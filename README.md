@@ -5,8 +5,8 @@ Ein zweisprachiges SvelteKit-Wortspiel mit DaisyUI und Unplugin Icons. Ziehe Buc
 ## Lokale Entwicklung
 
 ```bash
-pnpm install
-pnpm dev
+bun install
+bun run dev
 ```
 
 Die Spieloberfläche befindet sich vollständig in `src/routes/+page.svelte`. Rätsel liegen getrennt als `src/lib/data/words.de.json` und `src/lib/data/words.en.json` vor.
