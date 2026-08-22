@@ -14,3 +14,7 @@ Die Spieloberfläche befindet sich vollständig in `src/routes/+page.svelte`. R�
 ## Vercel
 
 Die App wird als statische SvelteKit-Seite gebaut. `vercel.json` legt Bun 1.4, den Build-Befehl und den erzeugten Ausgabeordner `build` ausdrücklich fest.
+
+## PWA und Offline-Nutzung
+
+WordCircle erzeugt beim Build ein Web-App-Manifest und einen Service Worker. Nach dem ersten erfolgreichen Aufruf kann die veröffentlichte Seite über die Browserfunktion **App installieren** zum Startbildschirm hinzugefügt werden; die Spieloberfläche und ihre lokalen Ressourcen bleiben anschließend offline verfügbar.

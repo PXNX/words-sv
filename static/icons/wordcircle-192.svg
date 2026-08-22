@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-label="WordCircle">
+  <rect width="192" height="192" rx="42" fill="#FFFDF7"/>
+  <path d="M96 28a68 68 0 1 0 0 136 68 68 0 1 0 0-136Zm0 21a47 47 0 1 1 0 94 47 47 0 1 1 0-94Z" fill="#172A45"/>
+  <path d="M119 63a38 38 0 1 0 0 76 38 38 0 1 0 0-76Zm0 15a23 23 0 1 1 0 46 23 23 0 1 1 0-46Z" fill="#E6A527"/>
+  <circle cx="70" cy="96" r="9" fill="#172A45"/>
+  <circle cx="119" cy="101" r="7" fill="#E6A527"/>
+</svg>
