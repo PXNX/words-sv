@@ -11,6 +11,7 @@
 - [x] Das Zielrepository PXNX/words-sv wurde vom Nutzer erstellt.
 - [ ] GitHub erneut mit Schreibzugriff auf PXNX/words-sv anmelden.
 - [x] Nutzer hat die GitHub-Anmeldung erneut abgeschlossen.
+- [ ] Workspace-GitHub-Zugang erneut für den Push nach PXNX/words-sv prüfen.
 - [ ] Bun-Version und Kompatibilität für die lokale SvelteKit-Entwicklung prüfen.
 - [ ] WordCircle-Skripte, Lockfile und Paketverwaltung auf Bun umstellen.
 - [ ] Repository psyops-sv prüfen und seine vorhandene technische Basis erfassen.
