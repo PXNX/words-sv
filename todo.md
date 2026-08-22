@@ -6,7 +6,7 @@
 - [x] Doppelte Buchstaben als separate Blasen im Buchstabenkreis darstellen und den Wiederholungsmodus entfernen.
 - [x] Großen grünen Abschluss-Haken mittig über dem Gitter vor der nächsten Runde zeigen.
 - [x] Generator, Mobilansicht und Build prüfen.
-- [ ] Generator-Update nach PXNX/words-sv übertragen.
+- [x] Generator-Update nach PXNX/words-sv übertragen.
 
 - [x] PWA-Manifest, Icons und Service Worker für WordCircle ergänzen.
 - [x] Offline-Caching und Installationsverhalten prüfen.
