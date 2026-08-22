@@ -5,6 +5,7 @@
 # Build outputs
 dist/
 build/
+.svelte-kit/
 *.dist
 
 # Environment variables

@@ -50,3 +50,5 @@
 - Die deutsche und englische Sprachfassung haben dieselbe visuelle Hierarchie und je eigene Wortlisten.
 - Das Kreuzworträtsel ist stets die dominante Druckfläche; der Buchstaben-Kreis ist ein ebenso klar gezeichnetes Interaktionsinstrument.
 - Steuerung, Zähler und Metadaten folgen der kompakten, linierten Typografie eines Rätselblatts; Bernstein ist Auswahl, Erfolg und Fortschritt vorbehalten.
+- Der aktive Buchstabenpfad und das aktuell gebildete Wort stehen im Zentrum des Kreisinstruments; Bernstein signalisiert ausschließlich Bewegung, Auswahl und gelöste Begriffe.
+- Bedienhandlungen bleiben kurz und bewegungsorientiert – „Spur kürzen“, „Kreis drehen“, „Neu ziehen“ und „Nächster Kreis“ – statt nach generischer App-Verwaltung zu klingen.
