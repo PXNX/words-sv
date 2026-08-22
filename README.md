@@ -10,3 +10,7 @@ bun run dev
 ```
 
 Die Spieloberfläche befindet sich vollständig in `src/routes/+page.svelte`. Rätsel liegen getrennt als `src/lib/data/words.de.json` und `src/lib/data/words.en.json` vor.
+
+## Vercel
+
+Die App wird als statische SvelteKit-Seite gebaut. `vercel.json` legt Bun 1.4, den Build-Befehl und den erzeugten Ausgabeordner `build` ausdrücklich fest.
