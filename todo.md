@@ -9,6 +9,8 @@
 - [x] Build und responsive Darstellung prüfen.
 - [ ] WordCircle nach PXNX/words-sv übertragen und den Projektstand sichern.
 - [x] Das Zielrepository PXNX/words-sv wurde vom Nutzer erstellt.
+- [ ] GitHub erneut mit Schreibzugriff auf PXNX/words-sv anmelden.
+- [x] Nutzer hat die GitHub-Anmeldung erneut abgeschlossen.
 - [ ] Bun-Version und Kompatibilität für die lokale SvelteKit-Entwicklung prüfen.
 - [ ] WordCircle-Skripte, Lockfile und Paketverwaltung auf Bun umstellen.
 - [ ] Repository psyops-sv prüfen und seine vorhandene technische Basis erfassen.
