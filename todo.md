@@ -2,7 +2,7 @@
 
 - [x] PWA-Manifest, Icons und Service Worker für WordCircle ergänzen.
 - [x] Offline-Caching und Installationsverhalten prüfen.
-- [ ] PWA-Update nach PXNX/words-sv übertragen.
+- [x] PWA-Update nach PXNX/words-sv übertragen.
 
 - [x] Schwierigkeitswahl mit mehrfacher Buchstabenauswahl ergänzen.
 - [x] Deutsche Rätsel mit doppelten Buchstaben für die neue Stufe hinzufügen.
