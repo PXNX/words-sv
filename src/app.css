@@ -1,0 +1,57 @@
+/* WordCircle design reminder: editorial word magazine, warm paper, inky navy structure, sun-amber interaction. */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@0;1&display=swap');
+@import 'tailwindcss';
+@plugin 'daisyui';
+
+:root {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  color: #172a45;
+  background: #f5f0e6;
+  font-synthesis: none;
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+  --color-base-100: #fffdf7;
+  --color-base-200: #f5f0e6;
+  --color-base-300: #e6ddcf;
+  --color-base-content: #172a45;
+  --color-primary: #e6a527;
+  --color-primary-content: #172a45;
+  --color-secondary: #172a45;
+  --color-secondary-content: #fffdf7;
+  --color-accent: #c96e4d;
+  --color-accent-content: #fffdf7;
+  --color-neutral: #172a45;
+  --color-neutral-content: #fffdf7;
+  --color-info: #315d8d;
+  --color-success: #587252;
+  --color-warning: #c9832f;
+  --color-error: #b45045;
+  --radius-box: 1rem;
+  --radius-btn: 0.625rem;
+  --radius-badge: 999px;
+}
+
+* { box-sizing: border-box; }
+
+html, body { min-height: 100%; }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background-color: #f5f0e6;
+  background-image:
+    linear-gradient(90deg, rgba(23, 42, 69, 0.025) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(23, 42, 69, 0.018) 1px, transparent 1px),
+    url('/manus-storage/wordcircle-paper_c78461e9.png');
+  background-size: 48px 48px, 48px 48px, 420px 420px;
+  background-blend-mode: multiply, multiply, normal;
+}
+
+button, input { font: inherit; }
+button:focus-visible { outline: 3px solid rgba(230, 165, 39, 0.55); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 1ms !important; transition-duration: 1ms !important; }
+}
