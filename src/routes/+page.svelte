@@ -14,7 +14,7 @@
   type Language = 'de' | 'en';
   type Theme = 'light' | 'dark';
   type Orientation = 'across' | 'down';
-  type Placement = { word: string; row: number; col: number; orientation: Orientation };
+  type Placement = { word: string; row: number; col: number; orientation: Orientation; reversed?: boolean };
   type BoardCell = { letter: string; words: string[] };
   type Grid = { cells: Map<string, BoardCell>; placements: Placement[]; minRow: number; maxRow: number; minCol: number; maxCol: number };
   type Round = { words: string[]; letters: string[]; grid: Grid };
@@ -23,6 +23,7 @@
   const wordPools: Record<Language, string[]> = { de: wordsDeJson as string[], en: wordsEnJson as string[] };
   const GAME_STORAGE_KEY = 'wordcircle-active-round-v1';
   const ROUND_TOTAL_KEY = 'wordcircle-completed-rounds-v1';
+  const ROUND_HISTORY_KEY = 'wordcircle-recent-base-words-v1';
   const copy = {
     de: { label: 'Wortkreis', hint: 'Zieh die Spur, Wort für Wort.', allDone: 'Rätsel gelöst', language: 'Sprache', appearance: 'Darstellung', light: 'Hell', dark: 'Dunkel', settings: 'Einstellungen', vibration: 'Vibration', settingsHint: 'Dein Wortspiel, deine Stimmung.', round: 'Runde', completed: 'Gelöste Runden' },
     en: { label: 'WordCircle', hint: 'Trace the letters, one word at a time.', allDone: 'Puzzle solved', language: 'Language', appearance: 'Appearance', light: 'Light', dark: 'Dark', settings: 'Settings', vibration: 'Vibration', settingsHint: 'Your word game, your mood.', round: 'Round', completed: 'Rounds solved' }
@@ -33,6 +34,7 @@
   const initialVibration = typeof localStorage === 'undefined' || localStorage.getItem('wordcircle-vibration') !== 'off';
   const initialGame = readStoredGame();
   const initialCompletedRounds = readCompletedRounds();
+  const initialRecentBases = readRecentBases();
   const CIRCLE = 146;
   const LETTER_RADIUS = 109;
 
@@ -42,6 +44,8 @@
   let settingsOpen = $state(false);
   let roundNumber = $state(initialGame?.roundNumber ?? 1);
   let completedRounds = $state(initialCompletedRounds);
+  let recentBaseWords = $state<string[]>(initialGame ? [...new Set([initialGame.words[0], ...initialRecentBases])] : initialRecentBases);
+  let needsFreshRound = $state(!initialGame);
   let currentRound = $state<Round>(initialGame ? roundFromStoredGame(initialGame) : buildRound(wordPools.de, 483719));
   let selectedPath = $state<number[]>([]);
   let solvedWords = $state<string[]>(initialGame?.solvedWords ?? []);
@@ -71,9 +75,15 @@
   $effect(() => { document.documentElement.dataset.theme = theme; document.documentElement.classList.toggle('dark', theme === 'dark'); localStorage.setItem('wordcircle-theme', theme); });
   $effect(() => { localStorage.setItem('wordcircle-vibration', vibration ? 'on' : 'off'); });
   $effect(() => { localStorage.setItem(ROUND_TOTAL_KEY, String(completedRounds)); });
+  $effect(() => { localStorage.setItem(ROUND_HISTORY_KEY, JSON.stringify(recentBaseWords)); });
   $effect(() => {
     const snapshot: StoredGame = { version: 1, language: lang, roundNumber, words: currentRound.words, letters: currentRound.letters, placements: currentRound.grid.placements, solvedWords };
     try { localStorage.setItem(GAME_STORAGE_KEY, JSON.stringify(snapshot)); } catch { /* Storage is optional; the game remains playable without it. */ }
+  });
+  $effect(() => {
+    if (!needsFreshRound) return;
+    needsFreshRound = false;
+    newRound('de', true);
   });
 
   function cellKey(row: number, col: number) { return `${row}:${col}`; }
@@ -83,16 +93,24 @@
   function inventory(word: string) { return [...word].reduce<Record<string, number>>((counts, letter) => ({ ...counts, [letter]: (counts[letter] ?? 0) + 1 }), {}); }
   function canSpell(word: string, letters: string[]) { const available = inventory(letters.join('')); return Object.entries(inventory(word)).every(([letter, count]) => (available[letter] ?? 0) >= count); }
   function emptyGrid() { return { cells: new Map<string, BoardCell>(), placements: [], minRow: 0, maxRow: 0, minCol: 0, maxCol: 0 } as Grid; }
+  function placementLetters(entry: Placement) { const letters = [...entry.word]; return entry.reversed ? letters.reverse() : letters; }
   function gridFromPlacements(placements: Placement[]) { const grid = emptyGrid(); placements.forEach((placement) => writePlacement(grid, placement)); return grid; }
   function isPlacement(value: unknown): value is Placement {
     if (!value || typeof value !== 'object') return false;
     const entry = value as Partial<Placement>;
-    return typeof entry.word === 'string' && Number.isInteger(entry.row) && Number.isInteger(entry.col) && (entry.orientation === 'across' || entry.orientation === 'down');
+    return typeof entry.word === 'string' && Number.isInteger(entry.row) && Number.isInteger(entry.col) && (entry.orientation === 'across' || entry.orientation === 'down') && (typeof entry.reversed === 'undefined' || typeof entry.reversed === 'boolean');
   }
   function readCompletedRounds() {
     if (typeof localStorage === 'undefined') return 0;
     const value = Number(localStorage.getItem(ROUND_TOTAL_KEY));
     return Number.isSafeInteger(value) && value >= 0 ? value : 0;
+  }
+  function readRecentBases() {
+    if (typeof localStorage === 'undefined') return [];
+    try {
+      const value: unknown = JSON.parse(localStorage.getItem(ROUND_HISTORY_KEY) ?? '[]');
+      return Array.isArray(value) ? value.filter((word): word is string => typeof word === 'string' && /^[A-ZÄÖÜ]+$/.test(word)).slice(0, 24) : [];
+    } catch { return []; }
   }
   function readStoredGame(): StoredGame | null {
     if (typeof localStorage === 'undefined') return null;
@@ -119,7 +137,7 @@
   function refreshBounds(grid: Grid) { const coordinates = [...grid.cells.keys()].map(coordinate); grid.minRow = Math.min(...coordinates.map((point) => point.row)); grid.maxRow = Math.max(...coordinates.map((point) => point.row)); grid.minCol = Math.min(...coordinates.map((point) => point.col)); grid.maxCol = Math.max(...coordinates.map((point) => point.col)); }
   function writePlacement(grid: Grid, entry: Placement) {
     grid.placements.push(entry);
-    entry.word.split('').forEach((letter, index) => {
+    placementLetters(entry).forEach((letter, index) => {
       const row = entry.row + (entry.orientation === 'down' ? index : 0);
       const col = entry.col + (entry.orientation === 'across' ? index : 0);
       const key = cellKey(row, col);
@@ -137,7 +155,7 @@
       const key = cellKey(point.row, point.col);
       const existing = grid.cells.get(key);
       if (existing) {
-        if (existing.letter !== entry.word[point.index] || key !== cellKey(crossing.row, crossing.col) || existing.words.length !== 1) return false;
+        if (existing.letter !== placementLetters(entry)[point.index] || key !== cellKey(crossing.row, crossing.col) || existing.words.length !== 1) return false;
         crossings += 1;
         continue;
       }
@@ -162,43 +180,58 @@
       const crossedPlacement = grid.placements.find((entry) => entry.word === crossedWord);
       if (!crossedPlacement) continue;
       const orientation: Orientation = crossedPlacement.orientation === 'across' ? 'down' : 'across';
-      for (const wordIndex of shuffle(word.split('').map((_letter, index) => index).filter((index) => word[index] === cell.letter), rng)) {
-        const entry: Placement = { word, orientation, row: orientation === 'down' ? crossing.row - wordIndex : crossing.row, col: orientation === 'across' ? crossing.col - wordIndex : crossing.col };
-        if (canPlace(grid, entry, crossing)) return entry;
+      for (const reversed of shuffle([false, true], rng)) {
+        const renderedLetters = reversed ? [...word].reverse() : [...word];
+        for (const wordIndex of shuffle(renderedLetters.map((_letter, index) => index).filter((index) => renderedLetters[index] === cell.letter), rng)) {
+          const entry: Placement = { word, reversed, orientation, row: orientation === 'down' ? crossing.row - wordIndex : crossing.row, col: orientation === 'across' ? crossing.col - wordIndex : crossing.col };
+          if (canPlace(grid, entry, crossing)) return entry;
+        }
       }
     }
     return null;
   }
-  function buildRound(pool: string[], seed: number): Round {
+  function buildRound(pool: string[], seed: number, excludedBases: string[] = []): Round {
     const rng = makeRng(seed);
     const normalized = [...new Set(pool.map((word) => word.trim().toUpperCase()).filter((word) => /^[A-ZÄÖÜ]+$/.test(word) && word.length >= 3 && word.length <= 8))];
     const bases = shuffle(normalized.filter((word) => word.length >= 5 && word.length <= 8 && normalized.filter((candidate) => candidate !== word && canSpell(candidate, [...word])).length >= 5), rng);
-    for (const base of bases) {
+    const freshBases = bases.filter((word) => !excludedBases.includes(word));
+    for (const base of freshBases.length > 0 ? freshBases : bases) {
       const grid = emptyGrid();
-      writePlacement(grid, { word: base, row: 0, col: 0, orientation: 'across' });
+      writePlacement(grid, { word: base, row: 0, col: 0, orientation: 'across', reversed: rng() >= .5 });
       const selected = [base];
       const target = 6 + Math.floor(rng() * 3);
       const candidates = shuffle(normalized.filter((word) => word !== base && word.length >= 3 && canSpell(word, [...base])), rng);
       while (selected.length < target) {
-        const candidate = candidates.find((word) => !selected.includes(word) && findPlacement(grid, word, rng));
-        if (!candidate) break;
-        const entry = findPlacement(grid, candidate, rng);
-        if (!entry) break;
-        writePlacement(grid, entry);
-        selected.push(candidate);
+        let placed = false;
+        for (const candidate of candidates) {
+          if (selected.includes(candidate)) continue;
+          const entry = findPlacement(grid, candidate, rng);
+          if (!entry) continue;
+          writePlacement(grid, entry);
+          selected.push(candidate);
+          placed = true;
+          break;
+        }
+        if (!placed) break;
       }
       if (selected.length >= 6) return { words: selected, letters: [...base], grid };
     }
-    const fallback = normalized.find((word) => word.length >= 5) ?? 'WORT';
+    const fallback = freshBases[0] ?? bases[0] ?? normalized.find((word) => word.length >= 5) ?? 'WORT';
     const grid = emptyGrid();
-    writePlacement(grid, { word: fallback, row: 0, col: 0, orientation: 'across' });
+    writePlacement(grid, { word: fallback, row: 0, col: 0, orientation: 'across', reversed: rng() >= .5 });
     return { words: [fallback], letters: [...fallback], grid };
+  }
+  function randomSeed() {
+    if (typeof crypto !== 'undefined' && 'getRandomValues' in crypto) { const values = new Uint32Array(1); crypto.getRandomValues(values); return values[0]; }
+    return Math.floor(Math.random() * 2147483647) ^ Date.now();
   }
   function buzz(pattern: number | number[]) { if (vibration && typeof navigator !== 'undefined' && 'vibrate' in navigator) navigator.vibrate(pattern); }
   function newRound(nextLanguage = lang, resetCount = false) {
     lang = nextLanguage;
     if (resetCount) roundNumber = 0;
-    currentRound = buildRound(wordPools[nextLanguage], Math.floor(Math.random() * 2147483647));
+    const nextRound = buildRound(wordPools[nextLanguage], randomSeed(), recentBaseWords);
+    currentRound = nextRound;
+    recentBaseWords = [nextRound.words[0], ...recentBaseWords.filter((word) => word !== nextRound.words[0])].slice(0, 24);
     roundNumber += 1;
     selectedPath = [];
     solvedWords = [];
