@@ -1,5 +1,9 @@
 # Erweiterung WordCircle
 
+- [x] Geeignete deutsche Substantive aus der angegebenen Quellenliste auswählen.
+- [x] Kreuzworttaugliche Begriffe in den deutschen Wortpool ergänzen.
+- [x] Wortdaten, Generator, Build und GitHub-Übertragung prüfen.
+
 - [x] Einstellungsoption für rückwärts platzierte Wörter ergänzen.
 - [x] Auswahl lokal speichern und für neue Runden anwenden.
 - [x] Vorwärtsplatzierungen priorisieren und Rückwärtsfallback nur bei aktivierter Option erlauben.
