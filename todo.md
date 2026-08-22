@@ -3,7 +3,7 @@
 - [x] Weiße Restmarkierungen unter dem Eingabebereich entfernen.
 - [x] Unerwünschtes schwarzes Element bei abgeschlossenem Raster entfernen.
 - [x] Bereinigung prüfen.
-- [ ] Bereinigung nach PXNX/words-sv übertragen.
+- [x] Bereinigung nach PXNX/words-sv übertragen.
 
 - [x] Aktive Runde, Rasterschnitt und gelöste Wörter lokal speichern.
 - [x] Gespeicherten Rätselstand beim Seitenreload validiert wiederherstellen.
