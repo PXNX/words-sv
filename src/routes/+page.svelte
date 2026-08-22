@@ -18,8 +18,10 @@
   type BoardCell = { letter: string; words: string[] };
   type Grid = { cells: Map<string, BoardCell>; placements: Placement[]; minRow: number; maxRow: number; minCol: number; maxCol: number };
   type Round = { words: string[]; letters: string[]; grid: Grid };
+  type StoredGame = { version: 1; language: Language; roundNumber: number; words: string[]; letters: string[]; placements: Placement[]; solvedWords: string[] };
 
   const wordPools: Record<Language, string[]> = { de: wordsDeJson as string[], en: wordsEnJson as string[] };
+  const GAME_STORAGE_KEY = 'wordcircle-active-round-v1';
   const copy = {
     de: { label: 'Wortkreis', hint: 'Zieh die Spur, Wort für Wort.', allDone: 'Rätsel gelöst', language: 'Sprache', appearance: 'Darstellung', light: 'Hell', dark: 'Dunkel', settings: 'Einstellungen', vibration: 'Vibration', settingsHint: 'Dein Wortspiel, deine Stimmung.', round: 'Runde' },
     en: { label: 'WordCircle', hint: 'Trace the letters, one word at a time.', allDone: 'Puzzle solved', language: 'Language', appearance: 'Appearance', light: 'Light', dark: 'Dark', settings: 'Settings', vibration: 'Vibration', settingsHint: 'Your word game, your mood.', round: 'Round' }
@@ -28,17 +30,18 @@
 
   const initialTheme: Theme = typeof localStorage !== 'undefined' && localStorage.getItem('wordcircle-theme') === 'dark' ? 'dark' : 'light';
   const initialVibration = typeof localStorage === 'undefined' || localStorage.getItem('wordcircle-vibration') !== 'off';
+  const initialGame = readStoredGame();
   const CIRCLE = 146;
   const LETTER_RADIUS = 109;
 
-  let lang = $state<Language>('de');
+  let lang = $state<Language>(initialGame?.language ?? 'de');
   let theme = $state<Theme>(initialTheme);
   let vibration = $state(initialVibration);
   let settingsOpen = $state(false);
-  let roundNumber = $state(1);
-  let currentRound = $state<Round>(buildRound(wordPools.de, 483719));
+  let roundNumber = $state(initialGame?.roundNumber ?? 1);
+  let currentRound = $state<Round>(initialGame ? roundFromStoredGame(initialGame) : buildRound(wordPools.de, 483719));
   let selectedPath = $state<number[]>([]);
-  let solvedWords = $state<string[]>([]);
+  let solvedWords = $state<string[]>(initialGame?.solvedWords ?? []);
   let feedback = $state<'correct' | 'wrong' | null>(null);
   let feedbackWord = $state('');
   let shakeGrid = $state(false);
@@ -64,6 +67,10 @@
 
   $effect(() => { document.documentElement.dataset.theme = theme; document.documentElement.classList.toggle('dark', theme === 'dark'); localStorage.setItem('wordcircle-theme', theme); });
   $effect(() => { localStorage.setItem('wordcircle-vibration', vibration ? 'on' : 'off'); });
+  $effect(() => {
+    const snapshot: StoredGame = { version: 1, language: lang, roundNumber, words: currentRound.words, letters: currentRound.letters, placements: currentRound.grid.placements, solvedWords };
+    try { localStorage.setItem(GAME_STORAGE_KEY, JSON.stringify(snapshot)); } catch { /* Storage is optional; the game remains playable without it. */ }
+  });
 
   function cellKey(row: number, col: number) { return `${row}:${col}`; }
   function coordinate(key: string) { const [row, col] = key.split(':').map(Number); return { row, col }; }
@@ -72,6 +79,34 @@
   function inventory(word: string) { return [...word].reduce<Record<string, number>>((counts, letter) => ({ ...counts, [letter]: (counts[letter] ?? 0) + 1 }), {}); }
   function canSpell(word: string, letters: string[]) { const available = inventory(letters.join('')); return Object.entries(inventory(word)).every(([letter, count]) => (available[letter] ?? 0) >= count); }
   function emptyGrid() { return { cells: new Map<string, BoardCell>(), placements: [], minRow: 0, maxRow: 0, minCol: 0, maxCol: 0 } as Grid; }
+  function gridFromPlacements(placements: Placement[]) { const grid = emptyGrid(); placements.forEach((placement) => writePlacement(grid, placement)); return grid; }
+  function isPlacement(value: unknown): value is Placement {
+    if (!value || typeof value !== 'object') return false;
+    const entry = value as Partial<Placement>;
+    return typeof entry.word === 'string' && Number.isInteger(entry.row) && Number.isInteger(entry.col) && (entry.orientation === 'across' || entry.orientation === 'down');
+  }
+  function readStoredGame(): StoredGame | null {
+    if (typeof localStorage === 'undefined') return null;
+    try {
+      const parsed: unknown = JSON.parse(localStorage.getItem(GAME_STORAGE_KEY) ?? 'null');
+      if (!parsed || typeof parsed !== 'object') return null;
+      const game = parsed as Partial<StoredGame>;
+      const language = game.language;
+      const roundNumber = game.roundNumber;
+      const words = game.words;
+      const letters = game.letters;
+      const placements = game.placements;
+      const solvedWords = game.solvedWords;
+      const validLanguage = language === 'de' || language === 'en';
+      const validWords = Array.isArray(words) && words.length > 0 && words.every((word) => typeof word === 'string' && /^[A-ZÄÖÜ]+$/.test(word));
+      const validLetters = Array.isArray(letters) && letters.length >= 3 && letters.length <= 8 && letters.every((letter) => typeof letter === 'string' && /^[A-ZÄÖÜ]$/.test(letter));
+      const validPlacements = Array.isArray(placements) && placements.length === words?.length && placements.every(isPlacement);
+      const validSolvedWords = Array.isArray(solvedWords) && solvedWords.every((word) => typeof word === 'string' && words?.includes(word));
+      if (game.version !== 1 || !validLanguage || !Number.isInteger(roundNumber) || (roundNumber ?? 0) < 1 || !validWords || !validLetters || !validPlacements || !validSolvedWords) return null;
+      return { version: 1, language: language as Language, roundNumber: roundNumber as number, words: words as string[], letters: letters as string[], placements: placements as Placement[], solvedWords: [...new Set(solvedWords as string[])] };
+    } catch { return null; }
+  }
+  function roundFromStoredGame(game: StoredGame): Round { return { words: game.words, letters: game.letters, grid: gridFromPlacements(game.placements) }; }
   function refreshBounds(grid: Grid) { const coordinates = [...grid.cells.keys()].map(coordinate); grid.minRow = Math.min(...coordinates.map((point) => point.row)); grid.maxRow = Math.max(...coordinates.map((point) => point.row)); grid.minCol = Math.min(...coordinates.map((point) => point.col)); grid.maxCol = Math.max(...coordinates.map((point) => point.col)); }
   function writePlacement(grid: Grid, entry: Placement) {
     grid.placements.push(entry);

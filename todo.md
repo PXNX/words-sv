@@ -1,5 +1,10 @@
 # Erweiterung WordCircle
 
+- [x] Aktive Runde, Rasterschnitt und gelöste Wörter lokal speichern.
+- [x] Gespeicherten Rätselstand beim Seitenreload validiert wiederherstellen.
+- [x] Persistenz und Build prüfen.
+- [ ] Persistenz-Update nach PXNX/words-sv übertragen.
+
 - [x] Zufälligen Basiswort- und Anschlusswortgenerator mit 5–7 verbundenen Wörtern umsetzen.
 - [x] Deutsche und englische Wortdaten als flache, gemeinsame Wortpools umstrukturieren.
 - [x] Gitterplatzierung mit freien Zwischenreihen oder -spalten für nicht kreuzende Wortteile erzwingen.
