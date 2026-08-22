@@ -1,8 +1,18 @@
 <script lang="ts">
   /* Papier & Tinte: a compact, tactile editorial puzzle surface where the grid and letter wheel are the primary instruments. */
   import '../app.css';
-  import wordsDeJson from '$lib/data/words.de.json';
-  import wordsEnJson from '$lib/data/words.en.json';
+  import wordsDeA1 from '$lib/data/words.de.a1.json';
+  import wordsDeA2 from '$lib/data/words.de.a2.json';
+  import wordsDeB1 from '$lib/data/words.de.b1.json';
+  import wordsDeB2 from '$lib/data/words.de.b2.json';
+  import wordsDeC1 from '$lib/data/words.de.c1.json';
+  import wordsDeC2 from '$lib/data/words.de.c2.json';
+  import wordsEnA1 from '$lib/data/words.en.a1.json';
+  import wordsEnA2 from '$lib/data/words.en.a2.json';
+  import wordsEnB1 from '$lib/data/words.en.b1.json';
+  import wordsEnB2 from '$lib/data/words.en.b2.json';
+  import wordsEnC1 from '$lib/data/words.en.c1.json';
+  import wordsEnC2 from '$lib/data/words.en.c2.json';
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
   import IconClose from '~icons/material-symbols/cancel-rounded';
   import IconDark from '~icons/material-symbols/dark-mode-rounded';
@@ -11,27 +21,36 @@
 
   type Language = 'de' | 'en';
   type Theme = 'light' | 'dark';
+  type VocabularyLevel = 'a1' | 'a2' | 'b1' | 'b2' | 'c1' | 'c2';
   type Orientation = 'across' | 'down';
   type Placement = { word: string; row: number; col: number; orientation: Orientation; reversed?: boolean };
   type BoardCell = { letter: string; words: string[] };
   type Grid = { cells: Map<string, BoardCell>; placements: Placement[]; minRow: number; maxRow: number; minCol: number; maxCol: number };
   type Round = { words: string[]; letters: string[]; grid: Grid };
-  type StoredGame = { version: 1; language: Language; roundNumber: number; words: string[]; letters: string[]; placements: Placement[]; solvedWords: string[]; startedAt?: number; completedDuration?: number };
+  type StoredGame = { version: 1; language: Language; roundNumber: number; words: string[]; letters: string[]; placements: Placement[]; solvedWords: string[]; startedAt?: number; completedDuration?: number; vocabularyLevel?: VocabularyLevel; includeLowerVocabulary?: boolean };
 
-  const wordPools: Record<Language, string[]> = { de: wordsDeJson as string[], en: wordsEnJson as string[] };
+  const vocabularyLevels: VocabularyLevel[] = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
+  const wordPools: Record<Language, Record<VocabularyLevel, string[]>> = {
+    de: { a1: wordsDeA1 as string[], a2: wordsDeA2 as string[], b1: wordsDeB1 as string[], b2: wordsDeB2 as string[], c1: wordsDeC1 as string[], c2: wordsDeC2 as string[] },
+    en: { a1: wordsEnA1 as string[], a2: wordsEnA2 as string[], b1: wordsEnB1 as string[], b2: wordsEnB2 as string[], c1: wordsEnC1 as string[], c2: wordsEnC2 as string[] }
+  };
   const GAME_STORAGE_KEY = 'wordcircle-active-round-v1';
   const ROUND_TOTAL_KEY = 'wordcircle-completed-rounds-v1';
   const ROUND_HISTORY_KEY = 'wordcircle-recent-base-words-v1';
   const BACKWARD_WORDS_KEY = 'wordcircle-backward-words-v1';
+  const VOCABULARY_LEVEL_KEY = 'wordcircle-vocabulary-level-v1';
+  const INCLUDE_LOWER_VOCABULARY_KEY = 'wordcircle-include-lower-vocabulary-v1';
   const copy = {
-    de: { label: 'Wortkreis', hint: 'Die Spur ziehen, Wort für Wort.', allDone: 'Rätsel gelöst', time: 'Lösungszeit', continue: 'Fortsetzen', language: 'Sprache', appearance: 'Darstellung', light: 'Hell', dark: 'Dunkel', settings: 'Einstellungen', vibration: 'Vibration', backwards: 'Rückwärts schreiben', settingsHint: 'Dein Wortspiel, deine Stimmung.', round: 'Runde', completed: 'Gelöste Runden', tracePrompt: 'SPUR ZIEHEN', traceActive: 'SPUR' },
-    en: { label: 'WordCircle', hint: 'Trace the letters, one word at a time.', allDone: 'Puzzle solved', time: 'Solve time', continue: 'Continue', language: 'Language', appearance: 'Appearance', light: 'Light', dark: 'Dark', settings: 'Settings', vibration: 'Vibration', backwards: 'Spell backwards', settingsHint: 'Your word game, your mood.', round: 'Round', completed: 'Rounds solved', tracePrompt: 'TRACE', traceActive: 'PATH' }
+    de: { label: 'Wortkreis', hint: 'Die Spur ziehen, Wort für Wort.', allDone: 'Rätsel gelöst', time: 'Lösungszeit', continue: 'Fortsetzen', language: 'Sprache', vocabulary: 'Niveau', includeLower: 'Niedrigere Niveaus', appearance: 'Darstellung', light: 'Hell', dark: 'Dunkel', settings: 'Einstellungen', vibration: 'Vibration', backwards: 'Rückwärts schreiben', settingsHint: 'Dein Wortspiel, deine Stimmung.', round: 'Runde', completed: 'Gelöste Runden', tracePrompt: 'SPUR ZIEHEN', traceActive: 'SPUR' },
+    en: { label: 'WordCircle', hint: 'Trace the letters, one word at a time.', allDone: 'Puzzle solved', time: 'Solve time', continue: 'Continue', language: 'Language', vocabulary: 'Level', includeLower: 'Include lower levels', appearance: 'Appearance', light: 'Light', dark: 'Dark', settings: 'Settings', vibration: 'Vibration', backwards: 'Spell backwards', settingsHint: 'Your word game, your mood.', round: 'Round', completed: 'Rounds solved', tracePrompt: 'TRACE', traceActive: 'PATH' }
   } as const;
   const confettiPieces = Array.from({ length: 36 }, (_item, index) => index);
 
   const initialTheme: Theme = typeof localStorage !== 'undefined' && localStorage.getItem('wordcircle-theme') === 'dark' ? 'dark' : 'light';
   const initialVibration = typeof localStorage === 'undefined' || localStorage.getItem('wordcircle-vibration') !== 'off';
   const initialBackwardWords = typeof localStorage !== 'undefined' && localStorage.getItem(BACKWARD_WORDS_KEY) === 'on';
+  const initialVocabularyLevel = readVocabularyLevel();
+  const initialIncludeLowerVocabulary = typeof localStorage !== 'undefined' && localStorage.getItem(INCLUDE_LOWER_VOCABULARY_KEY) === 'on';
   const initialGame = readStoredGame();
   const initialCompletedRounds = readCompletedRounds();
   const initialRecentBases = readRecentBases();
@@ -42,12 +61,14 @@
   let theme = $state<Theme>(initialTheme);
   let vibration = $state(initialVibration);
   let allowBackwardWords = $state(initialBackwardWords);
+  let vocabularyLevel = $state<VocabularyLevel>(initialGame?.vocabularyLevel ?? initialVocabularyLevel);
+  let includeLowerVocabulary = $state(initialGame?.includeLowerVocabulary ?? initialIncludeLowerVocabulary);
   let settingsOpen = $state(false);
   let roundNumber = $state(initialGame?.roundNumber ?? 1);
   let completedRounds = $state(initialCompletedRounds);
   let recentBaseWords = $state<string[]>(initialGame ? [...new Set([initialGame.words[0], ...initialRecentBases])] : initialRecentBases);
   let needsFreshRound = $state(!initialGame);
-  let currentRound = $state<Round>(initialGame ? roundFromStoredGame(initialGame) : buildRound(wordPools.de, 483719, [], initialBackwardWords));
+  let currentRound = $state<Round>(initialGame ? roundFromStoredGame(initialGame) : buildRound(selectedPool('de', initialVocabularyLevel, initialIncludeLowerVocabulary), 483719, [], initialBackwardWords));
   let selectedPath = $state<number[]>([]);
   let solvedWords = $state<string[]>(initialGame?.solvedWords ?? []);
   let feedback = $state<'correct' | 'wrong' | null>(null);
@@ -80,10 +101,11 @@
   $effect(() => { document.documentElement.dataset.theme = theme; document.documentElement.classList.toggle('dark', theme === 'dark'); localStorage.setItem('wordcircle-theme', theme); });
   $effect(() => { localStorage.setItem('wordcircle-vibration', vibration ? 'on' : 'off'); });
   $effect(() => { localStorage.setItem(BACKWARD_WORDS_KEY, allowBackwardWords ? 'on' : 'off'); });
+  $effect(() => { if (vocabularyLevel === 'a1' && includeLowerVocabulary) includeLowerVocabulary = false; localStorage.setItem(VOCABULARY_LEVEL_KEY, vocabularyLevel); localStorage.setItem(INCLUDE_LOWER_VOCABULARY_KEY, includeLowerVocabulary ? 'on' : 'off'); });
   $effect(() => { localStorage.setItem(ROUND_TOTAL_KEY, String(completedRounds)); });
   $effect(() => { localStorage.setItem(ROUND_HISTORY_KEY, JSON.stringify(recentBaseWords)); });
   $effect(() => {
-    const snapshot: StoredGame = { version: 1, language: lang, roundNumber, words: currentRound.words, letters: currentRound.letters, placements: currentRound.grid.placements, solvedWords, startedAt, completedDuration: completedDuration ?? undefined };
+    const snapshot: StoredGame = { version: 1, language: lang, roundNumber, words: currentRound.words, letters: currentRound.letters, placements: currentRound.grid.placements, solvedWords, startedAt, completedDuration: completedDuration ?? undefined, vocabularyLevel, includeLowerVocabulary };
     try { localStorage.setItem(GAME_STORAGE_KEY, JSON.stringify(snapshot)); } catch { /* Storage is optional; the game remains playable without it. */ }
   });
   $effect(() => {
@@ -93,6 +115,9 @@
   });
 
   function cellKey(row: number, col: number) { return `${row}:${col}`; }
+  function isVocabularyLevel(value: unknown): value is VocabularyLevel { return typeof value === 'string' && vocabularyLevels.includes(value as VocabularyLevel); }
+  function readVocabularyLevel(): VocabularyLevel { if (typeof localStorage === 'undefined') return 'a1'; const value = localStorage.getItem(VOCABULARY_LEVEL_KEY); return isVocabularyLevel(value) ? value : 'a1'; }
+  function selectedPool(language: Language, level: VocabularyLevel, includeLower = false) { const end = vocabularyLevels.indexOf(level); const levels = includeLower ? vocabularyLevels.slice(0, end + 1) : [level]; return levels.flatMap((entry) => wordPools[language][entry]); }
   function coordinate(key: string) { const [row, col] = key.split(':').map(Number); return { row, col }; }
   function makeRng(seed: number) { let value = seed >>> 0; return () => { value = (value * 1664525 + 1013904223) >>> 0; return value / 4294967296; }; }
   function shuffle<T>(values: T[], rng: () => number) { const result = [...values]; for (let index = result.length - 1; index > 0; index -= 1) { const swap = Math.floor(rng() * (index + 1)); [result[index], result[swap]] = [result[swap], result[index]]; } return result; }
@@ -137,8 +162,10 @@
       const validSolvedWords = Array.isArray(solvedWords) && solvedWords.every((word) => typeof word === 'string' && words?.includes(word));
       const validStartedAt = typeof game.startedAt === 'undefined' || (Number.isSafeInteger(game.startedAt) && game.startedAt > 0);
       const validCompletedDuration = typeof game.completedDuration === 'undefined' || (Number.isSafeInteger(game.completedDuration) && game.completedDuration >= 0);
-      if (game.version !== 1 || !validLanguage || !Number.isInteger(roundNumber) || (roundNumber ?? 0) < 1 || !validWords || !validLetters || !validPlacements || !validSolvedWords || !validStartedAt || !validCompletedDuration) return null;
-      return { version: 1, language: language as Language, roundNumber: roundNumber as number, words: words as string[], letters: letters as string[], placements: placements as Placement[], solvedWords: [...new Set(solvedWords as string[])], startedAt: game.startedAt, completedDuration: game.completedDuration };
+      const validVocabularyLevel = typeof game.vocabularyLevel === 'undefined' || isVocabularyLevel(game.vocabularyLevel);
+      const validIncludeLowerVocabulary = typeof game.includeLowerVocabulary === 'undefined' || typeof game.includeLowerVocabulary === 'boolean';
+      if (game.version !== 1 || !validLanguage || !Number.isInteger(roundNumber) || (roundNumber ?? 0) < 1 || !validWords || !validLetters || !validPlacements || !validSolvedWords || !validStartedAt || !validCompletedDuration || !validVocabularyLevel || !validIncludeLowerVocabulary) return null;
+      return { version: 1, language: language as Language, roundNumber: roundNumber as number, words: words as string[], letters: letters as string[], placements: placements as Placement[], solvedWords: [...new Set(solvedWords as string[])], startedAt: game.startedAt, completedDuration: game.completedDuration, vocabularyLevel: game.vocabularyLevel, includeLowerVocabulary: game.includeLowerVocabulary };
     } catch { return null; }
   }
   function roundFromStoredGame(game: StoredGame): Round { return { words: game.words, letters: game.letters, grid: gridFromPlacements(game.placements) }; }
@@ -237,7 +264,7 @@
   function newRound(nextLanguage = lang, resetCount = false) {
     lang = nextLanguage;
     if (resetCount) roundNumber = 0;
-    const nextRound = buildRound(wordPools[nextLanguage], randomSeed(), recentBaseWords, allowBackwardWords);
+    const nextRound = buildRound(selectedPool(nextLanguage, vocabularyLevel, includeLowerVocabulary), randomSeed(), recentBaseWords, allowBackwardWords);
     currentRound = nextRound;
     recentBaseWords = [nextRound.words[0], ...recentBaseWords.filter((word) => word !== nextRound.words[0])].slice(0, 24);
     roundNumber += 1;
@@ -252,6 +279,8 @@
   }
   function selectLanguage(nextLanguage: Language) { newRound(nextLanguage, true); settingsOpen = false; }
   function selectBackwardWords(nextValue: boolean) { allowBackwardWords = nextValue; newRound(); }
+  function selectVocabularyLevel(nextLevel: VocabularyLevel) { vocabularyLevel = nextLevel; if (nextLevel === 'a1') includeLowerVocabulary = false; newRound(); }
+  function selectIncludeLowerVocabulary(nextValue: boolean) { includeLowerVocabulary = nextValue; newRound(); }
   function position(index: number, total: number) { const angle = (index / total) * Math.PI * 2 - Math.PI / 2; return { x: CIRCLE + LETTER_RADIUS * Math.cos(angle), y: CIRCLE + LETTER_RADIUS * Math.sin(angle) }; }
   function pointFromEvent(event: PointerEvent) { const rect = circleEl?.getBoundingClientRect(); if (!rect) return null; return { x: ((event.clientX - rect.left) / rect.width) * 292, y: ((event.clientY - rect.top) / rect.height) * 292 }; }
   function nearestLetter(point: { x: number; y: number }) { let closest = -1; let distance = Infinity; circleLetters.forEach((_letter, index) => { const letter = position(index, circleLetters.length); const nextDistance = Math.hypot(point.x - letter.x, point.y - letter.y); if (nextDistance < distance) { distance = nextDistance; closest = index; } }); return distance < 36 ? closest : -1; }
@@ -288,6 +317,8 @@
         <button class="settings-close" onclick={() => (settingsOpen = false)} aria-label="Close settings"><IconClose /></button>
         <div class="settings-intro"><span class="brand-mark" aria-hidden="true"><i></i><b></b></span><div><strong>WordCircle</strong><p>{labels.settingsHint}</p></div></div>
         <div class="setting-row"><span>{labels.language}</span><div class="segmented"><button class:chosen={lang === 'de'} onclick={() => selectLanguage('de')}>DE</button><button class:chosen={lang === 'en'} onclick={() => selectLanguage('en')}>EN</button></div></div>
+        <div class="setting-row vocabulary-row"><span>{labels.vocabulary}</span><div class="segmented level-segmented">{#each vocabularyLevels as level}<button class:chosen={vocabularyLevel === level} onclick={() => selectVocabularyLevel(level)}>{level.toUpperCase()}</button>{/each}</div></div>
+        {#if vocabularyLevel !== 'a1'}<div class="setting-row vibration-row"><span>{labels.includeLower}</span><input aria-label={labels.includeLower} type="checkbox" class="toggle toggle-sm" checked={includeLowerVocabulary} onchange={(event) => selectIncludeLowerVocabulary((event.currentTarget as HTMLInputElement).checked)} /></div>{/if}
         <div class="setting-row"><span>{labels.appearance}</span><div class="segmented"><button class:chosen={theme === 'light'} onclick={() => (theme = 'light')}><IconLight />{labels.light}</button><button class:chosen={theme === 'dark'} onclick={() => (theme = 'dark')}><IconDark />{labels.dark}</button></div></div>
         <div class="setting-row vibration-row"><span><IconVibrate />{labels.vibration}</span><input aria-label={labels.vibration} type="checkbox" class="toggle toggle-sm" bind:checked={vibration} /></div>
         <div class="setting-row vibration-row"><span>{labels.backwards}</span><input aria-label={labels.backwards} type="checkbox" class="toggle toggle-sm" checked={allowBackwardWords} onchange={(event) => selectBackwardWords((event.currentTarget as HTMLInputElement).checked)} /></div>
@@ -337,7 +368,7 @@
   .game-paper::before { content:'';position:absolute;z-index:-1;inset:8px;border:1px solid rgba(23,42,69,.13);pointer-events:none; }
   .brand-mark { position:relative;width:34px;height:34px;display:block;flex:none; }.brand-mark i,.brand-mark b { position:absolute;display:block;width:21px;height:21px;border:2px solid #172a45;border-radius:50%; }.brand-mark i { top:1px;left:1px; }.brand-mark b { right:1px;bottom:1px;border-color:#e6a527; }
   .settings-trigger,.settings-close { display:grid;place-items:center;width:2.15rem;height:2.15rem;border:1px solid rgba(23,42,69,.24);border-radius:50%;background:rgba(255,253,247,.86);color:#172a45;transition:transform .18s cubic-bezier(.23,1,.32,1),background .18s ease; }.settings-trigger :global(svg),.settings-close :global(svg) { width:1.1rem;height:1.1rem; }.settings-close { position:absolute;z-index:2;top:.72rem;right:.72rem;background:#172a45;color:#fffdf7; }.settings-close:active { transform:scale(.94); }
-  .settings-panel { position:absolute;z-index:60;inset:0;margin:0;padding:clamp(4.5rem,16vw,6rem) clamp(1rem,5vw,2rem) clamp(1rem,5vw,2rem);border:0;background:rgba(255,253,247,.98);box-shadow:0 18px 55px rgba(23,42,69,.2);animation:drop-in .2s cubic-bezier(.23,1,.32,1); }.settings-intro { display:flex;align-items:center;gap:.75rem;color:#172a45; }.settings-intro strong { display:block;font-family:'DM Serif Display',serif;font-size:clamp(1.45rem,6vw,2rem);font-weight:400;letter-spacing:-.04em;line-height:.9; }.settings-intro p { margin:.35rem 0 0;color:#a45e38;font-family:'DM Serif Display',serif;font-size:.94rem; }.setting-row { display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-top:.82rem;margin-top:.82rem;border-top:1px solid rgba(23,42,69,.14);color:#172a45;font-size:.67rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }.segmented { display:flex;padding:2px;border:1px solid rgba(23,42,69,.22);border-radius:99px; }.segmented button { min-height:1.65rem;padding:0 .55rem;display:inline-flex;align-items:center;gap:.25rem;border:0;border-radius:99px;background:transparent;color:rgba(23,42,69,.62);font-size:.62rem;font-weight:800; }.segmented button :global(svg) { width:.78rem;height:.78rem; }.segmented button.chosen { background:#172a45;color:#fffdf7; }.vibration-row>span { display:inline-flex;align-items:center;gap:.35rem; }.vibration-row :global(svg) { width:.9rem;height:.9rem; }.completion-total strong { color:#34824d;font-family:'DM Serif Display',serif;font-size:1.45rem;line-height:1; }
+  .settings-panel { position:absolute;z-index:60;inset:0;margin:0;padding:clamp(4.5rem,16vw,6rem) clamp(1rem,5vw,2rem) clamp(1rem,5vw,2rem);overflow-y:auto;border:0;background:rgba(255,253,247,.98);box-shadow:0 18px 55px rgba(23,42,69,.2);animation:drop-in .2s cubic-bezier(.23,1,.32,1); }.settings-intro { display:flex;align-items:center;gap:.75rem;color:#172a45; }.settings-intro strong { display:block;font-family:'DM Serif Display',serif;font-size:clamp(1.45rem,6vw,2rem);font-weight:400;letter-spacing:-.04em;line-height:.9; }.settings-intro p { margin:.35rem 0 0;color:#a45e38;font-family:'DM Serif Display',serif;font-size:.94rem; }.setting-row { display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-top:.82rem;margin-top:.82rem;border-top:1px solid rgba(23,42,69,.14);color:#172a45;font-size:.67rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }.segmented { display:flex;padding:2px;border:1px solid rgba(23,42,69,.22);border-radius:99px; }.segmented button { min-height:1.65rem;padding:0 .55rem;display:inline-flex;align-items:center;gap:.25rem;border:0;border-radius:99px;background:transparent;color:rgba(23,42,69,.62);font-size:.62rem;font-weight:800; }.segmented button :global(svg) { width:.78rem;height:.78rem; }.segmented button.chosen { background:#172a45;color:#fffdf7; }.vibration-row>span { display:inline-flex;align-items:center;gap:.35rem; }.vibration-row :global(svg) { width:.9rem;height:.9rem; }.level-segmented button { min-width:1.65rem;padding:0 .32rem; }.vocabulary-row { align-items:flex-start; }.completion-total strong { color:#34824d;font-family:'DM Serif Display',serif;font-size:1.45rem;line-height:1; }
   .crossword-frame { position:relative;min-height:205px;display:grid;place-items:stretch;margin-top:.55rem;padding:clamp(.5rem,3vw,1rem);background-color:#ede4d5;background-image:linear-gradient(rgba(23,42,69,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.035) 1px,transparent 1px);background-size:20px 20px;border-top:3px double #172a45;border-bottom:2px solid rgba(23,42,69,.45);transition:transform .16s cubic-bezier(.23,1,.32,1); }.crossword-frame.shake { animation:shake .28s cubic-bezier(.23,1,.32,1); }.crossword-scroll { position:relative;z-index:1;min-width:0;min-height:0;overflow:scroll;display:grid;place-items:center;padding:clamp(.65rem,3vw,1.25rem);overscroll-behavior:contain;scrollbar-color:rgba(23,42,69,.4) transparent; }.crossword { --cell-size:clamp(2.35rem,10.2vw,3.1rem);position:relative;display:grid;width:max-content;min-width:calc(var(--cell-size) * 3); }.crossword-cell { aspect-ratio:1;min-width:0;display:grid;place-items:center;border:1px solid #172a45;background:#fffdf7;color:#172a45;font-size:clamp(.7rem,3.4vw,1.1rem);font-weight:800;line-height:1;text-transform:uppercase;transition:background .18s ease,color .18s ease,transform .18s cubic-bezier(.23,1,.32,1); }.crossword-cell.startAcross { border-left-width:4px; }.crossword-cell.endAcross { border-right-width:4px; }.crossword-cell.startDown { border-top-width:4px; }.crossword-cell.endDown { border-bottom-width:4px; }.crossword-cell.solved { background:#e6a527;transform:scale(.965);animation:solve-cell .32s cubic-bezier(.23,1,.32,1); }.crossword-void { aspect-ratio:1; }.frame-corner { position:absolute;z-index:2;width:13px;height:13px;border-color:#e6a527;border-style:solid;pointer-events:none; }.top-left { top:7px;left:7px;border-width:2px 0 0 2px; }.top-right { top:7px;right:7px;border-width:2px 2px 0 0; }.bottom-left { bottom:7px;left:7px;border-width:0 0 2px 2px; }.bottom-right { right:7px;bottom:7px;border-width:0 2px 2px 0; }
   .completion-mark { position:absolute;z-index:4;inset:0;display:grid;place-content:center;justify-items:center;gap:.48rem;background:rgba(255,253,247,.78);color:#34824d;backdrop-filter:blur(2px);animation:completion-in .32s cubic-bezier(.23,1,.32,1) both; }.completion-symbol { display:grid;place-items:center;width:clamp(4.5rem,20vw,6.5rem);height:clamp(4.5rem,20vw,6.5rem);border:clamp(.3rem,1vw,.45rem) solid currentColor;border-radius:50%;font-family:'DM Sans',sans-serif;font-size:clamp(3rem,13vw,4.4rem);font-weight:800;line-height:1;filter:drop-shadow(0 5px 0 rgba(46,109,63,.18)); }.completion-mark > span:nth-child(2) { font-family:'DM Serif Display',serif;font-size:clamp(1.1rem,5vw,1.6rem);letter-spacing:-.02em; }.completion-time { color:#172a45;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }.completion-time strong { color:#34824d;font-family:'DM Serif Display',serif;font-size:1.05rem;letter-spacing:0; }.completion-continue { min-height:2.25rem;padding:0 1rem;border:1px solid #34824d;border-radius:999px;background:#34824d;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease; }.completion-continue:active { transform:scale(.96); }
   .selection-area { position:relative;z-index:1;min-height:52px;padding:.55rem 0 .2rem;text-align:center; }.round-chip { position:absolute;z-index:2;top:.75rem;left:0;color:#172a45;font-size:.62rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }.selection-area .settings-trigger { position:absolute;z-index:70;top:.38rem;right:0; }.selected-word { min-height:1.7rem;display:inline-flex;align-items:center;justify-content:center;gap:.48rem;color:rgba(23,42,69,.35);font-family:'DM Serif Display',serif;font-size:clamp(1.35rem,5vw,1.75rem);letter-spacing:.16em;line-height:1; }.selected-word :global(svg) { width:1.45rem;height:1.45rem;letter-spacing:0; }.selected-word.has-word { color:#172a45;animation:word-rise .18s cubic-bezier(.23,1,.32,1); }.selected-word.correct { color:#3f7a50; }.selected-word.wrong { color:#b54442; }.selected-word.correct :global(svg),.selected-word.wrong :global(svg) { animation:feedback-pop .24s cubic-bezier(.23,1,.32,1); }
