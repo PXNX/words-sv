@@ -1,5 +1,20 @@
 # Erweiterung WordCircle
 
+- [x] PWA-Manifest, Icons und Service Worker für WordCircle ergänzen.
+- [x] Offline-Caching und Installationsverhalten prüfen.
+- [ ] PWA-Update nach PXNX/words-sv übertragen.
+
+- [x] Schwierigkeitswahl mit mehrfacher Buchstabenauswahl ergänzen.
+- [x] Deutsche Rätsel mit doppelten Buchstaben für die neue Stufe hinzufügen.
+- [x] Eingabevorschau als grüne Bestätigung oder rotes X vereinfachen.
+- [x] Spielablauf und Build prüfen.
+
+- [x] Untere Spielsteuerungen und Überschrift oberhalb des Rasters entfernen.
+- [x] Auswahlblasen deutlich animieren und das Buchstabeninstrument verdichten.
+- [x] Kreuzworträtsel-Reihenfolge durch kräftige Linien lesbar markieren.
+- [x] Deutschen Wortbestand erheblich erweitern.
+- [x] Mobile Darstellung und Build prüfen.
+
 - [x] Vercel-Output und Bun-Build für die statische SvelteKit-Ausgabe konfigurieren.
 - [x] Deployment-Fix validieren und nach PXNX/words-sv übertragen.
 
