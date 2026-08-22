@@ -1,5 +1,14 @@
 # Erweiterung WordCircle
 
+- [x] Einstellungsoption für rückwärts platzierte Wörter ergänzen.
+- [x] Auswahl lokal speichern und für neue Runden anwenden.
+- [x] Vorwärtsplatzierungen priorisieren und Rückwärtsfallback nur bei aktivierter Option erlauben.
+- [x] Einstellung, Generator, Build und GitHub-Übertragung prüfen.
+
+- [x] Vorwärtsplatzierungen bei jedem Kreuzungsversuch priorisieren.
+- [x] Rückwärtsplatzierungen ausschließlich als notwendigen Fallback zulassen.
+- [x] Generatorfall, Build und GitHub-Übertragung prüfen.
+
 - [x] Deutsche und englische Wortlisten übersichtlich zeilenweise formatieren.
 - [x] Deutschen Wortbestand um kompatible Wörter mit Ä, Ö, Ü und ß erweitern.
 - [x] Gitter im verbleibenden Höhenbereich zentrieren und Buchstabeneingabe am unteren Rand verankern.

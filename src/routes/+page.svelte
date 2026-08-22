@@ -24,14 +24,16 @@
   const GAME_STORAGE_KEY = 'wordcircle-active-round-v1';
   const ROUND_TOTAL_KEY = 'wordcircle-completed-rounds-v1';
   const ROUND_HISTORY_KEY = 'wordcircle-recent-base-words-v1';
+  const BACKWARD_WORDS_KEY = 'wordcircle-backward-words-v1';
   const copy = {
-    de: { label: 'Wortkreis', hint: 'Zieh die Spur, Wort für Wort.', allDone: 'Rätsel gelöst', language: 'Sprache', appearance: 'Darstellung', light: 'Hell', dark: 'Dunkel', settings: 'Einstellungen', vibration: 'Vibration', settingsHint: 'Dein Wortspiel, deine Stimmung.', round: 'Runde', completed: 'Gelöste Runden', tracePrompt: 'ZIEH', traceActive: 'SPUR' },
-    en: { label: 'WordCircle', hint: 'Trace the letters, one word at a time.', allDone: 'Puzzle solved', language: 'Language', appearance: 'Appearance', light: 'Light', dark: 'Dark', settings: 'Settings', vibration: 'Vibration', settingsHint: 'Your word game, your mood.', round: 'Round', completed: 'Rounds solved', tracePrompt: 'TRACE', traceActive: 'PATH' }
+    de: { label: 'Wortkreis', hint: 'Die Spur ziehen, Wort für Wort.', allDone: 'Rätsel gelöst', language: 'Sprache', appearance: 'Darstellung', light: 'Hell', dark: 'Dunkel', settings: 'Einstellungen', vibration: 'Vibration', backwards: 'Rückwärts schreiben', settingsHint: 'Dein Wortspiel, deine Stimmung.', round: 'Runde', completed: 'Gelöste Runden', tracePrompt: 'SPUR ZIEHEN', traceActive: 'SPUR' },
+    en: { label: 'WordCircle', hint: 'Trace the letters, one word at a time.', allDone: 'Puzzle solved', language: 'Language', appearance: 'Appearance', light: 'Light', dark: 'Dark', settings: 'Settings', vibration: 'Vibration', backwards: 'Spell backwards', settingsHint: 'Your word game, your mood.', round: 'Round', completed: 'Rounds solved', tracePrompt: 'TRACE', traceActive: 'PATH' }
   } as const;
   const confettiPieces = Array.from({ length: 36 }, (_item, index) => index);
 
   const initialTheme: Theme = typeof localStorage !== 'undefined' && localStorage.getItem('wordcircle-theme') === 'dark' ? 'dark' : 'light';
   const initialVibration = typeof localStorage === 'undefined' || localStorage.getItem('wordcircle-vibration') !== 'off';
+  const initialBackwardWords = typeof localStorage !== 'undefined' && localStorage.getItem(BACKWARD_WORDS_KEY) === 'on';
   const initialGame = readStoredGame();
   const initialCompletedRounds = readCompletedRounds();
   const initialRecentBases = readRecentBases();
@@ -41,12 +43,13 @@
   let lang = $state<Language>(initialGame?.language ?? 'de');
   let theme = $state<Theme>(initialTheme);
   let vibration = $state(initialVibration);
+  let allowBackwardWords = $state(initialBackwardWords);
   let settingsOpen = $state(false);
   let roundNumber = $state(initialGame?.roundNumber ?? 1);
   let completedRounds = $state(initialCompletedRounds);
   let recentBaseWords = $state<string[]>(initialGame ? [...new Set([initialGame.words[0], ...initialRecentBases])] : initialRecentBases);
   let needsFreshRound = $state(!initialGame);
-  let currentRound = $state<Round>(initialGame ? roundFromStoredGame(initialGame) : buildRound(wordPools.de, 483719));
+  let currentRound = $state<Round>(initialGame ? roundFromStoredGame(initialGame) : buildRound(wordPools.de, 483719, [], initialBackwardWords));
   let selectedPath = $state<number[]>([]);
   let solvedWords = $state<string[]>(initialGame?.solvedWords ?? []);
   let feedback = $state<'correct' | 'wrong' | null>(null);
@@ -63,6 +66,7 @@
   const solvedSet = $derived(new Set(solvedWords));
   const activeWord = $derived(selectedPath.map((index) => circleLetters[index]).join(''));
   const previewWord = $derived(activeWord || feedbackWord);
+  const coreReadout = $derived(activeWord || labels.tracePrompt);
   const traceCaption = $derived(activeWord ? labels.traceActive : labels.tracePrompt);
   const allSolved = $derived(solvedWords.length === currentRound.words.length);
   const solvedCells = $derived.by(() => {
@@ -75,6 +79,7 @@
 
   $effect(() => { document.documentElement.dataset.theme = theme; document.documentElement.classList.toggle('dark', theme === 'dark'); localStorage.setItem('wordcircle-theme', theme); });
   $effect(() => { localStorage.setItem('wordcircle-vibration', vibration ? 'on' : 'off'); });
+  $effect(() => { localStorage.setItem(BACKWARD_WORDS_KEY, allowBackwardWords ? 'on' : 'off'); });
   $effect(() => { localStorage.setItem(ROUND_TOTAL_KEY, String(completedRounds)); });
   $effect(() => { localStorage.setItem(ROUND_HISTORY_KEY, JSON.stringify(recentBaseWords)); });
   $effect(() => {
@@ -173,15 +178,15 @@
     const allCols = [...grid.cells.keys()].map(coordinate).map((point) => point.col).concat(points.map((point) => point.col));
     return Math.max(...allRows) - Math.min(...allRows) <= 12 && Math.max(...allCols) - Math.min(...allCols) <= 12;
   }
-  function findPlacement(grid: Grid, word: string, rng: () => number) {
+  function findPlacement(grid: Grid, word: string, rng: () => number, allowBackward = false) {
     const openCells = shuffle([...grid.cells.entries()].filter(([, cell]) => cell.words.length === 1), rng);
-    for (const [key, cell] of openCells) {
-      const crossing = coordinate(key);
-      const crossedWord = cell.words[0];
-      const crossedPlacement = grid.placements.find((entry) => entry.word === crossedWord);
-      if (!crossedPlacement) continue;
-      const orientation: Orientation = crossedPlacement.orientation === 'across' ? 'down' : 'across';
-      for (const reversed of shuffle([false, true], rng)) {
+    for (const reversed of allowBackward ? [false, true] : [false]) {
+      for (const [key, cell] of openCells) {
+        const crossing = coordinate(key);
+        const crossedWord = cell.words[0];
+        const crossedPlacement = grid.placements.find((entry) => entry.word === crossedWord);
+        if (!crossedPlacement) continue;
+        const orientation: Orientation = crossedPlacement.orientation === 'across' ? 'down' : 'across';
         const renderedLetters = reversed ? [...word].reverse() : [...word];
         for (const wordIndex of shuffle(renderedLetters.map((_letter, index) => index).filter((index) => renderedLetters[index] === cell.letter), rng)) {
           const entry: Placement = { word, reversed, orientation, row: orientation === 'down' ? crossing.row - wordIndex : crossing.row, col: orientation === 'across' ? crossing.col - wordIndex : crossing.col };
@@ -191,14 +196,14 @@
     }
     return null;
   }
-  function buildRound(pool: string[], seed: number, excludedBases: string[] = []): Round {
+  function buildRound(pool: string[], seed: number, excludedBases: string[] = [], allowBackward = false): Round {
     const rng = makeRng(seed);
     const normalized = [...new Set(pool.map((word) => word.trim().toUpperCase()).filter((word) => /^[A-ZÄÖÜ]+$/.test(word) && word.length >= 3 && word.length <= 8))];
     const bases = shuffle(normalized.filter((word) => word.length >= 5 && word.length <= 8 && normalized.filter((candidate) => candidate !== word && canSpell(candidate, [...word])).length >= 5), rng);
     const freshBases = bases.filter((word) => !excludedBases.includes(word));
     for (const base of freshBases.length > 0 ? freshBases : bases) {
       const grid = emptyGrid();
-      writePlacement(grid, { word: base, row: 0, col: 0, orientation: 'across', reversed: rng() >= .5 });
+      writePlacement(grid, { word: base, row: 0, col: 0, orientation: 'across' });
       const selected = [base];
       const target = 6 + Math.floor(rng() * 3);
       const candidates = shuffle(normalized.filter((word) => word !== base && word.length >= 3 && canSpell(word, [...base])), rng);
@@ -206,7 +211,7 @@
         let placed = false;
         for (const candidate of candidates) {
           if (selected.includes(candidate)) continue;
-          const entry = findPlacement(grid, candidate, rng);
+          const entry = findPlacement(grid, candidate, rng, allowBackward);
           if (!entry) continue;
           writePlacement(grid, entry);
           selected.push(candidate);
@@ -219,7 +224,7 @@
     }
     const fallback = freshBases[0] ?? bases[0] ?? normalized.find((word) => word.length >= 5) ?? 'WORT';
     const grid = emptyGrid();
-    writePlacement(grid, { word: fallback, row: 0, col: 0, orientation: 'across', reversed: rng() >= .5 });
+    writePlacement(grid, { word: fallback, row: 0, col: 0, orientation: 'across' });
     return { words: [fallback], letters: [...fallback], grid };
   }
   function randomSeed() {
@@ -230,7 +235,7 @@
   function newRound(nextLanguage = lang, resetCount = false) {
     lang = nextLanguage;
     if (resetCount) roundNumber = 0;
-    const nextRound = buildRound(wordPools[nextLanguage], randomSeed(), recentBaseWords);
+    const nextRound = buildRound(wordPools[nextLanguage], randomSeed(), recentBaseWords, allowBackwardWords);
     currentRound = nextRound;
     recentBaseWords = [nextRound.words[0], ...recentBaseWords.filter((word) => word !== nextRound.words[0])].slice(0, 24);
     roundNumber += 1;
@@ -242,6 +247,7 @@
     celebration = false;
   }
   function selectLanguage(nextLanguage: Language) { newRound(nextLanguage, true); settingsOpen = false; }
+  function selectBackwardWords(nextValue: boolean) { allowBackwardWords = nextValue; newRound(); }
   function position(index: number, total: number) { const angle = (index / total) * Math.PI * 2 - Math.PI / 2; return { x: CIRCLE + LETTER_RADIUS * Math.cos(angle), y: CIRCLE + LETTER_RADIUS * Math.sin(angle) }; }
   function pointFromEvent(event: PointerEvent) { const rect = circleEl?.getBoundingClientRect(); if (!rect) return null; return { x: ((event.clientX - rect.left) / rect.width) * 292, y: ((event.clientY - rect.top) / rect.height) * 292 }; }
   function nearestLetter(point: { x: number; y: number }) { let closest = -1; let distance = Infinity; circleLetters.forEach((_letter, index) => { const letter = position(index, circleLetters.length); const nextDistance = Math.hypot(point.x - letter.x, point.y - letter.y); if (nextDistance < distance) { distance = nextDistance; closest = index; } }); return distance < 36 ? closest : -1; }
@@ -279,6 +285,7 @@
         <div class="setting-row"><span>{labels.language}</span><div class="segmented"><button class:chosen={lang === 'de'} onclick={() => selectLanguage('de')}>DE</button><button class:chosen={lang === 'en'} onclick={() => selectLanguage('en')}>EN</button></div></div>
         <div class="setting-row"><span>{labels.appearance}</span><div class="segmented"><button class:chosen={theme === 'light'} onclick={() => (theme = 'light')}><IconLight />{labels.light}</button><button class:chosen={theme === 'dark'} onclick={() => (theme = 'dark')}><IconDark />{labels.dark}</button></div></div>
         <div class="setting-row vibration-row"><span><IconVibrate />{labels.vibration}</span><input aria-label={labels.vibration} type="checkbox" class="toggle toggle-sm" bind:checked={vibration} /></div>
+        <div class="setting-row vibration-row"><span>{labels.backwards}</span><input aria-label={labels.backwards} type="checkbox" class="toggle toggle-sm" checked={allowBackwardWords} onchange={(event) => selectBackwardWords((event.currentTarget as HTMLInputElement).checked)} /></div>
         <div class="setting-row completion-total"><span>{labels.completed}</span><strong>{completedRounds}</strong></div>
       </aside>
     {/if}
@@ -301,7 +308,7 @@
     <div class="wheel-stage">
       <svg bind:this={circleEl} viewBox="0 0 292 292" class="letter-wheel" role="application" aria-label={labels.hint} onpointerdown={(event) => startSwipe(event)} onpointermove={extendSwipe}>
         <circle cx={CIRCLE} cy={CIRCLE} r={LETTER_RADIUS} class="outer-ring" /><circle cx={CIRCLE} cy={CIRCLE} r="68" class="inner-ring" /><circle cx={CIRCLE} cy={CIRCLE} r="47" class="core-ring" /><path d="M124 146a22 22 0 1 0 44 0a22 22 0 1 1-44 0Z" class="core-mark" />
-        <text x={CIRCLE} y="142" text-anchor="middle" class:active-core={activeWord.length > 0} class="core-word">{activeWord || '·'}</text><text x={CIRCLE} y="161" text-anchor="middle" class="core-caption">{traceCaption}</text>
+        <text x={CIRCLE} y="142" text-anchor="middle" class:active-core={activeWord.length > 0} class:idle-core={!activeWord} class="core-word">{coreReadout}</text><text x={CIRCLE} y="161" text-anchor="middle" class="core-caption">{activeWord ? traceCaption : '·'}</text>
         {#if selectedPath.length > 1}<polyline points={pathPoints()} class="selection-line" />{/if}
         {#each circleLetters as letter, index (index)}
           {@const point = position(index, circleLetters.length)}
@@ -350,9 +357,14 @@
   .crossword-frame { flex:1 1 auto;min-height:0;margin-top:0;padding:clamp(.35rem,1.6vw,.7rem); }
   .crossword { width:min(82vw,50svh,440px); }
   .selection-area { flex:0 0 auto;min-height:40px;padding:.35rem 0 .05rem; }
-  .round-chip { top:.52rem; }
+  .round-chip { top:.52rem;font-family:'DM Serif Display',serif;font-size:.78rem;font-weight:400;letter-spacing:.035em;text-transform:none; }
   .selection-area .settings-trigger { top:.18rem; }
+  .settings-trigger { overflow:visible; }
+  .settings-trigger::before,.settings-trigger::after { content:'';position:absolute;top:.7rem;width:.72rem;height:.72rem;border:1px solid #e6a527;border-radius:50%;opacity:.72;pointer-events:none; }
+  .settings-trigger::before { left:.38rem; }.settings-trigger::after { right:.38rem; }
+  .settings-trigger :global(svg) { position:relative;z-index:1; }
   .wheel-stage { flex:0 0 clamp(206px,33svh,260px);min-height:0; }
   .letter-wheel { width:min(100%,238px); }
+  .core-word.idle-core { font-family:'DM Sans',sans-serif;font-size:7.3px;font-weight:800;letter-spacing:.14em; }
   @media (prefers-reduced-motion:reduce) { .letter-node:not(.active),.confetti-piece,.settings-panel,.crossword-cell.solved,.completion-mark { animation:none; } }
 </style>
