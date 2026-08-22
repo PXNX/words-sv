@@ -2,7 +2,7 @@
 
 - [x] X-Schließensteuerung über der geöffneten Einstellungsüberlagerung positionieren.
 - [x] Offenen und geschlossenen Einstellungszustand prüfen.
-- [ ] Schließensteuerungsupdate nach PXNX/words-sv übertragen.
+- [x] Schließensteuerungsupdate nach PXNX/words-sv übertragen.
 
 - [x] Wörter bei passenden Kreuzungen zufällig vorwärts oder rückwärts im Gitter setzen.
 - [x] Rückwärtsplatzierung zusammen mit Zufallsauswahl, Duplikatschutz und Persistenz prüfen.
