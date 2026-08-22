@@ -57,3 +57,6 @@
 - Die Wortmarke und das Monogramm bleiben gemäß der kompakten Mobilanforderung in den Einstellungen; auf der Spielfläche hat das Rätsel ohne zusätzliche Kopfzeile Vorrang.
 - Die Rundenanzeige als kleine Serif-Foliozeile setzen; die Einstellungssteuerung mit dem überlappenden Kreiszeichen als dezente Markenebene führen.
 - Den Kreismittelpunkt im Leerlauf mit einer klaren Bewegungsaufforderung besetzen; technische Punkt- oder Leerzustände vermeiden.
+- Die Gittertextur zurückhaltend und fein führen; die scrollbare Kreuzworträtselplatte als präzise Druckfläche vor der Textur positionieren.
+- Das überlappende Kreiszeichen als sichtbare Einstellungsmarke einsetzen; Standardsymbole wie Zahnräder vermeiden.
+- Die Leerlaufaufforderung im Kreismittelpunkt ausreichend groß und bernsteinfarben für eine klar lesbare Bewegungsaufforderung setzen.

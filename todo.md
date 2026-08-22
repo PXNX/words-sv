@@ -1,5 +1,14 @@
 # Erweiterung WordCircle
 
+- [x] Eigenständigen horizontal und vertikal scrollbaren Gitterbereich ergänzen.
+- [x] Kreuzworträtselgröße ohne Verschieben von Eingabekreis und Steuerungen begrenzen.
+- [x] Überlauf, Mobilansicht, Build und GitHub-Übertragung prüfen.
+
+- [x] Start- und Abschlusszeit pro Runde erfassen.
+- [x] Lösungszeit in Abschlussanzeige ausgeben.
+- [x] Fortsetzen-Schaltfläche statt automatischem Rundenwechsel ergänzen.
+- [x] Abschlussablauf, Build und GitHub-Übertragung prüfen.
+
 - [x] Geeignete deutsche Substantive aus der angegebenen Quellenliste auswählen.
 - [x] Kreuzworttaugliche Begriffe in den deutschen Wortpool ergänzen.
 - [x] Wortdaten, Generator, Build und GitHub-Übertragung prüfen.

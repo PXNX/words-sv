@@ -7,8 +7,6 @@
   import IconClose from '~icons/material-symbols/cancel-rounded';
   import IconDark from '~icons/material-symbols/dark-mode-rounded';
   import IconLight from '~icons/material-symbols/light-mode-rounded';
-  import IconSettings from '~icons/material-symbols/settings-rounded';
-  import IconSpark from '~icons/material-symbols/auto-awesome-rounded';
   import IconVibrate from '~icons/material-symbols/vibration-rounded';
 
   type Language = 'de' | 'en';
@@ -18,7 +16,7 @@
   type BoardCell = { letter: string; words: string[] };
   type Grid = { cells: Map<string, BoardCell>; placements: Placement[]; minRow: number; maxRow: number; minCol: number; maxCol: number };
   type Round = { words: string[]; letters: string[]; grid: Grid };
-  type StoredGame = { version: 1; language: Language; roundNumber: number; words: string[]; letters: string[]; placements: Placement[]; solvedWords: string[] };
+  type StoredGame = { version: 1; language: Language; roundNumber: number; words: string[]; letters: string[]; placements: Placement[]; solvedWords: string[]; startedAt?: number; completedDuration?: number };
 
   const wordPools: Record<Language, string[]> = { de: wordsDeJson as string[], en: wordsEnJson as string[] };
   const GAME_STORAGE_KEY = 'wordcircle-active-round-v1';
@@ -26,8 +24,8 @@
   const ROUND_HISTORY_KEY = 'wordcircle-recent-base-words-v1';
   const BACKWARD_WORDS_KEY = 'wordcircle-backward-words-v1';
   const copy = {
-    de: { label: 'Wortkreis', hint: 'Die Spur ziehen, Wort für Wort.', allDone: 'Rätsel gelöst', language: 'Sprache', appearance: 'Darstellung', light: 'Hell', dark: 'Dunkel', settings: 'Einstellungen', vibration: 'Vibration', backwards: 'Rückwärts schreiben', settingsHint: 'Dein Wortspiel, deine Stimmung.', round: 'Runde', completed: 'Gelöste Runden', tracePrompt: 'SPUR ZIEHEN', traceActive: 'SPUR' },
-    en: { label: 'WordCircle', hint: 'Trace the letters, one word at a time.', allDone: 'Puzzle solved', language: 'Language', appearance: 'Appearance', light: 'Light', dark: 'Dark', settings: 'Settings', vibration: 'Vibration', backwards: 'Spell backwards', settingsHint: 'Your word game, your mood.', round: 'Round', completed: 'Rounds solved', tracePrompt: 'TRACE', traceActive: 'PATH' }
+    de: { label: 'Wortkreis', hint: 'Die Spur ziehen, Wort für Wort.', allDone: 'Rätsel gelöst', time: 'Lösungszeit', continue: 'Fortsetzen', language: 'Sprache', appearance: 'Darstellung', light: 'Hell', dark: 'Dunkel', settings: 'Einstellungen', vibration: 'Vibration', backwards: 'Rückwärts schreiben', settingsHint: 'Dein Wortspiel, deine Stimmung.', round: 'Runde', completed: 'Gelöste Runden', tracePrompt: 'SPUR ZIEHEN', traceActive: 'SPUR' },
+    en: { label: 'WordCircle', hint: 'Trace the letters, one word at a time.', allDone: 'Puzzle solved', time: 'Solve time', continue: 'Continue', language: 'Language', appearance: 'Appearance', light: 'Light', dark: 'Dark', settings: 'Settings', vibration: 'Vibration', backwards: 'Spell backwards', settingsHint: 'Your word game, your mood.', round: 'Round', completed: 'Rounds solved', tracePrompt: 'TRACE', traceActive: 'PATH' }
   } as const;
   const confettiPieces = Array.from({ length: 36 }, (_item, index) => index);
 
@@ -57,8 +55,10 @@
   let shakeGrid = $state(false);
   let isDragging = $state(false);
   let circleEl = $state<SVGSVGElement>();
-  let celebration = $state(false);
+  let celebration = $state(initialGame ? initialGame.solvedWords.length === initialGame.words.length : false);
   let pulseIndex = $state(-1);
+  let startedAt = $state(initialGame?.startedAt ?? Date.now());
+  let completedDuration = $state<number | null>(initialGame?.completedDuration ?? null);
 
   const labels = $derived(copy[lang]);
   const circleLetters = $derived(currentRound.letters);
@@ -83,7 +83,7 @@
   $effect(() => { localStorage.setItem(ROUND_TOTAL_KEY, String(completedRounds)); });
   $effect(() => { localStorage.setItem(ROUND_HISTORY_KEY, JSON.stringify(recentBaseWords)); });
   $effect(() => {
-    const snapshot: StoredGame = { version: 1, language: lang, roundNumber, words: currentRound.words, letters: currentRound.letters, placements: currentRound.grid.placements, solvedWords };
+    const snapshot: StoredGame = { version: 1, language: lang, roundNumber, words: currentRound.words, letters: currentRound.letters, placements: currentRound.grid.placements, solvedWords, startedAt, completedDuration: completedDuration ?? undefined };
     try { localStorage.setItem(GAME_STORAGE_KEY, JSON.stringify(snapshot)); } catch { /* Storage is optional; the game remains playable without it. */ }
   });
   $effect(() => {
@@ -135,8 +135,10 @@
       const validLetters = Array.isArray(letters) && letters.length >= 3 && letters.length <= 8 && letters.every((letter) => typeof letter === 'string' && /^[A-ZÄÖÜ]$/.test(letter));
       const validPlacements = Array.isArray(placements) && placements.length === words?.length && placements.every(isPlacement);
       const validSolvedWords = Array.isArray(solvedWords) && solvedWords.every((word) => typeof word === 'string' && words?.includes(word));
-      if (game.version !== 1 || !validLanguage || !Number.isInteger(roundNumber) || (roundNumber ?? 0) < 1 || !validWords || !validLetters || !validPlacements || !validSolvedWords) return null;
-      return { version: 1, language: language as Language, roundNumber: roundNumber as number, words: words as string[], letters: letters as string[], placements: placements as Placement[], solvedWords: [...new Set(solvedWords as string[])] };
+      const validStartedAt = typeof game.startedAt === 'undefined' || (Number.isSafeInteger(game.startedAt) && game.startedAt > 0);
+      const validCompletedDuration = typeof game.completedDuration === 'undefined' || (Number.isSafeInteger(game.completedDuration) && game.completedDuration >= 0);
+      if (game.version !== 1 || !validLanguage || !Number.isInteger(roundNumber) || (roundNumber ?? 0) < 1 || !validWords || !validLetters || !validPlacements || !validSolvedWords || !validStartedAt || !validCompletedDuration) return null;
+      return { version: 1, language: language as Language, roundNumber: roundNumber as number, words: words as string[], letters: letters as string[], placements: placements as Placement[], solvedWords: [...new Set(solvedWords as string[])], startedAt: game.startedAt, completedDuration: game.completedDuration };
     } catch { return null; }
   }
   function roundFromStoredGame(game: StoredGame): Round { return { words: game.words, letters: game.letters, grid: gridFromPlacements(game.placements) }; }
@@ -245,14 +247,16 @@
     feedbackWord = '';
     shakeGrid = false;
     celebration = false;
+    startedAt = Date.now();
+    completedDuration = null;
   }
   function selectLanguage(nextLanguage: Language) { newRound(nextLanguage, true); settingsOpen = false; }
   function selectBackwardWords(nextValue: boolean) { allowBackwardWords = nextValue; newRound(); }
   function position(index: number, total: number) { const angle = (index / total) * Math.PI * 2 - Math.PI / 2; return { x: CIRCLE + LETTER_RADIUS * Math.cos(angle), y: CIRCLE + LETTER_RADIUS * Math.sin(angle) }; }
   function pointFromEvent(event: PointerEvent) { const rect = circleEl?.getBoundingClientRect(); if (!rect) return null; return { x: ((event.clientX - rect.left) / rect.width) * 292, y: ((event.clientY - rect.top) / rect.height) * 292 }; }
   function nearestLetter(point: { x: number; y: number }) { let closest = -1; let distance = Infinity; circleLetters.forEach((_letter, index) => { const letter = position(index, circleLetters.length); const nextDistance = Math.hypot(point.x - letter.x, point.y - letter.y); if (nextDistance < distance) { distance = nextDistance; closest = index; } }); return distance < 36 ? closest : -1; }
-  function chooseLetter(index: number) { if (selectedPath.includes(index)) return; feedback = null; feedbackWord = ''; selectedPath = [...selectedPath, index]; pulseIndex = index; buzz(7); window.setTimeout(() => (pulseIndex = -1), 180); }
-  function startSwipe(event: PointerEvent, knownIndex = -1) { event.preventDefault(); (event.currentTarget as Element).setPointerCapture?.(event.pointerId); isDragging = true; selectedPath = []; feedback = null; feedbackWord = ''; const point = pointFromEvent(event); const index = knownIndex >= 0 ? knownIndex : point ? nearestLetter(point) : -1; if (index >= 0) chooseLetter(index); }
+  function chooseLetter(index: number) { if (celebration || selectedPath.includes(index)) return; feedback = null; feedbackWord = ''; selectedPath = [...selectedPath, index]; pulseIndex = index; buzz(7); window.setTimeout(() => (pulseIndex = -1), 180); }
+  function startSwipe(event: PointerEvent, knownIndex = -1) { if (celebration) return; event.preventDefault(); (event.currentTarget as Element).setPointerCapture?.(event.pointerId); isDragging = true; selectedPath = []; feedback = null; feedbackWord = ''; const point = pointFromEvent(event); const index = knownIndex >= 0 ? knownIndex : point ? nearestLetter(point) : -1; if (index >= 0) chooseLetter(index); }
   function extendSwipe(event: PointerEvent) { if (!isDragging) return; const point = pointFromEvent(event); if (!point) return; const index = nearestLetter(point); if (index >= 0 && index !== selectedPath.at(-1)) chooseLetter(index); }
   function endSwipe() { if (!isDragging) return; isDragging = false; if (selectedPath.length >= 2) submitWord(); else selectedPath = []; }
   function submitWord() {
@@ -261,10 +265,11 @@
     if (currentRound.words.includes(word) && !solvedSet.has(word)) {
       const completed = solvedWords.length + 1 === currentRound.words.length;
       solvedWords = [...solvedWords, word]; feedback = 'correct'; buzz(completed ? [24, 28, 40, 28, 70] : [16, 20, 26]);
-      if (completed) { completedRounds += 1; celebration = true; window.setTimeout(() => newRound(), 2500); }
+      if (completed) { completedDuration = Math.max(0, Date.now() - startedAt); completedRounds += 1; celebration = true; }
     } else { feedback = 'wrong'; shakeGrid = true; buzz([18, 18, 18]); window.setTimeout(() => (shakeGrid = false), 280); }
     selectedPath = [];
   }
+  function formatDuration(duration: number | null) { const seconds = Math.floor((duration ?? 0) / 1000); return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`; }
   function pathPoints() { return selectedPath.map((index) => { const point = position(index, circleLetters.length); return `${point.x},${point.y}`; }).join(' '); }
   function inRange(row: number, col: number) { return grid.cells.get(cellKey(row, col)); }
   function isWordStart(row: number, col: number, orientation: Orientation) { return grid.placements.some((entry) => entry.orientation === orientation && entry.row === row && entry.col === col); }
@@ -291,7 +296,8 @@
     {/if}
 
     <div class:shake={shakeGrid} class="crossword-frame" aria-label="Crossword">
-      <div class="crossword" style={`grid-template-columns: repeat(${grid.maxCol - grid.minCol + 1}, 1fr);`}>
+      <div class="crossword-scroll" aria-label="Scrollable crossword grid">
+      <div class="crossword" style={`grid-template-columns: repeat(${grid.maxCol - grid.minCol + 1}, var(--cell-size));`}>
         {#each Array(grid.maxRow - grid.minRow + 1) as _, rowIndex}
           {#each Array(grid.maxCol - grid.minCol + 1) as _, colIndex}
             {@const row = grid.minRow + rowIndex}{@const col = grid.minCol + colIndex}{@const cell = inRange(row, col)}
@@ -299,11 +305,12 @@
           {/each}
         {/each}
       </div>
-      {#if celebration}<div class="completion-mark" aria-live="assertive"><span class="completion-symbol" aria-hidden="true">✓</span><span>{labels.allDone}</span></div>{/if}
+      </div>
+      {#if celebration}<div class="completion-mark" aria-live="assertive"><span class="completion-symbol" aria-hidden="true">✓</span><span>{labels.allDone}</span><span class="completion-time">{labels.time} <strong>{formatDuration(completedDuration)}</strong></span><button class="completion-continue" onclick={() => newRound()}>{labels.continue}</button></div>{/if}
       <div class="frame-corner top-left"></div><div class="frame-corner top-right"></div><div class="frame-corner bottom-left"></div><div class="frame-corner bottom-right"></div>
     </div>
 
-    <div class="selection-area" aria-live="polite"><span class="round-chip">{labels.round} {roundNumber}</span>{#if !settingsOpen}<button class="settings-trigger" aria-expanded="false" aria-controls="game-settings" onclick={() => (settingsOpen = true)}><IconSettings /><span class="sr-only">{labels.settings}</span></button>{/if}<div class:has-word={previewWord.length > 0} class:correct={feedback === 'correct'} class:wrong={feedback === 'wrong'} class="selected-word"><span>{previewWord}</span>{#if feedback === 'correct'}<IconCheck aria-label="Correct" />{:else if feedback === 'wrong'}<IconClose aria-label="Incorrect" />{/if}</div></div>
+    <div class="selection-area" aria-live="polite"><span class="round-chip">{labels.round} {roundNumber}</span>{#if !settingsOpen}<button class="settings-trigger" aria-expanded="false" aria-controls="game-settings" onclick={() => (settingsOpen = true)}><span class="settings-mark" aria-hidden="true"></span><span class="sr-only">{labels.settings}</span></button>{/if}<div class:has-word={previewWord.length > 0} class:correct={feedback === 'correct'} class:wrong={feedback === 'wrong'} class="selected-word"><span>{previewWord}</span>{#if feedback === 'correct'}<IconCheck aria-label="Correct" />{:else if feedback === 'wrong'}<IconClose aria-label="Incorrect" />{/if}</div></div>
 
     <div class="wheel-stage">
       <svg bind:this={circleEl} viewBox="0 0 292 292" class="letter-wheel" role="application" aria-label={labels.hint} onpointerdown={(event) => startSwipe(event)} onpointermove={extendSwipe}>
@@ -330,8 +337,8 @@
   .brand-mark { position:relative;width:34px;height:34px;display:block;flex:none; }.brand-mark i,.brand-mark b { position:absolute;display:block;width:21px;height:21px;border:2px solid #172a45;border-radius:50%; }.brand-mark i { top:1px;left:1px; }.brand-mark b { right:1px;bottom:1px;border-color:#e6a527; }
   .settings-trigger,.settings-close { display:grid;place-items:center;width:2.15rem;height:2.15rem;border:1px solid rgba(23,42,69,.24);border-radius:50%;background:rgba(255,253,247,.86);color:#172a45;transition:transform .18s cubic-bezier(.23,1,.32,1),background .18s ease; }.settings-trigger :global(svg),.settings-close :global(svg) { width:1.1rem;height:1.1rem; }.settings-close { position:absolute;z-index:2;top:.72rem;right:.72rem;background:#172a45;color:#fffdf7; }.settings-close:active { transform:scale(.94); }
   .settings-panel { position:absolute;z-index:60;inset:0;margin:0;padding:clamp(4.5rem,16vw,6rem) clamp(1rem,5vw,2rem) clamp(1rem,5vw,2rem);border:0;background:rgba(255,253,247,.98);box-shadow:0 18px 55px rgba(23,42,69,.2);animation:drop-in .2s cubic-bezier(.23,1,.32,1); }.settings-intro { display:flex;align-items:center;gap:.75rem;color:#172a45; }.settings-intro strong { display:block;font-family:'DM Serif Display',serif;font-size:clamp(1.45rem,6vw,2rem);font-weight:400;letter-spacing:-.04em;line-height:.9; }.settings-intro p { margin:.35rem 0 0;color:#a45e38;font-family:'DM Serif Display',serif;font-size:.94rem; }.setting-row { display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-top:.82rem;margin-top:.82rem;border-top:1px solid rgba(23,42,69,.14);color:#172a45;font-size:.67rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }.segmented { display:flex;padding:2px;border:1px solid rgba(23,42,69,.22);border-radius:99px; }.segmented button { min-height:1.65rem;padding:0 .55rem;display:inline-flex;align-items:center;gap:.25rem;border:0;border-radius:99px;background:transparent;color:rgba(23,42,69,.62);font-size:.62rem;font-weight:800; }.segmented button :global(svg) { width:.78rem;height:.78rem; }.segmented button.chosen { background:#172a45;color:#fffdf7; }.vibration-row>span { display:inline-flex;align-items:center;gap:.35rem; }.vibration-row :global(svg) { width:.9rem;height:.9rem; }.completion-total strong { color:#34824d;font-family:'DM Serif Display',serif;font-size:1.45rem;line-height:1; }
-  .crossword-frame { position:relative;min-height:205px;display:grid;place-items:center;margin-top:.55rem;padding:clamp(.5rem,3vw,1rem);background-color:#ede4d5;background-image:linear-gradient(rgba(23,42,69,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.035) 1px,transparent 1px);background-size:20px 20px;border-top:3px double #172a45;border-bottom:2px solid rgba(23,42,69,.45);transition:transform .16s cubic-bezier(.23,1,.32,1); }.crossword-frame.shake { animation:shake .28s cubic-bezier(.23,1,.32,1); }.crossword { position:relative;z-index:1;display:grid;width:min(86vw,440px); }.crossword-cell { aspect-ratio:1;min-width:0;display:grid;place-items:center;border:1px solid #172a45;background:#fffdf7;color:#172a45;font-size:clamp(.7rem,3.4vw,1.1rem);font-weight:800;line-height:1;text-transform:uppercase;transition:background .18s ease,color .18s ease,transform .18s cubic-bezier(.23,1,.32,1); }.crossword-cell.startAcross { border-left-width:4px; }.crossword-cell.endAcross { border-right-width:4px; }.crossword-cell.startDown { border-top-width:4px; }.crossword-cell.endDown { border-bottom-width:4px; }.crossword-cell.solved { background:#e6a527;transform:scale(.965);animation:solve-cell .32s cubic-bezier(.23,1,.32,1); }.crossword-void { aspect-ratio:1; }.frame-corner { position:absolute;width:13px;height:13px;border-color:#e6a527;border-style:solid; }.top-left { top:7px;left:7px;border-width:2px 0 0 2px; }.top-right { top:7px;right:7px;border-width:2px 2px 0 0; }.bottom-left { bottom:7px;left:7px;border-width:0 0 2px 2px; }.bottom-right { right:7px;bottom:7px;border-width:0 2px 2px 0; }
-  .completion-mark { position:absolute;z-index:4;inset:0;display:grid;place-content:center;justify-items:center;gap:.4rem;background:rgba(255,253,247,.72);color:#34824d;backdrop-filter:blur(2px);animation:completion-in .32s cubic-bezier(.23,1,.32,1) both; }.completion-symbol { display:grid;place-items:center;width:clamp(5rem,22vw,7.5rem);height:clamp(5rem,22vw,7.5rem);border:clamp(.3rem,1vw,.45rem) solid currentColor;border-radius:50%;font-family:'DM Sans',sans-serif;font-size:clamp(3.2rem,14vw,5rem);font-weight:800;line-height:1;filter:drop-shadow(0 5px 0 rgba(46,109,63,.18)); }.completion-mark > span:last-child { font-family:'DM Serif Display',serif;font-size:clamp(1.1rem,5vw,1.6rem);letter-spacing:-.02em; }
+  .crossword-frame { position:relative;min-height:205px;display:grid;place-items:stretch;margin-top:.55rem;padding:clamp(.5rem,3vw,1rem);background-color:#ede4d5;background-image:linear-gradient(rgba(23,42,69,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.035) 1px,transparent 1px);background-size:20px 20px;border-top:3px double #172a45;border-bottom:2px solid rgba(23,42,69,.45);transition:transform .16s cubic-bezier(.23,1,.32,1); }.crossword-frame.shake { animation:shake .28s cubic-bezier(.23,1,.32,1); }.crossword-scroll { position:relative;z-index:1;min-width:0;min-height:0;overflow:scroll;display:grid;place-items:center;padding:clamp(.65rem,3vw,1.25rem);overscroll-behavior:contain;scrollbar-color:rgba(23,42,69,.4) transparent; }.crossword { --cell-size:clamp(2.35rem,10.2vw,3.1rem);position:relative;display:grid;width:max-content;min-width:calc(var(--cell-size) * 3); }.crossword-cell { aspect-ratio:1;min-width:0;display:grid;place-items:center;border:1px solid #172a45;background:#fffdf7;color:#172a45;font-size:clamp(.7rem,3.4vw,1.1rem);font-weight:800;line-height:1;text-transform:uppercase;transition:background .18s ease,color .18s ease,transform .18s cubic-bezier(.23,1,.32,1); }.crossword-cell.startAcross { border-left-width:4px; }.crossword-cell.endAcross { border-right-width:4px; }.crossword-cell.startDown { border-top-width:4px; }.crossword-cell.endDown { border-bottom-width:4px; }.crossword-cell.solved { background:#e6a527;transform:scale(.965);animation:solve-cell .32s cubic-bezier(.23,1,.32,1); }.crossword-void { aspect-ratio:1; }.frame-corner { position:absolute;z-index:2;width:13px;height:13px;border-color:#e6a527;border-style:solid;pointer-events:none; }.top-left { top:7px;left:7px;border-width:2px 0 0 2px; }.top-right { top:7px;right:7px;border-width:2px 2px 0 0; }.bottom-left { bottom:7px;left:7px;border-width:0 0 2px 2px; }.bottom-right { right:7px;bottom:7px;border-width:0 2px 2px 0; }
+  .completion-mark { position:absolute;z-index:4;inset:0;display:grid;place-content:center;justify-items:center;gap:.48rem;background:rgba(255,253,247,.78);color:#34824d;backdrop-filter:blur(2px);animation:completion-in .32s cubic-bezier(.23,1,.32,1) both; }.completion-symbol { display:grid;place-items:center;width:clamp(4.5rem,20vw,6.5rem);height:clamp(4.5rem,20vw,6.5rem);border:clamp(.3rem,1vw,.45rem) solid currentColor;border-radius:50%;font-family:'DM Sans',sans-serif;font-size:clamp(3rem,13vw,4.4rem);font-weight:800;line-height:1;filter:drop-shadow(0 5px 0 rgba(46,109,63,.18)); }.completion-mark > span:nth-child(2) { font-family:'DM Serif Display',serif;font-size:clamp(1.1rem,5vw,1.6rem);letter-spacing:-.02em; }.completion-time { color:#172a45;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }.completion-time strong { color:#34824d;font-family:'DM Serif Display',serif;font-size:1.05rem;letter-spacing:0; }.completion-continue { min-height:2.25rem;padding:0 1rem;border:1px solid #34824d;border-radius:999px;background:#34824d;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease; }.completion-continue:active { transform:scale(.96); }
   .selection-area { position:relative;z-index:1;min-height:52px;padding:.55rem 0 .2rem;text-align:center; }.round-chip { position:absolute;z-index:2;top:.75rem;left:0;color:#172a45;font-size:.62rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }.selection-area .settings-trigger { position:absolute;z-index:70;top:.38rem;right:0; }.selected-word { min-height:1.7rem;display:inline-flex;align-items:center;justify-content:center;gap:.48rem;color:rgba(23,42,69,.35);font-family:'DM Serif Display',serif;font-size:clamp(1.35rem,5vw,1.75rem);letter-spacing:.16em;line-height:1; }.selected-word :global(svg) { width:1.45rem;height:1.45rem;letter-spacing:0; }.selected-word.has-word { color:#172a45;animation:word-rise .18s cubic-bezier(.23,1,.32,1); }.selected-word.correct { color:#3f7a50; }.selected-word.wrong { color:#b54442; }.selected-word.correct :global(svg),.selected-word.wrong :global(svg) { animation:feedback-pop .24s cubic-bezier(.23,1,.32,1); }
   .wheel-stage { position:relative;min-height:235px;display:grid;place-items:center;border-top:1px solid rgba(23,42,69,.16);border-bottom:1px solid rgba(23,42,69,.16); }.letter-wheel { width:min(100%,248px);touch-action:none;overflow:visible;user-select:none; }.outer-ring,.inner-ring,.core-ring { fill:none; }.outer-ring { stroke:#172a45;stroke-width:1.1;stroke-dasharray:none;opacity:.28; }.inner-ring { stroke:#172a45;stroke-width:1;opacity:.12; }.core-ring { stroke:#e6a527;stroke-width:1.8;opacity:.9; }.core-mark { fill:#172a45;opacity:.83; }.core-word { fill:rgba(23,42,69,.52);font-family:'DM Serif Display',serif;font-size:13px;letter-spacing:.08em; }.core-word.active-core { fill:#c98220; }.core-caption { fill:rgba(23,42,69,.5);font-family:'DM Sans',sans-serif;font-size:5.8px;font-weight:800;letter-spacing:.18em; }.selection-line { fill:none;stroke:#e6a527;stroke-linecap:round;stroke-linejoin:round;stroke-width:10;opacity:.9; }.letter-node { cursor:crosshair; }.letter-node>circle:nth-child(2) { fill:#fffdf7;stroke:#172a45;stroke-width:2;filter:drop-shadow(0 3px 0 rgba(23,42,69,.16));transition:fill .14s ease,transform .14s cubic-bezier(.23,1,.32,1),filter .14s ease;transform-box:fill-box;transform-origin:center; }.bubble-shine { fill:rgba(255,255,255,.72);stroke:none;transform:translate(-4px,-5px) scale(.34);transform-origin:center;pointer-events:none; }.letter-node text { fill:#172a45;font-family:'DM Sans',sans-serif;font-size:20px;font-weight:800;pointer-events:none; }.letter-node.active>circle:nth-child(2) { fill:#e6a527;transform:scale(1.12);filter:drop-shadow(0 5px 0 rgba(151,94,16,.2));animation:selected-bubble .42s cubic-bezier(.23,1,.32,1) both; }.letter-node.pulse .bubble-ripple { animation:bubble-ripple .48s cubic-bezier(.23,1,.32,1) both; }.letter-node:not(.active) { animation:bubble-drift 3.2s ease-in-out infinite; }.bubble-ripple { fill:none;stroke:#e6a527;stroke-width:2;opacity:0;pointer-events:none;transform-box:fill-box;transform-origin:center; }
   .confetti-field { position:fixed;z-index:20;inset:0;pointer-events:none;overflow:hidden; }.confetti-piece { position:absolute;left:50%;top:48%;width:8px;height:13px;background:#e6a527;border-radius:2px;animation:confetti 1.7s var(--delay) cubic-bezier(.13,.79,.31,1) forwards; }.confetti-piece:nth-child(3n) { background:#c96e4d; }.confetti-piece:nth-child(4n) { background:#172a45; }.confetti-piece:nth-child(5n) { width:6px;height:6px;border-radius:50%; }
@@ -365,6 +372,12 @@
   .settings-trigger :global(svg) { position:relative;z-index:1; }
   .wheel-stage { flex:0 0 clamp(206px,33svh,260px);min-height:0; }
   .letter-wheel { width:min(100%,238px); }
-  .core-word.idle-core { font-family:'DM Sans',sans-serif;font-size:7.3px;font-weight:800;letter-spacing:.14em; }
+  .crossword-frame { background-image:linear-gradient(rgba(23,42,69,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.018) 1px,transparent 1px);background-size:24px 24px; }
+  .crossword-scroll { overflow:auto;background:rgba(255,253,247,.16);outline:1px solid rgba(23,42,69,.08);outline-offset:-1px; }
+  .core-word.idle-core { fill:#a0621d;font-family:'DM Sans',sans-serif;font-size:9.2px;font-weight:800;letter-spacing:.12em; }
+  .settings-trigger::before,.settings-trigger::after { content:none; }
+  .settings-mark { position:relative;display:block;width:1.1rem;height:.82rem; }
+  .settings-mark::before,.settings-mark::after { content:'';position:absolute;width:.72rem;height:.72rem;border:1.5px solid #172a45;border-radius:50%;top:.04rem; }
+  .settings-mark::before { left:0; }.settings-mark::after { right:0;border-color:#e6a527; }
   @media (prefers-reduced-motion:reduce) { .letter-node:not(.active),.confetti-piece,.settings-panel,.crossword-cell.solved,.completion-mark { animation:none; } }
 </style>
