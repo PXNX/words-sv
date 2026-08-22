@@ -1,5 +1,11 @@
 # Erweiterung WordCircle
 
+- [x] Getrennte A1-bis-C2-Wortlisten für Deutsch anlegen.
+- [x] Getrennte A1-bis-C2-Wortlisten für Englisch anlegen.
+- [x] Niveausteuerung und Option für niedrigere Niveaus ergänzen.
+- [x] Niveauauswahl lokal speichern und für neue Runden anwenden.
+- [x] Generator, Einstellungen, Build und GitHub-Übertragung prüfen.
+
 - [x] Seitenskalierung im mobilen Viewport sperren.
 - [x] Abstand vor Rundenanzeige und nach Einstellungssteuerung ergänzen.
 - [x] GitHub-Verweis zum Repository ergänzen.
