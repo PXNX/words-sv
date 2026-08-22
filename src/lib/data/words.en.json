@@ -1,24 +1,3 @@
 [
-  {"letters":["C","A","S","T","L","E"],"words":["CASTLE","CAST","TALE","LATE","SEAL","SALE"]},
-  {"letters":["P","L","A","N","E","T"],"words":["PLANET","PLANE","PLATE","PLAN","LATE","NEAT"]},
-  {"letters":["O","R","A","N","G","E"],"words":["ORANGE","RANGE","GARN","RAGE","EGO","ROAN"]},
-  {"letters":["S","I","L","E","N","T"],"words":["SILENT","TINSEL","INLET","LINES","LENT","TIES"]},
-  {"letters":["T","R","A","C","E","S"],"words":["TRACES","CRATES","REACTS","CARES","RATES","TEAR"]},
-  {"letters":["S","T","R","E","A","M"],"words":["STREAM","MASTER","TAMERS","TEARS","STARE","MATE"]},
-  {"letters":["G","A","R","D","E","N"],"words":["GARDEN","DANGER","GRADE","RANGE","DEAR","RAG"]},
-  {"letters":["F","L","O","W","E","R"],"words":["FLOWER","FOWLER","LOWER","ROWEL","WORE","FLEW"]},
-  {"letters":["C","H","A","R","G","E"],"words":["CHARGE","REACH","GRACE","RAGE","EACH","CARE"]},
-  {"letters":["S","I","L","V","E","R"],"words":["SILVER","LIVERS","LIVES","RIVEL","RISE","VILE"]},
-  {"letters":["M","A","R","K","E","T"],"words":["MARKET","MAKER","TAKER","TEAR","RATE","MATE"]},
-  {"letters":["P","A","I","N","T","E","R"],"words":["PAINTER","PERTAIN","RETAIN","TRAIN","PAIN","TIRE"]},
-  {"letters":["V","I","O","L","E","T"],"words":["VIOLET","OLIVE","VOILE","VILE","TOIL","LOVE"]},
-  {"letters":["S","Q","U","A","R","E"],"words":["SQUARE","SURE","RUSE","EARS","RUE","SEA"]},
-  {"letters":["G","L","A","S","S","E"],"words":["GLASSES","GALSE","SAGE","SEAL","LASS","GAS"]},
-  {"letters":["B","R","I","D","G","E"],"words":["BRIDGE","GIBER","RIDE","DIRE","GRID","RIB"]},
-  {"letters":["C","L","O","U","D","S"],"words":["CLOUDS","COLD","LOUD","SOLD","SOD","DUO"]},
-  {"letters":["F","R","I","E","N","D"],"words":["FRIEND","FIRED","INFER","FINE","RIDE","DINE"]},
-  {"letters":["B","U","T","T","E","R"],"words":["BUTTER","TUBE","TRUE","TIER","RUE","BUT"]},
-  {"letters":["S","U","N","S","E","T"],"words":["SUNSET","NEST","TUNE","SENT","SUE","USE"]},
-  {"letters":["M","O","U","N","T","A","I","N"],"words":["MOUNTAIN","NATION","MOUNT","MAIN","UNIT","TUNA"]},
-  {"letters":["B","R","E","A","D","S"],"words":["BREADS","BEARD","DARES","DEAR","BARS","READ"]}
+  "CASTLE","CAST","TALE","LATE","SEAL","SALE","PLANET","PLANE","PLATE","PLAN","NEAT","ORANGE","RANGE","GARN","RAGE","EGO","ROAN","SILENT","TINSEL","INLET","LINES","LENT","TIES","TRACES","CRATES","REACTS","CARES","RATES","TEAR","STREAM","MASTER","TAMERS","TEARS","STARE","MATE","GARDEN","DANGER","GRADE","DEAR","RAG","FLOWER","FOWLER","LOWER","ROWEL","WORE","FLEW","CHARGE","REACH","GRACE","EACH","CARE","SILVER","LIVERS","LIVES","RIVEL","RISE","VILE","MARKET","MAKER","TAKER","RATE","PAINTER","PERTAIN","RETAIN","TRAIN","PAIN","TIRE","VIOLET","OLIVE","VOILE","TOIL","LOVE","SQUARE","SURE","RUSE","EARS","RUE","SEA","GLASSES","SAGE","LASS","GAS","BRIDGE","GIBER","RIDE","DIRE","GRID","RIB","CLOUDS","COLD","LOUD","SOLD","SOD","DUO","FRIEND","FIRED","INFER","FINE","DINE","BUTTER","TUBE","TRUE","TIER","BUT","SUNSET","NEST","TUNE","SENT","SUE","USE","MOUNTAIN","NATION","MOUNT","MAIN","UNIT","TUNA","BREADS","BEARD","DARES","BARS","READ","WINDOW","WINTER","WONDER","WANDER","STONE","STONES","TONE","NOTES","NOTE","EARTH","HEART","HEARTS","HATER","WATER","WATERS","WAVE","WAVES","SWEET","SHEET","SHEETS","STREET","STREETS","TREE","TREES","GREEN","GREENS","GREET","GREAT","GATE","GATES","LIGHT","LIGHTS","NIGHT","NIGHTS","THING","THINGS","BRIGHT","BRIGHTS","CIRCLE","CIRCLES","RICE","RICH","CHILE","CHILL","CHILLED","LITTLE","LETTER","LETTERS","BETTER","BATTLE","BOTTLE","APPLE","APPEAL","PEARL","PAPER","PAPERS","PEN","PENS","BOOK","BOOKS","LOOK","LOOKS","WOOD","WOODS","WORLD","WORDS","WORD","WORK","WORKS","MUSIC","MUSE","MUSES","SMILE","SMILES","SIMPLE","SILK","SILKS","RIVER","RIVERS","DRIVE","DRIVES","DREAM","DREAMS","BLOOM","BLOOMS","MOON","MOONS","SUN","SANDS","SAND","LAND","LANDS","HAND","HANDS","BRAND","BRANDS","BIRD","BIRDS","WIND","WINDS","GOLD","GOLDEN","GLOW","GLOWS"
 ]
