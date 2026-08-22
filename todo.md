@@ -1,5 +1,14 @@
 # Erweiterung WordCircle
 
+- [x] Wörter bei passenden Kreuzungen zufällig vorwärts oder rückwärts im Gitter setzen.
+- [x] Rückwärtsplatzierung zusammen mit Zufallsauswahl, Duplikatschutz und Persistenz prüfen.
+- [ ] Generatorupdate nach PXNX/words-sv übertragen.
+
+- [x] Ursache für wiederholte gespeicherte Start- oder Folgerunden prüfen.
+- [x] Neue Runden aus einem zuvor nicht verwendeten Zufallsbasiswort generieren.
+- [x] Gültige 5–7-Wort-Gitter und lokale Fortsetzung prüfen.
+- [ ] Generatorfix nach PXNX/words-sv übertragen.
+
 - [x] Runde links und Einstellungssteuerung rechts im Eingabebereich anordnen.
 - [x] Wortmarke und App-Symbol in die Einstellungen verschieben.
 - [x] Einstellungsüberlagerung über der gesamten Oberfläche mit X-Schließen gestalten.
