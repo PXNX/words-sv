@@ -1,5 +1,8 @@
 # Erweiterung WordCircle
 
+- [ ] Vercel-Output und Bun-Build für die statische SvelteKit-Ausgabe konfigurieren.
+- [ ] Deployment-Fix validieren und nach PXNX/words-sv übertragen.
+
 - [x] GitHub-Remote und berechtigten Veröffentlichungsweg prüfen.
 - [x] Deutsche und englische Wortlisten als getrennte JSON-Dateien ausbauen.
 - [x] Spielzustand für Konfetti bei vollständig gelöstem Raster ergänzen.
