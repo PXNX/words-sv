@@ -1,5 +1,11 @@
 # Erweiterung WordCircle
 
+- [x] Seitenskalierung im mobilen Viewport sperren.
+- [x] Abstand vor Rundenanzeige und nach Einstellungssteuerung ergänzen.
+- [x] GitHub-Verweis zum Repository ergänzen.
+- [x] Oberen Gittertrenner entfernen.
+- [x] Mobile Darstellung, Build und GitHub-Übertragung prüfen.
+
 - [x] Eigenständigen horizontal und vertikal scrollbaren Gitterbereich ergänzen.
 - [x] Kreuzworträtselgröße ohne Verschieben von Eingabekreis und Steuerungen begrenzen.
 - [x] Überlauf, Mobilansicht, Build und GitHub-Übertragung prüfen.

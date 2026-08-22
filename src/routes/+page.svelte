@@ -292,6 +292,7 @@
         <div class="setting-row vibration-row"><span><IconVibrate />{labels.vibration}</span><input aria-label={labels.vibration} type="checkbox" class="toggle toggle-sm" bind:checked={vibration} /></div>
         <div class="setting-row vibration-row"><span>{labels.backwards}</span><input aria-label={labels.backwards} type="checkbox" class="toggle toggle-sm" checked={allowBackwardWords} onchange={(event) => selectBackwardWords((event.currentTarget as HTMLInputElement).checked)} /></div>
         <div class="setting-row completion-total"><span>{labels.completed}</span><strong>{completedRounds}</strong></div>
+        <a class="settings-github" href="https://github.com/PXNX/words-sv" target="_blank" rel="noreferrer">GitHub · PXNX/words-sv</a>
       </aside>
     {/if}
 
@@ -361,11 +362,11 @@
   /* Compact mobile composition: the grid inhabits the free middle field and the wheel stays docked to the bottom edge. */
   :global(.game-shell) { min-height:100svh;padding:clamp(.25rem,1.2vw,.55rem);display:flex;align-items:stretch;justify-content:center; }
   .game-paper { box-sizing:border-box;width:min(100%,660px);height:calc(100svh - clamp(.5rem,2.4vw,1.1rem));min-height:0;padding:clamp(.35rem,1.75vw,.7rem);display:flex;flex-direction:column; }
-  .crossword-frame { flex:1 1 auto;min-height:0;margin-top:0;padding:clamp(.35rem,1.6vw,.7rem); }
-  .crossword { width:min(82vw,50svh,440px); }
+  .crossword-frame { flex:1 1 auto;min-height:0;margin-top:0;padding:clamp(.35rem,1.6vw,.7rem);border-top:0; }
+  .crossword { width:max-content;min-width:calc(var(--cell-size) * 3); }
   .selection-area { flex:0 0 auto;min-height:40px;padding:.35rem 0 .05rem; }
-  .round-chip { top:.52rem;font-family:'DM Serif Display',serif;font-size:.78rem;font-weight:400;letter-spacing:.035em;text-transform:none; }
-  .selection-area .settings-trigger { top:.18rem; }
+  .round-chip { top:.52rem;left:.55rem;padding-left:.48rem;border-left:2px solid #e6a527;font-family:'DM Serif Display',serif;font-size:.84rem;font-weight:400;letter-spacing:.035em;text-transform:none; }
+  .selection-area .settings-trigger { top:.18rem;right:.55rem; }
   .settings-trigger { overflow:visible; }
   .settings-trigger::before,.settings-trigger::after { content:'';position:absolute;top:.7rem;width:.72rem;height:.72rem;border:1px solid #e6a527;border-radius:50%;opacity:.72;pointer-events:none; }
   .settings-trigger::before { left:.38rem; }.settings-trigger::after { right:.38rem; }
@@ -373,11 +374,13 @@
   .wheel-stage { flex:0 0 clamp(206px,33svh,260px);min-height:0; }
   .letter-wheel { width:min(100%,238px); }
   .crossword-frame { background-image:linear-gradient(rgba(23,42,69,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.018) 1px,transparent 1px);background-size:24px 24px; }
-  .crossword-scroll { overflow:auto;background:rgba(255,253,247,.16);outline:1px solid rgba(23,42,69,.08);outline-offset:-1px; }
-  .core-word.idle-core { fill:#a0621d;font-family:'DM Sans',sans-serif;font-size:9.2px;font-weight:800;letter-spacing:.12em; }
+  .crossword-scroll { overflow:auto;touch-action:pan-x pan-y;border:1px solid rgba(23,42,69,.12);background:linear-gradient(90deg,rgba(255,253,247,.3),rgba(255,253,247,.08) 18%,rgba(255,253,247,.08) 82%,rgba(255,253,247,.3));box-shadow:inset 0 0 0 6px rgba(255,253,247,.15);outline:0; }
+  .core-word.idle-core { fill:#a0621d;font-family:'DM Sans',sans-serif;font-size:10.8px;font-weight:800;letter-spacing:.08em; }
   .settings-trigger::before,.settings-trigger::after { content:none; }
   .settings-mark { position:relative;display:block;width:1.1rem;height:.82rem; }
   .settings-mark::before,.settings-mark::after { content:'';position:absolute;width:.72rem;height:.72rem;border:1.5px solid #172a45;border-radius:50%;top:.04rem; }
   .settings-mark::before { left:0; }.settings-mark::after { right:0;border-color:#e6a527; }
+  .settings-github { display:block;margin-top:1rem;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:800;letter-spacing:.05em;text-align:center;text-decoration:none;text-transform:uppercase; }
+  .settings-github:focus-visible { outline:2px solid #e6a527;outline-offset:3px; }
   @media (prefers-reduced-motion:reduce) { .letter-node:not(.active),.confetti-piece,.settings-panel,.crossword-cell.solved,.completion-mark { animation:none; } }
 </style>
