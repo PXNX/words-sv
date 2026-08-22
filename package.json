@@ -3,11 +3,12 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "packageManager": "bun@1.4.0",
   "scripts": {
-    "dev": "vite dev --host 0.0.0.0",
-    "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0",
-    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
+    "dev": "bun x vite dev --host 0.0.0.0",
+    "build": "bun x vite build",
+    "preview": "bun x vite preview --host 0.0.0.0",
+    "check": "bun x svelte-kit sync && bun x svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
     "@iconify-json/material-symbols": "^1.2.89",
