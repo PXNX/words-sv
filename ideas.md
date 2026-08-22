@@ -55,3 +55,5 @@
 - Kreuzworträtselkästchen bleiben flache Tinten-auf-Papier-Flächen ohne plastische Schlagschatten; starke Linien dienen ausschließlich der lesbaren Wortfolge.
 - Der Kreiskern zeigt vollständig lokalisierte Bewegungswörter, während ruhige Vollkreise statt dekorativer Punktlinien die Interaktion bündeln.
 - Die Wortmarke und das Monogramm bleiben gemäß der kompakten Mobilanforderung in den Einstellungen; auf der Spielfläche hat das Rätsel ohne zusätzliche Kopfzeile Vorrang.
+- Die Rundenanzeige als kleine Serif-Foliozeile setzen; die Einstellungssteuerung mit dem überlappenden Kreiszeichen als dezente Markenebene führen.
+- Den Kreismittelpunkt im Leerlauf mit einer klaren Bewegungsaufforderung besetzen; technische Punkt- oder Leerzustände vermeiden.
