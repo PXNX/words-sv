@@ -1,5 +1,12 @@
 # Erweiterung WordCircle
 
+- [x] Runde links und Einstellungssteuerung rechts im Eingabebereich anordnen.
+- [x] Wortmarke und App-Symbol in die Einstellungen verschieben.
+- [x] Einstellungsüberlagerung über der gesamten Oberfläche mit X-Schließen gestalten.
+- [x] Abgeschlossene Runden als lokale Statistik speichern und wiederherstellen.
+- [x] Darstellung, Persistenz und Build prüfen.
+- [ ] Update nach PXNX/words-sv übertragen.
+
 - [x] Weiße Restmarkierungen unter dem Eingabebereich entfernen.
 - [x] Unerwünschtes schwarzes Element bei abgeschlossenem Raster entfernen.
 - [x] Bereinigung prüfen.
