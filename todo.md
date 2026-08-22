@@ -7,14 +7,14 @@
 - [x] Buchstabenblasen sichtbarer, runder und spielerischer gestalten.
 - [x] Fortschrittszähler und Fußzeile entfernen; Einstellungen für Sprache und Dark Mode ergänzen.
 - [x] Build und responsive Darstellung prüfen.
-- [ ] WordCircle nach PXNX/words-sv übertragen und den Projektstand sichern.
+- [x] WordCircle nach PXNX/words-sv übertragen und den Projektstand sichern.
 - [x] Das Zielrepository PXNX/words-sv wurde vom Nutzer erstellt.
-- [ ] GitHub erneut mit Schreibzugriff auf PXNX/words-sv anmelden.
+- [x] GitHub erneut mit Schreibzugriff auf PXNX/words-sv anmelden.
 - [x] Nutzer hat die GitHub-Anmeldung erneut abgeschlossen.
-- [ ] Workspace-GitHub-Zugang erneut für den Push nach PXNX/words-sv prüfen.
+- [x] Workspace-GitHub-Zugang erneut für den Push nach PXNX/words-sv prüfen.
 - [x] GitHub-Geräteautorisierung für den Workspace wurde im Browser als erfolgreich bestätigt.
 - [ ] Bun-Version und Kompatibilität für die lokale SvelteKit-Entwicklung prüfen.
 - [ ] WordCircle-Skripte, Lockfile und Paketverwaltung auf Bun umstellen.
 - [ ] Repository psyops-sv prüfen und seine vorhandene technische Basis erfassen.
 - [ ] Die Papier-&-Tinte-Designsprache für psyops-sv passend adaptieren.
-- [ ] Beide Repository-Stände validieren und nach GitHub übertragen.
+- [x] Beide Repository-Stände validieren und nach GitHub übertragen.
