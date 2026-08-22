@@ -52,3 +52,6 @@
 - Steuerung, Zähler und Metadaten folgen der kompakten, linierten Typografie eines Rätselblatts; Bernstein ist Auswahl, Erfolg und Fortschritt vorbehalten.
 - Der aktive Buchstabenpfad und das aktuell gebildete Wort stehen im Zentrum des Kreisinstruments; Bernstein signalisiert ausschließlich Bewegung, Auswahl und gelöste Begriffe.
 - Bedienhandlungen bleiben kurz und bewegungsorientiert – „Spur kürzen“, „Kreis drehen“, „Neu ziehen“ und „Nächster Kreis“ – statt nach generischer App-Verwaltung zu klingen.
+- Kreuzworträtselkästchen bleiben flache Tinten-auf-Papier-Flächen ohne plastische Schlagschatten; starke Linien dienen ausschließlich der lesbaren Wortfolge.
+- Der Kreiskern zeigt vollständig lokalisierte Bewegungswörter, während ruhige Vollkreise statt dekorativer Punktlinien die Interaktion bündeln.
+- Die Wortmarke und das Monogramm bleiben gemäß der kompakten Mobilanforderung in den Einstellungen; auf der Spielfläche hat das Rätsel ohne zusätzliche Kopfzeile Vorrang.

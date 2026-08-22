@@ -1,5 +1,10 @@
 # Erweiterung WordCircle
 
+- [x] Deutsche und englische Wortlisten übersichtlich zeilenweise formatieren.
+- [x] Deutschen Wortbestand um kompatible Wörter mit Ä, Ö, Ü und ß erweitern.
+- [x] Gitter im verbleibenden Höhenbereich zentrieren und Buchstabeneingabe am unteren Rand verankern.
+- [x] Wortdaten, Mobilansicht und Build prüfen sowie nach PXNX/words-sv übertragen.
+
 - [x] X-Schließensteuerung über der geöffneten Einstellungsüberlagerung positionieren.
 - [x] Offenen und geschlossenen Einstellungszustand prüfen.
 - [x] Schließensteuerungsupdate nach PXNX/words-sv übertragen.
