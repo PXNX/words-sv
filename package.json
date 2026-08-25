@@ -8,13 +8,11 @@
   },
   "scripts": {
     "dev": "vite dev --host 0.0.0.0",
-    "data:build": "bun run tools/generate-word-data.mjs",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
-    "@iconify-json/logos": "^1.2.13",
     "@iconify-json/material-symbols": "^1.2.89",
     "@sveltejs/adapter-static": "^3.0.9",
     "@sveltejs/kit": "^2.70.3",
