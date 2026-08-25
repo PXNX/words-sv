@@ -15,7 +15,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
-      includeAssets: ['favicon.svg', 'icons/wordcircle-192.svg', 'icons/wordcircle-512.svg'],
+      includeAssets: ['favicon.svg', 'icons/wordcircle-192.png', 'icons/wordcircle-512.png'],
       manifest: {
         name: 'WordCircle',
         short_name: 'WordCircle',
@@ -27,13 +27,13 @@ export default defineConfig({
         scope: '/',
         lang: 'de',
         icons: [
-          { src: '/icons/wordcircle-192.svg', sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
-          { src: '/icons/wordcircle-512.svg', sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
+          { src: '/icons/wordcircle-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: '/icons/wordcircle-512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
         ]
       },
       workbox: {
         navigateFallback: 'index.html',
-        globPatterns: ['**/*.{html,js,css,svg,json,webmanifest}']
+        globPatterns: ['**/*.{html,js,css,png,svg,json,webmanifest}']
       },
       devOptions: {
         enabled: true,

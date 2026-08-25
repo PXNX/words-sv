@@ -16,7 +16,9 @@
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
   import IconClose from '~icons/material-symbols/cancel-rounded';
   import IconDark from '~icons/material-symbols/dark-mode-rounded';
+  import IconDownload from '~icons/material-symbols/download-rounded';
   import IconLight from '~icons/material-symbols/light-mode-rounded';
+  import IconSettings from '~icons/material-symbols/settings-rounded';
   import IconVibrate from '~icons/material-symbols/vibration-rounded';
 
   type Language = 'de' | 'en';
@@ -28,6 +30,7 @@
   type Grid = { cells: Map<string, BoardCell>; placements: Placement[]; minRow: number; maxRow: number; minCol: number; maxCol: number };
   type Round = { words: string[]; letters: string[]; grid: Grid };
   type StoredGame = { version: 1; language: Language; roundNumber: number; words: string[]; letters: string[]; placements: Placement[]; solvedWords: string[]; startedAt?: number; completedDuration?: number; vocabularyLevel?: VocabularyLevel; includeLowerVocabulary?: boolean };
+  type InstallPromptEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }> };
 
   const vocabularyLevels: VocabularyLevel[] = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
   const wordPools: Record<Language, Record<VocabularyLevel, string[]>> = {
@@ -41,8 +44,8 @@
   const VOCABULARY_LEVEL_KEY = 'wordcircle-vocabulary-level-v1';
   const INCLUDE_LOWER_VOCABULARY_KEY = 'wordcircle-include-lower-vocabulary-v1';
   const copy = {
-    de: { label: 'Wortkreis', hint: 'Die Spur ziehen, Wort für Wort.', allDone: 'Rätsel gelöst', time: 'Lösungszeit', continue: 'Fortsetzen', language: 'Sprache', vocabulary: 'Niveau', includeLower: 'Niedrigere Niveaus', appearance: 'Darstellung', light: 'Hell', dark: 'Dunkel', settings: 'Einstellungen', vibration: 'Vibration', backwards: 'Rückwärts schreiben', settingsHint: 'Dein Wortspiel, deine Stimmung.', round: 'Runde', completed: 'Gelöste Runden', tracePrompt: 'SPUR ZIEHEN', traceActive: 'SPUR' },
-    en: { label: 'WordCircle', hint: 'Trace the letters, one word at a time.', allDone: 'Puzzle solved', time: 'Solve time', continue: 'Continue', language: 'Language', vocabulary: 'Level', includeLower: 'Include lower levels', appearance: 'Appearance', light: 'Light', dark: 'Dark', settings: 'Settings', vibration: 'Vibration', backwards: 'Spell backwards', settingsHint: 'Your word game, your mood.', round: 'Round', completed: 'Rounds solved', tracePrompt: 'TRACE', traceActive: 'PATH' }
+    de: { label: 'Wortkreis', hint: 'Die Spur ziehen, Wort für Wort.', allDone: 'Rätsel gelöst', time: 'Lösungszeit', continue: 'Fortsetzen', install: 'App installieren', installHint: 'Offline weiterspielen', language: 'Sprache', vocabulary: 'Niveau', includeLower: 'Niedrigere Niveaus', appearance: 'Darstellung', light: 'Hell', dark: 'Dunkel', settings: 'Einstellungen', vibration: 'Vibration', backwards: 'Rückwärts schreiben', settingsHint: 'Dein Wortspiel, deine Stimmung.', round: 'Runde', completed: 'Gelöste Runden', tracePrompt: 'SPUR ZIEHEN', traceActive: 'SPUR' },
+    en: { label: 'WordCircle', hint: 'Trace the letters, one word at a time.', allDone: 'Puzzle solved', time: 'Solve time', continue: 'Continue', install: 'Install app', installHint: 'Keep playing offline', language: 'Language', vocabulary: 'Level', includeLower: 'Include lower levels', appearance: 'Appearance', light: 'Light', dark: 'Dark', settings: 'Settings', vibration: 'Vibration', backwards: 'Spell backwards', settingsHint: 'Your word game, your mood.', round: 'Round', completed: 'Rounds solved', tracePrompt: 'TRACE', traceActive: 'PATH' }
   } as const;
   const confettiPieces = Array.from({ length: 36 }, (_item, index) => index);
 
@@ -80,6 +83,7 @@
   let pulseIndex = $state(-1);
   let startedAt = $state(initialGame?.startedAt ?? Date.now());
   let completedDuration = $state<number | null>(initialGame?.completedDuration ?? null);
+  let installPrompt = $state<InstallPromptEvent | null>(null);
 
   const labels = $derived(copy[lang]);
   const circleLetters = $derived(currentRound.letters);
@@ -112,6 +116,17 @@
     if (!needsFreshRound) return;
     needsFreshRound = false;
     newRound('de', true);
+  });
+
+  $effect(() => {
+    const captureInstallPrompt = (event: Event) => { event.preventDefault(); installPrompt = event as InstallPromptEvent; };
+    const clearInstallPrompt = () => { installPrompt = null; };
+    window.addEventListener('beforeinstallprompt', captureInstallPrompt);
+    window.addEventListener('appinstalled', clearInstallPrompt);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', captureInstallPrompt);
+      window.removeEventListener('appinstalled', clearInstallPrompt);
+    };
   });
 
   function cellKey(row: number, col: number) { return `${row}:${col}`; }
@@ -304,6 +319,13 @@
   function isWordStart(row: number, col: number, orientation: Orientation) { return grid.placements.some((entry) => entry.orientation === orientation && entry.row === row && entry.col === col); }
   function isWordEnd(row: number, col: number, orientation: Orientation) { return grid.placements.some((entry) => entry.orientation === orientation && row === entry.row + (orientation === 'down' ? entry.word.length - 1 : 0) && col === entry.col + (orientation === 'across' ? entry.word.length - 1 : 0)); }
   function confettiStyle(index: number) { return `--x:${((index * 73) % 240) - 120}px;--y:${-160 - ((index * 41) % 170)}px;--r:${(index * 47) % 330}deg;--delay:${(index % 7) * 18}ms;`; }
+  async function installApp() {
+    const prompt = installPrompt;
+    if (!prompt) return;
+    await prompt.prompt();
+    await prompt.userChoice;
+    installPrompt = null;
+  }
 </script>
 
 <svelte:head><title>{labels.label} · WordCircle</title></svelte:head>
@@ -318,7 +340,7 @@
         <div class="settings-intro"><span class="brand-mark" aria-hidden="true"><i></i><b></b></span><div><strong>WordCircle</strong><p>{labels.settingsHint}</p></div></div>
         <div class="setting-row"><span>{labels.language}</span><div class="segmented"><button class:chosen={lang === 'de'} onclick={() => selectLanguage('de')}>DE</button><button class:chosen={lang === 'en'} onclick={() => selectLanguage('en')}>EN</button></div></div>
         <div class="setting-row vocabulary-row"><span>{labels.vocabulary}</span><div class="segmented level-segmented">{#each vocabularyLevels as level}<button class:chosen={vocabularyLevel === level} onclick={() => selectVocabularyLevel(level)}>{level.toUpperCase()}</button>{/each}</div></div>
-        {#if vocabularyLevel !== 'a1'}<div class="setting-row vibration-row"><span>{labels.includeLower}</span><input aria-label={labels.includeLower} type="checkbox" class="toggle toggle-sm" checked={includeLowerVocabulary} onchange={(event) => selectIncludeLowerVocabulary((event.currentTarget as HTMLInputElement).checked)} /></div>{/if}
+        {#if vocabularyLevel !== 'a1'}<div class="setting-row vibration-row include-lower-row"><span>{labels.includeLower}</span><input aria-label={labels.includeLower} type="checkbox" class="toggle toggle-sm" checked={includeLowerVocabulary} onchange={(event) => selectIncludeLowerVocabulary((event.currentTarget as HTMLInputElement).checked)} /></div>{/if}
         <div class="setting-row"><span>{labels.appearance}</span><div class="segmented"><button class:chosen={theme === 'light'} onclick={() => (theme = 'light')}><IconLight />{labels.light}</button><button class:chosen={theme === 'dark'} onclick={() => (theme = 'dark')}><IconDark />{labels.dark}</button></div></div>
         <div class="setting-row vibration-row"><span><IconVibrate />{labels.vibration}</span><input aria-label={labels.vibration} type="checkbox" class="toggle toggle-sm" bind:checked={vibration} /></div>
         <div class="setting-row vibration-row"><span>{labels.backwards}</span><input aria-label={labels.backwards} type="checkbox" class="toggle toggle-sm" checked={allowBackwardWords} onchange={(event) => selectBackwardWords((event.currentTarget as HTMLInputElement).checked)} /></div>
@@ -338,11 +360,36 @@
         {/each}
       </div>
       </div>
-      {#if celebration}<div class="completion-mark" aria-live="assertive"><span class="completion-symbol" aria-hidden="true">✓</span><span>{labels.allDone}</span><span class="completion-time">{labels.time} <strong>{formatDuration(completedDuration)}</strong></span><button class="completion-continue" onclick={() => newRound()}>{labels.continue}</button></div>{/if}
       <div class="frame-corner top-left"></div><div class="frame-corner top-right"></div><div class="frame-corner bottom-left"></div><div class="frame-corner bottom-right"></div>
     </div>
 
-    <div class="selection-area" aria-live="polite"><span class="round-chip">{labels.round} {roundNumber}</span>{#if !settingsOpen}<button class="settings-trigger" aria-expanded="false" aria-controls="game-settings" onclick={() => (settingsOpen = true)}><span class="settings-mark" aria-hidden="true"></span><span class="sr-only">{labels.settings}</span></button>{/if}<div class:has-word={previewWord.length > 0} class:correct={feedback === 'correct'} class:wrong={feedback === 'wrong'} class="selected-word"><span>{previewWord}</span>{#if feedback === 'correct'}<IconCheck aria-label="Correct" />{:else if feedback === 'wrong'}<IconClose aria-label="Incorrect" />{/if}</div></div>
+    <div class:install-ready={installPrompt && !previewWord && !celebration} class="selection-area" aria-live="polite">
+      <span class="round-chip">{labels.round} {roundNumber}</span>
+      {#if !settingsOpen}<button class="settings-trigger" aria-expanded="false" aria-controls="game-settings" onclick={() => (settingsOpen = true)}><IconSettings aria-hidden="true" /><span class="sr-only">{labels.settings}</span></button>{/if}
+      <div class:has-word={previewWord.length > 0} class:correct={feedback === 'correct'} class:wrong={feedback === 'wrong'} class="selected-word">
+        {#if previewWord}
+          <span>{previewWord}</span>{#if feedback === 'correct'}<IconCheck aria-label="Correct" />{:else if feedback === 'wrong'}<IconClose aria-label="Incorrect" />{/if}
+        {:else}
+          <span class="idle-wordmark"><span class="brand-mark" aria-hidden="true"><i></i><b></b></span><span>WordCircle</span></span>
+        {/if}
+      </div>
+      {#if installPrompt && !previewWord && !celebration}
+        <button class="install-prompt" onclick={installApp}>
+          <IconDownload aria-hidden="true" />
+          <span><strong>{labels.install}</strong><small>{labels.installHint}</small></span>
+        </button>
+      {/if}
+      {#if celebration}
+        <div class="completion-mark input-completion-mark" aria-live="assertive">
+          <div class="completion-card">
+            <span class="completion-symbol" aria-hidden="true">✓</span>
+            <span>{labels.allDone}</span>
+            <span class="completion-time">{labels.time} <strong>{formatDuration(completedDuration)}</strong></span>
+            <button class="completion-continue" onclick={() => newRound()}>{labels.continue}</button>
+          </div>
+        </div>
+      {/if}
+    </div>
 
     <div class="wheel-stage">
       <svg bind:this={circleEl} viewBox="0 0 292 292" class="letter-wheel" role="application" aria-label={labels.hint} onpointerdown={(event) => startSwipe(event)} onpointermove={extendSwipe}>
@@ -368,10 +415,10 @@
   .game-paper::before { content:'';position:absolute;z-index:-1;inset:8px;border:1px solid rgba(23,42,69,.13);pointer-events:none; }
   .brand-mark { position:relative;width:34px;height:34px;display:block;flex:none; }.brand-mark i,.brand-mark b { position:absolute;display:block;width:21px;height:21px;border:2px solid #172a45;border-radius:50%; }.brand-mark i { top:1px;left:1px; }.brand-mark b { right:1px;bottom:1px;border-color:#e6a527; }
   .settings-trigger,.settings-close { display:grid;place-items:center;width:2.15rem;height:2.15rem;border:1px solid rgba(23,42,69,.24);border-radius:50%;background:rgba(255,253,247,.86);color:#172a45;transition:transform .18s cubic-bezier(.23,1,.32,1),background .18s ease; }.settings-trigger :global(svg),.settings-close :global(svg) { width:1.1rem;height:1.1rem; }.settings-close { position:absolute;z-index:2;top:.72rem;right:.72rem;background:#172a45;color:#fffdf7; }.settings-close:active { transform:scale(.94); }
-  .settings-panel { position:absolute;z-index:60;inset:0;margin:0;padding:clamp(4.5rem,16vw,6rem) clamp(1rem,5vw,2rem) clamp(1rem,5vw,2rem);overflow-y:auto;border:0;background:rgba(255,253,247,.98);box-shadow:0 18px 55px rgba(23,42,69,.2);animation:drop-in .2s cubic-bezier(.23,1,.32,1); }.settings-intro { display:flex;align-items:center;gap:.75rem;color:#172a45; }.settings-intro strong { display:block;font-family:'DM Serif Display',serif;font-size:clamp(1.45rem,6vw,2rem);font-weight:400;letter-spacing:-.04em;line-height:.9; }.settings-intro p { margin:.35rem 0 0;color:#a45e38;font-family:'DM Serif Display',serif;font-size:.94rem; }.setting-row { display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-top:.82rem;margin-top:.82rem;border-top:1px solid rgba(23,42,69,.14);color:#172a45;font-size:.67rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }.segmented { display:flex;padding:2px;border:1px solid rgba(23,42,69,.22);border-radius:99px; }.segmented button { min-height:1.65rem;padding:0 .55rem;display:inline-flex;align-items:center;gap:.25rem;border:0;border-radius:99px;background:transparent;color:rgba(23,42,69,.62);font-size:.62rem;font-weight:800; }.segmented button :global(svg) { width:.78rem;height:.78rem; }.segmented button.chosen { background:#172a45;color:#fffdf7; }.vibration-row>span { display:inline-flex;align-items:center;gap:.35rem; }.vibration-row :global(svg) { width:.9rem;height:.9rem; }.level-segmented button { min-width:1.65rem;padding:0 .32rem; }.vocabulary-row { align-items:flex-start; }.completion-total strong { color:#34824d;font-family:'DM Serif Display',serif;font-size:1.45rem;line-height:1; }
+  .settings-panel { position:absolute;z-index:60;inset:0;margin:0;padding:clamp(4.5rem,16vw,6rem) clamp(1rem,5vw,2rem) clamp(1rem,5vw,2rem);overflow-y:auto;border:0;background:rgba(255,253,247,.98);box-shadow:0 18px 55px rgba(23,42,69,.2);animation:drop-in .2s cubic-bezier(.23,1,.32,1); }.settings-intro { display:flex;align-items:center;gap:.75rem;color:#172a45; }.settings-intro strong { display:block;font-family:'DM Serif Display',serif;font-size:clamp(1.45rem,6vw,2rem);font-weight:400;letter-spacing:-.04em;line-height:.9; }.settings-intro p { margin:.35rem 0 0;color:#a45e38;font-family:'DM Serif Display',serif;font-size:.94rem; }.setting-row { display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-top:.82rem;margin-top:.82rem;border-top:1px solid rgba(23,42,69,.14);color:#172a45;font-size:.67rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }.include-lower-row { margin-top:.25rem;padding-top:.35rem;border-top:0; }.segmented { display:flex;padding:2px;border:1px solid rgba(23,42,69,.22);border-radius:99px; }.segmented button { min-height:1.65rem;padding:0 .55rem;display:inline-flex;align-items:center;gap:.25rem;border:0;border-radius:99px;background:transparent;color:rgba(23,42,69,.62);font-size:.62rem;font-weight:800; }.segmented button :global(svg) { width:.78rem;height:.78rem; }.segmented button.chosen { background:#172a45;color:#fffdf7; }.vibration-row>span { display:inline-flex;align-items:center;gap:.35rem; }.vibration-row :global(svg) { width:.9rem;height:.9rem; }.level-segmented button { min-width:1.65rem;padding:0 .32rem; }.vocabulary-row { align-items:flex-start; }.completion-total strong { color:#34824d;font-family:'DM Serif Display',serif;font-size:1.45rem;line-height:1; }
   .crossword-frame { position:relative;min-height:205px;display:grid;place-items:stretch;margin-top:.55rem;padding:clamp(.5rem,3vw,1rem);background-color:#ede4d5;background-image:linear-gradient(rgba(23,42,69,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.035) 1px,transparent 1px);background-size:20px 20px;border-top:3px double #172a45;border-bottom:2px solid rgba(23,42,69,.45);transition:transform .16s cubic-bezier(.23,1,.32,1); }.crossword-frame.shake { animation:shake .28s cubic-bezier(.23,1,.32,1); }.crossword-scroll { position:relative;z-index:1;min-width:0;min-height:0;overflow:scroll;display:grid;place-items:center;padding:clamp(.65rem,3vw,1.25rem);overscroll-behavior:contain;scrollbar-color:rgba(23,42,69,.4) transparent; }.crossword { --cell-size:clamp(2.35rem,10.2vw,3.1rem);position:relative;display:grid;width:max-content;min-width:calc(var(--cell-size) * 3); }.crossword-cell { aspect-ratio:1;min-width:0;display:grid;place-items:center;border:1px solid #172a45;background:#fffdf7;color:#172a45;font-size:clamp(.7rem,3.4vw,1.1rem);font-weight:800;line-height:1;text-transform:uppercase;transition:background .18s ease,color .18s ease,transform .18s cubic-bezier(.23,1,.32,1); }.crossword-cell.startAcross { border-left-width:4px; }.crossword-cell.endAcross { border-right-width:4px; }.crossword-cell.startDown { border-top-width:4px; }.crossword-cell.endDown { border-bottom-width:4px; }.crossword-cell.solved { background:#e6a527;transform:scale(.965);animation:solve-cell .32s cubic-bezier(.23,1,.32,1); }.crossword-void { aspect-ratio:1; }.frame-corner { position:absolute;z-index:2;width:13px;height:13px;border-color:#e6a527;border-style:solid;pointer-events:none; }.top-left { top:7px;left:7px;border-width:2px 0 0 2px; }.top-right { top:7px;right:7px;border-width:2px 2px 0 0; }.bottom-left { bottom:7px;left:7px;border-width:0 0 2px 2px; }.bottom-right { right:7px;bottom:7px;border-width:0 2px 2px 0; }
-  .completion-mark { position:absolute;z-index:4;inset:0;display:grid;place-content:center;justify-items:center;gap:.48rem;background:rgba(255,253,247,.78);color:#34824d;backdrop-filter:blur(2px);animation:completion-in .32s cubic-bezier(.23,1,.32,1) both; }.completion-symbol { display:grid;place-items:center;width:clamp(4.5rem,20vw,6.5rem);height:clamp(4.5rem,20vw,6.5rem);border:clamp(.3rem,1vw,.45rem) solid currentColor;border-radius:50%;font-family:'DM Sans',sans-serif;font-size:clamp(3rem,13vw,4.4rem);font-weight:800;line-height:1;filter:drop-shadow(0 5px 0 rgba(46,109,63,.18)); }.completion-mark > span:nth-child(2) { font-family:'DM Serif Display',serif;font-size:clamp(1.1rem,5vw,1.6rem);letter-spacing:-.02em; }.completion-time { color:#172a45;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }.completion-time strong { color:#34824d;font-family:'DM Serif Display',serif;font-size:1.05rem;letter-spacing:0; }.completion-continue { min-height:2.25rem;padding:0 1rem;border:1px solid #34824d;border-radius:999px;background:#34824d;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease; }.completion-continue:active { transform:scale(.96); }
-  .selection-area { position:relative;z-index:1;min-height:52px;padding:.55rem 0 .2rem;text-align:center; }.round-chip { position:absolute;z-index:2;top:.75rem;left:0;color:#172a45;font-size:.62rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }.selection-area .settings-trigger { position:absolute;z-index:70;top:.38rem;right:0; }.selected-word { min-height:1.7rem;display:inline-flex;align-items:center;justify-content:center;gap:.48rem;color:rgba(23,42,69,.35);font-family:'DM Serif Display',serif;font-size:clamp(1.35rem,5vw,1.75rem);letter-spacing:.16em;line-height:1; }.selected-word :global(svg) { width:1.45rem;height:1.45rem;letter-spacing:0; }.selected-word.has-word { color:#172a45;animation:word-rise .18s cubic-bezier(.23,1,.32,1); }.selected-word.correct { color:#3f7a50; }.selected-word.wrong { color:#b54442; }.selected-word.correct :global(svg),.selected-word.wrong :global(svg) { animation:feedback-pop .24s cubic-bezier(.23,1,.32,1); }
+  .completion-mark { position:absolute;z-index:80;inset:0;display:grid;place-items:center;background:rgba(255,253,247,.43);color:#34824d;backdrop-filter:blur(3px);animation:completion-in .32s cubic-bezier(.23,1,.32,1) both; }.completion-card { display:grid;justify-items:center;gap:.22rem;padding:.42rem .8rem;border:1px solid rgba(52,130,77,.24);border-radius:.3rem;background:rgba(255,253,247,.8);box-shadow:0 8px 22px rgba(23,42,69,.14); }.completion-symbol { display:grid;place-items:center;width:1.8rem;height:1.8rem;border:2px solid currentColor;border-radius:50%;font-family:'DM Sans',sans-serif;font-size:1.25rem;font-weight:800;line-height:1; }.completion-card > span:nth-child(2) { font-family:'DM Serif Display',serif;font-size:1.05rem;letter-spacing:-.02em; }.completion-time { color:#172a45;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }.completion-time strong { color:#34824d;font-family:'DM Serif Display',serif;font-size:.9rem;letter-spacing:0; }.completion-continue { min-height:1.85rem;padding:0 .8rem;border:1px solid #34824d;border-radius:999px;background:#34824d;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease; }.completion-continue:active { transform:scale(.96); }
+  .selection-area { position:relative;z-index:1;min-height:52px;padding:.55rem 0 .2rem;text-align:center;background:linear-gradient(90deg,transparent,rgba(23,42,69,.025) 22%,rgba(23,42,69,.025) 78%,transparent); }.selection-area.install-ready { min-height:82px; }.round-chip { position:absolute;z-index:2;top:.75rem;left:0;color:#172a45;font-size:.62rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }.selection-area .settings-trigger { position:absolute;z-index:70;top:.38rem;right:0; }.selected-word { min-height:1.7rem;display:inline-flex;align-items:center;justify-content:center;gap:.48rem;color:rgba(23,42,69,.35);font-family:'DM Serif Display',serif;font-size:clamp(1.35rem,5vw,1.75rem);letter-spacing:.16em;line-height:1; }.selected-word :global(svg) { width:1.45rem;height:1.45rem;letter-spacing:0; }.idle-wordmark { display:inline-flex;align-items:center;gap:.42rem;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1rem,3.4vw,1.2rem);letter-spacing:-.04em; }.idle-wordmark .brand-mark { width:20px;height:20px; }.idle-wordmark .brand-mark i,.idle-wordmark .brand-mark b { width:12px;height:12px;border-width:1.5px; }.selected-word.has-word { color:#172a45;animation:word-rise .18s cubic-bezier(.23,1,.32,1); }.selected-word.correct { color:#3f7a50; }.selected-word.wrong { color:#b54442; }.selected-word.correct :global(svg),.selected-word.wrong :global(svg) { animation:feedback-pop .24s cubic-bezier(.23,1,.32,1); }.install-prompt { position:absolute;z-index:5;bottom:.25rem;left:50%;display:inline-flex;align-items:center;gap:.42rem;min-height:1.75rem;padding:.22rem .62rem;border:1px solid #172a45;border-radius:.2rem;background:#172a45;color:#fffdf7;box-shadow:0 3px 0 rgba(23,42,69,.16);font-family:'DM Sans',sans-serif;text-align:left;transform:translateX(-50%);transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease; }.install-prompt:active { transform:translateX(-50%) scale(.97); }.install-prompt :global(svg) { width:1rem;height:1rem;color:#e6a527; }.install-prompt span { display:grid;gap:.02rem;line-height:1;white-space:nowrap; }.install-prompt strong { font-size:.57rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase; }.install-prompt small { color:rgba(255,253,247,.72);font-size:.5rem;font-weight:700;letter-spacing:.03em; }
   .wheel-stage { position:relative;min-height:235px;display:grid;place-items:center;border-top:1px solid rgba(23,42,69,.16);border-bottom:1px solid rgba(23,42,69,.16); }.letter-wheel { width:min(100%,248px);touch-action:none;overflow:visible;user-select:none; }.outer-ring,.inner-ring,.core-ring { fill:none; }.outer-ring { stroke:#172a45;stroke-width:1.1;stroke-dasharray:none;opacity:.28; }.inner-ring { stroke:#172a45;stroke-width:1;opacity:.12; }.core-ring { stroke:#e6a527;stroke-width:1.8;opacity:.9; }.core-mark { fill:#172a45;opacity:.83; }.core-word { fill:rgba(23,42,69,.52);font-family:'DM Serif Display',serif;font-size:13px;letter-spacing:.08em; }.core-word.active-core { fill:#c98220; }.core-caption { fill:rgba(23,42,69,.5);font-family:'DM Sans',sans-serif;font-size:5.8px;font-weight:800;letter-spacing:.18em; }.selection-line { fill:none;stroke:#e6a527;stroke-linecap:round;stroke-linejoin:round;stroke-width:10;opacity:.9; }.letter-node { cursor:crosshair; }.letter-node>circle:nth-child(2) { fill:#fffdf7;stroke:#172a45;stroke-width:2;filter:drop-shadow(0 3px 0 rgba(23,42,69,.16));transition:fill .14s ease,transform .14s cubic-bezier(.23,1,.32,1),filter .14s ease;transform-box:fill-box;transform-origin:center; }.bubble-shine { fill:rgba(255,255,255,.72);stroke:none;transform:translate(-4px,-5px) scale(.34);transform-origin:center;pointer-events:none; }.letter-node text { fill:#172a45;font-family:'DM Sans',sans-serif;font-size:20px;font-weight:800;pointer-events:none; }.letter-node.active>circle:nth-child(2) { fill:#e6a527;transform:scale(1.12);filter:drop-shadow(0 5px 0 rgba(151,94,16,.2));animation:selected-bubble .42s cubic-bezier(.23,1,.32,1) both; }.letter-node.pulse .bubble-ripple { animation:bubble-ripple .48s cubic-bezier(.23,1,.32,1) both; }.letter-node:not(.active) { animation:bubble-drift 3.2s ease-in-out infinite; }.bubble-ripple { fill:none;stroke:#e6a527;stroke-width:2;opacity:0;pointer-events:none;transform-box:fill-box;transform-origin:center; }
   .confetti-field { position:fixed;z-index:20;inset:0;pointer-events:none;overflow:hidden; }.confetti-piece { position:absolute;left:50%;top:48%;width:8px;height:13px;background:#e6a527;border-radius:2px;animation:confetti 1.7s var(--delay) cubic-bezier(.13,.79,.31,1) forwards; }.confetti-piece:nth-child(3n) { background:#c96e4d; }.confetti-piece:nth-child(4n) { background:#172a45; }.confetti-piece:nth-child(5n) { width:6px;height:6px;border-radius:50%; }
   @keyframes drop-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
@@ -395,22 +442,15 @@
   .game-paper { box-sizing:border-box;width:min(100%,660px);height:calc(100svh - clamp(.5rem,2.4vw,1.1rem));min-height:0;padding:clamp(.35rem,1.75vw,.7rem);display:flex;flex-direction:column; }
   .crossword-frame { flex:1 1 auto;min-height:0;margin-top:0;padding:clamp(.35rem,1.6vw,.7rem);border-top:0; }
   .crossword { width:max-content;min-width:calc(var(--cell-size) * 3); }
-  .selection-area { flex:0 0 auto;min-height:40px;padding:.35rem 0 .05rem; }
+  .selection-area { flex:0 0 auto;min-height:40px;padding:.35rem 0 .05rem; }.selection-area.install-ready { min-height:70px; }
   .round-chip { top:.52rem;left:.55rem;padding-left:.48rem;border-left:2px solid #e6a527;font-family:'DM Serif Display',serif;font-size:.84rem;font-weight:400;letter-spacing:.035em;text-transform:none; }
   .selection-area .settings-trigger { top:.18rem;right:.55rem; }
   .settings-trigger { overflow:visible; }
-  .settings-trigger::before,.settings-trigger::after { content:'';position:absolute;top:.7rem;width:.72rem;height:.72rem;border:1px solid #e6a527;border-radius:50%;opacity:.72;pointer-events:none; }
-  .settings-trigger::before { left:.38rem; }.settings-trigger::after { right:.38rem; }
-  .settings-trigger :global(svg) { position:relative;z-index:1; }
   .wheel-stage { flex:0 0 clamp(206px,33svh,260px);min-height:0; }
   .letter-wheel { width:min(100%,238px); }
   .crossword-frame { background-image:linear-gradient(rgba(23,42,69,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.018) 1px,transparent 1px);background-size:24px 24px; }
   .crossword-scroll { overflow:auto;touch-action:pan-x pan-y;border:1px solid rgba(23,42,69,.12);background:linear-gradient(90deg,rgba(255,253,247,.3),rgba(255,253,247,.08) 18%,rgba(255,253,247,.08) 82%,rgba(255,253,247,.3));box-shadow:inset 0 0 0 6px rgba(255,253,247,.15);outline:0; }
   .core-word.idle-core { fill:#a0621d;font-family:'DM Sans',sans-serif;font-size:10.8px;font-weight:800;letter-spacing:.08em; }
-  .settings-trigger::before,.settings-trigger::after { content:none; }
-  .settings-mark { position:relative;display:block;width:1.1rem;height:.82rem; }
-  .settings-mark::before,.settings-mark::after { content:'';position:absolute;width:.72rem;height:.72rem;border:1.5px solid #172a45;border-radius:50%;top:.04rem; }
-  .settings-mark::before { left:0; }.settings-mark::after { right:0;border-color:#e6a527; }
   .settings-github { display:block;margin-top:1rem;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:800;letter-spacing:.05em;text-align:center;text-decoration:none;text-transform:uppercase; }
   .settings-github:focus-visible { outline:2px solid #e6a527;outline-offset:3px; }
   @media (prefers-reduced-motion:reduce) { .letter-node:not(.active),.confetti-piece,.settings-panel,.crossword-cell.solved,.completion-mark { animation:none; } }
