@@ -138,7 +138,7 @@
 - [x] Bestehende deutsche und englische Wortlisten sowie belastbare CEFR-Quellen inventarisieren.
 - [x] Reproduzierbare CEFR-Zuordnung und Prüfregeln für die Wortlisten erstellen.
 - [x] Wortlisten anpassen und die Herkunft jeder Stufe dokumentieren.
-- [ ] Sprachstufen, Build und Vercel-Deployment prüfen.
+- [x] Sprachstufen, Build und Vercel-Deployment prüfen.
 - [ ] Bun-Version und Kompatibilität für die lokale SvelteKit-Entwicklung prüfen.
 - [ ] WordCircle-Skripte, Lockfile und Paketverwaltung auf Bun umstellen.
 - [ ] Repository psyops-sv prüfen und seine vorhandene technische Basis erfassen.
