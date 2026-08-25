@@ -162,3 +162,9 @@
 - [x] Persian als Interface-Locale ergänzen, ohne die spielbaren Deutsch-/Englisch-Wortpools zu ändern.
 - [x] Telegram-Verweis nur bei ausgewähltem Persian in den Einstellungen anzeigen.
 - [x] Persian-Interface, Telegram-Verweis, Build und Vercel-Deployment prüfen und veröffentlichen.
+
+- [x] Interface-Texte auf Paraglide i18n umstellen.
+- [x] Portugiesisch, Russisch, Arabisch und Ukrainisch als Interface-Locale ergänzen.
+- [x] Sprachumschalter als Dropdown mit vorangestelltem Globus-Icon gestalten.
+- [x] Telegram-Ziel für Deutsch und Englisch auf deutschstunde1 setzen.
+- [ ] Mehrsprachige Oberfläche, Build und Vercel-Deployment prüfen und veröffentlichen.
