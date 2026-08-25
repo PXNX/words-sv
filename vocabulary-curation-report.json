@@ -1,0 +1,38 @@
+{
+  "sourceCandidates": {
+    "nouns": 4814,
+    "infinitiveVerbs": 141
+  },
+  "summary": {
+    "a1": {
+      "total": 163,
+      "nounsAdded": 100,
+      "infinitiveVerbsAdded": 20
+    },
+    "a2": {
+      "total": 209,
+      "nounsAdded": 140,
+      "infinitiveVerbsAdded": 25
+    },
+    "b1": {
+      "total": 252,
+      "nounsAdded": 180,
+      "infinitiveVerbsAdded": 25
+    },
+    "b2": {
+      "total": 290,
+      "nounsAdded": 220,
+      "infinitiveVerbsAdded": 25
+    },
+    "c1": {
+      "total": 338,
+      "nounsAdded": 260,
+      "infinitiveVerbsAdded": 25
+    },
+    "c2": {
+      "total": 350,
+      "nounsAdded": 300,
+      "infinitiveVerbsAdded": 21
+    }
+  }
+}

@@ -117,6 +117,10 @@
 - [x] Bereinigte Eingabevorschau, Build und Vercel-Deployment prüfen.
 - [x] Schwarzes Element im Abschlusszustand entfernen.
 - [x] Abschlusszustand ohne schwarzes Element prüfen und veröffentlichen.
+- [x] Deutsche Wortquellen prüfen und zusätzliche rätseltaugliche Begriffe kuratieren.
+- [x] Deutsche Verben als Infinitive normalisieren und Wörterlisten nach Niveau erweitern.
+- [x] Wiktionary-Hilfelink nach korrekt geratenem Wort ergänzen.
+- [x] Wortdaten, Hilfelink, Build und Vercel-Deployment prüfen.
 - [ ] Bun-Version und Kompatibilität für die lokale SvelteKit-Entwicklung prüfen.
 - [ ] WordCircle-Skripte, Lockfile und Paketverwaltung auf Bun umstellen.
 - [ ] Repository psyops-sv prüfen und seine vorhandene technische Basis erfassen.

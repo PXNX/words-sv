@@ -9,7 +9,11 @@ bun install
 bun run dev
 ```
 
-Die Spieloberfläche befindet sich vollständig in `src/routes/+page.svelte`. Rätsel liegen getrennt als `src/lib/data/words.de.json` und `src/lib/data/words.en.json` vor.
+Die Spieloberfläche befindet sich vollständig in `src/routes/+page.svelte`. Rätsel liegen nach Sprache und CEFR-Niveau getrennt in `src/lib/data/words.{de,en}.{a1–c2}.json` vor.
+
+## Wortquellen und Erklärungen
+
+Die deutsche Vokabelkurierung verwendet Lemma-Daten aus [gambolputty/german-nouns](https://github.com/gambolputty/german-nouns) (CC BY-SA 4.0), nach Häufigkeit priorisiert mit [olastor/german-word-frequencies](https://github.com/olastor/german-word-frequencies) (DeReKo/DECOW, CC BY 4.0). Die Zuordnung von Verbformen richtet sich nach den Wiktionary-basierten Kategorien aus [ynsrc/german-categorized-wordlist](https://github.com/ynsrc/german-categorized-wordlist). Nach einer richtigen Lösung führt die Fragezeichen-Schaltfläche zum passenden Eintrag im [Wiktionary](https://de.wiktionary.org/).
 
 ## Vercel
 
