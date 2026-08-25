@@ -18,6 +18,7 @@
   import IconDark from '~icons/material-symbols/dark-mode-rounded';
   import IconDownload from '~icons/material-symbols/download-rounded';
   import IconHelp from '~icons/material-symbols/help-rounded';
+  import IconGithub from '~icons/fa6-brands/github';
   import IconLight from '~icons/material-symbols/light-mode-rounded';
   import IconSettings from '~icons/material-symbols/settings-rounded';
   import IconVibrate from '~icons/material-symbols/vibration-rounded';
@@ -375,7 +376,7 @@
         <div class="setting-row vibration-row"><span><IconVibrate />{labels.vibration}</span><input aria-label={labels.vibration} type="checkbox" class="toggle toggle-sm" bind:checked={vibration} /></div>
         <div class="setting-row vibration-row"><span>{labels.backwards}</span><input aria-label={labels.backwards} type="checkbox" class="toggle toggle-sm" checked={allowBackwardWords} onchange={(event) => selectBackwardWords((event.currentTarget as HTMLInputElement).checked)} /></div>
         <div class="setting-row completion-total"><span>{labels.completed}</span><strong>{completedRounds}</strong></div>
-        <a class="settings-github" href="https://github.com/PXNX/words-sv" target="_blank" rel="noreferrer">GitHub · PXNX/words-sv</a>
+        <a class="settings-github" href="https://github.com/PXNX/words-sv" target="_blank" rel="noreferrer"><IconGithub aria-hidden="true" /><span>GitHub · PXNX/words-sv</span></a>
       </aside>
     {/if}
 
@@ -401,7 +402,6 @@
           <button class="completion-continue" onclick={() => newRound()}>{labels.continue}</button>
         </div>
       {:else}
-        <span class="round-chip">{labels.round} {roundNumber}</span>
         {#if !settingsOpen}<button class="settings-trigger" aria-expanded="false" aria-controls="game-settings" onclick={() => (settingsOpen = true)}><IconSettings aria-hidden="true" /><span class="sr-only">{labels.settings}</span></button>{/if}
         <div class:has-word={previewWord.length > 0} class:correct={feedback === 'correct'} class:wrong={feedback === 'wrong'} class="selected-word">
           {#if previewWord}
@@ -474,5 +474,21 @@
   .core-word.idle-core { fill:#a0621d;font-family:'DM Sans',sans-serif;font-size:10.8px;font-weight:800;letter-spacing:.08em; }
   .settings-github { display:block;margin-top:1rem;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:800;letter-spacing:.05em;text-align:center;text-decoration:none;text-transform:uppercase; }
   .settings-github:focus-visible { outline:2px solid #e6a527;outline-offset:3px; }
+  /* Input rail: completion occupies the exact input slot; helper and repository controls remain secondary to word feedback. */
+  .selection-area.completion-area { display:flex;align-items:center;justify-content:center;height:58px;min-height:58px;padding:0; }
+  .selection-area.completion-area .completion-inline { display:flex;align-items:center;justify-content:center;width:100%;height:100%;margin:0; }
+  .wiktionary-link { border-color:#8b949c;background:#edf0ef;color:#69727a; }
+  .wiktionary-link:hover,.wiktionary-link:focus-visible { background:#c9d0cf;color:#3f484e; }
+  :global(html.dark) .wiktionary-link { border-color:#84909b;background:#2b3d57;color:#d8dde1; }
+  .settings-github { display:flex;align-items:center;justify-content:center;gap:.42rem; }
+  .settings-github :global(svg) { width:1rem;height:1rem; }
+  @media (max-width:579px) { .selection-area.completion-area { height:54px;min-height:54px;padding:0; } }
+  /* Papier & Tinte onboarding: a calm vertical folio with registration details, kept outside the idle game-input preview. */
+  .tutorial-panel { isolation:isolate;background:linear-gradient(90deg,rgba(23,42,69,.055) 1px,transparent 1px) 1.15rem 0/1px 100%,linear-gradient(90deg,transparent calc(100% - 1.15rem),rgba(23,42,69,.055) calc(100% - 1.15rem),rgba(23,42,69,.055) calc(100% - 1.05rem),transparent calc(100% - 1.05rem)),#fffdf7; }
+  .tutorial-panel::before { content:'WORDCIRCLE · DAILY LANGUAGE FOLIO'; position:absolute;z-index:-1;top:1.35rem;left:1.55rem;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.48rem;font-weight:800;letter-spacing:.16em;opacity:.68; }
+  .tutorial-panel::after { content:'';position:absolute;z-index:-1;right:1.55rem;bottom:1.45rem;width:1.12rem;height:1.12rem;border:1px solid #172a45;border-radius:50%;box-shadow:.42rem .42rem 0 -1px #fffdf7,.42rem .42rem 0 0 #e6a527;opacity:.72; }
+  .tutorial-card { position:relative;box-shadow:8px 8px 0 rgba(230,165,39,.18),0 0 0 4px rgba(255,253,247,.8); }
+  .tutorial-card::after { content:'01';position:absolute;right:.7rem;bottom:.55rem;color:rgba(23,42,69,.48);font-family:'DM Sans',sans-serif;font-size:.48rem;font-weight:800;letter-spacing:.12em; }
+  :global(html.dark) .tutorial-panel { background:linear-gradient(90deg,rgba(255,253,247,.11) 1px,transparent 1px) 1.15rem 0/1px 100%,linear-gradient(90deg,transparent calc(100% - 1.15rem),rgba(255,253,247,.11) calc(100% - 1.15rem),rgba(255,253,247,.11) calc(100% - 1.05rem),transparent calc(100% - 1.05rem)),#172a45; }.tutorial-panel::before { color:#fffdf7; }.tutorial-panel::after { border-color:#fffdf7;box-shadow:.42rem .42rem 0 -1px #172a45,.42rem .42rem 0 0 #e6a527; }.tutorial-card::after { color:rgba(255,253,247,.56); }
   @media (prefers-reduced-motion:reduce) { .letter-node:not(.active),.settings-panel,.crossword-cell.solved,.completion-inline { animation:none; } }
 </style>
