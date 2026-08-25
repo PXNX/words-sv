@@ -1,0 +1,69 @@
+{
+  "generatedAt": "2026-08-25T16:12:42.748Z",
+  "methodology": {
+    "german": "Goethe A1–B1 textual membership intersected with GerVLPro conservative CEFR assignments; GerVLPro conservative assignments for B2–C2.",
+    "english": "Open Language Profiles CEFR-J 1.5 for A1–B2 and Octanove C1/C2 1.0 for C1–C2. Individual English Profile lookups are retained as non-bulk primary-source validation evidence."
+  },
+  "levels": {
+    "a1": {
+      "german": {
+        "candidates": 202,
+        "exported": 202
+      },
+      "english": {
+        "candidates": 781,
+        "exported": 781
+      }
+    },
+    "a2": {
+      "german": {
+        "candidates": 331,
+        "exported": 331
+      },
+      "english": {
+        "candidates": 927,
+        "exported": 927
+      }
+    },
+    "b1": {
+      "german": {
+        "candidates": 259,
+        "exported": 259
+      },
+      "english": {
+        "candidates": 1550,
+        "exported": 1550
+      }
+    },
+    "b2": {
+      "german": {
+        "candidates": 386,
+        "exported": 386
+      },
+      "english": {
+        "candidates": 1580,
+        "exported": 1580
+      }
+    },
+    "c1": {
+      "german": {
+        "candidates": 99,
+        "exported": 99
+      },
+      "english": {
+        "candidates": 501,
+        "exported": 501
+      }
+    },
+    "c2": {
+      "german": {
+        "candidates": 5,
+        "exported": 5
+      },
+      "english": {
+        "candidates": 398,
+        "exported": 398
+      }
+    }
+  }
+}
