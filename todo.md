@@ -167,4 +167,4 @@
 - [x] Portugiesisch, Russisch, Arabisch und Ukrainisch als Interface-Locale ergänzen.
 - [x] Sprachumschalter als Dropdown mit vorangestelltem Globus-Icon gestalten.
 - [x] Telegram-Ziel für Deutsch und Englisch auf deutschstunde1 setzen.
-- [ ] Mehrsprachige Oberfläche, Build und Vercel-Deployment prüfen und veröffentlichen.
+- [x] Mehrsprachige Oberfläche, Build und Vercel-Deployment prüfen und veröffentlichen.
