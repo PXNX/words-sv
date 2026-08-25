@@ -115,6 +115,8 @@
 - [x] Abschlusszustand, Build und Vercel-Deployment prüfen.
 - [x] App-Name und Logo aus der inaktiven Eingabevorschau entfernen.
 - [x] Bereinigte Eingabevorschau, Build und Vercel-Deployment prüfen.
+- [x] Schwarzes Element im Abschlusszustand entfernen.
+- [x] Abschlusszustand ohne schwarzes Element prüfen und veröffentlichen.
 - [ ] Bun-Version und Kompatibilität für die lokale SvelteKit-Entwicklung prüfen.
 - [ ] WordCircle-Skripte, Lockfile und Paketverwaltung auf Bun umstellen.
 - [ ] Repository psyops-sv prüfen und seine vorhandene technische Basis erfassen.
