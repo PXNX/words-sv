@@ -41,6 +41,10 @@ The Open Language Profiles CEFR-J release is a reproducible secondary English so
 
 The rebuilt local game rendered a complete source-aligned German round headed by `ARBEITEN`, confirming that the revised data format preserves normal grid and wheel behavior. A subsequent local C2 selection was prepared with its stored lower-level option deliberately cleared. On reload, it produced a seven-word crossword headed by `ERLEBNIS` and persisted `includeLower=on`, confirming that the source-constrained pooling safeguard visibly enables prerequisite levels when required for playability.
 
+## Production release check
+
+After commit `70c31aa` was published to `PXNX/words-sv` main, the Vercel deployment served a fresh 200 response and loaded a German game round headed by `GARTEN`. Its manifest remained valid and the root `sw.js` response remained JavaScript with a 200 status. Browser verification then confirmed that the page was actively controlled by `https://words-sv.vercel.app/sw.js` with root scope.
+
 ## Research source access
 
 The GerVLPro release repository contains the associated vocabulary resource under `GerVLPro/`. Its public README identifies the LREC 2026 paper and indicates source code is pending. The word-level resource is therefore suitable for a reproducible data review after its exact files and licensing are confirmed.
