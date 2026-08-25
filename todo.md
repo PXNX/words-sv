@@ -149,4 +149,4 @@
 - [x] Wiktionary-Fragezeichen in einem zurückhaltenden Grauton gestalten.
 - [x] Abschlusssteuerung exakt über dem Eingabebereich zentrieren.
 - [x] GitHub-Verweis in den Einstellungen mit Unplugin-Icon ergänzen.
-- [ ] Verfeinerungen, Build und Vercel-Deployment prüfen und nach PXNX/words-sv übertragen.
+- [x] Verfeinerungen, Build und Vercel-Deployment prüfen und nach PXNX/words-sv übertragen.
