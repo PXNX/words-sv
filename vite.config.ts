@@ -14,7 +14,7 @@ export default defineConfig({
     }),
     VitePWA({
       registerType: 'autoUpdate',
-      injectRegister: 'auto',
+      injectRegister: false,
       includeAssets: ['favicon.svg', 'icons/wordcircle-192.png', 'icons/wordcircle-512.png'],
       manifest: {
         name: 'WordCircle',

@@ -131,6 +131,8 @@
 - [x] Installationshinweis, Build und Vercel-Deployment prüfen.
 - [x] Wiktionary-Links mit Wörterbuchgroßschreibung erzeugen und Spielwörter weiterhin in Versalien darstellen.
 - [x] Linkgroßschreibung, Build und Vercel-Deployment prüfen.
+- [x] Android-Chrome-Installierbarkeit von Manifest, Service Worker und Icons prüfen.
+- [x] Mobile PWA-Konfiguration korrigieren und das Deployment validieren.
 - [ ] Bun-Version und Kompatibilität für die lokale SvelteKit-Entwicklung prüfen.
 - [ ] WordCircle-Skripte, Lockfile und Paketverwaltung auf Bun umstellen.
 - [ ] Repository psyops-sv prüfen und seine vorhandene technische Basis erfassen.
