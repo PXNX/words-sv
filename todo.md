@@ -133,6 +133,8 @@
 - [x] Linkgroßschreibung, Build und Vercel-Deployment prüfen.
 - [x] Android-Chrome-Installierbarkeit von Manifest, Service Worker und Icons prüfen.
 - [x] Mobile PWA-Konfiguration korrigieren und das Deployment validieren.
+- [x] Kurzes Tutorial für die erste Spielrunde gestalten und dauerhaft abschließbar machen.
+- [x] Erste-Spielerfahrung, Build und Vercel-Deployment prüfen.
 - [ ] Bun-Version und Kompatibilität für die lokale SvelteKit-Entwicklung prüfen.
 - [ ] WordCircle-Skripte, Lockfile und Paketverwaltung auf Bun umstellen.
 - [ ] Repository psyops-sv prüfen und seine vorhandene technische Basis erfassen.
