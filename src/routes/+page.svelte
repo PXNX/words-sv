@@ -315,7 +315,13 @@
   }
   function formatDuration(duration: number | null) { const seconds = Math.floor((duration ?? 0) / 1000); return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`; }
   function pathPoints() { return selectedPath.map((index) => { const point = position(index, circleLetters.length); return `${point.x},${point.y}`; }).join(' '); }
-  function wiktionaryUrl(word: string) { const host = lang === 'de' ? 'https://de.wiktionary.org/wiki/' : 'https://en.wiktionary.org/wiki/'; const locale = lang === 'de' ? 'de-DE' : 'en-US'; return `${host}${encodeURIComponent(word.toLocaleLowerCase(locale))}`; }
+  function wiktionaryUrl(word: string) {
+    const locale = lang === 'de' ? 'de-DE' : 'en-US';
+    const normalized = word.toLocaleLowerCase(locale);
+    const dictionaryTerm = lang === 'de' ? `${normalized.slice(0, 1).toLocaleUpperCase(locale)}${normalized.slice(1)}` : normalized;
+    const host = lang === 'de' ? 'https://de.wiktionary.org/wiki/' : 'https://en.wiktionary.org/wiki/';
+    return `${host}${encodeURIComponent(dictionaryTerm)}`;
+  }
   function inRange(row: number, col: number) { return grid.cells.get(cellKey(row, col)); }
   function isWordStart(row: number, col: number, orientation: Orientation) { return grid.placements.some((entry) => entry.orientation === orientation && entry.row === row && entry.col === col); }
   function isWordEnd(row: number, col: number, orientation: Orientation) { return grid.placements.some((entry) => entry.orientation === orientation && row === entry.row + (orientation === 'down' ? entry.word.length - 1 : 0) && col === entry.col + (orientation === 'across' ? entry.word.length - 1 : 0)); }

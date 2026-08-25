@@ -129,6 +129,8 @@
 - [x] Konfettifreien Abschlusszustand, Build und Vercel-Deployment prüfen.
 - [x] Browsergestützte Installationsaufforderung als eindeutliche PWA-Empfehlung formulieren.
 - [x] Installationshinweis, Build und Vercel-Deployment prüfen.
+- [x] Wiktionary-Links mit Wörterbuchgroßschreibung erzeugen und Spielwörter weiterhin in Versalien darstellen.
+- [x] Linkgroßschreibung, Build und Vercel-Deployment prüfen.
 - [ ] Bun-Version und Kompatibilität für die lokale SvelteKit-Entwicklung prüfen.
 - [ ] WordCircle-Skripte, Lockfile und Paketverwaltung auf Bun umstellen.
 - [ ] Repository psyops-sv prüfen und seine vorhandene technische Basis erfassen.
