@@ -33,22 +33,6 @@
   --radius-badge: 999px;
 }
 
-[data-theme='dark'] {
-  color-scheme: dark;
-  --color-base-100: #102238;
-  --color-base-200: #0b192a;
-  --color-base-300: #1b3452;
-  --color-base-content: #fffdf7;
-  --color-primary: #e6a527;
-  --color-primary-content: #172a45;
-  --color-secondary: #dce9f7;
-  --color-secondary-content: #102238;
-  --color-accent: #d98362;
-  --color-accent-content: #102238;
-  --color-neutral: #08121f;
-  --color-neutral-content: #fffdf7;
-}
-
 * { box-sizing: border-box; }
 
 html, body { min-height: 100%; }
@@ -62,14 +46,6 @@ body {
     linear-gradient(0deg, rgba(23, 42, 69, 0.018) 1px, transparent 1px);
   background-size: 48px 48px, 48px 48px;
   background-blend-mode: multiply, multiply;
-}
-
-html[data-theme='dark'] body {
-  color: #fffdf7;
-  background-color: #08121f;
-  background-image:
-    linear-gradient(90deg, rgba(255, 253, 247, 0.035) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(255, 253, 247, 0.025) 1px, transparent 1px);
 }
 
 button, input { font: inherit; }
