@@ -109,7 +109,7 @@
   $effect(() => { document.documentElement.dataset.theme = theme; document.documentElement.classList.toggle('dark', theme === 'dark'); localStorage.setItem('wordcircle-theme', theme); });
   $effect(() => { localStorage.setItem('wordcircle-vibration', vibration ? 'on' : 'off'); });
   $effect(() => { localStorage.setItem(BACKWARD_WORDS_KEY, allowBackwardWords ? 'on' : 'off'); });
-  $effect(() => { if (vocabularyLevel === 'a1' && includeLowerVocabulary) includeLowerVocabulary = false; localStorage.setItem(VOCABULARY_LEVEL_KEY, vocabularyLevel); localStorage.setItem(INCLUDE_LOWER_VOCABULARY_KEY, includeLowerVocabulary ? 'on' : 'off'); });
+  $effect(() => { if ((vocabularyLevel === 'a1' || requiresCumulativePool(lang, vocabularyLevel)) && !includeLowerVocabulary) includeLowerVocabulary = vocabularyLevel !== 'a1'; localStorage.setItem(VOCABULARY_LEVEL_KEY, vocabularyLevel); localStorage.setItem(INCLUDE_LOWER_VOCABULARY_KEY, includeLowerVocabulary ? 'on' : 'off'); });
   $effect(() => { localStorage.setItem(ROUND_TOTAL_KEY, String(completedRounds)); });
   $effect(() => { localStorage.setItem(ROUND_HISTORY_KEY, JSON.stringify(recentBaseWords)); });
   $effect(() => { if (tutorialOpen) localStorage.setItem(TUTORIAL_STATE_KEY, 'open'); });
@@ -138,7 +138,12 @@
   function completeTutorial() { localStorage.setItem(TUTORIAL_STATE_KEY, 'complete'); tutorialOpen = false; }
   function isVocabularyLevel(value: unknown): value is VocabularyLevel { return typeof value === 'string' && vocabularyLevels.includes(value as VocabularyLevel); }
   function readVocabularyLevel(): VocabularyLevel { if (typeof localStorage === 'undefined') return 'a1'; const value = localStorage.getItem(VOCABULARY_LEVEL_KEY); return isVocabularyLevel(value) ? value : 'a1'; }
-  function selectedPool(language: Language, level: VocabularyLevel, includeLower = false) { const end = vocabularyLevels.indexOf(level); const levels = includeLower ? vocabularyLevels.slice(0, end + 1) : [level]; return levels.flatMap((entry) => wordPools[language][entry]); }
+  function viableBaseCount(pool: string[]) {
+    const normalized = [...new Set(pool.map((word) => word.trim().toUpperCase()).filter((word) => /^[A-ZÄÖÜẞ]+$/.test(word) && word.length >= 3 && word.length <= 8))];
+    return normalized.filter((word) => word.length >= 5 && word.length <= 8 && normalized.filter((candidate) => candidate !== word && canSpell(candidate, [...word])).length >= 5).length;
+  }
+  function requiresCumulativePool(language: Language, level: VocabularyLevel) { return level !== 'a1' && viableBaseCount(wordPools[language][level]) === 0; }
+  function selectedPool(language: Language, level: VocabularyLevel, includeLower = false) { const end = vocabularyLevels.indexOf(level); const levels = includeLower || requiresCumulativePool(language, level) ? vocabularyLevels.slice(0, end + 1) : [level]; return levels.flatMap((entry) => wordPools[language][entry]); }
   function coordinate(key: string) { const [row, col] = key.split(':').map(Number); return { row, col }; }
   function makeRng(seed: number) { let value = seed >>> 0; return () => { value = (value * 1664525 + 1013904223) >>> 0; return value / 4294967296; }; }
   function shuffle<T>(values: T[], rng: () => number) { const result = [...values]; for (let index = result.length - 1; index > 0; index -= 1) { const swap = Math.floor(rng() * (index + 1)); [result[index], result[swap]] = [result[swap], result[index]]; } return result; }
@@ -300,7 +305,7 @@
   }
   function selectLanguage(nextLanguage: Language) { newRound(nextLanguage, true); settingsOpen = false; }
   function selectBackwardWords(nextValue: boolean) { allowBackwardWords = nextValue; newRound(); }
-  function selectVocabularyLevel(nextLevel: VocabularyLevel) { vocabularyLevel = nextLevel; if (nextLevel === 'a1') includeLowerVocabulary = false; newRound(); }
+  function selectVocabularyLevel(nextLevel: VocabularyLevel) { vocabularyLevel = nextLevel; includeLowerVocabulary = nextLevel !== 'a1' && requiresCumulativePool(lang, nextLevel); newRound(); }
   function selectIncludeLowerVocabulary(nextValue: boolean) { includeLowerVocabulary = nextValue; newRound(); }
   function position(index: number, total: number) { const angle = (index / total) * Math.PI * 2 - Math.PI / 2; return { x: CIRCLE + LETTER_RADIUS * Math.cos(angle), y: CIRCLE + LETTER_RADIUS * Math.sin(angle) }; }
   function pointFromEvent(event: PointerEvent) { const rect = circleEl?.getBoundingClientRect(); if (!rect) return null; return { x: ((event.clientX - rect.left) / rect.width) * 292, y: ((event.clientY - rect.top) / rect.height) * 292 }; }
