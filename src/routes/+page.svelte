@@ -19,11 +19,13 @@
   import IconDownload from '~icons/material-symbols/download-rounded';
   import IconHelp from '~icons/material-symbols/help-rounded';
   import IconGithub from '~icons/fa6-brands/github';
+  import IconTelegram from '~icons/fa6-brands/telegram';
   import IconLight from '~icons/material-symbols/light-mode-rounded';
   import IconSettings from '~icons/material-symbols/settings-rounded';
   import IconVibrate from '~icons/material-symbols/vibration-rounded';
 
   type Language = 'de' | 'en';
+  type InterfaceLocale = Language | 'fa';
   type Theme = 'light' | 'dark';
   type VocabularyLevel = 'a1' | 'a2' | 'b1' | 'b2' | 'c1' | 'c2';
   type Orientation = 'across' | 'down';
@@ -45,11 +47,15 @@
   const BACKWARD_WORDS_KEY = 'wordcircle-backward-words-v1';
   const VOCABULARY_LEVEL_KEY = 'wordcircle-vocabulary-level-v1';
   const INCLUDE_LOWER_VOCABULARY_KEY = 'wordcircle-include-lower-vocabulary-v1';
+  const LANGUAGE_KEY = 'wordcircle-language-v1';
+  const INTERFACE_LOCALE_KEY = 'wordcircle-interface-locale-v1';
   const TUTORIAL_STATE_KEY = 'wordcircle-tutorial-state-v1';
   const copy = {
-    de: { label: 'Wortkreis', hint: 'Die Spur ziehen, Wort für Wort.', allDone: 'Rätsel gelöst', time: 'Lösungszeit', continue: 'Fortsetzen', explain: 'Wort im Wiktionary erklären', install: 'Als App installieren', installHint: 'In diesem Browser verfügbar · offline spielen', language: 'Sprache', vocabulary: 'Niveau', includeLower: 'Niedrigere Niveaus', appearance: 'Darstellung', light: 'Hell', dark: 'Dunkel', settings: 'Einstellungen', vibration: 'Vibration', backwards: 'Rückwärts schreiben', settingsHint: 'Dein Wortspiel, deine Stimmung.', round: 'Runde', completed: 'Gelöste Runden', tracePrompt: 'SPUR ZIEHEN', traceActive: 'SPUR', tutorialKicker: 'Erste Runde', tutorialTitle: 'Drei kurze Schritte.', tutorialTrace: 'Ziehe über die Buchstaben, um ein Wort zu bilden.', tutorialGrid: 'Jeder Treffer füllt das Kreuzworträtsel.', tutorialHelp: 'Das Fragezeichen zeigt nach einem Treffer die Erklärung.', tutorialStart: 'Losspielen' },
-    en: { label: 'WordCircle', hint: 'Trace the letters, one word at a time.', allDone: 'Puzzle solved', time: 'Solve time', continue: 'Continue', explain: 'Explain this word in Wiktionary', install: 'Install as an app', installHint: 'Available in this browser · play offline', language: 'Language', vocabulary: 'Level', includeLower: 'Include lower levels', appearance: 'Appearance', light: 'Light', dark: 'Dark', settings: 'Settings', vibration: 'Vibration', backwards: 'Spell backwards', settingsHint: 'Your word game, your mood.', round: 'Round', completed: 'Rounds solved', tracePrompt: 'TRACE', traceActive: 'PATH', tutorialKicker: 'First round', tutorialTitle: 'Three quick steps.', tutorialTrace: 'Trace across letters to form a word.', tutorialGrid: 'Each correct word fills the crossword.', tutorialHelp: 'After a correct word, the question mark opens an explanation.', tutorialStart: 'Start playing' }
+    de: { label: 'Wortkreis', hint: 'Die Spur ziehen, Wort für Wort.', allDone: 'Rätsel gelöst', time: 'Lösungszeit', continue: 'Fortsetzen', explain: 'Wort im Wiktionary erklären', install: 'Als App installieren', installHint: 'In diesem Browser verfügbar · offline spielen', language: 'Sprache', vocabulary: 'Niveau', includeLower: 'Niedrigere Niveaus', appearance: 'Darstellung', light: 'Hell', dark: 'Dunkel', settings: 'Einstellungen', vibration: 'Vibration', backwards: 'Rückwärts schreiben', settingsHint: 'Dein Wortspiel, deine Stimmung.', round: 'Runde', completed: 'Gelöste Runden', tracePrompt: 'SPUR ZIEHEN', traceActive: 'SPUR', tutorial: 'Tutorial', tutorialKicker: 'Erste Runde', tutorialTitle: 'Drei kurze Schritte.', tutorialTrace: 'Ziehe über die Buchstaben, um ein Wort zu bilden.', tutorialGrid: 'Jeder Treffer füllt das Kreuzworträtsel.', tutorialHelp: 'Das Fragezeichen zeigt nach einem Treffer die Erklärung.', tutorialStart: 'Losspielen', tutorialRestart: 'Tutorial erneut ansehen' },
+    en: { label: 'WordCircle', hint: 'Trace the letters, one word at a time.', allDone: 'Puzzle solved', time: 'Solve time', continue: 'Continue', explain: 'Explain this word in Wiktionary', install: 'Install as an app', installHint: 'Available in this browser · play offline', language: 'Language', vocabulary: 'Level', includeLower: 'Include lower levels', appearance: 'Appearance', light: 'Light', dark: 'Dark', settings: 'Settings', vibration: 'Vibration', backwards: 'Spell backwards', settingsHint: 'Your word game, your mood.', round: 'Round', completed: 'Rounds solved', tracePrompt: 'TRACE', traceActive: 'PATH', tutorial: 'Tutorial', tutorialKicker: 'First round', tutorialTitle: 'Three quick steps.', tutorialTrace: 'Trace across letters to form a word.', tutorialGrid: 'Each correct word fills the crossword.', tutorialHelp: 'After a correct word, the question mark opens an explanation.', tutorialStart: 'Start playing', tutorialRestart: 'View tutorial again' }
   } as const;
+  const faCopy = { label: 'وردسیرکل', hint: 'برای ساختن واژه روی حروف بکشید.', allDone: 'پازل حل شد', time: 'زمان حل', continue: 'ادامه', explain: 'توضیح واژه در ویکی‌واژه', install: 'نصب به‌عنوان برنامه', installHint: 'در این مرورگر در دسترس است · بازی آفلاین', language: 'زبان بازی', vocabulary: 'سطح', includeLower: 'شامل سطح‌های پایین‌تر', appearance: 'نمایش', light: 'روشن', dark: 'تیره', settings: 'تنظیمات', vibration: 'لرزش', backwards: 'نوشتن برعکس', settingsHint: 'بازی واژه، حسِ خودت.', round: 'دور', completed: 'دورهای حل‌شده', tracePrompt: 'حروف را بکش', traceActive: 'مسیر', tutorial: 'آموزش', tutorialKicker: 'شروع بازی', tutorialTitle: 'سه گام کوتاه.', tutorialTrace: 'برای ساخت واژه روی حروف بکشید.', tutorialGrid: 'هر پاسخ درست جدول را کامل می‌کند.', tutorialHelp: 'پس از پاسخ درست، علامت سؤال توضیح را باز می‌کند.', tutorialStart: 'شروع بازی', tutorialRestart: 'آموزش را دوباره ببینید' } as const;
+  const persianTelegramMessage = 'مفید بود یه ❤️ بفرست و برای دوستات ارسال کن! ✈️';
 
   const initialTheme: Theme = typeof localStorage !== 'undefined' && localStorage.getItem('wordcircle-theme') === 'dark' ? 'dark' : 'light';
   const initialVibration = typeof localStorage === 'undefined' || localStorage.getItem('wordcircle-vibration') !== 'off';
@@ -57,6 +63,8 @@
   const initialVocabularyLevel = readVocabularyLevel();
   const initialIncludeLowerVocabulary = typeof localStorage !== 'undefined' && localStorage.getItem(INCLUDE_LOWER_VOCABULARY_KEY) === 'on';
   const initialGame = readStoredGame();
+  const initialLanguage = readLanguage();
+  const initialInterfaceLocale = readInterfaceLocale();
   const initialCompletedRounds = readCompletedRounds();
   const initialRecentBases = readRecentBases();
   const initialTutorialState = typeof localStorage === 'undefined' ? null : localStorage.getItem(TUTORIAL_STATE_KEY);
@@ -64,7 +72,8 @@
   const CIRCLE = 146;
   const LETTER_RADIUS = 109;
 
-  let lang = $state<Language>(initialGame?.language ?? 'de');
+  let lang = $state<Language>(initialGame?.language ?? initialLanguage);
+  let interfaceLocale = $state<InterfaceLocale>(initialInterfaceLocale);
   let theme = $state<Theme>(initialTheme);
   let vibration = $state(initialVibration);
   let allowBackwardWords = $state(initialBackwardWords);
@@ -75,7 +84,7 @@
   let completedRounds = $state(initialCompletedRounds);
   let recentBaseWords = $state<string[]>(initialGame ? [...new Set([initialGame.words[0], ...initialRecentBases])] : initialRecentBases);
   let needsFreshRound = $state(!initialGame);
-  let currentRound = $state<Round>(initialGame ? roundFromStoredGame(initialGame) : buildRound(selectedPool('de', initialVocabularyLevel, initialIncludeLowerVocabulary), 483719, [], initialBackwardWords));
+  let currentRound = $state<Round>(initialGame ? roundFromStoredGame(initialGame) : buildRound(selectedPool(initialLanguage, initialVocabularyLevel, initialIncludeLowerVocabulary), 483719, [], initialBackwardWords));
   let selectedPath = $state<number[]>([]);
   let solvedWords = $state<string[]>(initialGame?.solvedWords ?? []);
   let feedback = $state<'correct' | 'wrong' | null>(null);
@@ -90,7 +99,8 @@
   let installPrompt = $state<InstallPromptEvent | null>(null);
   let tutorialOpen = $state(initialTutorialOpen);
 
-  const labels = $derived(copy[lang]);
+  const labels = $derived(interfaceLocale === 'fa' ? faCopy : copy[interfaceLocale]);
+  const interfaceLanguageLabel = $derived(interfaceLocale === 'fa' ? 'زبان رابط' : interfaceLocale === 'de' ? 'App-Sprache' : 'Interface language');
   const circleLetters = $derived(currentRound.letters);
   const grid = $derived(currentRound.grid);
   const solvedSet = $derived(new Set(solvedWords));
@@ -108,6 +118,8 @@
   });
 
   $effect(() => { document.documentElement.dataset.theme = theme; document.documentElement.classList.toggle('dark', theme === 'dark'); localStorage.setItem('wordcircle-theme', theme); });
+  $effect(() => { localStorage.setItem(LANGUAGE_KEY, lang); });
+  $effect(() => { localStorage.setItem(INTERFACE_LOCALE_KEY, interfaceLocale); });
   $effect(() => { localStorage.setItem('wordcircle-vibration', vibration ? 'on' : 'off'); });
   $effect(() => { localStorage.setItem(BACKWARD_WORDS_KEY, allowBackwardWords ? 'on' : 'off'); });
   $effect(() => { if ((vocabularyLevel === 'a1' || requiresCumulativePool(lang, vocabularyLevel)) && !includeLowerVocabulary) includeLowerVocabulary = vocabularyLevel !== 'a1'; localStorage.setItem(VOCABULARY_LEVEL_KEY, vocabularyLevel); localStorage.setItem(INCLUDE_LOWER_VOCABULARY_KEY, includeLowerVocabulary ? 'on' : 'off'); });
@@ -121,7 +133,7 @@
   $effect(() => {
     if (!needsFreshRound) return;
     needsFreshRound = false;
-    newRound('de', true);
+    newRound(lang, true);
   });
 
   $effect(() => {
@@ -137,6 +149,11 @@
 
   function cellKey(row: number, col: number) { return `${row}:${col}`; }
   function completeTutorial() { localStorage.setItem(TUTORIAL_STATE_KEY, 'complete'); tutorialOpen = false; }
+  function restartTutorial() { localStorage.setItem(TUTORIAL_STATE_KEY, 'open'); settingsOpen = false; tutorialOpen = true; }
+  function isLanguage(value: unknown): value is Language { return value === 'de' || value === 'en'; }
+  function readLanguage(): Language { if (typeof localStorage === 'undefined') return 'de'; const value = localStorage.getItem(LANGUAGE_KEY); return isLanguage(value) ? value : 'de'; }
+  function isInterfaceLocale(value: unknown): value is InterfaceLocale { return value === 'de' || value === 'en' || value === 'fa'; }
+  function readInterfaceLocale(): InterfaceLocale { if (typeof localStorage === 'undefined') return 'de'; const value = localStorage.getItem(INTERFACE_LOCALE_KEY); if (isInterfaceLocale(value)) return value; return readLanguage(); }
   function isVocabularyLevel(value: unknown): value is VocabularyLevel { return typeof value === 'string' && vocabularyLevels.includes(value as VocabularyLevel); }
   function readVocabularyLevel(): VocabularyLevel { if (typeof localStorage === 'undefined') return 'a1'; const value = localStorage.getItem(VOCABULARY_LEVEL_KEY); return isVocabularyLevel(value) ? value : 'a1'; }
   function viableBaseCount(pool: string[]) {
@@ -304,7 +321,9 @@
     startedAt = Date.now();
     completedDuration = null;
   }
-  function selectLanguage(nextLanguage: Language) { newRound(nextLanguage, true); settingsOpen = false; }
+  function selectLanguage(nextLanguage: Language) { newRound(nextLanguage, true); if (interfaceLocale !== 'fa') interfaceLocale = nextLanguage; settingsOpen = false; }
+  function selectInterfaceLocale(nextLocale: InterfaceLocale) { interfaceLocale = nextLocale; }
+  function selectTutorialLanguage(nextLocale: InterfaceLocale) { interfaceLocale = nextLocale; if (nextLocale !== 'fa' && nextLocale !== lang) newRound(nextLocale, true); }
   function selectBackwardWords(nextValue: boolean) { allowBackwardWords = nextValue; newRound(); }
   function selectVocabularyLevel(nextLevel: VocabularyLevel) { vocabularyLevel = nextLevel; includeLowerVocabulary = nextLevel !== 'a1' && requiresCumulativePool(lang, nextLevel); newRound(); }
   function selectIncludeLowerVocabulary(nextValue: boolean) { includeLowerVocabulary = nextValue; newRound(); }
@@ -353,8 +372,9 @@
   <section class="game-paper" aria-label={labels.label}>
     {#if tutorialOpen}
       <div class="tutorial-panel" role="dialog" aria-modal="true" aria-labelledby="tutorial-title">
-        <div class="tutorial-card">
+        <div class="tutorial-card" dir={interfaceLocale === 'fa' ? 'rtl' : 'ltr'} lang={interfaceLocale}>
           <p class="tutorial-kicker">{labels.tutorialKicker}</p>
+          <div class="tutorial-language" role="group" aria-label={interfaceLanguageLabel}><span>{interfaceLanguageLabel}</span><div class="tutorial-language-options"><button class:chosen={interfaceLocale === 'de'} onclick={() => selectTutorialLanguage('de')}>DE</button><button class:chosen={interfaceLocale === 'en'} onclick={() => selectTutorialLanguage('en')}>EN</button><button class:chosen={interfaceLocale === 'fa'} onclick={() => selectTutorialLanguage('fa')}>FA</button></div></div>
           <h1 id="tutorial-title">{labels.tutorialTitle}</h1>
           <ol class="tutorial-steps">
             <li><b>1</b><span>{labels.tutorialTrace}</span></li>
@@ -366,16 +386,19 @@
       </div>
     {/if}
     {#if settingsOpen}
-      <aside id="game-settings" class="settings-panel" aria-label={labels.settings}>
+      <aside id="game-settings" class="settings-panel" aria-label={labels.settings} dir={interfaceLocale === 'fa' ? 'rtl' : 'ltr'} lang={interfaceLocale}>
         <button class="settings-close" onclick={() => (settingsOpen = false)} aria-label="Close settings"><IconClose /></button>
         <div class="settings-intro"><span class="brand-mark" aria-hidden="true"><i></i><b></b></span><div><strong>WordCircle</strong><p>{labels.settingsHint}</p></div></div>
         <div class="setting-row"><span>{labels.language}</span><div class="segmented"><button class:chosen={lang === 'de'} onclick={() => selectLanguage('de')}>DE</button><button class:chosen={lang === 'en'} onclick={() => selectLanguage('en')}>EN</button></div></div>
+        <div class="setting-row interface-locale-row"><span>{interfaceLanguageLabel}</span><div class="segmented locale-segmented"><button class:chosen={interfaceLocale === 'de'} onclick={() => selectInterfaceLocale('de')}>DE</button><button class:chosen={interfaceLocale === 'en'} onclick={() => selectInterfaceLocale('en')}>EN</button><button class:chosen={interfaceLocale === 'fa'} onclick={() => selectInterfaceLocale('fa')}>FA</button></div></div>
         <div class="setting-row vocabulary-row"><span>{labels.vocabulary}</span><div class="segmented level-segmented">{#each vocabularyLevels as level}<button class:chosen={vocabularyLevel === level} onclick={() => selectVocabularyLevel(level)}>{level.toUpperCase()}</button>{/each}</div></div>
         {#if vocabularyLevel !== 'a1'}<div class="setting-row vibration-row include-lower-row"><span>{labels.includeLower}</span><input aria-label={labels.includeLower} type="checkbox" class="toggle toggle-sm" checked={includeLowerVocabulary} onchange={(event) => selectIncludeLowerVocabulary((event.currentTarget as HTMLInputElement).checked)} /></div>{/if}
         <div class="setting-row"><span>{labels.appearance}</span><div class="segmented"><button class:chosen={theme === 'light'} onclick={() => (theme = 'light')}><IconLight />{labels.light}</button><button class:chosen={theme === 'dark'} onclick={() => (theme = 'dark')}><IconDark />{labels.dark}</button></div></div>
         <div class="setting-row vibration-row"><span><IconVibrate />{labels.vibration}</span><input aria-label={labels.vibration} type="checkbox" class="toggle toggle-sm" bind:checked={vibration} /></div>
         <div class="setting-row vibration-row"><span>{labels.backwards}</span><input aria-label={labels.backwards} type="checkbox" class="toggle toggle-sm" checked={allowBackwardWords} onchange={(event) => selectBackwardWords((event.currentTarget as HTMLInputElement).checked)} /></div>
+        <div class="setting-row tutorial-restart-row"><span>{labels.tutorial}</span><button onclick={restartTutorial}>{labels.tutorialRestart}</button></div>
         <div class="setting-row completion-total"><span>{labels.completed}</span><strong>{completedRounds}</strong></div>
+        {#if interfaceLocale === 'fa'}<a class="settings-telegram" href="https://t.me/yasamanabedin" target="_blank" rel="noreferrer" lang="fa" dir="rtl"><IconTelegram aria-hidden="true" /><span>{persianTelegramMessage}</span></a>{/if}
         <a class="settings-github" href="https://github.com/PXNX/words-sv" target="_blank" rel="noreferrer"><IconGithub aria-hidden="true" /><span>GitHub · PXNX/words-sv</span></a>
       </aside>
     {/if}
@@ -482,12 +505,19 @@
   :global(html.dark) .wiktionary-link { border-color:#84909b;background:#2b3d57;color:#d8dde1; }
   .settings-github { display:flex;align-items:center;justify-content:center;gap:.42rem; }
   .settings-github :global(svg) { width:1rem;height:1rem; }
+  .interface-locale-row .locale-segmented button { min-width:1.9rem; }
+  .settings-telegram { display:flex;align-items:center;justify-content:center;gap:.48rem;margin-top:1rem;padding:.54rem .7rem;border:1px solid #2aab2e;background:rgba(42,171,46,.08);color:#237a26;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:700;line-height:1.45;text-align:right;text-decoration:none; }.settings-telegram :global(svg) { width:1.12rem;height:1.12rem;flex:none; }.settings-telegram:hover,.settings-telegram:focus-visible { background:#2aab2e;color:#fffdf7;outline:0; }.settings-telegram:focus-visible { outline:2px solid #e6a527;outline-offset:3px; }
+  :global(html.dark) .settings-telegram { border-color:#56c85a;background:rgba(86,200,90,.13);color:#a9e8ab; }
+  .tutorial-restart-row button { min-height:1.85rem;padding:0 .62rem;border:1px solid #a45e38;border-radius:0;background:transparent;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.57rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;transition:background .16s ease,color .16s ease,transform .16s cubic-bezier(.23,1,.32,1); }.tutorial-restart-row button:hover,.tutorial-restart-row button:focus-visible { background:#a45e38;color:#fffdf7;outline:0; }.tutorial-restart-row button:active { transform:scale(.97); }
+  :global(html.dark) .tutorial-restart-row button { border-color:#e6a527;color:#e6a527; }:global(html.dark) .tutorial-restart-row button:hover,:global(html.dark) .tutorial-restart-row button:focus-visible { background:#e6a527;color:#172a45; }
   @media (max-width:579px) { .selection-area.completion-area { height:54px;min-height:54px;padding:0; } }
   /* Papier & Tinte onboarding: a calm vertical folio with registration details, kept outside the idle game-input preview. */
   .tutorial-panel { isolation:isolate;background:linear-gradient(90deg,rgba(23,42,69,.055) 1px,transparent 1px) 1.15rem 0/1px 100%,linear-gradient(90deg,transparent calc(100% - 1.15rem),rgba(23,42,69,.055) calc(100% - 1.15rem),rgba(23,42,69,.055) calc(100% - 1.05rem),transparent calc(100% - 1.05rem)),#fffdf7; }
   .tutorial-panel::before { content:'WORDCIRCLE · DAILY LANGUAGE FOLIO'; position:absolute;z-index:-1;top:1.35rem;left:1.55rem;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.48rem;font-weight:800;letter-spacing:.16em;opacity:.68; }
   .tutorial-panel::after { content:'';position:absolute;z-index:-1;right:1.55rem;bottom:1.45rem;width:1.12rem;height:1.12rem;border:1px solid #172a45;border-radius:50%;box-shadow:.42rem .42rem 0 -1px #fffdf7,.42rem .42rem 0 0 #e6a527;opacity:.72; }
   .tutorial-card { position:relative;box-shadow:8px 8px 0 rgba(230,165,39,.18),0 0 0 4px rgba(255,253,247,.8); }
+  .tutorial-language { display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin:0 0 .75rem;padding-bottom:.55rem;border-bottom:1px solid rgba(23,42,69,.18); }.tutorial-language>span { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase; }.tutorial-language-options { display:flex;border:1px solid #172a45; }.tutorial-language-options button { min-width:2.35rem;min-height:1.55rem;border:0;border-right:1px solid #172a45;background:transparent;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:800;letter-spacing:.08em;transition:background .16s ease,color .16s ease; }.tutorial-language-options button:last-child { border-right:0; }.tutorial-language-options button.chosen { background:#172a45;color:#fffdf7; }.tutorial-language-options button:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
+  :global(html.dark) .tutorial-language { border-color:rgba(255,253,247,.25); }.tutorial-language-options { border-color:#fffdf7; }.tutorial-language-options button { border-color:#fffdf7;color:#fffdf7; }.tutorial-language-options button.chosen { background:#e6a527;color:#172a45; }
   .tutorial-card::after { content:'01';position:absolute;right:.7rem;bottom:.55rem;color:rgba(23,42,69,.48);font-family:'DM Sans',sans-serif;font-size:.48rem;font-weight:800;letter-spacing:.12em; }
   :global(html.dark) .tutorial-panel { background:linear-gradient(90deg,rgba(255,253,247,.11) 1px,transparent 1px) 1.15rem 0/1px 100%,linear-gradient(90deg,transparent calc(100% - 1.15rem),rgba(255,253,247,.11) calc(100% - 1.15rem),rgba(255,253,247,.11) calc(100% - 1.05rem),transparent calc(100% - 1.05rem)),#172a45; }.tutorial-panel::before { color:#fffdf7; }.tutorial-panel::after { border-color:#fffdf7;box-shadow:.42rem .42rem 0 -1px #172a45,.42rem .42rem 0 0 #e6a527; }.tutorial-card::after { color:rgba(255,253,247,.56); }
   @media (prefers-reduced-motion:reduce) { .letter-node:not(.active),.settings-panel,.crossword-cell.solved,.completion-inline { animation:none; } }

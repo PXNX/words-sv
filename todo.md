@@ -150,3 +150,15 @@
 - [x] Abschlusssteuerung exakt über dem Eingabebereich zentrieren.
 - [x] GitHub-Verweis in den Einstellungen mit Unplugin-Icon ergänzen.
 - [x] Verfeinerungen, Build und Vercel-Deployment prüfen und nach PXNX/words-sv übertragen.
+
+- [x] Bestehendes Tutorial und lokale Abschluss-Persistenz für einen manuellen Neustart prüfen.
+- [x] Einstellungen um eine klare Aktion zum erneuten Anzeigen des Tutorials ergänzen.
+- [ ] Tutorialneustart, lokale Persistenz, Build und Vercel-Deployment prüfen und veröffentlichen.
+
+- [x] Sprachauswahl vor dem ersten Tutorial anzeigen.
+- [x] Gewählte Sprache lokal speichern und für spätere Sitzungen wiederherstellen.
+- [ ] Onboarding-Sprachauswahl, Persistenz, Build und Vercel-Deployment prüfen und veröffentlichen.
+
+- [x] Persian als Interface-Locale ergänzen, ohne die spielbaren Deutsch-/Englisch-Wortpools zu ändern.
+- [x] Telegram-Verweis nur bei ausgewähltem Persian in den Einstellungen anzeigen.
+- [ ] Persian-Interface, Telegram-Verweis, Build und Vercel-Deployment prüfen und veröffentlichen.
