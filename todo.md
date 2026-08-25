@@ -113,6 +113,8 @@
 - [x] Änderungen nach PXNX/words-sv übertragen und das Vercel-Deployment verifizieren.
 - [x] Abschlusszustand ohne Unschärfe direkt anstelle des Eingabebereichs darstellen.
 - [x] Abschlusszustand, Build und Vercel-Deployment prüfen.
+- [x] App-Name und Logo aus der inaktiven Eingabevorschau entfernen.
+- [x] Bereinigte Eingabevorschau, Build und Vercel-Deployment prüfen.
 - [ ] Bun-Version und Kompatibilität für die lokale SvelteKit-Entwicklung prüfen.
 - [ ] WordCircle-Skripte, Lockfile und Paketverwaltung auf Bun umstellen.
 - [ ] Repository psyops-sv prüfen und seine vorhandene technische Basis erfassen.
