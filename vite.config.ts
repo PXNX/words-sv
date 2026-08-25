@@ -14,8 +14,8 @@ export default defineConfig({
     }),
     VitePWA({
       registerType: 'autoUpdate',
-      injectRegister: 'auto',
-      includeAssets: ['favicon.svg', 'icons/wordcircle-192.svg', 'icons/wordcircle-512.svg'],
+      injectRegister: 'script',
+      includeAssets: ['favicon.svg', 'icons/wordcircle-192.svg', 'icons/wordcircle-512.svg', 'word-data-attribution.txt'],
       manifest: {
         name: 'WordCircle',
         short_name: 'WordCircle',
@@ -23,6 +23,7 @@ export default defineConfig({
         theme_color: '#172A45',
         background_color: '#FFFDF7',
         display: 'standalone',
+        display_override: ['standalone', 'minimal-ui'],
         start_url: '/',
         scope: '/',
         lang: 'de',
@@ -33,10 +34,13 @@ export default defineConfig({
       },
       workbox: {
         navigateFallback: 'index.html',
-        globPatterns: ['**/*.{html,js,css,svg,json,webmanifest}']
+        globPatterns: ['**/*.{html,js,css,svg,json,webmanifest,txt}'],
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
+        skipWaiting: true
       },
       devOptions: {
-        enabled: true,
+        enabled: false,
         type: 'module'
       }
     })

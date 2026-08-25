@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "vite dev --host 0.0.0.0",
+    "data:build": "bun run tools/generate-word-data.mjs",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
