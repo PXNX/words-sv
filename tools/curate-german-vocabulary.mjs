@@ -22,8 +22,18 @@ const excludedExistingForms = new Set([
   'ANALY', 'ANSPRU', 'ANNE', 'ANAL', 'ANALY', 'AUS', 'BEDINGT', 'BLAU', 'CANE',
   'EINFLU', 'FREI', 'GRAU', 'HEUL', 'LASE', 'LERNE', 'LIEß', 'LISS', 'LYSE',
   'MISE', 'MUTE', 'NUAN', 'ORDA', 'PARA', 'PAX', 'PRÄM', 'RATE', 'RISK', 'ROTE',
-  'RUSS', 'SAMMEN', 'SEN', 'SIR', 'SUD', 'SUCH', 'TAN', 'THEOR', 'URTE', 'WIRK', 'WURDE', 'ZUSAM', 'HEUL'
+  'MUSS', 'SAMMEN', 'SEN', 'SIR', 'SUD', 'SUCH', 'TAN', 'THEOR', 'URTE', 'VERLASS', 'WIRK', 'WURDE', 'ZUSAM', 'HEUL', 'STRASS'
 ]);
+const legacySharpSReplacements = new Map([
+  ['FUSS', 'FUẞ'],
+  ['MASS', 'MAẞ'],
+  ['RUSS', 'RUẞ'],
+  ['SCHOSS', 'SCHOẞ'],
+  ['SPASS', 'SPAẞ']
+]);
+const lowercaseSharpSReplacements = new Map(
+  [...legacySharpSReplacements].map(([legacy, corrected]) => [legacy.toLocaleLowerCase('de-DE'), corrected.toLocaleLowerCase('de-DE')])
+);
 const puzzleWord = /^[a-zäöüß]{3,8}$/iu;
 const coreInfinitives = [
   'sein', 'haben', 'heißen', 'kommen', 'gehen', 'wohnen', 'lernen', 'spielen', 'machen', 'arbeiten', 'lesen', 'schreiben', 'hören', 'sehen', 'sprechen', 'essen', 'trinken', 'kaufen', 'brauchen', 'können',
@@ -40,11 +50,16 @@ function parseNoun(line) {
 }
 
 function normalize(word) {
-  return word.normalize('NFC').toLocaleLowerCase('de-DE');
+  const normalized = word.normalize('NFC').toLocaleLowerCase('de-DE');
+  return lowercaseSharpSReplacements.get(normalized) ?? normalized;
 }
 
 function toPuzzleForm(word) {
-  return normalize(word).toLocaleUpperCase('de-DE');
+  const sharpSPlaceholder = '\uE000';
+  return normalize(word)
+    .replaceAll('ß', sharpSPlaceholder)
+    .toLocaleUpperCase('de-DE')
+    .replaceAll(sharpSPlaceholder, 'ẞ');
 }
 
 function isPuzzleWord(word) {
@@ -94,6 +109,11 @@ const rankedNouns = ranked(nounCandidates);
 const rankedVerbs = [...new Set(coreInfinitives.map(normalize))]
   .filter((word) => isPuzzleWord(word) && isPuzzleForm(word))
   .map(toPuzzleForm);
+const transliteratedSharpSForms = new Set(
+  [...rankedNouns, ...rankedVerbs]
+    .filter((word) => word.includes('ẞ'))
+    .map((word) => word.replaceAll('ẞ', 'SS'))
+);
 let nounCursor = 0;
 let verbCursor = 0;
 const summary = {};
@@ -101,7 +121,9 @@ const summary = {};
 for (const level of levels) {
   const filePath = resolve(projectRoot, 'src', 'lib', 'data', `words.de.${level}.json`);
   const existing = JSON.parse(await readFile(filePath, 'utf8'));
-  const retained = existing.filter((word) => !excludedExistingForms.has(word) && isPuzzleWord(normalize(word)));
+  const retained = existing
+    .map((word) => legacySharpSReplacements.get(word) ?? word)
+    .filter((word) => !excludedExistingForms.has(word) && isPuzzleWord(normalize(word)) && !transliteratedSharpSForms.has(word));
   const nouns = rankedNouns.slice(nounCursor, nounCursor + quotas[level].nouns);
   const verbs = rankedVerbs.slice(verbCursor, verbCursor + quotas[level].verbs);
   nounCursor += quotas[level].nouns;

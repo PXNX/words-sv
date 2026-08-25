@@ -62,7 +62,6 @@
   "LEICH",
   "RECHT",
   "KAUF",
-  "VERLASS",
   "TOD",
   "ALTER",
   "ZAHL",
@@ -100,7 +99,7 @@
   "WAHRHEIT",
   "VERKAUF",
   "ANFANG",
-  "SPASS",
+  "SPAẞ",
   "HUND",
   "BETT",
   "BUCH",
@@ -121,7 +120,6 @@
   "ARSCH",
   "SCHENK",
   "ZEUG",
-  "STRASS",
   "RAT",
   "GANG",
   "ZEH",
@@ -207,5 +205,8 @@
   "SCHLAFEN",
   "SUCHEN",
   "TANZEN",
-  "AUFHÖREN"
+  "AUFHÖREN",
+  "FUẞ",
+  "VERLASS",
+  "STRASS"
 ]
