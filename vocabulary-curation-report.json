@@ -1,7 +1,7 @@
 {
   "sourceCandidates": {
-    "nouns": 4814,
-    "infinitiveVerbs": 141
+    "nouns": 4815,
+    "infinitiveVerbs": 143
   },
   "summary": {
     "a1": {
@@ -10,29 +10,29 @@
       "infinitiveVerbsAdded": 20
     },
     "a2": {
-      "total": 209,
+      "total": 210,
       "nounsAdded": 140,
       "infinitiveVerbsAdded": 25
     },
     "b1": {
-      "total": 252,
+      "total": 254,
       "nounsAdded": 180,
       "infinitiveVerbsAdded": 25
     },
     "b2": {
-      "total": 290,
+      "total": 291,
       "nounsAdded": 220,
       "infinitiveVerbsAdded": 25
     },
     "c1": {
-      "total": 338,
+      "total": 339,
       "nounsAdded": 260,
       "infinitiveVerbsAdded": 25
     },
     "c2": {
-      "total": 350,
+      "total": 352,
       "nounsAdded": 300,
-      "infinitiveVerbsAdded": 21
+      "infinitiveVerbsAdded": 23
     }
   }
 }

@@ -8,7 +8,7 @@
   "NACH",
   "EINFLUSS",
   "FLUSS",
-  "FUSS",
+  "FUẞ",
   "EIN",
   "FEIN",
   "UMFELD",
@@ -90,7 +90,7 @@
   "KID",
   "ISEL",
   "PUTZ",
-  "MASS",
+  "MAẞ",
   "MIN",
   "DOPPEL",
   "VORTEIL",
@@ -336,5 +336,6 @@
   "AUFGEBEN",
   "AUSLÖSEN",
   "EINSEHEN",
+  "ZUGANG",
   "GRAU"
 ]

@@ -60,7 +60,6 @@
   "VON",
   "WENN",
   "ALL",
-  "MUSS",
   "NEIN",
   "GUT",
   "SEIN",
@@ -142,7 +141,6 @@
   "STADT",
   "BABY",
   "HABEN",
-  "HEISSEN",
   "KOMMEN",
   "GEHEN",
   "WOHNEN",
@@ -160,6 +158,8 @@
   "BRAUCHEN",
   "KÖNNEN",
   "DÜRFEN",
+  "HEIẞEN",
+  "MUSS",
   "AUS",
   "SIR"
 ]
