@@ -108,6 +108,9 @@
 - [x] Nutzer hat die GitHub-Anmeldung erneut abgeschlossen.
 - [x] Workspace-GitHub-Zugang erneut für den Push nach PXNX/words-sv prüfen.
 - [x] GitHub-Geräteautorisierung für den Workspace wurde im Browser als erfolgreich bestätigt.
+- [ ] Browsergestützte WordCircle-Installationsaufforderung ergänzen.
+- [ ] Installationsaufforderung, Manifest und Service Worker im Produktionsbuild prüfen.
+- [ ] Änderungen nach PXNX/words-sv übertragen und das Vercel-Deployment verifizieren.
 - [ ] Bun-Version und Kompatibilität für die lokale SvelteKit-Entwicklung prüfen.
 - [ ] WordCircle-Skripte, Lockfile und Paketverwaltung auf Bun umstellen.
 - [ ] Repository psyops-sv prüfen und seine vorhandene technische Basis erfassen.

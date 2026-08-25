@@ -4,11 +4,5 @@
   "bunVersion": "1.4.x",
   "installCommand": "bun install --frozen-lockfile",
   "buildCommand": "bun run build",
-  "outputDirectory": "build",
-  "rewrites": [
-    {
-      "source": "/:path*",
-      "destination": "/index.html"
-    }
-  ]
+  "outputDirectory": "build"
 }
