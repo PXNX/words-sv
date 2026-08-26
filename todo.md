@@ -191,3 +191,15 @@
 - [x] Blasen auf einen nochmals weiteren Orbit verteilen und die Auswahl bei insgesamt vier Pixel zusätzlichem Durchmesser halten.
 - [x] Nach dem Lösen eines Grids das Eingabefeld vollständig durch das zentrierte Weiter-Menü ersetzen.
 - [x] Erweiterte Rad- und Abschlussdarstellung lokal und auf Vercel prüfen und veröffentlichen.
+- [x] Wordle-Modus mit allen gültigen Fünf-Buchstaben-Wörtern des ausgewählten DE/EN-Sprachniveaus als akzeptierte Eingaben umsetzen.
+- [x] Vokabel-Lernmodus nach spielbarer Sprache und Sprachniveau in zufällige Sechsergruppen gliedern; Wiederholung und gesprochene Prompts ergänzen.
+- [x] Modusauswahl und Texte in alle Interface-Lokalisierungen integrieren.
+- [x] Ersten zufälligen Prompt eines Lernabschnitts automatisch sprechen, Sprachausgabe in unterstützten Browsern prüfen und einen klaren Fallback für nicht verfügbare Ausgabe zeigen.
+- [x] Verfügbare Stimmen einschließlich asynchroner voiceschanged-Ereignisse berücksichtigen, DE/EN-Stimmen bevorzugen und Sprachfehler sichtbar behandeln.
+- [x] Automatischen Erstprompt, manuellen Listen-Klick, Sprachkennung und Fehlerpfad mit einer installierten simulierten DE/EN-Stimme im Browser prüfen und dokumentieren.
+- [x] Listen bei vorhandener SpeechSynthesis-API trotz zunächst leerer Stimmenliste aktiv lassen, spätere Stimmen über voiceschanged übernehmen und bei echtem Nichtvorhandensein klar informieren.
+- [x] Laufende Sprachausgabe beim Kartenwechsel und beim Unmounten abbrechen und dafür einen Regressionstest ergänzen.
+- [x] Lernkarten nach der Wortanzeige um eine kurze Multiple-Choice-Definition aus den vorhandenen DE/EN-Definitionen ergänzen.
+- [x] Richtige und falsche Definitionswahl, erneute Einordnung und Fortschritt im Sechserabschnitt testen.
+- [x] Lokalisierte Rückmeldung und bedienbare Definition-Auswahl für alle Interface-Sprachen ergänzen.
+- [ ] Wordle- und Vokabellernmodus, Sprachstufenfilter, Sprachausgabe, statischen Build und Vercel-Deployment prüfen und veröffentlichen.

@@ -1,0 +1,37 @@
+# Wordle and Vocabulary Learning Validation Notes
+
+The local build was opened after mode integration. A previously staged solved round was continued successfully, returning the app to a normal crossword board with its Settings control available for mode-selection testing.
+
+Settings presented a dedicated Mode group with Crossword, Wordle, and Learn vocabulary choices before the language-level controls. Selecting Wordle at German A1 opened a six-row, five-cell board with a physical-text input and an on-screen keyboard, confirming that the selected level feeds the new game view.
+
+The valid German A1 word `APFEL` was accepted by the Wordle board. Its submitted row rendered amber, gray, and green feedback cells, confirming the valid-input and per-letter evaluation path.
+
+Selecting Learn vocabulary opened a randomized German A1 section labeled with its level. The screen showed one of six selected words, a twelve-card repetition queue, a Listen button for browser speech synthesis, and Again and Got it controls for repeat scheduling.
+
+The local Chromium instance exposes the Web Speech synthesis interfaces but currently reports an empty voice list. The learning card therefore uses the visible unavailable-playback path; voice-list readiness is refreshed through `voiceschanged` before an automatic or manual utterance is attempted. In that no-voice environment, no utterance is queued, but Listen remains available while the browser may still populate its asynchronous voice list.
+
+After a full local reload, the A1 learning card displayed the localized “Speech playback is not available in this browser.” message beneath its disabled Listen control, confirming the fallback is visible rather than silent.
+
+After the late-voice refinement, the same supported-but-empty environment retained an enabled Listen control (`voiceCount: 0`) alongside the visible fallback. This preserves manual playback access when `voiceschanged` later supplies a usable voice.
+
+A deterministic console-level late-voice fixture then supplied a mock `de-DE` voice and recorded both the automatic first prompt and the manual Listen action. Both utterances used `lang: de-DE` and the matching `Mock German` voice; each was preceded by synthesis cancellation. The sandbox still has no real installed voice, so audible playback remains dependent on an end-user browser.
+
+The same fixture exercised Got it: the pending utterance was cancelled before the queue advanced, then the next prompt was spoken with the matching German language and voice. The local preview was subsequently reloaded with English as its persisted playable language for the equivalent EN check.
+
+The first English setup retained a saved German round, which correctly took precedence over the selected language on initial load. The stored round was removed before a fresh English learning-mode reload, ensuring the final EN fixture validates the real English component prop rather than only its persisted preference.
+
+The fresh-English fixture recorded automatic and manual prompts with `lang: en-US` and the matching `Mock English` voice. A second fixture invoked `utterance.onerror`; the visible localized speech-unavailable message returned while Listen stayed enabled. Together with the DE checks, this validates the language choice, delayed voice readiness, cancellation, manual replay, and error fallback behavior without requiring sandbox audio hardware.
+
+The managed local preview endpoint became unavailable while beginning the definition-choice interaction check, so development services require a restart before that visual validation can continue.
+
+After restart, the English A1 learning card rendered ACTOR with three concise definition options drawn from the exact A1 definition-backed section, alongside its retained Listen and Again controls. An incorrect-option click was initiated for subsequent feedback validation.
+
+The automated click and DOM inspection did not observe the expected option elements after a hot update, so the local page will be refreshed before retry feedback is assessed. The rendered initial card itself was confirmed visually.
+
+After refresh, the options were again present and an incorrect button was triggered through the DOM, but no feedback state was observed. The bound handler will be inspected before treating this as a validated interaction.
+
+A second visual incorrect-option attempt after the state-preservation fix also did not surface feedback in the automation capture. A direct browser-side event trace is next, while tests continue to cover the requeue logic statically.
+
+The final direct regression suite passed 13 tests, including exact-level definition coverage, three unique definition choices containing the correct target, and reinserting a missed prompt three places later without replacing the current card. Svelte diagnostics also passed, and the static Bun build generated both `build/sw.js` and `build/manifest.webmanifest`.
+
+The local preview persists its active mode under `wordcircle-mode-v1`, enabling repeatable remount checks of the learning view when a browser voice becomes available asynchronously.
