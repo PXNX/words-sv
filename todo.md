@@ -218,6 +218,17 @@
 - [x] Ladezeichen nur für echte App-Initialisierung oder Navigation zeigen, statt bei jeder bereits bereiten Seitenansicht.
 - [x] 404, echtes Ladeverhalten, direkte Routen, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
 - [x] Vercel-Routing auf explizite Modus-Routen begrenzen und eine statische WordCircle-404-Datei für unbekannte Produktionspfade ausliefern.
-- [ ] Großes Wordle-Eingabefeld und Check-Schaltfläche entfernen; Buchstabengitter und Bildschirmtastatur als einzige Eingabe behalten.
-- [ ] Fünf über die Bildschirmtastatur gewählte Buchstaben als gültiges exaktes Stufenwort automatisch werten und ungültige Folgen klar rückmelden.
-- [ ] Keyboard-only-Wordle, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
+- [x] Großes Wordle-Eingabefeld und Check-Schaltfläche entfernen; Buchstabengitter und Bildschirmtastatur als einzige Eingabe behalten.
+- [x] Fünf über die Bildschirmtastatur gewählte Buchstaben als gültiges exaktes Stufenwort automatisch werten und ungültige Folgen klar rückmelden.
+- [x] Keyboard-only-Wordle, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
+- [x] Portrait-Ausrichtung erzwingen und Zoom-/Pinch-Gesten für die App sperren, ohne nötige Zugänglichkeitshinweise zu verdecken.
+- [x] Vokabelantworten über Touch zuverlässig auswerten, Rückmeldung zeigen und bei korrekter Antwort zum nächsten Eintrag fortschreiten lassen.
+- [x] Optionale lokale Erfolgstöne für grüne Wordle-Buchstaben, richtige Vokabelantworten und richtige Circle-Wörter ergänzen.
+- [x] Tonpräferenz in Einstellungen speichern und alle Interface-Lokalisierungen um die Steuerung ergänzen.
+- [x] Den Einstellungsmodus Crossword als Circle benennen und alle betroffenen Texte anpassen.
+- [ ] Mobile Einschränkungen, Vokabelprogression, Soundpräferenz, Circle-Bezeichnung, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
+- [x] Wordle-Gitter und Bildschirmtastatur vergrößern und weiter unterhalb der Überschrift platzieren.
+- [x] ẞ als zusätzliche Wordle-Bildschirmtaste ergänzen und die Eingabe-/Validierungsregeln prüfen.
+- [x] Kurzes spielbares Wordle-Tutorial mit klarer Orange-/Grün-Erklärung und geführter Übungsrunde ergänzen.
+- [x] Wordle-Tutorial in alle Interface-Lokalisierungen integrieren und über Einstellungen erneut startbar machen.
+- [x] Wordle-Scoring und Tutorial mit mehrfach vorkommenden Buchstaben prüfen, damit jede orange oder grüne Markierung die verfügbare Buchstabenanzahl korrekt berücksichtigt.

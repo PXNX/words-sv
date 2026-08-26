@@ -68,8 +68,14 @@ The follow-up static-404 repair, production commit `e647839`, returned the brand
 
 The local `/wordle` route now renders only the six-row grid and on-screen letter keyboard; the text field and Check button are absent. A browser-console sequence did not mutate the rendered row in this automation environment, so selected-level automatic keyboard validation remains covered by the direct regression test and will be rechecked in production with visible controls.
 
+Production commit `0748926` renders only the Wordle grid and keyboard with no input field or Check button. Clicking the visible A key placed A in the first active grid cell, confirming the on-screen keyboard path is active in production.
+
 The deployed site also rendered the English A1 Wordle view with its six five-cell rows, A1 heading, selected-level subtitle, text input, Check action, and on-screen keyboard.
 
 On the deployed English A1 board, ACTOR was accepted and rendered with five feedback cells. The invalid five-letter string ZZZZZ was visibly rejected with “This word is not part of this level.” This confirms the selected exact-level acceptance and rejection path in production.
 
 The local preview persists its active mode under `wordcircle-mode-v1`, enabling repeatable remount checks of the learning view when a browser voice becomes available asynchronously.
+
+An isolated mobile Chromium validation then reproduced and corrected the vocabulary interaction defect. The first direct-tap run exposed a real `effect_update_depth_exceeded` reactive cycle during learning-card hydration; it prevented answer feedback from rendering. The section and choice rebuild effects now use explicit source keys with untracked initialization. A subsequent direct tap on the correct definition showed the green feedback, invoked the mocked success-tone path, and advanced to a different card after the 520 ms transition.
+
+The same mobile validation opened `/wordle` with its dedicated tutorial ahead of the Circle onboarding. The German guided round entered `TASES` against `TASSE` one highlighted key at a time, rendering three green tiles and two orange tiles; it then entered `TASSE` and completed with five green tiles. This verifies the repeated-letter explanation and the two-pass scoring behavior in a rendered flow. The ẞ screen key was present, the settings sound toggle persisted `wordcircle-sound` as `off` and `on`, and a mocked AudioContext observed tutorial/vocabulary success tones. A 844×390 mobile viewport displayed the portrait guard and hid game content, while the 390×844 viewport rendered the playable controls.
