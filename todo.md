@@ -214,6 +214,7 @@
 - [x] Direkte statische Routen /circle, /wordle und /vocab den jeweiligen Spielmodi zuordnen.
 - [x] Einstellungen, lokale Modusauswahl, Browser-Zurück/Vorwärts und URL beim Wechsel eines Spielmodus konsistent synchronisieren.
 - [ ] Direkte Routen, Auto-Prüfung, Ladezeichen, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
-- [x] Passende WordCircle-404-Seite für unbekannte Routen mit klarer Rückkehr zu /circle gestalten.
+- [ ] Passende WordCircle-404-Seite für unbekannte Routen mit klarer Rückkehr zu /circle gestalten.
 - [x] Ladezeichen nur für echte App-Initialisierung oder Navigation zeigen, statt bei jeder bereits bereiten Seitenansicht.
 - [ ] 404, echtes Ladeverhalten, direkte Routen, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
+- [ ] Vercel-Routing auf explizite Modus-Routen begrenzen und eine statische WordCircle-404-Datei für unbekannte Produktionspfade ausliefern.

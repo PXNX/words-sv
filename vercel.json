@@ -7,6 +7,6 @@
   "outputDirectory": "build",
   "routes": [
     { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    { "src": "/(circle|wordle|vocab)/?", "dest": "/index.html" }
   ]
 }
