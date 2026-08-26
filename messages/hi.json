@@ -75,5 +75,15 @@
   "learning_correct": "सही है।",
   "learning_try_again": "पूरी तरह नहीं — फिर से प्रयास करें।",
   "learning_choose_word": "सुना हुआ शब्द चुनें।",
-  "learning_audio_prompt": "सुनें, फिर मिलान वाला शब्द चुनें।"
+  "learning_audio_prompt": "सुनें, फिर मिलान वाला शब्द चुनें।",
+  "streak": "दैनिक श्रृंखला",
+  "streak_done": "आज का लक्ष्य पूरा हुआ",
+  "streak_progress": "शब्दावली प्रगति",
+  "streak_time_left": "आज शेष समय",
+  "notifications": "श्रृंखला अनुस्मारक",
+  "notifications_enable": "अनुस्मारक चालू करें",
+  "notifications_disable": "अनुस्मारक बंद करें",
+  "notifications_enabled": "अनुस्मारक चालू हैं।",
+  "notifications_denied": "इस ब्राउज़र में सूचनाएँ अवरुद्ध हैं।",
+  "notifications_unavailable": "इस ब्राउज़र में पुश अनुस्मारक उपलब्ध नहीं हैं।"
 }

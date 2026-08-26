@@ -75,5 +75,15 @@
   "learning_correct": "ശരിയാണ്.",
   "learning_try_again": "പൂർണ്ണമായില്ല — വീണ്ടും ശ്രമിക്കുക.",
   "learning_choose_word": "കേട്ട വാക്ക് തിരഞ്ഞെടുക്കൂ.",
-  "learning_audio_prompt": "കേൾക്കൂ, പിന്നെ പൊരുത്തമുള്ള വാക്ക് തിരഞ്ഞെടുക്കൂ."
+  "learning_audio_prompt": "കേൾക്കൂ, പിന്നെ പൊരുത്തമുള്ള വാക്ക് തിരഞ്ഞെടുക്കൂ.",
+  "streak": "ദൈനംദിന തുടർച്ച",
+  "streak_done": "ഇന്നത്തെ ലക്ഷ്യം പൂർത്തിയായി",
+  "streak_progress": "പദസഞ്ചയ പുരോഗതി",
+  "streak_time_left": "ഇന്ന് ശേഷിക്കുന്ന സമയം",
+  "notifications": "തുടർച്ചാ ഓർമ്മപ്പെടുത്തലുകൾ",
+  "notifications_enable": "ഓർമ്മപ്പെടുത്തലുകൾ സജീവമാക്കുക",
+  "notifications_disable": "ഓർമ്മപ്പെടുത്തലുകൾ നിർത്തുക",
+  "notifications_enabled": "ഓർമ്മപ്പെടുത്തലുകൾ സജീവമാണ്.",
+  "notifications_denied": "ഈ ബ്രൗസറിൽ അറിയിപ്പുകൾ തടഞ്ഞിരിക്കുന്നു.",
+  "notifications_unavailable": "ഈ ബ്രൗസറിൽ പുഷ് ഓർമ്മപ്പെടുത്തലുകൾ ലഭ്യമല്ല."
 }

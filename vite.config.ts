@@ -11,6 +11,9 @@ export default defineConfig({
     sveltekit(),
     Icons({ compiler: 'svelte', autoInstall: false }),
     VitePWA({
+			strategies: 'injectManifest',
+			srcDir: 'src',
+			filename: 'sw.ts',
       registerType: 'autoUpdate',
       injectRegister: false,
       includeAssets: [
@@ -44,8 +47,7 @@ export default defineConfig({
           }
         ]
       },
-      workbox: {
-        navigateFallback: 'index.html',
+			injectManifest: {
         globPatterns: ['**/*.{html,js,css,png,svg,json,webmanifest}']
       },
       devOptions: { enabled: true, type: 'module' }

@@ -75,5 +75,15 @@
   "learning_correct": "Correct.",
   "learning_try_again": "Not quite — try again.",
   "learning_choose_word": "Choose the word you heard.",
-  "learning_audio_prompt": "Listen, then choose the matching word."
+  "learning_audio_prompt": "Listen, then choose the matching word.",
+  "streak": "Daily streak",
+  "streak_done": "Today is qualified",
+  "streak_progress": "Vocabulary progress",
+  "streak_time_left": "Time left today",
+  "notifications": "Streak reminders",
+  "notifications_enable": "Enable reminders",
+  "notifications_disable": "Disable reminders",
+  "notifications_enabled": "Reminders are enabled.",
+  "notifications_denied": "Notifications are blocked in this browser.",
+  "notifications_unavailable": "Push reminders are not available in this browser."
 }

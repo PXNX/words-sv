@@ -75,5 +75,15 @@
   "learning_correct": "Верно.",
   "learning_try_again": "Почти — попробуйте ещё раз.",
   "learning_choose_word": "Выберите услышанное слово.",
-  "learning_audio_prompt": "Послушайте и выберите подходящее слово."
+  "learning_audio_prompt": "Послушайте и выберите подходящее слово.",
+  "streak": "Ежедневная серия",
+  "streak_done": "День засчитан",
+  "streak_progress": "Прогресс словаря",
+  "streak_time_left": "Времени осталось сегодня",
+  "notifications": "Напоминания о серии",
+  "notifications_enable": "Включить напоминания",
+  "notifications_disable": "Отключить напоминания",
+  "notifications_enabled": "Напоминания включены.",
+  "notifications_denied": "Уведомления заблокированы в этом браузере.",
+  "notifications_unavailable": "Push-напоминания недоступны в этом браузере."
 }

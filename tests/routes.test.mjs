@@ -8,6 +8,9 @@ const loaderSource = await readFile(new URL('../src/lib/StartupLoader.svelte', i
 const errorSource = await readFile(new URL('../src/routes/+error.svelte', import.meta.url), 'utf8');
 const staticErrorSource = await readFile(new URL('../static/404.html', import.meta.url), 'utf8');
 const vercelConfig = JSON.parse(await readFile(new URL('../vercel.json', import.meta.url), 'utf8'));
+	const workerSource = await readFile(new URL('../src/sw.ts', import.meta.url), 'utf8');
+	const viteSource = await readFile(new URL('../vite.config.ts', import.meta.url), 'utf8');
+	const metadata = JSON.parse(await readFile(new URL('../src/lib/data/metadata.de.json', import.meta.url), 'utf8'));
 
 test('direct mode routes reuse the WordCircle page component', async () => {
 	for (const route of ['circle', 'wordle', 'vocab', 'settings']) {
@@ -47,4 +50,33 @@ test('Vercel keeps static files first and falls back to the app for direct mode 
 		{ handle: 'filesystem' },
 		{ src: '/(circle|wordle|vocab|settings)/?', dest: '/index.html' }
 	]);
+	});
+
+test('Home exposes the requested Settings link, streak status, language catalog, and article-aware vocabulary flow', () => {
+	assert.match(rootSource, /class="home-settings-link" onclick=\{goSettings\}/);
+	assert.match(rootSource, /class:qualified=\{streak\.qualified\} class="home-streak"/);
+	assert.match(rootSource, /const playableLanguages/);
+	for (const language of ['fr', 'it', 'es', 'pt', 'uk']) assert.match(rootSource, new RegExp(`code: '${language}'`));
+	assert.match(rootSource, /<LearningMode words=\{modeLevelWords\} definitions=\{wordDefinitions\[lang\]\} metadata=\{wordMetadata\[lang\]\}/);
+	assert.match(rootSource, /onWin=\{\(\) => void recordStreak\('wordle_completed'\)\}/);
+	assert.match(rootSource, /recordStreak\('circle_completed'\)/);
+});
+
+test('custom service worker and narrow endpoints support background reminders without a platform cron declaration', async () => {
+	assert.match(viteSource, /strategies: 'injectManifest'/);
+	assert.match(workerSource, /precacheAndRoute\(self\.__WB_MANIFEST\)/);
+	assert.match(workerSource, /addEventListener\('push'/);
+	assert.match(workerSource, /addEventListener\('notificationclick'/);
+	for (const file of ['api/push/public-key.mjs', 'api/push/subscribe.mjs', 'api/push/unsubscribe.mjs', 'api/cron/reminders.mjs']) {
+		const source = await readFile(new URL(`../${file}`, import.meta.url), 'utf8');
+		assert.ok(source.length > 80, `${file} must contain a real handler`);
+	}
+	assert.doesNotMatch(JSON.stringify(vercelConfig), /crons/);
+});
+
+test('German structured metadata carries grammatical fields and only a directly checked Duden rarity class', () => {
+	assert.deepEqual(metadata.HAUS, { type: 'Substantiv', gender: 'neuter', article: 'das', rarity: { source: 'Duden', dudenClass: 4, label: 'common' }, sources: ['Duden', 'ynsrc/gerhard-koebler'] });
+	assert.deepEqual(metadata.MANN.gender, 'masculine');
+	assert.equal(metadata.ARBEITEN.type, 'Verb');
+	assert.deepEqual(metadata.GARTEN.rarity, { source: 'Duden', dudenClass: 3, label: 'established' });
 });

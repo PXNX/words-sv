@@ -75,5 +75,15 @@
   "learning_correct": "Richtig.",
   "learning_try_again": "Nicht ganz — versuche es erneut.",
   "learning_choose_word": "Wähle das gehörte Wort.",
-  "learning_audio_prompt": "Höre zu und wähle das passende Wort."
+  "learning_audio_prompt": "Höre zu und wähle das passende Wort.",
+  "streak": "Tägliche Serie",
+  "streak_done": "Heute qualifiziert",
+  "streak_progress": "Vokabelfortschritt",
+  "streak_time_left": "Verbleibende Zeit heute",
+  "notifications": "Streak-Erinnerungen",
+  "notifications_enable": "Erinnerungen aktivieren",
+  "notifications_disable": "Erinnerungen deaktivieren",
+  "notifications_enabled": "Erinnerungen sind aktiviert.",
+  "notifications_denied": "Benachrichtigungen sind in diesem Browser blockiert.",
+  "notifications_unavailable": "Push-Erinnerungen sind in diesem Browser nicht verfügbar."
 }
