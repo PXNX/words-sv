@@ -226,7 +226,7 @@
 - [x] Optionale lokale Erfolgstöne für grüne Wordle-Buchstaben, richtige Vokabelantworten und richtige Circle-Wörter ergänzen.
 - [x] Tonpräferenz in Einstellungen speichern und alle Interface-Lokalisierungen um die Steuerung ergänzen.
 - [x] Den Einstellungsmodus Crossword als Circle benennen und alle betroffenen Texte anpassen.
-- [ ] Mobile Einschränkungen, Vokabelprogression, Soundpräferenz, Circle-Bezeichnung, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
+- [x] Mobile Einschränkungen, Vokabelprogression, Soundpräferenz, Circle-Bezeichnung, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
 - [x] Wordle-Gitter und Bildschirmtastatur vergrößern und weiter unterhalb der Überschrift platzieren.
 - [x] ẞ als zusätzliche Wordle-Bildschirmtaste ergänzen und die Eingabe-/Validierungsregeln prüfen.
 - [x] Kurzes spielbares Wordle-Tutorial mit klarer Orange-/Grün-Erklärung und geführter Übungsrunde ergänzen.
