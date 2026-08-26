@@ -2,8 +2,9 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
-const { definitionAnswerResult, definitionChoiceWords, evaluateWordleGuess, fiveLetterWords, insertLearningRepeat, pickLearningSection } = await import('../src/lib/modes.js');
+const { definitionAnswerResult, definitionChoiceWords, evaluateWordleGuess, fiveLetterWords, insertLearningRepeat, isValidWordleGuess, pickLearningSection } = await import('../src/lib/modes.js');
 const learningSource = await readFile(new URL('../src/lib/LearningMode.svelte', import.meta.url), 'utf8');
+const wordleSource = await readFile(new URL('../src/lib/WordleMode.svelte', import.meta.url), 'utf8');
 const levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
 
 test('five-letter mode accepts only normalized five-letter vocabulary entries', () => {
@@ -12,6 +13,16 @@ test('five-letter mode accepts only normalized five-letter vocabulary entries', 
 
 test('Wordle evaluation handles repeated letters without over-marking presents', () => {
   assert.deepEqual(evaluateWordleGuess('KÄLTE', 'KELLE'), ['correct', 'absent', 'correct', 'absent', 'correct']);
+});
+
+test('Wordle auto-submits only exact-level valid five-letter guesses', () => {
+  const a1Candidates = ['ACTOR', 'PENNY', 'APPLE'];
+  assert.equal(isValidWordleGuess(a1Candidates, 'actor'), true);
+  assert.equal(isValidWordleGuess(a1Candidates, 'other'), false);
+  assert.equal(isValidWordleGuess(a1Candidates, 'ACT'), false);
+  assert.match(wordleSource, /isValidWordleGuess\(candidates, guess\)\) submit\(\)/);
+  assert.match(wordleSource, /width:clamp\(13rem,66vw,21rem\)/);
+  assert.match(wordleSource, /min-height:3rem/);
 });
 
 test('learning sections select no more than six unique level words', () => {

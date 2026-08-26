@@ -8,6 +8,11 @@ export function fiveLetterWords(words) {
   return [...new Set(words.map(normalizePlayableWord).filter((word) => /^[A-ZÄÖÜẞ]{5}$/.test(word)))];
 }
 
+export function isValidWordleGuess(candidates, value) {
+  const normalized = normalizePlayableWord(value);
+  return normalized.length === 5 && candidates.includes(normalized);
+}
+
 export function evaluateWordleGuess(answer, guess) {
   const normalizedAnswer = normalizePlayableWord(answer);
   const normalizedGuess = normalizePlayableWord(guess);

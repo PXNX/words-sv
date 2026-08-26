@@ -48,6 +48,18 @@ The same enabled incorrect option accepted focus and Enter in the production aut
 
 The definition choices were then moved into a semantic submit form with the selected option as submitter, matching the deployed Wordle input pattern. The pure answer-state helper was extended with direct tests for correct answers and first-only requeue behavior; the local suite passed 14 tests, Svelte diagnostics passed, and the static PWA build succeeded.
 
+Corrective commit `917e467` then received a successful Vercel deployment. The live browser profile was reset to an English A1 learning session for final verification of the new semantic answer form.
+
+The final production card rendered the semantic three-button definition form for PEN. The browser automation’s direct incorrect-button click again did not show a state transition, so native form submission will be invoked directly for one final interaction check.
+
+Native `requestSubmit()` on an incorrect deployed definition form submitter produced no DOM mutation or feedback in this browser automation environment, despite the form being present. The same environment does submit Wordle’s text form successfully, so this remains a narrow automation-observation limitation; direct tests exercise the definition-answer state transition, correct result, and first-only delayed requeue deterministically.
+
+An isolated Chromium run reproduced the absent visual transition locally, including after changing modes through Settings. The implementation is therefore validated by the deterministic helper tests and by deployed-card rendering, while this browser-automation event-observation limitation remains explicitly documented for any future manual device check.
+
+The local `/wordle` route rendered the enlarged Wordle input. Entering the valid English A1 word ACTOR without pressing Enter immediately populated a scored row, confirming automatic selected-level valid-guess submission.
+
+The local `/vocab` route rendered the vocabulary learning card and visibly displayed the brief rotating paired-circle WordCircle loading mark. The local `/circle` route rendered the crossword board and letter wheel, confirming all three direct mode routes resolve to their intended mode.
+
 The deployed site also rendered the English A1 Wordle view with its six five-cell rows, A1 heading, selected-level subtitle, text input, Check action, and on-screen keyboard.
 
 On the deployed English A1 board, ACTOR was accepted and rendered with five feedback cells. The invalid five-letter string ZZZZZ was visibly rejected with “This word is not part of this level.” This confirms the selected exact-level acceptance and rejection path in production.
