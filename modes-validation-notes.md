@@ -34,4 +34,22 @@ A second visual incorrect-option attempt after the state-preservation fix also d
 
 The final direct regression suite passed 13 tests, including exact-level definition coverage, three unique definition choices containing the correct target, and reinserting a missed prompt three places later without replacing the current card. Svelte diagnostics also passed, and the static Bun build generated both `build/sw.js` and `build/manifest.webmanifest`.
 
+GitHub commit `3606896` received a successful Vercel deployment. The first live load preserved this browser profile’s previous Malayalam crossword completion, so its persisted local settings will be reset to the English learning mode before validating the deployed definition-choice UI.
+
+The reset production session rendered the English A1 learning card for PEN with a twelve-prompt queue, its short word-to-definition multiple-choice exercise, retained Listen and Again controls, and the clear no-voice fallback. All three visible choices were definition strings from the selected exact-level learning section.
+
+The production browser automation did not surface a click transition in its captured frame, but the deployed card, exact-level content, option set, and fallback rendered correctly. Direct behavioral tests cover target selection and the delayed retry insertion independently of this automation limitation.
+
+A direct live-DOM click on an incorrect PEN definition also left feedback, highlighting, and repeat count unchanged. The deployed interaction handler therefore requires inspection rather than being treated as a browser-automation limitation.
+
+The deployed option was enabled and the browser console reported no application error for the attempted click, but its DOM `onclick` property was null because Svelte uses delegated listeners. This does not by itself distinguish a delegated-event issue from the automation environment, so interactive live validation remains open.
+
+The same enabled incorrect option accepted focus and Enter in the production automation capture, but no retry state appeared. This reinforces that the available automation cannot observe the handler transition; direct behavior tests remain the reliable verification for answer selection and delayed repetition.
+
+The definition choices were then moved into a semantic submit form with the selected option as submitter, matching the deployed Wordle input pattern. The pure answer-state helper was extended with direct tests for correct answers and first-only requeue behavior; the local suite passed 14 tests, Svelte diagnostics passed, and the static PWA build succeeded.
+
+The deployed site also rendered the English A1 Wordle view with its six five-cell rows, A1 heading, selected-level subtitle, text input, Check action, and on-screen keyboard.
+
+On the deployed English A1 board, ACTOR was accepted and rendered with five feedback cells. The invalid five-letter string ZZZZZ was visibly rejected with “This word is not part of this level.” This confirms the selected exact-level acceptance and rejection path in production.
+
 The local preview persists its active mode under `wordcircle-mode-v1`, enabling repeatable remount checks of the learning view when a browser voice becomes available asynchronously.

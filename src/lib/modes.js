@@ -67,3 +67,9 @@ export function insertLearningRepeat(queue, position, word, delay = 3) {
   nextQueue.splice(Math.min(position + delay, nextQueue.length), 0, normalizePlayableWord(word));
   return nextQueue;
 }
+
+export function definitionAnswerResult(choice, currentWord, queue, position, alreadyRequeued = false) {
+  const isCorrect = normalizePlayableWord(choice) === normalizePlayableWord(currentWord);
+  if (isCorrect || alreadyRequeued) return { isCorrect, queue: [...queue], requeued: alreadyRequeued };
+  return { isCorrect, queue: insertLearningRepeat(queue, position, currentWord), requeued: true };
+}
