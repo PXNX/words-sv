@@ -266,6 +266,7 @@
 - [x] Französisch, Italienisch, Spanisch, Portugiesisch und Ukrainisch als spielbare Lernsprachen in Onboarding und Einstellungen anbieten.
 - [x] Für jede neue Lernsprache CEFR-ausgerichtete Circle-, Wordle- und Vokabelwortpools mit Definitionen und Aussprache-Metadaten bereitstellen.
 - [ ] Neue spielbare Sprachrouten, Wortlisten und die Sprachwahl lokal sowie in der Produktionsvorschau prüfen.
+- [ ] Vercel-Build wieder auf die verfügbare Bun-Installation zurückstellen und den Produktionslauf nach dem fehlenden-PNPM-Fehler erneut prüfen.
 - [x] Vokabelkarten um sprachspezifische grammatische Artikel ergänzen und dabei die Antwortauswertung weiterhin auf dem Grundwort durchführen.
 - [x] Wortdaten auf strukturierte Einträge mit Wortart, grammatischem Geschlecht und Seltenheitsangabe umstellen, ohne bestehende Spielauswahl zu brechen.
 - [x] Seltenheitsangaben aus dokumentierten Duden-Häufigkeitsinformationen und dem angegebenen Quellenbestand nachvollziehbar zuzuordnen und zu dokumentieren.
