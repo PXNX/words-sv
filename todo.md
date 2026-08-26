@@ -185,4 +185,4 @@
 - [x] Eingabebereich vertikal vergrößern und Buchstabenblasen um vier Pixel vergrößern.
 - [x] Einstellungen in Inhalts- und Verhaltensgruppen ordnen; Globus vor die App-Sprachen-Steuerung stellen.
 - [x] JSON-Definitionen für spielbare Wörter ergänzen und einen nach einer Minute eingeblendeten Hinweis mit Zielzellen-Markierung umsetzen.
-- [ ] Eingabe, gruppierte Einstellungen, Idle-Hinweis, statischen Build und Vercel-Deployment prüfen und veröffentlichen.
+- [x] Eingabe, gruppierte Einstellungen, Idle-Hinweis, statischen Build und Vercel-Deployment prüfen und veröffentlichen.
