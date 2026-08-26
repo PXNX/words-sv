@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { definitionChoiceWords, insertLearningRepeat, pickLearningSection } from '$lib/modes.js';
+  import { definitionAnswerResult, definitionChoiceWords, insertLearningRepeat, pickLearningSection } from '$lib/modes.js';
 
   type Labels = { title: string; listen: string; again: string; known: string; section: string; unavailable: string; speechUnavailable: string; chooseDefinition: string; correct: string; tryAgain: string };
   let { words, definitions, language, level, labels }: { words: string[]; definitions: Record<string, string>; language: 'de' | 'en'; level: string; labels: Labels } = $props();
@@ -101,17 +101,24 @@
   function selectDefinition(word: string) {
     if (answerStatus === 'correct') return;
     selectedChoice = word;
-    if (word === currentWord) {
+    const result = definitionAnswerResult(word, currentWord, queue, position, requeuedCurrent);
+    if (result.isCorrect) {
       answerStatus = 'correct';
       window.setTimeout(advance, 520);
       return;
     }
     answerStatus = 'wrong';
-    if (!requeuedCurrent) {
-      queue = insertLearningRepeat(queue, position, currentWord);
+    if (!requeuedCurrent && result.requeued) {
+      queue = result.queue;
       repeats += 1;
-      requeuedCurrent = true;
     }
+    requeuedCurrent = result.requeued;
+  }
+
+  function submitDefinition(event: SubmitEvent) {
+    event.preventDefault();
+    const submitter = event.submitter;
+    if (submitter instanceof HTMLButtonElement) selectDefinition(submitter.value);
   }
 
   onMount(() => {
@@ -172,11 +179,11 @@
     {#if choiceWords.length >= 3}
       <section class="definition-choice" aria-label={labels.chooseDefinition}>
         <p>{labels.chooseDefinition}</p>
-        <div class="definition-options">
+        <form class="definition-options" onsubmit={submitDefinition}>
           {#each choiceWords as word}
-            <button class:correct-option={answerStatus === 'correct' && word === currentWord} class:wrong-option={answerStatus === 'wrong' && word === selectedChoice} onclick={() => selectDefinition(word)} disabled={answerStatus === 'correct'}>{definitions[word]}</button>
+            <button type="submit" value={word} class:correct-option={answerStatus === 'correct' && word === currentWord} class:wrong-option={answerStatus === 'wrong' && word === selectedChoice} disabled={answerStatus === 'correct'}>{definitions[word]}</button>
           {/each}
-        </div>
+        </form>
         {#if answerStatus}<p class:correct-feedback={answerStatus === 'correct'} class:wrong-feedback={answerStatus === 'wrong'} class="definition-feedback">{answerStatus === 'correct' ? labels.correct : labels.tryAgain}</p>{/if}
       </section>
     {:else}

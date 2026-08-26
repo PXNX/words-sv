@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
-const { definitionChoiceWords, evaluateWordleGuess, fiveLetterWords, insertLearningRepeat, pickLearningSection } = await import('../src/lib/modes.js');
+const { definitionAnswerResult, definitionChoiceWords, evaluateWordleGuess, fiveLetterWords, insertLearningRepeat, pickLearningSection } = await import('../src/lib/modes.js');
 const learningSource = await readFile(new URL('../src/lib/LearningMode.svelte', import.meta.url), 'utf8');
 const levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
 
@@ -33,6 +33,13 @@ test('a missed definition is inserted three prompts later without replacing the 
   assert.deepEqual(insertLearningRepeat(['ACTOR', 'PEN', 'TEA', 'ADDRESS'], 0, 'ACTOR'), ['ACTOR', 'PEN', 'TEA', 'ACTOR', 'ADDRESS']);
 });
 
+test('definition answer results retain the correct queue or requeue only the first missed target', () => {
+  const queue = ['ACTOR', 'PEN', 'TEA', 'ADDRESS'];
+  assert.deepEqual(definitionAnswerResult('ACTOR', 'ACTOR', queue, 0), { isCorrect: true, queue, requeued: false });
+  assert.deepEqual(definitionAnswerResult('PEN', 'ACTOR', queue, 0), { isCorrect: false, queue: ['ACTOR', 'PEN', 'TEA', 'ACTOR', 'ADDRESS'], requeued: true });
+  assert.deepEqual(definitionAnswerResult('TEA', 'ACTOR', queue, 0, true), { isCorrect: false, queue, requeued: true });
+});
+
 test('every exact DE/EN level supplies at least three curated-definition targets for definition choices', async () => {
   for (const language of ['de', 'en']) {
     const definitions = (await import(`../src/lib/data/definitions.${language}.json`, { with: { type: 'json' } })).default;
@@ -48,6 +55,9 @@ test('learning cards choose definition-backed exact-level words and requeue a mi
   assert.match(learningSource, /const definitionWords = \$derived\(words\.filter/);
   assert.match(learningSource, /pickLearningSection\(definitionWords, random, 6\)/);
   assert.match(learningSource, /function selectDefinition\(word: string\)/);
+  assert.match(learningSource, /definitionAnswerResult\(word, currentWord, queue, position, requeuedCurrent\)/);
+  assert.match(learningSource, /function submitDefinition\(event: SubmitEvent\)/);
+  assert.match(learningSource, /<form class="definition-options" onsubmit=\{submitDefinition\}>/);
   assert.match(learningSource, /insertLearningRepeat\(queue, position, currentWord\)/);
   assert.match(learningSource, /if \(nextWordKey === choiceWordKey && nextSectionKey === choiceSectionKey\) return/);
   assert.match(learningSource, /word === selectedChoice/);

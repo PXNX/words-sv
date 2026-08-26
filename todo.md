@@ -203,3 +203,6 @@
 - [x] Richtige und falsche Definitionswahl, erneute Einordnung und Fortschritt im Sechserabschnitt testen.
 - [x] Lokalisierte Rückmeldung und bedienbare Definition-Auswahl für alle Interface-Sprachen ergänzen.
 - [ ] Wordle- und Vokabellernmodus, Sprachstufenfilter, Sprachausgabe, statischen Build und Vercel-Deployment prüfen und veröffentlichen.
+- [ ] Wordle-Modus auf Vercel mit einem gültigen und einem ungültigen Fünf-Buchstaben-Wort des exakten CEFR-Niveaus prüfen.
+- [ ] Vokabellernmodus auf Vercel mit richtiger und falscher Definitionswahl interaktiv prüfen sowie Wiederholung und Fortschritt dokumentieren.
+- [ ] Reale DE/EN-Browserstimmen prüfen oder die technische Sandbox-Einschränkung der Live-Audio-Verifikation dokumentieren.
