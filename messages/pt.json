@@ -39,6 +39,16 @@
   "mode_crossword": "Circle",
   "mode_wordle": "Wordle",
   "mode_learning": "Aprender vocabulário",
+  "home_kicker": "Escolha um jogo",
+  "home_title": "O seu treino de palavras.",
+  "home_subtitle": "Três formas breves de praticar no seu nível.",
+  "home_circle": "Deslize pelas letras para criar uma grelha de palavras.",
+  "home_wordle": "Encontre a palavra de cinco letras.",
+  "home_vocab": "Reveja palavras com som e escolhas rápidas.",
+  "home_play": "Jogar",
+  "onboarding_title": "Que idioma quer aprender?",
+  "onboarding_subtitle": "Pode alterar isto mais tarde nas definições.",
+  "onboarding_learning_language": "Idioma a aprender",
   "wordle_title": "Wordle",
   "wordle_subtitle": "Encontre uma palavra válida de cinco letras deste nível.",
   "wordle_empty": "Ainda não há palavras válidas de cinco letras para este nível.",
@@ -62,5 +72,7 @@
   "learning_speech_unavailable": "A reprodução de voz não está disponível neste navegador.",
   "learning_choose_definition": "Escolha a definição curta.",
   "learning_correct": "Correto.",
-  "learning_try_again": "Ainda não — tente novamente."
+  "learning_try_again": "Ainda não — tente novamente.",
+  "learning_choose_word": "Escolha a palavra que ouviu.",
+  "learning_audio_prompt": "Ouça e escolha a palavra correspondente."
 }

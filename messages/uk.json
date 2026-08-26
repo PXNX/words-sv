@@ -39,6 +39,16 @@
   "mode_crossword": "Circle",
   "mode_wordle": "Wordle",
   "mode_learning": "Вчити слова",
+  "home_kicker": "Оберіть гру",
+  "home_title": "Ваше тренування слів.",
+  "home_subtitle": "Три короткі способи практикуватися на вашому рівні.",
+  "home_circle": "З’єднуйте літери у пов’язану сітку слів.",
+  "home_wordle": "Знайдіть слово з п’яти літер.",
+  "home_vocab": "Повторюйте слова зі звуком і швидким вибором.",
+  "home_play": "Грати",
+  "onboarding_title": "Яку мову ви хочете вивчати?",
+  "onboarding_subtitle": "Це можна змінити пізніше в налаштуваннях.",
+  "onboarding_learning_language": "Мова навчання",
   "wordle_title": "Wordle",
   "wordle_subtitle": "Знайдіть правильне п’ятибуквене слово цього рівня.",
   "wordle_empty": "Для цього рівня ще немає правильних п’ятибуквених слів.",
@@ -62,5 +72,7 @@
   "learning_speech_unavailable": "Відтворення мовлення недоступне в цьому браузері.",
   "learning_choose_definition": "Оберіть коротке визначення.",
   "learning_correct": "Правильно.",
-  "learning_try_again": "Майже — спробуйте ще раз."
+  "learning_try_again": "Майже — спробуйте ще раз.",
+  "learning_choose_word": "Оберіть слово, яке ви почули.",
+  "learning_audio_prompt": "Послухайте та оберіть відповідне слово."
 }

@@ -39,6 +39,16 @@
   "mode_crossword": "Circle",
   "mode_wordle": "Wordle",
   "mode_learning": "Учить слова",
+  "home_kicker": "Выберите игру",
+  "home_title": "Ваша тренировка слов.",
+  "home_subtitle": "Три коротких способа практиковаться на вашем уровне.",
+  "home_circle": "Соединяйте буквы в связанную сетку слов.",
+  "home_wordle": "Найдите слово из пяти букв.",
+  "home_vocab": "Повторяйте слова со звуком и быстрым выбором.",
+  "home_play": "Играть",
+  "onboarding_title": "Какой язык вы хотите учить?",
+  "onboarding_subtitle": "Позже это можно изменить в настройках.",
+  "onboarding_learning_language": "Язык обучения",
   "wordle_title": "Wordle",
   "wordle_subtitle": "Найдите допустимое пятибуквенное слово этого уровня.",
   "wordle_empty": "Для этого уровня пока нет допустимых пятибуквенных слов.",
@@ -62,5 +72,7 @@
   "learning_speech_unavailable": "Воспроизведение речи недоступно в этом браузере.",
   "learning_choose_definition": "Выберите краткое определение.",
   "learning_correct": "Верно.",
-  "learning_try_again": "Почти — попробуйте ещё раз."
+  "learning_try_again": "Почти — попробуйте ещё раз.",
+  "learning_choose_word": "Выберите услышанное слово.",
+  "learning_audio_prompt": "Послушайте и выберите подходящее слово."
 }

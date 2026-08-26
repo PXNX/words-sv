@@ -39,6 +39,16 @@
   "mode_crossword": "Circle",
   "mode_wordle": "Wordle",
   "mode_learning": "Vokabeln lernen",
+  "home_kicker": "Spiel wählen",
+  "home_title": "Dein Worttraining.",
+  "home_subtitle": "Drei kurze Wege, auf deinem Niveau zu üben.",
+  "home_circle": "Ziehe Buchstaben zu einem verbundenen Worträtsel.",
+  "home_wordle": "Finde das Wort mit fünf Buchstaben.",
+  "home_vocab": "Wiederhole Wörter mit Ton und schnellen Auswahlfragen.",
+  "home_play": "Spielen",
+  "onboarding_title": "Welche Sprache möchtest du lernen?",
+  "onboarding_subtitle": "Du kannst dies später in den Einstellungen ändern.",
+  "onboarding_learning_language": "Lernsprache",
   "wordle_title": "Wordle",
   "wordle_subtitle": "Finde ein gültiges Wort mit fünf Buchstaben aus diesem Niveau.",
   "wordle_empty": "Für dieses Niveau gibt es noch keine gültigen Wörter mit fünf Buchstaben.",
@@ -62,5 +72,7 @@
   "learning_speech_unavailable": "Die Sprachausgabe ist in diesem Browser nicht verfügbar.",
   "learning_choose_definition": "Wähle die kurze Erklärung.",
   "learning_correct": "Richtig.",
-  "learning_try_again": "Nicht ganz — versuche es erneut."
+  "learning_try_again": "Nicht ganz — versuche es erneut.",
+  "learning_choose_word": "Wähle das gehörte Wort.",
+  "learning_audio_prompt": "Höre zu und wähle das passende Wort."
 }

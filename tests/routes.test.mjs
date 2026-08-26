@@ -20,10 +20,13 @@ test('direct mode routes reuse the WordCircle page component', async () => {
 });
 
 test('loading mark appears only during startup or genuine navigation and respects motion preferences', () => {
-  assert.match(layoutSource, /\{#if !hydrated \|\| navigating\.to\}/);
-  assert.match(layoutSource, /class="portrait-guard"/);
-  assert.match(layoutSource, /@media \(orientation:landscape\)/);
-  assert.match(layoutSource, /gesturestart/);
+	assert.match(layoutSource, /\{#if !hydrated \|\| navigating\.to\}/);
+	assert.match(layoutSource, /@media \(orientation:landscape\)/);
+	assert.match(layoutSource, /gesturestart/);
+	assert.match(layoutSource, /width:min\(100svh,430px\)/);
+	assert.doesNotMatch(layoutSource, /Turn your device upright/);
+	assert.match(rootSource, /class="home-games"/);
+	assert.match(rootSource, /ROOT_ONBOARDING_KEY = 'wordcircle-root-onboarding-v1'/);
   assert.match(loaderSource, /class="startup-loader" role="status"/);
   assert.match(loaderSource, /animation:startup-spin \.82s linear infinite/);
   assert.match(loaderSource, /@media \(prefers-reduced-motion:reduce\) \{ \.startup-mark/);

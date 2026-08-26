@@ -39,6 +39,16 @@
   "mode_crossword": "Circle",
   "mode_wordle": "Wordle",
   "mode_learning": "Learn vocabulary",
+  "home_kicker": "Choose a game",
+  "home_title": "Your word training.",
+  "home_subtitle": "Three short ways to practise at your level.",
+  "home_circle": "Trace letters into a connected word grid.",
+  "home_wordle": "Find the five-letter word.",
+  "home_vocab": "Review words with sound and quick choices.",
+  "home_play": "Play",
+  "onboarding_title": "Which language do you want to learn?",
+  "onboarding_subtitle": "You can change this later in Settings.",
+  "onboarding_learning_language": "Learning language",
   "wordle_title": "Wordle",
   "wordle_subtitle": "Find a valid five-letter word from this level.",
   "wordle_empty": "No valid five-letter words are available for this level yet.",
@@ -62,5 +72,7 @@
   "learning_speech_unavailable": "Speech playback is not available in this browser.",
   "learning_choose_definition": "Choose the short definition.",
   "learning_correct": "Correct.",
-  "learning_try_again": "Not quite — try again."
+  "learning_try_again": "Not quite — try again.",
+  "learning_choose_word": "Choose the word you heard.",
+  "learning_audio_prompt": "Listen, then choose the matching word."
 }
