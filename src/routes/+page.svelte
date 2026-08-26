@@ -5,15 +5,17 @@
   import wordsDeA2 from '$lib/data/words.de.a2.json';
   import wordsDeB1 from '$lib/data/words.de.b1.json';
   import wordsDeB2 from '$lib/data/words.de.b2.json';
-  import wordsDeC1 from '$lib/data/words.de.c1.json';
-  import wordsDeC2 from '$lib/data/words.de.c2.json';
-  import wordsEnA1 from '$lib/data/words.en.a1.json';
+import wordsDeC1 from '$lib/data/words.de.c1.json';
+import wordsDeC2 from '$lib/data/words.de.c2.json';
+import definitionsDe from '$lib/data/definitions.de.json';
+import wordsEnA1 from '$lib/data/words.en.a1.json';
   import wordsEnA2 from '$lib/data/words.en.a2.json';
   import wordsEnB1 from '$lib/data/words.en.b1.json';
   import wordsEnB2 from '$lib/data/words.en.b2.json';
-  import wordsEnC1 from '$lib/data/words.en.c1.json';
-  import wordsEnC2 from '$lib/data/words.en.c2.json';
-  import { m } from '$lib/paraglide/messages';
+import wordsEnC1 from '$lib/data/words.en.c1.json';
+import wordsEnC2 from '$lib/data/words.en.c2.json';
+import definitionsEn from '$lib/data/definitions.en.json';
+import { m } from '$lib/paraglide/messages';
   import { getTextDirection, setLocale, type Locale } from '$lib/paraglide/runtime';
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
   import IconClose from '~icons/material-symbols/cancel-rounded';
@@ -40,11 +42,16 @@
   type InstallPromptEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }> };
 
   const vocabularyLevels: VocabularyLevel[] = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
-  const wordPools: Record<Language, Record<VocabularyLevel, string[]>> = {
-    de: { a1: wordsDeA1 as string[], a2: wordsDeA2 as string[], b1: wordsDeB1 as string[], b2: wordsDeB2 as string[], c1: wordsDeC1 as string[], c2: wordsDeC2 as string[] },
-    en: { a1: wordsEnA1 as string[], a2: wordsEnA2 as string[], b1: wordsEnB1 as string[], b2: wordsEnB2 as string[], c1: wordsEnC1 as string[], c2: wordsEnC2 as string[] }
-  };
-  const interfaceLocales = [
+const wordPools: Record<Language, Record<VocabularyLevel, string[]>> = {
+de: { a1: wordsDeA1 as string[], a2: wordsDeA2 as string[], b1: wordsDeB1 as string[], b2: wordsDeB2 as string[], c1: wordsDeC1 as string[], c2: wordsDeC2 as string[] },
+en: { a1: wordsEnA1 as string[], a2: wordsEnA2 as string[], b1: wordsEnB1 as string[], b2: wordsEnB2 as string[], c1: wordsEnC1 as string[], c2: wordsEnC2 as string[] }
+};
+const wordDefinitions: Record<Language, Record<string, string>> = {
+de: definitionsDe as Record<string, string>,
+en: definitionsEn as Record<string, string>
+};
+const hintableBaseWords = new Set([...Object.keys(wordDefinitions.de), ...Object.keys(wordDefinitions.en)]);
+const interfaceLocales = [
     { code: 'de', label: 'Deutsch' }, { code: 'en', label: 'English' }, { code: 'fa', label: 'فارسی' }, { code: 'pt', label: 'Português' }, { code: 'ru', label: 'Русский' }, { code: 'ar', label: 'العربية' }, { code: 'uk', label: 'Українська' }, { code: 'hi', label: 'हिन्दी' }, { code: 'ml', label: 'മലയാളം' }
   ] as const satisfies ReadonlyArray<{ code: InterfaceLocale; label: string }>;
   const GAME_STORAGE_KEY = 'wordcircle-active-round-v1';
@@ -100,14 +107,17 @@
   let startedAt = $state(initialGame?.startedAt ?? Date.now());
   let completedDuration = $state<number | null>(initialGame?.completedDuration ?? null);
   let installPrompt = $state<InstallPromptEvent | null>(null);
-  let tutorialOpen = $state(initialTutorialOpen);
-  let tutorialPractice = $state(false);
-  let tutorialLanguage = $state<Language>(initialGame?.language ?? initialLanguage);
+let tutorialOpen = $state(initialTutorialOpen);
+let tutorialPractice = $state(false);
+let tutorialLanguage = $state<Language>(initialGame?.language ?? initialLanguage);
+let idleHintReady = $state(false);
+let revealedHintWord = $state<string | null>(null);
+let idleHintTimer: number | null = null;
 
   const labels = $derived.by(() => {
     const options = { locale: interfaceLocale };
     return {
-      label: m.label({}, options), hint: m.hint({}, options), allDone: m.all_done({}, options), time: m.time({}, options), continue: m.continue({}, options), explain: m.explain({}, options), install: m.install({}, options), installHint: m.install_hint({}, options), gameLanguage: m.game_language({}, options), interfaceLanguage: m.interface_language({}, options), vocabulary: m.vocabulary({}, options), includeLower: m.include_lower({}, options), appearance: m.appearance({}, options), light: m.light({}, options), dark: m.dark({}, options), settings: m.settings({}, options), vibration: m.vibration({}, options), backwards: m.backwards({}, options), settingsHint: m.settings_hint({}, options), completed: m.completed({}, options), tracePrompt: m.trace_prompt({}, options), traceActive: m.trace_active({}, options), tutorial: m.tutorial({}, options), tutorialKicker: m.tutorial_kicker({}, options), tutorialTitle: m.tutorial_title({}, options), tutorialTrace: m.tutorial_trace({}, options), tutorialGrid: m.tutorial_grid({}, options), tutorialHelp: m.tutorial_help({}, options), tutorialStart: m.tutorial_start({}, options), tutorialRestart: m.tutorial_restart({}, options), telegramShare: m.telegram_share({}, options)
+      label: m.label({}, options), hint: m.hint({}, options), allDone: m.all_done({}, options), time: m.time({}, options), continue: m.continue({}, options), explain: m.explain({}, options), install: m.install({}, options), installHint: m.install_hint({}, options), gameLanguage: m.game_language({}, options), interfaceLanguage: m.interface_language({}, options), vocabulary: m.vocabulary({}, options), includeLower: m.include_lower({}, options), appearance: m.appearance({}, options), light: m.light({}, options), dark: m.dark({}, options), settings: m.settings({}, options), vibration: m.vibration({}, options), backwards: m.backwards({}, options), settingsHint: m.settings_hint({}, options), completed: m.completed({}, options), tracePrompt: m.trace_prompt({}, options), traceActive: m.trace_active({}, options), tutorial: m.tutorial({}, options), tutorialKicker: m.tutorial_kicker({}, options), tutorialTitle: m.tutorial_title({}, options), tutorialTrace: m.tutorial_trace({}, options), tutorialGrid: m.tutorial_grid({}, options), tutorialHelp: m.tutorial_help({}, options), tutorialStart: m.tutorial_start({}, options), tutorialRestart: m.tutorial_restart({}, options), telegramShare: m.telegram_share({}, options), contentGroup: m.content_group({}, options), behaviorGroup: m.behavior_group({}, options), idleHint: m.idle_hint({}, options)
     };
   });
   const interfaceDirection = $derived(getTextDirection(interfaceLocale));
@@ -121,6 +131,12 @@
   const traceCaption = $derived(activeWord ? labels.traceActive : labels.tracePrompt);
   const allSolved = $derived(solvedWords.length === currentRound.words.length);
   const tutorialHint = $derived(tutorialLanguage === 'de' ? 'G••••• · G•• · T••' : 'P••••• · P•• · T••');
+  const hintDefinition = $derived(revealedHintWord ? wordDefinitions[lang][revealedHintWord] ?? null : null);
+  const hintedCells = $derived.by(() => {
+    if (!revealedHintWord) return new Set<string>();
+    const placement = grid.placements.find((entry) => entry.word === revealedHintWord);
+    return new Set((placement ? placementCells(placement) : []).map((point) => cellKey(point.row, point.col)));
+  });
   const solvedCells = $derived.by(() => {
     const keys = new Set<string>();
     grid.placements.filter((entry) => solvedSet.has(entry.word)).forEach((entry) => {
@@ -149,6 +165,15 @@
   });
 
   $effect(() => {
+    currentRound;
+    solvedWords.length;
+    celebration;
+    tutorialPractice;
+    scheduleIdleHint();
+    return () => clearIdleHintTimer();
+  });
+
+  $effect(() => {
     const captureInstallPrompt = (event: Event) => { event.preventDefault(); installPrompt = event as InstallPromptEvent; };
     const clearInstallPrompt = () => { installPrompt = null; };
     window.addEventListener('beforeinstallprompt', captureInstallPrompt);
@@ -160,6 +185,23 @@
   });
 
   function cellKey(row: number, col: number) { return `${row}:${col}`; }
+  function clearIdleHintTimer() { if (idleHintTimer !== null) window.clearTimeout(idleHintTimer); idleHintTimer = null; }
+  function scheduleIdleHint(keepVisible = false) {
+    if (typeof window === 'undefined') return;
+    clearIdleHintTimer();
+    idleHintReady = false;
+    if (!keepVisible) revealedHintWord = null;
+    if (celebration || currentRound.words.every((word) => solvedSet.has(word) || !wordDefinitions[lang][word])) return;
+    idleHintTimer = window.setTimeout(() => { revealedHintWord = null; idleHintReady = true; }, 60_000);
+  }
+  function noteGameInput() { scheduleIdleHint(); }
+  function showIdleHint() {
+    const candidates = currentRound.words.filter((word) => !solvedSet.has(word) && Boolean(wordDefinitions[lang][word]));
+    const target = candidates.length > 0 ? candidates[Math.floor(randomSeed() % candidates.length)] : null;
+    if (!target) return;
+    revealedHintWord = target;
+    scheduleIdleHint(true);
+  }
   function setTutorialRound(nextLanguage = tutorialLanguage) {
     tutorialLanguage = nextLanguage;
     lang = nextLanguage;
@@ -172,6 +214,7 @@
     celebration = false;
     startedAt = Date.now();
     completedDuration = null;
+    scheduleIdleHint();
   }
   function beginTutorialPractice() { setTutorialRound(tutorialLanguage); tutorialOpen = false; tutorialPractice = true; }
   function completeTutorial() { localStorage.setItem(TUTORIAL_STATE_KEY, 'complete'); tutorialPractice = false; tutorialOpen = false; newRound(lang, true); }
@@ -301,7 +344,10 @@
     const normalized = [...new Set(pool.map((word) => word.trim().toUpperCase()).filter((word) => /^[A-ZÄÖÜ]+$/.test(word) && word.length >= 3 && word.length <= 8))];
     const bases = shuffle(normalized.filter((word) => word.length >= 5 && word.length <= 8 && normalized.filter((candidate) => candidate !== word && canSpell(candidate, [...word])).length >= 5), rng);
     const freshBases = bases.filter((word) => !excludedBases.includes(word));
-    for (const base of freshBases.length > 0 ? freshBases : bases) {
+    const preferredBases = bases.filter((word) => hintableBaseWords.has(word));
+    const freshPreferredBases = preferredBases.filter((word) => !excludedBases.includes(word));
+    const candidatesForBase = freshPreferredBases.length > 0 ? freshPreferredBases : preferredBases.length > 0 ? preferredBases : freshBases.length > 0 ? freshBases : bases;
+    for (const base of candidatesForBase) {
       const grid = emptyGrid();
       writePlacement(grid, { word: base, row: 0, col: 0, orientation: 'across' });
       const selected = [base];
@@ -322,7 +368,7 @@
       }
       if (selected.length >= 6) return { words: selected, letters: [...base], grid };
     }
-    const fallback = freshBases[0] ?? bases[0] ?? normalized.find((word) => word.length >= 5) ?? 'WORT';
+    const fallback = preferredBases[0] ?? freshBases[0] ?? bases[0] ?? normalized.find((word) => word.length >= 5) ?? 'WORT';
     const grid = emptyGrid();
     writePlacement(grid, { word: fallback, row: 0, col: 0, orientation: 'across' });
     return { words: [fallback], letters: [...fallback], grid };
@@ -347,6 +393,7 @@
     celebration = false;
     startedAt = Date.now();
     completedDuration = null;
+    scheduleIdleHint();
   }
   function selectLanguage(nextLanguage: Language) { newRound(nextLanguage, true); if (interfaceLocale !== 'fa') interfaceLocale = nextLanguage; settingsOpen = false; }
   function selectInterfaceLocale(nextLocale: InterfaceLocale) { interfaceLocale = nextLocale; }
@@ -359,7 +406,7 @@
   function position(index: number, total: number) { const angle = (index / total) * Math.PI * 2 - Math.PI / 2; return { x: CIRCLE + LETTER_RADIUS * Math.cos(angle), y: CIRCLE + LETTER_RADIUS * Math.sin(angle) }; }
   function pointFromEvent(event: PointerEvent) { const rect = circleEl?.getBoundingClientRect(); if (!rect) return null; return { x: ((event.clientX - rect.left) / rect.width) * 292, y: ((event.clientY - rect.top) / rect.height) * 292 }; }
   function nearestLetter(point: { x: number; y: number }) { let closest = -1; let distance = Infinity; circleLetters.forEach((_letter, index) => { const letter = position(index, circleLetters.length); const nextDistance = Math.hypot(point.x - letter.x, point.y - letter.y); if (nextDistance < distance) { distance = nextDistance; closest = index; } }); return distance < 36 ? closest : -1; }
-  function chooseLetter(index: number) { if (celebration || selectedPath.includes(index)) return; feedback = null; feedbackWord = ''; selectedPath = [...selectedPath, index]; buzz(7); }
+  function chooseLetter(index: number) { if (celebration || selectedPath.includes(index)) return; noteGameInput(); feedback = null; feedbackWord = ''; selectedPath = [...selectedPath, index]; buzz(7); }
   function startSwipe(event: PointerEvent, knownIndex = -1) { if (celebration) return; event.preventDefault(); (event.currentTarget as Element).setPointerCapture?.(event.pointerId); isDragging = true; selectedPath = []; feedback = null; feedbackWord = ''; const point = pointFromEvent(event); const index = knownIndex >= 0 ? knownIndex : point ? nearestLetter(point) : -1; if (index >= 0) chooseLetter(index); }
   function extendSwipe(event: PointerEvent) { if (!isDragging) return; const point = pointFromEvent(event); if (!point) return; const index = nearestLetter(point); if (index >= 0 && index !== selectedPath.at(-1)) chooseLetter(index); }
   function endSwipe() { if (!isDragging) return; isDragging = false; if (selectedPath.length >= 2) submitWord(); else selectedPath = []; }
@@ -420,15 +467,8 @@
       <aside id="game-settings" class="settings-panel" aria-label={labels.settings} dir={interfaceDirection} lang={interfaceLocale}>
         <button class="settings-close" onclick={() => (settingsOpen = false)} aria-label="Close settings"><IconClose /></button>
         <div class="settings-intro"><span class="brand-mark" aria-hidden="true"><i></i><b></b></span><div><strong>WordCircle</strong><p>{labels.settingsHint}</p></div></div>
-        <div class="setting-row"><span>{labels.gameLanguage}</span><div class="segmented"><button class:chosen={lang === 'de'} onclick={() => selectLanguage('de')}>DE</button><button class:chosen={lang === 'en'} onclick={() => selectLanguage('en')}>EN</button></div></div>
-        <label class="setting-row interface-locale-row"><span>{labels.interfaceLanguage}</span><span class="locale-dropdown"><IconLanguage aria-hidden="true" /><select aria-label={labels.interfaceLanguage} value={interfaceLocale} onchange={selectInterfaceLocaleFromEvent}>{#each interfaceLocales as locale}<option value={locale.code}>{locale.label}</option>{/each}</select></span></label>
-        <div class="setting-row vocabulary-row"><span>{labels.vocabulary}</span><div class="segmented level-segmented">{#each vocabularyLevels as level}<button class:chosen={vocabularyLevel === level} onclick={() => selectVocabularyLevel(level)}>{level.toUpperCase()}</button>{/each}</div></div>
-        {#if vocabularyLevel !== 'a1'}<div class="setting-row vibration-row include-lower-row"><span>{labels.includeLower}</span><input aria-label={labels.includeLower} type="checkbox" class="toggle toggle-sm" checked={includeLowerVocabulary} onchange={(event) => selectIncludeLowerVocabulary((event.currentTarget as HTMLInputElement).checked)} /></div>{/if}
-        <div class="setting-row"><span>{labels.appearance}</span><div class="segmented"><button class:chosen={theme === 'light'} onclick={() => (theme = 'light')}><IconLight />{labels.light}</button><button class:chosen={theme === 'dark'} onclick={() => (theme = 'dark')}><IconDark />{labels.dark}</button></div></div>
-        <div class="setting-row vibration-row"><span><IconVibrate />{labels.vibration}</span><input aria-label={labels.vibration} type="checkbox" class="toggle toggle-sm" bind:checked={vibration} /></div>
-        <div class="setting-row vibration-row"><span>{labels.backwards}</span><input aria-label={labels.backwards} type="checkbox" class="toggle toggle-sm" checked={allowBackwardWords} onchange={(event) => selectBackwardWords((event.currentTarget as HTMLInputElement).checked)} /></div>
-        <div class="setting-row tutorial-restart-row"><span>{labels.tutorial}</span><button onclick={restartTutorial}>{labels.tutorialRestart}</button></div>
-        <div class="setting-row completion-total"><span>{labels.completed}</span><strong>{completedRounds}</strong></div>
+        <section class="settings-group" aria-labelledby="content-settings-heading"><h2 id="content-settings-heading">{labels.contentGroup}</h2><div class="setting-row"><span>{labels.gameLanguage}</span><div class="segmented"><button class:chosen={lang === 'de'} onclick={() => selectLanguage('de')}>DE</button><button class:chosen={lang === 'en'} onclick={() => selectLanguage('en')}>EN</button></div></div><div class="setting-row vocabulary-row"><span>{labels.vocabulary}</span><div class="segmented level-segmented">{#each vocabularyLevels as level}<button class:chosen={vocabularyLevel === level} onclick={() => selectVocabularyLevel(level)}>{level.toUpperCase()}</button>{/each}</div></div>{#if vocabularyLevel !== 'a1'}<div class="setting-row vibration-row include-lower-row"><span>{labels.includeLower}</span><input aria-label={labels.includeLower} type="checkbox" class="toggle toggle-sm" checked={includeLowerVocabulary} onchange={(event) => selectIncludeLowerVocabulary((event.currentTarget as HTMLInputElement).checked)} /></div>{/if}<div class="setting-row vibration-row"><span>{labels.backwards}</span><input aria-label={labels.backwards} type="checkbox" class="toggle toggle-sm" checked={allowBackwardWords} onchange={(event) => selectBackwardWords((event.currentTarget as HTMLInputElement).checked)} /></div></section>
+        <section class="settings-group" aria-labelledby="behavior-settings-heading"><h2 id="behavior-settings-heading">{labels.behaviorGroup}</h2><label class="setting-row interface-locale-row"><span class="setting-label"><IconLanguage aria-hidden="true" />{labels.interfaceLanguage}</span><select aria-label={labels.interfaceLanguage} value={interfaceLocale} onchange={selectInterfaceLocaleFromEvent}>{#each interfaceLocales as locale}<option value={locale.code}>{locale.label}</option>{/each}</select></label><div class="setting-row"><span>{labels.appearance}</span><div class="segmented"><button class:chosen={theme === 'light'} onclick={() => (theme = 'light')}><IconLight />{labels.light}</button><button class:chosen={theme === 'dark'} onclick={() => (theme = 'dark')}><IconDark />{labels.dark}</button></div></div><div class="setting-row vibration-row"><span><IconVibrate />{labels.vibration}</span><input aria-label={labels.vibration} type="checkbox" class="toggle toggle-sm" bind:checked={vibration} /></div><div class="setting-row tutorial-restart-row"><span>{labels.tutorial}</span><button onclick={restartTutorial}>{labels.tutorialRestart}</button></div><div class="setting-row completion-total"><span>{labels.completed}</span><strong>{completedRounds}</strong></div></section>
         {#if telegramHref}<a class="settings-telegram" href={telegramHref} target="_blank" rel="noreferrer" lang={interfaceLocale} dir={interfaceDirection}><IconTelegram aria-hidden="true" /><span>{labels.telegramShare}</span></a>{/if}
         <a class="settings-github" href="https://github.com/PXNX/words-sv" target="_blank" rel="noreferrer"><IconGithub aria-hidden="true" /><span>GitHub · PXNX/words-sv</span></a>
       </aside>
@@ -440,7 +480,7 @@
         {#each Array(grid.maxRow - grid.minRow + 1) as _, rowIndex}
           {#each Array(grid.maxCol - grid.minCol + 1) as _, colIndex}
             {@const row = grid.minRow + rowIndex}{@const col = grid.minCol + colIndex}{@const cell = inRange(row, col)}
-            {#if cell}<div class:solved={solvedCells.has(cellKey(row, col))} class:startAcross={isWordStart(row, col, 'across')} class:endAcross={isWordEnd(row, col, 'across')} class:startDown={isWordStart(row, col, 'down')} class:endDown={isWordEnd(row, col, 'down')} class="crossword-cell" aria-label={solvedCells.has(cellKey(row, col)) ? cell.letter : 'open cell'}>{solvedCells.has(cellKey(row, col)) ? cell.letter : ''}</div>{:else}<div class="crossword-void"></div>{/if}
+            {#if cell}<div class:solved={solvedCells.has(cellKey(row, col))} class:hinted={hintedCells.has(cellKey(row, col)) && !solvedCells.has(cellKey(row, col))} class:startAcross={isWordStart(row, col, 'across')} class:endAcross={isWordEnd(row, col, 'across')} class:startDown={isWordStart(row, col, 'down')} class:endDown={isWordEnd(row, col, 'down')} class="crossword-cell" aria-label={solvedCells.has(cellKey(row, col)) ? cell.letter : 'open cell'}>{solvedCells.has(cellKey(row, col)) ? cell.letter : ''}</div>{:else}<div class="crossword-void"></div>{/if}
           {/each}
         {/each}
       </div>
@@ -457,8 +497,11 @@
         </div>
       {:else}
         {#if !settingsOpen}<button class="settings-trigger" aria-expanded="false" aria-controls="game-settings" onclick={() => (settingsOpen = true)}><IconSettings aria-hidden="true" /><span class="sr-only">{labels.settings}</span></button>{/if}
+        {#if idleHintReady && !settingsOpen && !tutorialOpen}<button class="idle-hint-trigger" onclick={showIdleHint}><IconHelp aria-hidden="true" /><span>{labels.idleHint}</span></button>{/if}
         <div class:has-word={previewWord.length > 0} class:correct={feedback === 'correct'} class:wrong={feedback === 'wrong'} class="selected-word">
-          {#if previewWord}
+          {#if hintDefinition}
+            <span class="hint-definition">{hintDefinition}</span>
+          {:else if previewWord}
             <span>{previewWord}</span>{#if feedback === 'correct'}<IconCheck aria-label="Correct" /><a class="wiktionary-link" href={wiktionaryUrl(feedbackWord)} target="_blank" rel="noreferrer" aria-label={`${labels.explain}: ${feedbackWord}`}><IconHelp aria-hidden="true" /><span class="sr-only">{labels.explain}</span></a>{:else if feedback === 'wrong'}<IconClose aria-label="Incorrect" />{/if}
           {/if}
         </div>
@@ -480,7 +523,7 @@
         {#each circleLetters as letter, index (index)}
           {@const point = position(index, circleLetters.length)}
           <g transform={`translate(${point.x} ${point.y})`} class:active={selectedPath.includes(index)} class="letter-node" role="button" tabindex="0" aria-label={`Letter ${letter}`} onpointerdown={(event) => { event.stopPropagation(); startSwipe(event, index); }} onkeydown={(event) => { if (event.key === 'Enter' || event.key === ' ') chooseLetter(index); }}>
-            <circle r="28"></circle><text text-anchor="middle" dominant-baseline="central">{letter}</text>
+            <circle r="30"></circle><text text-anchor="middle" dominant-baseline="central">{letter}</text>
           </g>
         {/each}
       </svg>
@@ -498,10 +541,10 @@
   .tutorial-panel { position:absolute;z-index:90;inset:0;display:grid;place-items:center;padding:clamp(1rem,6vw,2rem);background:#fffdf7;color:#172a45;animation:drop-in .22s cubic-bezier(.23,1,.32,1) both; }.tutorial-card { width:min(100%,25rem);padding:clamp(1.1rem,5vw,1.7rem);border:1px solid rgba(23,42,69,.24);border-top:3px double #172a45;background:#fffdf7;box-shadow:8px 8px 0 rgba(230,165,39,.18); }.tutorial-kicker { margin:0 0 .45rem;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase; }.tutorial-card h1 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,8vw,2.55rem);font-weight:400;letter-spacing:-.045em;line-height:.92; }.tutorial-steps { display:grid;gap:.72rem;margin:1.35rem 0 1.2rem;padding:0;list-style:none; }.tutorial-steps li { display:grid;grid-template-columns:1.55rem 1fr;gap:.62rem;align-items:start;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;line-height:1.35; }.tutorial-steps b { display:grid;place-items:center;width:1.35rem;height:1.35rem;border:1px solid #172a45;border-radius:50%;background:#fffdf7;color:#a45e38;font-family:'DM Serif Display',serif;font-size:.9rem;font-weight:400; }.tutorial-solve-language { display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin:0 0 .7rem;padding-top:.7rem;border-top:1px solid rgba(23,42,69,.14);color:#172a45;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }.tutorial-practice-hint { display:flex;align-items:center;justify-content:space-between;gap:.65rem;margin:0 0 1rem;padding:.55rem .65rem;border:1px solid rgba(230,165,39,.56);background:rgba(230,165,39,.08);color:#172a45;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:800;letter-spacing:.05em; }.tutorial-practice-hint strong { color:#a45e38;font-size:.56rem;letter-spacing:.08em;text-transform:uppercase; }.tutorial-practice-hint span { white-space:nowrap; }.tutorial-start { width:100%;min-height:2.45rem;border:1px solid #172a45;border-radius:0;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.67rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;box-shadow:3px 3px 0 #e6a527;transition:transform .16s cubic-bezier(.23,1,.32,1),box-shadow .16s ease; }.tutorial-start:active { transform:translate(2px,2px);box-shadow:1px 1px 0 #e6a527; }
   .brand-mark { position:relative;width:34px;height:34px;display:block;flex:none; }.brand-mark i,.brand-mark b { position:absolute;display:block;width:21px;height:21px;border:2px solid #172a45;border-radius:50%; }.brand-mark i { top:1px;left:1px; }.brand-mark b { right:1px;bottom:1px;border-color:#e6a527; }
   .settings-trigger,.settings-close { display:grid;place-items:center;width:2.15rem;height:2.15rem;border:1px solid rgba(23,42,69,.24);border-radius:50%;background:rgba(255,253,247,.86);color:#172a45;transition:transform .18s cubic-bezier(.23,1,.32,1),background .18s ease; }.settings-trigger :global(svg),.settings-close :global(svg) { width:1.1rem;height:1.1rem; }.settings-close { position:absolute;z-index:2;top:.72rem;right:.72rem;background:#172a45;color:#fffdf7; }.settings-close:active { transform:scale(.94); }
-  .settings-panel { position:absolute;z-index:60;inset:0;margin:0;padding:clamp(4.5rem,16vw,6rem) clamp(1rem,5vw,2rem) clamp(1rem,5vw,2rem);overflow-y:auto;border:0;background:rgba(255,253,247,.98);box-shadow:0 18px 55px rgba(23,42,69,.2);animation:drop-in .2s cubic-bezier(.23,1,.32,1); }.settings-intro { display:flex;align-items:center;gap:.75rem;color:#172a45; }.settings-intro strong { display:block;font-family:'DM Serif Display',serif;font-size:clamp(1.45rem,6vw,2rem);font-weight:400;letter-spacing:-.04em;line-height:.9; }.settings-intro p { margin:.35rem 0 0;color:#a45e38;font-family:'DM Serif Display',serif;font-size:.94rem; }.setting-row { display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-top:.82rem;margin-top:.82rem;border-top:1px solid rgba(23,42,69,.14);color:#172a45;font-size:.67rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }.include-lower-row { margin-top:.25rem;padding-top:.35rem;border-top:0; }.segmented { display:flex;padding:2px;border:1px solid rgba(23,42,69,.22);border-radius:99px; }.segmented button { min-height:1.65rem;padding:0 .55rem;display:inline-flex;align-items:center;gap:.25rem;border:0;border-radius:99px;background:transparent;color:rgba(23,42,69,.62);font-size:.62rem;font-weight:800; }.segmented button :global(svg) { width:.78rem;height:.78rem; }.segmented button.chosen { background:#172a45;color:#fffdf7; }.vibration-row>span { display:inline-flex;align-items:center;gap:.35rem; }.vibration-row :global(svg) { width:.9rem;height:.9rem; }.level-segmented button { min-width:1.65rem;padding:0 .32rem; }.vocabulary-row { align-items:flex-start; }.completion-total strong { color:#34824d;font-family:'DM Serif Display',serif;font-size:1.45rem;line-height:1; }
-  .crossword-frame { position:relative;min-height:205px;display:grid;place-items:stretch;margin-top:.55rem;padding:clamp(.5rem,3vw,1rem);background-color:#ede4d5;background-image:linear-gradient(rgba(23,42,69,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.035) 1px,transparent 1px);background-size:20px 20px;border-top:3px double #172a45;border-bottom:2px solid rgba(23,42,69,.45);transition:transform .16s cubic-bezier(.23,1,.32,1); }.crossword-frame.shake { animation:shake .28s cubic-bezier(.23,1,.32,1); }.crossword-scroll { position:relative;z-index:1;min-width:0;min-height:0;overflow:scroll;display:grid;place-items:center;padding:clamp(.65rem,3vw,1.25rem);overscroll-behavior:contain;scrollbar-color:rgba(23,42,69,.4) transparent; }.crossword { --cell-size:clamp(2.35rem,10.2vw,3.1rem);position:relative;display:grid;width:max-content;min-width:calc(var(--cell-size) * 3); }.crossword-cell { aspect-ratio:1;min-width:0;display:grid;place-items:center;border:1px solid #172a45;background:#fffdf7;color:#172a45;font-size:clamp(.7rem,3.4vw,1.1rem);font-weight:800;line-height:1;text-transform:uppercase;transition:background .18s ease,color .18s ease,transform .18s cubic-bezier(.23,1,.32,1); }.crossword-cell.startAcross { border-left-width:4px; }.crossword-cell.endAcross { border-right-width:4px; }.crossword-cell.startDown { border-top-width:4px; }.crossword-cell.endDown { border-bottom-width:4px; }.crossword-cell.solved { background:#e6a527;transform:scale(.965);animation:solve-cell .32s cubic-bezier(.23,1,.32,1); }.crossword-void { aspect-ratio:1; }.frame-corner { position:absolute;z-index:2;width:13px;height:13px;border-color:#e6a527;border-style:solid;pointer-events:none; }.top-left { top:7px;left:7px;border-width:2px 0 0 2px; }.top-right { top:7px;right:7px;border-width:2px 2px 0 0; }.bottom-left { bottom:7px;left:7px;border-width:0 0 2px 2px; }.bottom-right { right:7px;bottom:7px;border-width:0 2px 2px 0; }
+  .settings-panel { position:absolute;z-index:60;inset:0;margin:0;padding:clamp(4.5rem,16vw,6rem) clamp(1rem,5vw,2rem) clamp(1rem,5vw,2rem);overflow-y:auto;border:0;background:rgba(255,253,247,.98);box-shadow:0 18px 55px rgba(23,42,69,.2);animation:drop-in .2s cubic-bezier(.23,1,.32,1); }.settings-intro { display:flex;align-items:center;gap:.75rem;color:#172a45; }.settings-intro strong { display:block;font-family:'DM Serif Display',serif;font-size:clamp(1.45rem,6vw,2rem);font-weight:400;letter-spacing:-.04em;line-height:.9; }.settings-intro p { margin:.35rem 0 0;color:#a45e38;font-family:'DM Serif Display',serif;font-size:.94rem; }.settings-group { margin-top:1.35rem;padding:.7rem .8rem .85rem;border:1px solid rgba(23,42,69,.17);background:rgba(255,253,247,.55); }.settings-group h2 { margin:0 0 .1rem;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase; }.setting-row { display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-top:.72rem;margin-top:.72rem;border-top:1px solid rgba(23,42,69,.14);color:#172a45;font-size:.67rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }.include-lower-row { margin-top:.25rem;padding-top:.35rem;border-top:0; }.segmented { display:flex;padding:2px;border:1px solid rgba(23,42,69,.22);border-radius:99px; }.segmented button { min-height:1.65rem;padding:0 .55rem;display:inline-flex;align-items:center;gap:.25rem;border:0;border-radius:99px;background:transparent;color:rgba(23,42,69,.62);font-size:.62rem;font-weight:800; }.segmented button :global(svg) { width:.78rem;height:.78rem; }.segmented button.chosen { background:#172a45;color:#fffdf7; }.vibration-row>span,.setting-label { display:inline-flex;align-items:center;gap:.35rem; }.vibration-row :global(svg),.setting-label :global(svg) { width:.9rem;height:.9rem; }.interface-locale-row select { max-width:9.6rem;border:1px solid rgba(23,42,69,.28);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:800;outline:0; }.interface-locale-row select:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }.level-segmented button { min-width:1.65rem;padding:0 .32rem; }.vocabulary-row { align-items:flex-start; }.completion-total strong { color:#34824d;font-family:'DM Serif Display',serif;font-size:1.45rem;line-height:1; }
+  .crossword-frame { position:relative;min-height:205px;display:grid;place-items:stretch;margin-top:.55rem;padding:clamp(.5rem,3vw,1rem);background-color:#ede4d5;background-image:linear-gradient(rgba(23,42,69,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.035) 1px,transparent 1px);background-size:20px 20px;border-top:3px double #172a45;border-bottom:2px solid rgba(23,42,69,.45);transition:transform .16s cubic-bezier(.23,1,.32,1); }.crossword-frame.shake { animation:shake .28s cubic-bezier(.23,1,.32,1); }.crossword-scroll { position:relative;z-index:1;min-width:0;min-height:0;overflow:scroll;display:grid;place-items:center;padding:clamp(.65rem,3vw,1.25rem);overscroll-behavior:contain;scrollbar-color:rgba(23,42,69,.4) transparent; }.crossword { --cell-size:clamp(2.35rem,10.2vw,3.1rem);position:relative;display:grid;width:max-content;min-width:calc(var(--cell-size) * 3); }.crossword-cell { aspect-ratio:1;min-width:0;display:grid;place-items:center;border:1px solid #172a45;background:#fffdf7;color:#172a45;font-size:clamp(.7rem,3.4vw,1.1rem);font-weight:800;line-height:1;text-transform:uppercase;transition:background .18s ease,color .18s ease,transform .18s cubic-bezier(.23,1,.32,1); }.crossword-cell.startAcross { border-left-width:4px; }.crossword-cell.endAcross { border-right-width:4px; }.crossword-cell.startDown { border-top-width:4px; }.crossword-cell.endDown { border-bottom-width:4px; }.crossword-cell.hinted { position:relative;z-index:1;outline:3px solid #e6a527;outline-offset:-4px;background:#fff7dd; }.crossword-cell.solved { background:#e6a527;transform:scale(.965);animation:solve-cell .32s cubic-bezier(.23,1,.32,1); }.crossword-void { aspect-ratio:1; }.frame-corner { position:absolute;z-index:2;width:13px;height:13px;border-color:#e6a527;border-style:solid;pointer-events:none; }.top-left { top:7px;left:7px;border-width:2px 0 0 2px; }.top-right { top:7px;right:7px;border-width:2px 2px 0 0; }.bottom-left { bottom:7px;left:7px;border-width:0 0 2px 2px; }.bottom-right { right:7px;bottom:7px;border-width:0 2px 2px 0; }
   .completion-inline { position:relative;z-index:56;display:inline-flex;align-items:center;justify-content:center;gap:.6rem;min-height:2.5rem;margin:auto;color:#34824d;animation:completion-in .24s cubic-bezier(.23,1,.32,1) both; }.completion-symbol { display:grid;place-items:center;width:1.8rem;height:1.8rem;flex:none;border:2px solid currentColor;border-radius:50%;font-family:'DM Sans',sans-serif;font-size:1.25rem;font-weight:800;line-height:1; }.completion-result { display:grid;gap:.08rem;justify-items:start;text-align:left; }.completion-result strong { color:#34824d;font-family:'DM Serif Display',serif;font-size:1.05rem;font-weight:400;letter-spacing:-.02em;line-height:1; }.completion-result small { color:#172a45;font-family:'DM Sans',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.06em;line-height:1.2;text-transform:uppercase; }.completion-result b { color:#34824d;font-family:'DM Serif Display',serif;font-size:.88rem;letter-spacing:0; }.completion-continue { min-height:1.85rem;padding:0 .8rem;border:1px solid #34824d;border-radius:999px;background:#34824d;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease; }.completion-continue:active { transform:scale(.96); }
-  .selection-area { position:relative;z-index:1;min-height:52px;padding:.55rem 0 .2rem;text-align:center;background:linear-gradient(90deg,transparent,rgba(23,42,69,.025) 22%,rgba(23,42,69,.025) 78%,transparent); }.selection-area.install-ready { min-height:82px; }.selection-area.completion-area { z-index:55;display:grid;place-items:center;min-height:58px;padding:.35rem 0;background:transparent; }.selection-area .settings-trigger { position:absolute;z-index:70;top:.38rem;right:0; }.selected-word { min-height:1.7rem;display:inline-flex;align-items:center;justify-content:center;gap:.48rem;color:rgba(23,42,69,.35);font-family:'DM Serif Display',serif;font-size:clamp(1.35rem,5vw,1.75rem);letter-spacing:.16em;line-height:1; }.selected-word :global(svg) { width:1.45rem;height:1.45rem;letter-spacing:0; }.selected-word.has-word { color:#172a45; }.selected-word.correct { color:#3f7a50; }.selected-word.wrong { color:#b54442; }.tutorial-practice-status { display:flex;align-items:center;justify-content:center;gap:.5rem;margin:.2rem 0 0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.54rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase; }.tutorial-practice-status b { color:#172a45;font-size:.58rem;letter-spacing:.11em; }.wiktionary-link { display:grid;place-items:center;width:1.25rem;height:1.25rem;border:1px solid currentColor;border-radius:50%;color:inherit;letter-spacing:0;transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease,color .16s ease; }.wiktionary-link:hover,.wiktionary-link:focus-visible { background:#3f7a50;color:#fffdf7;outline:0; }.wiktionary-link:active { transform:scale(.94); }.selected-word .wiktionary-link :global(svg) { width:.85rem;height:.85rem;animation:none; }.install-prompt { position:absolute;z-index:5;bottom:.25rem;left:50%;display:inline-flex;align-items:center;gap:.42rem;min-height:1.75rem;padding:.22rem .62rem;border:1px solid #172a45;border-radius:.2rem;background:#172a45;color:#fffdf7;box-shadow:0 3px 0 rgba(23,42,69,.16);font-family:'DM Sans',sans-serif;text-align:left;transform:translateX(-50%);transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease; }.install-prompt:active { transform:translateX(-50%) scale(.97); }.install-prompt :global(svg) { width:1rem;height:1rem;color:#e6a527; }.install-prompt span { display:grid;gap:.02rem;line-height:1;white-space:nowrap; }.install-prompt strong { font-size:.57rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase; }.install-prompt small { color:rgba(255,253,247,.72);font-size:.5rem;font-weight:700;letter-spacing:.03em; }
+  .selection-area { position:relative;z-index:1;min-height:70px;padding:.75rem 0 .35rem;text-align:center;background:linear-gradient(90deg,transparent,rgba(23,42,69,.025) 22%,rgba(23,42,69,.025) 78%,transparent); }.selection-area.install-ready { min-height:96px; }.selection-area.completion-area { z-index:55;display:grid;place-items:center;min-height:64px;padding:.35rem 0;background:transparent; }.selection-area .settings-trigger { position:absolute;z-index:70;top:.48rem;right:0; }.idle-hint-trigger { position:absolute;z-index:70;top:.48rem;left:0;display:inline-flex;align-items:center;gap:.3rem;min-height:1.85rem;padding:0 .55rem;border:1px solid rgba(164,94,56,.58);border-radius:999px;background:#fffdf7;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:800;letter-spacing:.07em;opacity:0;transform:translateY(4px);animation:hint-fade-in .28s cubic-bezier(.23,1,.32,1) forwards;text-transform:uppercase; }.idle-hint-trigger :global(svg) { width:.9rem;height:.9rem; }.idle-hint-trigger:active { transform:translateY(4px) scale(.96); }.selected-word { min-height:2.1rem;display:inline-flex;align-items:center;justify-content:center;gap:.48rem;color:rgba(23,42,69,.35);font-family:'DM Serif Display',serif;font-size:clamp(1.35rem,5vw,1.75rem);letter-spacing:.16em;line-height:1; }.selected-word :global(svg) { width:1.45rem;height:1.45rem;letter-spacing:0; }.selected-word.has-word { color:#172a45; }.selected-word.correct { color:#3f7a50; }.selected-word.wrong { color:#b54442; }.hint-definition { max-width:min(32rem,74vw);color:#a45e38;font-family:'DM Sans',sans-serif;font-size:clamp(.63rem,2.5vw,.78rem);font-weight:700;letter-spacing:.01em;line-height:1.35;text-align:center; }.tutorial-practice-status { display:flex;align-items:center;justify-content:center;gap:.5rem;margin:.2rem 0 0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.54rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase; }.tutorial-practice-status b { color:#172a45;font-size:.58rem;letter-spacing:.11em; }.wiktionary-link { display:grid;place-items:center;width:1.25rem;height:1.25rem;border:1px solid currentColor;border-radius:50%;color:inherit;letter-spacing:0;transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease,color .16s ease; }.wiktionary-link:hover,.wiktionary-link:focus-visible { background:#3f7a50;color:#fffdf7;outline:0; }.wiktionary-link:active { transform:scale(.94); }.selected-word .wiktionary-link :global(svg) { width:.85rem;height:.85rem;animation:none; }.install-prompt { position:absolute;z-index:5;bottom:.25rem;left:50%;display:inline-flex;align-items:center;gap:.42rem;min-height:1.75rem;padding:.22rem .62rem;border:1px solid #172a45;border-radius:.2rem;background:#172a45;color:#fffdf7;box-shadow:0 3px 0 rgba(23,42,69,.16);font-family:'DM Sans',sans-serif;text-align:left;transform:translateX(-50%);transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease; }.install-prompt:active { transform:translateX(-50%) scale(.97); }.install-prompt :global(svg) { width:1rem;height:1rem;color:#e6a527; }.install-prompt span { display:grid;gap:.02rem;line-height:1;white-space:nowrap; }.install-prompt strong { font-size:.57rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase; }.install-prompt small { color:rgba(255,253,247,.72);font-size:.5rem;font-weight:700;letter-spacing:.03em; }
   .wheel-stage { position:relative;min-height:235px;display:grid;place-items:center;border-top:1px solid rgba(23,42,69,.16);border-bottom:1px solid rgba(23,42,69,.16); }.letter-wheel { width:min(100%,248px);touch-action:none;overflow:visible;user-select:none; }.outer-ring,.inner-ring,.core-ring { fill:none; }.outer-ring { stroke:#172a45;stroke-width:1.1;stroke-dasharray:none;opacity:.28; }.inner-ring { stroke:#172a45;stroke-width:1;opacity:.12; }.core-ring { stroke:#e6a527;stroke-width:1.8;opacity:.9; }.core-mark { fill:#172a45;opacity:.83; }.core-word { fill:rgba(23,42,69,.52);font-family:'DM Serif Display',serif;font-size:13px;letter-spacing:.08em; }.core-word.active-core { fill:#c98220; }.core-caption { fill:rgba(23,42,69,.5);font-family:'DM Sans',sans-serif;font-size:5.8px;font-weight:800;letter-spacing:.18em; }.selection-line { fill:none;stroke:#e6a527;stroke-linecap:round;stroke-linejoin:round;stroke-width:10;opacity:.9; }.letter-node { cursor:crosshair; }.letter-node>circle { fill:#fffdf7;stroke:#172a45;stroke-width:2;transform-box:fill-box;transform-origin:center; }.letter-node text { fill:#172a45;font-family:'DM Sans',sans-serif;font-size:20px;font-weight:800;pointer-events:none; }.letter-node.active>circle { fill:#e6a527;stroke:#c98220;transform:scale(1.22); }.letter-node.active text { fill:#172a45; }
   @keyframes drop-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes shake { 25% { transform: translateX(-7px); } 55% { transform: translateX(6px); } 80% { transform: translateX(-3px); } }
@@ -516,13 +559,14 @@
   .crossword { width:max-content;min-width:calc(var(--cell-size) * 3); }
   .selection-area { flex:0 0 auto;min-height:40px;padding:.35rem 0 .05rem; }.selection-area.install-ready { min-height:70px; }.selection-area.completion-area { min-height:54px;padding:.2rem 0; }
   .settings-trigger { overflow:visible; }
-  .wheel-stage { flex:0 0 clamp(206px,33svh,260px);min-height:0; }
+  .wheel-stage { flex:0 0 clamp(214px,34svh,270px);min-height:0; }
   .letter-wheel { width:min(100%,238px); }
   .crossword-frame { background-image:linear-gradient(rgba(23,42,69,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.018) 1px,transparent 1px);background-size:24px 24px; }
   .crossword-scroll { overflow:auto;touch-action:pan-x pan-y;border:1px solid rgba(23,42,69,.12);background:linear-gradient(90deg,rgba(255,253,247,.3),rgba(255,253,247,.08) 18%,rgba(255,253,247,.08) 82%,rgba(255,253,247,.3));box-shadow:inset 0 0 0 6px rgba(255,253,247,.15);outline:0; }
   .core-word.idle-core { fill:#a0621d;font-family:'DM Sans',sans-serif;font-size:10.8px;font-weight:800;letter-spacing:.08em; }
   .settings-github { display:block;margin-top:1rem;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:800;letter-spacing:.05em;text-align:center;text-decoration:none;text-transform:uppercase; }
   .settings-github:focus-visible { outline:2px solid #e6a527;outline-offset:3px; }
+  @keyframes hint-fade-in { to { opacity:1;transform:translateY(0); } }
   /* Input rail: completion occupies the exact input slot; helper and repository controls remain secondary to word feedback. */
   .selection-area.completion-area { display:flex;align-items:center;justify-content:center;height:58px;min-height:58px;padding:0; }
   .selection-area.completion-area .completion-inline { display:flex;align-items:center;justify-content:center;width:100%;height:100%;margin:0; }

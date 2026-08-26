@@ -182,3 +182,7 @@
 - [x] Bereits gelöste gemeinsame Wörter ohne irreführende neue Erfolgsmeldung behandeln (mit der entfernten Co-op-Funktion verworfen).
 - [x] Co-op-, SSE- und Datenbankcode vollständig entfernen und die statische Vercel-Ausgabe wiederherstellen.
 - [x] Hindi/Malayalam-Interface, Drei-Wort-Tutorial und die vereinfachte orange Eingabeauswahl im statischen Build prüfen und veröffentlichen.
+- [x] Eingabebereich vertikal vergrößern und Buchstabenblasen um vier Pixel vergrößern.
+- [x] Einstellungen in Inhalts- und Verhaltensgruppen ordnen; Globus vor die App-Sprachen-Steuerung stellen.
+- [x] JSON-Definitionen für spielbare Wörter ergänzen und einen nach einer Minute eingeblendeten Hinweis mit Zielzellen-Markierung umsetzen.
+- [ ] Eingabe, gruppierte Einstellungen, Idle-Hinweis, statischen Build und Vercel-Deployment prüfen und veröffentlichen.

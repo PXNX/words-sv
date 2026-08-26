@@ -30,5 +30,8 @@
   "tutorial_help": "После верного слова знак вопроса откроет объяснение.",
   "tutorial_start": "Начать игру",
   "tutorial_restart": "Посмотреть обучение снова",
-  "telegram_share": ""
+  "telegram_share": "",
+  "content_group": "Содержание",
+  "behavior_group": "Поведение приложения",
+  "idle_hint": "Подсказка"
 }
