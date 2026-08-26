@@ -181,4 +181,4 @@
 - [x] Abgelaufene oder fehlende gemeinsame Runde sauber auf eine normale Runde oder klare Join-Fehlermeldung zurückführen (mit der entfernten Co-op-Funktion verworfen).
 - [x] Bereits gelöste gemeinsame Wörter ohne irreführende neue Erfolgsmeldung behandeln (mit der entfernten Co-op-Funktion verworfen).
 - [x] Co-op-, SSE- und Datenbankcode vollständig entfernen und die statische Vercel-Ausgabe wiederherstellen.
-- [ ] Hindi/Malayalam-Interface, Drei-Wort-Tutorial und die vereinfachte orange Eingabeauswahl im statischen Build prüfen und veröffentlichen.
+- [x] Hindi/Malayalam-Interface, Drei-Wort-Tutorial und die vereinfachte orange Eingabeauswahl im statischen Build prüfen und veröffentlichen.
