@@ -12,7 +12,8 @@ const soundSource = await readFile(new URL('../src/lib/sounds.ts', import.meta.u
 const levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
 
 test('five-letter mode accepts only normalized five-letter vocabulary entries', () => {
-  assert.deepEqual(fiveLetterWords(['Apfel', 'APFEL', 'HAUS', 'KÄLTE', 'SIEBEN']), ['APFEL', 'KÄLTE']);
+	  assert.deepEqual(fiveLetterWords(['Apfel', 'APFEL', 'HAUS', 'KÄLTE', 'SIEBEN']), ['APFEL', 'KÄLTE']);
+	  assert.deepEqual(fiveLetterWords(['ÉCOLE', 'ШКОЛА', 'ДІМ']), ['ÉCOLE', 'ШКОЛА']);
 });
 
 test('Wordle evaluation handles repeated letters without over-marking presents', () => {
@@ -30,7 +31,8 @@ test('Wordle auto-submits only exact-level valid five-letter guesses', () => {
 	assert.match(wordleSource, /if \(nextGuess\.length === 5\) \{\n\s+submit\(\);/);
   assert.doesNotMatch(wordleSource, /class="wordle-form"/);
   assert.doesNotMatch(wordleSource, /id="wordle-guess"/);
-  assert.match(wordleSource, /onclick=\{\(\) => press\('ẞ'\)\}/);
+	  assert.match(wordleSource, /const keyboardLayouts/);
+	  assert.match(wordleSource, /extras: \['Ä', 'Ö', 'Ü', 'ẞ'\]/);
   assert.match(wordleSource, /grid-template-columns:repeat\(5,clamp\(2\.35rem,12vw,3\.35rem\)\)/);
 });
 
@@ -96,6 +98,11 @@ test('learning cards separate word and audio prompts, reveal every answer state,
 	assert.doesNotMatch(learningSource, /class="listen-icon"/);
 	assert.doesNotMatch(learningSource, /class="definition-feedback"/);
 	assert.match(learningSource, /onCorrect\(\)/);
+	assert.match(learningSource, /const currentArticle = \$derived\(articleFor\(currentWord\)\)/);
+	assert.match(learningSource, /entry\.type !== 'Substantiv'/);
+	assert.match(learningSource, /new SpeechSynthesisUtterance\(currentWord\)/);
+	assert.doesNotMatch(learningSource, /new SpeechSynthesisUtterance\(currentDisplayWord\)/);
+	assert.match(learningSource, /currentDisplayWord/);
 });
 
 test('local spaced repetition resets after a mistake and extends review intervals after successive correct answers', () => {
@@ -121,7 +128,7 @@ test('portrait safeguards and persistent optional success sounds remain wired at
 	assert.match(pageSource, /ROOT_ONBOARDING_KEY = 'wordcircle-root-onboarding-v1'/);
 	assert.match(pageSource, /function preferredInterfaceLocale\(\)/);
 	assert.match(pageSource, /class="home-games"/);
-	assert.match(pageSource, /nextMode === 'crossword' && localStorage\.getItem\(TUTORIAL_STATE_KEY\) !== 'complete'/);
+	assert.match(pageSource, /nextMode === 'crossword' && \(lang === 'de' \|\| lang === 'en'\) && localStorage\.getItem\(TUTORIAL_STATE_KEY\) !== 'complete'/);
 	assert.match(pageSource, /class="home-trigger" onclick=\{goHome\}/);
 	assert.match(pageSource, /function goSettings\(\) \{ tutorialOpen = false; void goto\('\/settings'\); \}/);
 	assert.match(pageSource, /class="settings-page"/);

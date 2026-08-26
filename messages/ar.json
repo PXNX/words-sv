@@ -75,5 +75,15 @@
   "learning_correct": "إجابة صحيحة.",
   "learning_try_again": "ليست تمامًا — حاول مرة أخرى.",
   "learning_choose_word": "اختر الكلمة التي سمعتها.",
-  "learning_audio_prompt": "استمع ثم اختر الكلمة المطابقة."
+  "learning_audio_prompt": "استمع ثم اختر الكلمة المطابقة.",
+  "streak": "سلسلة يومية",
+  "streak_done": "تم احتساب اليوم",
+  "streak_progress": "تقدم المفردات",
+  "streak_time_left": "الوقت المتبقي اليوم",
+  "notifications": "تذكيرات السلسلة",
+  "notifications_enable": "تفعيل التذكيرات",
+  "notifications_disable": "إيقاف التذكيرات",
+  "notifications_enabled": "التذكيرات مفعّلة.",
+  "notifications_denied": "الإشعارات محجوبة في هذا المتصفح.",
+  "notifications_unavailable": "تذكيرات الدفع غير متاحة في هذا المتصفح."
 }

@@ -240,14 +240,14 @@
 - [x] Lokale mehrtägige, leistungsabhängige Vokabelwiederholung mit Fehlerrücksetzung und zunehmend größeren Erfolgsintervallen speichern.
 - [x] Neue Einstiegs- und Vokabelflüsse inklusive Persistenz, Lokalisierungen, statischem PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
 - [x] Landschaftshinweis entfernen und die Oberfläche stattdessen ohne sichtbare Rotationsaufforderung in ihrer Portrait-Komposition halten.
-- [ ] Tägliche Streak-Regel speichern: acht richtige Vokabelantworten oder eine vollständige Circle- beziehungsweise Wordle-Runde qualifizieren den Kalendertag.
-- [ ] Streak-Status, heutige Restaufgabe und verbleibende Zeit bis Tagesende auf der Startseite anzeigen.
-- [ ] Nutzerfreundliche Einwilligung und ausgewählten Versandweg für Zwei-Stunden- und Tagesstart-Erinnerungen ergänzen.
+- [x] Tägliche Streak-Regel speichern: acht richtige Vokabelantworten oder eine vollständige Circle- beziehungsweise Wordle-Runde qualifizieren den Kalendertag.
+- [x] Streak-Status, heutige Restaufgabe und verbleibende Zeit bis Tagesende auf der Startseite anzeigen.
+- [x] Nutzerfreundliche Einwilligung und ausgewählten Versandweg für Zwei-Stunden- und Tagesstart-Erinnerungen ergänzen.
 - [ ] Streak-Rollover, Qualifikation, Root-Anzeige, Benachrichtigungstiming, PWA-Build und Deployment prüfen und veröffentlichen.
 - [x] Widersprüchlichen Sprachausgabe-Status bei sichtbarer Audiosteuerung beheben und den Vokabel-Prompt mit ausreichendem Kontrast darstellen.
 - [x] Auf Circle-, Wordle- und Vokabelseiten eine linke Home-Schaltfläche zur Startseite ergänzen.
 - [x] Sprachstatus, Prompt-Kontrast, Home-Routing, mobile Darstellung, statischen PWA-Build und Deployment prüfen und veröffentlichen.
-- [ ] Push-Benachrichtigungsansatz von PXNX/psyops-sv prüfen und für die täglichen Streak-Erinnerungen übernehmen, soweit er zur WordCircle-PWA passt.
+- [x] Push-Benachrichtigungsansatz von PXNX/psyops-sv prüfen und für die täglichen Streak-Erinnerungen übernehmen, soweit er zur WordCircle-PWA passt.
 - [x] Portrait-Komposition beim Wechsel zu Landscape unverändert und aufrecht halten, ohne seitliches Umfließen oder Drehen der Benutzeroberfläche.
 - [x] Ungültige oder bereits verwendete Wordle-Eingaben unmittelbar aus der aktiven Reihe entfernen und klar rückmelden.
 - [x] Modusumschalter aus Einstellungen entfernen und Spielwahl ausschließlich über die Startseite anbieten.
@@ -257,3 +257,16 @@
 - [x] Richtige Vokabelantwort mit Häkchen und falsch gewählte Antwort mit Kreuz markieren.
 - [x] Überflüssiges Lautsprecher-Icon oberhalb von Listen entfernen und Text über dem Fortsetzen-Knopf ausblenden.
 - [x] Vokabelfeedback, Audiokarten, Fortsetzen-Steuerung, mobile Darstellung, PWA-Build und Deployment prüfen und veröffentlichen.
+- [x] Persistente Push-Abonnements und VAPID-Schlüssel sicher verwalten sowie den Service Worker für Hintergrund-Push und Klicknavigation ergänzen.
+- [x] Serverseitliche Erinnerungslogik für zwei Stunden vor lokalem Tagesende und für den Start eines neuen Lerntags mit idempotenter Zustellung ergänzen.
+- [x] Hintergrund-Push-Berechtigung, Abonnement, Streak-Qualifikation und Fehlerzustände verständlich über `/settings` steuern und anzeigen.
+- [x] Auf der Startseite einen klaren Link zur dedizierten `/settings`-Seite ergänzen.
+- [x] Extern aufrufbaren Cron-Endpunkt ohne kostenpflichtigen Plattformzeitplan absichern und für einen beliebigen kostenlosen Scheduler dokumentieren.
+- [x] Bereitgestelltes VAPID-Schlüsselpaar sicher speichern und vor Aktivierung des externen Cron-Aufrufs einen separaten Cron-Secret setzen.
+- [x] Französisch, Italienisch, Spanisch, Portugiesisch und Ukrainisch als spielbare Lernsprachen in Onboarding und Einstellungen anbieten.
+- [x] Für jede neue Lernsprache CEFR-ausgerichtete Circle-, Wordle- und Vokabelwortpools mit Definitionen und Aussprache-Metadaten bereitstellen.
+- [ ] Neue spielbare Sprachrouten, Wortlisten und die Sprachwahl lokal sowie in der Produktionsvorschau prüfen.
+- [x] Vokabelkarten um sprachspezifische grammatische Artikel ergänzen und dabei die Antwortauswertung weiterhin auf dem Grundwort durchführen.
+- [x] Wortdaten auf strukturierte Einträge mit Wortart, grammatischem Geschlecht und Seltenheitsangabe umstellen, ohne bestehende Spielauswahl zu brechen.
+- [x] Seltenheitsangaben aus dokumentierten Duden-Häufigkeitsinformationen und dem angegebenen Quellenbestand nachvollziehbar zuzuordnen und zu dokumentieren.
+- [x] Artikel ausschließlich bei Substantiven aus dem grammatischen Geschlecht ableiten und bei der Sprachausgabe nur das Lemma sprechen.

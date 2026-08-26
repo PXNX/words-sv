@@ -75,5 +75,15 @@
   "learning_correct": "Правильно.",
   "learning_try_again": "Майже — спробуйте ще раз.",
   "learning_choose_word": "Оберіть слово, яке ви почули.",
-  "learning_audio_prompt": "Послухайте та оберіть відповідне слово."
+  "learning_audio_prompt": "Послухайте та оберіть відповідне слово.",
+  "streak": "Щоденна серія",
+  "streak_done": "Сьогодні зараховано",
+  "streak_progress": "Прогрес словника",
+  "streak_time_left": "Часу залишилося сьогодні",
+  "notifications": "Нагадування про серію",
+  "notifications_enable": "Увімкнути нагадування",
+  "notifications_disable": "Вимкнути нагадування",
+  "notifications_enabled": "Нагадування ввімкнено.",
+  "notifications_denied": "Сповіщення заблоковані в цьому браузері.",
+  "notifications_unavailable": "Push-нагадування недоступні в цьому браузері."
 }

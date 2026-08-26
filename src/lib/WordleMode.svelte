@@ -10,9 +10,14 @@
   };
   type TutorialRound = { target: string; warmup: string };
 
-  let { words, level, language, labels, onGreen = () => {}, tutorialRequested = 0 }: { words: string[]; level: string; language: 'de' | 'en'; labels: Labels; onGreen?: () => void; tutorialRequested?: number } = $props();
-  const WORDLE_TUTORIAL_KEY = 'wordcircle-wordle-tutorial-v1';
-  const keyboardRows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+	  let { words, level, language, labels, onGreen = () => {}, onWin = () => {}, tutorialRequested = 0 }: { words: string[]; level: string; language: string; labels: Labels; onGreen?: () => void; onWin?: () => void; tutorialRequested?: number } = $props();
+	  const WORDLE_TUTORIAL_KEY = 'wordcircle-wordle-tutorial-v1';
+	  const keyboardLayouts: Record<string, { rows: string[]; extras: string[] }> = {
+		de: { rows: ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'], extras: ['Ä', 'Ö', 'Ü', 'ẞ'] }, en: { rows: ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'], extras: [] },
+		fr: { rows: ['AZERTYUIOP', 'QSDFGHJKLM', 'WXCVBN'], extras: ['À', 'É', 'È', 'Ê', 'Ë', 'Î', 'Ï', 'Ô', 'Ù', 'Û', 'Ü', 'Ç', 'Œ'] }, it: { rows: ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'], extras: ['À', 'È', 'É', 'Ì', 'Ò', 'Ù'] },
+		es: { rows: ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'], extras: ['Á', 'É', 'Í', 'Ó', 'Ú', 'Ü', 'Ñ'] }, pt: { rows: ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'], extras: ['Á', 'À', 'Â', 'Ã', 'É', 'Ê', 'Í', 'Ó', 'Ô', 'Õ', 'Ú', 'Ç'] },
+		uk: { rows: ['ЙЦУКЕНГШЩЗХ', 'ФІВАПРОЛДЖЄ', 'ЯЧСМИТЬБЮ'], extras: ['Ґ', 'Ї'] }
+	  };
   const tutorialRounds: Record<'de' | 'en', TutorialRound> = {
     de: { target: 'TASSE', warmup: 'TASES' },
     en: { target: 'TASTE', warmup: 'TATES' }
@@ -31,8 +36,9 @@
   const candidates = $derived(fiveLetterWords(words));
   const won = $derived(entries.some((entry) => entry.word === target));
   const exhausted = $derived(entries.length >= 6 && !won);
-  const tutorialRound = $derived(tutorialRounds[language]);
-  const tutorialExpected = $derived(tutorialStep === 0 ? tutorialRound.warmup : tutorialRound.target);
+	  const keyboardLayout = $derived(keyboardLayouts[language] ?? keyboardLayouts.en);
+	  const tutorialRound = $derived(tutorialRounds[language as 'de' | 'en'] ?? null);
+	  const tutorialExpected = $derived(tutorialRound ? (tutorialStep === 0 ? tutorialRound.warmup : tutorialRound.target) : '');
   const tutorialFinished = $derived(tutorialStep >= 2);
   const tutorialHint = $derived(tutorialFinished ? labels.tutorialComplete : `${labels.tutorialPrompt} ${tutorialExpected}`);
 
@@ -55,7 +61,7 @@
     entries = [...entries, { word: normalized, marks }];
     guess = '';
     if (marks.some((mark) => mark === 'correct')) onGreen();
-    notice = normalized === target ? labels.win : '';
+	    if (normalized === target) { notice = labels.win; onWin(); } else notice = '';
   }
 
   function press(letter: string) {
@@ -72,8 +78,9 @@
     notice = '';
   }
 
-  function openTutorial() {
-    tutorialOpen = true;
+	function openTutorial() {
+		if (!tutorialRound) return;
+	    tutorialOpen = true;
     tutorialStep = 0;
     tutorialGuess = '';
     tutorialEntries = [];
@@ -91,7 +98,7 @@
   }
 
   function tutorialPress(letter: string) {
-    if (tutorialFinished) return;
+		if (tutorialFinished || !tutorialRound) return;
     const expectedLetter = tutorialExpected[tutorialGuess.length];
     if (letter !== expectedLetter) return;
     const nextGuess = `${tutorialGuess}${letter}`;
@@ -123,7 +130,7 @@
   });
 
   onMount(() => {
-    if (localStorage.getItem(WORDLE_TUTORIAL_KEY) !== 'complete') openTutorial();
+	    if (tutorialRound && localStorage.getItem(WORDLE_TUTORIAL_KEY) !== 'complete') openTutorial();
   });
 </script>
 
@@ -155,15 +162,15 @@
       {#if won || exhausted}<button class="mode-reset" onclick={start}>{labels.again}</button>{/if}
     </div>
 
-    <div class="wordle-keyboard" aria-label={labels.input}>
-      {#each keyboardRows as row}
-        <div>{#each row.split('') as letter}<button type="button" onclick={() => press(letter)} disabled={won || exhausted}>{letter}</button>{/each}</div>
-      {/each}
-      <div class="wordle-utility"><button type="button" onclick={() => press('Ä')} disabled={won || exhausted}>Ä</button><button type="button" onclick={() => press('Ö')} disabled={won || exhausted}>Ö</button><button type="button" onclick={() => press('Ü')} disabled={won || exhausted}>Ü</button><button type="button" onclick={() => press('ẞ')} disabled={won || exhausted}>ẞ</button><button class="delete-key" type="button" onclick={removeLetter} disabled={won || exhausted}>⌫</button></div>
-    </div>
+	    <div class="wordle-keyboard" aria-label={labels.input}>
+	      {#each keyboardLayout.rows as row}
+	        <div>{#each row.split('') as letter}<button type="button" onclick={() => press(letter)} disabled={won || exhausted}>{letter}</button>{/each}</div>
+	      {/each}
+	      <div class="wordle-utility">{#each keyboardLayout.extras as letter}<button type="button" onclick={() => press(letter)} disabled={won || exhausted}>{letter}</button>{/each}<button class="delete-key" type="button" onclick={removeLetter} disabled={won || exhausted}>⌫</button></div>
+	    </div>
   {/if}
 
-  {#if tutorialOpen}
+	  {#if tutorialOpen && tutorialRound}
     <div class="wordle-tutorial" role="dialog" aria-modal="true" aria-labelledby="wordle-tutorial-title">
       <div class="wordle-tutorial-card">
         <p class="tutorial-kicker">{labels.tutorialTitle}</p>
@@ -186,11 +193,11 @@
         {#if tutorialFinished}
           <button class="tutorial-finish" type="button" onclick={closeTutorial}>{labels.again}</button>
         {:else}
-          <div class="wordle-keyboard tutorial-keyboard" aria-label={labels.input}>
-            {#each keyboardRows as row}
-              <div>{#each row.split('') as letter}<button type="button" onclick={() => tutorialPress(letter)} class:expected={tutorialExpected[tutorialGuess.length] === letter}>{letter}</button>{/each}</div>
-            {/each}
-            <div class="wordle-utility"><button type="button" onclick={() => tutorialPress('Ä')} class:expected={tutorialExpected[tutorialGuess.length] === 'Ä'}>Ä</button><button type="button" onclick={() => tutorialPress('Ö')} class:expected={tutorialExpected[tutorialGuess.length] === 'Ö'}>Ö</button><button type="button" onclick={() => tutorialPress('Ü')} class:expected={tutorialExpected[tutorialGuess.length] === 'Ü'}>Ü</button><button type="button" onclick={() => tutorialPress('ẞ')} class:expected={tutorialExpected[tutorialGuess.length] === 'ẞ'}>ẞ</button><button class="delete-key" type="button" onclick={tutorialRemove}>⌫</button></div>
+	          <div class="wordle-keyboard tutorial-keyboard" aria-label={labels.input}>
+	            {#each keyboardLayout.rows as row}
+	              <div>{#each row.split('') as letter}<button type="button" onclick={() => tutorialPress(letter)} class:expected={tutorialExpected[tutorialGuess.length] === letter}>{letter}</button>{/each}</div>
+	            {/each}
+	            <div class="wordle-utility">{#each keyboardLayout.extras as letter}<button type="button" onclick={() => tutorialPress(letter)} class:expected={tutorialExpected[tutorialGuess.length] === letter}>{letter}</button>{/each}<button class="delete-key" type="button" onclick={tutorialRemove}>⌫</button></div>
           </div>
         {/if}
       </div>

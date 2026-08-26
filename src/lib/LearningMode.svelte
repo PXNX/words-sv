@@ -6,10 +6,11 @@
   import { definitionChoiceWords, insertLearningRepeat, pickLearningSection } from '$lib/modes.js';
   import { prioritizeLearningWords, updateReviewProgress } from '$lib/spacedRepetition.js';
 
-  type PromptKind = 'word' | 'audio';
-  type AnswerStatus = 'correct' | 'wrong' | null;
-  type Labels = { title: string; listen: string; section: string; unavailable: string; speechUnavailable: string; chooseDefinition: string; correct: string; tryAgain: string; continue: string; chooseWord: string; audioPrompt: string };
-  let { words, definitions, language, level, labels, onCorrect = () => {} }: { words: string[]; definitions: Record<string, string>; language: 'de' | 'en'; level: string; labels: Labels; onCorrect?: () => void } = $props();
+	  type PromptKind = 'word' | 'audio';
+	  type AnswerStatus = 'correct' | 'wrong' | null;
+	  type VocabularyMetadata = { type: string; gender?: 'masculine' | 'feminine' | 'neuter'; article?: string };
+	  type Labels = { title: string; listen: string; section: string; unavailable: string; speechUnavailable: string; chooseDefinition: string; correct: string; tryAgain: string; continue: string; chooseWord: string; audioPrompt: string };
+	  let { words, definitions, metadata, language, level, labels, onCorrect = () => {} }: { words: string[]; definitions: Record<string, string>; metadata: Record<string, VocabularyMetadata>; language: string; level: string; labels: Labels; onCorrect?: () => void } = $props();
   const REVIEW_STORAGE_KEY = 'wordcircle-vocabulary-review-v2';
   let section = $state<string[]>([]);
   let queue = $state<string[]>([]);
@@ -27,17 +28,22 @@
 
   const currentWord = $derived(queue[position] ?? '');
   const currentDefinition = $derived(definitions[currentWord] ?? '');
+		const currentArticle = $derived(articleFor(currentWord));
+	const currentDisplayWord = $derived(currentArticle ? `${currentArticle} ${currentWord}` : currentWord);
   const definitionWords = $derived(words.map((word) => word.trim().toUpperCase()).filter((word) => Boolean(definitions[word])));
   const isDefinitionPrompt = $derived(promptKind === 'word');
 
   function random() { return Math.random(); }
+	function speechLocale() { return ({ de: 'de-DE', en: 'en-US', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', pt: 'pt-PT', uk: 'uk-UA' } as Record<string, string>)[language] ?? language; }
+		function articleFor(word: string) { const entry = metadata[word]; if (!entry || entry.type !== 'Substantiv') return ''; if (entry.article) return entry.article; const articlesByGender: Record<string, Record<string, string>> = { de: { masculine: 'der', feminine: 'die', neuter: 'das' } }; return entry.gender ? articlesByGender[language]?.[entry.gender] ?? '' : ''; }
+		function displayWord(word: string) { const article = articleFor(word); return article ? `${article} ${word}` : word; }
   function cancelSpeech() { if (typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel(); }
   function speak() {
 	    if (!speechSupported || !currentWord) { speechStatus = labels.speechUnavailable; return; }
     speechStatus = '';
     window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(currentWord);
-    utterance.lang = language === 'de' ? 'de-DE' : 'en-US';
+		    const utterance = new SpeechSynthesisUtterance(currentWord);
+	    utterance.lang = speechLocale();
     utterance.rate = .84;
 	    utterance.voice = voices.find((voice) => voice.lang.toLowerCase().startsWith(language)) ?? voices.find((voice) => voice.default) ?? null;
     utterance.onerror = () => { speechStatus = labels.speechUnavailable; };
@@ -85,7 +91,7 @@
     cancelSpeech();
     position = position >= queue.length - 1 ? 0 : position + 1;
   }
-  function optionText(word: string) { return isDefinitionPrompt ? definitions[word] : word; }
+	  function optionText(word: string) { return isDefinitionPrompt ? definitions[word] : displayWord(word); }
 
   onMount(() => {
     speechSupported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
@@ -120,7 +126,7 @@
   {:else}
     <article class="learning-card" class:audio-card={promptKind === 'audio'}>
 	      {#if promptKind === 'word'}
-	        <p class="learning-word" lang={language}>{currentWord}</p>
+	        <p class="learning-word" lang={language}>{currentDisplayWord}</p>
 	      {:else}
 	        <button class="listen-button loud-listen" onclick={speak} disabled={!speechSupported}><IconVolume aria-hidden="true" />{labels.listen}</button>
         <p class="audio-prompt">{labels.audioPrompt}</p>

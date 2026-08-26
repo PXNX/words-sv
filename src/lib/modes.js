@@ -1,16 +1,21 @@
 // @ts-nocheck
 
 export function normalizePlayableWord(value) {
-  return value.trim().toLocaleUpperCase('de-DE');
+	return value.trim().normalize('NFC').toLocaleUpperCase();
+}
+
+function isLetterWord(word, minimum, maximum = minimum) {
+	const length = [...word].length;
+	return length >= minimum && length <= maximum && /^\p{L}+$/u.test(word);
 }
 
 export function fiveLetterWords(words) {
-  return [...new Set(words.map(normalizePlayableWord).filter((word) => /^[A-ZÄÖÜẞ]{5}$/.test(word)))];
+	return [...new Set(words.map(normalizePlayableWord).filter((word) => isLetterWord(word, 5)))];
 }
 
 export function isValidWordleGuess(candidates, value) {
-  const normalized = normalizePlayableWord(value);
-  return normalized.length === 5 && candidates.includes(normalized);
+	const normalized = normalizePlayableWord(value);
+	return isLetterWord(normalized, 5) && candidates.includes(normalized);
 }
 
 export function evaluateWordleGuess(answer, guess) {
@@ -41,7 +46,7 @@ export function evaluateWordleGuess(answer, guess) {
 }
 
 export function pickLearningSection(words, random, size = 6) {
-  const normalized = [...new Set(words.map(normalizePlayableWord).filter((word) => /^[A-ZÄÖÜẞ]{3,12}$/.test(word)))];
+	const normalized = [...new Set(words.map(normalizePlayableWord).filter((word) => isLetterWord(word, 3, 18)))];
   const shuffled = [...normalized];
   for (let index = shuffled.length - 1; index > 0; index -= 1) {
     const swap = Math.floor(random() * (index + 1));

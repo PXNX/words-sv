@@ -75,5 +75,15 @@
   "learning_correct": "Correto.",
   "learning_try_again": "Ainda não — tente novamente.",
   "learning_choose_word": "Escolha a palavra que ouviu.",
-  "learning_audio_prompt": "Ouça e escolha a palavra correspondente."
+  "learning_audio_prompt": "Ouça e escolha a palavra correspondente.",
+  "streak": "Sequência diária",
+  "streak_done": "Hoje está concluído",
+  "streak_progress": "Progresso de vocabulário",
+  "streak_time_left": "Tempo restante hoje",
+  "notifications": "Lembretes da sequência",
+  "notifications_enable": "Ativar lembretes",
+  "notifications_disable": "Desativar lembretes",
+  "notifications_enabled": "Os lembretes estão ativados.",
+  "notifications_denied": "As notificações estão bloqueadas neste navegador.",
+  "notifications_unavailable": "Lembretes por push não estão disponíveis neste navegador."
 }

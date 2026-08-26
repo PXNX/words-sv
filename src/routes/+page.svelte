@@ -10,7 +10,8 @@
   import wordsDeB2 from '$lib/data/words.de.b2.json';
 import wordsDeC1 from '$lib/data/words.de.c1.json';
 import wordsDeC2 from '$lib/data/words.de.c2.json';
-import definitionsDe from '$lib/data/definitions.de.json';
+	import definitionsDe from '$lib/data/definitions.de.json';
+	import metadataDe from '$lib/data/metadata.de.json';
 import wordsEnA1 from '$lib/data/words.en.a1.json';
   import wordsEnA2 from '$lib/data/words.en.a2.json';
   import wordsEnB1 from '$lib/data/words.en.b1.json';
@@ -19,8 +20,11 @@ import wordsEnC1 from '$lib/data/words.en.c1.json';
 	import wordsEnC2 from '$lib/data/words.en.c2.json';
 	import definitionsEn from '$lib/data/definitions.en.json';
 		import LearningMode from '$lib/LearningMode.svelte';
-		import WordleMode from '$lib/WordleMode.svelte';
-		import { playSuccessSound } from '$lib/sounds';
+			import WordleMode from '$lib/WordleMode.svelte';
+			import { playSuccessSound } from '$lib/sounds';
+			import { addedLanguagePacks, existingArticles } from '$lib/data/languagePacks';
+			import { readStreak, syncStreak, type ClientStreak, type StreakEvent } from '$lib/clientStreak';
+			import { disablePush, enablePush, pushEnabled, pushSupported } from '$lib/pushClient';
 	import { m } from '$lib/paraglide/messages';
   import { getTextDirection, setLocale, type Locale } from '$lib/paraglide/runtime';
 	  import IconCheck from '~icons/material-symbols/check-circle-rounded';
@@ -38,7 +42,7 @@ import wordsEnC1 from '$lib/data/words.en.c1.json';
 	  import IconVolume from '~icons/material-symbols/volume-up-rounded';
 	  import IconVolumeOff from '~icons/material-symbols/volume-off-rounded';
 
-	type Language = 'de' | 'en';
+		type Language = 'de' | 'en' | 'fr' | 'it' | 'es' | 'pt' | 'uk';
 	type GameMode = 'crossword' | 'wordle' | 'learning';
   type InterfaceLocale = Locale;
   type Theme = 'light' | 'dark';
@@ -53,14 +57,20 @@ import wordsEnC1 from '$lib/data/words.en.c1.json';
 
   const vocabularyLevels: VocabularyLevel[] = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
 const wordPools: Record<Language, Record<VocabularyLevel, string[]>> = {
-de: { a1: wordsDeA1 as string[], a2: wordsDeA2 as string[], b1: wordsDeB1 as string[], b2: wordsDeB2 as string[], c1: wordsDeC1 as string[], c2: wordsDeC2 as string[] },
-en: { a1: wordsEnA1 as string[], a2: wordsEnA2 as string[], b1: wordsEnB1 as string[], b2: wordsEnB2 as string[], c1: wordsEnC1 as string[], c2: wordsEnC2 as string[] }
+	de: { a1: wordsDeA1 as string[], a2: wordsDeA2 as string[], b1: wordsDeB1 as string[], b2: wordsDeB2 as string[], c1: wordsDeC1 as string[], c2: wordsDeC2 as string[] },
+	en: { a1: wordsEnA1 as string[], a2: wordsEnA2 as string[], b1: wordsEnB1 as string[], b2: wordsEnB2 as string[], c1: wordsEnC1 as string[], c2: wordsEnC2 as string[] },
+	fr: addedLanguagePacks.fr.words as unknown as Record<VocabularyLevel, string[]>, it: addedLanguagePacks.it.words as unknown as Record<VocabularyLevel, string[]>, es: addedLanguagePacks.es.words as unknown as Record<VocabularyLevel, string[]>, pt: addedLanguagePacks.pt.words as unknown as Record<VocabularyLevel, string[]>, uk: addedLanguagePacks.uk.words as unknown as Record<VocabularyLevel, string[]>
 };
 const wordDefinitions: Record<Language, Record<string, string>> = {
-de: definitionsDe as Record<string, string>,
-en: definitionsEn as Record<string, string>
+	de: definitionsDe as Record<string, string>,
+	en: definitionsEn as Record<string, string>,
+	fr: addedLanguagePacks.fr.definitions, it: addedLanguagePacks.it.definitions, es: addedLanguagePacks.es.definitions, pt: addedLanguagePacks.pt.definitions, uk: addedLanguagePacks.uk.definitions
 };
-const hintableBaseWords = new Set([...Object.keys(wordDefinitions.de), ...Object.keys(wordDefinitions.en)]);
+	type VocabularyMetadata = { type: string; gender?: 'masculine' | 'feminine' | 'neuter'; article?: string };
+	const nounMetadata = (articles: Record<string, string>) => Object.fromEntries(Object.entries(articles).map(([word, article]) => [word, { type: 'Substantiv', article }])) as Record<string, VocabularyMetadata>;
+	const wordMetadata: Record<Language, Record<string, VocabularyMetadata>> = { de: metadataDe as Record<string, VocabularyMetadata>, en: nounMetadata(existingArticles.en), fr: nounMetadata(addedLanguagePacks.fr.articles), it: nounMetadata(addedLanguagePacks.it.articles), es: nounMetadata(addedLanguagePacks.es.articles), pt: nounMetadata(addedLanguagePacks.pt.articles), uk: nounMetadata(addedLanguagePacks.uk.articles) };
+	const playableLanguages: ReadonlyArray<{ code: Language; label: string }> = [{ code: 'de', label: 'Deutsch' }, { code: 'en', label: 'English' }, { code: 'fr', label: 'Français' }, { code: 'it', label: 'Italiano' }, { code: 'es', label: 'Español' }, { code: 'pt', label: 'Português' }, { code: 'uk', label: 'Українська' }];
+	const hintableBaseWords = new Set(Object.values(wordDefinitions).flatMap((definitions) => Object.keys(definitions)));
 const interfaceLocales = [
     { code: 'de', label: 'Deutsch' }, { code: 'en', label: 'English' }, { code: 'fa', label: 'فارسی' }, { code: 'pt', label: 'Português' }, { code: 'ru', label: 'Русский' }, { code: 'ar', label: 'العربية' }, { code: 'uk', label: 'Українська' }, { code: 'hi', label: 'हिन्दी' }, { code: 'ml', label: 'മലയാളം' }
   ] as const satisfies ReadonlyArray<{ code: InterfaceLocale; label: string }>;
@@ -94,10 +104,10 @@ const interfaceLocales = [
   const initialCompletedRounds = readCompletedRounds();
   const initialRecentBases = readRecentBases();
   const initialTutorialState = typeof localStorage === 'undefined' ? null : localStorage.getItem(TUTORIAL_STATE_KEY);
-	  const initialTutorialOpen = routeModeFromPath(page.url.pathname) === 'crossword' && (initialTutorialState === 'open' || (initialTutorialState !== 'complete' && !initialGame && initialCompletedRounds === 0));
+	  const initialTutorialOpen = (initialGame?.language === 'de' || initialGame?.language === 'en' || (!initialGame && (initialLanguage === 'de' || initialLanguage === 'en'))) && routeModeFromPath(page.url.pathname) === 'crossword' && (initialTutorialState === 'open' || (initialTutorialState !== 'complete' && !initialGame && initialCompletedRounds === 0));
   const CIRCLE = 146;
   const LETTER_RADIUS = 120;
-  const tutorialRounds: Record<Language, Round> = {
+	  const tutorialRounds: Partial<Record<Language, Round>> = {
     de: { words: ['GARTEN', 'GAS', 'TEE'], letters: [...'GARTEN'], grid: gridFromPlacements([{ word: 'GARTEN', row: 0, col: 0, orientation: 'across' }, { word: 'GAS', row: 0, col: 0, orientation: 'down' }, { word: 'TEE', row: 0, col: 3, orientation: 'down' }]) },
     en: { words: ['PLANET', 'PEN', 'TEA'], letters: [...'PLANET'], grid: gridFromPlacements([{ word: 'PLANET', row: 0, col: 0, orientation: 'across' }, { word: 'PEN', row: 0, col: 0, orientation: 'down' }, { word: 'TEA', row: 0, col: 5, orientation: 'down' }]) }
   };
@@ -134,12 +144,17 @@ const interfaceLocales = [
 	let idleHintReady = $state(false);
 let revealedHintWord = $state<string | null>(null);
 	  let idleHintTimer: number | null = null;
-	  let wordleTutorialRequest = $state(0);
+		let wordleTutorialRequest = $state(0);
+		let streak = $state<ClientStreak>(readStreak());
+		let notificationsEnabled = $state(false);
+		let notificationMessage = $state('');
+		let notificationBusy = $state(false);
+		let streakTimer: number | null = null;
 
   const labels = $derived.by(() => {
     const options = { locale: interfaceLocale };
     return {
-	      label: m.label({}, options), homeButton: m.home_button({}, options), hint: m.hint({}, options), allDone: m.all_done({}, options), time: m.time({}, options), continue: m.continue({}, options), explain: m.explain({}, options), install: m.install({}, options), installHint: m.install_hint({}, options), gameLanguage: m.game_language({}, options), interfaceLanguage: m.interface_language({}, options), vocabulary: m.vocabulary({}, options), includeLower: m.include_lower({}, options), appearance: m.appearance({}, options), light: m.light({}, options), dark: m.dark({}, options), settings: m.settings({}, options), vibration: m.vibration({}, options), sound: m.sound({}, options), backwards: m.backwards({}, options), settingsHint: m.settings_hint({}, options), completed: m.completed({}, options), tracePrompt: m.trace_prompt({}, options), traceActive: m.trace_active({}, options), tutorial: m.tutorial({}, options), tutorialKicker: m.tutorial_kicker({}, options), tutorialTitle: m.tutorial_title({}, options), tutorialTrace: m.tutorial_trace({}, options), tutorialGrid: m.tutorial_grid({}, options), tutorialHelp: m.tutorial_help({}, options), tutorialStart: m.tutorial_start({}, options), tutorialRestart: m.tutorial_restart({}, options), telegramShare: m.telegram_share({}, options), contentGroup: m.content_group({}, options), behaviorGroup: m.behavior_group({}, options), idleHint: m.idle_hint({}, options), mode: m.mode({}, options), modeCrossword: m.mode_crossword({}, options), modeWordle: m.mode_wordle({}, options), modeLearning: m.mode_learning({}, options), homeKicker: m.home_kicker({}, options), homeTitle: m.home_title({}, options), homeSubtitle: m.home_subtitle({}, options), homeCircle: m.home_circle({}, options), homeWordle: m.home_wordle({}, options), homeVocab: m.home_vocab({}, options), homePlay: m.home_play({}, options), onboardingTitle: m.onboarding_title({}, options), onboardingSubtitle: m.onboarding_subtitle({}, options), onboardingLearningLanguage: m.onboarding_learning_language({}, options), wordleTitle: m.wordle_title({}, options), wordleSubtitle: m.wordle_subtitle({}, options), wordleEmpty: m.wordle_empty({}, options), wordleInput: m.wordle_input({}, options), wordleSubmit: m.wordle_submit({}, options), wordleInvalid: m.wordle_invalid({}, options), wordleWin: m.wordle_win({}, options), wordleAgain: m.wordle_again({}, options), wordleTutorialTitle: m.wordle_tutorial_title({}, options), wordleTutorialExplain: m.wordle_tutorial_explain({}, options), wordleTutorialPrompt: m.wordle_tutorial_prompt({}, options), wordleTutorialComplete: m.wordle_tutorial_complete({}, options), wordleTutorialRepeat: m.wordle_tutorial_repeat({}, options), learningTitle: m.learning_title({}, options), learningListen: m.learning_listen({}, options), learningAgain: m.learning_again({}, options), learningKnown: m.learning_known({}, options), learningSection: m.learning_section({}, options), learningUnavailable: m.learning_unavailable({}, options), learningDefinition: m.learning_definition({}, options), learningSpeechUnavailable: m.learning_speech_unavailable({}, options), learningChooseDefinition: m.learning_choose_definition({}, options), learningChooseWord: m.learning_choose_word({}, options), learningAudioPrompt: m.learning_audio_prompt({}, options), learningCorrect: m.learning_correct({}, options), learningTryAgain: m.learning_try_again({}, options)
+	      label: m.label({}, options), homeButton: m.home_button({}, options), hint: m.hint({}, options), allDone: m.all_done({}, options), time: m.time({}, options), continue: m.continue({}, options), explain: m.explain({}, options), install: m.install({}, options), installHint: m.install_hint({}, options), gameLanguage: m.game_language({}, options), interfaceLanguage: m.interface_language({}, options), vocabulary: m.vocabulary({}, options), includeLower: m.include_lower({}, options), appearance: m.appearance({}, options), light: m.light({}, options), dark: m.dark({}, options), settings: m.settings({}, options), vibration: m.vibration({}, options), sound: m.sound({}, options), backwards: m.backwards({}, options), settingsHint: m.settings_hint({}, options), completed: m.completed({}, options), tracePrompt: m.trace_prompt({}, options), traceActive: m.trace_active({}, options), tutorial: m.tutorial({}, options), tutorialKicker: m.tutorial_kicker({}, options), tutorialTitle: m.tutorial_title({}, options), tutorialTrace: m.tutorial_trace({}, options), tutorialGrid: m.tutorial_grid({}, options), tutorialHelp: m.tutorial_help({}, options), tutorialStart: m.tutorial_start({}, options), tutorialRestart: m.tutorial_restart({}, options), telegramShare: m.telegram_share({}, options), contentGroup: m.content_group({}, options), behaviorGroup: m.behavior_group({}, options), idleHint: m.idle_hint({}, options), mode: m.mode({}, options), modeCrossword: m.mode_crossword({}, options), modeWordle: m.mode_wordle({}, options), modeLearning: m.mode_learning({}, options), homeKicker: m.home_kicker({}, options), homeTitle: m.home_title({}, options), homeSubtitle: m.home_subtitle({}, options), homeCircle: m.home_circle({}, options), homeWordle: m.home_wordle({}, options), homeVocab: m.home_vocab({}, options), homePlay: m.home_play({}, options), onboardingTitle: m.onboarding_title({}, options), onboardingSubtitle: m.onboarding_subtitle({}, options), onboardingLearningLanguage: m.onboarding_learning_language({}, options), wordleTitle: m.wordle_title({}, options), wordleSubtitle: m.wordle_subtitle({}, options), wordleEmpty: m.wordle_empty({}, options), wordleInput: m.wordle_input({}, options), wordleSubmit: m.wordle_submit({}, options), wordleWin: m.wordle_win({}, options), wordleInvalid: m.wordle_invalid({}, options), wordleAgain: m.wordle_again({}, options), wordleTutorialTitle: m.wordle_tutorial_title({}, options), wordleTutorialExplain: m.wordle_tutorial_explain({}, options), wordleTutorialPrompt: m.wordle_tutorial_prompt({}, options), wordleTutorialComplete: m.wordle_tutorial_complete({}, options), wordleTutorialRepeat: m.wordle_tutorial_repeat({}, options), learningTitle: m.learning_title({}, options), learningListen: m.learning_listen({}, options), learningAgain: m.learning_again({}, options), learningKnown: m.learning_known({}, options), learningSection: m.learning_section({}, options), learningUnavailable: m.learning_unavailable({}, options), learningDefinition: m.learning_definition({}, options), learningSpeechUnavailable: m.learning_speech_unavailable({}, options), learningChooseDefinition: m.learning_choose_definition({}, options), learningChooseWord: m.learning_choose_word({}, options), learningAudioPrompt: m.learning_audio_prompt({}, options), learningCorrect: m.learning_correct({}, options), learningTryAgain: m.learning_try_again({}, options), streak: m.streak({}, options), streakDone: m.streak_done({}, options), streakProgress: m.streak_progress({}, options), streakTimeLeft: m.streak_time_left({}, options), notifications: m.notifications({}, options), notificationsEnable: m.notifications_enable({}, options), notificationsDisable: m.notifications_disable({}, options), notificationsEnabled: m.notifications_enabled({}, options), notificationsDenied: m.notifications_denied({}, options), notificationsUnavailable: m.notifications_unavailable({}, options)
     };
   });
 	  const interfaceDirection = $derived(getTextDirection(interfaceLocale));
@@ -216,10 +231,15 @@ let revealedHintWord = $state<string | null>(null);
     };
 	  });
 
-	  onMount(() => {
-		if (!localStorage.getItem(INTERFACE_LOCALE_KEY)) interfaceLocale = preferredInterfaceLocale();
-		if (routeModeFromPath(page.url.pathname) === null && localStorage.getItem(ROOT_ONBOARDING_KEY) !== 'complete') rootOnboarding = true;
-	  });
+		  onMount(() => {
+			if (!localStorage.getItem(INTERFACE_LOCALE_KEY)) interfaceLocale = preferredInterfaceLocale();
+			if (routeModeFromPath(page.url.pathname) === null && localStorage.getItem(ROOT_ONBOARDING_KEY) !== 'complete') rootOnboarding = true;
+			streak = readStreak();
+			void syncStreak('sync', streak).then((next) => (streak = next));
+			void pushEnabled().then((enabled) => (notificationsEnabled = enabled));
+			streakTimer = window.setInterval(() => (streak = readStreak()), 30_000);
+			return () => { if (streakTimer !== null) window.clearInterval(streakTimer); };
+		  });
 
 	  function cellKey(row: number, col: number) { return `${row}:${col}`; }
   function clearIdleHintTimer() { if (idleHintTimer !== null) window.clearTimeout(idleHintTimer); idleHintTimer = null; }
@@ -242,7 +262,9 @@ let revealedHintWord = $state<string | null>(null);
   function setTutorialRound(nextLanguage = tutorialLanguage) {
     tutorialLanguage = nextLanguage;
     lang = nextLanguage;
-    currentRound = tutorialRounds[nextLanguage];
+	    const tutorialRound = tutorialRounds[nextLanguage];
+	    if (!tutorialRound) return;
+	    currentRound = tutorialRound;
     selectedPath = [];
     solvedWords = [];
     feedback = null;
@@ -257,7 +279,7 @@ let revealedHintWord = $state<string | null>(null);
   function completeTutorial() { localStorage.setItem(TUTORIAL_STATE_KEY, 'complete'); tutorialPractice = false; tutorialOpen = false; newRound(lang, true); }
   function continueRound() { if (tutorialPractice) completeTutorial(); else newRound(); }
 	function restartTutorial() { localStorage.setItem(TUTORIAL_STATE_KEY, 'open'); tutorialPractice = false; tutorialLanguage = lang; tutorialOpen = true; }
-	function isLanguage(value: unknown): value is Language { return value === 'de' || value === 'en'; }
+		function isLanguage(value: unknown): value is Language { return typeof value === 'string' && playableLanguages.some((language) => language.code === value); }
 	function readLanguage(): Language { if (typeof localStorage === 'undefined') return 'de'; const value = localStorage.getItem(LANGUAGE_KEY); return isLanguage(value) ? value : 'de'; }
 	function isGameMode(value: unknown): value is GameMode { return value === 'crossword' || value === 'wordle' || value === 'learning'; }
 		function readGameMode(): GameMode { if (typeof localStorage === 'undefined') return 'crossword'; const value = localStorage.getItem(GAME_MODE_KEY); return isGameMode(value) ? value : 'crossword'; }
@@ -269,12 +291,12 @@ let revealedHintWord = $state<string | null>(null);
 			}
 			return 'en';
 		}
-  function readInterfaceLocale(): InterfaceLocale { if (typeof localStorage === 'undefined') return 'de'; const value = localStorage.getItem(INTERFACE_LOCALE_KEY); if (isInterfaceLocale(value)) return value; return readLanguage(); }
+	function readInterfaceLocale(): InterfaceLocale { if (typeof localStorage === 'undefined') return 'de'; const value = localStorage.getItem(INTERFACE_LOCALE_KEY); if (isInterfaceLocale(value)) return value; const learningLanguage = readLanguage(); return isInterfaceLocale(learningLanguage) ? learningLanguage : 'en'; }
   function isVocabularyLevel(value: unknown): value is VocabularyLevel { return typeof value === 'string' && vocabularyLevels.includes(value as VocabularyLevel); }
   function readVocabularyLevel(): VocabularyLevel { if (typeof localStorage === 'undefined') return 'a1'; const value = localStorage.getItem(VOCABULARY_LEVEL_KEY); return isVocabularyLevel(value) ? value : 'a1'; }
   function viableBaseCount(pool: string[]) {
-    const normalized = [...new Set(pool.map((word) => word.trim().toUpperCase()).filter((word) => /^[A-ZÄÖÜẞ]+$/.test(word) && word.length >= 3 && word.length <= 8))];
-    return normalized.filter((word) => word.length >= 5 && word.length <= 8 && normalized.filter((candidate) => candidate !== word && canSpell(candidate, [...word])).length >= 5).length;
+	    const normalized = [...new Set(pool.map((word) => word.trim().normalize('NFC').toUpperCase()).filter((word) => /^\p{L}+$/u.test(word) && [...word].length >= 3 && [...word].length <= 8))];
+	    return normalized.filter((word) => [...word].length >= 5 && [...word].length <= 8 && normalized.filter((candidate) => candidate !== word && canSpell(candidate, [...word])).length >= 5).length;
   }
   function requiresCumulativePool(language: Language, level: VocabularyLevel) { return level !== 'a1' && viableBaseCount(wordPools[language][level]) === 0; }
   function selectedPool(language: Language, level: VocabularyLevel, includeLower = false) { const end = vocabularyLevels.indexOf(level); const levels = includeLower || requiresCumulativePool(language, level) ? vocabularyLevels.slice(0, end + 1) : [level]; return levels.flatMap((entry) => wordPools[language][entry]); }
@@ -300,7 +322,7 @@ let revealedHintWord = $state<string | null>(null);
     if (typeof localStorage === 'undefined') return [];
     try {
       const value: unknown = JSON.parse(localStorage.getItem(ROUND_HISTORY_KEY) ?? '[]');
-      return Array.isArray(value) ? value.filter((word): word is string => typeof word === 'string' && /^[A-ZÄÖÜ]+$/.test(word)).slice(0, 24) : [];
+	      return Array.isArray(value) ? value.filter((word): word is string => typeof word === 'string' && /^\p{L}+$/u.test(word)).slice(0, 24) : [];
     } catch { return []; }
   }
   function readStoredGame(): StoredGame | null {
@@ -315,9 +337,9 @@ let revealedHintWord = $state<string | null>(null);
       const letters = game.letters;
       const placements = game.placements;
       const solvedWords = game.solvedWords;
-      const validLanguage = language === 'de' || language === 'en';
-      const validWords = Array.isArray(words) && words.length > 0 && words.every((word) => typeof word === 'string' && /^[A-ZÄÖÜ]+$/.test(word));
-      const validLetters = Array.isArray(letters) && letters.length >= 3 && letters.length <= 8 && letters.every((letter) => typeof letter === 'string' && /^[A-ZÄÖÜ]$/.test(letter));
+	      const validLanguage = isLanguage(language);
+	      const validWords = Array.isArray(words) && words.length > 0 && words.every((word) => typeof word === 'string' && /^\p{L}+$/u.test(word));
+	      const validLetters = Array.isArray(letters) && letters.length >= 3 && letters.length <= 8 && letters.every((letter) => typeof letter === 'string' && /^\p{L}$/u.test(letter));
       const validPlacements = Array.isArray(placements) && placements.length === words?.length && placements.every(isPlacement);
       const validSolvedWords = Array.isArray(solvedWords) && solvedWords.every((word) => typeof word === 'string' && words?.includes(word));
       const validStartedAt = typeof game.startedAt === 'undefined' || (Number.isSafeInteger(game.startedAt) && game.startedAt > 0);
@@ -387,8 +409,8 @@ let revealedHintWord = $state<string | null>(null);
   }
   function buildRound(pool: string[], seed: number, excludedBases: string[] = [], allowBackward = false): Round {
     const rng = makeRng(seed);
-    const normalized = [...new Set(pool.map((word) => word.trim().toUpperCase()).filter((word) => /^[A-ZÄÖÜ]+$/.test(word) && word.length >= 3 && word.length <= 8))];
-    const bases = shuffle(normalized.filter((word) => word.length >= 5 && word.length <= 8 && normalized.filter((candidate) => candidate !== word && canSpell(candidate, [...word])).length >= 5), rng);
+	    const normalized = [...new Set(pool.map((word) => word.trim().normalize('NFC').toUpperCase()).filter((word) => /^\p{L}+$/u.test(word) && [...word].length >= 3 && [...word].length <= 8))];
+	    const bases = shuffle(normalized.filter((word) => [...word].length >= 5 && [...word].length <= 8 && normalized.filter((candidate) => candidate !== word && canSpell(candidate, [...word])).length >= 5), rng);
     const freshBases = bases.filter((word) => !excludedBases.includes(word));
     const preferredBases = bases.filter((word) => hintableBaseWords.has(word));
     const freshPreferredBases = preferredBases.filter((word) => !excludedBases.includes(word));
@@ -398,7 +420,7 @@ let revealedHintWord = $state<string | null>(null);
       writePlacement(grid, { word: base, row: 0, col: 0, orientation: 'across' });
       const selected = [base];
       const target = 6 + Math.floor(rng() * 3);
-      const candidates = shuffle(normalized.filter((word) => word !== base && word.length >= 3 && canSpell(word, [...base])), rng);
+	      const candidates = shuffle(normalized.filter((word) => word !== base && [...word].length >= 3 && canSpell(word, [...base])), rng);
       while (selected.length < target) {
         let placed = false;
         for (const candidate of candidates) {
@@ -414,7 +436,7 @@ let revealedHintWord = $state<string | null>(null);
       }
       if (selected.length >= 6) return { words: selected, letters: [...base], grid };
     }
-    const fallback = preferredBases[0] ?? freshBases[0] ?? bases[0] ?? normalized.find((word) => word.length >= 5) ?? 'WORT';
+	    const fallback = preferredBases[0] ?? freshBases[0] ?? bases[0] ?? normalized.find((word) => [...word].length >= 5) ?? 'WORT';
     const grid = emptyGrid();
     writePlacement(grid, { word: fallback, row: 0, col: 0, orientation: 'across' });
     return { words: [fallback], letters: [...fallback], grid };
@@ -441,16 +463,20 @@ let revealedHintWord = $state<string | null>(null);
     completedDuration = null;
     scheduleIdleHint();
   }
-	function selectLanguage(nextLanguage: Language) { newRound(nextLanguage, true); if (interfaceLocale !== 'fa') interfaceLocale = nextLanguage; }
+		function selectLanguage(nextLanguage: Language) { newRound(nextLanguage, true); if (nextLanguage === 'de' || nextLanguage === 'en' || nextLanguage === 'pt' || nextLanguage === 'uk') interfaceLocale = nextLanguage; }
+		function selectLanguageFromEvent(event: Event) { const nextLanguage = (event.currentTarget as HTMLSelectElement).value; if (isLanguage(nextLanguage)) selectLanguage(nextLanguage); }
 		function selectMode(nextMode: GameMode) {
 			gameMode = nextMode;
-			if (nextMode === 'crossword' && localStorage.getItem(TUTORIAL_STATE_KEY) !== 'complete') { tutorialLanguage = lang; tutorialPractice = false; tutorialOpen = true; }
+			if (nextMode === 'crossword' && (lang === 'de' || lang === 'en') && localStorage.getItem(TUTORIAL_STATE_KEY) !== 'complete') { tutorialLanguage = lang; tutorialPractice = false; tutorialOpen = true; }
 			if (page.url.pathname !== modePaths[nextMode]) void goto(modePaths[nextMode]);
 		}
 		function replayWordleTutorial() { wordleTutorialRequest += 1; selectMode('wordle'); }
 		function finishRootOnboarding(nextLanguage: Language) { selectLanguage(nextLanguage); localStorage.setItem(ROOT_ONBOARDING_KEY, 'complete'); rootOnboarding = false; }
 		function goHome() { tutorialOpen = false; void goto('/'); }
 		function goSettings() { tutorialOpen = false; void goto('/settings'); }
+		async function recordStreak(event: Exclude<StreakEvent, 'sync'>) { streak = await syncStreak(event, streak); }
+		function formatMinutes(minutes: number) { const hours = Math.floor(minutes / 60); return hours > 0 ? `${hours}h ${String(minutes % 60).padStart(2, '0')}m` : `${minutes}m`; }
+		async function toggleNotifications() { notificationBusy = true; notificationMessage = ''; try { if (notificationsEnabled) { await disablePush(); notificationsEnabled = false; } else { if (!pushSupported()) throw new Error('unsupported'); await enablePush(); notificationsEnabled = true; notificationMessage = labels.notificationsEnabled; } } catch (error) { notificationMessage = error instanceof Error && error.message === 'permission_denied' ? labels.notificationsDenied : labels.notificationsUnavailable; } finally { notificationBusy = false; } }
   function selectInterfaceLocale(nextLocale: InterfaceLocale) { interfaceLocale = nextLocale; }
   function selectInterfaceLocaleFromEvent(event: Event) { const nextLocale = (event.currentTarget as HTMLSelectElement).value; if (isInterfaceLocale(nextLocale)) selectInterfaceLocale(nextLocale); }
   function selectTutorialLanguage(nextLocale: InterfaceLocale) { interfaceLocale = nextLocale; }
@@ -472,7 +498,7 @@ let revealedHintWord = $state<string | null>(null);
       const completed = solvedWords.length + 1 === currentRound.words.length;
 	      solvedWords = [...solvedWords, word]; feedback = 'correct'; buzz(completed ? [24, 28, 40, 28, 70] : [16, 20, 26]);
 	      playSuccessSound(sound, 'circle');
-      if (completed) { completedDuration = Math.max(0, Date.now() - startedAt); if (!tutorialPractice) completedRounds += 1; celebration = true; }
+	      if (completed) { completedDuration = Math.max(0, Date.now() - startedAt); if (!tutorialPractice) { completedRounds += 1; void recordStreak('circle_completed'); } celebration = true; }
     } else { feedback = 'wrong'; shakeGrid = true; buzz([18, 18, 18]); window.setTimeout(() => (shakeGrid = false), 280); }
     selectedPath = [];
   }
@@ -509,10 +535,12 @@ let revealedHintWord = $state<string | null>(null);
 	            <p>{labels.onboardingLearningLanguage}</p>
 	            <h1>{labels.onboardingTitle}</h1>
 	            <span>{labels.onboardingSubtitle}</span>
-	            <div class="home-language-choice"><button type="button" onclick={() => finishRootOnboarding('de')}>Deutsch</button><button type="button" onclick={() => finishRootOnboarding('en')}>English</button></div>
+	            <div class="home-language-choice">{#each playableLanguages as language}<button type="button" onclick={() => finishRootOnboarding(language.code)}>{language.label}</button>{/each}</div>
 	          </div>
 	        {:else}
 	          <header class="home-header"><p>{labels.homeKicker}</p><h1>{labels.homeTitle}</h1><span>{labels.homeSubtitle}</span></header>
+	          <button class="home-settings-link" onclick={goSettings}><IconSettings aria-hidden="true" /><span>{labels.settings}</span></button>
+	          <section class:qualified={streak.qualified} class="home-streak" aria-label={labels.streak}><div><span>{labels.streak}</span><strong>{streak.streakCount}</strong></div><div>{#if streak.qualified}<b>{labels.streakDone}</b>{:else}<b>{labels.streakProgress}: {streak.vocabCorrect}/{streak.vocabularyGoal}</b><small>{labels.streakTimeLeft}: {formatMinutes(streak.minutesRemaining)}</small>{/if}</div></section>
 	          <div class="home-games">
 	            <article><span class="home-index">01</span><h2>{labels.modeCrossword}</h2><p>{labels.homeCircle}</p><button type="button" onclick={() => selectMode('crossword')}>{labels.homePlay}</button></article>
 	            <article><span class="home-index">02</span><h2>{labels.modeWordle}</h2><p>{labels.homeWordle}</p><button type="button" onclick={() => selectMode('wordle')}>{labels.homePlay}</button></article>
@@ -524,8 +552,8 @@ let revealedHintWord = $state<string | null>(null);
 	      <aside class="settings-page" aria-label={labels.settings} dir={interfaceDirection} lang={interfaceLocale}>
 	        <button class="home-trigger" onclick={goHome} aria-label={labels.homeButton}><IconHome aria-hidden="true" /></button>
 	        <div class="settings-intro"><span class="brand-mark" aria-hidden="true"><i></i><b></b></span><div><strong>WordCircle</strong><p>{labels.settingsHint}</p></div></div>
-	        <section class="settings-group" aria-labelledby="content-settings-heading"><h2 id="content-settings-heading">{labels.contentGroup}</h2><div class="setting-row"><span>{labels.gameLanguage}</span><div class="segmented"><button class:chosen={lang === 'de'} onclick={() => selectLanguage('de')}>DE</button><button class:chosen={lang === 'en'} onclick={() => selectLanguage('en')}>EN</button></div></div><div class="setting-row vocabulary-row"><span>{labels.vocabulary}</span><div class="segmented level-segmented">{#each vocabularyLevels as level}<button class:chosen={vocabularyLevel === level} onclick={() => selectVocabularyLevel(level)}>{level.toUpperCase()}</button>{/each}</div></div>{#if vocabularyLevel !== 'a1'}<div class="setting-row vibration-row include-lower-row"><span>{labels.includeLower}</span><input aria-label={labels.includeLower} type="checkbox" class="toggle toggle-sm" checked={includeLowerVocabulary} onchange={(event) => selectIncludeLowerVocabulary((event.currentTarget as HTMLInputElement).checked)} /></div>{/if}<div class="setting-row vibration-row"><span>{labels.backwards}</span><input aria-label={labels.backwards} type="checkbox" class="toggle toggle-sm" checked={allowBackwardWords} onchange={(event) => selectBackwardWords((event.currentTarget as HTMLInputElement).checked)} /></div></section>
-	        <section class="settings-group" aria-labelledby="behavior-settings-heading"><h2 id="behavior-settings-heading">{labels.behaviorGroup}</h2><label class="setting-row interface-locale-row"><span class="setting-label"><IconLanguage aria-hidden="true" />{labels.interfaceLanguage}</span><select aria-label={labels.interfaceLanguage} value={interfaceLocale} onchange={selectInterfaceLocaleFromEvent}>{#each interfaceLocales as locale}<option value={locale.code}>{locale.label}</option>{/each}</select></label><div class="setting-row"><span>{labels.appearance}</span><div class="segmented"><button class:chosen={theme === 'light'} onclick={() => (theme = 'light')}><IconLight />{labels.light}</button><button class:chosen={theme === 'dark'} onclick={() => (theme = 'dark')}><IconDark />{labels.dark}</button></div></div><div class="setting-row vibration-row"><span><IconVibrate />{labels.vibration}</span><input aria-label={labels.vibration} type="checkbox" class="toggle toggle-sm" bind:checked={vibration} /></div><div class="setting-row vibration-row"><span>{#if sound}<IconVolume />{:else}<IconVolumeOff />{/if}{labels.sound}</span><input aria-label={labels.sound} type="checkbox" class="toggle toggle-sm" bind:checked={sound} /></div>{#if gameMode === 'crossword'}<div class="setting-row tutorial-restart-row"><span>{labels.tutorial}</span><button onclick={restartTutorial}>{labels.tutorialRestart}</button></div>{:else if gameMode === 'wordle'}<div class="setting-row tutorial-restart-row"><span>{labels.wordleTitle}</span><button onclick={replayWordleTutorial}>{labels.wordleTutorialTitle}</button></div>{/if}<div class="setting-row completion-total"><span>{labels.completed}</span><strong>{completedRounds}</strong></div></section>
+	        <section class="settings-group" aria-labelledby="content-settings-heading"><h2 id="content-settings-heading">{labels.contentGroup}</h2><label class="setting-row interface-locale-row"><span>{labels.gameLanguage}</span><select aria-label={labels.gameLanguage} value={lang} onchange={selectLanguageFromEvent}>{#each playableLanguages as language}<option value={language.code}>{language.label}</option>{/each}</select></label><div class="setting-row vocabulary-row"><span>{labels.vocabulary}</span><div class="segmented level-segmented">{#each vocabularyLevels as level}<button class:chosen={vocabularyLevel === level} onclick={() => selectVocabularyLevel(level)}>{level.toUpperCase()}</button>{/each}</div></div>{#if vocabularyLevel !== 'a1'}<div class="setting-row vibration-row include-lower-row"><span>{labels.includeLower}</span><input aria-label={labels.includeLower} type="checkbox" class="toggle toggle-sm" checked={includeLowerVocabulary} onchange={(event) => selectIncludeLowerVocabulary((event.currentTarget as HTMLInputElement).checked)} /></div>{/if}<div class="setting-row vibration-row"><span>{labels.backwards}</span><input aria-label={labels.backwards} type="checkbox" class="toggle toggle-sm" checked={allowBackwardWords} onchange={(event) => selectBackwardWords((event.currentTarget as HTMLInputElement).checked)} /></div></section>
+	        <section class="settings-group" aria-labelledby="behavior-settings-heading"><h2 id="behavior-settings-heading">{labels.behaviorGroup}</h2><label class="setting-row interface-locale-row"><span class="setting-label"><IconLanguage aria-hidden="true" />{labels.interfaceLanguage}</span><select aria-label={labels.interfaceLanguage} value={interfaceLocale} onchange={selectInterfaceLocaleFromEvent}>{#each interfaceLocales as locale}<option value={locale.code}>{locale.label}</option>{/each}</select></label><div class="setting-row"><span>{labels.appearance}</span><div class="segmented"><button class:chosen={theme === 'light'} onclick={() => (theme = 'light')}><IconLight />{labels.light}</button><button class:chosen={theme === 'dark'} onclick={() => (theme = 'dark')}><IconDark />{labels.dark}</button></div></div><div class="setting-row vibration-row"><span><IconVibrate />{labels.vibration}</span><input aria-label={labels.vibration} type="checkbox" class="toggle toggle-sm" bind:checked={vibration} /></div><div class="setting-row vibration-row"><span>{#if sound}<IconVolume />{:else}<IconVolumeOff />{/if}{labels.sound}</span><input aria-label={labels.sound} type="checkbox" class="toggle toggle-sm" bind:checked={sound} /></div><div class="setting-row notification-row"><span>{labels.notifications}</span><button type="button" onclick={toggleNotifications} disabled={notificationBusy}>{notificationsEnabled ? labels.notificationsDisable : labels.notificationsEnable}</button></div>{#if notificationMessage}<p class="notification-message">{notificationMessage}</p>{/if}{#if gameMode === 'crossword'}<div class="setting-row tutorial-restart-row"><span>{labels.tutorial}</span><button onclick={restartTutorial}>{labels.tutorialRestart}</button></div>{:else if gameMode === 'wordle' && (lang === 'de' || lang === 'en')}<div class="setting-row tutorial-restart-row"><span>{labels.wordleTitle}</span><button onclick={replayWordleTutorial}>{labels.wordleTutorialTitle}</button></div>{/if}<div class="setting-row completion-total"><span>{labels.completed}</span><strong>{completedRounds}</strong></div></section>
 	        {#if telegramHref}<a class="settings-telegram" href={telegramHref} target="_blank" rel="noreferrer" lang={interfaceLocale} dir={interfaceDirection}><IconTelegram aria-hidden="true" /><span>{labels.telegramShare}</span></a>{/if}
 	        <a class="settings-github" href="https://github.com/PXNX/words-sv" target="_blank" rel="noreferrer"><IconGithub aria-hidden="true" /><span>GitHub · PXNX/words-sv</span></a>
 	      </aside>
@@ -605,9 +633,9 @@ let revealedHintWord = $state<string | null>(null);
       </svg>
     </div>
     {:else if gameMode === 'wordle'}
-	      <WordleMode words={modeLevelWords} level={vocabularyLevel} language={lang} tutorialRequested={wordleTutorialRequest} onGreen={() => playSuccessSound(sound, 'wordle')} labels={{ title: labels.wordleTitle, subtitle: labels.wordleSubtitle, empty: labels.wordleEmpty, input: labels.wordleInput, submit: labels.wordleSubmit, invalid: labels.wordleInvalid, win: labels.wordleWin, again: labels.wordleAgain, tutorialTitle: labels.wordleTutorialTitle, tutorialExplain: labels.wordleTutorialExplain, tutorialPrompt: labels.wordleTutorialPrompt, tutorialComplete: labels.wordleTutorialComplete, tutorialRepeat: labels.wordleTutorialRepeat }} />
+	      <WordleMode words={modeLevelWords} level={vocabularyLevel} language={lang} tutorialRequested={wordleTutorialRequest} onGreen={() => playSuccessSound(sound, 'wordle')} onWin={() => void recordStreak('wordle_completed')} labels={{ title: labels.wordleTitle, subtitle: labels.wordleSubtitle, empty: labels.wordleEmpty, input: labels.wordleInput, submit: labels.wordleSubmit, invalid: labels.wordleInvalid, win: labels.wordleWin, again: labels.wordleAgain, tutorialTitle: labels.wordleTutorialTitle, tutorialExplain: labels.wordleTutorialExplain, tutorialPrompt: labels.wordleTutorialPrompt, tutorialComplete: labels.wordleTutorialComplete, tutorialRepeat: labels.wordleTutorialRepeat }} />
     {:else}
-	      <LearningMode words={modeLevelWords} definitions={wordDefinitions[lang]} language={lang} level={vocabularyLevel} onCorrect={() => playSuccessSound(sound, 'vocab')} labels={{ title: labels.learningTitle, listen: labels.learningListen, section: labels.learningSection, unavailable: labels.learningUnavailable, speechUnavailable: labels.learningSpeechUnavailable, chooseDefinition: labels.learningChooseDefinition, chooseWord: labels.learningChooseWord, audioPrompt: labels.learningAudioPrompt, continue: labels.continue, correct: labels.learningCorrect, tryAgain: labels.learningTryAgain }} />
+	      <LearningMode words={modeLevelWords} definitions={wordDefinitions[lang]} metadata={wordMetadata[lang]} language={lang} level={vocabularyLevel} onCorrect={() => { playSuccessSound(sound, 'vocab'); void recordStreak('vocab_correct'); }} labels={{ title: labels.learningTitle, listen: labels.learningListen, section: labels.learningSection, unavailable: labels.learningUnavailable, speechUnavailable: labels.learningSpeechUnavailable, chooseDefinition: labels.learningChooseDefinition, chooseWord: labels.learningChooseWord, audioPrompt: labels.learningAudioPrompt, continue: labels.continue, correct: labels.learningCorrect, tryAgain: labels.learningTryAgain }} />
 	    {/if}
 	    {/if}
 	  </section>
@@ -672,7 +700,9 @@ let revealedHintWord = $state<string | null>(null);
   :global(html.dark) .tutorial-language { border-color:rgba(255,253,247,.25); }.tutorial-language .locale-dropdown,:global(html.dark) .locale-dropdown { border-color:#fffdf7;background:rgba(23,42,69,.55);color:#fffdf7; }
   .tutorial-card::after { content:'01';position:absolute;right:.7rem;bottom:.55rem;color:rgba(23,42,69,.48);font-family:'DM Sans',sans-serif;font-size:.48rem;font-weight:800;letter-spacing:.12em; }
 	  :global(html.dark) .tutorial-panel { background:linear-gradient(90deg,rgba(255,253,247,.11) 1px,transparent 1px) 1.15rem 0/1px 100%,linear-gradient(90deg,transparent calc(100% - 1.15rem),rgba(255,253,247,.11) calc(100% - 1.15rem),rgba(255,253,247,.11) calc(100% - 1.05rem),transparent calc(100% - 1.05rem)),#172a45; }.tutorial-panel::before { color:#fffdf7; }.tutorial-panel::after { border-color:#fffdf7;box-shadow:.42rem .42rem 0 -1px #172a45,.42rem .42rem 0 0 #e6a527; }.tutorial-card::after { color:rgba(255,253,247,.56); }
-	  .home-view { flex:1 1 auto;min-height:0;display:grid;align-content:center;gap:clamp(1rem,4vw,1.8rem);padding:clamp(1rem,5vw,2.2rem);overflow:auto;background:radial-gradient(circle at 86% 10%,rgba(230,165,39,.2),transparent 26%),linear-gradient(180deg,rgba(237,228,213,.85),rgba(255,253,247,.75)); }.home-header { display:grid;gap:.35rem;text-align:center; }.home-header p,.home-onboarding>p { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }.home-header h1,.home-onboarding h1 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(2.1rem,10vw,3.35rem);font-weight:400;letter-spacing:-.05em;line-height:.9; }.home-header span,.home-onboarding>span { color:#596477;font-family:'DM Sans',sans-serif;font-size:.73rem;font-weight:700;line-height:1.4; }.home-games { display:grid;gap:.65rem; }.home-games article { position:relative;display:grid;grid-template-columns:2.25rem 1fr auto;gap:.6rem;align-items:center;padding:.8rem .75rem;border:1px solid rgba(23,42,69,.34);border-left:4px double #172a45;background:#fffdf7;box-shadow:4px 4px 0 rgba(230,165,39,.15); }.home-games article:nth-child(2) { border-left-color:#e6a527; }.home-games article:nth-child(3) { border-left-color:#34824d; }.home-index { align-self:start;color:#a45e38;font-family:'DM Serif Display',serif;font-size:1.15rem;line-height:1; }.home-games h2 { grid-column:2;margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:1.08rem;font-weight:400;line-height:1; }.home-games p { grid-column:2;margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700;line-height:1.35; }.home-games button { grid-column:3;grid-row:1 / span 2;min-height:2.15rem;padding:0 .62rem;border:1px solid #172a45;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }.home-games button:active,.home-language-choice button:active { transform:scale(.97); }.home-onboarding { width:min(100%,27rem);display:grid;justify-self:center;gap:.9rem;padding:clamp(1.15rem,6vw,1.8rem);border:1px solid rgba(23,42,69,.32);border-top:4px double #172a45;background:#fffdf7;box-shadow:8px 8px 0 rgba(230,165,39,.18);text-align:center; }.home-language-choice { display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-top:.45rem; }.home-language-choice button { min-height:2.7rem;border:1px solid #172a45;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:900;letter-spacing:.04em; }.home-language-choice button+button { background:#fffdf7;color:#172a45; }
+	  .home-view { flex:1 1 auto;min-height:0;display:grid;align-content:center;gap:clamp(1rem,4vw,1.8rem);padding:clamp(1rem,5vw,2.2rem);overflow:auto;background:radial-gradient(circle at 86% 10%,rgba(230,165,39,.2),transparent 26%),linear-gradient(180deg,rgba(237,228,213,.85),rgba(255,253,247,.75)); }.home-header { display:grid;gap:.35rem;text-align:center; }.home-header p,.home-onboarding>p { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }.home-header h1,.home-onboarding h1 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(2.1rem,10vw,3.35rem);font-weight:400;letter-spacing:-.05em;line-height:.9; }.home-header span,.home-onboarding>span { color:#596477;font-family:'DM Sans',sans-serif;font-size:.73rem;font-weight:700;line-height:1.4; }.home-settings-link { justify-self:center;display:inline-flex;align-items:center;gap:.42rem;min-height:2rem;padding:0 .72rem;border:1px solid rgba(23,42,69,.42);background:transparent;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:900;letter-spacing:.09em;text-transform:uppercase; }.home-settings-link :global(svg) { width:1rem;height:1rem; }.home-settings-link:active { transform:scale(.97); }.home-games { display:grid;gap:.65rem; }.home-games article { position:relative;display:grid;grid-template-columns:2.25rem 1fr auto;gap:.6rem;align-items:center;padding:.8rem .75rem;border:1px solid rgba(23,42,69,.34);border-left:4px double #172a45;background:#fffdf7;box-shadow:4px 4px 0 rgba(230,165,39,.15); }.home-games article:nth-child(2) { border-left-color:#e6a527; }.home-games article:nth-child(3) { border-left-color:#34824d; }.home-index { align-self:start;color:#a45e38;font-family:'DM Serif Display',serif;font-size:1.15rem;line-height:1; }.home-games h2 { grid-column:2;margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:1.08rem;font-weight:400;line-height:1; }.home-games p { grid-column:2;margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700;line-height:1.35; }.home-games button { grid-column:3;grid-row:1 / span 2;min-height:2.15rem;padding:0 .62rem;border:1px solid #172a45;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }.home-games button:active,.home-language-choice button:active { transform:scale(.97); }.home-onboarding { width:min(100%,27rem);display:grid;justify-self:center;gap:.9rem;padding:clamp(1.15rem,6vw,1.8rem);border:1px solid rgba(23,42,69,.32);border-top:4px double #172a45;background:#fffdf7;box-shadow:8px 8px 0 rgba(230,165,39,.18);text-align:center; }.home-language-choice { display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-top:.45rem; }.home-language-choice button { min-height:2.7rem;border:1px solid #172a45;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:900;letter-spacing:.04em; }.home-language-choice button+button { background:#fffdf7;color:#172a45; }
 	  :global(html.dark) .home-view { background:radial-gradient(circle at 86% 10%,rgba(230,165,39,.2),transparent 26%),#172a45; }.home-header h1,:global(html.dark) .home-onboarding h1,:global(html.dark) .home-games h2 { color:#fffdf7; }.home-header span,:global(html.dark) .home-onboarding>span,:global(html.dark) .home-games p { color:rgba(255,253,247,.72); }:global(html.dark) .home-games article,:global(html.dark) .home-onboarding { border-color:rgba(255,253,247,.42);background:#213a5d; }.home-games button { border-color:#e6a527;background:#e6a527;color:#172a45; }.home-language-choice button+button { border-color:#fffdf7;background:#213a5d;color:#fffdf7; }
+	  .home-view .home-header h1 { color:#172a45 !important;text-shadow:0 1px 0 rgba(255,253,247,.72); }.home-streak { display:grid;grid-template-columns:auto 1fr;gap:.75rem;align-items:center;justify-self:center;width:min(100%,27rem);padding:.65rem .75rem;border:1px solid rgba(23,42,69,.28);border-left:4px double #e6a527;background:rgba(255,253,247,.72); }.home-streak>div:first-child { display:grid;gap:.05rem;justify-items:center;min-width:3rem; }.home-streak span { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.5rem;font-weight:900;letter-spacing:.09em;text-transform:uppercase; }.home-streak strong { color:#172a45;font-family:'DM Serif Display',serif;font-size:1.65rem;font-weight:400;line-height:.8; }.home-streak>div:last-child { display:grid;gap:.18rem; }.home-streak b { color:#172a45;font-family:'DM Sans',sans-serif;font-size:.65rem;font-weight:800;line-height:1.3; }.home-streak small { color:#596477;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800; }.home-streak.qualified { border-left-color:#34824d; }.home-streak.qualified b,.home-streak.qualified strong { color:#34824d; }.notification-row button { min-height:1.8rem;padding:0 .55rem;border:1px solid #a45e38;background:transparent;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.55rem;font-weight:900;letter-spacing:.05em;text-transform:uppercase; }.notification-row button:disabled { opacity:.55; }.notification-row button:active { transform:scale(.97); }.notification-message { margin:.45rem 0 0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:700;line-height:1.35; }.home-language-choice { grid-template-columns:repeat(2,minmax(0,1fr)); }.home-language-choice button { min-width:0; }
+	  :global(html.dark) .home-view .home-header h1 { color:#fffdf7 !important;text-shadow:none; }:global(html.dark) .home-streak { border-color:rgba(255,253,247,.36);background:#213a5d; }.home-streak b,:global(html.dark) .home-streak strong { color:#fffdf7; }:global(html.dark) .home-streak small { color:rgba(255,253,247,.72); }:global(html.dark) .home-streak.qualified b,:global(html.dark) .home-streak.qualified strong { color:#8ed8a2; }
 	  @media (prefers-reduced-motion:reduce) { .letter-node:not(.active),.settings-page,.crossword-cell.solved,.completion-inline { animation:none; } }
 </style>

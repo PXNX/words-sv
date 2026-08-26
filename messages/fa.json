@@ -75,5 +75,15 @@
   "learning_correct": "درست است.",
   "learning_try_again": "نه کاملاً — دوباره امتحان کنید.",
   "learning_choose_word": "واژه‌ای را که شنیدید انتخاب کنید.",
-  "learning_audio_prompt": "گوش دهید، سپس واژهٔ مطابق را انتخاب کنید."
+  "learning_audio_prompt": "گوش دهید، سپس واژهٔ مطابق را انتخاب کنید.",
+  "streak": "زنجیرهٔ روزانه",
+  "streak_done": "امروز کامل شد",
+  "streak_progress": "پیشرفت واژگان",
+  "streak_time_left": "زمان باقی‌ماندهٔ امروز",
+  "notifications": "یادآور زنجیره",
+  "notifications_enable": "فعال‌سازی یادآورها",
+  "notifications_disable": "غیرفعال‌سازی یادآورها",
+  "notifications_enabled": "یادآورها فعال هستند.",
+  "notifications_denied": "اعلان‌ها در این مرورگر مسدود شده‌اند.",
+  "notifications_unavailable": "یادآورهای پوش در این مرورگر در دسترس نیستند."
 }
