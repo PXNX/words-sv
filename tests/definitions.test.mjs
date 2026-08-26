@@ -5,6 +5,7 @@ import test from 'node:test';
 const load = (name) => JSON.parse(readFileSync(new URL(`../src/lib/data/${name}`, import.meta.url), 'utf8'));
 const germanDefinitions = load('definitions.de.json');
 const englishDefinitions = load('definitions.en.json');
+const pageSource = readFileSync(new URL('../src/routes/+page.svelte', import.meta.url), 'utf8');
 const levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
 
 function inventory(value) {
@@ -53,4 +54,10 @@ test('every playable level can generate a definition-backed idle-hint base', () 
       assert.ok(hasDefinitionBackedBase(selectedPool, definitions), `${language}.${level} should have a definition-backed base word`);
     }
   }
+});
+
+test('letter selection adds only four pixels to the base bubble diameter and increases bubble separation', () => {
+  assert.match(pageSource, /const LETTER_RADIUS = 114;/);
+  assert.match(pageSource, /<circle r="30"><\/circle>/);
+  assert.match(pageSource, /transform:scale\(1\.066667\)/);
 });
