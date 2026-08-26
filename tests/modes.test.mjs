@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 const { definitionAnswerResult, definitionChoiceWords, evaluateWordleGuess, fiveLetterWords, insertLearningRepeat, isValidWordleGuess, pickLearningSection } = await import('../src/lib/modes.js');
+const { prioritizeLearningWords, updateReviewProgress } = await import('../src/lib/spacedRepetition.js');
 const learningSource = await readFile(new URL('../src/lib/LearningMode.svelte', import.meta.url), 'utf8');
 const wordleSource = await readFile(new URL('../src/lib/WordleMode.svelte', import.meta.url), 'utf8');
 const pageSource = await readFile(new URL('../src/routes/+page.svelte', import.meta.url), 'utf8');
@@ -78,21 +79,30 @@ test('every exact DE/EN level supplies at least three curated-definition targets
   }
 });
 
-test('learning cards choose definition-backed exact-level words and requeue a missed definition', () => {
-  assert.match(learningSource, /const definitionWords = \$derived\(words\.filter/);
-  assert.match(learningSource, /pickLearningSection\(definitionWords, random, 6\)/);
-  assert.match(learningSource, /function selectDefinition\(event: MouseEvent\)/);
-  assert.match(learningSource, /definitionAnswerResult\(word, currentWord, queue, position, requeuedCurrent\)/);
-  assert.match(learningSource, /untrack\(\(\) => startSection\(\)\)/);
-  assert.match(learningSource, /<button type="button" value=\{word\} onclick=\{selectDefinition\}/);
-  assert.doesNotMatch(learningSource, /submitDefinition/);
-  assert.doesNotMatch(learningSource, /<form class="definition-options"/);
-  assert.match(learningSource, /insertLearningRepeat\(queue, position, currentWord\)/);
-  assert.match(learningSource, /if \(nextWordKey === choiceWordKey && nextSectionKey === choiceSectionKey\) return/);
-  assert.match(learningSource, /untrack\(\(\) => resetDefinitionChoices\(\)\)/);
-  assert.match(learningSource, /word === selectedChoice/);
-  assert.match(learningSource, /advanceTimer = window\.setTimeout\(\(\) => advance\(\), 520\)/);
-  assert.match(learningSource, /onCorrect\(\)/);
+test('learning cards separate word and audio prompts, reveal every answer state, and wait for explicit continuation', () => {
+	assert.match(learningSource, /type PromptKind = 'word' \| 'audio'/);
+	assert.match(learningSource, /const definitionWords = \$derived\(words\.map/);
+	assert.match(learningSource, /pickLearningSection\(prioritized, random, 6\)/);
+	assert.match(learningSource, /function chooseAnswer\(event: MouseEvent\)/);
+	assert.match(learningSource, /untrack\(\(\) => startSection\(\)\)/);
+	assert.match(learningSource, /<button type="button" value=\{word\} onclick=\{chooseAnswer\}/);
+	assert.match(learningSource, /insertLearningRepeat\(queue, position, currentWord\)/);
+	assert.match(learningSource, /class:correct-option=\{answerStatus !== null && word === currentWord\}/);
+	assert.match(learningSource, /class:wrong-option=\{answerStatus === 'wrong' && word === selectedChoice\}/);
+	assert.match(learningSource, /class="continue-learning" onclick=\{continueLearning\}/);
+	assert.match(learningSource, /class="listen-icon"/);
+	assert.match(learningSource, /onCorrect\(\)/);
+});
+
+test('local spaced repetition resets after a mistake and extends review intervals after successive correct answers', () => {
+	const now = 1_700_000_000_000;
+	const firstCorrect = updateReviewProgress({}, 'ACTOR', true, now);
+	assert.deepEqual(firstCorrect.ACTOR, { repetitions: 1, dueAt: now + 86_400_000 });
+	const secondCorrect = updateReviewProgress(firstCorrect, 'ACTOR', true, now);
+	assert.deepEqual(secondCorrect.ACTOR, { repetitions: 2, dueAt: now + 172_800_000 });
+	const afterMistake = updateReviewProgress(secondCorrect, 'ACTOR', false, now);
+	assert.deepEqual(afterMistake.ACTOR, { repetitions: 0, dueAt: now + 86_400_000 });
+	assert.deepEqual(prioritizeLearningWords(['LATER', 'DUE'], { LATER: { repetitions: 4, dueAt: now + 99_999 }, DUE: { repetitions: 0, dueAt: now - 1 } }, now), ['DUE', 'LATER']);
 });
 
 test('portrait safeguards and persistent optional success sounds remain wired at the application shell', () => {
@@ -103,16 +113,20 @@ test('portrait safeguards and persistent optional success sounds remain wired at
   assert.match(pageSource, /playSuccessSound\(sound, 'circle'\)/);
   assert.match(pageSource, /playSuccessSound\(sound, 'wordle'\)/);
   assert.match(pageSource, /playSuccessSound\(sound, 'vocab'\)/);
-  assert.match(soundSource, /AudioContext/);
+	assert.match(soundSource, /AudioContext/);
+	assert.match(pageSource, /ROOT_ONBOARDING_KEY = 'wordcircle-root-onboarding-v1'/);
+	assert.match(pageSource, /function preferredInterfaceLocale\(\)/);
+	assert.match(pageSource, /class="home-games"/);
+	assert.match(pageSource, /nextMode === 'crossword' && localStorage\.getItem\(TUTORIAL_STATE_KEY\) !== 'complete'/);
+	assert.match(pageSource, /{#if gameMode === 'crossword'}/);
 });
 
-test('learning prompts wait for voices, prefer the selected language, and cancel speech on card changes', () => {
+test('learning prompts load available voices, use the selected language, and expose the large audio control', () => {
   assert.match(learningSource, /window\.speechSynthesis\.getVoices\(\)/);
   assert.match(learningSource, /addEventListener\('voiceschanged', refreshVoices\)/);
-  assert.match(learningSource, /if \(voices\.length === 0\)/);
-  assert.match(learningSource, /voice\.lang\.toLowerCase\(\)\.startsWith\(language\)/);
-  assert.match(learningSource, /function scheduleInitialSpeech\(\)/);
-  assert.match(learningSource, /disabled=\{!speechSupported\}/);
+	assert.match(learningSource, /speechStatus = voices\.length \? '' : labels\.speechUnavailable/);
+	assert.match(learningSource, /voice\.lang\.toLowerCase\(\)\.startsWith\(language\)/);
+	assert.match(learningSource, /disabled=\{!speechSupported\}/);
   assert.match(learningSource, /window\.speechSynthesis\.cancel\(\)/);
   assert.match(learningSource, /utterance\.onerror/);
 });

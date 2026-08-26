@@ -39,6 +39,16 @@
   "mode_crossword": "Circle",
   "mode_wordle": "ووردل",
   "mode_learning": "تعلّم المفردات",
+  "home_kicker": "اختر لعبة",
+  "home_title": "تدريبك على الكلمات.",
+  "home_subtitle": "ثلاث طرق قصيرة للتدرب على مستواك.",
+  "home_circle": "صِل الحروف لتكوّن شبكة كلمات مترابطة.",
+  "home_wordle": "اعثر على الكلمة ذات الأحرف الخمسة.",
+  "home_vocab": "راجع الكلمات مع الصوت واختيارات سريعة.",
+  "home_play": "العب",
+  "onboarding_title": "أي لغة تريد أن تتعلم؟",
+  "onboarding_subtitle": "يمكنك تغيير ذلك لاحقًا في الإعدادات.",
+  "onboarding_learning_language": "لغة التعلّم",
   "wordle_title": "ووردل",
   "wordle_subtitle": "اعثر على كلمة صحيحة من خمسة أحرف من هذا المستوى.",
   "wordle_empty": "لا توجد كلمات صحيحة من خمسة أحرف لهذا المستوى بعد.",
@@ -62,5 +72,7 @@
   "learning_speech_unavailable": "تشغيل الصوت غير متاح في هذا المتصفح.",
   "learning_choose_definition": "اختر التعريف القصير الصحيح.",
   "learning_correct": "إجابة صحيحة.",
-  "learning_try_again": "ليست تمامًا — حاول مرة أخرى."
+  "learning_try_again": "ليست تمامًا — حاول مرة أخرى.",
+  "learning_choose_word": "اختر الكلمة التي سمعتها.",
+  "learning_audio_prompt": "استمع ثم اختر الكلمة المطابقة."
 }

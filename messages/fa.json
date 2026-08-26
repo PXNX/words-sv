@@ -39,6 +39,16 @@
   "mode_crossword": "Circle",
   "mode_wordle": "وردل",
   "mode_learning": "یادگیری واژگان",
+  "home_kicker": "یک بازی انتخاب کنید",
+  "home_title": "تمرین واژگان شما.",
+  "home_subtitle": "سه راه کوتاه برای تمرین در سطح شما.",
+  "home_circle": "حروف را به یک جدول واژهٔ پیوسته وصل کنید.",
+  "home_wordle": "واژهٔ پنج‌حرفی را پیدا کنید.",
+  "home_vocab": "واژه‌ها را با صدا و انتخاب‌های کوتاه مرور کنید.",
+  "home_play": "بازی",
+  "onboarding_title": "می‌خواهید چه زبانی یاد بگیرید؟",
+  "onboarding_subtitle": "بعداً می‌توانید آن را در تنظیمات تغییر دهید.",
+  "onboarding_learning_language": "زبان یادگیری",
   "wordle_title": "وردل",
   "wordle_subtitle": "یک واژهٔ معتبر پنج‌حرفی از این سطح پیدا کنید.",
   "wordle_empty": "هنوز واژهٔ معتبر پنج‌حرفی برای این سطح وجود ندارد.",
@@ -62,5 +72,7 @@
   "learning_speech_unavailable": "پخش گفتار در این مرورگر در دسترس نیست.",
   "learning_choose_definition": "توضیح کوتاه درست را انتخاب کنید.",
   "learning_correct": "درست است.",
-  "learning_try_again": "نه کاملاً — دوباره امتحان کنید."
+  "learning_try_again": "نه کاملاً — دوباره امتحان کنید.",
+  "learning_choose_word": "واژه‌ای را که شنیدید انتخاب کنید.",
+  "learning_audio_prompt": "گوش دهید، سپس واژهٔ مطابق را انتخاب کنید."
 }

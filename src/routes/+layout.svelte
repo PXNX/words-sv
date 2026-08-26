@@ -43,18 +43,11 @@
 	{/if}
 </div>
 
-<aside class="portrait-guard" role="alert" aria-label="Portrait orientation required">
-	<span aria-hidden="true">↻</span>
-	<strong>Turn your device upright.</strong>
-	<p>WordCircle is designed for portrait play.</p>
-</aside>
-
 <style>
 	:global(html),:global(body) { width:100%;min-height:100%;overflow:hidden;overscroll-behavior:none;touch-action:pan-y; }
-	.portrait-guard { display:none; }
+	.portrait-content { width:100%;min-height:100svh; }
 	@media (orientation:landscape) {
-		.portrait-content { display:none; }
-		.portrait-guard { position:fixed;inset:0;z-index:300;display:grid;place-content:center;justify-items:center;gap:.55rem;padding:2rem;background:#172a45;color:#fffdf7;text-align:center; }
-		.portrait-guard span { display:grid;place-items:center;width:3.5rem;height:3.5rem;border:2px solid #e6a527;border-radius:50%;color:#e6a527;font-size:2rem; }.portrait-guard strong { font-family:'DM Serif Display',serif;font-size:clamp(1.5rem,4vw,2.3rem);font-weight:400; }.portrait-guard p { margin:0;color:rgba(255,253,247,.72);font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:700; }
+		:global(body) { background:#ede4d5; }
+		.portrait-content { width:min(100svh,430px);min-height:100svh;margin:0 auto;box-shadow:0 0 0 1px rgba(23,42,69,.15),0 0 42px rgba(23,42,69,.2); }
 	}
 </style>

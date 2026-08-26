@@ -232,3 +232,11 @@
 - [x] Kurzes spielbares Wordle-Tutorial mit klarer Orange-/Grün-Erklärung und geführter Übungsrunde ergänzen.
 - [x] Wordle-Tutorial in alle Interface-Lokalisierungen integrieren und über Einstellungen erneut startbar machen.
 - [x] Wordle-Scoring und Tutorial mit mehrfach vorkommenden Buchstaben prüfen, damit jede orange oder grüne Markierung die verfügbare Buchstabenanzahl korrekt berücksichtigt.
+- [x] Startseite als Auswahl der drei Worttrainingsspiele gestalten und direkte Modusrouten beibehalten.
+- [x] Beim ersten Root-Aufruf unterstützte Client-Sprache übernehmen, sonst Englisch verwenden, und eine Lernsprachauswahl anfordern.
+- [x] Bei erstem Start von Circle oder Wordle jeweils nur das passende Modus-Tutorial anzeigen und in Einstellungen ausschließlich dessen Wiederholung anbieten.
+- [x] Vokabelkarten in klar getrennte Wort- oder Audio-Prompts mit lauter Sprecher-Schaltfläche umgestalten.
+- [x] Vokabelantworten als Wort- oder Definitionsauswahl darstellen, falsche Auswahl rot und richtige Auswahl grün markieren sowie Fortsetzen erst nach der Auswertung anbieten.
+- [x] Lokale mehrtägige, leistungsabhängige Vokabelwiederholung mit Fehlerrücksetzung und zunehmend größeren Erfolgsintervallen speichern.
+- [ ] Neue Einstiegs- und Vokabelflüsse inklusive Persistenz, Lokalisierungen, statischem PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
+- [x] Landschaftshinweis entfernen und die Oberfläche stattdessen ohne sichtbare Rotationsaufforderung in ihrer Portrait-Komposition halten.
