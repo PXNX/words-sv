@@ -90,8 +90,11 @@ test('learning cards separate word and audio prompts, reveal every answer state,
 	assert.match(learningSource, /insertLearningRepeat\(queue, position, currentWord\)/);
 	assert.match(learningSource, /class:correct-option=\{answerStatus !== null && word === currentWord\}/);
 	assert.match(learningSource, /class:wrong-option=\{answerStatus === 'wrong' && word === selectedChoice\}/);
+	assert.match(learningSource, /<IconCheck class="answer-icon answer-icon-correct"/);
+	assert.match(learningSource, /<IconClose class="answer-icon answer-icon-wrong"/);
 	assert.match(learningSource, /class="continue-learning" onclick=\{continueLearning\}/);
-	assert.match(learningSource, /class="listen-icon"/);
+	assert.doesNotMatch(learningSource, /class="listen-icon"/);
+	assert.doesNotMatch(learningSource, /class="definition-feedback"/);
 	assert.match(learningSource, /onCorrect\(\)/);
 });
 
