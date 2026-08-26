@@ -30,14 +30,5 @@
   "tutorial_help": "Після правильної відповіді знак питання відкриє пояснення.",
   "tutorial_start": "Почати гру",
   "tutorial_restart": "Переглянути навчання знову",
-  "telegram_share": "",
-  "cooperate": "Грати разом",
-  "share_round": "Поділитися раундом",
-  "invite_copied": "Запрошення скопійовано",
-  "invite_ready": "Запрошення готове",
-  "players": "гравці",
-  "teammate_solved": "Напарник розв’язав",
-  "already_solved": "Вже розв’язано",
-  "leave_coop": "Вийти зі спільного раунду",
-  "coop_unavailable": "Спільний раунд недоступний"
+  "telegram_share": ""
 }

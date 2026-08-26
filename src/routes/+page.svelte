@@ -13,10 +13,8 @@
   import wordsEnB2 from '$lib/data/words.en.b2.json';
   import wordsEnC1 from '$lib/data/words.en.c1.json';
   import wordsEnC2 from '$lib/data/words.en.c2.json';
-  import { isRoomToken, type CoopRound, type CoopSnapshot } from '$lib/coop';
   import { m } from '$lib/paraglide/messages';
   import { getTextDirection, setLocale, type Locale } from '$lib/paraglide/runtime';
-  import { onMount } from 'svelte';
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
   import IconClose from '~icons/material-symbols/cancel-rounded';
   import IconDark from '~icons/material-symbols/dark-mode-rounded';
@@ -27,8 +25,6 @@
   import IconTelegram from '~icons/fa6-brands/telegram';
   import IconLight from '~icons/material-symbols/light-mode-rounded';
   import IconSettings from '~icons/material-symbols/settings-rounded';
-  import IconShare from '~icons/material-symbols/share-rounded';
-  import IconGroup from '~icons/material-symbols/groups-rounded';
   import IconVibrate from '~icons/material-symbols/vibration-rounded';
 
   type Language = 'de' | 'en';
@@ -60,7 +56,6 @@
   const LANGUAGE_KEY = 'wordcircle-language-v1';
   const INTERFACE_LOCALE_KEY = 'wordcircle-interface-locale-v1';
   const TUTORIAL_STATE_KEY = 'wordcircle-tutorial-state-v1';
-  const COOP_PARTICIPANT_KEY = 'wordcircle-coop-participant-v1';
 
   const initialTheme: Theme = typeof localStorage !== 'undefined' && localStorage.getItem('wordcircle-theme') === 'dark' ? 'dark' : 'light';
   const initialVibration = typeof localStorage === 'undefined' || localStorage.getItem('wordcircle-vibration') !== 'off';
@@ -108,19 +103,11 @@
   let tutorialOpen = $state(initialTutorialOpen);
   let tutorialPractice = $state(false);
   let tutorialLanguage = $state<Language>(initialGame?.language ?? initialLanguage);
-  let coopRoom = $state<CoopSnapshot | null>(null);
-  let coopParticipantId = $state('');
-  let coopNotice = $state('');
-  let coopPending = $state(false);
-  let coopStream: EventSource | null = null;
-  let coopPollTimer: number | null = null;
-  let coopReconnectTimer: number | null = null;
-  let activeCoopToken = '';
 
   const labels = $derived.by(() => {
     const options = { locale: interfaceLocale };
     return {
-      label: m.label({}, options), hint: m.hint({}, options), allDone: m.all_done({}, options), time: m.time({}, options), continue: m.continue({}, options), explain: m.explain({}, options), install: m.install({}, options), installHint: m.install_hint({}, options), gameLanguage: m.game_language({}, options), interfaceLanguage: m.interface_language({}, options), vocabulary: m.vocabulary({}, options), includeLower: m.include_lower({}, options), appearance: m.appearance({}, options), light: m.light({}, options), dark: m.dark({}, options), settings: m.settings({}, options), vibration: m.vibration({}, options), backwards: m.backwards({}, options), settingsHint: m.settings_hint({}, options), completed: m.completed({}, options), tracePrompt: m.trace_prompt({}, options), traceActive: m.trace_active({}, options), tutorial: m.tutorial({}, options), tutorialKicker: m.tutorial_kicker({}, options), tutorialTitle: m.tutorial_title({}, options), tutorialTrace: m.tutorial_trace({}, options), tutorialGrid: m.tutorial_grid({}, options), tutorialHelp: m.tutorial_help({}, options), tutorialStart: m.tutorial_start({}, options), tutorialRestart: m.tutorial_restart({}, options), telegramShare: m.telegram_share({}, options), cooperate: m.cooperate({}, options), shareRound: m.share_round({}, options), inviteCopied: m.invite_copied({}, options), inviteReady: m.invite_ready({}, options), players: m.players({}, options), teammateSolved: m.teammate_solved({}, options), alreadySolved: m.already_solved({}, options), leaveCoop: m.leave_coop({}, options), coopUnavailable: m.coop_unavailable({}, options)
+      label: m.label({}, options), hint: m.hint({}, options), allDone: m.all_done({}, options), time: m.time({}, options), continue: m.continue({}, options), explain: m.explain({}, options), install: m.install({}, options), installHint: m.install_hint({}, options), gameLanguage: m.game_language({}, options), interfaceLanguage: m.interface_language({}, options), vocabulary: m.vocabulary({}, options), includeLower: m.include_lower({}, options), appearance: m.appearance({}, options), light: m.light({}, options), dark: m.dark({}, options), settings: m.settings({}, options), vibration: m.vibration({}, options), backwards: m.backwards({}, options), settingsHint: m.settings_hint({}, options), completed: m.completed({}, options), tracePrompt: m.trace_prompt({}, options), traceActive: m.trace_active({}, options), tutorial: m.tutorial({}, options), tutorialKicker: m.tutorial_kicker({}, options), tutorialTitle: m.tutorial_title({}, options), tutorialTrace: m.tutorial_trace({}, options), tutorialGrid: m.tutorial_grid({}, options), tutorialHelp: m.tutorial_help({}, options), tutorialStart: m.tutorial_start({}, options), tutorialRestart: m.tutorial_restart({}, options), telegramShare: m.telegram_share({}, options)
     };
   });
   const interfaceDirection = $derived(getTextDirection(interfaceLocale));
@@ -172,13 +159,6 @@
     };
   });
 
-  onMount(() => {
-    coopParticipantId = readCoopParticipantId();
-    const invitedToken = new URLSearchParams(window.location.search).get('coop');
-    if (isRoomToken(invitedToken)) void joinCoopRoom(invitedToken);
-    return () => stopCoopSync();
-  });
-
   function cellKey(row: number, col: number) { return `${row}:${col}`; }
   function setTutorialRound(nextLanguage = tutorialLanguage) {
     tutorialLanguage = nextLanguage;
@@ -195,20 +175,12 @@
   }
   function beginTutorialPractice() { setTutorialRound(tutorialLanguage); tutorialOpen = false; tutorialPractice = true; }
   function completeTutorial() { localStorage.setItem(TUTORIAL_STATE_KEY, 'complete'); tutorialPractice = false; tutorialOpen = false; newRound(lang, true); }
-  function continueRound() { if (tutorialPractice) completeTutorial(); else if (coopRoom) leaveCoopRoom(true); else newRound(); }
+  function continueRound() { if (tutorialPractice) completeTutorial(); else newRound(); }
   function restartTutorial() { localStorage.setItem(TUTORIAL_STATE_KEY, 'open'); settingsOpen = false; tutorialPractice = false; tutorialLanguage = lang; tutorialOpen = true; }
   function isLanguage(value: unknown): value is Language { return value === 'de' || value === 'en'; }
   function readLanguage(): Language { if (typeof localStorage === 'undefined') return 'de'; const value = localStorage.getItem(LANGUAGE_KEY); return isLanguage(value) ? value : 'de'; }
   function isInterfaceLocale(value: unknown): value is InterfaceLocale { return typeof value === 'string' && interfaceLocales.some((locale) => locale.code === value); }
   function readInterfaceLocale(): InterfaceLocale { if (typeof localStorage === 'undefined') return 'de'; const value = localStorage.getItem(INTERFACE_LOCALE_KEY); if (isInterfaceLocale(value)) return value; return readLanguage(); }
-  function readCoopParticipantId() {
-    if (typeof localStorage === 'undefined') return '';
-    const existing = localStorage.getItem(COOP_PARTICIPANT_KEY);
-    if (/^[A-Za-z0-9_-]{20,80}$/.test(existing ?? '')) return existing as string;
-    const participantId = typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}-wordcircle`;
-    localStorage.setItem(COOP_PARTICIPANT_KEY, participantId);
-    return participantId;
-  }
   function isVocabularyLevel(value: unknown): value is VocabularyLevel { return typeof value === 'string' && vocabularyLevels.includes(value as VocabularyLevel); }
   function readVocabularyLevel(): VocabularyLevel { if (typeof localStorage === 'undefined') return 'a1'; const value = localStorage.getItem(VOCABULARY_LEVEL_KEY); return isVocabularyLevel(value) ? value : 'a1'; }
   function viableBaseCount(pool: string[]) {
@@ -376,14 +348,14 @@
     startedAt = Date.now();
     completedDuration = null;
   }
-  function selectLanguage(nextLanguage: Language) { if (coopRoom) { coopNotice = labels.cooperate; settingsOpen = false; return; } newRound(nextLanguage, true); if (interfaceLocale !== 'fa') interfaceLocale = nextLanguage; settingsOpen = false; }
+  function selectLanguage(nextLanguage: Language) { newRound(nextLanguage, true); if (interfaceLocale !== 'fa') interfaceLocale = nextLanguage; settingsOpen = false; }
   function selectInterfaceLocale(nextLocale: InterfaceLocale) { interfaceLocale = nextLocale; }
   function selectInterfaceLocaleFromEvent(event: Event) { const nextLocale = (event.currentTarget as HTMLSelectElement).value; if (isInterfaceLocale(nextLocale)) selectInterfaceLocale(nextLocale); }
   function selectTutorialLanguage(nextLocale: InterfaceLocale) { interfaceLocale = nextLocale; }
   function selectTutorialGameLanguage(nextLanguage: Language) { tutorialLanguage = nextLanguage; }
-  function selectBackwardWords(nextValue: boolean) { if (coopRoom) { coopNotice = labels.cooperate; return; } allowBackwardWords = nextValue; newRound(); }
-  function selectVocabularyLevel(nextLevel: VocabularyLevel) { if (coopRoom) { coopNotice = labels.cooperate; return; } vocabularyLevel = nextLevel; includeLowerVocabulary = nextLevel !== 'a1' && requiresCumulativePool(lang, nextLevel); newRound(); }
-  function selectIncludeLowerVocabulary(nextValue: boolean) { if (coopRoom) { coopNotice = labels.cooperate; return; } includeLowerVocabulary = nextValue; newRound(); }
+  function selectBackwardWords(nextValue: boolean) { allowBackwardWords = nextValue; newRound(); }
+  function selectVocabularyLevel(nextLevel: VocabularyLevel) { vocabularyLevel = nextLevel; includeLowerVocabulary = nextLevel !== 'a1' && requiresCumulativePool(lang, nextLevel); newRound(); }
+  function selectIncludeLowerVocabulary(nextValue: boolean) { includeLowerVocabulary = nextValue; newRound(); }
   function position(index: number, total: number) { const angle = (index / total) * Math.PI * 2 - Math.PI / 2; return { x: CIRCLE + LETTER_RADIUS * Math.cos(angle), y: CIRCLE + LETTER_RADIUS * Math.sin(angle) }; }
   function pointFromEvent(event: PointerEvent) { const rect = circleEl?.getBoundingClientRect(); if (!rect) return null; return { x: ((event.clientX - rect.left) / rect.width) * 292, y: ((event.clientY - rect.top) / rect.height) * 292 }; }
   function nearestLetter(point: { x: number; y: number }) { let closest = -1; let distance = Infinity; circleLetters.forEach((_letter, index) => { const letter = position(index, circleLetters.length); const nextDistance = Math.hypot(point.x - letter.x, point.y - letter.y); if (nextDistance < distance) { distance = nextDistance; closest = index; } }); return distance < 36 ? closest : -1; }
@@ -391,127 +363,9 @@
   function startSwipe(event: PointerEvent, knownIndex = -1) { if (celebration) return; event.preventDefault(); (event.currentTarget as Element).setPointerCapture?.(event.pointerId); isDragging = true; selectedPath = []; feedback = null; feedbackWord = ''; const point = pointFromEvent(event); const index = knownIndex >= 0 ? knownIndex : point ? nearestLetter(point) : -1; if (index >= 0) chooseLetter(index); }
   function extendSwipe(event: PointerEvent) { if (!isDragging) return; const point = pointFromEvent(event); if (!point) return; const index = nearestLetter(point); if (index >= 0 && index !== selectedPath.at(-1)) chooseLetter(index); }
   function endSwipe() { if (!isDragging) return; isDragging = false; if (selectedPath.length >= 2) submitWord(); else selectedPath = []; }
-  function coopRoundFromCurrent(): CoopRound { return { language: lang, words: [...currentRound.words], letters: [...currentRound.letters], placements: currentRound.grid.placements.map((placement) => ({ ...placement })) }; }
-  function applyCoopSnapshot(snapshot: CoopSnapshot) {
-    const previousSolvedCount = solvedWords.length;
-    const wasComplete = celebration;
-    coopRoom = snapshot;
-    lang = snapshot.round.language;
-    currentRound = { words: [...snapshot.round.words], letters: [...snapshot.round.letters], grid: gridFromPlacements(snapshot.round.placements) };
-    solvedWords = [...snapshot.solvedWords];
-    const completed = snapshot.solvedWords.length === snapshot.round.words.length;
-    if (completed && !wasComplete && previousSolvedCount < snapshot.round.words.length) {
-      completedDuration = Math.max(0, Date.now() - startedAt);
-      completedRounds += 1;
-    }
-    celebration = completed;
-    const latest = snapshot.events.at(-1);
-    if (latest?.kind === 'solved' && latest.actorId !== coopParticipantId) coopNotice = `${labels.teammateSolved} ${latest.word}`;
-    startCoopSync(snapshot.token);
-  }
-  function invitationUrl(token: string) {
-    const url = new URL(window.location.href);
-    url.searchParams.set('coop', token);
-    return url.toString();
-  }
-  function updateInvitationUrl(token: string | null) {
-    const url = new URL(window.location.href);
-    if (token) url.searchParams.set('coop', token); else url.searchParams.delete('coop');
-    window.history.replaceState({}, '', url);
-  }
-  function stopCoopSync() {
-    if (coopStream) coopStream.close();
-    if (coopPollTimer) window.clearInterval(coopPollTimer);
-    if (coopReconnectTimer) window.clearTimeout(coopReconnectTimer);
-    coopStream = null;
-    coopPollTimer = null;
-    coopReconnectTimer = null;
-    activeCoopToken = '';
-  }
-  function startCoopSync(token: string) {
-    if (!coopParticipantId || activeCoopToken === token) return;
-    stopCoopSync();
-    activeCoopToken = token;
-    const refresh = () => void fetchCoopSnapshot(token, false);
-    const streamUrl = `/api/coop/${encodeURIComponent(token)}/stream?participantId=${encodeURIComponent(coopParticipantId)}&after=${coopRoom?.version ?? -1}`;
-    coopStream = new EventSource(streamUrl);
-    coopStream.addEventListener('room-event', refresh);
-    coopStream.onerror = () => {
-      coopStream?.close();
-      coopStream = null;
-      if (activeCoopToken === token) { activeCoopToken = ''; coopReconnectTimer = window.setTimeout(() => startCoopSync(token), 2_000); }
-    };
-    coopPollTimer = window.setInterval(refresh, 3_000);
-  }
-  async function fetchCoopSnapshot(token: string, joining: boolean) {
-    if (!coopParticipantId) return;
-    try {
-      const response = await fetch(`/api/coop/${encodeURIComponent(token)}?participantId=${encodeURIComponent(coopParticipantId)}`, { cache: 'no-store' });
-      if (response.status === 404) { leaveCoopRoom(false); coopNotice = labels.coopUnavailable; return; }
-      if (!response.ok) throw new Error('room_unavailable');
-      const snapshot = await response.json() as CoopSnapshot;
-      applyCoopSnapshot(snapshot);
-      if (joining) { updateInvitationUrl(snapshot.token); coopNotice = labels.inviteReady; }
-    } catch {
-      coopNotice = labels.coopUnavailable;
-    }
-  }
-  async function joinCoopRoom(token: string) { await fetchCoopSnapshot(token, true); }
-  async function copyInvitation(token: string) {
-    const url = invitationUrl(token);
-    try {
-      if (navigator.share) await navigator.share({ title: 'WordCircle', url });
-      else await navigator.clipboard.writeText(url);
-      coopNotice = labels.inviteCopied;
-    } catch {
-      try { await navigator.clipboard.writeText(url); coopNotice = labels.inviteCopied; } catch { coopNotice = url; }
-    }
-  }
-  async function shareCoopRound() {
-    if (tutorialPractice || coopPending) return;
-    if (coopRoom) { await copyInvitation(coopRoom.token); return; }
-    coopPending = true;
-    try {
-      if (!coopParticipantId) coopParticipantId = readCoopParticipantId();
-      const response = await fetch('/api/coop', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ round: coopRoundFromCurrent(), participantId: coopParticipantId }) });
-      if (!response.ok) throw new Error('room_unavailable');
-      const snapshot = await response.json() as CoopSnapshot;
-      applyCoopSnapshot(snapshot);
-      updateInvitationUrl(snapshot.token);
-      await copyInvitation(snapshot.token);
-    } catch {
-      coopNotice = labels.coopUnavailable;
-    } finally {
-      coopPending = false;
-    }
-  }
-  function leaveCoopRoom(startFreshRound: boolean) {
-    stopCoopSync();
-    coopRoom = null;
-    coopNotice = '';
-    updateInvitationUrl(null);
-    if (startFreshRound || !tutorialPractice) newRound();
-  }
-  async function submitCoopWord(word: string) {
-    const room = coopRoom;
-    if (!room || !coopParticipantId) return;
-    try {
-      const response = await fetch(`/api/coop/${encodeURIComponent(room.token)}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ participantId: coopParticipantId, word }) });
-      if (response.status === 429) return;
-      if (!response.ok) throw new Error('room_unavailable');
-      const result = await response.json() as { accepted: boolean; snapshot: CoopSnapshot };
-      applyCoopSnapshot(result.snapshot);
-      if (result.accepted) { feedback = 'correct'; buzz(result.snapshot.solvedWords.length === result.snapshot.round.words.length ? [24, 28, 40, 28, 70] : [16, 20, 26]); }
-      else if (result.snapshot.solvedWords.includes(word)) { feedback = null; coopNotice = labels.alreadySolved; }
-      else { feedback = 'wrong'; shakeGrid = true; buzz([18, 18, 18]); window.setTimeout(() => (shakeGrid = false), 280); }
-    } catch {
-      coopNotice = labels.coopUnavailable;
-    }
-  }
   function submitWord() {
     const word = activeWord;
     feedbackWord = word;
-    if (coopRoom && !tutorialPractice) { selectedPath = []; void submitCoopWord(word); return; }
     if (currentRound.words.includes(word) && !solvedSet.has(word)) {
       const completed = solvedWords.length + 1 === currentRound.words.length;
       solvedWords = [...solvedWords, word]; feedback = 'correct'; buzz(completed ? [24, 28, 40, 28, 70] : [16, 20, 26]);
@@ -566,7 +420,6 @@
       <aside id="game-settings" class="settings-panel" aria-label={labels.settings} dir={interfaceDirection} lang={interfaceLocale}>
         <button class="settings-close" onclick={() => (settingsOpen = false)} aria-label="Close settings"><IconClose /></button>
         <div class="settings-intro"><span class="brand-mark" aria-hidden="true"><i></i><b></b></span><div><strong>WordCircle</strong><p>{labels.settingsHint}</p></div></div>
-        {#if coopRoom}<div class="setting-row"><span>{labels.cooperate}</span><button onclick={() => leaveCoopRoom(false)}>{labels.leaveCoop}</button></div>{/if}
         <div class="setting-row"><span>{labels.gameLanguage}</span><div class="segmented"><button class:chosen={lang === 'de'} onclick={() => selectLanguage('de')}>DE</button><button class:chosen={lang === 'en'} onclick={() => selectLanguage('en')}>EN</button></div></div>
         <label class="setting-row interface-locale-row"><span>{labels.interfaceLanguage}</span><span class="locale-dropdown"><IconLanguage aria-hidden="true" /><select aria-label={labels.interfaceLanguage} value={interfaceLocale} onchange={selectInterfaceLocaleFromEvent}>{#each interfaceLocales as locale}<option value={locale.code}>{locale.label}</option>{/each}</select></span></label>
         <div class="setting-row vocabulary-row"><span>{labels.vocabulary}</span><div class="segmented level-segmented">{#each vocabularyLevels as level}<button class:chosen={vocabularyLevel === level} onclick={() => selectVocabularyLevel(level)}>{level.toUpperCase()}</button>{/each}</div></div>
@@ -604,13 +457,11 @@
         </div>
       {:else}
         {#if !settingsOpen}<button class="settings-trigger" aria-expanded="false" aria-controls="game-settings" onclick={() => (settingsOpen = true)}><IconSettings aria-hidden="true" /><span class="sr-only">{labels.settings}</span></button>{/if}
-        {#if !settingsOpen && !tutorialPractice}<button class:active-coop={Boolean(coopRoom)} class="coop-share" aria-label={labels.shareRound} title={labels.shareRound} aria-busy={coopPending} onclick={shareCoopRound}><IconShare aria-hidden="true" /><span class="sr-only">{labels.shareRound}</span></button>{/if}
         <div class:has-word={previewWord.length > 0} class:correct={feedback === 'correct'} class:wrong={feedback === 'wrong'} class="selected-word">
           {#if previewWord}
             <span>{previewWord}</span>{#if feedback === 'correct'}<IconCheck aria-label="Correct" /><a class="wiktionary-link" href={wiktionaryUrl(feedbackWord)} target="_blank" rel="noreferrer" aria-label={`${labels.explain}: ${feedbackWord}`}><IconHelp aria-hidden="true" /><span class="sr-only">{labels.explain}</span></a>{:else if feedback === 'wrong'}<IconClose aria-label="Incorrect" />{/if}
           {/if}
         </div>
-        {#if coopRoom}<p class="coop-status"><IconGroup aria-hidden="true" /><span><b>{coopRoom.memberCount}</b> {labels.players}</span>{#if coopNotice}<em>{coopNotice}</em>{/if}</p>{:else if coopNotice}<p class="coop-status coop-notice"><span>{coopNotice}</span></p>{/if}
         {#if tutorialPractice}<p class="tutorial-practice-status"><span>{labels.tutorial}</span><b>{tutorialHint}</b></p>{/if}
         {#if installPrompt && !previewWord}
           <button class="install-prompt" onclick={installApp}>
@@ -646,11 +497,10 @@
   .tutorial-panel { position:absolute;z-index:90;inset:0;display:grid;place-items:center;padding:clamp(1rem,6vw,2rem);background:#fffdf7;color:#172a45;animation:drop-in .22s cubic-bezier(.23,1,.32,1) both; }.tutorial-card { width:min(100%,25rem);padding:clamp(1.1rem,5vw,1.7rem);border:1px solid rgba(23,42,69,.24);border-top:3px double #172a45;background:#fffdf7;box-shadow:8px 8px 0 rgba(230,165,39,.18); }.tutorial-kicker { margin:0 0 .45rem;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase; }.tutorial-card h1 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,8vw,2.55rem);font-weight:400;letter-spacing:-.045em;line-height:.92; }.tutorial-steps { display:grid;gap:.72rem;margin:1.35rem 0 1.2rem;padding:0;list-style:none; }.tutorial-steps li { display:grid;grid-template-columns:1.55rem 1fr;gap:.62rem;align-items:start;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;line-height:1.35; }.tutorial-steps b { display:grid;place-items:center;width:1.35rem;height:1.35rem;border:1px solid #172a45;border-radius:50%;background:#fffdf7;color:#a45e38;font-family:'DM Serif Display',serif;font-size:.9rem;font-weight:400; }.tutorial-start { width:100%;min-height:2.45rem;border:1px solid #172a45;border-radius:0;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.67rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;box-shadow:3px 3px 0 #e6a527;transition:transform .16s cubic-bezier(.23,1,.32,1),box-shadow .16s ease; }.tutorial-start:active { transform:translate(2px,2px);box-shadow:1px 1px 0 #e6a527; }
   .tutorial-panel { position:absolute;z-index:90;inset:0;display:grid;place-items:center;padding:clamp(1rem,6vw,2rem);background:#fffdf7;color:#172a45;animation:drop-in .22s cubic-bezier(.23,1,.32,1) both; }.tutorial-card { width:min(100%,25rem);padding:clamp(1.1rem,5vw,1.7rem);border:1px solid rgba(23,42,69,.24);border-top:3px double #172a45;background:#fffdf7;box-shadow:8px 8px 0 rgba(230,165,39,.18); }.tutorial-kicker { margin:0 0 .45rem;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase; }.tutorial-card h1 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,8vw,2.55rem);font-weight:400;letter-spacing:-.045em;line-height:.92; }.tutorial-steps { display:grid;gap:.72rem;margin:1.35rem 0 1.2rem;padding:0;list-style:none; }.tutorial-steps li { display:grid;grid-template-columns:1.55rem 1fr;gap:.62rem;align-items:start;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;line-height:1.35; }.tutorial-steps b { display:grid;place-items:center;width:1.35rem;height:1.35rem;border:1px solid #172a45;border-radius:50%;background:#fffdf7;color:#a45e38;font-family:'DM Serif Display',serif;font-size:.9rem;font-weight:400; }.tutorial-solve-language { display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin:0 0 .7rem;padding-top:.7rem;border-top:1px solid rgba(23,42,69,.14);color:#172a45;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }.tutorial-practice-hint { display:flex;align-items:center;justify-content:space-between;gap:.65rem;margin:0 0 1rem;padding:.55rem .65rem;border:1px solid rgba(230,165,39,.56);background:rgba(230,165,39,.08);color:#172a45;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:800;letter-spacing:.05em; }.tutorial-practice-hint strong { color:#a45e38;font-size:.56rem;letter-spacing:.08em;text-transform:uppercase; }.tutorial-practice-hint span { white-space:nowrap; }.tutorial-start { width:100%;min-height:2.45rem;border:1px solid #172a45;border-radius:0;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.67rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;box-shadow:3px 3px 0 #e6a527;transition:transform .16s cubic-bezier(.23,1,.32,1),box-shadow .16s ease; }.tutorial-start:active { transform:translate(2px,2px);box-shadow:1px 1px 0 #e6a527; }
   .brand-mark { position:relative;width:34px;height:34px;display:block;flex:none; }.brand-mark i,.brand-mark b { position:absolute;display:block;width:21px;height:21px;border:2px solid #172a45;border-radius:50%; }.brand-mark i { top:1px;left:1px; }.brand-mark b { right:1px;bottom:1px;border-color:#e6a527; }
-  .settings-trigger,.settings-close,.coop-share { display:grid;place-items:center;width:2.15rem;height:2.15rem;border:1px solid rgba(23,42,69,.24);border-radius:50%;background:rgba(255,253,247,.86);color:#172a45;transition:transform .18s cubic-bezier(.23,1,.32,1),background .18s ease; }.settings-trigger :global(svg),.settings-close :global(svg),.coop-share :global(svg) { width:1.1rem;height:1.1rem; }.settings-close { position:absolute;z-index:2;top:.72rem;right:.72rem;background:#172a45;color:#fffdf7; }.settings-close:active,.coop-share:active { transform:scale(.94); }
+  .settings-trigger,.settings-close { display:grid;place-items:center;width:2.15rem;height:2.15rem;border:1px solid rgba(23,42,69,.24);border-radius:50%;background:rgba(255,253,247,.86);color:#172a45;transition:transform .18s cubic-bezier(.23,1,.32,1),background .18s ease; }.settings-trigger :global(svg),.settings-close :global(svg) { width:1.1rem;height:1.1rem; }.settings-close { position:absolute;z-index:2;top:.72rem;right:.72rem;background:#172a45;color:#fffdf7; }.settings-close:active { transform:scale(.94); }
   .settings-panel { position:absolute;z-index:60;inset:0;margin:0;padding:clamp(4.5rem,16vw,6rem) clamp(1rem,5vw,2rem) clamp(1rem,5vw,2rem);overflow-y:auto;border:0;background:rgba(255,253,247,.98);box-shadow:0 18px 55px rgba(23,42,69,.2);animation:drop-in .2s cubic-bezier(.23,1,.32,1); }.settings-intro { display:flex;align-items:center;gap:.75rem;color:#172a45; }.settings-intro strong { display:block;font-family:'DM Serif Display',serif;font-size:clamp(1.45rem,6vw,2rem);font-weight:400;letter-spacing:-.04em;line-height:.9; }.settings-intro p { margin:.35rem 0 0;color:#a45e38;font-family:'DM Serif Display',serif;font-size:.94rem; }.setting-row { display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-top:.82rem;margin-top:.82rem;border-top:1px solid rgba(23,42,69,.14);color:#172a45;font-size:.67rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }.include-lower-row { margin-top:.25rem;padding-top:.35rem;border-top:0; }.segmented { display:flex;padding:2px;border:1px solid rgba(23,42,69,.22);border-radius:99px; }.segmented button { min-height:1.65rem;padding:0 .55rem;display:inline-flex;align-items:center;gap:.25rem;border:0;border-radius:99px;background:transparent;color:rgba(23,42,69,.62);font-size:.62rem;font-weight:800; }.segmented button :global(svg) { width:.78rem;height:.78rem; }.segmented button.chosen { background:#172a45;color:#fffdf7; }.vibration-row>span { display:inline-flex;align-items:center;gap:.35rem; }.vibration-row :global(svg) { width:.9rem;height:.9rem; }.level-segmented button { min-width:1.65rem;padding:0 .32rem; }.vocabulary-row { align-items:flex-start; }.completion-total strong { color:#34824d;font-family:'DM Serif Display',serif;font-size:1.45rem;line-height:1; }
   .crossword-frame { position:relative;min-height:205px;display:grid;place-items:stretch;margin-top:.55rem;padding:clamp(.5rem,3vw,1rem);background-color:#ede4d5;background-image:linear-gradient(rgba(23,42,69,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.035) 1px,transparent 1px);background-size:20px 20px;border-top:3px double #172a45;border-bottom:2px solid rgba(23,42,69,.45);transition:transform .16s cubic-bezier(.23,1,.32,1); }.crossword-frame.shake { animation:shake .28s cubic-bezier(.23,1,.32,1); }.crossword-scroll { position:relative;z-index:1;min-width:0;min-height:0;overflow:scroll;display:grid;place-items:center;padding:clamp(.65rem,3vw,1.25rem);overscroll-behavior:contain;scrollbar-color:rgba(23,42,69,.4) transparent; }.crossword { --cell-size:clamp(2.35rem,10.2vw,3.1rem);position:relative;display:grid;width:max-content;min-width:calc(var(--cell-size) * 3); }.crossword-cell { aspect-ratio:1;min-width:0;display:grid;place-items:center;border:1px solid #172a45;background:#fffdf7;color:#172a45;font-size:clamp(.7rem,3.4vw,1.1rem);font-weight:800;line-height:1;text-transform:uppercase;transition:background .18s ease,color .18s ease,transform .18s cubic-bezier(.23,1,.32,1); }.crossword-cell.startAcross { border-left-width:4px; }.crossword-cell.endAcross { border-right-width:4px; }.crossword-cell.startDown { border-top-width:4px; }.crossword-cell.endDown { border-bottom-width:4px; }.crossword-cell.solved { background:#e6a527;transform:scale(.965);animation:solve-cell .32s cubic-bezier(.23,1,.32,1); }.crossword-void { aspect-ratio:1; }.frame-corner { position:absolute;z-index:2;width:13px;height:13px;border-color:#e6a527;border-style:solid;pointer-events:none; }.top-left { top:7px;left:7px;border-width:2px 0 0 2px; }.top-right { top:7px;right:7px;border-width:2px 2px 0 0; }.bottom-left { bottom:7px;left:7px;border-width:0 0 2px 2px; }.bottom-right { right:7px;bottom:7px;border-width:0 2px 2px 0; }
   .completion-inline { position:relative;z-index:56;display:inline-flex;align-items:center;justify-content:center;gap:.6rem;min-height:2.5rem;margin:auto;color:#34824d;animation:completion-in .24s cubic-bezier(.23,1,.32,1) both; }.completion-symbol { display:grid;place-items:center;width:1.8rem;height:1.8rem;flex:none;border:2px solid currentColor;border-radius:50%;font-family:'DM Sans',sans-serif;font-size:1.25rem;font-weight:800;line-height:1; }.completion-result { display:grid;gap:.08rem;justify-items:start;text-align:left; }.completion-result strong { color:#34824d;font-family:'DM Serif Display',serif;font-size:1.05rem;font-weight:400;letter-spacing:-.02em;line-height:1; }.completion-result small { color:#172a45;font-family:'DM Sans',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.06em;line-height:1.2;text-transform:uppercase; }.completion-result b { color:#34824d;font-family:'DM Serif Display',serif;font-size:.88rem;letter-spacing:0; }.completion-continue { min-height:1.85rem;padding:0 .8rem;border:1px solid #34824d;border-radius:999px;background:#34824d;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease; }.completion-continue:active { transform:scale(.96); }
-  .selection-area { position:relative;z-index:1;min-height:52px;padding:.55rem 0 .2rem;text-align:center;background:linear-gradient(90deg,transparent,rgba(23,42,69,.025) 22%,rgba(23,42,69,.025) 78%,transparent); }.selection-area.install-ready { min-height:82px; }.selection-area.completion-area { z-index:55;display:grid;place-items:center;min-height:58px;padding:.35rem 0;background:transparent; }.selection-area .settings-trigger { position:absolute;z-index:70;top:.38rem;right:0; }.selection-area .coop-share { position:absolute;z-index:70;top:.38rem;left:0; }.coop-share.active-coop { background:#172a45;color:#e6a527;border-color:#172a45; }.selected-word { min-height:1.7rem;display:inline-flex;align-items:center;justify-content:center;gap:.48rem;color:rgba(23,42,69,.35);font-family:'DM Serif Display',serif;font-size:clamp(1.35rem,5vw,1.75rem);letter-spacing:.16em;line-height:1; }.selected-word :global(svg) { width:1.45rem;height:1.45rem;letter-spacing:0; }.selected-word.has-word { color:#172a45; }.selected-word.correct { color:#3f7a50; }.selected-word.wrong { color:#b54442; }.coop-status { display:flex;align-items:center;justify-content:center;gap:.34rem;min-height:.95rem;margin:.05rem 2.4rem 0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.52rem;font-weight:800;letter-spacing:.07em;line-height:1.25;text-transform:uppercase; }.coop-status :global(svg) { width:.84rem;height:.84rem;flex:none; }.coop-status b { color:#172a45; }.coop-status em { max-width:12rem;overflow:hidden;color:#3f7a50;font-style:normal;text-overflow:ellipsis;white-space:nowrap; }.coop-notice { color:#a45e38; }.wiktionary-link { display:grid;place-items:center;width:1.25rem;height:1.25rem;border:1px solid currentColor;border-radius:50%;color:inherit;letter-spacing:0;transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease,color .16s ease; }.wiktionary-link:hover,.wiktionary-link:focus-visible { background:#3f7a50;color:#fffdf7;outline:0; }.wiktionary-link:active { transform:scale(.94); }.selected-word .wiktionary-link :global(svg) { width:.85rem;height:.85rem;animation:none; }.install-prompt { position:absolute;z-index:5;bottom:.25rem;left:50%;display:inline-flex;align-items:center;gap:.42rem;min-height:1.75rem;padding:.22rem .62rem;border:1px solid #172a45;border-radius:.2rem;background:#172a45;color:#fffdf7;box-shadow:0 3px 0 rgba(23,42,69,.16);font-family:'DM Sans',sans-serif;text-align:left;transform:translateX(-50%);transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease; }.install-prompt:active { transform:translateX(-50%) scale(.97); }.install-prompt :global(svg) { width:1rem;height:1rem;color:#e6a527; }.install-prompt span { display:grid;gap:.02rem;line-height:1;white-space:nowrap; }.install-prompt strong { font-size:.57rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase; }.install-prompt small { color:rgba(255,253,247,.72);font-size:.5rem;font-weight:700;letter-spacing:.03em; }
   .selection-area { position:relative;z-index:1;min-height:52px;padding:.55rem 0 .2rem;text-align:center;background:linear-gradient(90deg,transparent,rgba(23,42,69,.025) 22%,rgba(23,42,69,.025) 78%,transparent); }.selection-area.install-ready { min-height:82px; }.selection-area.completion-area { z-index:55;display:grid;place-items:center;min-height:58px;padding:.35rem 0;background:transparent; }.selection-area .settings-trigger { position:absolute;z-index:70;top:.38rem;right:0; }.selected-word { min-height:1.7rem;display:inline-flex;align-items:center;justify-content:center;gap:.48rem;color:rgba(23,42,69,.35);font-family:'DM Serif Display',serif;font-size:clamp(1.35rem,5vw,1.75rem);letter-spacing:.16em;line-height:1; }.selected-word :global(svg) { width:1.45rem;height:1.45rem;letter-spacing:0; }.selected-word.has-word { color:#172a45; }.selected-word.correct { color:#3f7a50; }.selected-word.wrong { color:#b54442; }.tutorial-practice-status { display:flex;align-items:center;justify-content:center;gap:.5rem;margin:.2rem 0 0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.54rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase; }.tutorial-practice-status b { color:#172a45;font-size:.58rem;letter-spacing:.11em; }.wiktionary-link { display:grid;place-items:center;width:1.25rem;height:1.25rem;border:1px solid currentColor;border-radius:50%;color:inherit;letter-spacing:0;transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease,color .16s ease; }.wiktionary-link:hover,.wiktionary-link:focus-visible { background:#3f7a50;color:#fffdf7;outline:0; }.wiktionary-link:active { transform:scale(.94); }.selected-word .wiktionary-link :global(svg) { width:.85rem;height:.85rem;animation:none; }.install-prompt { position:absolute;z-index:5;bottom:.25rem;left:50%;display:inline-flex;align-items:center;gap:.42rem;min-height:1.75rem;padding:.22rem .62rem;border:1px solid #172a45;border-radius:.2rem;background:#172a45;color:#fffdf7;box-shadow:0 3px 0 rgba(23,42,69,.16);font-family:'DM Sans',sans-serif;text-align:left;transform:translateX(-50%);transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease; }.install-prompt:active { transform:translateX(-50%) scale(.97); }.install-prompt :global(svg) { width:1rem;height:1rem;color:#e6a527; }.install-prompt span { display:grid;gap:.02rem;line-height:1;white-space:nowrap; }.install-prompt strong { font-size:.57rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase; }.install-prompt small { color:rgba(255,253,247,.72);font-size:.5rem;font-weight:700;letter-spacing:.03em; }
   .wheel-stage { position:relative;min-height:235px;display:grid;place-items:center;border-top:1px solid rgba(23,42,69,.16);border-bottom:1px solid rgba(23,42,69,.16); }.letter-wheel { width:min(100%,248px);touch-action:none;overflow:visible;user-select:none; }.outer-ring,.inner-ring,.core-ring { fill:none; }.outer-ring { stroke:#172a45;stroke-width:1.1;stroke-dasharray:none;opacity:.28; }.inner-ring { stroke:#172a45;stroke-width:1;opacity:.12; }.core-ring { stroke:#e6a527;stroke-width:1.8;opacity:.9; }.core-mark { fill:#172a45;opacity:.83; }.core-word { fill:rgba(23,42,69,.52);font-family:'DM Serif Display',serif;font-size:13px;letter-spacing:.08em; }.core-word.active-core { fill:#c98220; }.core-caption { fill:rgba(23,42,69,.5);font-family:'DM Sans',sans-serif;font-size:5.8px;font-weight:800;letter-spacing:.18em; }.selection-line { fill:none;stroke:#e6a527;stroke-linecap:round;stroke-linejoin:round;stroke-width:10;opacity:.9; }.letter-node { cursor:crosshair; }.letter-node>circle { fill:#fffdf7;stroke:#172a45;stroke-width:2;transform-box:fill-box;transform-origin:center; }.letter-node text { fill:#172a45;font-family:'DM Sans',sans-serif;font-size:20px;font-weight:800;pointer-events:none; }.letter-node.active>circle { fill:#e6a527;stroke:#c98220;transform:scale(1.22); }.letter-node.active text { fill:#172a45; }
   @keyframes drop-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }

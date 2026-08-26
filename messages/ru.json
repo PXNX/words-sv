@@ -30,14 +30,5 @@
   "tutorial_help": "После верного слова знак вопроса откроет объяснение.",
   "tutorial_start": "Начать игру",
   "tutorial_restart": "Посмотреть обучение снова",
-  "telegram_share": "",
-  "cooperate": "Играть вместе",
-  "share_round": "Поделиться раундом",
-  "invite_copied": "Приглашение скопировано",
-  "invite_ready": "Приглашение готово",
-  "players": "игроки",
-  "teammate_solved": "Игрок разгадал",
-  "already_solved": "Уже разгадано",
-  "leave_coop": "Покинуть общий раунд",
-  "coop_unavailable": "Общий раунд недоступен"
+  "telegram_share": ""
 }

@@ -21,13 +21,7 @@ Die aktuell ausgelieferten Wortlisten werden nicht mehr aus Häufigkeitsbändern
 
 ## Vercel
 
-Die App verwendet `@sveltejs/adapter-vercel`. `vercel.json` legt Bun 1.4 und den Build-Befehl fest; Vercel veröffentlicht die Spieloberfläche sowie die SvelteKit-Serverfunktionen für gemeinsame Runden.
-
-### Gemeinsame Runden
-
-Eine Runde kann über die Teilen-Schaltfläche als zeitlich begrenzte Einladung geteilt werden. Die Serverfunktionen erwarten eine PostgreSQL-kompatible `DATABASE_URL` in Vercel. Beim ersten Aufruf werden die Tabellen für Räume, Teilnehmende und Ereignisse angelegt. Rätselzustand und Treffer liegen dauerhaft in der Datenbank; der Browser kombiniert einen SSE-Stream mit einem kurzen Snapshot-Polling als Wiederverbindungs-Fallback. Dadurch hängt die Synchronisierung nicht von einem einzelnen Funktionsprozess ab.
-
-Gemeinsame Runden laufen nach 24 Stunden ab. Die Einladungskennung und eine anonyme Teilnehmendenkennung sind zufällig erzeugte URL-sichere Werte. Nur die auf dem Server gespeicherte Rundendefinition wird zur Annahme eines gelösten Wortes verwendet.
+Die App wird als statische SvelteKit-Seite gebaut. `vercel.json` legt Bun 1.4, den Build-Befehl und den erzeugten Ausgabeordner `build` ausdrücklich fest.
 
 ## PWA und Offline-Nutzung
 
