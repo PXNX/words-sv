@@ -43,12 +43,13 @@
     notice = '';
   }
 
-  function submit() {
-    const normalized = normalizePlayableWord(guess);
-    if (won || exhausted) return;
-    if (!isValidWordleGuess(candidates, normalized)) {
-      notice = labels.invalid;
-      return;
+	function submit() {
+	  const normalized = normalizePlayableWord(guess);
+	  if (won || exhausted) return;
+	  if (!isValidWordleGuess(candidates, normalized) || entries.some((entry) => entry.word === normalized)) {
+	    notice = labels.invalid;
+	    guess = '';
+	    return;
     }
     const marks = evaluateWordleGuess(target, normalized) as WordleMark[];
     entries = [...entries, { word: normalized, marks }];
@@ -60,10 +61,9 @@
   function press(letter: string) {
     if (won || exhausted) return;
     const nextGuess = normalizePlayableWord(`${guess}${letter}`).slice(0, 5);
-    guess = nextGuess;
-    if (nextGuess.length === 5) {
-      if (isValidWordleGuess(candidates, nextGuess)) submit();
-      else notice = labels.invalid;
+	  guess = nextGuess;
+	  if (nextGuess.length === 5) {
+	    submit();
     } else notice = '';
   }
 
