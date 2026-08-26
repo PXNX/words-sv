@@ -30,5 +30,14 @@
   "tutorial_help": "Depois de acertar, o ponto de interrogação abre uma explicação.",
   "tutorial_start": "Começar a jogar",
   "tutorial_restart": "Ver o tutorial novamente",
-  "telegram_share": ""
+  "telegram_share": "",
+  "cooperate": "Jogar em conjunto",
+  "share_round": "Partilhar ronda",
+  "invite_copied": "Convite copiado",
+  "invite_ready": "Convite pronto",
+  "players": "jogadores",
+  "teammate_solved": "Colega resolveu",
+  "already_solved": "Já resolvida",
+  "leave_coop": "Sair da ronda partilhada",
+  "coop_unavailable": "A ronda partilhada não está disponível"
 }

@@ -30,5 +30,14 @@
   "tutorial_help": "Das Fragezeichen zeigt nach einem Treffer die Erklärung.",
   "tutorial_start": "Losspielen",
   "tutorial_restart": "Tutorial erneut ansehen",
-  "telegram_share": "Hilfreich? Sende ein ❤️ und teile es mit Freund:innen! ✈️"
+  "telegram_share": "Hilfreich? Sende ein ❤️ und teile es mit Freund:innen! ✈️",
+  "cooperate": "Gemeinsam spielen",
+  "share_round": "Runde teilen",
+  "invite_copied": "Einladung kopiert",
+  "invite_ready": "Einladung bereit",
+  "players": "Spieler:innen",
+  "teammate_solved": "Mitspieler:in löste",
+  "already_solved": "Bereits gelöst",
+  "leave_coop": "Gemeinsame Runde verlassen",
+  "coop_unavailable": "Gemeinsame Runde ist nicht verfügbar"
 }

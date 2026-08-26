@@ -168,3 +168,15 @@
 - [x] Sprachumschalter als Dropdown mit vorangestelltem Globus-Icon gestalten.
 - [x] Telegram-Ziel für Deutsch und Englisch auf deutschstunde1 setzen.
 - [x] Mehrsprachige Oberfläche, Build und Vercel-Deployment prüfen und veröffentlichen.
+
+- [x] Deutsch und Englisch als einzige spielbare Rätselsprachen bestätigen; Russisch, Hindi und Malayalam auf Tutorial-Inhalte begrenzen.
+- [x] Hindi und Malayalam als zusätzliche Interface-Locale ergänzen; Russisch als vorhandene Interface-Locale beibehalten.
+- [x] Tutorial in eine geführte Drei-Wort-Übungsrunde mit Hinweisen und wählbarer Rätselsprache umbauen.
+- [x] Dekorative Eingabeanimationen entfernen und ausgewählte Buchstaben größer orange darstellen.
+- [x] psyops-sv-Chatarchitektur und ihre hosting-kompatible Synchronisation prüfen.
+- [x] Vercel-kompatibles Serverless- und Datenbankbackend für einladbare gemeinsame Runden unter Nutzung von DATABASE_URL planen und bereitstellen.
+- [x] Teilen- und Einladungsablauf mit synchronisierten Rätsellösungen und Mitspieler-Ereignissen implementieren.
+- [ ] Tutorial, Eingabeauswahl, SSE-Synchronisierung, Build und Deployment prüfen und veröffentlichen.
+- [ ] Mit echter DATABASE_URL-Verbindung Raum-Erstellung, Beitritt, beidseitige Wortsynchronisierung und Mitspieler-Ereignisse prüfen.
+- [x] Abgelaufene oder fehlende gemeinsame Runde sauber auf eine normale Runde oder klare Join-Fehlermeldung zurückführen.
+- [ ] Bereits gelöste gemeinsame Wörter ohne irreführende neue Erfolgsmeldung behandeln.
