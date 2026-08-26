@@ -30,5 +30,8 @@
   "tutorial_help": "Das Fragezeichen zeigt nach einem Treffer die Erklärung.",
   "tutorial_start": "Losspielen",
   "tutorial_restart": "Tutorial erneut ansehen",
-  "telegram_share": "Hilfreich? Sende ein ❤️ und teile es mit Freund:innen! ✈️"
+  "telegram_share": "Hilfreich? Sende ein ❤️ und teile es mit Freund:innen! ✈️",
+  "content_group": "Inhalt",
+  "behavior_group": "App-Verhalten",
+  "idle_hint": "Hinweis"
 }

@@ -30,5 +30,8 @@
   "tutorial_help": "After a correct word, the question mark opens an explanation.",
   "tutorial_start": "Start playing",
   "tutorial_restart": "View tutorial again",
-  "telegram_share": "Helpful? Send a ❤️ and share it with your friends! ✈️"
+  "telegram_share": "Helpful? Send a ❤️ and share it with your friends! ✈️",
+  "content_group": "Content",
+  "behavior_group": "App behavior",
+  "idle_hint": "Hint"
 }
