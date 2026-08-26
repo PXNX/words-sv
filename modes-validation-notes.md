@@ -60,6 +60,8 @@ The local `/wordle` route rendered the enlarged Wordle input. Entering the valid
 
 The local `/vocab` route rendered the vocabulary learning card and visibly displayed the brief rotating paired-circle WordCircle loading mark. The local `/circle` route rendered the crossword board and letter wheel, confirming all three direct mode routes resolve to their intended mode.
 
+The local unknown-route page rendered the branded WordCircle 404 folio with its paired-circle mark, clear recovery copy, and a Return to WordCircle action. That action successfully returned to `/circle` and restored the crossword view.
+
 The deployed site also rendered the English A1 Wordle view with its six five-cell rows, A1 heading, selected-level subtitle, text input, Check action, and on-screen keyboard.
 
 On the deployed English A1 board, ACTOR was accepted and rendered with five feedback cells. The invalid five-letter string ZZZZZ was visibly rejected with “This word is not part of this level.” This confirms the selected exact-level acceptance and rejection path in production.

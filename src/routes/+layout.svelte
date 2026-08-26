@@ -1,9 +1,14 @@
 <script lang="ts">
 	import type { Pathname } from '$app/types';
 	import { resolve } from '$app/paths';
-	import { page } from '$app/state';
+	import { navigating, page } from '$app/state';
+	import { onMount } from 'svelte';
 	import { locales, localizeHref } from '$lib/paraglide/runtime';
+	import StartupLoader from '$lib/StartupLoader.svelte';
 	let { children } = $props();
+	let hydrated = $state(false);
+
+	onMount(() => { hydrated = true; });
 </script>
 
 <div style="display:none">
@@ -14,4 +19,8 @@
 	{/each}
 </div>
 
-{@render children()}
+{#if !hydrated || navigating.to}
+	<StartupLoader />
+{:else}
+	{@render children()}
+{/if}
