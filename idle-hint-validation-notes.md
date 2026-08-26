@@ -11,3 +11,7 @@ The Vercel production release for commit `495bcfe` was opened with Malayalam act
 On that live deployment, the unsolved German `GARTEN` round was left untouched for 65 seconds. The localized Malayalam hint button then appeared above the taller input rail; the six letter bubbles were visibly larger than the prior release. The next interaction was reserved for checking the definition and target-cell outline.
 
 Selecting the live hint replaced the input preview with the predefined German `GARTEN` definition, “Ein Stück Land bei einem Haus, auf dem Pflanzen wachsen.” All six empty `GARTEN` cells were outlined in amber, confirming the complete published idle-hint flow.
+
+For the later bubble-spacing refinement, the local English tutorial wheel was opened with all bubbles unselected. The larger orbit preserved clear, evenly distributed spacing between the six 60-pixel bubbles.
+
+After the local development hot-reload reset the tutorial overlay, the same English practice board restarted successfully and retained the widened unselected-bubble spacing.
