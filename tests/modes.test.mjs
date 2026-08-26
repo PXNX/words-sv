@@ -5,6 +5,9 @@ import test from 'node:test';
 const { definitionAnswerResult, definitionChoiceWords, evaluateWordleGuess, fiveLetterWords, insertLearningRepeat, isValidWordleGuess, pickLearningSection } = await import('../src/lib/modes.js');
 const learningSource = await readFile(new URL('../src/lib/LearningMode.svelte', import.meta.url), 'utf8');
 const wordleSource = await readFile(new URL('../src/lib/WordleMode.svelte', import.meta.url), 'utf8');
+const pageSource = await readFile(new URL('../src/routes/+page.svelte', import.meta.url), 'utf8');
+const layoutSource = await readFile(new URL('../src/routes/+layout.svelte', import.meta.url), 'utf8');
+const soundSource = await readFile(new URL('../src/lib/sounds.ts', import.meta.url), 'utf8');
 const levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
 
 test('five-letter mode accepts only normalized five-letter vocabulary entries', () => {
@@ -13,6 +16,7 @@ test('five-letter mode accepts only normalized five-letter vocabulary entries', 
 
 test('Wordle evaluation handles repeated letters without over-marking presents', () => {
   assert.deepEqual(evaluateWordleGuess('KÄLTE', 'KELLE'), ['correct', 'absent', 'correct', 'absent', 'correct']);
+  assert.deepEqual(evaluateWordleGuess('TASSE', 'TASES'), ['correct', 'correct', 'correct', 'present', 'present']);
 });
 
 test('Wordle auto-submits only exact-level valid five-letter guesses', () => {
@@ -20,10 +24,21 @@ test('Wordle auto-submits only exact-level valid five-letter guesses', () => {
   assert.equal(isValidWordleGuess(a1Candidates, 'actor'), true);
   assert.equal(isValidWordleGuess(a1Candidates, 'other'), false);
   assert.equal(isValidWordleGuess(a1Candidates, 'ACT'), false);
-  assert.match(wordleSource, /isValidWordleGuess\(candidates, guess\)\) submit\(\)/);
-  assert.match(wordleSource, /nextGuess\.length === 5 && !isValidWordleGuess\(candidates, nextGuess\)/);
+  assert.match(wordleSource, /if \(isValidWordleGuess\(candidates, nextGuess\)\) submit\(\)/);
+  assert.match(wordleSource, /else notice = labels\.invalid/);
   assert.doesNotMatch(wordleSource, /class="wordle-form"/);
   assert.doesNotMatch(wordleSource, /id="wordle-guess"/);
+  assert.match(wordleSource, /onclick=\{\(\) => press\('ẞ'\)\}/);
+  assert.match(wordleSource, /grid-template-columns:repeat\(5,clamp\(2\.35rem,12vw,3\.35rem\)\)/);
+});
+
+test('Wordle tutorial is deterministic, playable, and demonstrates repeated-letter scoring', () => {
+  assert.match(wordleSource, /WORDLE_TUTORIAL_KEY = 'wordcircle-wordle-tutorial-v1'/);
+  assert.match(wordleSource, /de: \{ target: 'TASSE', warmup: 'TASES' \}/);
+  assert.match(wordleSource, /en: \{ target: 'TASTE', warmup: 'TATES' \}/);
+  assert.match(wordleSource, /function tutorialPress\(letter: string\)/);
+  assert.match(wordleSource, /evaluateWordleGuess\(tutorialRound\.target, nextGuess\)/);
+  assert.match(wordleSource, /class:expected=\{tutorialExpected\[tutorialGuess\.length\] === letter\}/);
 });
 
 test('learning sections select no more than six unique level words', () => {
@@ -66,14 +81,29 @@ test('every exact DE/EN level supplies at least three curated-definition targets
 test('learning cards choose definition-backed exact-level words and requeue a missed definition', () => {
   assert.match(learningSource, /const definitionWords = \$derived\(words\.filter/);
   assert.match(learningSource, /pickLearningSection\(definitionWords, random, 6\)/);
-  assert.match(learningSource, /function selectDefinition\(word: string\)/);
+  assert.match(learningSource, /function selectDefinition\(event: MouseEvent\)/);
   assert.match(learningSource, /definitionAnswerResult\(word, currentWord, queue, position, requeuedCurrent\)/);
-  assert.match(learningSource, /function submitDefinition\(event: SubmitEvent\)/);
-  assert.match(learningSource, /<form class="definition-options" onsubmit=\{submitDefinition\}>/);
+  assert.match(learningSource, /untrack\(\(\) => startSection\(\)\)/);
+  assert.match(learningSource, /<button type="button" value=\{word\} onclick=\{selectDefinition\}/);
+  assert.doesNotMatch(learningSource, /submitDefinition/);
+  assert.doesNotMatch(learningSource, /<form class="definition-options"/);
   assert.match(learningSource, /insertLearningRepeat\(queue, position, currentWord\)/);
   assert.match(learningSource, /if \(nextWordKey === choiceWordKey && nextSectionKey === choiceSectionKey\) return/);
+  assert.match(learningSource, /untrack\(\(\) => resetDefinitionChoices\(\)\)/);
   assert.match(learningSource, /word === selectedChoice/);
-  assert.match(learningSource, /window\.setTimeout\(advance, 520\)/);
+  assert.match(learningSource, /advanceTimer = window\.setTimeout\(\(\) => advance\(\), 520\)/);
+  assert.match(learningSource, /onCorrect\(\)/);
+});
+
+test('portrait safeguards and persistent optional success sounds remain wired at the application shell', () => {
+  assert.match(layoutSource, /screen\.orientation/);
+  assert.match(layoutSource, /gesturestart/);
+  assert.match(layoutSource, /@media \(orientation:landscape\)/);
+  assert.match(pageSource, /SOUND_KEY = 'wordcircle-sound'/);
+  assert.match(pageSource, /playSuccessSound\(sound, 'circle'\)/);
+  assert.match(pageSource, /playSuccessSound\(sound, 'wordle'\)/);
+  assert.match(pageSource, /playSuccessSound\(sound, 'vocab'\)/);
+  assert.match(soundSource, /AudioContext/);
 });
 
 test('learning prompts wait for voices, prefer the selected language, and cancel speech on card changes', () => {

@@ -21,6 +21,9 @@ test('direct mode routes reuse the WordCircle page component', async () => {
 
 test('loading mark appears only during startup or genuine navigation and respects motion preferences', () => {
   assert.match(layoutSource, /\{#if !hydrated \|\| navigating\.to\}/);
+  assert.match(layoutSource, /class="portrait-guard"/);
+  assert.match(layoutSource, /@media \(orientation:landscape\)/);
+  assert.match(layoutSource, /gesturestart/);
   assert.match(loaderSource, /class="startup-loader" role="status"/);
   assert.match(loaderSource, /animation:startup-spin \.82s linear infinite/);
   assert.match(loaderSource, /@media \(prefers-reduced-motion:reduce\) \{ \.startup-mark/);

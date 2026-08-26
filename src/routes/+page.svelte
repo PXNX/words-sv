@@ -17,8 +17,9 @@ import wordsEnA1 from '$lib/data/words.en.a1.json';
 import wordsEnC1 from '$lib/data/words.en.c1.json';
 	import wordsEnC2 from '$lib/data/words.en.c2.json';
 	import definitionsEn from '$lib/data/definitions.en.json';
-	import LearningMode from '$lib/LearningMode.svelte';
-	import WordleMode from '$lib/WordleMode.svelte';
+		import LearningMode from '$lib/LearningMode.svelte';
+		import WordleMode from '$lib/WordleMode.svelte';
+		import { playSuccessSound } from '$lib/sounds';
 	import { m } from '$lib/paraglide/messages';
   import { getTextDirection, setLocale, type Locale } from '$lib/paraglide/runtime';
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
@@ -30,8 +31,10 @@ import wordsEnC1 from '$lib/data/words.en.c1.json';
   import IconLanguage from '~icons/material-symbols/language-rounded';
   import IconTelegram from '~icons/fa6-brands/telegram';
   import IconLight from '~icons/material-symbols/light-mode-rounded';
-  import IconSettings from '~icons/material-symbols/settings-rounded';
-  import IconVibrate from '~icons/material-symbols/vibration-rounded';
+	  import IconSettings from '~icons/material-symbols/settings-rounded';
+	  import IconVibrate from '~icons/material-symbols/vibration-rounded';
+	  import IconVolume from '~icons/material-symbols/volume-up-rounded';
+	  import IconVolumeOff from '~icons/material-symbols/volume-off-rounded';
 
 	type Language = 'de' | 'en';
 	type GameMode = 'crossword' | 'wordle' | 'learning';
@@ -68,7 +71,8 @@ const interfaceLocales = [
   const LANGUAGE_KEY = 'wordcircle-language-v1';
 	const INTERFACE_LOCALE_KEY = 'wordcircle-interface-locale-v1';
 	const GAME_MODE_KEY = 'wordcircle-mode-v1';
-  const TUTORIAL_STATE_KEY = 'wordcircle-tutorial-state-v1';
+	  const TUTORIAL_STATE_KEY = 'wordcircle-tutorial-state-v1';
+	  const SOUND_KEY = 'wordcircle-sound';
 	const modePaths: Record<GameMode, string> = { crossword: '/circle', wordle: '/wordle', learning: '/vocab' };
 	function routeModeFromPath(pathname: string): GameMode | null {
 		const normalized = pathname.replace(/\/+$/, '') || '/';
@@ -76,7 +80,8 @@ const interfaceLocales = [
 	}
 
   const initialTheme: Theme = typeof localStorage !== 'undefined' && localStorage.getItem('wordcircle-theme') === 'dark' ? 'dark' : 'light';
-  const initialVibration = typeof localStorage === 'undefined' || localStorage.getItem('wordcircle-vibration') !== 'off';
+	  const initialVibration = typeof localStorage === 'undefined' || localStorage.getItem('wordcircle-vibration') !== 'off';
+	  const initialSound = typeof localStorage === 'undefined' || localStorage.getItem(SOUND_KEY) !== 'off';
   const initialBackwardWords = typeof localStorage !== 'undefined' && localStorage.getItem(BACKWARD_WORDS_KEY) === 'on';
   const initialVocabularyLevel = readVocabularyLevel();
   const initialIncludeLowerVocabulary = typeof localStorage !== 'undefined' && localStorage.getItem(INCLUDE_LOWER_VOCABULARY_KEY) === 'on';
@@ -86,7 +91,7 @@ const interfaceLocales = [
   const initialCompletedRounds = readCompletedRounds();
   const initialRecentBases = readRecentBases();
   const initialTutorialState = typeof localStorage === 'undefined' ? null : localStorage.getItem(TUTORIAL_STATE_KEY);
-  const initialTutorialOpen = initialTutorialState === 'open' || (initialTutorialState !== 'complete' && !initialGame && initialCompletedRounds === 0);
+	  const initialTutorialOpen = routeModeFromPath(page.url.pathname) !== 'wordle' && (initialTutorialState === 'open' || (initialTutorialState !== 'complete' && !initialGame && initialCompletedRounds === 0));
   const CIRCLE = 146;
   const LETTER_RADIUS = 120;
   const tutorialRounds: Record<Language, Round> = {
@@ -97,7 +102,8 @@ const interfaceLocales = [
   let lang = $state<Language>(initialGame?.language ?? initialLanguage);
   let interfaceLocale = $state<InterfaceLocale>(initialInterfaceLocale);
   let theme = $state<Theme>(initialTheme);
-  let vibration = $state(initialVibration);
+	  let vibration = $state(initialVibration);
+	  let sound = $state(initialSound);
   let allowBackwardWords = $state(initialBackwardWords);
   let vocabularyLevel = $state<VocabularyLevel>(initialGame?.vocabularyLevel ?? initialVocabularyLevel);
   let includeLowerVocabulary = $state(initialGame?.includeLowerVocabulary ?? initialIncludeLowerVocabulary);
@@ -124,12 +130,13 @@ const interfaceLocales = [
 		let gameMode = $state<GameMode>(routeModeFromPath(page.url.pathname) ?? readGameMode());
 	let idleHintReady = $state(false);
 let revealedHintWord = $state<string | null>(null);
-let idleHintTimer: number | null = null;
+	  let idleHintTimer: number | null = null;
+	  let wordleTutorialRequest = $state(0);
 
   const labels = $derived.by(() => {
     const options = { locale: interfaceLocale };
     return {
-      label: m.label({}, options), hint: m.hint({}, options), allDone: m.all_done({}, options), time: m.time({}, options), continue: m.continue({}, options), explain: m.explain({}, options), install: m.install({}, options), installHint: m.install_hint({}, options), gameLanguage: m.game_language({}, options), interfaceLanguage: m.interface_language({}, options), vocabulary: m.vocabulary({}, options), includeLower: m.include_lower({}, options), appearance: m.appearance({}, options), light: m.light({}, options), dark: m.dark({}, options), settings: m.settings({}, options), vibration: m.vibration({}, options), backwards: m.backwards({}, options), settingsHint: m.settings_hint({}, options), completed: m.completed({}, options), tracePrompt: m.trace_prompt({}, options), traceActive: m.trace_active({}, options), tutorial: m.tutorial({}, options), tutorialKicker: m.tutorial_kicker({}, options), tutorialTitle: m.tutorial_title({}, options), tutorialTrace: m.tutorial_trace({}, options), tutorialGrid: m.tutorial_grid({}, options), tutorialHelp: m.tutorial_help({}, options), tutorialStart: m.tutorial_start({}, options), tutorialRestart: m.tutorial_restart({}, options), telegramShare: m.telegram_share({}, options), contentGroup: m.content_group({}, options), behaviorGroup: m.behavior_group({}, options), idleHint: m.idle_hint({}, options), mode: m.mode({}, options), modeCrossword: m.mode_crossword({}, options), modeWordle: m.mode_wordle({}, options), modeLearning: m.mode_learning({}, options), wordleTitle: m.wordle_title({}, options), wordleSubtitle: m.wordle_subtitle({}, options), wordleEmpty: m.wordle_empty({}, options), wordleInput: m.wordle_input({}, options), wordleSubmit: m.wordle_submit({}, options), wordleInvalid: m.wordle_invalid({}, options), wordleWin: m.wordle_win({}, options), wordleAgain: m.wordle_again({}, options), learningTitle: m.learning_title({}, options), learningListen: m.learning_listen({}, options), learningAgain: m.learning_again({}, options), learningKnown: m.learning_known({}, options), learningSection: m.learning_section({}, options), learningUnavailable: m.learning_unavailable({}, options), learningDefinition: m.learning_definition({}, options), learningSpeechUnavailable: m.learning_speech_unavailable({}, options), learningChooseDefinition: m.learning_choose_definition({}, options), learningCorrect: m.learning_correct({}, options), learningTryAgain: m.learning_try_again({}, options)
+	      label: m.label({}, options), hint: m.hint({}, options), allDone: m.all_done({}, options), time: m.time({}, options), continue: m.continue({}, options), explain: m.explain({}, options), install: m.install({}, options), installHint: m.install_hint({}, options), gameLanguage: m.game_language({}, options), interfaceLanguage: m.interface_language({}, options), vocabulary: m.vocabulary({}, options), includeLower: m.include_lower({}, options), appearance: m.appearance({}, options), light: m.light({}, options), dark: m.dark({}, options), settings: m.settings({}, options), vibration: m.vibration({}, options), sound: m.sound({}, options), backwards: m.backwards({}, options), settingsHint: m.settings_hint({}, options), completed: m.completed({}, options), tracePrompt: m.trace_prompt({}, options), traceActive: m.trace_active({}, options), tutorial: m.tutorial({}, options), tutorialKicker: m.tutorial_kicker({}, options), tutorialTitle: m.tutorial_title({}, options), tutorialTrace: m.tutorial_trace({}, options), tutorialGrid: m.tutorial_grid({}, options), tutorialHelp: m.tutorial_help({}, options), tutorialStart: m.tutorial_start({}, options), tutorialRestart: m.tutorial_restart({}, options), telegramShare: m.telegram_share({}, options), contentGroup: m.content_group({}, options), behaviorGroup: m.behavior_group({}, options), idleHint: m.idle_hint({}, options), mode: m.mode({}, options), modeCrossword: m.mode_crossword({}, options), modeWordle: m.mode_wordle({}, options), modeLearning: m.mode_learning({}, options), wordleTitle: m.wordle_title({}, options), wordleSubtitle: m.wordle_subtitle({}, options), wordleEmpty: m.wordle_empty({}, options), wordleInput: m.wordle_input({}, options), wordleSubmit: m.wordle_submit({}, options), wordleInvalid: m.wordle_invalid({}, options), wordleWin: m.wordle_win({}, options), wordleAgain: m.wordle_again({}, options), wordleTutorialTitle: m.wordle_tutorial_title({}, options), wordleTutorialExplain: m.wordle_tutorial_explain({}, options), wordleTutorialPrompt: m.wordle_tutorial_prompt({}, options), wordleTutorialComplete: m.wordle_tutorial_complete({}, options), wordleTutorialRepeat: m.wordle_tutorial_repeat({}, options), learningTitle: m.learning_title({}, options), learningListen: m.learning_listen({}, options), learningAgain: m.learning_again({}, options), learningKnown: m.learning_known({}, options), learningSection: m.learning_section({}, options), learningUnavailable: m.learning_unavailable({}, options), learningDefinition: m.learning_definition({}, options), learningSpeechUnavailable: m.learning_speech_unavailable({}, options), learningChooseDefinition: m.learning_choose_definition({}, options), learningCorrect: m.learning_correct({}, options), learningTryAgain: m.learning_try_again({}, options)
     };
   });
   const interfaceDirection = $derived(getTextDirection(interfaceLocale));
@@ -166,7 +173,8 @@ let idleHintTimer: number | null = null;
 			if (routedMode && routedMode !== gameMode) gameMode = routedMode;
 		});
   $effect(() => { localStorage.setItem(INTERFACE_LOCALE_KEY, interfaceLocale); document.documentElement.lang = interfaceLocale; document.documentElement.dir = interfaceDirection; void setLocale(interfaceLocale, { reload: false }); });
-  $effect(() => { localStorage.setItem('wordcircle-vibration', vibration ? 'on' : 'off'); });
+	  $effect(() => { localStorage.setItem('wordcircle-vibration', vibration ? 'on' : 'off'); });
+	  $effect(() => { localStorage.setItem(SOUND_KEY, sound ? 'on' : 'off'); });
   $effect(() => { localStorage.setItem(BACKWARD_WORDS_KEY, allowBackwardWords ? 'on' : 'off'); });
   $effect(() => { if ((vocabularyLevel === 'a1' || requiresCumulativePool(lang, vocabularyLevel)) && !includeLowerVocabulary) includeLowerVocabulary = vocabularyLevel !== 'a1'; localStorage.setItem(VOCABULARY_LEVEL_KEY, vocabularyLevel); localStorage.setItem(INCLUDE_LOWER_VOCABULARY_KEY, includeLowerVocabulary ? 'on' : 'off'); });
   $effect(() => { localStorage.setItem(ROUND_TOTAL_KEY, String(completedRounds)); });
@@ -421,6 +429,7 @@ let idleHintTimer: number | null = null;
 			settingsOpen = false;
 			if (page.url.pathname !== modePaths[nextMode]) void goto(modePaths[nextMode]);
 		}
+		function replayWordleTutorial() { wordleTutorialRequest += 1; selectMode('wordle'); }
   function selectInterfaceLocale(nextLocale: InterfaceLocale) { interfaceLocale = nextLocale; }
   function selectInterfaceLocaleFromEvent(event: Event) { const nextLocale = (event.currentTarget as HTMLSelectElement).value; if (isInterfaceLocale(nextLocale)) selectInterfaceLocale(nextLocale); }
   function selectTutorialLanguage(nextLocale: InterfaceLocale) { interfaceLocale = nextLocale; }
@@ -438,9 +447,10 @@ let idleHintTimer: number | null = null;
   function submitWord() {
     const word = activeWord;
     feedbackWord = word;
-    if (currentRound.words.includes(word) && !solvedSet.has(word)) {
+	    if (currentRound.words.includes(word) && !solvedSet.has(word)) {
       const completed = solvedWords.length + 1 === currentRound.words.length;
-      solvedWords = [...solvedWords, word]; feedback = 'correct'; buzz(completed ? [24, 28, 40, 28, 70] : [16, 20, 26]);
+	      solvedWords = [...solvedWords, word]; feedback = 'correct'; buzz(completed ? [24, 28, 40, 28, 70] : [16, 20, 26]);
+	      playSuccessSound(sound, 'circle');
       if (completed) { completedDuration = Math.max(0, Date.now() - startedAt); if (!tutorialPractice) completedRounds += 1; celebration = true; }
     } else { feedback = 'wrong'; shakeGrid = true; buzz([18, 18, 18]); window.setTimeout(() => (shakeGrid = false), 280); }
     selectedPath = [];
@@ -494,7 +504,7 @@ let idleHintTimer: number | null = null;
         <div class="settings-intro"><span class="brand-mark" aria-hidden="true"><i></i><b></b></span><div><strong>WordCircle</strong><p>{labels.settingsHint}</p></div></div>
         <section class="settings-group" aria-labelledby="mode-settings-heading"><h2 id="mode-settings-heading">{labels.mode}</h2><div class="setting-row mode-picker"><span>{labels.mode}</span><div class="segmented"><button class:chosen={gameMode === 'crossword'} onclick={() => selectMode('crossword')}>{labels.modeCrossword}</button><button class:chosen={gameMode === 'wordle'} onclick={() => selectMode('wordle')}>{labels.modeWordle}</button><button class:chosen={gameMode === 'learning'} onclick={() => selectMode('learning')}>{labels.modeLearning}</button></div></div></section>
         <section class="settings-group" aria-labelledby="content-settings-heading"><h2 id="content-settings-heading">{labels.contentGroup}</h2><div class="setting-row"><span>{labels.gameLanguage}</span><div class="segmented"><button class:chosen={lang === 'de'} onclick={() => selectLanguage('de')}>DE</button><button class:chosen={lang === 'en'} onclick={() => selectLanguage('en')}>EN</button></div></div><div class="setting-row vocabulary-row"><span>{labels.vocabulary}</span><div class="segmented level-segmented">{#each vocabularyLevels as level}<button class:chosen={vocabularyLevel === level} onclick={() => selectVocabularyLevel(level)}>{level.toUpperCase()}</button>{/each}</div></div>{#if vocabularyLevel !== 'a1'}<div class="setting-row vibration-row include-lower-row"><span>{labels.includeLower}</span><input aria-label={labels.includeLower} type="checkbox" class="toggle toggle-sm" checked={includeLowerVocabulary} onchange={(event) => selectIncludeLowerVocabulary((event.currentTarget as HTMLInputElement).checked)} /></div>{/if}<div class="setting-row vibration-row"><span>{labels.backwards}</span><input aria-label={labels.backwards} type="checkbox" class="toggle toggle-sm" checked={allowBackwardWords} onchange={(event) => selectBackwardWords((event.currentTarget as HTMLInputElement).checked)} /></div></section>
-        <section class="settings-group" aria-labelledby="behavior-settings-heading"><h2 id="behavior-settings-heading">{labels.behaviorGroup}</h2><label class="setting-row interface-locale-row"><span class="setting-label"><IconLanguage aria-hidden="true" />{labels.interfaceLanguage}</span><select aria-label={labels.interfaceLanguage} value={interfaceLocale} onchange={selectInterfaceLocaleFromEvent}>{#each interfaceLocales as locale}<option value={locale.code}>{locale.label}</option>{/each}</select></label><div class="setting-row"><span>{labels.appearance}</span><div class="segmented"><button class:chosen={theme === 'light'} onclick={() => (theme = 'light')}><IconLight />{labels.light}</button><button class:chosen={theme === 'dark'} onclick={() => (theme = 'dark')}><IconDark />{labels.dark}</button></div></div><div class="setting-row vibration-row"><span><IconVibrate />{labels.vibration}</span><input aria-label={labels.vibration} type="checkbox" class="toggle toggle-sm" bind:checked={vibration} /></div><div class="setting-row tutorial-restart-row"><span>{labels.tutorial}</span><button onclick={restartTutorial}>{labels.tutorialRestart}</button></div><div class="setting-row completion-total"><span>{labels.completed}</span><strong>{completedRounds}</strong></div></section>
+	        <section class="settings-group" aria-labelledby="behavior-settings-heading"><h2 id="behavior-settings-heading">{labels.behaviorGroup}</h2><label class="setting-row interface-locale-row"><span class="setting-label"><IconLanguage aria-hidden="true" />{labels.interfaceLanguage}</span><select aria-label={labels.interfaceLanguage} value={interfaceLocale} onchange={selectInterfaceLocaleFromEvent}>{#each interfaceLocales as locale}<option value={locale.code}>{locale.label}</option>{/each}</select></label><div class="setting-row"><span>{labels.appearance}</span><div class="segmented"><button class:chosen={theme === 'light'} onclick={() => (theme = 'light')}><IconLight />{labels.light}</button><button class:chosen={theme === 'dark'} onclick={() => (theme = 'dark')}><IconDark />{labels.dark}</button></div></div><div class="setting-row vibration-row"><span><IconVibrate />{labels.vibration}</span><input aria-label={labels.vibration} type="checkbox" class="toggle toggle-sm" bind:checked={vibration} /></div><div class="setting-row vibration-row"><span>{#if sound}<IconVolume />{:else}<IconVolumeOff />{/if}{labels.sound}</span><input aria-label={labels.sound} type="checkbox" class="toggle toggle-sm" bind:checked={sound} /></div><div class="setting-row tutorial-restart-row"><span>{labels.tutorial}</span><button onclick={restartTutorial}>{labels.tutorialRestart}</button></div><div class="setting-row tutorial-restart-row"><span>{labels.wordleTitle}</span><button onclick={replayWordleTutorial}>{labels.wordleTutorialTitle}</button></div><div class="setting-row completion-total"><span>{labels.completed}</span><strong>{completedRounds}</strong></div></section>
         {#if telegramHref}<a class="settings-telegram" href={telegramHref} target="_blank" rel="noreferrer" lang={interfaceLocale} dir={interfaceDirection}><IconTelegram aria-hidden="true" /><span>{labels.telegramShare}</span></a>{/if}
         <a class="settings-github" href="https://github.com/PXNX/words-sv" target="_blank" rel="noreferrer"><IconGithub aria-hidden="true" /><span>GitHub · PXNX/words-sv</span></a>
       </aside>
@@ -557,9 +567,9 @@ let idleHintTimer: number | null = null;
       </svg>
     </div>
     {:else if gameMode === 'wordle'}
-      <WordleMode words={modeLevelWords} level={vocabularyLevel} labels={{ title: labels.wordleTitle, subtitle: labels.wordleSubtitle, empty: labels.wordleEmpty, input: labels.wordleInput, submit: labels.wordleSubmit, invalid: labels.wordleInvalid, win: labels.wordleWin, again: labels.wordleAgain }} />
+	      <WordleMode words={modeLevelWords} level={vocabularyLevel} language={lang} tutorialRequested={wordleTutorialRequest} onGreen={() => playSuccessSound(sound, 'wordle')} labels={{ title: labels.wordleTitle, subtitle: labels.wordleSubtitle, empty: labels.wordleEmpty, input: labels.wordleInput, submit: labels.wordleSubmit, invalid: labels.wordleInvalid, win: labels.wordleWin, again: labels.wordleAgain, tutorialTitle: labels.wordleTutorialTitle, tutorialExplain: labels.wordleTutorialExplain, tutorialPrompt: labels.wordleTutorialPrompt, tutorialComplete: labels.wordleTutorialComplete, tutorialRepeat: labels.wordleTutorialRepeat }} />
     {:else}
-      <LearningMode words={modeLevelWords} definitions={wordDefinitions[lang]} language={lang} level={vocabularyLevel} labels={{ title: labels.learningTitle, listen: labels.learningListen, again: labels.learningAgain, known: labels.learningKnown, section: labels.learningSection, unavailable: labels.learningUnavailable, speechUnavailable: labels.learningSpeechUnavailable, chooseDefinition: labels.learningChooseDefinition, correct: labels.learningCorrect, tryAgain: labels.learningTryAgain }} />
+	      <LearningMode words={modeLevelWords} definitions={wordDefinitions[lang]} language={lang} level={vocabularyLevel} onCorrect={() => playSuccessSound(sound, 'vocab')} labels={{ title: labels.learningTitle, listen: labels.learningListen, again: labels.learningAgain, known: labels.learningKnown, section: labels.learningSection, unavailable: labels.learningUnavailable, speechUnavailable: labels.learningSpeechUnavailable, chooseDefinition: labels.learningChooseDefinition, correct: labels.learningCorrect, tryAgain: labels.learningTryAgain }} />
     {/if}
   </section>
 </main>
