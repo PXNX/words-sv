@@ -208,13 +208,16 @@
 - [x] Reale DE/EN-Browserstimmen prüfen oder die technische Sandbox-Einschränkung der Live-Audio-Verifikation dokumentieren.
 - [x] Wordle-Eingabefeld für Touch- und Tastatureingabe sichtbar vergrößern, ohne das mobile Layout zu überfüllen.
 - [x] Gültige fünfstellige Wordle-Wörter des exakten ausgewählten CEFR-Pools nach der Eingabe automatisch prüfen; ungültige Wörter weiterhin erst mit klarer Rückmeldung behandeln.
-- [ ] Automatische Wordle-Prüfung, manuelle Check-Aktion, ungültige Eingabe, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
+- [x] Automatische Wordle-Prüfung, manuelle Check-Aktion, ungültige Eingabe, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
 - [x] Beim initialen Laden einen kurzen WordCircle-Ladezustand mit rotierenden Kreisen zeigen und dabei reduzierte Bewegung respektieren.
-- [ ] Ladezeichen, Wordle-Änderungen, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
+- [x] Ladezeichen, Wordle-Änderungen, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
 - [x] Direkte statische Routen /circle, /wordle und /vocab den jeweiligen Spielmodi zuordnen.
 - [x] Einstellungen, lokale Modusauswahl, Browser-Zurück/Vorwärts und URL beim Wechsel eines Spielmodus konsistent synchronisieren.
-- [ ] Direkte Routen, Auto-Prüfung, Ladezeichen, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
-- [ ] Passende WordCircle-404-Seite für unbekannte Routen mit klarer Rückkehr zu /circle gestalten.
+- [x] Direkte Routen, Auto-Prüfung, Ladezeichen, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
+- [x] Passende WordCircle-404-Seite für unbekannte Routen mit klarer Rückkehr zu /circle gestalten.
 - [x] Ladezeichen nur für echte App-Initialisierung oder Navigation zeigen, statt bei jeder bereits bereiten Seitenansicht.
-- [ ] 404, echtes Ladeverhalten, direkte Routen, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
-- [ ] Vercel-Routing auf explizite Modus-Routen begrenzen und eine statische WordCircle-404-Datei für unbekannte Produktionspfade ausliefern.
+- [x] 404, echtes Ladeverhalten, direkte Routen, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
+- [x] Vercel-Routing auf explizite Modus-Routen begrenzen und eine statische WordCircle-404-Datei für unbekannte Produktionspfade ausliefern.
+- [ ] Großes Wordle-Eingabefeld und Check-Schaltfläche entfernen; Buchstabengitter und Bildschirmtastatur als einzige Eingabe behalten.
+- [ ] Fünf über die Bildschirmtastatur gewählte Buchstaben als gültiges exaktes Stufenwort automatisch werten und ungültige Folgen klar rückmelden.
+- [ ] Keyboard-only-Wordle, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
