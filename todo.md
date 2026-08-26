@@ -188,3 +188,6 @@
 - [x] Eingabe, gruppierte Einstellungen, Idle-Hinweis, statischen Build und Vercel-Deployment prüfen und veröffentlichen.
 - [x] Nur ausgewählte Buchstabenblasen um vier Pixel gegenüber dem Grundzustand vergrößern und den Abstand zwischen allen Blasen erhöhen.
 - [x] Verfeinerte Blasenauswahl lokal und auf Vercel prüfen und veröffentlichen.
+- [x] Blasen auf einen nochmals weiteren Orbit verteilen und die Auswahl bei insgesamt vier Pixel zusätzlichem Durchmesser halten.
+- [x] Nach dem Lösen eines Grids das Eingabefeld vollständig durch das zentrierte Weiter-Menü ersetzen.
+- [ ] Erweiterte Rad- und Abschlussdarstellung lokal und auf Vercel prüfen und veröffentlichen.

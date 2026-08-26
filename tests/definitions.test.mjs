@@ -56,8 +56,10 @@ test('every playable level can generate a definition-backed idle-hint base', () 
   }
 });
 
-test('letter selection adds only four pixels to the base bubble diameter and increases bubble separation', () => {
-  assert.match(pageSource, /const LETTER_RADIUS = 114;/);
+test('letter selection adds only four pixels to the base bubble diameter, uses the wider orbit, and replaces input content on completion', () => {
+  assert.match(pageSource, /const LETTER_RADIUS = 120;/);
   assert.match(pageSource, /<circle r="30"><\/circle>/);
   assert.match(pageSource, /transform:scale\(1\.066667\)/);
+  assert.match(pageSource, /\{#if celebration\}[\s\S]*class="completion-inline"[\s\S]*\{:else\}[\s\S]*class="selected-word"/);
+  assert.match(pageSource, /\.selection-area\.completion-area \{ display:flex;align-items:center;justify-content:center;height:70px;min-height:70px;padding:0; \}/);
 });

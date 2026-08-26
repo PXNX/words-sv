@@ -17,3 +17,7 @@ For the later bubble-spacing refinement, the local English tutorial wheel was op
 After the local development hot-reload reset the tutorial overlay, the same English practice board restarted successfully and retained the widened unselected-bubble spacing.
 
 The Vercel release for commit `730a4fe` was opened directly. Its six unselected bubbles were visibly farther apart on the widened orbit; the exact selected-state scale is additionally covered by the published regression test.
+
+For the completion-area refinement, a completed German `GARTEN · GAS · TEE` round was staged in the local browser using the same persisted game shape read by the app. The page was then reloaded to verify its solved-grid state.
+
+The completed state showed the centered success summary and **Continue** control in the full input rail directly above the wheel. The normal word-preview, settings trigger, and idle-hint control were absent from that rail, confirming that the continue menu replaces rather than accompanies the input.
