@@ -30,5 +30,14 @@
   "tutorial_help": "After a correct word, the question mark opens an explanation.",
   "tutorial_start": "Start playing",
   "tutorial_restart": "View tutorial again",
-  "telegram_share": "Helpful? Send a ❤️ and share it with your friends! ✈️"
+  "telegram_share": "Helpful? Send a ❤️ and share it with your friends! ✈️",
+  "cooperate": "Play together",
+  "share_round": "Share round",
+  "invite_copied": "Invite copied",
+  "invite_ready": "Invite ready",
+  "players": "players",
+  "teammate_solved": "Teammate solved",
+  "already_solved": "Already solved",
+  "leave_coop": "Leave shared round",
+  "coop_unavailable": "Shared round is unavailable"
 }

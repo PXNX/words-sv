@@ -30,5 +30,14 @@
   "tutorial_help": "بعد الإجابة الصحيحة، تفتح علامة الاستفهام شرحًا.",
   "tutorial_start": "ابدأ اللعب",
   "tutorial_restart": "شاهد الدليل مجددًا",
-  "telegram_share": ""
+  "telegram_share": "",
+  "cooperate": "العبوا معًا",
+  "share_round": "مشاركة الجولة",
+  "invite_copied": "تم نسخ الدعوة",
+  "invite_ready": "الدعوة جاهزة",
+  "players": "لاعبون",
+  "teammate_solved": "حل زميلك",
+  "already_solved": "تم الحل بالفعل",
+  "leave_coop": "مغادرة الجولة المشتركة",
+  "coop_unavailable": "الجولة المشتركة غير متاحة"
 }
