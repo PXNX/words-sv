@@ -10,7 +10,7 @@ const staticErrorSource = await readFile(new URL('../static/404.html', import.me
 const vercelConfig = JSON.parse(await readFile(new URL('../vercel.json', import.meta.url), 'utf8'));
 
 test('direct mode routes reuse the WordCircle page component', async () => {
-  for (const route of ['circle', 'wordle', 'vocab']) {
+	for (const route of ['circle', 'wordle', 'vocab', 'settings']) {
     const source = await readFile(new URL(`../src/routes/${route}/+page.svelte`, import.meta.url), 'utf8');
     assert.match(source, /import WordCircle from '\.\.\/\+page\.svelte'/);
     assert.match(source, /<WordCircle\s*\/>/);
@@ -43,8 +43,8 @@ test('unknown routes receive a branded 404 page with a clear return route', () =
 });
 
 test('Vercel keeps static files first and falls back to the app for direct mode routes', () => {
-  assert.deepEqual(vercelConfig.routes, [
-    { handle: 'filesystem' },
-    { src: '/(circle|wordle|vocab)/?', dest: '/index.html' }
-  ]);
+	assert.deepEqual(vercelConfig.routes, [
+		{ handle: 'filesystem' },
+		{ src: '/(circle|wordle|vocab|settings)/?', dest: '/index.html' }
+	]);
 });
