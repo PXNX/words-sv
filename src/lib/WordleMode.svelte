@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { evaluateWordleGuess, fiveLetterWords, normalizePlayableWord } from '$lib/modes.js';
+  import { evaluateWordleGuess, fiveLetterWords, isValidWordleGuess, normalizePlayableWord } from '$lib/modes.js';
 
   type WordleMark = 'correct' | 'present' | 'absent';
   type Entry = { word: string; marks: WordleMark[] };
@@ -34,7 +34,8 @@
 
   function submit() {
     const normalized = normalizePlayableWord(guess);
-    if (!candidates.includes(normalized)) {
+    if (won || exhausted) return;
+    if (!isValidWordleGuess(candidates, normalized)) {
       notice = labels.invalid;
       return;
     }
@@ -58,6 +59,14 @@
     words;
     level;
     start();
+  });
+
+  $effect(() => {
+    guess;
+    candidates;
+    won;
+    exhausted;
+    if (!won && !exhausted && isValidWordleGuess(candidates, guess)) submit();
   });
 </script>
 
@@ -108,7 +117,7 @@
   .mode-view { flex:1 1 auto;min-height:0;display:grid;align-content:start;gap:.8rem;padding:clamp(.8rem,3vw,1.25rem);overflow:auto;background:linear-gradient(180deg,rgba(237,228,213,.8),rgba(255,253,247,.65));border-top:3px double #172a45; }
   .mode-header { text-align:center; }.mode-header span { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.14em; }.mode-header h1 { margin:.15rem 0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.65rem,6vw,2.4rem);font-weight:400;line-height:1; }.mode-header p { margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.67rem;font-weight:700;line-height:1.35; }
   .wordle-grid { display:grid;justify-content:center;gap:.3rem; }.wordle-row { display:grid;grid-template-columns:repeat(5,clamp(2rem,9vw,2.7rem));gap:.3rem; }.wordle-row span { display:grid;place-items:center;aspect-ratio:1;border:1px solid rgba(23,42,69,.34);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:clamp(.9rem,4vw,1.2rem);font-weight:900; }.wordle-row span.correct { border-color:#34824d;background:#34824d;color:#fffdf7; }.wordle-row span.present { border-color:#d39723;background:#e6a527;color:#172a45; }.wordle-row span.absent { border-color:#69727a;background:#69727a;color:#fffdf7; }
-  .wordle-form { display:flex;justify-content:center;gap:.4rem; }.wordle-form input { width:min(15rem,58vw);min-height:2.25rem;padding:0 .6rem;border:1px solid #172a45;background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase; }.wordle-form button,.mode-reset { min-height:2.25rem;padding:0 .75rem;border:1px solid #172a45;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.59rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }.wordle-form button:disabled,.wordle-keyboard button:disabled { opacity:.45; }
+  .wordle-form { width:min(100%,26rem);display:flex;justify-content:center;gap:.5rem;margin-inline:auto; }.wordle-form input { flex:1 1 auto;min-width:0;width:clamp(13rem,66vw,21rem);min-height:3rem;padding:0 .85rem;border:1px solid #172a45;background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:clamp(1rem,4.5vw,1.2rem);font-weight:800;letter-spacing:.12em;text-transform:uppercase; }.wordle-form button,.mode-reset { min-height:3rem;padding:0 .85rem;border:1px solid #172a45;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }.wordle-form button:disabled,.wordle-keyboard button:disabled { opacity:.45; }
   .mode-notice { min-height:1rem;margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:800;text-align:center; }.mode-notice.success { color:#34824d; }.mode-reset { justify-self:center;background:#34824d;border-color:#34824d; }
   .wordle-keyboard { display:grid;gap:.23rem;justify-content:center; }.wordle-keyboard>div { display:flex;justify-content:center;gap:.2rem; }.wordle-keyboard button { min-width:clamp(1.25rem,6vw,1.8rem);height:1.8rem;border:1px solid rgba(23,42,69,.28);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:900; }.wordle-utility button { min-width:2rem; }
   .mode-empty { padding:1.25rem;border:1px solid rgba(164,94,56,.42);background:rgba(164,94,56,.08);color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:800;text-align:center; }

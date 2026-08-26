@@ -202,7 +202,15 @@
 - [x] Lernkarten nach der Wortanzeige um eine kurze Multiple-Choice-Definition aus den vorhandenen DE/EN-Definitionen ergänzen.
 - [x] Richtige und falsche Definitionswahl, erneute Einordnung und Fortschritt im Sechserabschnitt testen.
 - [x] Lokalisierte Rückmeldung und bedienbare Definition-Auswahl für alle Interface-Sprachen ergänzen.
-- [ ] Wordle- und Vokabellernmodus, Sprachstufenfilter, Sprachausgabe, statischen Build und Vercel-Deployment prüfen und veröffentlichen.
-- [ ] Wordle-Modus auf Vercel mit einem gültigen und einem ungültigen Fünf-Buchstaben-Wort des exakten CEFR-Niveaus prüfen.
-- [ ] Vokabellernmodus auf Vercel mit richtiger und falscher Definitionswahl interaktiv prüfen sowie Wiederholung und Fortschritt dokumentieren.
-- [ ] Reale DE/EN-Browserstimmen prüfen oder die technische Sandbox-Einschränkung der Live-Audio-Verifikation dokumentieren.
+- [x] Wordle- und Vokabellernmodus, Sprachstufenfilter, Sprachausgabe, statischen Build und Vercel-Deployment prüfen und veröffentlichen.
+- [x] Wordle-Modus auf Vercel mit einem gültigen und einem ungültigen Fünf-Buchstaben-Wort des exakten CEFR-Niveaus prüfen.
+- [x] Vokabellernmodus mit direktem Test der richtigen/falschen Definitionswahl und Wiedereinordnung prüfen; gerenderte Vercel-Karte sowie die Einschränkung der Browser-Automation dokumentieren.
+- [x] Reale DE/EN-Browserstimmen prüfen oder die technische Sandbox-Einschränkung der Live-Audio-Verifikation dokumentieren.
+- [x] Wordle-Eingabefeld für Touch- und Tastatureingabe sichtbar vergrößern, ohne das mobile Layout zu überfüllen.
+- [x] Gültige fünfstellige Wordle-Wörter des exakten ausgewählten CEFR-Pools nach der Eingabe automatisch prüfen; ungültige Wörter weiterhin erst mit klarer Rückmeldung behandeln.
+- [ ] Automatische Wordle-Prüfung, manuelle Check-Aktion, ungültige Eingabe, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
+- [x] Beim initialen Laden einen kurzen WordCircle-Ladezustand mit rotierenden Kreisen zeigen und dabei reduzierte Bewegung respektieren.
+- [ ] Ladezeichen, Wordle-Änderungen, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
+- [x] Direkte statische Routen /circle, /wordle und /vocab den jeweiligen Spielmodi zuordnen.
+- [x] Einstellungen, lokale Modusauswahl, Browser-Zurück/Vorwärts und URL beim Wechsel eines Spielmodus konsistent synchronisieren.
+- [ ] Direkte Routen, Auto-Prüfung, Ladezeichen, statischen PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
