@@ -120,7 +120,10 @@ test('portrait safeguards and persistent optional success sounds remain wired at
 	assert.match(pageSource, /class="home-games"/);
 	assert.match(pageSource, /nextMode === 'crossword' && localStorage\.getItem\(TUTORIAL_STATE_KEY\) !== 'complete'/);
 	assert.match(pageSource, /class="home-trigger" onclick=\{goHome\}/);
+	assert.match(pageSource, /function goSettings\(\) \{ tutorialOpen = false; void goto\('\/settings'\); \}/);
+	assert.match(pageSource, /class="settings-page"/);
 	assert.doesNotMatch(pageSource, /class="setting-row mode-picker"/);
+	assert.doesNotMatch(pageSource, /settingsOpen/);
 	assert.match(pageSource, /{#if gameMode === 'crossword'}/);
 });
 

@@ -251,3 +251,6 @@
 - [x] Portrait-Komposition beim Wechsel zu Landscape unverändert und aufrecht halten, ohne seitliches Umfließen oder Drehen der Benutzeroberfläche.
 - [x] Ungültige oder bereits verwendete Wordle-Eingaben unmittelbar aus der aktiven Reihe entfernen und klar rückmelden.
 - [x] Modusumschalter aus Einstellungen entfernen und Spielwahl ausschließlich über die Startseite anbieten.
+- [x] Home-Schaltfläche auf ein eindeutiges Haus-Icon reduzieren und weiterhin barrierefrei beschriften.
+- [x] Einstellungen aus den Spiel-Popups in eine direkte `/settings`-Seite mit denselben persistenten Steuerungen überführen.
+- [ ] Icon-Home, `/settings`-Navigation, Einstellungen-Persistenz, mobile Portrait-Darstellung und statisches Deployment prüfen und veröffentlichen.
