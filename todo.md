@@ -240,3 +240,14 @@
 - [x] Lokale mehrtägige, leistungsabhängige Vokabelwiederholung mit Fehlerrücksetzung und zunehmend größeren Erfolgsintervallen speichern.
 - [ ] Neue Einstiegs- und Vokabelflüsse inklusive Persistenz, Lokalisierungen, statischem PWA-Build und Vercel-Deployment prüfen und veröffentlichen.
 - [x] Landschaftshinweis entfernen und die Oberfläche stattdessen ohne sichtbare Rotationsaufforderung in ihrer Portrait-Komposition halten.
+- [ ] Tägliche Streak-Regel speichern: acht richtige Vokabelantworten oder eine vollständige Circle- beziehungsweise Wordle-Runde qualifizieren den Kalendertag.
+- [ ] Streak-Status, heutige Restaufgabe und verbleibende Zeit bis Tagesende auf der Startseite anzeigen.
+- [ ] Nutzerfreundliche Einwilligung und ausgewählten Versandweg für Zwei-Stunden- und Tagesstart-Erinnerungen ergänzen.
+- [ ] Streak-Rollover, Qualifikation, Root-Anzeige, Benachrichtigungstiming, PWA-Build und Deployment prüfen und veröffentlichen.
+- [x] Widersprüchlichen Sprachausgabe-Status bei sichtbarer Audiosteuerung beheben und den Vokabel-Prompt mit ausreichendem Kontrast darstellen.
+- [x] Auf Circle-, Wordle- und Vokabelseiten eine linke Home-Schaltfläche zur Startseite ergänzen.
+- [ ] Sprachstatus, Prompt-Kontrast, Home-Routing, mobile Darstellung, statischen PWA-Build und Deployment prüfen und veröffentlichen.
+- [ ] Push-Benachrichtigungsansatz von PXNX/psyops-sv prüfen und für die täglichen Streak-Erinnerungen übernehmen, soweit er zur WordCircle-PWA passt.
+- [x] Portrait-Komposition beim Wechsel zu Landscape unverändert und aufrecht halten, ohne seitliches Umfließen oder Drehen der Benutzeroberfläche.
+- [x] Ungültige oder bereits verwendete Wordle-Eingaben unmittelbar aus der aktiven Reihe entfernen und klar rückmelden.
+- [x] Modusumschalter aus Einstellungen entfernen und Spielwahl ausschließlich über die Startseite anbieten.

@@ -23,10 +23,12 @@ test('loading mark appears only during startup or genuine navigation and respect
 	assert.match(layoutSource, /\{#if !hydrated \|\| navigating\.to\}/);
 	assert.match(layoutSource, /@media \(orientation:landscape\)/);
 	assert.match(layoutSource, /gesturestart/);
-	assert.match(layoutSource, /width:min\(100svh,430px\)/);
+	assert.match(layoutSource, /width:min\(100svh,430px\);min-height:100svh/);
+	assert.doesNotMatch(layoutSource, /rotate\(90deg\)/);
 	assert.doesNotMatch(layoutSource, /Turn your device upright/);
 	assert.match(rootSource, /class="home-games"/);
 	assert.match(rootSource, /ROOT_ONBOARDING_KEY = 'wordcircle-root-onboarding-v1'/);
+	assert.doesNotMatch(rootSource, /mode-settings-heading/);
   assert.match(loaderSource, /class="startup-loader" role="status"/);
   assert.match(loaderSource, /animation:startup-spin \.82s linear infinite/);
   assert.match(loaderSource, /@media \(prefers-reduced-motion:reduce\) \{ \.startup-mark/);

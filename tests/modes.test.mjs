@@ -23,10 +23,11 @@ test('Wordle evaluation handles repeated letters without over-marking presents',
 test('Wordle auto-submits only exact-level valid five-letter guesses', () => {
   const a1Candidates = ['ACTOR', 'PENNY', 'APPLE'];
   assert.equal(isValidWordleGuess(a1Candidates, 'actor'), true);
-  assert.equal(isValidWordleGuess(a1Candidates, 'other'), false);
-  assert.equal(isValidWordleGuess(a1Candidates, 'ACT'), false);
-  assert.match(wordleSource, /if \(isValidWordleGuess\(candidates, nextGuess\)\) submit\(\)/);
-  assert.match(wordleSource, /else notice = labels\.invalid/);
+	assert.equal(isValidWordleGuess(a1Candidates, 'other'), false);
+	assert.equal(isValidWordleGuess(a1Candidates, 'ACT'), false);
+	assert.match(wordleSource, /entries\.some\(\(entry\) => entry\.word === normalized\)/);
+	assert.match(wordleSource, /notice = labels\.invalid;\n\s+guess = '';/);
+	assert.match(wordleSource, /if \(nextGuess\.length === 5\) \{\n\s+submit\(\);/);
   assert.doesNotMatch(wordleSource, /class="wordle-form"/);
   assert.doesNotMatch(wordleSource, /id="wordle-guess"/);
   assert.match(wordleSource, /onclick=\{\(\) => press\('ẞ'\)\}/);
@@ -118,13 +119,16 @@ test('portrait safeguards and persistent optional success sounds remain wired at
 	assert.match(pageSource, /function preferredInterfaceLocale\(\)/);
 	assert.match(pageSource, /class="home-games"/);
 	assert.match(pageSource, /nextMode === 'crossword' && localStorage\.getItem\(TUTORIAL_STATE_KEY\) !== 'complete'/);
+	assert.match(pageSource, /class="home-trigger" onclick=\{goHome\}/);
+	assert.doesNotMatch(pageSource, /class="setting-row mode-picker"/);
 	assert.match(pageSource, /{#if gameMode === 'crossword'}/);
 });
 
 test('learning prompts load available voices, use the selected language, and expose the large audio control', () => {
   assert.match(learningSource, /window\.speechSynthesis\.getVoices\(\)/);
   assert.match(learningSource, /addEventListener\('voiceschanged', refreshVoices\)/);
-	assert.match(learningSource, /speechStatus = voices\.length \? '' : labels\.speechUnavailable/);
+	assert.match(learningSource, /speechStatus = '';/);
+	assert.match(learningSource, /if \(!speechSupported \|\| !currentWord\)/);
 	assert.match(learningSource, /voice\.lang\.toLowerCase\(\)\.startsWith\(language\)/);
 	assert.match(learningSource, /disabled=\{!speechSupported\}/);
   assert.match(learningSource, /window\.speechSynthesis\.cancel\(\)/);
