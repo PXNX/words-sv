@@ -21,8 +21,9 @@ test('Wordle auto-submits only exact-level valid five-letter guesses', () => {
   assert.equal(isValidWordleGuess(a1Candidates, 'other'), false);
   assert.equal(isValidWordleGuess(a1Candidates, 'ACT'), false);
   assert.match(wordleSource, /isValidWordleGuess\(candidates, guess\)\) submit\(\)/);
-  assert.match(wordleSource, /width:clamp\(13rem,66vw,21rem\)/);
-  assert.match(wordleSource, /min-height:3rem/);
+  assert.match(wordleSource, /nextGuess\.length === 5 && !isValidWordleGuess\(candidates, nextGuess\)/);
+  assert.doesNotMatch(wordleSource, /class="wordle-form"/);
+  assert.doesNotMatch(wordleSource, /id="wordle-guess"/);
 });
 
 test('learning sections select no more than six unique level words', () => {

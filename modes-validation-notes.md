@@ -64,6 +64,10 @@ The local unknown-route page rendered the branded WordCircle 404 folio with its 
 
 Production commit `6bae188` successfully resolved the direct `/wordle` route. Its first unknown-route capture was blank immediately after navigation, so the production 404 view requires a load-state recheck before final verification.
 
+The follow-up static-404 repair, production commit `e647839`, returned the branded WordCircle 404 folio for `/unknown-trail` and retained direct `/vocab` rendering. The targeted filesystem-first Vercel routes now distinguish known application modes from unknown paths.
+
+The local `/wordle` route now renders only the six-row grid and on-screen letter keyboard; the text field and Check button are absent. A browser-console sequence did not mutate the rendered row in this automation environment, so selected-level automatic keyboard validation remains covered by the direct regression test and will be rechecked in production with visible controls.
+
 The deployed site also rendered the English A1 Wordle view with its six five-cell rows, A1 heading, selected-level subtitle, text input, Check action, and on-screen keyboard.
 
 On the deployed English A1 board, ACTOR was accepted and rendered with five feedback cells. The invalid five-letter string ZZZZZ was visibly rejected with “This word is not part of this level.” This confirms the selected exact-level acceptance and rejection path in production.

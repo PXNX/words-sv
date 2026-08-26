@@ -46,8 +46,9 @@
 
   function press(letter: string) {
     if (won || exhausted) return;
-    guess = normalizePlayableWord(`${guess}${letter}`).slice(0, 5);
-    notice = '';
+    const nextGuess = normalizePlayableWord(`${guess}${letter}`).slice(0, 5);
+    guess = nextGuess;
+    notice = nextGuess.length === 5 && !isValidWordleGuess(candidates, nextGuess) ? labels.invalid : '';
   }
 
   function removeLetter() {
@@ -93,12 +94,6 @@
       {/each}
     </div>
 
-    <form class="wordle-form" onsubmit={(event) => { event.preventDefault(); submit(); }}>
-      <label class="sr-only" for="wordle-guess">{labels.input}</label>
-      <input id="wordle-guess" bind:value={guess} maxlength="5" autocomplete="off" autocapitalize="characters" placeholder={labels.input} disabled={won || exhausted} />
-      <button type="submit" disabled={won || exhausted}>{labels.submit}</button>
-    </form>
-
     {#if notice}<p class:success={won} class="mode-notice">{notice}</p>{/if}
     {#if exhausted && !won}<p class="mode-notice">{target}</p>{/if}
     {#if won || exhausted}<button class="mode-reset" onclick={start}>{labels.again}</button>{/if}
@@ -113,13 +108,12 @@
 </section>
 
 <style>
-  .sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
   .mode-view { flex:1 1 auto;min-height:0;display:grid;align-content:start;gap:.8rem;padding:clamp(.8rem,3vw,1.25rem);overflow:auto;background:linear-gradient(180deg,rgba(237,228,213,.8),rgba(255,253,247,.65));border-top:3px double #172a45; }
   .mode-header { text-align:center; }.mode-header span { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.14em; }.mode-header h1 { margin:.15rem 0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.65rem,6vw,2.4rem);font-weight:400;line-height:1; }.mode-header p { margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.67rem;font-weight:700;line-height:1.35; }
   .wordle-grid { display:grid;justify-content:center;gap:.3rem; }.wordle-row { display:grid;grid-template-columns:repeat(5,clamp(2rem,9vw,2.7rem));gap:.3rem; }.wordle-row span { display:grid;place-items:center;aspect-ratio:1;border:1px solid rgba(23,42,69,.34);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:clamp(.9rem,4vw,1.2rem);font-weight:900; }.wordle-row span.correct { border-color:#34824d;background:#34824d;color:#fffdf7; }.wordle-row span.present { border-color:#d39723;background:#e6a527;color:#172a45; }.wordle-row span.absent { border-color:#69727a;background:#69727a;color:#fffdf7; }
-  .wordle-form { width:min(100%,26rem);display:flex;justify-content:center;gap:.5rem;margin-inline:auto; }.wordle-form input { flex:1 1 auto;min-width:0;width:clamp(13rem,66vw,21rem);min-height:3rem;padding:0 .85rem;border:1px solid #172a45;background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:clamp(1rem,4.5vw,1.2rem);font-weight:800;letter-spacing:.12em;text-transform:uppercase; }.wordle-form button,.mode-reset { min-height:3rem;padding:0 .85rem;border:1px solid #172a45;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }.wordle-form button:disabled,.wordle-keyboard button:disabled { opacity:.45; }
+  .mode-reset { min-height:2.35rem;padding:0 .85rem;border:1px solid #172a45;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }.wordle-keyboard button:disabled { opacity:.45; }
   .mode-notice { min-height:1rem;margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:800;text-align:center; }.mode-notice.success { color:#34824d; }.mode-reset { justify-self:center;background:#34824d;border-color:#34824d; }
   .wordle-keyboard { display:grid;gap:.23rem;justify-content:center; }.wordle-keyboard>div { display:flex;justify-content:center;gap:.2rem; }.wordle-keyboard button { min-width:clamp(1.25rem,6vw,1.8rem);height:1.8rem;border:1px solid rgba(23,42,69,.28);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:900; }.wordle-utility button { min-width:2rem; }
   .mode-empty { padding:1.25rem;border:1px solid rgba(164,94,56,.42);background:rgba(164,94,56,.08);color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:800;text-align:center; }
-  :global(html.dark) .mode-view { background:linear-gradient(180deg,#213a5d,#172a45); }.mode-header h1 { color:#172a45; }:global(html.dark) .mode-header h1 { color:#fffdf7; }:global(html.dark) .mode-header p { color:rgba(255,253,247,.7); }:global(html.dark) .wordle-row span,:global(html.dark) .wordle-form input,:global(html.dark) .wordle-keyboard button { background:#172a45;border-color:rgba(255,253,247,.38);color:#fffdf7; }
+  :global(html.dark) .mode-view { background:linear-gradient(180deg,#213a5d,#172a45); }.mode-header h1 { color:#172a45; }:global(html.dark) .mode-header h1 { color:#fffdf7; }:global(html.dark) .mode-header p { color:rgba(255,253,247,.7); }:global(html.dark) .wordle-row span,:global(html.dark) .wordle-keyboard button { background:#172a45;border-color:rgba(255,253,247,.38);color:#fffdf7; }
 </style>
