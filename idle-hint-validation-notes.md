@@ -21,3 +21,7 @@ The Vercel release for commit `730a4fe` was opened directly. Its six unselected 
 For the completion-area refinement, a completed German `GARTEN · GAS · TEE` round was staged in the local browser using the same persisted game shape read by the app. The page was then reloaded to verify its solved-grid state.
 
 The completed state showed the centered success summary and **Continue** control in the full input rail directly above the wheel. The normal word-preview, settings trigger, and idle-hint control were absent from that rail, confirming that the continue menu replaces rather than accompanies the input.
+
+The Vercel release for commit `29df9a6` visibly uses the farther-spaced wheel. A completed `GARTEN · GAS · TEE` game was then staged in that release’s browser storage and reloaded for the production completion-menu check.
+
+The live completed state displayed the localized Malayalam success summary and **Continue** button centered in the full former input rail. No word preview, idle-hint button, or settings trigger appeared there.
