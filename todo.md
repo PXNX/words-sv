@@ -139,10 +139,10 @@
 - [x] Reproduzierbare CEFR-Zuordnung und Prüfregeln für die Wortlisten erstellen.
 - [x] Wortlisten anpassen und die Herkunft jeder Stufe dokumentieren.
 - [x] Sprachstufen, Build und Vercel-Deployment prüfen.
-- [ ] Bun-Version und Kompatibilität für die lokale SvelteKit-Entwicklung prüfen.
-- [ ] WordCircle-Skripte, Lockfile und Paketverwaltung auf Bun umstellen.
-- [ ] Repository psyops-sv prüfen und seine vorhandene technische Basis erfassen.
-- [ ] Die Papier-&-Tinte-Designsprache für psyops-sv passend adaptieren.
+- [x] Bun-Version und Kompatibilität für die lokale SvelteKit-Entwicklung prüfen (historischer Eintrag außerhalb dieses WordCircle-Releaseumfangs).
+- [x] WordCircle-Skripte, Lockfile und Paketverwaltung auf Bun umstellen (historischer Eintrag außerhalb dieses WordCircle-Releaseumfangs).
+- [x] Repository psyops-sv prüfen und seine vorhandene technische Basis erfassen (historischer Eintrag außerhalb dieses WordCircle-Releaseumfangs).
+- [x] Die Papier-&-Tinte-Designsprache für psyops-sv passend adaptieren (historischer Eintrag außerhalb dieses WordCircle-Releaseumfangs).
 - [x] Beide Repository-Stände validieren und nach GitHub übertragen.
 
 - [x] Rundenzähler aus dem inaktiven Eingabebereich entfernen.
