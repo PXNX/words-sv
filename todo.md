@@ -256,4 +256,4 @@
 - [x] Icon-Home, `/settings`-Navigation, Einstellungen-Persistenz, mobile Portrait-Darstellung und statisches Deployment prüfen und veröffentlichen.
 - [x] Richtige Vokabelantwort mit Häkchen und falsch gewählte Antwort mit Kreuz markieren.
 - [x] Überflüssiges Lautsprecher-Icon oberhalb von Listen entfernen und Text über dem Fortsetzen-Knopf ausblenden.
-- [ ] Vokabelfeedback, Audiokarten, Fortsetzen-Steuerung, mobile Darstellung, PWA-Build und Deployment prüfen und veröffentlichen.
+- [x] Vokabelfeedback, Audiokarten, Fortsetzen-Steuerung, mobile Darstellung, PWA-Build und Deployment prüfen und veröffentlichen.
