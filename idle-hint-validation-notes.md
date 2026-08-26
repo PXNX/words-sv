@@ -15,3 +15,5 @@ Selecting the live hint replaced the input preview with the predefined German `G
 For the later bubble-spacing refinement, the local English tutorial wheel was opened with all bubbles unselected. The larger orbit preserved clear, evenly distributed spacing between the six 60-pixel bubbles.
 
 After the local development hot-reload reset the tutorial overlay, the same English practice board restarted successfully and retained the widened unselected-bubble spacing.
+
+The Vercel release for commit `730a4fe` was opened directly. Its six unselected bubbles were visibly farther apart on the widened orbit; the exact selected-state scale is additionally covered by the published regression test.
