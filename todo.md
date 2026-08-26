@@ -174,9 +174,11 @@
 - [x] Tutorial in eine geführte Drei-Wort-Übungsrunde mit Hinweisen und wählbarer Rätselsprache umbauen.
 - [x] Dekorative Eingabeanimationen entfernen und ausgewählte Buchstaben größer orange darstellen.
 - [x] psyops-sv-Chatarchitektur und ihre hosting-kompatible Synchronisation prüfen.
-- [x] Vercel-kompatibles Serverless- und Datenbankbackend für einladbare gemeinsame Runden unter Nutzung von DATABASE_URL planen und bereitstellen.
-- [x] Teilen- und Einladungsablauf mit synchronisierten Rätsellösungen und Mitspieler-Ereignissen implementieren.
-- [ ] Tutorial, Eingabeauswahl, SSE-Synchronisierung, Build und Deployment prüfen und veröffentlichen.
-- [ ] Mit echter DATABASE_URL-Verbindung Raum-Erstellung, Beitritt, beidseitige Wortsynchronisierung und Mitspieler-Ereignisse prüfen.
-- [x] Abgelaufene oder fehlende gemeinsame Runde sauber auf eine normale Runde oder klare Join-Fehlermeldung zurückführen.
-- [ ] Bereits gelöste gemeinsame Wörter ohne irreführende neue Erfolgsmeldung behandeln.
+- [x] Vercel-kompatibles Serverless- und Datenbankbackend für einladbare gemeinsame Runden unter Nutzung von DATABASE_URL planen und bereitstellen (anschließend auf Nutzerwunsch entfernt).
+- [x] Teilen- und Einladungsablauf mit synchronisierten Rätsellösungen und Mitspieler-Ereignissen implementieren (anschließend auf Nutzerwunsch entfernt).
+- [x] Tutorial, Eingabeauswahl, SSE-Synchronisierung, Build und Deployment prüfen und veröffentlichen (SSE-Teil auf Nutzerwunsch nicht weiterverfolgt).
+- [x] Mit echter DATABASE_URL-Verbindung Raum-Erstellung, Beitritt, beidseitige Wortsynchronisierung und Mitspieler-Ereignisse prüfen (auf Nutzerwunsch nicht weiterverfolgt).
+- [x] Abgelaufene oder fehlende gemeinsame Runde sauber auf eine normale Runde oder klare Join-Fehlermeldung zurückführen (mit der entfernten Co-op-Funktion verworfen).
+- [x] Bereits gelöste gemeinsame Wörter ohne irreführende neue Erfolgsmeldung behandeln (mit der entfernten Co-op-Funktion verworfen).
+- [x] Co-op-, SSE- und Datenbankcode vollständig entfernen und die statische Vercel-Ausgabe wiederherstellen.
+- [ ] Hindi/Malayalam-Interface, Drei-Wort-Tutorial und die vereinfachte orange Eingabeauswahl im statischen Build prüfen und veröffentlichen.
