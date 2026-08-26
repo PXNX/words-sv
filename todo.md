@@ -190,4 +190,4 @@
 - [x] Verfeinerte Blasenauswahl lokal und auf Vercel prüfen und veröffentlichen.
 - [x] Blasen auf einen nochmals weiteren Orbit verteilen und die Auswahl bei insgesamt vier Pixel zusätzlichem Durchmesser halten.
 - [x] Nach dem Lösen eines Grids das Eingabefeld vollständig durch das zentrierte Weiter-Menü ersetzen.
-- [ ] Erweiterte Rad- und Abschlussdarstellung lokal und auf Vercel prüfen und veröffentlichen.
+- [x] Erweiterte Rad- und Abschlussdarstellung lokal und auf Vercel prüfen und veröffentlichen.
