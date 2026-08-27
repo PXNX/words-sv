@@ -33,7 +33,16 @@ test('Wordle auto-submits only exact-level valid five-letter guesses', () => {
   assert.doesNotMatch(wordleSource, /id="wordle-guess"/);
 	  assert.match(wordleSource, /const keyboardLayouts/);
 	  assert.match(wordleSource, /extras: \['Ä', 'Ö', 'Ü', 'ẞ'\]/);
-  assert.match(wordleSource, /grid-template-columns:repeat\(5,clamp\(2\.35rem,12vw,3\.35rem\)\)/);
+	  assert.match(wordleSource, /grid-template-columns:repeat\(5,clamp\(2\.35rem,12vw,3\.35rem\)\)/);
+});
+
+test('Wordle keyboard greys scored-absent letters while preserving present and correct score priority', () => {
+	assert.match(wordleSource, /const keyboardMarks = \$derived\.by/);
+	assert.match(wordleSource, /const priority: Record<WordleMark, number> = \{ absent: 1, present: 2, correct: 3 \}/);
+	assert.match(wordleSource, /class:correct=\{keyboardMarks\[letter\] === 'correct'\}/);
+	assert.match(wordleSource, /class:present=\{keyboardMarks\[letter\] === 'present'\}/);
+	assert.match(wordleSource, /class:absent=\{keyboardMarks\[letter\] === 'absent'\}/);
+	assert.match(wordleSource, /\.wordle-keyboard button\.absent \{ border-color:#69727a;background:#69727a;color:#fffdf7; \}/);
 });
 
 test('Wordle tutorial is deterministic, playable, and demonstrates repeated-letter scoring', () => {
@@ -130,7 +139,8 @@ test('portrait safeguards and persistent optional success sounds remain wired at
 	assert.match(pageSource, /class="home-games"/);
 	assert.match(pageSource, /nextMode === 'crossword' && \(lang === 'de' \|\| lang === 'en'\) && localStorage\.getItem\(TUTORIAL_STATE_KEY\) !== 'complete'/);
 	assert.match(pageSource, /class="home-trigger" onclick=\{goHome\}/);
-	assert.match(pageSource, /function goSettings\(\) \{ tutorialOpen = false; void goto\('\/settings'\); \}/);
+		assert.match(pageSource, /function goSettings\(\) \{ tutorialOpen = false; void goto\('\/settings'\); \}/);
+		assert.match(pageSource, /<button class="home-settings-link" onclick=\{goSettings\}>/);
 	assert.match(pageSource, /class="settings-page"/);
 	assert.doesNotMatch(pageSource, /class="setting-row mode-picker"/);
 	assert.doesNotMatch(pageSource, /settingsOpen/);

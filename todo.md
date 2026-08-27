@@ -267,6 +267,10 @@
 - [x] Für jede neue Lernsprache CEFR-ausgerichtete Circle-, Wordle- und Vokabelwortpools mit Definitionen und Aussprache-Metadaten bereitstellen.
 - [ ] Neue spielbare Sprachrouten, Wortlisten und die Sprachwahl lokal sowie in der Produktionsvorschau prüfen.
 - [ ] Vercel-Build wieder auf die verfügbare Bun-Installation zurückstellen und den Produktionslauf nach dem fehlenden-PNPM-Fehler erneut prüfen.
+- [ ] Bereits verwendete Wordle-Tastaturbuchstaben nach der Wertung grau darstellen, ohne korrekte orange oder grüne Hinweise zu überschreiben.
+- [ ] Direkten Einstellungen-Link auf der Startseite auf Vorhandensein, Beschriftung und Navigation prüfen.
+- [ ] Abgelaufene GitHub-Veröffentlichungsintegration über den regulären verbundenen Zugriff erneuern und ohne Geräteaktivierung veröffentlichen.
+- [ ] Veraltete Vercel-PNPM-Projektüberschreibung entfernen, damit die vorhandene Bun-Erkennung den Build ausführt.
 - [x] Vokabelkarten um sprachspezifische grammatische Artikel ergänzen und dabei die Antwortauswertung weiterhin auf dem Grundwort durchführen.
 - [x] Wortdaten auf strukturierte Einträge mit Wortart, grammatischem Geschlecht und Seltenheitsangabe umstellen, ohne bestehende Spielauswahl zu brechen.
 - [x] Seltenheitsangaben aus dokumentierten Duden-Häufigkeitsinformationen und dem angegebenen Quellenbestand nachvollziehbar zuzuordnen und zu dokumentieren.
