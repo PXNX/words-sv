@@ -121,3 +121,11 @@ The real-board `APFEL` entry then scored successfully: `A`, `P`, `F`, and `L` we
 For the local persistence check, only the local Wordle tutorial-complete marker was set and the route was reloaded. The empty real Wordle board then rendered, ready to verify that an in-progress row survives a normal page reload.
 
 After selecting `A` on the local real Wordle keyboard, reloading `/wordle` restored the same visible `A` in the active row. This confirms the in-progress local state restoration path in addition to the deterministic validation tests.
+
+Production commit `e90cd7f` completed successfully on Vercel. The deployed Wordle board accepted a new in-progress `B` key entry, which was then prepared for a same-route reload restoration check.
+
+Reloading the production `/wordle` route restored the same visible `B` in the active Wordle row. This confirms the deployed local-state persistence path as well as the local and deterministic test coverage.
+
+In production Settings, French was selectable as a learning language from the expanded selector. The Wordle-specific replay control correctly disappeared because the guided Wordle tutorial applies only to German and English.
+
+The deployed French Wordle route then rendered an A1 five-letter board with the French AZERTY layout and accented-key row. The deployed French vocabulary route rendered a native-definition learning card for `la PORTE`, including the correct noun article and three French choices. Together with the exhaustive language-pack tests, this verifies the expanded-language selector, word lists, and real game routes locally and in production.
