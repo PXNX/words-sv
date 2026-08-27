@@ -97,3 +97,27 @@ Production commit `99f7885` completed successfully on Vercel. The deployed mobil
 The current local mobile preview rendered a seven-language first-run learning-language card with Deutsch, English, Français, Italiano, Español, Português, and Українська. The dedicated Settings route rendered the expanded learning-language selector and the opt-in streak-reminder control. The German vocabulary card rendered the noun article as `der TEE`; source-level regression coverage verifies that speech now submits only the underlying lemma rather than that display phrase.
 
 After completing local onboarding, Home rendered the direct Settings control, a daily-streak count of zero, `0/8` vocabulary progress, and the remaining local-day time. A local contrast review found the large Home heading insufficiently distinct on the paper background, so the heading now receives an explicit navy paper-theme color and a separate white dark-theme override.
+
+Production commit `85c95c9` successfully deployed after removing the conflicting PNPM lockfile and validating the frozen Bun path. A fresh production onboarding rendered all seven playable learning languages. After choosing German, Home rendered the direct Settings control, the daily streak count, the `0/8` vocabulary progress, and the remaining local-day time.
+
+The deployed Home Settings control navigated successfully to `/settings`, where the expanded playable-language selector and the opt-in Streak reminder control both rendered. The deployed German Wordle route displayed its dedicated tutorial before the real board; the first highlighted tutorial key correctly entered `T` into the tutorial row.
+
+The following highlighted tutorial selections entered `A` and `S`, producing the expected visible `TAS` prefix. The dedicated tutorial keyboard therefore remained usable in the deployed build while the real game awaits used-key feedback verification after tutorial completion.
+
+The first tutorial guess `TASES` then submitted and rendered three green cells plus amber feedback for the remaining matching letters, after which the guided target advanced to `TASSE`.
+
+The second guided answer began with the highlighted `T` and `A` keys, producing the visible `TA` prefix for `TASSE`.
+
+Both repeated `S` selections were accepted into the guided row, producing the visible `TASS` prefix and confirming the deployed tutorial’s repeated-letter input path.
+
+The final `E` completed `TASSE` with five green tutorial cells. Selecting the rendered New Word action closed the tutorial and exposed the empty real-game grid and keyboard.
+
+On the real production board, the valid German candidate `APFEL` was entered through the on-screen keyboard; the first two input cells visibly displayed `A` and `P` before scoring.
+
+The same real-board entry then accepted `F` and `E`, yielding the visible `APFE` prefix before the final scoring selection.
+
+The real-board `APFEL` entry then scored successfully: `A`, `P`, `F`, and `L` were greyed as absent on the on-screen keyboard, while `E` remained amber as present. Production HTTP checks returned `200` for all known game routes, Settings, manifest, and service worker; `/unknown-trail` returned the branded `404`; and the unauthenticated external cron endpoint returned `401`. The public VAPID-key endpoint returned `503`, so the supplied VAPID environment values still need to be added to Vercel before live subscription and background delivery can be enabled.
+
+For the local persistence check, only the local Wordle tutorial-complete marker was set and the route was reloaded. The empty real Wordle board then rendered, ready to verify that an in-progress row survives a normal page reload.
+
+After selecting `A` on the local real Wordle keyboard, reloading `/wordle` restored the same visible `A` in the active row. This confirms the in-progress local state restoration path in addition to the deterministic validation tests.

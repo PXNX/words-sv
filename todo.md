@@ -262,7 +262,7 @@
 - [x] Hintergrund-Push-Berechtigung, Abonnement, Streak-Qualifikation und Fehlerzustände verständlich über `/settings` steuern und anzeigen.
 - [x] Auf der Startseite einen klaren Link zur dedizierten `/settings`-Seite ergänzen.
 - [x] Extern aufrufbaren Cron-Endpunkt ohne kostenpflichtigen Plattformzeitplan absichern und für einen beliebigen kostenlosen Scheduler dokumentieren.
-- [x] Bereitgestelltes VAPID-Schlüsselpaar sicher speichern und vor Aktivierung des externen Cron-Aufrufs einen separaten Cron-Secret setzen.
+- [ ] Bereitgestelltes VAPID-Schlüsselpaar und das separate Cron-Secret zusätzlich als Vercel-Umgebungsvariablen setzen und den öffentlichen Schlüssel-Endpunkt produktiv prüfen.
 - [x] Französisch, Italienisch, Spanisch, Portugiesisch und Ukrainisch als spielbare Lernsprachen in Onboarding und Einstellungen anbieten.
 - [x] Für jede neue Lernsprache CEFR-ausgerichtete Circle-, Wordle- und Vokabelwortpools mit Definitionen und Aussprache-Metadaten bereitstellen.
 - [ ] Neue spielbare Sprachrouten, Wortlisten und die Sprachwahl lokal sowie in der Produktionsvorschau prüfen.
@@ -272,6 +272,7 @@
 - [ ] Abgelaufene GitHub-Veröffentlichungsintegration über den regulären verbundenen Zugriff erneuern und ohne Geräteaktivierung veröffentlichen.
 - [ ] Veraltete Vercel-PNPM-Projektüberschreibung entfernen, damit die vorhandene Bun-Erkennung den Build ausführt.
 - [ ] PNPM-Lockdatei entfernen und den Build mit ausschließlich Bun-Lockdatei reproduzierbar prüfen.
+- [x] Aktiven Wordle-Stand mit Zielwort, gewerteten Reihen und aktueller Eingabe lokal speichern, beim Reload validiert wiederherstellen und nach Abschluss oder Neustart zurücksetzen.
 - [x] Vokabelkarten um sprachspezifische grammatische Artikel ergänzen und dabei die Antwortauswertung weiterhin auf dem Grundwort durchführen.
 - [x] Wortdaten auf strukturierte Einträge mit Wortart, grammatischem Geschlecht und Seltenheitsangabe umstellen, ohne bestehende Spielauswahl zu brechen.
 - [x] Seltenheitsangaben aus dokumentierten Duden-Häufigkeitsinformationen und dem angegebenen Quellenbestand nachvollziehbar zuzuordnen und zu dokumentieren.
