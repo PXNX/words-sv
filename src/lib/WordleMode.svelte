@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { evaluateWordleGuess, fiveLetterWords, isValidWordleGuess, normalizePlayableWord } from '$lib/modes.js';
+	  import { onMount } from 'svelte';
+	  import { evaluateWordleGuess, fiveLetterWords, isValidWordleGuess, normalizePlayableWord } from '$lib/modes.js';
+	  import { readWordleState, WORDLE_STATE_KEY, writeWordleState } from '$lib/wordleState.js';
 
   type WordleMark = 'correct' | 'present' | 'absent';
   type Entry = { word: string; marks: WordleMark[] };
@@ -53,12 +54,29 @@
     return marks;
   });
 
-  function start() {
-    target = candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : '';
-    guess = '';
-    entries = [];
-    notice = '';
-  }
+	  function start() {
+	    target = candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : '';
+	    guess = '';
+	    entries = [];
+	    notice = '';
+	    if (typeof localStorage !== 'undefined') localStorage.removeItem(WORDLE_STATE_KEY);
+	  }
+
+	  function restoreOrStart() {
+	    if (typeof localStorage === 'undefined' || candidates.length === 0) {
+	      start();
+	      return;
+	    }
+	    const saved = readWordleState(localStorage.getItem(WORDLE_STATE_KEY), { language, level, candidates });
+	    if (!saved) {
+	      start();
+	      return;
+	    }
+	    target = saved.target;
+	    entries = saved.entries;
+	    guess = saved.guess;
+	    notice = '';
+	  }
 
 	function submit() {
 	  const normalized = normalizePlayableWord(guess);
@@ -128,11 +146,22 @@
     tutorialGuess = tutorialGuess.slice(0, -1);
   }
 
-  $effect(() => {
-    words;
-    level;
-    start();
-  });
+	  $effect(() => {
+	    words;
+	    level;
+	    language;
+	    candidates;
+	    restoreOrStart();
+	  });
+
+	  $effect(() => {
+	    if (typeof localStorage === 'undefined' || !target) return;
+	    if (won || exhausted) {
+	      localStorage.removeItem(WORDLE_STATE_KEY);
+	      return;
+	    }
+	    localStorage.setItem(WORDLE_STATE_KEY, writeWordleState({ language, level, target, entries, guess }));
+	  });
 
   $effect(() => {
     if (tutorialRequested === observedTutorialRequest) return;

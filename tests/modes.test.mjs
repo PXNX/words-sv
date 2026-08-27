@@ -45,6 +45,14 @@ test('Wordle keyboard greys scored-absent letters while preserving present and c
 	assert.match(wordleSource, /\.wordle-keyboard button\.absent \{ border-color:#69727a;background:#69727a;color:#fffdf7; \}/);
 });
 
+test('Wordle persists only a validated in-progress round and clears saved state after reset or completion', () => {
+	assert.match(wordleSource, /import \{ readWordleState, WORDLE_STATE_KEY, writeWordleState \} from '\$lib\/wordleState\.js'/);
+	assert.match(wordleSource, /function restoreOrStart\(\)/);
+	assert.match(wordleSource, /readWordleState\(localStorage\.getItem\(WORDLE_STATE_KEY\), \{ language, level, candidates \}\)/);
+	assert.match(wordleSource, /localStorage\.setItem\(WORDLE_STATE_KEY, writeWordleState\(\{ language, level, target, entries, guess \}\)\)/);
+	assert.match(wordleSource, /if \(won \|\| exhausted\) \{\n\s+localStorage\.removeItem\(WORDLE_STATE_KEY\)/);
+});
+
 test('Wordle tutorial is deterministic, playable, and demonstrates repeated-letter scoring', () => {
   assert.match(wordleSource, /WORDLE_TUTORIAL_KEY = 'wordcircle-wordle-tutorial-v1'/);
   assert.match(wordleSource, /de: \{ target: 'TASSE', warmup: 'TASES' \}/);
