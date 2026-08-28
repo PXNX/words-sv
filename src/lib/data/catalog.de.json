@@ -1,0 +1,6558 @@
+{
+  "ABEND": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ABGEBEN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "ABHÄNGEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ABHÄNGIG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ABHOLEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ABITUR": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ABNEHMEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ABSATZ": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ABSCHLUẞ": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ABSICHT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ABSTRAKT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ABWERTEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ACHT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ACHTUNG": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "ADRESSE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ÄHNLICH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "AHNUNG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "AKTIV": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "AKTUELL": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ALLEIN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ALLTAG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ALT": {
+    "levels": [
+      "a1",
+      "a2"
+    ]
+  },
+  "ALTER": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "ANALYSE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ANBIETEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ÄNDERN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ÄNDERUNG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ANFANG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ANFANGEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "ANFÜHREN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ANGABE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ANGEBEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ANGEBOT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ANHÄNGER": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ANKOMMEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "ANLAGE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ANMELDEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ANORDNEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ANPASSEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ANRUFEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "ANSATZ": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ANSEHEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ANSICHT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ANSPRUCH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ANTEIL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ANTWORT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "ANWALT": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "ANWESEND": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ANZAHL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ANZEIGE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ANZEIGEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ANZUG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "APFEL": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "ARABISCH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ARBEIT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "ARBEITEN": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Eine Tätigkeit ausüben, oft beruflich.",
+    "type": "Verb",
+    "sources": [
+      "ynsrc/dwds"
+    ]
+  },
+  "ARBEITER": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ÄRGERN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ARGUMENT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ARM": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ART": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ARTIKEL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ARZT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ASOZIAL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "AUFBAU": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "AUFGABE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "AUFHÖREN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "AUFLÖSEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "AUFNAHME": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "AUFSATZ": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "AUGE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "AUSDRUCK": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "AUSFLUG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "AUSGANG": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "AUSKUNFT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "AUSLAND": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "AUSNAHME": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "AUSRUHEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "AUSSAGE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "AUSSEHEN": {
+    "levels": [
+      "a2",
+      "b1"
+    ]
+  },
+  "ÄUẞERUNG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "AUSSICHT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "AUSÜBEN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "AUSWAHL": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "AUTO": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "AUTOBAHN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "AUTONOM": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "AUTOR": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "AUTORIN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BABY": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "BACHELOR": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BACKEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BAD": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "BADEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BAHN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BAHNHOF": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BALKON": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "BANANE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "BAND": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BANK": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BAR": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "BASIEREN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BASIS": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BAUEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BAUER": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BAUM": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BEACHTEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BEDANKEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BEDARF": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BEDEUTEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BEENDEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BEFASSEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BEFINDEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BEFRAGT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BEFREIEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BEGABT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BEGEGNEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BEGEHEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BEGINNEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "BEHÖRDE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BEIDEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BEIN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "BEISPIEL": {
+    "levels": [
+      "b1"
+    ],
+    "definition": "Etwas, das einen Sachverhalt anschaulich macht.",
+    "type": "Substantiv",
+    "gender": "neuter",
+    "article": "das",
+    "rarity": {
+      "source": "Duden",
+      "dudenClass": 4,
+      "label": "common"
+    },
+    "sources": [
+      "Duden",
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "BEITRAG": {
+    "levels": [
+      "c1"
+    ],
+    "definition": "Ein Anteil oder eine Leistung zu einer gemeinsamen Sache.",
+    "type": "Substantiv",
+    "gender": "masculine",
+    "article": "der",
+    "rarity": {
+      "source": "Duden",
+      "dudenClass": 3,
+      "label": "established"
+    },
+    "sources": [
+      "Duden",
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "BEKANNT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BEKANNTE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BEKLAGEN": {
+    "levels": [
+      "b2"
+    ],
+    "definition": "Trauer oder Bedauern über etwas ausdrücken.",
+    "type": "Verb",
+    "sources": [
+      "ynsrc/dwds"
+    ]
+  },
+  "BEKOMMEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "BELASTEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BELIEBT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BEMERKEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BEMÜHUNG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BENEHMEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BENUTZEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BERATEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BERATUNG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BEREICH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BEREIT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BEREITEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BERUF": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BERÜHMT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BESETZEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BESITZEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BESORGEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BESTEHEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BESTIMMT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BESUCH": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BESUCHEN": {
+    "levels": [
+      "a1",
+      "a2"
+    ],
+    "definition": "Zu einer Person, einem Ort oder einer Veranstaltung gehen.",
+    "type": "Verb",
+    "sources": [
+      "ynsrc/dwds"
+    ]
+  },
+  "BETRACHT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BETREUEN": {
+    "levels": [
+      "c2"
+    ],
+    "definition": "Für jemanden sorgen und ihn unterstützen.",
+    "type": "Verb",
+    "sources": [
+      "ynsrc/dwds"
+    ]
+  },
+  "BETRIEB": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BETT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BEWAHREN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BEWEGUNG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BEWEIS": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BEWEISEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BEWERTEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BEWIRKEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BEWOHNER": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BEZAHLEN": {
+    "levels": [
+      "a1",
+      "b2"
+    ]
+  },
+  "BEZIEHEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BEZUG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BIER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BILD": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BILDEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BILDUNG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BILLIG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BINDEN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "BIOLOGIE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BITTE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "BITTEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "BLATT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BLAU": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BLEIBEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BLICK": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "BLOND": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BLUME": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BLUT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "BODEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BRAUCHEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "BRAUN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BRIEF": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "BRINGEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "BROT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "BRÖTCHEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BRUDER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BRUTAL": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "BUCH": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BUCHEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BUNT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BÜRGER": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "BÜRO": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BUS": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "BUTTER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "CHANCE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "CHEF": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "CHEFIN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "CLUB": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "CODE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "COMPUTER": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "DACH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "DAME": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "DANK": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "DANKEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "DATIV": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "DATUM": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "DAUER": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "DAUERN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "DEBATTE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "DENKEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "DEUTSCH": {
+    "levels": [
+      "a2",
+      "b1"
+    ],
+    "definition": "Die deutsche Sprache oder etwas aus Deutschland.",
+    "type": "Substantiv",
+    "gender": "neuter",
+    "article": "das",
+    "sources": [
+      "Duden"
+    ]
+  },
+  "DEUTSCHE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "DIAGRAMM": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "DIALEKT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "DICK": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "DIENEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "DILEMMA": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "DIPLOM": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "DIREKT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "DISCO": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "DISKO": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "DOLLAR": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "DOMINANT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "DOPPELT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "DORF": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "DOZENT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "DRINGEND": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "DRITTEL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "DROGE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "DROHEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "DROHUNG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "DRUCK": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "DRÜCKEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "DUMM": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "DUNKEL": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "DÜNN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "DUSCHEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "EBENE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ECKE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "EGAL": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "EHE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "EHEFRAU": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "EHEMALIG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "EHEMANN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "EIGEN": {
+    "levels": [
+      "a2",
+      "b2"
+    ]
+  },
+  "EINBAUEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "EINDRUCK": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "EINE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "EINEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "EINFACH": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "EINGEHEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "EINHEIT": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "EINIG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "EINIGEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "EINLADEN": {
+    "levels": [
+      "a2"
+    ],
+    "definition": "Jemanden bitten, zu einem Ereignis oder Ort zu kommen.",
+    "type": "Verb",
+    "sources": [
+      "ynsrc/dwds"
+    ]
+  },
+  "EINSAM": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "EINSATZ": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "EINTRITT": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "EINZELN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "EINZELNE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "EINZIG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ELEMENT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ELTERN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "EMPATHIE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ENDE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ENDEN": {
+    "levels": [
+      "a1",
+      "a2"
+    ]
+  },
+  "ENDUNG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ENG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ENGLISCH": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ENORM": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "ENSTEHEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ENTFERNT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "EPOCHE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ERFAHREN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ERFOLG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ERFÜLLEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ERGÄNZEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ERGEBEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ERGEBNIS": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ERHEBEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ERHÖHEN": {
+    "levels": [
+      "b1",
+      "b2"
+    ]
+  },
+  "ERHÖHUNG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ERINNERN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ERKENNEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ERKLÄREN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "ERLAUBEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ERLEBNIS": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ERLEIDEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ERLERNEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ERNST": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ERÖRTERN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "ERREGEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ERSETZEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ERST": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "ERWÄGUNG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ERWÄHNT": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "ERWARTEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ERWECKEN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "ERWEISEN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "ERWERB": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ERWERBEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ERZÄHLEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "ERZIEHEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ERZIELEN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "ESSAY": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ESSEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ETHISCH": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "EURO": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "EUROPÄER": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "EXISTENZ": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "EXPERTE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "EXTREM": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FABRIK": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "FAHREN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "FAHRPLAN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FAHRRAD": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FAHRT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FAIR": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FAKT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FAKTOR": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "FAKTUM": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FAKULTÄT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FALL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FALLE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FALLEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FALSCH": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "FAMILIE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FAN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FARBE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FASSEN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "FAUL": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FEHLEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "FEHLEND": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "FEHLER": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "FEIER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FEIERN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FEIERTAG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FEIND": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FENSTER": {
+    "levels": [
+      "a2"
+    ],
+    "definition": "Eine Öffnung in einer Wand, durch die Licht und Luft kommen.",
+    "type": "Substantiv",
+    "gender": "neuter",
+    "article": "das",
+    "rarity": {
+      "source": "Duden",
+      "dudenClass": 3,
+      "label": "established"
+    },
+    "sources": [
+      "Duden",
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "FERN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FERTIG": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "FEST": {
+    "levels": [
+      "a2",
+      "b1"
+    ]
+  },
+  "FILM": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FINDEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "FIRMA": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "FISCH": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FIT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FLASCHE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FLEISCH": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "FLEIẞIG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FLEXIBEL": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "FLIEGEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FLIEẞEND": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "FLUGZEUG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FOKUS": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FOLGE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "FOLGEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "FOLGENDE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "FORDERN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "FÖRDERN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "FORM": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FORMAL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FORSCHER": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FOTO": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FRAGE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FRAGEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "FRAGLICH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FRANZOSE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FRAU": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "FREI": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "FREIHEIT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FREIZEIT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "FREMD": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FREUEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FREUND": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "FREUNDIN": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Eine weibliche Person, zu der man eine enge Beziehung hat.",
+    "type": "Substantiv",
+    "gender": "feminine",
+    "article": "die",
+    "rarity": {
+      "source": "Duden",
+      "dudenClass": 3,
+      "label": "established"
+    },
+    "sources": [
+      "Duden",
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "FRISCH": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FRÜH": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FRÜHER": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "FRÜHLING": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FÜGEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FÜHLEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "FÜHREN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "FÜLLEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "FUNKTION": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "FÜRCHTEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "FUẞ": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FUẞBALL": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "GANG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GANZ": {
+    "levels": [
+      "a1",
+      "b1",
+      "c1"
+    ]
+  },
+  "GANZE": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "GARANTIE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GARTEN": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Ein Stück Land bei einem Haus, auf dem Pflanzen wachsen.",
+    "type": "Substantiv",
+    "gender": "masculine",
+    "article": "der",
+    "rarity": {
+      "source": "Duden",
+      "dudenClass": 3,
+      "label": "established"
+    },
+    "sources": [
+      "Duden",
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "GAS": {
+    "levels": [],
+    "definition": "Ein Stoff, der keinen festen Körper und keine feste Form hat.",
+    "type": "Substantiv",
+    "gender": "neuter",
+    "article": "das",
+    "rarity": {
+      "source": "Duden",
+      "dudenClass": 3,
+      "label": "established"
+    },
+    "sources": [
+      "Duden"
+    ]
+  },
+  "GAST": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "GEBÄUDE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "GEBEN": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Jemandem etwas überreichen oder zukommen lassen.",
+    "type": "Verb",
+    "sources": [
+      "ynsrc/dwds"
+    ]
+  },
+  "GEBIET": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GEBILDE": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "GEBILDET": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GEBRAUCH": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GEBÜHR": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GEDANKE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GEDICHT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GEEIGNET": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GEFAHR": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GEFALLEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "GEFÜHL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GEGEBEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GEGNER": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GEHEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "GEHÖREN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "GEHT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "GEISTIG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GELB": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "GELD": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "GELINGEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GELTEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GEMISCHT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GEMÜSE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "GENANNT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GENAU": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GENERELL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GENÜGEND": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GERÄT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GERATEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GERECHT": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "GERICHT": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "GERING": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GERN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "GESAMT": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "GESCHÄFT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "GESCHENK": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "GESETZ": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GESICHT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "GESPRÄCH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GESUND": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "GETRÄNK": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "GETRENNT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GEWÄHLT": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "GEWALT": {
+    "levels": [
+      "c1"
+    ],
+    "definition": "Kraft oder Macht, die Menschen verletzen oder zwingen kann.",
+    "type": "Substantiv",
+    "gender": "feminine",
+    "article": "die",
+    "rarity": {
+      "source": "Duden",
+      "dudenClass": 3,
+      "label": "established"
+    },
+    "sources": [
+      "Duden",
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "GEWALTIG": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "GEWICHT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GEWINN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GEWINNEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "GEWIẞ": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GEWISSEN": {
+    "levels": [
+      "b2"
+    ],
+    "definition": "Die innere Stimme für richtiges und falsches Handeln.",
+    "type": "Substantiv",
+    "gender": "neuter",
+    "article": "das",
+    "rarity": {
+      "source": "Duden",
+      "dudenClass": 3,
+      "label": "established"
+    },
+    "sources": [
+      "Duden",
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "GEWOHNT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GITARRE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "GLAUBE": {
+    "levels": [
+      "a2",
+      "b2"
+    ]
+  },
+  "GLAUBEN": {
+    "levels": [
+      "a2"
+    ],
+    "definition": "Etwas für wahr halten oder Vertrauen haben.",
+    "type": "Verb",
+    "sources": [
+      "ynsrc/dwds"
+    ]
+  },
+  "GLEICH": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "GLEICHE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GLEICHEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GLÜCK": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "GRAD": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "GRAPHIK": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GREIFEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GRENZE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GROẞ": {
+    "levels": [
+      "a1",
+      "a2"
+    ]
+  },
+  "GRÖẞE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "GRÜN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "GRUND": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GRÜNDEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GRÜNDUNG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GRUPPE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "GRUẞ": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "GRÜẞEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "GUCKEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GÜLTIG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "GÜNSTIG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "GUT": {
+    "levels": [
+      "a1",
+      "a2"
+    ]
+  },
+  "HAAR": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "HABEN": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Etwas besitzen oder bei sich tragen.",
+    "type": "Verb",
+    "sources": [
+      "ynsrc/dwds"
+    ]
+  },
+  "HALB": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "HALBE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "HÄLFTE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "HALLO": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "HALTEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "HALTUNG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "HAND": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "HANDEL": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "HANDELN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "HANDLUNG": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "HANDY": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "HARMONIE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "HÄSSLICH": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "HÄUFIG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "HAUS": {
+    "levels": [
+      "a2"
+    ],
+    "definition": "Ein Gebäude, in dem Menschen wohnen.",
+    "type": "Substantiv",
+    "gender": "neuter",
+    "article": "das",
+    "rarity": {
+      "source": "Duden",
+      "dudenClass": 4,
+      "label": "common"
+    },
+    "sources": [
+      "Duden",
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "HAUSFRAU": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "HAUSHALT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "HEFTIG": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "HEIMAT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "HEIMWEH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "HEIRAT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "HEIRATEN": {
+    "levels": [
+      "a2"
+    ],
+    "definition": "Mit einer Person eine Ehe schließen.",
+    "type": "Verb",
+    "sources": [
+      "ynsrc/dwds"
+    ]
+  },
+  "HEIẞ": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "HEIẞEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "HEKTISCH": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "HELD": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "HELFEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "HELL": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "HEMD": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "HERBST": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "HERKUNFT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "HERR": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "HERZLICH": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "HEUTIG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "HILFE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "HIMMEL": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "HINSICHT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "HINWEIS": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "HOBBY": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "HOCH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "HOCHZEIT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "HOLEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "HÖREN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "HORMON": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "HOSE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "HOTEL": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "HUND": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "HUNGER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "IDEAL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "IDEE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ILLEGAL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "INDIREKT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "INHALT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "INNER": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "INSEL": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "INSTITUT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "INTENSIV": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "INTERNET": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "ISOLIERT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "JACKE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "JAHR": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "JEANS": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "JEWEILIG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "JOB": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "JUDE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "JUGEND": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "JUNG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "JUNGE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "JURA": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "KAFFEE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "KALT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KAMERA": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KAMPF": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "KÄMPFEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KANDIDAT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "KAPITEL": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "KAPUTT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "KARRIERE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KARTE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "KÄSE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KASSE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "KASUS": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "KATZE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KAUF": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "KAUFEN": {
+    "levels": [
+      "a1",
+      "a2"
+    ]
+  },
+  "KENNEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "KIND": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KINO": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "KLANG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KLAPPEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "KLAR": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KLASSE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KLAVIER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KLEID": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KLEIDUNG": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "KLEIN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KLINGEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "KLUB": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KLUFT": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "KLUG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KNAPP": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KOCHEN": {
+    "levels": [
+      "a1",
+      "a2"
+    ]
+  },
+  "KOHÄSION": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KOLLEGE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "KOMMEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "KOMMEND": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KOMPLETT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KONFLIKT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KÖNIG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KONKRET": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KÖNNEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "KONSENS": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KONSTANT": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "KONTAKT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "KONTEXT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KONTO": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KONTRAST": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "KONZEPT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KONZERT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KOPF": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KOPIEREN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "KORREKT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KOSTEN": {
+    "levels": [
+      "a1",
+      "b1"
+    ]
+  },
+  "KRAFT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "KRÄFTIG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KRANK": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "KREDIT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "KREIS": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "KRIEGEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "KRIMI": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KRISE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KRITIK": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KRITIKER": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "KRITISCH": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "KÜCHE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "KUCHEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KÜHL": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KULTUR": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "KÜMMERN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "KUNDE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "KÜNDIGEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KÜNFTIG": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "KUNST": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "KURS": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "KURZ": {
+    "levels": [
+      "a1",
+      "b1"
+    ]
+  },
+  "KÜRZLICH": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "LACHEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "LADEN": {
+    "levels": [
+      "a2",
+      "b1"
+    ]
+  },
+  "LAGE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "LAMPE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "LAND": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "LANDEN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "LANG": {
+    "levels": [
+      "a2",
+      "b2"
+    ]
+  },
+  "LÄNGE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "LANGSAM": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "LASSEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "LAST": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "LAUF": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "LAUFEN": {
+    "levels": [
+      "a1",
+      "b2"
+    ]
+  },
+  "LAUT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "LEBEN": {
+    "levels": [
+      "a1",
+      "b1",
+      "b2"
+    ],
+    "definition": "Existieren und seinen Alltag führen.",
+    "type": "Verb",
+    "sources": [
+      "ynsrc/dwds"
+    ]
+  },
+  "LEBEND": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "LEBENDE": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "LEBENDIG": {
+    "levels": [
+      "b2"
+    ],
+    "definition": "Voller Leben, Bewegung oder Energie.",
+    "type": "Adjektiv",
+    "sources": [
+      "ynsrc/dwds"
+    ]
+  },
+  "LEDIG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "LEER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "LEGAL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "LEGEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "LEGITIM": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "LEHNEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "LEHRER": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "LEHRERIN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "LEICHT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "LEID": {
+    "levels": [
+      "a1",
+      "a2"
+    ]
+  },
+  "LEIDEN": {
+    "levels": [
+      "b2",
+      "c1"
+    ]
+  },
+  "LEIHEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "LEISTEN": {
+    "levels": [
+      "c1"
+    ],
+    "definition": "Etwas schaffen, erbringen oder bezahlen.",
+    "type": "Verb",
+    "sources": [
+      "ynsrc/dwds"
+    ]
+  },
+  "LEITEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "LEKTOR": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "LERNEN": {
+    "levels": [
+      "b1"
+    ],
+    "definition": "Wissen oder Fähigkeiten erwerben.",
+    "type": "Verb",
+    "sources": [
+      "ynsrc/dwds"
+    ]
+  },
+  "LESEN": {
+    "levels": [
+      "a1",
+      "a2"
+    ]
+  },
+  "LESER": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "LETZT": {
+    "levels": [
+      "a1",
+      "a2"
+    ]
+  },
+  "LEUTE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "LEXIKON": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "LICHT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "LIEB": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "LIEBE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "LIEBEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "LIED": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "LIEFERN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "LIEGEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "LINGUIST": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "LINIE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "LISTE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "LIZENZ": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "LOGISCH": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "LOHN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "LOHNEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "LÖHNEN": {
+    "levels": [
+      "c2"
+    ],
+    "definition": "Sich wegen des Nutzens oder Ergebnisses auszahlen.",
+    "type": "Verb",
+    "sources": [
+      "Duden"
+    ]
+  },
+  "LOKAL": {
+    "levels": [
+      "a2",
+      "b1"
+    ]
+  },
+  "LÖSEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "LÖSUNG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "LUFT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "LÜGEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "LUSTIG": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "MACHEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "MACHT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MÄDCHEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "MAIL": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "MAL": {
+    "levels": [
+      "a1",
+      "a2"
+    ]
+  },
+  "MALEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "MAMA": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MANGEL": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MANGELND": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "MANN": {
+    "levels": [
+      "a2"
+    ],
+    "definition": "Eine erwachsene Person männlichen Geschlechts.",
+    "type": "Substantiv",
+    "gender": "masculine",
+    "article": "der",
+    "sources": [
+      "Duden",
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "MÄNNLICH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "MARKE": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "MASCHINE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MAẞ": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "MASSE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "MAẞNAHME": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "MASTER": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "MATERIAL": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MAUER": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "MEDIZIN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "MEER": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "MEHRHEIT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MEIN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "MEINEN": {
+    "levels": [
+      "a1",
+      "c1"
+    ]
+  },
+  "MEINUNG": {
+    "levels": [
+      "b1"
+    ],
+    "definition": "Eine persönliche Ansicht zu einem Thema.",
+    "type": "Substantiv",
+    "gender": "feminine",
+    "article": "die",
+    "rarity": {
+      "source": "Duden",
+      "dudenClass": 4,
+      "label": "common"
+    },
+    "sources": [
+      "Duden",
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "MEIST": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MEISTER": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MENGE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MENSCH": {
+    "levels": [
+      "b2"
+    ],
+    "definition": "Eine Person.",
+    "type": "Substantiv",
+    "gender": "masculine",
+    "article": "der",
+    "sources": [
+      "Duden",
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "MENSCHEN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "MERKEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MERKMAL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "MESSEN": {
+    "levels": [
+      "c2"
+    ],
+    "definition": "Die Größe, Menge oder Dauer von etwas bestimmen.",
+    "type": "Verb",
+    "sources": [
+      "ynsrc/dwds"
+    ]
+  },
+  "METHODE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MIETE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "MIETEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "MILCH": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "MILLION": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "MINISTER": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MINUTE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "MISCHEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MITGLIED": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "MITTE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "MITTEL": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MÖBEL": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "MODE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "MODEL": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "MODELL": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MODERN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MÖGEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "MÖGLICH": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MOMENT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MONAT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "MORD": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "MORGEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "MÜDE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "MÜHE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "MÜLL": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "MUNDART": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "MÜNDLICH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "MUSEUM": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "MUSIK": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "MUSIKER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "MÜSSEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "MUSTER": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "MUTTER": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "NACH": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "NACHBAR": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "NACHT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "NÄHE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "NAME": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "NATION": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "NATIONAL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "NEHMEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "NEIGEN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "NEIGUNG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "NENNEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "NERVÖS": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "NETT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "NETZ": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "NETZWERK": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "NEU": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "NEUZEIT": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "NOMEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "NORDEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "NORM": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "NORMAL": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "NOT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "NOTE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "NOTIEREN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "NÖTIG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "NUMMER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "NUTZEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "NÜTZEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "NÜTZLICH": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "NUTZLOS": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "OBST": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "OFFEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ÖFFNEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "OHR": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "OMA": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "OPA": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "OPFER": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "OPTIMAL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ORDNUNG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ORT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "OST": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "OSTEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PAAR": {
+    "levels": [
+      "a1",
+      "a2"
+    ]
+  },
+  "PACKEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PAPIER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PARADOX": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "PARALLEL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "PARK": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PARTEI": {
+    "levels": [
+      "c1"
+    ],
+    "definition": "Eine politische Gruppe mit gemeinsamen Zielen.",
+    "type": "Substantiv",
+    "gender": "feminine",
+    "article": "die",
+    "rarity": {
+      "source": "Duden",
+      "dudenClass": 4,
+      "label": "common"
+    },
+    "sources": [
+      "Duden",
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "PARTNER": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "PARTY": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PASSIV": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "PATIENT": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "PAUSE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "PEINLICH": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "PERSON": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "PFERD": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PFLANZEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PFLEGE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "PFLEGEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "PFLICHT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "PFUND": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "PHÄNOMEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "PHASE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "PHYSISCH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "PIZZA": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PLAKAT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PLAN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "PLANEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PLATZ": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "POESIE": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "POETISCH": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "POLEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "POLITIK": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "POLIZEI": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "POLIZIST": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "POLNISCH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "POMMES": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "POPULÄR": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "POSITION": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "POSITIV": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "POSITIVE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "PRÄGEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "PRAXIS": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "PRÄZIS": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "PREIS": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PRESSE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "PRINZIP": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "PRIVAT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "PROBLEM": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "PROGRAMM": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PROJEKT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PROTEST": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "PROZENT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "PROZEẞ": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "PRÜFEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "PRÜFUNG": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "PUBLIKUM": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "PUNKT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "PUTZEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "QUAL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "QUALITÄT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "QUELLE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "RACHE": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "RAD": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "RADIKAL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "RADIO": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "RAHMEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "RASCH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "RASSE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "RAT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "RATE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "RATEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "RAUCHEN": {
+    "levels": [
+      "a2",
+      "c1"
+    ]
+  },
+  "RAUCHER": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "RAUM": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "REAKTION": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "RECHEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "RECHNEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "RECHNUNG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "RECHT": {
+    "levels": [
+      "a2",
+      "b2"
+    ]
+  },
+  "REDE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "REDEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "REFORM": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "REGEL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "REGELUNG": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "REGION": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "REGIONAL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "REGNEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "REICH": {
+    "levels": [
+      "a2",
+      "b1"
+    ]
+  },
+  "REICHEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "REIF": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "REIHE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "REIN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "REIS": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "REISE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "REISEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "REITEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "RELATIV": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "RELEVANT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "RELIGION": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "RELIGIÖS": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "RENTE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "RENTNER": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "RESPEKT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "REST": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "RESULTAT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "RICHTEN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "RICHTER": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "RICHTIG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "RICHTUNG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "RIESIG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "RISIKO": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ROLLE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ROT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "RUF": {
+    "levels": [
+      "a1",
+      "a2"
+    ]
+  },
+  "RUHE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "RUHIG": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "RUNDFUNK": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SAFT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "SAGEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "SALAT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "SALZ": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SAMMELN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SÄNGER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SATZ": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SAUBER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SAUER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SCHADE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SCHADEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SCHÄTZEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SCHEINEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SCHICKEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "SCHIFF": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SCHLAFEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SCHLANK": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SCHLECHT": {
+    "levels": [
+      "a1",
+      "b1",
+      "b2"
+    ]
+  },
+  "SCHLIMM": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SCHMERZ": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SCHNEE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SCHNEIEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SCHNELL": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "SCHOCK": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SCHÖN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "SCHRIFT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SCHRITT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SCHUH": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SCHULD": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SCHULDIG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SCHULE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "SCHÜLER": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SCHUTZ": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SCHÜTZEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SCHWACH": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SCHWÄCHE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SCHWARZ": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SCHWER": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "SEE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SEELISCH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SEHEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "SEIN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "SEIT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SEITE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SEKUNDE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SELTEN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "SELTSAM": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SEMESTER": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SEMINAR": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SENDUNG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SENKEN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "SEPARAT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SERVICE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SICHERN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SICHT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SICHTBAR": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SIEG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SINGEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SINGLE": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "SINKEN": {
+    "levels": [
+      "b1",
+      "b2"
+    ]
+  },
+  "SINN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SINNLOS": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SINNVOLL": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SINVOLL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SITZEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SOFA": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SOFTWARE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SOHN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "SOLLEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SOMMER": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "SONNE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "SONNIG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SORGE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SORGEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SOZIAL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SPANISCH": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SPANNEND": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SPAẞ": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SPÄT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "SPIEL": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "SPIELEN": {
+    "levels": [
+      "a1",
+      "a2"
+    ]
+  },
+  "SPITZE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SPORT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "SPORTLER": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "SPRACHE": {
+    "levels": [
+      "b1"
+    ],
+    "definition": "Ein System aus Wörtern und Regeln zur Verständigung.",
+    "type": "Substantiv",
+    "gender": "feminine",
+    "article": "die",
+    "rarity": {
+      "source": "Duden",
+      "dudenClass": 3,
+      "label": "established"
+    },
+    "sources": [
+      "Duden",
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "SPRECHEN": {
+    "levels": [
+      "a1",
+      "b2"
+    ]
+  },
+  "SPRECHER": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SPÜREN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "STAAT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "STADT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "STAMMEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "STAND": {
+    "levels": [
+      "c2"
+    ],
+    "definition": "Die aktuelle Lage oder der Zustand von etwas.",
+    "type": "Substantiv",
+    "gender": "masculine",
+    "article": "der",
+    "rarity": {
+      "source": "Duden",
+      "dudenClass": 4,
+      "label": "common"
+    },
+    "sources": [
+      "Duden",
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "STANDARD": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "STÄNDIG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "STAR": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "STARK": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "STÄRKE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "STÄRKEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "STATUS": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "STAU": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "STEHEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "STEIGEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "STEIGERN": {
+    "levels": [
+      "b2"
+    ],
+    "definition": "Etwas größer, stärker oder mehr machen.",
+    "type": "Verb",
+    "sources": [
+      "ynsrc/dwds"
+    ]
+  },
+  "STELLE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "STELLEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "STELLUNG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "STERBEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "STEUER": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "STIL": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "STIMME": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "STIMMEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "STIMMUNG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "STOFF": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "STOLZ": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "STOPPEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "STÖREN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "STOẞEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "STRAFE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "STRAFEN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "STRAẞE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "STREBEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "STREIT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "STREITEN": {
+    "levels": [
+      "a2"
+    ],
+    "definition": "Einen Konflikt oder eine heftige Diskussion haben.",
+    "type": "Verb",
+    "sources": [
+      "ynsrc/dwds"
+    ]
+  },
+  "STRENG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "STRÖMUNG": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "STÜCK": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "STUDENT": {
+    "levels": [
+      "b2"
+    ],
+    "definition": "Eine Person, die an einer Hochschule studiert.",
+    "type": "Substantiv",
+    "gender": "masculine",
+    "article": "der",
+    "rarity": {
+      "source": "Duden",
+      "dudenClass": 3,
+      "label": "established"
+    },
+    "sources": [
+      "Duden",
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "STUDIE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "STUDIUM": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "STUFE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "STUNDE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "STÜTZEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SUCHE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SUCHEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "SUCHT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SÜDEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SUMME": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SUPPE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SURFEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SÜẞ": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SYMBOL": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "SYSTEM": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "TABELLE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "TAG": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "TAGEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "TÄGLICH": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TALENT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "TANTE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TANZEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TASCHE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "TAT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "TATE": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "TÄTER": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "TÄTIG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "TATSACHE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "TAUCHEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "TAUSEND": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TAXI": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TEAM": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TEE": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Ein heißes Getränk aus aufgegossenen Blättern oder Kräutern.",
+    "type": "Substantiv",
+    "gender": "masculine",
+    "article": "der",
+    "sources": [
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "TEIL": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "TEILEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TEILUNG": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "TELEFON": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TENDENZ": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "TENNIS": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TERMIN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TEST": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "TEUER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TEXT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "THEATER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "THEMA": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "THEORIE": {
+    "levels": [
+      "c1"
+    ],
+    "definition": "Eine begründete Erklärung für einen Zusammenhang.",
+    "type": "Substantiv",
+    "gender": "feminine",
+    "article": "die",
+    "rarity": {
+      "source": "Duden",
+      "dudenClass": 3,
+      "label": "established"
+    },
+    "sources": [
+      "Duden",
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "THESE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "TICKET": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "TIEF": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "TIER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TISCH": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "TITEL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "TOCHTER": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "TOD": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "TÖDLICH": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "TOILETTE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TOLERANZ": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "TOMATE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "TOR": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "TOT": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "TOTAL": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "TÖTEN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "TOURIST": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TRAGEN": {
+    "levels": [
+      "a2",
+      "c1"
+    ]
+  },
+  "TRAUEN": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "TRAUM": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TRÄUMEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TREFFEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "TREND": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "TRENNEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "TRENNUNG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "TRETEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "TRINKEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "TUN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TÜR": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "TYPISCH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ÜBEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ÜBLICH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ÜBUNG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "UHR": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "UMFASSEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "UMFRAGE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "UMGANG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "UMGEBUNG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "UMGEHEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "UMSTAND": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "UMZIEHEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "UNFÄHIG": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "UNFALL": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "UNGEFÄHR": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "UNI": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "UNRECHT": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "URBAN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "URLAUB": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "URSPRUNG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "URTEIL": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "VARIANTE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "VARIETÄT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "VATER": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "VERBOT": {
+    "levels": [
+      "c1"
+    ],
+    "definition": "Eine Regel, die etwas nicht erlaubt.",
+    "type": "Substantiv",
+    "gender": "neuter",
+    "article": "das",
+    "rarity": {
+      "source": "Duden",
+      "dudenClass": 3,
+      "label": "established"
+    },
+    "sources": [
+      "Duden",
+      "ynsrc/gerhard-koebler"
+    ]
+  },
+  "VEREIN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "VERFÜGEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "VERGEHEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "VERKEHR": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "VERLUST": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "VERMÖGEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "VERMUTEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "VERSUCH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "VERTRAG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "VERTRAUT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "VIELFALT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "VIERTEL": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "VISUM": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "VOLL": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "VÖLLIG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "VOR": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "VORFELD": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "VORGANG": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "VORHABEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "WAFFE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "WAGEN": {
+    "levels": [
+      "a2",
+      "c1"
+    ]
+  },
+  "WÄHLEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "WÄHLER": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "WAHR": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "WANDEL": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "WANDELN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "WANDERN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "WARTEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "WÄSCHE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "WASCHEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "WASSER": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "WEBSITE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "WECKEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "WEG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "WEIBLICH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "WEIN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "WEINEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "WEISE": {
+    "levels": [
+      "b1",
+      "b2"
+    ]
+  },
+  "WEIẞ": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "WEIT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "WELT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "WELTWEIT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "WENDE": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "WENIGER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "WERBUNG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "WERDEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "WERFEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "WERK": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "WERKZEUG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "WERT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "WERTLOS": {
+    "levels": [
+      "c2"
+    ],
+    "definition": "Ohne Wert oder Nutzen.",
+    "type": "Adjektiv",
+    "sources": [
+      "ynsrc/dwds"
+    ]
+  },
+  "WERTVOLL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "WESEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "WEST": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "WESTEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "WETTER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "WICHTIG": {
+    "levels": [
+      "a1",
+      "b1"
+    ]
+  },
+  "WILLE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "WIND": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "WINDIG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "WINTER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "WIRKEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "WIRKLICH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "WIRKUNG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "WISSEN": {
+    "levels": [
+      "a1",
+      "a2"
+    ]
+  },
+  "WITZ": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "WOCHE": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "WOHNEN": {
+    "levels": [
+      "a1",
+      "a2"
+    ]
+  },
+  "WOHNORT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "WOHNRAUM": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "WOHNUNG": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "WOLLEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "WORT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "WUNDER": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "WÜRDE": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "WURST": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ZAHL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ZAHLEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "ZAHN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ZEICHEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ZEICHNEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ZEIGEN": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "ZEIT": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ZEITLICH": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ZEITRAUM": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ZEITUNG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ZENSUR": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ZETTEL": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ZEUGNIS": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ZIEHEN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ZIEL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ZIMMER": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "ZITAT": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ZONE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ZUCKER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ZUG": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ZUGANG": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ZUHAUSE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ZUHÖREN": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "ZUNEHMEN": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ZUSTAND": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ZUTATEN": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ZWECK": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ZWEIFEL": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ZWINGEN": {
+    "levels": [
+      "b2"
+    ]
+  }
+}

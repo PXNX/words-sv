@@ -4,25 +4,10 @@
 	  import { goto } from '$app/navigation';
 	  import { page } from '$app/state';
 	  import { onMount } from 'svelte';
-  import wordsDeA1 from '$lib/data/words.de.a1.json';
-  import wordsDeA2 from '$lib/data/words.de.a2.json';
-  import wordsDeB1 from '$lib/data/words.de.b1.json';
-  import wordsDeB2 from '$lib/data/words.de.b2.json';
-import wordsDeC1 from '$lib/data/words.de.c1.json';
-import wordsDeC2 from '$lib/data/words.de.c2.json';
-	import definitionsDe from '$lib/data/definitions.de.json';
-	import metadataDe from '$lib/data/metadata.de.json';
-import wordsEnA1 from '$lib/data/words.en.a1.json';
-  import wordsEnA2 from '$lib/data/words.en.a2.json';
-  import wordsEnB1 from '$lib/data/words.en.b1.json';
-  import wordsEnB2 from '$lib/data/words.en.b2.json';
-import wordsEnC1 from '$lib/data/words.en.c1.json';
-	import wordsEnC2 from '$lib/data/words.en.c2.json';
-	import definitionsEn from '$lib/data/definitions.en.json';
+		import { catalogDefinitions, catalogMetadata, catalogWords, vocabularyCatalogs } from '$lib/data/catalog';
 		import LearningMode from '$lib/LearningMode.svelte';
 			import WordleMode from '$lib/WordleMode.svelte';
 			import { playSuccessSound } from '$lib/sounds';
-			import { addedLanguagePacks, existingArticles } from '$lib/data/languagePacks';
 			import { readStreak, syncStreak, type ClientStreak, type StreakEvent } from '$lib/clientStreak';
 			import { disablePush, enablePush, pushEnabled, pushSupported } from '$lib/pushClient';
 	import { m } from '$lib/paraglide/messages';
@@ -56,19 +41,10 @@ import wordsEnC1 from '$lib/data/words.en.c1.json';
   type InstallPromptEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }> };
 
   const vocabularyLevels: VocabularyLevel[] = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
-const wordPools: Record<Language, Record<VocabularyLevel, string[]>> = {
-	de: { a1: wordsDeA1 as string[], a2: wordsDeA2 as string[], b1: wordsDeB1 as string[], b2: wordsDeB2 as string[], c1: wordsDeC1 as string[], c2: wordsDeC2 as string[] },
-	en: { a1: wordsEnA1 as string[], a2: wordsEnA2 as string[], b1: wordsEnB1 as string[], b2: wordsEnB2 as string[], c1: wordsEnC1 as string[], c2: wordsEnC2 as string[] },
-	fr: addedLanguagePacks.fr.words as unknown as Record<VocabularyLevel, string[]>, it: addedLanguagePacks.it.words as unknown as Record<VocabularyLevel, string[]>, es: addedLanguagePacks.es.words as unknown as Record<VocabularyLevel, string[]>, pt: addedLanguagePacks.pt.words as unknown as Record<VocabularyLevel, string[]>, uk: addedLanguagePacks.uk.words as unknown as Record<VocabularyLevel, string[]>
-};
-const wordDefinitions: Record<Language, Record<string, string>> = {
-	de: definitionsDe as Record<string, string>,
-	en: definitionsEn as Record<string, string>,
-	fr: addedLanguagePacks.fr.definitions, it: addedLanguagePacks.it.definitions, es: addedLanguagePacks.es.definitions, pt: addedLanguagePacks.pt.definitions, uk: addedLanguagePacks.uk.definitions
-};
+	const wordPools: Record<Language, Record<VocabularyLevel, string[]>> = Object.fromEntries(Object.entries(vocabularyCatalogs).map(([language, catalog]) => [language, Object.fromEntries(vocabularyLevels.map((level) => [level, catalogWords(catalog, level)]))])) as Record<Language, Record<VocabularyLevel, string[]>>;
+	const wordDefinitions: Record<Language, Record<string, string>> = Object.fromEntries(Object.entries(vocabularyCatalogs).map(([language, catalog]) => [language, catalogDefinitions(catalog)])) as Record<Language, Record<string, string>>;
 	type VocabularyMetadata = { type: string; gender?: 'masculine' | 'feminine' | 'neuter'; article?: string };
-	const nounMetadata = (articles: Record<string, string>) => Object.fromEntries(Object.entries(articles).map(([word, article]) => [word, { type: 'Substantiv', article }])) as Record<string, VocabularyMetadata>;
-	const wordMetadata: Record<Language, Record<string, VocabularyMetadata>> = { de: metadataDe as Record<string, VocabularyMetadata>, en: nounMetadata(existingArticles.en), fr: nounMetadata(addedLanguagePacks.fr.articles), it: nounMetadata(addedLanguagePacks.it.articles), es: nounMetadata(addedLanguagePacks.es.articles), pt: nounMetadata(addedLanguagePacks.pt.articles), uk: nounMetadata(addedLanguagePacks.uk.articles) };
+	const wordMetadata: Record<Language, Record<string, VocabularyMetadata>> = Object.fromEntries(Object.entries(vocabularyCatalogs).map(([language, catalog]) => [language, catalogMetadata(catalog)])) as Record<Language, Record<string, VocabularyMetadata>>;
 	const playableLanguages: ReadonlyArray<{ code: Language; label: string }> = [{ code: 'de', label: 'Deutsch' }, { code: 'en', label: 'English' }, { code: 'fr', label: 'Français' }, { code: 'it', label: 'Italiano' }, { code: 'es', label: 'Español' }, { code: 'pt', label: 'Português' }, { code: 'uk', label: 'Українська' }];
 	const hintableBaseWords = new Set(Object.values(wordDefinitions).flatMap((definitions) => Object.keys(definitions)));
 const interfaceLocales = [

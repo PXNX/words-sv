@@ -1,0 +1,302 @@
+{
+  "ABITUDINE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "AMARE": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Provare affetto profondo per qualcuno o qualcosa."
+  },
+  "AMBIGUITÀ": {
+    "levels": [
+      "c2"
+    ]
+  },
+  "AREA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Spazio o zona delimitata.",
+    "article": "l’",
+    "type": "Substantiv"
+  },
+  "ARTE": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Espressione creativa con forme, suoni o immagini.",
+    "article": "l’",
+    "type": "Substantiv"
+  },
+  "CAPIRE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "CASA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Luogo in cui si abita.",
+    "article": "la",
+    "type": "Substantiv"
+  },
+  "CITTÀ": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "COERENZA": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "CONCILIARE": {
+    "levels": [
+      "c2"
+    ]
+  },
+  "CONSEGUENZA": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "CONTROVERSIA": {
+    "levels": [
+      "c2"
+    ]
+  },
+  "CULTURA": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "DONNA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Persona adulta di sesso femminile.",
+    "article": "la",
+    "type": "Substantiv"
+  },
+  "DUREVOLE": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "ESIGENZA": {
+    "levels": [
+      "c2"
+    ]
+  },
+  "FAMIGLIA": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FUTURO": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GATTO": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Piccolo animale domestico che miagola.",
+    "article": "il",
+    "type": "Substantiv"
+  },
+  "GRANDE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "LAVORO": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "LIBRO": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Insieme di pagine da leggere.",
+    "article": "il",
+    "type": "Substantiv"
+  },
+  "MANGIARE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "MARE": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Grande distesa di acqua salata.",
+    "article": "il",
+    "type": "Substantiv"
+  },
+  "MAREA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Movimento periodico del livello del mare."
+  },
+  "MATERIA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Argomento o sostanza di cui si parla.",
+    "article": "la",
+    "type": "Substantiv"
+  },
+  "MATTINA": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "MIRA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Punto verso cui si dirige uno sguardo o un’azione."
+  },
+  "MOTIVO": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "PAESE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PARLARE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PERCORSO": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "PICCOLO": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PROGETTO": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "QUESTIONE": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "RATA": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "RILEVANTE": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "RIMA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Somiglianza di suono alla fine di due parole.",
+    "article": "la",
+    "type": "Substantiv"
+  },
+  "RIUSCIRE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SCEGLIERE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SCUOLA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Luogo in cui gli studenti imparano.",
+    "article": "la",
+    "type": "Substantiv"
+  },
+  "SERA": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "SFUMATURA": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "SINTETIZZARE": {
+    "levels": [
+      "c2"
+    ]
+  },
+  "SOCIETÀ": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SOTTIGLIEZZA": {
+    "levels": [
+      "c2"
+    ]
+  },
+  "SPESSO": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "SVILUPPO": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "TEMA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Argomento principale di un discorso o di un testo.",
+    "article": "il",
+    "type": "Substantiv"
+  },
+  "TIRA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Muove qualcosa verso di sé."
+  },
+  "UOMO": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Persona adulta di sesso maschile.",
+    "article": "l’",
+    "type": "Substantiv"
+  },
+  "VIAGGIO": {
+    "levels": [
+      "a2"
+    ]
+  }
+}
