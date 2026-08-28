@@ -277,3 +277,6 @@
 - [x] Wortdaten auf strukturierte Einträge mit Wortart, grammatischem Geschlecht und Seltenheitsangabe umstellen, ohne bestehende Spielauswahl zu brechen.
 - [x] Seltenheitsangaben aus dokumentierten Duden-Häufigkeitsinformationen und dem angegebenen Quellenbestand nachvollziehbar zuzuordnen und zu dokumentieren.
 - [x] Artikel ausschließlich bei Substantiven aus dem grammatischen Geschlecht ableiten und bei der Sprachausgabe nur das Lemma sprechen.
+
+- [ ] words-, definitions-, articles- und Metadaten-JSON je Sprache in einen gemeinsamen Katalog zusammenführen, ohne Datenverlust oder Änderungen an Push-/Cron-Code.
+- [ ] Zusammengeführte Kataloge und alle bestehenden Loader mit Tests, Svelte-Check und Build verifizieren.

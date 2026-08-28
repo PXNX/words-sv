@@ -11,7 +11,7 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"test": "node --test tests/modes.test.mjs tests/routes.test.mjs tests/streak.test.mjs tests/wordle-state.test.mjs && vitest run --config tests/vitest.server.config.mjs"
+		"test": "node --test tests/modes.test.mjs tests/routes.test.mjs tests/streak.test.mjs tests/wordle-state.test.mjs tests/catalog.test.mjs && vitest run --config tests/vitest.server.config.mjs"
   },
   "devDependencies": {
     "@iconify-json/fa6-brands": "^1.2.6",

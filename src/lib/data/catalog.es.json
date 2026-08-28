@@ -1,0 +1,330 @@
+{
+  "AMAR": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Sentir afecto profundo por alguien o algo."
+  },
+  "AMBIGÜEDAD": {
+    "levels": [
+      "c2"
+    ]
+  },
+  "AREA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Espacio o zona delimitada.",
+    "article": "el",
+    "type": "Substantiv"
+  },
+  "ARTE": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Expresión creativa con formas, sonidos o imágenes.",
+    "article": "el",
+    "type": "Substantiv"
+  },
+  "AUNQUE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "CASA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Lugar donde vive una persona.",
+    "article": "la",
+    "type": "Substantiv"
+  },
+  "CIUDAD": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "COHERENCIA": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "COMER": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "CONCILIAR": {
+    "levels": [
+      "c2"
+    ]
+  },
+  "CONSECUENCIA": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "CONTROVERSIA": {
+    "levels": [
+      "c2"
+    ]
+  },
+  "COSTUMBRE": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "CUESTION": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "CULTURA": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "DESARROLLO": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "ELEGIR": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ENFOQUE": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "ENTENDER": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ESCUELA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Lugar donde aprenden los estudiantes.",
+    "article": "la",
+    "type": "Substantiv"
+  },
+  "EXIGENCIA": {
+    "levels": [
+      "c2"
+    ]
+  },
+  "FAMILIA": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "FUTURO": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "GATO": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Animal doméstico pequeño que maúlla.",
+    "article": "el",
+    "type": "Substantiv"
+  },
+  "GRANDE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "HABLAR": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "HOMBRE": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Persona adulta de sexo masculino.",
+    "article": "el",
+    "type": "Substantiv"
+  },
+  "LIBRO": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Conjunto de páginas para leer.",
+    "article": "el",
+    "type": "Substantiv"
+  },
+  "LOGRAR": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "MAÑANA": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "MAR": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Gran extensión de agua salada.",
+    "article": "el",
+    "type": "Substantiv"
+  },
+  "MAREA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Movimiento periódico del nivel del mar."
+  },
+  "MATA": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "MATAR": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "MATERIA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Tema o sustancia de la que se trata.",
+    "article": "la",
+    "type": "Substantiv"
+  },
+  "MATIZ": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "MIRA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Punto hacia el que se dirige la vista o una acción."
+  },
+  "MIRAR": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "MOTIVO": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MUJER": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Persona adulta de sexo femenino.",
+    "article": "la",
+    "type": "Substantiv"
+  },
+  "NOCHE": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PAÍS": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PEQUEÑO": {
+    "levels": [
+      "a2"
+    ]
+  },
+  "PERRO": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Animal doméstico que suele ladrar.",
+    "article": "el",
+    "type": "Substantiv"
+  },
+  "PROYECTO": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "RATA": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "RELEVANTE": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "RIMA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Semejanza de sonido al final de dos palabras.",
+    "article": "la",
+    "type": "Substantiv"
+  },
+  "SINTETIZAR": {
+    "levels": [
+      "c2"
+    ]
+  },
+  "SOCIEDAD": {
+    "levels": [
+      "b2"
+    ]
+  },
+  "SOSTENIBLE": {
+    "levels": [
+      "c1"
+    ]
+  },
+  "SUTILEZA": {
+    "levels": [
+      "c2"
+    ]
+  },
+  "TEMA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Asunto principal de un texto o conversación.",
+    "article": "el",
+    "type": "Substantiv"
+  },
+  "TIRA": {
+    "levels": [
+      "a1"
+    ],
+    "definition": "Mueve algo hacia sí."
+  },
+  "TIRAR": {
+    "levels": [
+      "a1"
+    ]
+  },
+  "TRABAJO": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "VIAJE": {
+    "levels": [
+      "a2"
+    ]
+  }
+}
