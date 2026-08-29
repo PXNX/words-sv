@@ -6,7 +6,18 @@ const { definitionAnswerResult, definitionChoiceWords, evaluateWordleGuess, five
 const { prioritizeLearningWords, updateReviewProgress } = await import('../src/lib/spacedRepetition.js');
 const learningSource = await readFile(new URL('../src/lib/LearningMode.svelte', import.meta.url), 'utf8');
 const wordleSource = await readFile(new URL('../src/lib/WordleMode.svelte', import.meta.url), 'utf8');
-const pageSource = await readFile(new URL('../src/routes/+page.svelte', import.meta.url), 'utf8');
+const keyboardLayoutsSource = await readFile(new URL('../src/lib/wordle/keyboardLayouts.ts', import.meta.url), 'utf8');
+const wordleGridSource = await readFile(new URL('../src/lib/wordle/WordleGrid.svelte', import.meta.url), 'utf8');
+const wordleKeyboardSource = await readFile(new URL('../src/lib/wordle/WordleKeyboard.svelte', import.meta.url), 'utf8');
+const wordleTutorialDataSource = await readFile(new URL('../src/lib/wordle/tutorial.ts', import.meta.url), 'utf8');
+const homeSource = await readFile(new URL('../src/lib/HomeView.svelte', import.meta.url), 'utf8');
+const settingsViewSource = await readFile(new URL('../src/lib/SettingsView.svelte', import.meta.url), 'utf8');
+const settingsStoreSource = await readFile(new URL('../src/lib/state/settings.svelte.ts', import.meta.url), 'utf8');
+const vocabPageSource = await readFile(new URL('../src/routes/vocab/+page.svelte', import.meta.url), 'utf8');
+const circleGameSource = await readFile(new URL('../src/lib/circle/CircleGame.svelte', import.meta.url), 'utf8');
+const circlePageSource = await readFile(new URL('../src/routes/circle/+page.svelte', import.meta.url), 'utf8');
+const wordleTutorialRouteSource = await readFile(new URL('../src/routes/wordle/tutorial/+page.svelte', import.meta.url), 'utf8');
+const wordlePageSource = await readFile(new URL('../src/routes/wordle/+page.svelte', import.meta.url), 'utf8');
 const layoutSource = await readFile(new URL('../src/routes/+layout.svelte', import.meta.url), 'utf8');
 const soundSource = await readFile(new URL('../src/lib/sounds.ts', import.meta.url), 'utf8');
 const levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
@@ -28,21 +39,22 @@ test('Wordle auto-submits only exact-level valid five-letter guesses', () => {
 	assert.equal(isValidWordleGuess(a1Candidates, 'ACT'), false);
 	assert.match(wordleSource, /entries\.some\(\(entry\) => entry\.word === normalized\)/);
 	assert.match(wordleSource, /notice = labels\.invalid;\n\s+guess = '';/);
-	assert.match(wordleSource, /if \(nextGuess\.length === 5\) \{\n\s+submit\(\);/);
+	assert.match(wordleSource, /if \(nextGuess\.length === 5\) submit\(\);/);
   assert.doesNotMatch(wordleSource, /class="wordle-form"/);
   assert.doesNotMatch(wordleSource, /id="wordle-guess"/);
-	  assert.match(wordleSource, /const keyboardLayouts/);
-	  assert.match(wordleSource, /extras: \['Ä', 'Ö', 'Ü', 'ẞ'\]/);
-	  assert.match(wordleSource, /grid-template-columns:repeat\(5,clamp\(2\.35rem,12vw,3\.35rem\)\)/);
+	  assert.match(keyboardLayoutsSource, /export const keyboardLayouts/);
+	  assert.match(keyboardLayoutsSource, /extras: \['Ä', 'Ö', 'Ü', 'ẞ'\]/);
+	  assert.match(wordleGridSource, /grid-template-columns:repeat\(5,clamp\(2\.35rem,12vw,3\.35rem\)\)/);
 });
 
-test('Wordle keyboard greys scored-absent letters while preserving present and correct score priority', () => {
-	assert.match(wordleSource, /const keyboardMarks = \$derived\.by/);
-	assert.match(wordleSource, /const priority: Record<WordleMark, number> = \{ absent: 1, present: 2, correct: 3 \}/);
-	assert.match(wordleSource, /class:correct=\{keyboardMarks\[letter\] === 'correct'\}/);
-	assert.match(wordleSource, /class:present=\{keyboardMarks\[letter\] === 'present'\}/);
-	assert.match(wordleSource, /class:absent=\{keyboardMarks\[letter\] === 'absent'\}/);
-	assert.match(wordleSource, /\.wordle-keyboard button\.absent \{ border-color:#69727a;background:#69727a;color:#fffdf7; \}/);
+test('Wordle keyboard greys already-used letters, keeping present/correct legible while dimming absent keys', () => {
+	assert.match(keyboardLayoutsSource, /export function keyboardMarksFrom/);
+	assert.match(keyboardLayoutsSource, /const priority: Record<WordleMark, number> = \{ absent: 1, present: 2, correct: 3 \}/);
+	assert.match(wordleSource, /const keyboardMarks = \$derived\(keyboardMarksFrom\(entries\)\)/);
+	assert.match(wordleKeyboardSource, /class:correct=\{marks\[letter\] === 'correct'\}/);
+	assert.match(wordleKeyboardSource, /class:present=\{marks\[letter\] === 'present'\}/);
+	assert.match(wordleKeyboardSource, /class:absent=\{marks\[letter\] === 'absent'\}/);
+	assert.match(wordleKeyboardSource, /\.wordle-keyboard button\.absent \{ border-color:#69727a;background:#69727a;color:#fffdf7;opacity:\.6; \}/);
 });
 
 test('Wordle persists only a validated in-progress round and clears saved state after reset or completion', () => {
@@ -53,13 +65,17 @@ test('Wordle persists only a validated in-progress round and clears saved state 
 	assert.match(wordleSource, /if \(won \|\| exhausted\) \{\n\s+localStorage\.removeItem\(WORDLE_STATE_KEY\)/);
 });
 
-test('Wordle tutorial is deterministic, playable, and demonstrates repeated-letter scoring', () => {
-  assert.match(wordleSource, /WORDLE_TUTORIAL_KEY = 'wordcircle-wordle-tutorial-v1'/);
-  assert.match(wordleSource, /de: \{ target: 'TASSE', warmup: 'TASES' \}/);
-  assert.match(wordleSource, /en: \{ target: 'TASTE', warmup: 'TATES' \}/);
-  assert.match(wordleSource, /function tutorialPress\(letter: string\)/);
-  assert.match(wordleSource, /evaluateWordleGuess\(tutorialRound\.target, nextGuess\)/);
-  assert.match(wordleSource, /class:expected=\{tutorialExpected\[tutorialGuess\.length\] === letter\}/);
+test('Wordle tutorial is deterministic, playable, lives at its own route, and demonstrates repeated-letter scoring', () => {
+  assert.match(wordleTutorialDataSource, /WORDLE_TUTORIAL_KEY = 'wordcircle-wordle-tutorial-v1'/);
+  assert.match(wordleTutorialDataSource, /de: \{ target: 'TASSE', warmup: 'TASES' \}/);
+  assert.match(wordleTutorialDataSource, /en: \{ target: 'TASTE', warmup: 'TATES' \}/);
+  assert.match(wordleTutorialRouteSource, /function press\(letter: string\)/);
+  assert.match(wordleTutorialRouteSource, /evaluateWordleGuess\(tutorialRound\.target, nextGuess\)/);
+  assert.match(wordleKeyboardSource, /class:expected=\{guided && expectedLetter === letter\}/);
+  assert.match(wordleTutorialRouteSource, /class="wordle-tutorial-view"/);
+  assert.match(wordleTutorialRouteSource, /<WordleGrid rows=\{2\}/);
+  assert.match(wordleTutorialRouteSource, /<WordleKeyboard language=\{settings\.lang\}/);
+  assert.match(wordlePageSource, /if \(isWordleTutorialLanguage\(settings\.lang\) && !wordleTutorialComplete\(\)\) void goto\('\/wordle\/tutorial'\)/);
 });
 
 test('learning sections select no more than six unique level words', () => {
@@ -137,22 +153,23 @@ test('portrait safeguards and persistent optional success sounds remain wired at
   assert.match(layoutSource, /screen\.orientation/);
   assert.match(layoutSource, /gesturestart/);
   assert.match(layoutSource, /@media \(orientation:landscape\)/);
-  assert.match(pageSource, /SOUND_KEY = 'wordcircle-sound'/);
-  assert.match(pageSource, /playSuccessSound\(sound, 'circle'\)/);
-  assert.match(pageSource, /playSuccessSound\(sound, 'wordle'\)/);
-  assert.match(pageSource, /playSuccessSound\(sound, 'vocab'\)/);
+  assert.match(settingsStoreSource, /SOUND_KEY = 'wordcircle-sound'/);
+  assert.match(circleGameSource, /playSuccessSound\(settings\.sound, 'circle'\)/);
+  assert.match(wordlePageSource, /playSuccessSound\(settings\.sound, 'wordle'\)/);
+  assert.match(vocabPageSource, /playSuccessSound\(settings\.sound, 'vocab'\)/);
 	assert.match(soundSource, /AudioContext/);
-	assert.match(pageSource, /ROOT_ONBOARDING_KEY = 'wordcircle-root-onboarding-v1'/);
-	assert.match(pageSource, /function preferredInterfaceLocale\(\)/);
-	assert.match(pageSource, /class="home-games"/);
-	assert.match(pageSource, /nextMode === 'crossword' && \(lang === 'de' \|\| lang === 'en'\) && localStorage\.getItem\(TUTORIAL_STATE_KEY\) !== 'complete'/);
-	assert.match(pageSource, /class="home-trigger" onclick=\{goHome\}/);
-		assert.match(pageSource, /function goSettings\(\) \{ tutorialOpen = false; void goto\('\/settings'\); \}/);
-		assert.match(pageSource, /<button class="home-settings-link" onclick=\{goSettings\}>/);
-	assert.match(pageSource, /class="settings-page"/);
-	assert.doesNotMatch(pageSource, /class="setting-row mode-picker"/);
-	assert.doesNotMatch(pageSource, /settingsOpen/);
-	assert.match(pageSource, /{#if gameMode === 'crossword'}/);
+	assert.match(homeSource, /ROOT_ONBOARDING_KEY = 'wordcircle-root-onboarding-v1'/);
+	assert.match(settingsStoreSource, /function preferredInterfaceLocale\(\)/);
+	assert.match(homeSource, /class="home-games"/);
+	assert.match(circlePageSource, /\(settings\.lang === 'de' \|\| settings\.lang === 'en'\) && localStorage\.getItem\(CIRCLE_TUTORIAL_STATE_KEY\) !== 'complete'/);
+	assert.match(layoutSource, /class="home-trigger" onclick=\{\(\) => void goto\('\/'\)\}/);
+	assert.match(homeSource, /<button class="home-settings-link" onclick=\{\(\) => void goto\('\/settings'\)\}>/);
+	assert.match(settingsViewSource, /class="settings-page"/);
+	assert.doesNotMatch(settingsViewSource, /class="setting-row mode-picker"/);
+	assert.doesNotMatch(settingsViewSource, /settingsOpen/);
+	assert.match(circlePageSource, /<CircleGame \{practiceLanguage\} \/>/);
+	assert.match(wordlePageSource, /<WordleMode /);
+	assert.match(vocabPageSource, /<LearningMode /);
 });
 
 test('learning prompts load available voices, use the selected language, and expose the large audio control', () => {
