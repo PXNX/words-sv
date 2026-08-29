@@ -5,7 +5,7 @@ import test from 'node:test';
 const load = (name) => JSON.parse(readFileSync(new URL(`../src/lib/data/${name}`, import.meta.url), 'utf8'));
 const germanDefinitions = load('definitions.de.json');
 const englishDefinitions = load('definitions.en.json');
-const pageSource = readFileSync(new URL('../src/routes/+page.svelte', import.meta.url), 'utf8');
+const circleGameSource = readFileSync(new URL('../src/lib/circle/CircleGame.svelte', import.meta.url), 'utf8');
 const levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
 
 function inventory(value) {
@@ -57,9 +57,9 @@ test('every playable level can generate a definition-backed idle-hint base', () 
 });
 
 test('letter selection adds only four pixels to the base bubble diameter, uses the wider orbit, and replaces input content on completion', () => {
-  assert.match(pageSource, /const LETTER_RADIUS = 120;/);
-  assert.match(pageSource, /<circle r="30"><\/circle>/);
-  assert.match(pageSource, /transform:scale\(1\.066667\)/);
-  assert.match(pageSource, /\{#if celebration\}[\s\S]*class="completion-inline"[\s\S]*\{:else\}[\s\S]*class="selected-word"/);
-  assert.match(pageSource, /\.selection-area\.completion-area \{ display:flex;align-items:center;justify-content:center;height:70px;min-height:70px;padding:0; \}/);
+  assert.match(circleGameSource, /const LETTER_RADIUS = 120;/);
+  assert.match(circleGameSource, /<circle r="30"><\/circle>/);
+  assert.match(circleGameSource, /transform:scale\(1\.066667\)/);
+  assert.match(circleGameSource, /\{#if celebration\}[\s\S]*class="completion-inline"[\s\S]*\{:else\}[\s\S]*class="selected-word"/);
+  assert.match(circleGameSource, /\.selection-area\.completion-area \{ z-index:55;display:flex;align-items:center;justify-content:center;height:70px;min-height:70px;padding:0;background:transparent; \}/);
 });
