@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
   import { m } from '$lib/paraglide/messages';
   import { settings } from '$lib/state/settings.svelte';
   import { playSuccessSound } from '$lib/sounds';
@@ -12,7 +11,6 @@
   import IconClose from '~icons/material-symbols/cancel-rounded';
   import IconDownload from '~icons/material-symbols/download-rounded';
   import IconHelp from '~icons/material-symbols/help-rounded';
-  import IconSettings from '~icons/material-symbols/settings-rounded';
 
   type InstallPromptEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }> };
 
@@ -144,8 +142,7 @@
     tracePrompt: m.trace_prompt({}, { locale: settings.interfaceLocale }),
     traceActive: m.trace_active({}, { locale: settings.interfaceLocale }),
     tutorial: m.tutorial({}, { locale: settings.interfaceLocale }),
-    idleHint: m.idle_hint({}, { locale: settings.interfaceLocale }),
-    settings: m.settings({}, { locale: settings.interfaceLocale })
+    idleHint: m.idle_hint({}, { locale: settings.interfaceLocale })
   });
 
   const circleLetters = $derived(currentRound.letters);
@@ -396,7 +393,6 @@
       <button class="completion-continue" onclick={continueRound}>{labels.continue}</button>
     </div>
   {:else}
-    <button class="settings-trigger" onclick={() => void goto('/settings')} aria-label={labels.settings}><IconSettings aria-hidden="true" /></button>
     {#if idleHintReady}<button class="idle-hint-trigger" onclick={showIdleHint}><IconHelp aria-hidden="true" /><span>{labels.idleHint}</span></button>{/if}
     <div class:has-word={previewWord.length > 0} class:correct={feedback === 'correct'} class:wrong={feedback === 'wrong'} class="selected-word">
       {#if hintDefinition}
@@ -445,7 +441,6 @@
   .completion-continue { min-height:1.85rem;padding:0 .8rem;border:1px solid #34824d;border-radius:999px;background:#34824d;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease; }.completion-continue:active { transform:scale(.96); }
   .selection-area { position:relative;z-index:1;flex:0 0 auto;min-height:70px;padding:.75rem 0 .35rem;text-align:center;background:linear-gradient(90deg,transparent,rgba(23,42,69,.025) 22%,rgba(23,42,69,.025) 78%,transparent); }.selection-area.install-ready { min-height:96px; }.selection-area.completion-area { z-index:55;display:flex;align-items:center;justify-content:center;height:70px;min-height:70px;padding:0;background:transparent; }
   @media (max-width:579px) { .selection-area { min-height:54px;padding:.45rem 0 .1rem; }.selection-area.install-ready { min-height:70px; }.selection-area.completion-area { height:54px;min-height:54px; } }
-  .selection-area .settings-trigger { position:absolute;z-index:70;top:.48rem;right:0;display:grid;place-items:center;width:2.15rem;height:2.15rem;border:1px solid rgba(23,42,69,.24);border-radius:50%;background:rgba(255,253,247,.86);color:#172a45; }.selection-area .settings-trigger :global(svg) { width:1.1rem;height:1.1rem; }
   .idle-hint-trigger { position:absolute;z-index:70;top:.48rem;left:0;display:inline-flex;align-items:center;gap:.3rem;min-height:1.85rem;padding:0 .55rem;border:1px solid rgba(164,94,56,.58);border-radius:999px;background:#fffdf7;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:800;letter-spacing:.07em;opacity:0;transform:translateY(4px);animation:hint-fade-in .28s cubic-bezier(.23,1,.32,1) forwards;text-transform:uppercase; }.idle-hint-trigger :global(svg) { width:.9rem;height:.9rem; }.idle-hint-trigger:active { transform:translateY(4px) scale(.96); }
   .selected-word { min-height:2.1rem;display:inline-flex;align-items:center;justify-content:center;gap:.48rem;color:rgba(23,42,69,.35);font-family:'DM Serif Display',serif;font-size:clamp(1.35rem,5vw,1.75rem);letter-spacing:.16em;line-height:1; }.selected-word :global(svg) { width:1.45rem;height:1.45rem;letter-spacing:0; }.selected-word.has-word { color:#172a45; }.selected-word.correct { color:#3f7a50; }.selected-word.wrong { color:#b54442; }
   .hint-definition { max-width:min(32rem,74vw);color:#a45e38;font-family:'DM Sans',sans-serif;font-size:clamp(.63rem,2.5vw,.78rem);font-weight:700;letter-spacing:.01em;line-height:1.35;text-align:center; }
@@ -464,7 +459,6 @@
   :global(html.dark) .crossword-frame { background-color:#213a5d;border-color:#e6a527; }:global(html.dark) .crossword-cell { background:#fffdf7; }:global(html.dark) .outer-ring { stroke:#fffdf7; }:global(html.dark) .inner-ring { stroke:#fffdf7; }:global(html.dark) .core-mark { fill:#fffdf7; }:global(html.dark) .core-word,:global(html.dark) .core-caption { fill:rgba(255,253,247,.55); }:global(html.dark) .core-word.active-core { fill:#e6a527; }:global(html.dark) .letter-node>circle { fill:#172a45;stroke:#fffdf7; }:global(html.dark) .letter-node.active>circle { fill:#e6a527;stroke:#e6a527; }:global(html.dark) .letter-node.active text { fill:#172a45; }
   :global(html.dark) .selected-word.has-word { color:#fffdf7; }:global(html.dark) .completion-result small { color:rgba(255,253,247,.74); }
   :global(html.dark) .wiktionary-link { border-color:#84909b;background:#2b3d57;color:#d8dde1; }
-  :global(html.dark) .selection-area .settings-trigger { border-color:rgba(255,253,247,.3);background:rgba(23,42,69,.8);color:#fffdf7; }
   @media (min-width:580px) { .crossword-frame { min-height:260px; }.wheel-stage { min-height:300px;flex-basis:auto; }.letter-wheel { width:292px; } }
   @media (prefers-reduced-motion:reduce) { .letter-node:not(.active),.crossword-cell.solved,.completion-inline { animation:none; } }
 </style>

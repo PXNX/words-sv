@@ -1,4 +1,4 @@
-import { deviceId, timeZone } from './clientStreak';
+import { deviceId, timeZone } from '$lib/clientStreak';
 
 function decodeApplicationServerKey(value: string) {
 	const padding = '='.repeat((4 - value.length % 4) % 4);

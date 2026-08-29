@@ -1,15 +1,14 @@
-import { evaluateWordleGuess, normalizePlayableWord } from './modes.js';
+import { evaluateWordleGuess, normalizePlayableWord } from './wordleWords';
+import type { WordleMark } from './keyboardLayouts';
 
 export const WORDLE_STATE_KEY = 'wordcircle-wordle-state-v1';
 const STATE_VERSION = 1;
 
-/** @typedef {'correct' | 'present' | 'absent'} WordleMark */
-/** @typedef {{ word: string, marks: WordleMark[] }} WordleEntry */
-/** @typedef {{ language: string, level: string, candidates: string[] }} WordleContext */
-/** @typedef {{ target: string, entries: WordleEntry[], guess: string }} WordleSnapshot */
+export type WordleEntry = { word: string; marks: WordleMark[] };
+export type WordleContext = { language: string; level: string; candidates: string[] };
+export type WordleSnapshot = { target: string; entries: WordleEntry[]; guess: string };
 
-/** @param {unknown} actual @param {WordleMark[]} expected */
-function sameMarks(actual, expected) {
+function sameMarks(actual: unknown, expected: WordleMark[]): boolean {
   return Array.isArray(actual) && actual.length === expected.length && actual.every((mark, index) => mark === expected[index]);
 }
 
@@ -17,19 +16,18 @@ function sameMarks(actual, expected) {
  * Parse and validate a locally saved in-progress game. Completed and exhausted
  * games deliberately do not restore: the next load starts a fresh Wordle.
  */
-/** @param {unknown} serialized @param {WordleContext} context @returns {WordleSnapshot | null} */
-export function readWordleState(serialized, context) {
+export function readWordleState(serialized: string | null | undefined, context: WordleContext): WordleSnapshot | null {
   const { language, level, candidates } = context;
   if (typeof serialized !== 'string' || !serialized) return null;
 
   try {
-    const state = JSON.parse(serialized);
+    const state = JSON.parse(serialized) as Partial<WordleSnapshot & { version: number; language: string; level: string }>;
     if (!state || state.version !== STATE_VERSION || state.language !== language || state.level !== level) return null;
     if (typeof state.target !== 'string' || !candidates.includes(state.target)) return null;
     if (!Array.isArray(state.entries) || state.entries.length >= 6) return null;
     if (typeof state.guess !== 'string' || state.guess !== normalizePlayableWord(state.guess) || Array.from(state.guess).length > 4) return null;
 
-    const used = new Set();
+    const used = new Set<string>();
     for (const entry of state.entries) {
       if (!entry || typeof entry.word !== 'string' || !Array.isArray(entry.marks)) return null;
       if (!candidates.includes(entry.word) || entry.word === state.target || used.has(entry.word)) return null;
@@ -40,15 +38,14 @@ export function readWordleState(serialized, context) {
     return {
       target: state.target,
       guess: state.guess,
-      entries: state.entries.map(/** @param {WordleEntry} entry */ (entry) => ({ word: entry.word, marks: [...entry.marks] }))
+      entries: state.entries.map((entry) => ({ word: entry.word, marks: [...entry.marks] }))
     };
   } catch {
     return null;
   }
 }
 
-/** @param {WordleSnapshot & { language: string, level: string }} state */
-export function writeWordleState(state) {
+export function writeWordleState(state: WordleSnapshot & { language: string; level: string }): string {
   const { language, level, target, entries, guess } = state;
   return JSON.stringify({
     version: STATE_VERSION,
