@@ -1,12 +1,11 @@
 const DAY_MS = 24 * 60 * 60 * 1000;
 const INTERVAL_DAYS = [1, 2, 4, 8, 16, 32];
 
-/** @typedef {{ repetitions: number, dueAt: number }} ReviewProgress */
+export type ReviewProgress = { repetitions: number; dueAt: number };
 
-/** @param {unknown} value @returns {ReviewProgress} */
-export function normalizeReviewProgress(value) {
+export function normalizeReviewProgress(value: unknown): ReviewProgress {
   if (!value || typeof value !== 'object') return { repetitions: 0, dueAt: 0 };
-  const progress = /** @type {Partial<ReviewProgress>} */ (value);
+  const progress = value as Partial<ReviewProgress>;
   const repetitions = typeof progress.repetitions === 'number' && Number.isSafeInteger(progress.repetitions) && progress.repetitions >= 0 ? progress.repetitions : 0;
   const dueAt = typeof progress.dueAt === 'number' && Number.isSafeInteger(progress.dueAt) && progress.dueAt >= 0 ? progress.dueAt : 0;
   return {
@@ -15,8 +14,7 @@ export function normalizeReviewProgress(value) {
   };
 }
 
-/** @param {Record<string, ReviewProgress>} progressByWord @param {string} word @param {boolean} correct @param {number} [now] @returns {Record<string, ReviewProgress>} */
-export function updateReviewProgress(progressByWord, word, correct, now = Date.now()) {
+export function updateReviewProgress(progressByWord: Record<string, ReviewProgress>, word: string, correct: boolean, now: number = Date.now()): Record<string, ReviewProgress> {
   const current = normalizeReviewProgress(progressByWord[word]);
   const repetitions = correct ? current.repetitions + 1 : 0;
   const intervalDays = correct ? INTERVAL_DAYS[Math.min(repetitions - 1, INTERVAL_DAYS.length - 1)] : 1;
@@ -26,8 +24,7 @@ export function updateReviewProgress(progressByWord, word, correct, now = Date.n
   };
 }
 
-/** @param {string[]} words @param {Record<string, ReviewProgress>} progressByWord @param {number} [now] @returns {string[]} */
-export function prioritizeLearningWords(words, progressByWord, now = Date.now()) {
+export function prioritizeLearningWords(words: string[], progressByWord: Record<string, ReviewProgress>, now: number = Date.now()): string[] {
   return [...words].sort((left, right) => {
     const leftProgress = normalizeReviewProgress(progressByWord[left]);
     const rightProgress = normalizeReviewProgress(progressByWord[right]);

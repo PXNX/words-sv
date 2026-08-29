@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { evaluateWordleGuess, fiveLetterWords, isValidWordleGuess, normalizePlayableWord } from '$lib/modes.js';
-  import { readWordleState, WORDLE_STATE_KEY, writeWordleState } from '$lib/wordleState.js';
-  import { keyboardMarksFrom, type WordleMark } from '$lib/wordle/keyboardLayouts';
-  import WordleGrid from '$lib/wordle/WordleGrid.svelte';
-  import WordleKeyboard from '$lib/wordle/WordleKeyboard.svelte';
+  import { evaluateWordleGuess, fiveLetterWords, isValidWordleGuess, normalizePlayableWord } from './wordleWords';
+  import { readWordleState, WORDLE_STATE_KEY, writeWordleState } from './wordleState';
+  import { keyboardMarksFrom, type WordleMark } from './keyboardLayouts';
+  import WordleGrid from './WordleGrid.svelte';
+  import WordleKeyboard from './WordleKeyboard.svelte';
 
   type Entry = { word: string; marks: WordleMark[] };
   type Labels = { title: string; subtitle: string; empty: string; input: string; win: string; invalid: string; again: string };
@@ -115,7 +115,7 @@
 </section>
 
 <style>
-  .mode-view { flex:1 1 auto;min-height:0;display:grid;grid-template-rows:auto 1fr auto;align-content:stretch;gap:clamp(.75rem,2.8vw,1.2rem);padding:clamp(1.25rem,7svh,4rem) clamp(.8rem,3vw,1.25rem) clamp(1rem,3vw,1.5rem);overflow:auto;background:linear-gradient(180deg,rgba(237,228,213,.8),rgba(255,253,247,.65));border-top:3px double #172a45; }
+  .mode-view { flex:1 1 auto;min-height:0;display:grid;grid-template-rows:auto 1fr auto;align-content:stretch;gap:clamp(.75rem,2.8vw,1.2rem);padding:clamp(1.25rem,7svh,4rem) clamp(.8rem,3vw,1.25rem) clamp(1rem,3vw,1.5rem);overflow-x:hidden;overflow-y:auto;background:linear-gradient(180deg,rgba(237,228,213,.8),rgba(255,253,247,.65));border-top:3px double #172a45; }
   .mode-header { text-align:center; }.mode-header span { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.14em; }.mode-header h1 { margin:.15rem 0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.65rem,6vw,2.4rem);font-weight:400;line-height:1; }.mode-header p { margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.67rem;font-weight:700;line-height:1.35; }
   .wordle-board { display:grid;align-content:center;justify-items:center;gap:.65rem; }
   .mode-reset { min-height:2.45rem;padding:0 .9rem;border:1px solid #34824d;background:#34824d;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }

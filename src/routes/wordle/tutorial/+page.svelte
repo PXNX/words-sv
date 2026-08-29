@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { evaluateWordleGuess } from '$lib/modes.js';
+  import { evaluateWordleGuess } from '$lib/wordle/wordleWords';
   import { settings } from '$lib/state/settings.svelte';
   import { m } from '$lib/paraglide/messages';
   import TutorialDialog from '$lib/TutorialDialog.svelte';
@@ -87,7 +87,8 @@
 </section>
 
 <style>
-  .wordle-tutorial-view { flex:1 1 auto;min-height:0;display:grid;place-items:center;padding:clamp(1rem,6vw,2rem);overflow:auto;background:linear-gradient(180deg,rgba(237,228,213,.8),rgba(255,253,247,.65));border-top:3px double #172a45; }
+  .wordle-tutorial-view { flex:1 1 auto;min-height:0;display:grid;place-items:stretch;padding:0;overflow-x:hidden;overflow-y:auto;background:linear-gradient(180deg,rgba(237,228,213,.8),rgba(255,253,247,.65));border-top:3px double #172a45; }
+  .wordle-tutorial-view :global(.tutorial-dialog) { width:100%;height:100%;max-width:none;align-content:center;border-left:0;border-right:0;box-shadow:none; }
   .tutorial-explanation,.tutorial-repeats,.tutorial-prompt { margin:0;font-family:'DM Sans',sans-serif;font-size:.69rem;font-weight:700;line-height:1.4; }
   .tutorial-explanation { color:#172a45; }
   .tutorial-repeats { padding:.45rem .55rem;border-left:3px solid #e6a527;background:rgba(230,165,39,.1);color:#76541b; }

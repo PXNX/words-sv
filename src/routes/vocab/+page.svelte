@@ -1,13 +1,11 @@
 <script lang="ts">
   import { onMount, untrack } from 'svelte';
-  import { goto } from '$app/navigation';
   import { playSuccessSound } from '$lib/sounds';
   import { settings } from '$lib/state/settings.svelte';
   import { wordPools, wordDefinitions, wordMetadata } from '$lib/data/vocabulary';
   import { m } from '$lib/paraglide/messages';
-  import { definitionChoiceWords, insertLearningRepeat, pickLearningSection } from '$lib/modes.js';
-  import { prioritizeLearningWords, updateReviewProgress } from '$lib/spacedRepetition.js';
-  import IconSettings from '~icons/material-symbols/settings-rounded';
+  import { definitionChoiceWords, insertLearningRepeat, pickLearningSection } from '$lib/vocab/learning';
+  import { prioritizeLearningWords, updateReviewProgress } from '$lib/vocab/spacedRepetition';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
@@ -30,7 +28,6 @@
     correct: m.learning_correct({}, { locale: settings.interfaceLocale }),
     tryAgain: m.learning_try_again({}, { locale: settings.interfaceLocale })
   });
-  const settingsLabel = $derived(m.settings({}, { locale: settings.interfaceLocale }));
   const words = $derived(wordPools[settings.lang][settings.vocabularyLevel]);
   const definitions = $derived(wordDefinitions[settings.lang]);
   const metadata = $derived(wordMetadata[settings.lang]);
@@ -142,8 +139,6 @@
   });
 </script>
 
-<button class="settings-trigger mode-settings-trigger" onclick={() => void goto('/settings')} aria-label={settingsLabel}><IconSettings aria-hidden="true" /></button>
-
 <section class="learning-view" aria-label={labels.title}>
   <header class="learning-header"><span>{labels.section} · {settings.vocabularyLevel.toUpperCase()}</span><h1>{labels.title}</h1><p>{Math.min(position + 1, queue.length)} / {queue.length || 6}</p></header>
   {#if !currentWord}
@@ -173,10 +168,7 @@
 </section>
 
 <style>
-  .settings-trigger { display:grid;place-items:center;width:2.15rem;height:2.15rem;border:1px solid rgba(23,42,69,.24);border-radius:50%;background:rgba(255,253,247,.86);color:#172a45;transition:transform .18s cubic-bezier(.23,1,.32,1),background .18s ease; }
-  .settings-trigger :global(svg) { width:1.1rem;height:1.1rem; }
-  .mode-settings-trigger { position:absolute;z-index:100;top:.62rem;right:.62rem; }
-  .learning-view { flex:1 1 auto;min-height:0;display:grid;align-content:center;justify-items:center;gap:1rem;padding:clamp(1rem,4vw,2rem);overflow:auto;background:radial-gradient(circle at 50% 15%,rgba(230,165,39,.18),transparent 34%),#ede4d5;border-top:3px double #172a45; }.learning-header { text-align:center; }.learning-header span { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase; }.learning-header h1 { margin:.16rem 0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.7rem,7vw,2.65rem);font-weight:400;line-height:1; }.learning-header p { margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.65rem;font-weight:800; }
+  .learning-view { flex:1 1 auto;min-height:0;display:grid;align-content:center;justify-items:center;gap:1rem;padding:clamp(1rem,4vw,2rem);overflow-x:hidden;overflow-y:auto;background:radial-gradient(circle at 50% 15%,rgba(230,165,39,.18),transparent 34%),#ede4d5;border-top:3px double #172a45; }.learning-header { text-align:center; }.learning-header span { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase; }.learning-header h1 { margin:.16rem 0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.7rem,7vw,2.65rem);font-weight:400;line-height:1; }.learning-header p { margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.65rem;font-weight:800; }
   .learning-card { width:min(100%,28rem);min-height:8.2rem;display:grid;align-content:center;justify-items:center;gap:1rem;padding:clamp(1.2rem,6vw,2rem);border:1px solid #172a45;border-top:4px double #172a45;background:#fffdf7;box-shadow:8px 8px 0 rgba(164,94,56,.16);text-align:center; }.learning-word { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(2.35rem,11vw,4rem);font-weight:400;letter-spacing:.06em;line-height:1; }.audio-card { min-height:8.2rem;background:linear-gradient(145deg,#fffdf7,#fff4d9); }.listen-button { display:inline-flex;align-items:center;justify-content:center;gap:.45rem;min-height:2.4rem;padding:0 .95rem;border:1px solid #172a45;border-radius:999px;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }.loud-listen :global(svg) { width:1.1rem;height:1.1rem; }.listen-button:disabled { opacity:.5; }.audio-prompt,.speech-fallback { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:800;line-height:1.35; }.speech-fallback { color:#a45e38; }
   .definition-choice { width:min(100%,28rem);display:grid;gap:.55rem; }.definition-choice>p:first-child { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:900;letter-spacing:.1em;text-align:center;text-transform:uppercase; }.definition-options { display:grid;gap:.45rem; }.definition-options button { min-height:2.8rem;padding:.55rem .75rem;display:flex;align-items:center;justify-content:space-between;gap:.65rem;border:1px solid rgba(23,42,69,.55);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:700;line-height:1.3;text-align:left;touch-action:manipulation; }.definition-options button>span { flex:1; }.definition-options button:active { transform:scale(.985); }.definition-options button:disabled { opacity:1; }.definition-options button.correct-option { border-color:#34824d;background:#34824d;color:#fffdf7; }.definition-options button.wrong-option { border-color:#a45e38;background:#fff2e8;color:#8e4322; }:global(.answer-icon) { width:1.25rem;height:1.25rem;flex:none; }:global(.answer-icon-correct) { color:#fffdf7; }:global(.answer-icon-wrong) { color:#a45e38; }.continue-learning { justify-self:center;min-height:2.45rem;padding:0 1rem;border:1px solid #172a45;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;box-shadow:3px 3px 0 #e6a527; }.learning-definition,.learning-empty { max-width:24rem;margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:700;line-height:1.45;text-align:center; }.learning-empty { padding:1.2rem;border:1px solid rgba(164,94,56,.42);background:rgba(255,253,247,.8);color:#a45e38; }
   :global(html.dark) .learning-view { background:radial-gradient(circle at 50% 15%,rgba(230,165,39,.18),transparent 34%),#213a5d; }:global(html.dark) .learning-header h1 { color:#fffdf7; }:global(html.dark) .learning-header p { color:rgba(255,253,247,.68); }:global(html.dark) .learning-card { border-color:#fffdf7;background:#172a45; }:global(html.dark) .audio-card { background:linear-gradient(145deg,#172a45,#294666); }:global(html.dark) .learning-word { color:#fffdf7; }:global(html.dark) .definition-options button { border-color:rgba(255,253,247,.6);background:#172a45;color:#fffdf7; }:global(html.dark) .definition-options button.correct-option { background:#34824d;color:#fffdf7; }:global(html.dark) .definition-options button.wrong-option { background:#69332f;color:#fff7ed; }
