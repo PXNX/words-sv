@@ -139,37 +139,60 @@
   });
 </script>
 
-<section class="learning-view" aria-label={labels.title}>
-  <header class="learning-header"><span>{labels.section} · {settings.vocabularyLevel.toUpperCase()}</span><h1>{labels.title}</h1><p>{Math.min(position + 1, queue.length)} / {queue.length || 6}</p></header>
+<section
+  class="flex-1 min-h-0 grid content-center justify-items-center gap-4 p-[clamp(1rem,4vw,2rem)] overflow-x-hidden overflow-y-auto bg-[radial-gradient(circle_at_50%_15%,rgba(230,165,39,.18),transparent_34%),#ede4d5] dark:bg-[radial-gradient(circle_at_50%_15%,rgba(230,165,39,.18),transparent_34%),#213a5d] border-t-[3px] border-t-double border-t-[#172a45]"
+  aria-label={labels.title}
+>
+  <header class="text-center">
+    <span class="text-accent text-[.58rem] font-extrabold tracking-[.14em] uppercase">{labels.section} · {settings.vocabularyLevel.toUpperCase()}</span>
+    <h1 class="my-[.16rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,7vw,2.65rem)] font-normal leading-none">{labels.title}</h1>
+    <p class="m-0 text-base-content/60 text-[.65rem] font-extrabold">{Math.min(position + 1, queue.length)} / {queue.length || 6}</p>
+  </header>
   {#if !currentWord}
-    <div class="learning-empty">{labels.unavailable}</div>
+    <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{labels.unavailable}</div>
   {:else}
-    <article class="learning-card" class:audio-card={promptKind === 'audio'}>
+    <article
+      class="w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] border border-neutral border-t-[4px] border-t-double border-t-neutral shadow-[8px_8px_0_rgba(164,94,56,.16)] text-center"
+      class:bg-neutral-content={promptKind !== 'audio'}
+      class:bg-[linear-gradient(145deg,#fffdf7,#fff4d9)]={promptKind === 'audio'}
+      class:dark:bg-[linear-gradient(145deg,#172a45,#294666)]={promptKind === 'audio'}
+    >
       {#if promptKind === 'word'}
-        <p class="learning-word" lang={settings.lang}>{currentDisplayWord}</p>
+        <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(2.35rem,11vw,4rem)] font-normal tracking-[.06em] leading-none" lang={settings.lang}>{currentDisplayWord}</p>
       {:else}
-        <button class="listen-button loud-listen" onclick={speak} disabled={!speechSupported}><IconVolume aria-hidden="true" />{labels.listen}</button>
-        <p class="audio-prompt">{labels.audioPrompt}</p>
+        <button class="inline-flex items-center justify-center gap-[.45rem] min-h-[2.4rem] px-[.95rem] border border-[#172a45] rounded-full bg-[#172a45] text-[#fffdf7] text-[.68rem] font-black tracking-[.08em] uppercase disabled:opacity-50" onclick={speak} disabled={!speechSupported}><IconVolume class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />{labels.listen}</button>
+        <p class="m-0 text-accent text-[.62rem] font-extrabold leading-[1.35]">{labels.audioPrompt}</p>
       {/if}
-      {#if speechStatus && promptKind === 'audio'}<p class="speech-fallback">{speechStatus}</p>{/if}
+      {#if speechStatus && promptKind === 'audio'}<p class="m-0 text-accent text-[.62rem] font-extrabold leading-[1.35]">{speechStatus}</p>{/if}
     </article>
     {#if choiceWords.length >= 3}
-      <section class="definition-choice" aria-label={isDefinitionPrompt ? labels.chooseDefinition : labels.chooseWord}>
-        <p>{isDefinitionPrompt ? labels.chooseDefinition : labels.chooseWord}</p>
-        <div class="definition-options">
+      <section class="w-[min(100%,28rem)] grid gap-[.55rem]" aria-label={isDefinitionPrompt ? labels.chooseDefinition : labels.chooseWord}>
+        <p class="m-0 text-accent text-[.6rem] font-black tracking-[.1em] text-center uppercase">{isDefinitionPrompt ? labels.chooseDefinition : labels.chooseWord}</p>
+        <div class="grid gap-[.45rem]">
           {#each choiceWords as word}
-            <button type="button" value={word} onclick={chooseAnswer} disabled={answerStatus !== null} class:correct-option={answerStatus !== null && word === currentWord} class:wrong-option={answerStatus === 'wrong' && word === selectedChoice}><span>{optionText(word)}</span>{#if answerStatus !== null && word === currentWord}<IconCheck class="answer-icon answer-icon-correct" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && word === selectedChoice}<IconClose class="answer-icon answer-icon-wrong" aria-label={labels.tryAgain} />{/if}</button>
+            <button
+              type="button"
+              value={word}
+              onclick={chooseAnswer}
+              disabled={answerStatus !== null}
+              class="min-h-[2.8rem] px-[.75rem] py-[.55rem] flex items-center justify-between gap-[.65rem] text-[.72rem] font-bold leading-[1.3] text-left touch-manipulation active:scale-[.985] disabled:opacity-100"
+              class:border-neutral/55={!(answerStatus !== null && word === currentWord) && !(answerStatus === 'wrong' && word === selectedChoice)}
+              class:dark:border-neutral/60={!(answerStatus !== null && word === currentWord) && !(answerStatus === 'wrong' && word === selectedChoice)}
+              class:bg-neutral-content={!(answerStatus !== null && word === currentWord) && !(answerStatus === 'wrong' && word === selectedChoice)}
+              class:text-base-content={!(answerStatus !== null && word === currentWord) && !(answerStatus === 'wrong' && word === selectedChoice)}
+              class:border-success={answerStatus !== null && word === currentWord}
+              class:bg-success={answerStatus !== null && word === currentWord}
+              class:text-[#fffdf7]={answerStatus !== null && word === currentWord}
+              class:border-accent={answerStatus === 'wrong' && word === selectedChoice}
+              class:bg-[#fff2e8]={answerStatus === 'wrong' && word === selectedChoice}
+              class:text-[#8e4322]={answerStatus === 'wrong' && word === selectedChoice}
+              class:dark:bg-[#69332f]={answerStatus === 'wrong' && word === selectedChoice}
+              class:dark:text-[#fff7ed]={answerStatus === 'wrong' && word === selectedChoice}
+            ><span class="flex-1">{optionText(word)}</span>{#if answerStatus !== null && word === currentWord}<IconCheck class="w-[1.25rem] h-[1.25rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && word === selectedChoice}<IconClose class="w-[1.25rem] h-[1.25rem] flex-none text-accent" aria-label={labels.tryAgain} />{/if}</button>
           {/each}
         </div>
-        {#if answerStatus}<button class="continue-learning" onclick={continueLearning}>{labels.continue}</button>{/if}
+        {#if answerStatus}<button class="justify-self-center min-h-[2.45rem] px-[1rem] border border-[#172a45] bg-[#172a45] text-[#fffdf7] text-[.64rem] font-black tracking-[.08em] uppercase shadow-[3px_3px_0_#e6a527]" onclick={continueLearning}>{labels.continue}</button>{/if}
       </section>
-    {:else}<p class="learning-definition">{currentDefinition || labels.unavailable}</p>{/if}
+    {:else}<p class="max-w-[24rem] m-0 text-base-content/60 text-[.75rem] font-bold leading-[1.45] text-center">{currentDefinition || labels.unavailable}</p>{/if}
   {/if}
 </section>
-
-<style>
-  .learning-view { flex:1 1 auto;min-height:0;display:grid;align-content:center;justify-items:center;gap:1rem;padding:clamp(1rem,4vw,2rem);overflow-x:hidden;overflow-y:auto;background:radial-gradient(circle at 50% 15%,rgba(230,165,39,.18),transparent 34%),#ede4d5;border-top:3px double #172a45; }.learning-header { text-align:center; }.learning-header span { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase; }.learning-header h1 { margin:.16rem 0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.7rem,7vw,2.65rem);font-weight:400;line-height:1; }.learning-header p { margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.65rem;font-weight:800; }
-  .learning-card { width:min(100%,28rem);min-height:8.2rem;display:grid;align-content:center;justify-items:center;gap:1rem;padding:clamp(1.2rem,6vw,2rem);border:1px solid #172a45;border-top:4px double #172a45;background:#fffdf7;box-shadow:8px 8px 0 rgba(164,94,56,.16);text-align:center; }.learning-word { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(2.35rem,11vw,4rem);font-weight:400;letter-spacing:.06em;line-height:1; }.audio-card { min-height:8.2rem;background:linear-gradient(145deg,#fffdf7,#fff4d9); }.listen-button { display:inline-flex;align-items:center;justify-content:center;gap:.45rem;min-height:2.4rem;padding:0 .95rem;border:1px solid #172a45;border-radius:999px;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }.loud-listen :global(svg) { width:1.1rem;height:1.1rem; }.listen-button:disabled { opacity:.5; }.audio-prompt,.speech-fallback { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:800;line-height:1.35; }.speech-fallback { color:#a45e38; }
-  .definition-choice { width:min(100%,28rem);display:grid;gap:.55rem; }.definition-choice>p:first-child { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:900;letter-spacing:.1em;text-align:center;text-transform:uppercase; }.definition-options { display:grid;gap:.45rem; }.definition-options button { min-height:2.8rem;padding:.55rem .75rem;display:flex;align-items:center;justify-content:space-between;gap:.65rem;border:1px solid rgba(23,42,69,.55);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:700;line-height:1.3;text-align:left;touch-action:manipulation; }.definition-options button>span { flex:1; }.definition-options button:active { transform:scale(.985); }.definition-options button:disabled { opacity:1; }.definition-options button.correct-option { border-color:#34824d;background:#34824d;color:#fffdf7; }.definition-options button.wrong-option { border-color:#a45e38;background:#fff2e8;color:#8e4322; }:global(.answer-icon) { width:1.25rem;height:1.25rem;flex:none; }:global(.answer-icon-correct) { color:#fffdf7; }:global(.answer-icon-wrong) { color:#a45e38; }.continue-learning { justify-self:center;min-height:2.45rem;padding:0 1rem;border:1px solid #172a45;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;box-shadow:3px 3px 0 #e6a527; }.learning-definition,.learning-empty { max-width:24rem;margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:700;line-height:1.45;text-align:center; }.learning-empty { padding:1.2rem;border:1px solid rgba(164,94,56,.42);background:rgba(255,253,247,.8);color:#a45e38; }
-  :global(html.dark) .learning-view { background:radial-gradient(circle at 50% 15%,rgba(230,165,39,.18),transparent 34%),#213a5d; }:global(html.dark) .learning-header h1 { color:#fffdf7; }:global(html.dark) .learning-header p { color:rgba(255,253,247,.68); }:global(html.dark) .learning-card { border-color:#fffdf7;background:#172a45; }:global(html.dark) .audio-card { background:linear-gradient(145deg,#172a45,#294666); }:global(html.dark) .learning-word { color:#fffdf7; }:global(html.dark) .definition-options button { border-color:rgba(255,253,247,.6);background:#172a45;color:#fffdf7; }:global(html.dark) .definition-options button.correct-option { background:#34824d;color:#fffdf7; }:global(html.dark) .definition-options button.wrong-option { background:#69332f;color:#fff7ed; }
-</style>
