@@ -1,7 +1,56 @@
 /* WordCircle design reminder: editorial word magazine, warm paper, inky navy structure, sun-amber interaction. */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@0;1&display=swap');
 @import 'tailwindcss';
 @plugin 'daisyui';
+@custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/dm-sans-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/dm-sans-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'DM Serif Display';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/dm-serif-display-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'DM Serif Display';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/dm-serif-display-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'DM Serif Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/dm-serif-display-normal-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'DM Serif Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/dm-serif-display-normal-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 
 :root {
   font-family: 'DM Sans', system-ui, sans-serif;
@@ -20,14 +69,37 @@
   --color-primary-content: #172a45;
   --color-secondary: #172a45;
   --color-secondary-content: #fffdf7;
-  --color-accent: #c96e4d;
+  --color-accent: #a45e38;
   --color-accent-content: #fffdf7;
   --color-neutral: #172a45;
   --color-neutral-content: #fffdf7;
   --color-info: #315d8d;
-  --color-success: #587252;
+  --color-success: #34824d;
   --color-warning: #c9832f;
-  --color-error: #b45045;
+  --color-error: #b54442;
+  --radius-box: 1rem;
+  --radius-btn: 0.625rem;
+  --radius-badge: 999px;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --color-base-100: #213a5d;
+  --color-base-200: #172a45;
+  --color-base-300: #2b3d57;
+  --color-base-content: #fffdf7;
+  --color-primary: #e6a527;
+  --color-primary-content: #172a45;
+  --color-secondary: #fffdf7;
+  --color-secondary-content: #172a45;
+  --color-accent: #a45e38;
+  --color-accent-content: #fffdf7;
+  --color-neutral: #fffdf7;
+  --color-neutral-content: #172a45;
+  --color-info: #6ea3d9;
+  --color-success: #34824d;
+  --color-warning: #e6a527;
+  --color-error: #b54442;
   --radius-box: 1rem;
   --radius-btn: 0.625rem;
   --radius-badge: 999px;
@@ -56,3 +128,11 @@ button:focus-visible { outline: 3px solid rgba(230, 165, 39, 0.55); outline-offs
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 1ms !important; transition-duration: 1ms !important; }
 }
+
+/* Shared keyframes referenced from component markup via Tailwind's animate-[name_duration_...] arbitrary utility. */
+@keyframes shake { 25% { transform: translateX(-7px); } 55% { transform: translateX(6px); } 80% { transform: translateX(-3px); } }
+@keyframes solve-cell { 0% { transform: scale(.84); } 70% { transform: scale(1.05); } 100% { transform: scale(.965); } }
+@keyframes completion-in { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: scale(1); } }
+@keyframes hint-fade-in { to { opacity: 1; transform: translateY(0); } }
+@keyframes drop-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes startup-spin { to { transform: rotate(360deg); } }

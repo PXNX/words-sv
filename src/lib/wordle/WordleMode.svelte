@@ -141,47 +141,39 @@
   });
 </script>
 
-<section class="mode-view wordle-view" aria-label={labels.title}>
-  <header class="mode-header">
-    <span>{level.toUpperCase()}</span>
-    <h1>{labels.title}</h1>
-    <p>{labels.subtitle}</p>
+<section
+  class="flex-1 min-h-0 grid grid-rows-[auto_1fr_auto] content-stretch gap-[clamp(.75rem,2.8vw,1.2rem)] pt-[clamp(1.25rem,7svh,4rem)] px-[clamp(.8rem,3vw,1.25rem)] pb-[clamp(1rem,3vw,1.5rem)] overflow-x-hidden overflow-y-auto bg-[linear-gradient(180deg,rgba(237,228,213,.8),rgba(255,253,247,.65))] dark:bg-[linear-gradient(180deg,#213a5d,#172a45)] border-t-[3px] border-t-double border-t-[#172a45]"
+  aria-label={labels.title}
+>
+  <header class="text-center">
+    <span class="text-accent text-[.58rem] font-extrabold tracking-[.14em]">{level.toUpperCase()}</span>
+    <h1 class="my-[.15rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.65rem,6vw,2.4rem)] font-normal leading-none">{labels.title}</h1>
+    <p class="m-0 text-base-content/60 text-[.67rem] font-bold leading-[1.35]">{labels.subtitle}</p>
   </header>
 
   {#if practiceActive && tutorialRound}
-    <div class="wordle-board">
+    <div class="grid content-center justify-items-center gap-[.65rem]">
       <WordleGrid rows={2} {entries} currentGuess={practiceFinished ? '' : guess} ariaLabel={labels.title} compact />
       {#if practiceFinished}
-        <p class="mode-notice success">{practiceCompleteLabel}</p>
-        <button class="mode-reset" onclick={finishPractice}>{practiceContinueLabel}</button>
+        <p class="min-h-[1rem] m-0 text-success text-[.68rem] font-extrabold text-center">{practiceCompleteLabel}</p>
+        <button class="min-h-[2.45rem] px-[.9rem] border border-success bg-success text-[#fffdf7] text-[.64rem] font-extrabold tracking-[.08em] uppercase" onclick={finishPractice}>{practiceContinueLabel}</button>
       {:else}
-        <p class="practice-prompt">{practicePromptLabel} {practiceExpectedWord}</p>
+        <p class="m-0 text-accent text-[.68rem] font-extrabold text-center">{practicePromptLabel} {practiceExpectedWord}</p>
       {/if}
     </div>
     {#if !practiceFinished}
       <WordleKeyboard {language} expectedLetter={practiceExpectedWord[guess.length]} ariaLabel={labels.input} onPress={practicePress} onRemove={practiceRemoveLetter} />
     {/if}
   {:else if candidates.length === 0}
-    <div class="mode-empty">{labels.empty}</div>
+    <div class="p-[1.25rem] border border-accent/42 bg-accent/8 text-accent text-[.75rem] font-extrabold text-center">{labels.empty}</div>
   {:else}
-    <div class="wordle-board">
+    <div class="grid content-center justify-items-center gap-[.65rem]">
       <WordleGrid rows={6} {entries} currentGuess={guess} ariaLabel={labels.title} />
-      {#if notice}<p class:success={won} class="mode-notice">{notice}</p>{/if}
-      {#if exhausted && !won}<p class="mode-notice">{target}</p>{/if}
-      {#if won || exhausted}<button class="mode-reset" onclick={start}>{labels.again}</button>{/if}
+      {#if notice}<p class:text-accent={!won} class:text-success={won} class="min-h-[1rem] m-0 text-[.68rem] font-extrabold text-center">{notice}</p>{/if}
+      {#if exhausted && !won}<p class="min-h-[1rem] m-0 text-accent text-[.68rem] font-extrabold text-center">{target}</p>{/if}
+      {#if won || exhausted}<button class="min-h-[2.45rem] px-[.9rem] border border-success bg-success text-[#fffdf7] text-[.64rem] font-extrabold tracking-[.08em] uppercase" onclick={start}>{labels.again}</button>{/if}
     </div>
 
     <WordleKeyboard {language} marks={keyboardMarks} disabled={won || exhausted} ariaLabel={labels.input} onPress={press} onRemove={removeLetter} />
   {/if}
 </section>
-
-<style>
-  .mode-view { flex:1 1 auto;min-height:0;display:grid;grid-template-rows:auto 1fr auto;align-content:stretch;gap:clamp(.75rem,2.8vw,1.2rem);padding:clamp(1.25rem,7svh,4rem) clamp(.8rem,3vw,1.25rem) clamp(1rem,3vw,1.5rem);overflow-x:hidden;overflow-y:auto;background:linear-gradient(180deg,rgba(237,228,213,.8),rgba(255,253,247,.65));border-top:3px double #172a45; }
-  .mode-header { text-align:center; }.mode-header span { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.14em; }.mode-header h1 { margin:.15rem 0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.65rem,6vw,2.4rem);font-weight:400;line-height:1; }.mode-header p { margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.67rem;font-weight:700;line-height:1.35; }
-  .wordle-board { display:grid;align-content:center;justify-items:center;gap:.65rem; }
-  .mode-reset { min-height:2.45rem;padding:0 .9rem;border:1px solid #34824d;background:#34824d;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }
-  .mode-notice { min-height:1rem;margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:800;text-align:center; }.mode-notice.success { color:#34824d; }
-  .mode-empty { padding:1.25rem;border:1px solid rgba(164,94,56,.42);background:rgba(164,94,56,.08);color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:800;text-align:center; }
-  .practice-prompt { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:800;text-align:center; }
-  :global(html.dark) .mode-view { background:linear-gradient(180deg,#213a5d,#172a45); }.mode-header h1 { color:#172a45; }:global(html.dark) .mode-header h1 { color:#fffdf7; }:global(html.dark) .mode-header p { color:rgba(255,253,247,.7); }
-</style>
