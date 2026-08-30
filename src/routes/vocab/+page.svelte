@@ -177,7 +177,7 @@
               value={word}
               onclick={chooseAnswer}
               disabled={answerStatus !== null}
-              class="min-h-[2.8rem] px-[.75rem] py-[.55rem] flex items-center justify-between gap-[.65rem] text-[.72rem] font-bold leading-[1.3] text-left touch-manipulation active:scale-[.985] disabled:opacity-100 {optionStateClasses(word)}"
+              class="min-h-[2.8rem] px-[.75rem] py-[.55rem] flex items-center justify-between gap-[.65rem] border text-[.72rem] font-bold leading-[1.3] text-left touch-manipulation active:scale-[.985] disabled:opacity-100 {optionStateClasses(word)}"
             ><span class="flex-1">{optionText(word)}</span>{#if answerStatus !== null && word === currentWord}<IconCheck class="w-[1.25rem] h-[1.25rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && word === selectedChoice}<IconClose class="w-[1.25rem] h-[1.25rem] flex-none text-accent" aria-label={labels.tryAgain} />{/if}</button>
           {/each}
         </div>
