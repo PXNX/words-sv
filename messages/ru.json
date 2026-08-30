@@ -47,6 +47,7 @@
   "home_wordle": "Найдите слово из пяти букв.",
   "home_vocab": "Повторяйте слова со звуком и быстрым выбором.",
   "home_play": "Играть",
+  "onboarding_intro": "WordCircle помогает каждый день изучать новые слова с помощью трёх коротких игр. Выберите свои языки, чтобы начать.",
   "onboarding_title": "Какой язык вы хотите учить?",
   "onboarding_subtitle": "Позже это можно изменить в настройках.",
   "onboarding_learning_language": "Язык обучения",
@@ -100,5 +101,8 @@
   "stats_words_practiced": "Отработано слов",
   "stats_repetitions": "Повторений",
   "stats_most_repeated": "Самые повторяемые слова",
-  "stats_no_vocab_progress": "Потренируйте слова, чтобы увидеть прогресс здесь."
+  "stats_no_vocab_progress": "Потренируйте слова, чтобы увидеть прогресс здесь.",
+  "stats_overall_progress": "Общий прогресс",
+  "stats_mastered_words": "Освоенные слова",
+  "stats_by_level": "По уровням"
 }

@@ -47,6 +47,7 @@
   "home_wordle": "Finde das Wort mit fünf Buchstaben.",
   "home_vocab": "Wiederhole Wörter mit Ton und schnellen Auswahlfragen.",
   "home_play": "Spielen",
+  "onboarding_intro": "WordCircle hilft dir, jeden Tag neue Wörter zu lernen – mit drei kurzen Spielen. Wähle deine Sprachen, um loszulegen.",
   "onboarding_title": "Welche Sprache möchtest du lernen?",
   "onboarding_subtitle": "Du kannst dies später in den Einstellungen ändern.",
   "onboarding_learning_language": "Lernsprache",
@@ -100,5 +101,8 @@
   "stats_words_practiced": "Geübte Wörter",
   "stats_repetitions": "Wiederholungen",
   "stats_most_repeated": "Am häufigsten wiederholt",
-  "stats_no_vocab_progress": "Übe Vokabeln, um hier deinen Fortschritt zu sehen."
+  "stats_no_vocab_progress": "Übe Vokabeln, um hier deinen Fortschritt zu sehen.",
+  "stats_overall_progress": "Gesamtfortschritt",
+  "stats_mastered_words": "Gemeisterte Wörter",
+  "stats_by_level": "Nach Level"
 }

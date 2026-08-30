@@ -47,6 +47,7 @@
   "home_wordle": "Знайдіть слово з п’яти літер.",
   "home_vocab": "Повторюйте слова зі звуком і швидким вибором.",
   "home_play": "Грати",
+  "onboarding_intro": "WordCircle допомагає щодня вивчати нові слова за допомогою трьох коротких ігор. Оберіть свої мови, щоб почати.",
   "onboarding_title": "Яку мову ви хочете вивчати?",
   "onboarding_subtitle": "Це можна змінити пізніше в налаштуваннях.",
   "onboarding_learning_language": "Мова навчання",
@@ -100,5 +101,8 @@
   "stats_words_practiced": "Опрацьовані слова",
   "stats_repetitions": "Повторення",
   "stats_most_repeated": "Найчастіше повторювані слова",
-  "stats_no_vocab_progress": "Потренуйте слова, щоб побачити прогрес тут."
+  "stats_no_vocab_progress": "Потренуйте слова, щоб побачити прогрес тут.",
+  "stats_overall_progress": "Загальний прогрес",
+  "stats_mastered_words": "Опановані слова",
+  "stats_by_level": "За рівнями"
 }
