@@ -47,6 +47,7 @@
   "home_wordle": "واژهٔ پنج‌حرفی را پیدا کنید.",
   "home_vocab": "واژه‌ها را با صدا و انتخاب‌های کوتاه مرور کنید.",
   "home_play": "بازی",
+  "onboarding_intro": "WordCircle به شما کمک می‌کند هر روز با سه بازی کوتاه، واژگان جدید یاد بگیرید. برای شروع، زبان‌های خود را انتخاب کنید.",
   "onboarding_title": "می‌خواهید چه زبانی یاد بگیرید؟",
   "onboarding_subtitle": "بعداً می‌توانید آن را در تنظیمات تغییر دهید.",
   "onboarding_learning_language": "زبان یادگیری",
@@ -100,5 +101,8 @@
   "stats_words_practiced": "واژه‌های تمرین‌شده",
   "stats_repetitions": "تکرارها",
   "stats_most_repeated": "پرتکرارترین واژه‌ها",
-  "stats_no_vocab_progress": "واژگان را تمرین کنید تا پیشرفت خود را اینجا ببینید."
+  "stats_no_vocab_progress": "واژگان را تمرین کنید تا پیشرفت خود را اینجا ببینید.",
+  "stats_overall_progress": "پیشرفت کلی",
+  "stats_mastered_words": "واژه‌های تسلط‌یافته",
+  "stats_by_level": "بر اساس سطح"
 }

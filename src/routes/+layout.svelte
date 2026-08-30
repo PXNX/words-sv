@@ -73,7 +73,7 @@
 </div>
 
 <style>
-	:global(html),:global(body) { width:100%;min-height:100%;overflow:hidden;overscroll-behavior:none;touch-action:pan-y; }
+	:global(html),:global(body) { width:100%;min-height:100%;overflow:hidden;touch-action:pan-y; }
 	.portrait-content { width:100%;min-height:100svh; }
 	:global(.game-shell) { min-height:100svh;padding:0;display:flex;align-items:stretch;justify-content:center; }
 	.game-paper { position:relative;isolation:isolate;box-sizing:border-box;overflow:hidden;width:100%;height:100svh;min-height:0;padding:clamp(.35rem,1.75vw,.7rem);display:flex;flex-direction:column;border:0;background:rgba(255,253,247,.9);box-shadow:none; }

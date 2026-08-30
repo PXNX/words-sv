@@ -47,6 +47,7 @@
   "home_wordle": "اعثر على الكلمة ذات الأحرف الخمسة.",
   "home_vocab": "راجع الكلمات مع الصوت واختيارات سريعة.",
   "home_play": "العب",
+  "onboarding_intro": "يساعدك WordCircle على تعلّم كلمات جديدة كل يوم من خلال ثلاث ألعاب قصيرة. اختر لغاتك للبدء.",
   "onboarding_title": "أي لغة تريد أن تتعلم؟",
   "onboarding_subtitle": "يمكنك تغيير ذلك لاحقًا في الإعدادات.",
   "onboarding_learning_language": "لغة التعلّم",
@@ -100,5 +101,8 @@
   "stats_words_practiced": "الكلمات المُتدرَّب عليها",
   "stats_repetitions": "التكرارات",
   "stats_most_repeated": "الكلمات الأكثر تكرارًا",
-  "stats_no_vocab_progress": "تدرّب على المفردات لترى تقدمك هنا."
+  "stats_no_vocab_progress": "تدرّب على المفردات لترى تقدمك هنا.",
+  "stats_overall_progress": "التقدم الإجمالي",
+  "stats_mastered_words": "الكلمات المُتقَنة",
+  "stats_by_level": "حسب المستوى"
 }

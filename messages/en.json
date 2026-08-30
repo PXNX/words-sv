@@ -47,6 +47,7 @@
   "home_wordle": "Find the five-letter word.",
   "home_vocab": "Review words with sound and quick choices.",
   "home_play": "Play",
+  "onboarding_intro": "WordCircle helps you learn new words every day through three quick games. Choose your languages to get started.",
   "onboarding_title": "Which language do you want to learn?",
   "onboarding_subtitle": "You can change this later in Settings.",
   "onboarding_learning_language": "Learning language",
@@ -100,5 +101,8 @@
   "stats_words_practiced": "Words practiced",
   "stats_repetitions": "Repetitions",
   "stats_most_repeated": "Most repeated words",
-  "stats_no_vocab_progress": "Practice vocabulary to see progress here."
+  "stats_no_vocab_progress": "Practice vocabulary to see progress here.",
+  "stats_overall_progress": "Overall progress",
+  "stats_mastered_words": "Mastered words",
+  "stats_by_level": "By level"
 }

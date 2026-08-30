@@ -28,7 +28,10 @@
     wordsPracticed: m.stats_words_practiced({}, { locale: settings.interfaceLocale }),
     repetitions: m.stats_repetitions({}, { locale: settings.interfaceLocale }),
     mostRepeated: m.stats_most_repeated({}, { locale: settings.interfaceLocale }),
-    noVocabProgress: m.stats_no_vocab_progress({}, { locale: settings.interfaceLocale })
+    noVocabProgress: m.stats_no_vocab_progress({}, { locale: settings.interfaceLocale }),
+    overallProgress: m.stats_overall_progress({}, { locale: settings.interfaceLocale }),
+    masteredWords: m.stats_mastered_words({}, { locale: settings.interfaceLocale }),
+    byLevel: m.stats_by_level({}, { locale: settings.interfaceLocale })
   });
 
   const vocabProgress = $derived(readVocabularyProgressByLanguage(playableLanguages.map((language) => language.code)));
@@ -85,8 +88,19 @@
     {:else}
       {#each vocabProgressEntries as language (language.code)}
         <div class="pt-[.6rem] mt-[.6rem] border-t border-base-content/[.14] dark:border-base-content/[.22]">
-          <div class="flex items-center justify-between gap-4 text-base-content text-[.68rem] font-extrabold"><span>{language.label}</span><strong class="text-success font-['DM_Serif_Display',serif] text-[1.35rem] leading-none">{language.progress.wordsPracticed}</strong></div>
-          <div class="mt-[.15rem] flex items-center justify-between gap-4 text-base-content/60 text-[.58rem] font-extrabold uppercase tracking-[.06em]"><span>{labels.wordsPracticed}</span><span>{labels.repetitions}: {language.progress.totalRepetitions}</span></div>
+          <div class="flex items-center justify-between gap-4 text-base-content text-[.68rem] font-extrabold"><span>{language.label}</span><strong class="text-success font-['DM_Serif_Display',serif] text-[1.35rem] leading-none">{language.progress.percentage}%</strong></div>
+          <div class="mt-[.15rem] flex items-center justify-between gap-4 text-base-content/60 text-[.58rem] font-extrabold uppercase tracking-[.06em]"><span>{labels.overallProgress}</span><span>{labels.masteredWords}: {language.progress.masteredWords}/{language.progress.totalWords}</span></div>
+          <div class="mt-[.15rem] flex items-center justify-between gap-4 text-base-content/60 text-[.58rem] font-extrabold uppercase tracking-[.06em]"><span>{labels.wordsPracticed}: {language.progress.wordsPracticed}</span><span>{labels.repetitions}: {language.progress.totalRepetitions}</span></div>
+          {#if language.progress.levelBreakdown.length > 0}
+            <div class="mt-[.45rem]">
+              <p class="m-0 text-accent text-[.54rem] font-extrabold tracking-[.08em] uppercase">{labels.byLevel}</p>
+              <ul class="m-0 mt-[.25rem] pl-0 grid gap-[.15rem] list-none">
+                {#each language.progress.levelBreakdown as level (level.level)}
+                  <li class="flex items-center justify-between gap-4 text-base-content text-[.64rem] font-bold"><span>{level.level.toUpperCase()}</span><span class="text-base-content/60">{level.percentage}% ({level.masteredWords}/{level.totalWords})</span></li>
+                {/each}
+              </ul>
+            </div>
+          {/if}
           {#if language.progress.mostRepeated.length > 0}
             <div class="mt-[.45rem]">
               <p class="m-0 text-accent text-[.54rem] font-extrabold tracking-[.08em] uppercase">{labels.mostRepeated}</p>

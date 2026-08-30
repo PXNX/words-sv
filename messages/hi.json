@@ -47,6 +47,7 @@
   "home_wordle": "पाँच अक्षरों वाला शब्द खोजें।",
   "home_vocab": "ध्वनि और त्वरित विकल्पों के साथ शब्द दोहराएँ।",
   "home_play": "खेलें",
+  "onboarding_intro": "WordCircle आपको तीन छोटे खेलों के ज़रिए हर दिन नए शब्द सीखने में मदद करता है। शुरू करने के लिए अपनी भाषाएँ चुनें।",
   "onboarding_title": "आप कौन-सी भाषा सीखना चाहते हैं?",
   "onboarding_subtitle": "इसे बाद में सेटिंग्स में बदला जा सकता है।",
   "onboarding_learning_language": "सीखने की भाषा",
@@ -100,5 +101,8 @@
   "stats_words_practiced": "अभ्यासित शब्द",
   "stats_repetitions": "दोहराव",
   "stats_most_repeated": "सबसे अधिक दोहराए गए शब्द",
-  "stats_no_vocab_progress": "प्रगति देखने के लिए शब्दावली का अभ्यास करें।"
+  "stats_no_vocab_progress": "प्रगति देखने के लिए शब्दावली का अभ्यास करें।",
+  "stats_overall_progress": "कुल प्रगति",
+  "stats_mastered_words": "पूर्णतः सीखे गए शब्द",
+  "stats_by_level": "स्तर के अनुसार"
 }
