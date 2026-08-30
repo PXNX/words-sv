@@ -1,5 +1,5 @@
 export type StreakEvent = 'sync' | 'vocab_correct' | 'circle_completed' | 'wordle_completed';
-export type ClientStreak = { dateKey: string; vocabCorrect: number; circleCompleted: boolean; wordleCompleted: boolean; qualified: boolean; streakCount: number; lastQualifiedDay: string | null; vocabularyGoal: number; minutesRemaining: number };
+export type ClientStreak = { dateKey: string; vocabCorrect: number; circleCompleted: boolean; wordleCompleted: boolean; qualified: boolean; streakCount: number; bestStreak: number; lastQualifiedDay: string | null; vocabularyGoal: number; minutesRemaining: number };
 
 const DEVICE_KEY = 'wordcircle-streak-device-v1';
 const STREAK_KEY = 'wordcircle-streak-state-v1';
@@ -17,15 +17,15 @@ export function deviceId() {
 	return value;
 }
 
-function defaultState(now = new Date()): ClientStreak { return { dateKey: dateKey(now), vocabCorrect: 0, circleCompleted: false, wordleCompleted: false, qualified: false, streakCount: 0, lastQualifiedDay: null, vocabularyGoal: goal, minutesRemaining: minutesLeft(now) }; }
+function defaultState(now = new Date()): ClientStreak { return { dateKey: dateKey(now), vocabCorrect: 0, circleCompleted: false, wordleCompleted: false, qualified: false, streakCount: 0, bestStreak: 0, lastQualifiedDay: null, vocabularyGoal: goal, minutesRemaining: minutesLeft(now) }; }
 export function readStreak(now = new Date()) {
 	if (typeof localStorage === 'undefined') return defaultState(now);
 	try {
 		const saved = JSON.parse(localStorage.getItem(STREAK_KEY) ?? 'null') as ClientStreak | null;
 		const today = dateKey(now);
 		if (!saved) return defaultState(now);
-		if (saved.dateKey !== today) return { ...defaultState(now), streakCount: saved.lastQualifiedDay && saved.lastQualifiedDay < previousDate(today) ? 0 : saved.streakCount, lastQualifiedDay: saved.lastQualifiedDay };
-		return { ...saved, minutesRemaining: minutesLeft(now) };
+		if (saved.dateKey !== today) return { ...defaultState(now), streakCount: saved.lastQualifiedDay && saved.lastQualifiedDay < previousDate(today) ? 0 : saved.streakCount, bestStreak: saved.bestStreak ?? 0, lastQualifiedDay: saved.lastQualifiedDay };
+		return { ...saved, bestStreak: saved.bestStreak ?? 0, minutesRemaining: minutesLeft(now) };
 	} catch { return defaultState(now); }
 }
 export function writeStreak(state: ClientStreak) { if (typeof localStorage !== 'undefined') localStorage.setItem(STREAK_KEY, JSON.stringify(state)); return state; }
@@ -37,6 +37,7 @@ export function applyLocalEvent(current: ClientStreak, event: StreakEvent, now =
 	const qualifies = next.vocabCorrect >= goal || next.circleCompleted || next.wordleCompleted;
 	if (qualifies && !next.qualified) { next.streakCount = next.lastQualifiedDay === previousDate(next.dateKey) ? next.streakCount + 1 : 1; next.lastQualifiedDay = next.dateKey; }
 	next.qualified = qualifies;
+	next.bestStreak = Math.max(next.bestStreak ?? 0, next.streakCount);
 	return writeStreak(next);
 }
 export async function syncStreak(event: StreakEvent, fallback = readStreak()) {

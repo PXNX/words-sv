@@ -35,6 +35,10 @@
 		document.addEventListener('gesturechange', blockGesture, { passive: false });
 		document.addEventListener('gestureend', blockGesture, { passive: false });
 		document.addEventListener('touchmove', blockPinch, { passive: false });
+		// iOS Safari only renders :active styles on elements with a touch listener in their ancestry;
+		// this no-op listener enables the app-wide button press-down animations on touch devices.
+		const enableActiveStates = () => {};
+		document.addEventListener('touchstart', enableActiveStates, { passive: true });
 		const orientation = screen.orientation as ScreenOrientation & { lock?: (type: 'portrait') => Promise<void> };
 		void orientation?.lock?.('portrait').catch(() => undefined);
 		return () => {
@@ -42,6 +46,7 @@
 			document.removeEventListener('gesturechange', blockGesture);
 			document.removeEventListener('gestureend', blockGesture);
 			document.removeEventListener('touchmove', blockPinch);
+			document.removeEventListener('touchstart', enableActiveStates);
 		};
 	});
 </script>
