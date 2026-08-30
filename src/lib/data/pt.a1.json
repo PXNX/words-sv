@@ -1,0 +1,79 @@
+{
+  "casa": {
+    "definition": "Lugar onde uma pessoa mora.",
+    "type": "noun",
+    "article": "a"
+  },
+  "escola": {
+    "definition": "Lugar onde estudantes aprendem.",
+    "type": "noun",
+    "article": "a"
+  },
+  "gato": {
+    "definition": "Pequeno animal doméstico que mia.",
+    "type": "noun",
+    "article": "o"
+  },
+  "gatos": {},
+  "homem": {
+    "definition": "Pessoa adulta do sexo masculino.",
+    "type": "noun",
+    "article": "o"
+  },
+  "lata": {
+    "definition": "Recipiente de metal.",
+    "type": "noun",
+    "article": "a"
+  },
+  "lima": {},
+  "livro": {
+    "definition": "Conjunto de páginas para ler.",
+    "type": "noun",
+    "article": "o"
+  },
+  "mala": {
+    "definition": "Bolsa para levar objetos em uma viagem.",
+    "type": "noun",
+    "article": "a"
+  },
+  "mar": {
+    "definition": "Grande extensão de água salgada.",
+    "type": "noun",
+    "article": "o"
+  },
+  "mata": {
+    "definition": "Conjunto de árvores e vegetação.",
+    "type": "noun",
+    "article": "a"
+  },
+  "matar": {},
+  "material": {
+    "definition": "Substância ou conjunto de coisas usadas para uma atividade.",
+    "type": "noun",
+    "article": "o"
+  },
+  "mira": {
+    "definition": "Ponto para o qual se dirige a vista ou uma ação."
+  },
+  "mulher": {
+    "definition": "Pessoa adulta do sexo feminino.",
+    "type": "noun",
+    "article": "a"
+  },
+  "rima": {
+    "definition": "Semelhança de som no fim de palavras.",
+    "type": "noun",
+    "article": "a"
+  },
+  "rimar": {},
+  "tema": {
+    "definition": "Assunto principal de um texto ou conversa.",
+    "type": "noun",
+    "article": "o"
+  },
+  "temas": {},
+  "tira": {
+    "definition": "Puxa algo para perto de si."
+  },
+  "tirar": {}
+}

@@ -5,7 +5,7 @@
   import { wordPools, wordDefinitions, wordMetadata } from '$lib/data/vocabulary';
   import { m } from '$lib/paraglide/messages';
   import { definitionChoiceWords, insertLearningRepeat, pickLearningSection } from '$lib/vocab/learning';
-  import { prioritizeLearningWords, updateReviewProgress } from '$lib/vocab/spacedRepetition';
+  import { VOCABULARY_REVIEW_STORAGE_PREFIX, prioritizeLearningWords, updateReviewProgress } from '$lib/vocab/spacedRepetition';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
@@ -13,7 +13,7 @@
   type PromptKind = 'word' | 'audio';
   type AnswerStatus = 'correct' | 'wrong' | null;
 
-  const REVIEW_STORAGE_KEY = 'wordcircle-vocabulary-review-v2';
+  const REVIEW_STORAGE_KEY = VOCABULARY_REVIEW_STORAGE_PREFIX;
 
   const labels = $derived({
     title: m.learning_title({}, { locale: settings.interfaceLocale }),
@@ -55,7 +55,7 @@
 
   function random() { return Math.random(); }
   function speechLocale() { return ({ de: 'de-DE', en: 'en-US', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', pt: 'pt-PT', uk: 'uk-UA' } as Record<string, string>)[settings.lang] ?? settings.lang; }
-  function articleFor(word: string) { const entry = metadata[word]; if (!entry || entry.type !== 'Substantiv') return ''; if (entry.article) return entry.article; const articlesByGender: Record<string, Record<string, string>> = { de: { masculine: 'der', feminine: 'die', neuter: 'das' } }; return entry.gender ? articlesByGender[settings.lang]?.[entry.gender] ?? '' : ''; }
+  function articleFor(word: string) { const entry = metadata[word]; if (!entry || entry.type !== 'noun') return ''; if (entry.article) return entry.article; const articlesByGender: Record<string, Record<string, string>> = { de: { masculine: 'der', feminine: 'die', neuter: 'das' } }; return entry.gender ? articlesByGender[settings.lang]?.[entry.gender] ?? '' : ''; }
   function displayWord(word: string) { const article = articleFor(word); return article ? `${article} ${word}` : word; }
   function cancelSpeech() { if (typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel(); }
   function speak() {
@@ -112,6 +112,11 @@
     position = position >= queue.length - 1 ? 0 : position + 1;
   }
   function optionText(word: string) { return isDefinitionPrompt ? definitions[word] : displayWord(word); }
+  function optionStateClasses(word: string) {
+    if (answerStatus !== null && word === currentWord) return 'border-success bg-success text-[#fffdf7]';
+    if (answerStatus === 'wrong' && word === selectedChoice) return 'border-accent bg-[#fff2e8] text-[#8e4322] dark:bg-[#69332f] dark:text-[#fff7ed]';
+    return 'border-neutral/55 dark:border-neutral/60 bg-neutral-content text-base-content';
+  }
 
   onMount(() => {
     speechSupported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
@@ -152,10 +157,7 @@
     <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{labels.unavailable}</div>
   {:else}
     <article
-      class="w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] border border-neutral border-t-[4px] border-t-double border-t-neutral shadow-[8px_8px_0_rgba(164,94,56,.16)] text-center"
-      class:bg-neutral-content={promptKind !== 'audio'}
-      class:bg-[linear-gradient(145deg,#fffdf7,#fff4d9)]={promptKind === 'audio'}
-      class:dark:bg-[linear-gradient(145deg,#172a45,#294666)]={promptKind === 'audio'}
+      class="w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] border border-neutral border-t-[4px] border-t-double border-t-neutral shadow-[8px_8px_0_rgba(164,94,56,.16)] text-center {promptKind === 'audio' ? 'bg-[linear-gradient(145deg,#fffdf7,#fff4d9)] dark:bg-[linear-gradient(145deg,#172a45,#294666)]' : 'bg-neutral-content'}"
     >
       {#if promptKind === 'word'}
         <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(2.35rem,11vw,4rem)] font-normal tracking-[.06em] leading-none" lang={settings.lang}>{currentDisplayWord}</p>
@@ -175,19 +177,7 @@
               value={word}
               onclick={chooseAnswer}
               disabled={answerStatus !== null}
-              class="min-h-[2.8rem] px-[.75rem] py-[.55rem] flex items-center justify-between gap-[.65rem] text-[.72rem] font-bold leading-[1.3] text-left touch-manipulation active:scale-[.985] disabled:opacity-100"
-              class:border-neutral/55={!(answerStatus !== null && word === currentWord) && !(answerStatus === 'wrong' && word === selectedChoice)}
-              class:dark:border-neutral/60={!(answerStatus !== null && word === currentWord) && !(answerStatus === 'wrong' && word === selectedChoice)}
-              class:bg-neutral-content={!(answerStatus !== null && word === currentWord) && !(answerStatus === 'wrong' && word === selectedChoice)}
-              class:text-base-content={!(answerStatus !== null && word === currentWord) && !(answerStatus === 'wrong' && word === selectedChoice)}
-              class:border-success={answerStatus !== null && word === currentWord}
-              class:bg-success={answerStatus !== null && word === currentWord}
-              class:text-[#fffdf7]={answerStatus !== null && word === currentWord}
-              class:border-accent={answerStatus === 'wrong' && word === selectedChoice}
-              class:bg-[#fff2e8]={answerStatus === 'wrong' && word === selectedChoice}
-              class:text-[#8e4322]={answerStatus === 'wrong' && word === selectedChoice}
-              class:dark:bg-[#69332f]={answerStatus === 'wrong' && word === selectedChoice}
-              class:dark:text-[#fff7ed]={answerStatus === 'wrong' && word === selectedChoice}
+              class="min-h-[2.8rem] px-[.75rem] py-[.55rem] flex items-center justify-between gap-[.65rem] text-[.72rem] font-bold leading-[1.3] text-left touch-manipulation active:scale-[.985] disabled:opacity-100 {optionStateClasses(word)}"
             ><span class="flex-1">{optionText(word)}</span>{#if answerStatus !== null && word === currentWord}<IconCheck class="w-[1.25rem] h-[1.25rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && word === selectedChoice}<IconClose class="w-[1.25rem] h-[1.25rem] flex-none text-accent" aria-label={labels.tryAgain} />{/if}</button>
           {/each}
         </div>

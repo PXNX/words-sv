@@ -1,0 +1,798 @@
+{
+  "Achtung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "alt": {
+    "type": "adjective"
+  },
+  "Alter": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "anfangen": {
+    "type": "verb"
+  },
+  "ankommen": {
+    "type": "verb"
+  },
+  "anrufen": {
+    "type": "verb"
+  },
+  "Antwort": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Apfel": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Arbeit": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "arbeiten": {
+    "definition": "Eine Tätigkeit ausüben, oft beruflich.",
+    "type": "verb"
+  },
+  "Aufgabe": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Auge": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Ausgang": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Baby": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Bad": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Balkon": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Banane": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Bar": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "beginnen": {
+    "type": "verb"
+  },
+  "Bein": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "bekommen": {
+    "type": "verb"
+  },
+  "besuchen": {
+    "definition": "Zu einer Person, einem Ort oder einer Veranstaltung gehen.",
+    "type": "verb"
+  },
+  "bezahlen": {
+    "type": "verb"
+  },
+  "bitte": {},
+  "bitten": {
+    "type": "verb"
+  },
+  "brauchen": {
+    "type": "verb"
+  },
+  "Brief": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "bringen": {
+    "type": "verb"
+  },
+  "Brot": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Chef": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Computer": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Dame": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Dank": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "danken": {
+    "type": "verb"
+  },
+  "enden": {
+    "type": "verb"
+  },
+  "erklären": {
+    "type": "verb"
+  },
+  "erst": {},
+  "erzählen": {
+    "type": "verb"
+  },
+  "fahren": {
+    "type": "verb"
+  },
+  "fertig": {
+    "type": "adjective"
+  },
+  "finden": {
+    "type": "verb"
+  },
+  "Firma": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Fleisch": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "folgen": {
+    "type": "verb"
+  },
+  "fragen": {
+    "type": "verb"
+  },
+  "Frau": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "frei": {
+    "type": "adjective"
+  },
+  "Freizeit": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Freund": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Freundin": {
+    "definition": "Eine weibliche Person, zu der man eine enge Beziehung hat.",
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Fußball": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "ganz": {},
+  "Garten": {
+    "definition": "Ein Stück Land bei einem Haus, auf dem Pflanzen wachsen.",
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Gast": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "geben": {
+    "definition": "Jemandem etwas überreichen oder zukommen lassen.",
+    "type": "verb"
+  },
+  "gefallen": {
+    "type": "verb"
+  },
+  "gehen": {
+    "type": "verb"
+  },
+  "gehören": {
+    "type": "verb"
+  },
+  "geht": {},
+  "Gemüse": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "gern": {},
+  "Geschäft": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "gleich": {},
+  "Glück": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "groß": {
+    "type": "adjective"
+  },
+  "Größe": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "grün": {
+    "type": "adjective"
+  },
+  "Gruß": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "gut": {
+    "type": "adjective"
+  },
+  "haben": {
+    "definition": "Etwas besitzen oder bei sich tragen.",
+    "type": "verb"
+  },
+  "hallo": {},
+  "Hand": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Handy": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "heißen": {
+    "type": "verb"
+  },
+  "helfen": {
+    "type": "verb"
+  },
+  "Herr": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "herzlich": {
+    "type": "adjective"
+  },
+  "Hilfe": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Hochzeit": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "hören": {
+    "type": "verb"
+  },
+  "Hotel": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Internet": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Jeans": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Junge": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Kaffee": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "kaputt": {
+    "type": "adjective"
+  },
+  "Karte": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Kasse": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "kaufen": {
+    "type": "verb"
+  },
+  "kennen": {
+    "type": "verb"
+  },
+  "Kino": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Kleidung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "kochen": {
+    "type": "verb"
+  },
+  "Kollege": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "kommen": {
+    "type": "verb"
+  },
+  "können": {
+    "type": "verb"
+  },
+  "kosten": {
+    "type": "verb"
+  },
+  "krank": {
+    "type": "adjective"
+  },
+  "kriegen": {
+    "type": "verb"
+  },
+  "Küche": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Kunde": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Kurs": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "kurz": {
+    "type": "adjective"
+  },
+  "lassen": {
+    "type": "verb"
+  },
+  "laufen": {
+    "type": "verb"
+  },
+  "leben": {
+    "definition": "Existieren und seinen Alltag führen.",
+    "type": "verb"
+  },
+  "leid": {},
+  "lesen": {
+    "type": "verb"
+  },
+  "letzt": {
+    "type": "adjective"
+  },
+  "lieb": {
+    "type": "adjective"
+  },
+  "Liebe": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "lieben": {
+    "type": "verb"
+  },
+  "liegen": {
+    "type": "verb"
+  },
+  "lustig": {
+    "type": "adjective"
+  },
+  "machen": {
+    "type": "verb"
+  },
+  "Mädchen": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Mail": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "mal": {},
+  "Meer": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "meinen": {
+    "type": "verb"
+  },
+  "mieten": {
+    "type": "verb"
+  },
+  "Milch": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "mögen": {
+    "type": "verb"
+  },
+  "Monat": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "morgen": {},
+  "müde": {
+    "type": "adjective"
+  },
+  "müssen": {
+    "type": "verb"
+  },
+  "Mutter": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Name": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "nehmen": {
+    "type": "verb"
+  },
+  "neu": {
+    "type": "adjective"
+  },
+  "normal": {
+    "type": "adjective"
+  },
+  "Obst": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Oma": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Opa": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Ort": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "paar": {},
+  "Pause": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Person": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Platz": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Polizei": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Problem": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Prozent": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Prüfung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Rat": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Reis": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Ruf": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "ruhig": {
+    "type": "adjective"
+  },
+  "Saft": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "sagen": {
+    "type": "verb"
+  },
+  "Salat": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "schicken": {
+    "type": "verb"
+  },
+  "schlecht": {
+    "type": "adjective"
+  },
+  "schnell": {
+    "type": "adjective"
+  },
+  "schön": {
+    "type": "adjective"
+  },
+  "Schule": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "schwer": {
+    "type": "adjective"
+  },
+  "sehen": {
+    "type": "verb"
+  },
+  "sein": {
+    "type": "verb"
+  },
+  "Sohn": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Sommer": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Sonne": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "spät": {
+    "type": "adjective"
+  },
+  "Spiel": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "spielen": {
+    "type": "verb"
+  },
+  "Sport": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "sprechen": {
+    "type": "verb"
+  },
+  "Stadt": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "stehen": {
+    "type": "verb"
+  },
+  "Stelle": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "stellen": {
+    "type": "verb"
+  },
+  "Stück": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Stunde": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "suchen": {
+    "type": "verb"
+  },
+  "Tag": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "tagen": {
+    "type": "verb"
+  },
+  "Tasche": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Tee": {
+    "definition": "Ein heißes Getränk aus aufgegossenen Blättern oder Kräutern.",
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Thema": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Ticket": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Tisch": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Tochter": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Tomate": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "tot": {
+    "type": "adjective"
+  },
+  "treffen": {
+    "type": "verb"
+  },
+  "trinken": {
+    "type": "verb"
+  },
+  "Uhr": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Urlaub": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Vater": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "warten": {
+    "type": "verb"
+  },
+  "Wasser": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Wein": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "werden": {
+    "type": "verb"
+  },
+  "wichtig": {
+    "type": "adjective"
+  },
+  "wissen": {
+    "type": "verb"
+  },
+  "Woche": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "wohnen": {
+    "type": "verb"
+  },
+  "Wohnung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "wollen": {
+    "type": "verb"
+  },
+  "zahlen": {
+    "type": "verb"
+  },
+  "zeigen": {
+    "type": "verb"
+  },
+  "Zimmer": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  }
+}

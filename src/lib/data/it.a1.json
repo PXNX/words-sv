@@ -1,0 +1,75 @@
+{
+  "amare": {
+    "definition": "Provare affetto profondo per qualcuno o qualcosa."
+  },
+  "area": {
+    "definition": "Spazio o zona delimitata.",
+    "type": "noun",
+    "article": "l’"
+  },
+  "arte": {
+    "definition": "Espressione creativa con forme, suoni o immagini.",
+    "type": "noun",
+    "article": "l’"
+  },
+  "casa": {
+    "definition": "Luogo in cui si abita.",
+    "type": "noun",
+    "article": "la"
+  },
+  "donna": {
+    "definition": "Persona adulta di sesso femminile.",
+    "type": "noun",
+    "article": "la"
+  },
+  "gatto": {
+    "definition": "Piccolo animale domestico che miagola.",
+    "type": "noun",
+    "article": "il"
+  },
+  "libro": {
+    "definition": "Insieme di pagine da leggere.",
+    "type": "noun",
+    "article": "il"
+  },
+  "mare": {
+    "definition": "Grande distesa di acqua salata.",
+    "type": "noun",
+    "article": "il"
+  },
+  "marea": {
+    "definition": "Movimento periodico del livello del mare."
+  },
+  "materia": {
+    "definition": "Argomento o sostanza di cui si parla.",
+    "type": "noun",
+    "article": "la"
+  },
+  "mira": {
+    "definition": "Punto verso cui si dirige uno sguardo o un’azione."
+  },
+  "rata": {},
+  "rima": {
+    "definition": "Somiglianza di suono alla fine di due parole.",
+    "type": "noun",
+    "article": "la"
+  },
+  "scuola": {
+    "definition": "Luogo in cui gli studenti imparano.",
+    "type": "noun",
+    "article": "la"
+  },
+  "tema": {
+    "definition": "Argomento principale di un discorso o di un testo.",
+    "type": "noun",
+    "article": "il"
+  },
+  "tira": {
+    "definition": "Muove qualcosa verso di sé."
+  },
+  "uomo": {
+    "definition": "Persona adulta di sesso maschile.",
+    "type": "noun",
+    "article": "l’"
+  }
+}

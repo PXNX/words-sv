@@ -1,0 +1,84 @@
+{
+  "amar": {
+    "definition": "Sentir afecto profundo por alguien o algo."
+  },
+  "area": {
+    "definition": "Espacio o zona delimitada.",
+    "type": "noun",
+    "article": "el"
+  },
+  "arte": {
+    "definition": "Expresión creativa con formas, sonidos o imágenes.",
+    "type": "noun",
+    "article": "el"
+  },
+  "casa": {
+    "definition": "Lugar donde vive una persona.",
+    "type": "noun",
+    "article": "la"
+  },
+  "escuela": {
+    "definition": "Lugar donde aprenden los estudiantes.",
+    "type": "noun",
+    "article": "la"
+  },
+  "gato": {
+    "definition": "Animal doméstico pequeño que maúlla.",
+    "type": "noun",
+    "article": "el"
+  },
+  "hombre": {
+    "definition": "Persona adulta de sexo masculino.",
+    "type": "noun",
+    "article": "el"
+  },
+  "libro": {
+    "definition": "Conjunto de páginas para leer.",
+    "type": "noun",
+    "article": "el"
+  },
+  "mar": {
+    "definition": "Gran extensión de agua salada.",
+    "type": "noun",
+    "article": "el"
+  },
+  "marea": {
+    "definition": "Movimiento periódico del nivel del mar."
+  },
+  "mata": {},
+  "matar": {},
+  "materia": {
+    "definition": "Tema o sustancia de la que se trata.",
+    "type": "noun",
+    "article": "la"
+  },
+  "mira": {
+    "definition": "Punto hacia el que se dirige la vista o una acción."
+  },
+  "mirar": {},
+  "mujer": {
+    "definition": "Persona adulta de sexo femenino.",
+    "type": "noun",
+    "article": "la"
+  },
+  "perro": {
+    "definition": "Animal doméstico que suele ladrar.",
+    "type": "noun",
+    "article": "el"
+  },
+  "rata": {},
+  "rima": {
+    "definition": "Semejanza de sonido al final de dos palabras.",
+    "type": "noun",
+    "article": "la"
+  },
+  "tema": {
+    "definition": "Asunto principal de un texto o conversación.",
+    "type": "noun",
+    "article": "el"
+  },
+  "tira": {
+    "definition": "Mueve algo hacia sí."
+  },
+  "tirar": {}
+}

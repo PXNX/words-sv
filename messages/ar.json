@@ -94,5 +94,11 @@
   "notifications_disable": "إيقاف التذكيرات",
   "notifications_enabled": "التذكيرات مفعّلة.",
   "notifications_denied": "الإشعارات محجوبة في هذا المتصفح.",
-  "notifications_unavailable": "تذكيرات الدفع غير متاحة في هذا المتصفح."
+  "notifications_unavailable": "تذكيرات الدفع غير متاحة في هذا المتصفح.",
+  "read_more": "اقرأ المزيد",
+  "stats_vocab_heading": "المفردات حسب اللغة",
+  "stats_words_practiced": "الكلمات المُتدرَّب عليها",
+  "stats_repetitions": "التكرارات",
+  "stats_most_repeated": "الكلمات الأكثر تكرارًا",
+  "stats_no_vocab_progress": "تدرّب على المفردات لترى تقدمك هنا."
 }

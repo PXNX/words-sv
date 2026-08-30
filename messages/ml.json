@@ -94,5 +94,11 @@
   "notifications_disable": "ഓർമ്മപ്പെടുത്തലുകൾ നിർത്തുക",
   "notifications_enabled": "ഓർമ്മപ്പെടുത്തലുകൾ സജീവമാണ്.",
   "notifications_denied": "ഈ ബ്രൗസറിൽ അറിയിപ്പുകൾ തടഞ്ഞിരിക്കുന്നു.",
-  "notifications_unavailable": "ഈ ബ്രൗസറിൽ പുഷ് ഓർമ്മപ്പെടുത്തലുകൾ ലഭ്യമല്ല."
+  "notifications_unavailable": "ഈ ബ്രൗസറിൽ പുഷ് ഓർമ്മപ്പെടുത്തലുകൾ ലഭ്യമല്ല.",
+  "read_more": "കൂടുതൽ വായിക്കുക",
+  "stats_vocab_heading": "ഭാഷ അനുസരിച്ച് പദസഞ്ചയം",
+  "stats_words_practiced": "പരിശീലിച്ച വാക്കുകൾ",
+  "stats_repetitions": "ആവർത്തനങ്ങൾ",
+  "stats_most_repeated": "കൂടുതൽ ആവർത്തിച്ച വാക്കുകൾ",
+  "stats_no_vocab_progress": "പുരോഗതി കാണാൻ പദസഞ്ചയം പരിശീലിക്കുക."
 }

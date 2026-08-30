@@ -2,7 +2,8 @@
   import { m } from '$lib/paraglide/messages';
   import { settings } from '$lib/state/settings.svelte';
   import { playSuccessSound } from '$lib/sounds';
-  import { hintableBaseWords, wordDefinitions, wordPools, type Language } from '$lib/data/vocabulary';
+  import { hintableBaseWords, wordDefinitions, wordMetadata, wordPools, type Language } from '$lib/data/vocabulary';
+  import { wiktionaryUrl } from '$lib/wiktionary';
   import {
     buildRound, cellKey, gridFromPlacements, isPlacement, placementCells, randomSeed, roundFromStoredGame, selectedPool,
     type Placement, type Round, type StoredGame
@@ -131,6 +132,7 @@
   let idleHintReady = $state(false);
   let revealedHintWord = $state<string | null>(null);
   let idleHintTimer: number | null = null;
+  let explainOpen = $state(false);
 
   const labels = $derived({
     hint: m.hint({}, { locale: settings.interfaceLocale }),
@@ -138,6 +140,7 @@
     time: m.time({}, { locale: settings.interfaceLocale }),
     continue: m.continue({}, { locale: settings.interfaceLocale }),
     explain: m.explain({}, { locale: settings.interfaceLocale }),
+    readMore: m.read_more({}, { locale: settings.interfaceLocale }),
     install: m.install({}, { locale: settings.interfaceLocale }),
     installHint: m.install_hint({}, { locale: settings.interfaceLocale }),
     tracePrompt: m.trace_prompt({}, { locale: settings.interfaceLocale }),
@@ -155,6 +158,9 @@
   const traceCaption = $derived(activeWord ? labels.traceActive : labels.tracePrompt);
   const tutorialHint = $derived(practiceLanguage ? circleTutorialHints[practiceLanguage] : '');
   const hintDefinition = $derived(revealedHintWord ? wordDefinitions[settings.lang][revealedHintWord] ?? null : null);
+  const feedbackSpelling = $derived(wordMetadata[settings.lang][feedbackWord]?.spelling ?? feedbackWord);
+  const feedbackDefinition = $derived(wordDefinitions[settings.lang][feedbackWord] ?? null);
+  const feedbackWiktionaryHref = $derived(wiktionaryUrl(settings.lang, feedbackSpelling));
   const hintedCells = $derived.by(() => {
     if (!revealedHintWord) return new Set<string>();
     const placement = grid.placements.find((entry) => entry.word === revealedHintWord);
@@ -283,6 +289,7 @@
     noteGameInput();
     feedback = null;
     feedbackWord = '';
+    explainOpen = false;
     selectedPath = [...selectedPath, index];
     buzz(7);
   }
@@ -294,6 +301,7 @@
     selectedPath = [];
     feedback = null;
     feedbackWord = '';
+    explainOpen = false;
     const point = pointFromEvent(event);
     const index = knownIndex >= 0 ? knownIndex : point ? nearestLetter(point) : -1;
     if (index >= 0) chooseLetter(index);
@@ -346,12 +354,11 @@
       return `${point.x},${point.y}`;
     }).join(' ');
   }
-  function wiktionaryUrl(word: string) {
-    const locale = settings.lang === 'de' ? 'de-DE' : 'en-US';
-    const normalized = word.toLocaleLowerCase(locale);
-    const dictionaryTerm = settings.lang === 'de' ? `${normalized.slice(0, 1).toLocaleUpperCase(locale)}${normalized.slice(1)}` : normalized;
-    const host = settings.lang === 'de' ? 'https://de.wiktionary.org/wiki/' : 'https://en.wiktionary.org/wiki/';
-    return `${host}${encodeURIComponent(dictionaryTerm)}`;
+  function selectionAreaClasses() {
+    if (celebration) return 'relative z-[55] flex items-center justify-center h-[70px] min-h-[70px] p-0 bg-transparent max-[579px]:h-[54px] max-[579px]:min-h-[54px]';
+    const base = 'relative z-[1] flex-none pt-[.75rem] pb-[.35rem] text-center bg-[linear-gradient(90deg,transparent,rgba(23,42,69,.025)_22%,rgba(23,42,69,.025)_78%,transparent)] max-[579px]:pt-[.45rem] max-[579px]:pb-[.1rem]';
+    const heights = installPrompt && !previewWord ? 'min-h-[96px] max-[579px]:min-h-[70px]' : 'min-h-[70px] max-[579px]:min-h-[54px]';
+    return `${base} ${heights}`;
   }
   function inRange(row: number, col: number) {
     return grid.cells.get(cellKey(row, col));
@@ -373,95 +380,88 @@
 
 <svelte:window onpointerup={endSwipe} onpointercancel={endSwipe} />
 
-<div class:shake={shakeGrid} class="crossword-frame" aria-label="Crossword">
-  <div class="crossword-scroll" aria-label="Scrollable crossword grid">
-    <div class="crossword" style={`grid-template-columns: repeat(${grid.maxCol - grid.minCol + 1}, var(--cell-size));`}>
+<div
+  class="relative min-h-[205px] min-[580px]:min-h-[260px] flex-1 grid place-items-stretch mt-0 p-[clamp(.35rem,1.6vw,.7rem)] bg-[#ede4d5] bg-[image:linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:24px_24px] border-t-0 border-b-2 border-b-[rgba(23,42,69,.45)] [transition:transform_.16s_cubic-bezier(.23,1,.32,1)] dark:bg-[#213a5d] dark:border-b-primary {shakeGrid ? 'animate-[shake_.28s_cubic-bezier(.23,1,.32,1)]' : ''}"
+  aria-label="Crossword"
+>
+  <div class="relative z-[1] min-w-0 min-h-0 overflow-auto grid place-items-center p-[clamp(.65rem,3vw,1.25rem)] [overscroll-behavior:contain] [touch-action:pan-x_pan-y] border border-[rgba(23,42,69,.12)] bg-[linear-gradient(90deg,rgba(255,253,247,.3),rgba(255,253,247,.08)_18%,rgba(255,253,247,.08)_82%,rgba(255,253,247,.3))] shadow-[inset_0_0_0_6px_rgba(255,253,247,.15)] outline-0 [scrollbar-color:rgba(23,42,69,.4)_transparent]" aria-label="Scrollable crossword grid">
+    <div class="relative grid w-max min-w-[calc(var(--cell-size)*3)] [--cell-size:clamp(2.35rem,10.2vw,3.1rem)]" style={`grid-template-columns: repeat(${grid.maxCol - grid.minCol + 1}, var(--cell-size));`}>
       {#each Array(grid.maxRow - grid.minRow + 1) as _, rowIndex}
         {#each Array(grid.maxCol - grid.minCol + 1) as _, colIndex}
           {@const row = grid.minRow + rowIndex}{@const col = grid.minCol + colIndex}{@const cell = inRange(row, col)}
-          {#if cell}<div class:solved={solvedCells.has(cellKey(row, col))} class:hinted={hintedCells.has(cellKey(row, col)) && !solvedCells.has(cellKey(row, col))} class:startAcross={isWordStart(row, col, 'across')} class:endAcross={isWordEnd(row, col, 'across')} class:startDown={isWordStart(row, col, 'down')} class:endDown={isWordEnd(row, col, 'down')} class="crossword-cell" aria-label={solvedCells.has(cellKey(row, col)) ? cell.letter : 'open cell'}>{solvedCells.has(cellKey(row, col)) ? cell.letter : ''}</div>{:else}<div class="crossword-void"></div>{/if}
+          {@const solved = solvedCells.has(cellKey(row, col))}
+          {@const hinted = hintedCells.has(cellKey(row, col)) && !solved}
+          {#if cell}<div
+            class="aspect-square min-w-0 grid place-items-center border border-[#172a45] bg-[#fffdf7] text-[#172a45] text-[clamp(.7rem,3.4vw,1.1rem)] font-extrabold leading-none uppercase [transition:background_.18s_ease,color_.18s_ease,transform_.18s_cubic-bezier(.23,1,.32,1)]"
+            class:border-l-4={isWordStart(row, col, 'across')}
+            class:border-r-4={isWordEnd(row, col, 'across')}
+            class:border-t-4={isWordStart(row, col, 'down')}
+            class:border-b-4={isWordEnd(row, col, 'down')}
+            class:relative={hinted}
+            class:z-[1]={hinted}
+            class:outline={hinted}
+            class:outline-[3px]={hinted}
+            class:outline-offset-[-4px]={hinted}
+            class:outline-primary={hinted}
+            class:bg-[#fff7dd]={hinted}
+            class:bg-primary={solved}
+            class:scale-[.965]={solved}
+            class:animate-[solve-cell_.32s_cubic-bezier(.23,1,.32,1)]={solved}
+            aria-label={solved ? cell.letter : 'open cell'}
+          >{solved ? cell.letter : ''}</div>{:else}<div class="aspect-square"></div>{/if}
         {/each}
       {/each}
     </div>
   </div>
-  <div class="frame-corner top-left"></div><div class="frame-corner top-right"></div><div class="frame-corner bottom-left"></div><div class="frame-corner bottom-right"></div>
+  <div class="absolute z-[2] w-[13px] h-[13px] border-primary [border-style:solid] pointer-events-none top-[7px] left-[7px] [border-width:2px_0_0_2px]"></div><div class="absolute z-[2] w-[13px] h-[13px] border-primary [border-style:solid] pointer-events-none top-[7px] right-[7px] [border-width:2px_2px_0_0]"></div><div class="absolute z-[2] w-[13px] h-[13px] border-primary [border-style:solid] pointer-events-none bottom-[7px] left-[7px] [border-width:0_0_2px_2px]"></div><div class="absolute z-[2] w-[13px] h-[13px] border-primary [border-style:solid] pointer-events-none right-[7px] bottom-[7px] [border-width:0_2px_2px_0]"></div>
 </div>
 
-<div class:install-ready={installPrompt && !previewWord && !celebration} class:completion-area={celebration} class="selection-area" aria-live="polite">
+<div class={selectionAreaClasses()} aria-live="polite">
   {#if celebration}
-    <div class="completion-inline">
-      <span class="completion-symbol" aria-hidden="true">✓</span>
-      <span class="completion-result"><strong>{labels.allDone}</strong><small>{labels.time} <b>{formatDuration(completedDuration)}</b></small></span>
-      <button class="completion-continue" onclick={continueRound}>{labels.continue}</button>
+    <div class="relative z-[56] flex items-center justify-center w-full h-full gap-[.6rem] m-0 text-success animate-[completion-in_.24s_cubic-bezier(.23,1,.32,1)_both] motion-reduce:animate-none">
+      <span class="grid place-items-center w-[1.8rem] h-[1.8rem] flex-none border-2 border-current rounded-full font-['DM_Sans'] text-[1.25rem] font-extrabold leading-none" aria-hidden="true">✓</span>
+      <span class="grid gap-[.08rem] justify-items-start text-left">
+        <strong class="text-success font-['DM_Serif_Display'] text-[1.05rem] font-normal tracking-[-.02em] leading-none">{labels.allDone}</strong>
+        <small class="block text-base-content dark:text-base-content/74 font-['DM_Sans'] text-[.55rem] font-extrabold tracking-[.06em] leading-[1.2] uppercase">{labels.time} <b class="text-success font-['DM_Serif_Display'] text-[.88rem] tracking-normal">{formatDuration(completedDuration)}</b></small>
+      </span>
+      <button class="min-h-[1.85rem] px-[.8rem] border border-success rounded-full bg-success text-[#fffdf7] font-['DM_Sans'] text-[.58rem] font-extrabold tracking-[.08em] uppercase [transition:transform_.16s_cubic-bezier(.23,1,.32,1),background_.16s_ease] active:scale-[.96]" onclick={continueRound}>{labels.continue}</button>
     </div>
   {:else}
-    {#if idleHintReady}<button class="idle-hint-trigger" onclick={showIdleHint}><IconHelp aria-hidden="true" /><span>{labels.idleHint}</span></button>{/if}
-    <div class:has-word={previewWord.length > 0} class:correct={feedback === 'correct'} class:wrong={feedback === 'wrong'} class="selected-word">
+    {#if idleHintReady}<button class="absolute z-[70] top-[.48rem] left-0 inline-flex items-center gap-[.3rem] min-h-[1.85rem] px-[.55rem] border border-[rgba(164,94,56,.58)] rounded-full bg-[#fffdf7] text-accent font-['DM_Sans'] text-[.56rem] font-extrabold tracking-[.07em] uppercase opacity-0 translate-y-1 animate-[hint-fade-in_.28s_cubic-bezier(.23,1,.32,1)_forwards] active:translate-y-1 active:scale-[.96]" onclick={showIdleHint}><IconHelp class="w-[.9rem] h-[.9rem]" aria-hidden="true" /><span>{labels.idleHint}</span></button>{/if}
+    <div
+      class="min-h-[2.1rem] inline-flex items-center justify-center gap-[.48rem] text-[rgba(23,42,69,.35)] font-['DM_Serif_Display'] text-[clamp(1.35rem,5vw,1.75rem)] tracking-[.16em] leading-none"
+      class:text-base-content={previewWord.length > 0 && feedback !== 'wrong' && !(feedback === 'correct' && !explainOpen)}
+      class:text-error={feedback === 'wrong'}
+    >
       {#if hintDefinition}
-        <span class="hint-definition">{hintDefinition}</span>
+        <span class="max-w-[min(32rem,74vw)] text-accent font-['DM_Sans'] text-[clamp(.63rem,2.5vw,.78rem)] font-bold tracking-[.01em] leading-[1.35] text-center">{hintDefinition}</span>
+      {:else if explainOpen && feedback === 'correct'}
+        <span class="max-w-[min(32rem,74vw)] text-accent font-['DM_Sans'] text-[clamp(.63rem,2.5vw,.78rem)] font-bold tracking-[.01em] leading-[1.35] text-center">{feedbackDefinition}<a class="ml-1 text-primary font-extrabold underline decoration-2 underline-offset-2 whitespace-nowrap" href={feedbackWiktionaryHref} target="_blank" rel="noreferrer">{labels.readMore}</a></span>
       {:else if previewWord}
-        <span>{previewWord}</span>{#if feedback === 'correct'}<IconCheck aria-label="Correct" /><a class="wiktionary-link" href={wiktionaryUrl(feedbackWord)} target="_blank" rel="noreferrer" aria-label={`${labels.explain}: ${feedbackWord}`}><IconHelp aria-hidden="true" /><span class="sr-only">{labels.explain}</span></a>{:else if feedback === 'wrong'}<IconClose aria-label="Incorrect" />{/if}
+        <span class={feedback === 'correct' ? 'text-[#3f7a50]' : ''}>{previewWord}</span>{#if feedback === 'correct'}<IconCheck class="w-[1.45rem] h-[1.45rem]" aria-label="Correct" />{#if feedbackDefinition}<button type="button" class="grid place-items-center w-[1.25rem] h-[1.25rem] border border-[#8b949c] rounded-full bg-[#edf0ef] text-[#69727a] tracking-normal [transition:transform_.16s_cubic-bezier(.23,1,.32,1),background_.16s_ease,color_.16s_ease] hover:bg-[#c9d0cf] hover:text-[#3f484e] focus-visible:bg-[#c9d0cf] focus-visible:text-[#3f484e] focus-visible:outline-0 active:scale-[.94] dark:border-[#84909b] dark:bg-[#2b3d57] dark:text-[#d8dde1]" onclick={() => (explainOpen = true)} aria-label={`${labels.explain}: ${feedbackSpelling}`}><IconHelp class="w-[.85rem] h-[.85rem]" aria-hidden="true" /></button>{:else}<a class="grid place-items-center w-[1.25rem] h-[1.25rem] border border-[#8b949c] rounded-full bg-[#edf0ef] text-[#69727a] tracking-normal [transition:transform_.16s_cubic-bezier(.23,1,.32,1),background_.16s_ease,color_.16s_ease] hover:bg-[#c9d0cf] hover:text-[#3f484e] focus-visible:bg-[#c9d0cf] focus-visible:text-[#3f484e] focus-visible:outline-0 active:scale-[.94] dark:border-[#84909b] dark:bg-[#2b3d57] dark:text-[#d8dde1]" href={feedbackWiktionaryHref} target="_blank" rel="noreferrer" aria-label={`${labels.explain}: ${feedbackSpelling}`}><IconHelp class="w-[.85rem] h-[.85rem]" aria-hidden="true" /><span class="sr-only">{labels.explain}</span></a>{/if}{:else if feedback === 'wrong'}<IconClose class="w-[1.45rem] h-[1.45rem]" aria-label="Incorrect" />{/if}
       {/if}
     </div>
-    {#if tutorialPractice}<p class="tutorial-practice-status"><span>{labels.tutorial}</span><b>{tutorialHint}</b></p>{/if}
+    {#if tutorialPractice}<p class="flex items-center justify-center gap-[.5rem] mt-[.2rem] text-accent font-['DM_Sans'] text-[.54rem] font-extrabold tracking-[.07em] uppercase"><span>{labels.tutorial}</span><b class="text-base-content text-[.58rem] tracking-[.11em]">{tutorialHint}</b></p>{/if}
     {#if installPrompt && !previewWord}
-      <button class="install-prompt" onclick={installApp}>
-        <IconDownload aria-hidden="true" />
-        <span><strong>{labels.install}</strong><small>{labels.installHint}</small></span>
+      <button class="absolute z-[5] bottom-[.25rem] left-1/2 -translate-x-1/2 inline-flex items-center gap-[.42rem] min-h-[1.75rem] py-[.22rem] px-[.62rem] border border-[#172a45] rounded-[.2rem] bg-[#172a45] text-[#fffdf7] shadow-[0_3px_0_rgba(23,42,69,.16)] font-['DM_Sans'] text-left [transition:transform_.16s_cubic-bezier(.23,1,.32,1),background_.16s_ease] active:scale-[.97]" onclick={installApp}>
+        <IconDownload class="w-[1rem] h-[1rem] text-primary" aria-hidden="true" />
+        <span class="grid gap-[.02rem] leading-none whitespace-nowrap"><strong class="text-[.57rem] font-extrabold tracking-[.07em] uppercase">{labels.install}</strong><small class="text-[rgba(255,253,247,.72)] text-[.5rem] font-bold tracking-[.03em]">{labels.installHint}</small></span>
       </button>
     {/if}
   {/if}
 </div>
 
-<div class="wheel-stage">
-  <svg bind:this={circleEl} viewBox="0 0 292 292" class="letter-wheel" role="application" aria-label={labels.hint} onpointerdown={(event) => startSwipe(event)} onpointermove={extendSwipe}>
-    <circle cx={CIRCLE} cy={CIRCLE} r={LETTER_RADIUS} class="outer-ring" /><circle cx={CIRCLE} cy={CIRCLE} r="68" class="inner-ring" /><circle cx={CIRCLE} cy={CIRCLE} r="47" class="core-ring" /><path d="M124 146a22 22 0 1 0 44 0a22 22 0 1 1-44 0Z" class="core-mark" />
-    <text x={CIRCLE} y="142" text-anchor="middle" class:active-core={activeWord.length > 0} class:idle-core={!activeWord} class="core-word">{coreReadout}</text><text x={CIRCLE} y="161" text-anchor="middle" class="core-caption">{activeWord ? traceCaption : '·'}</text>
-    {#if selectedPath.length > 1}<polyline points={pathPoints()} class="selection-line" />{/if}
+<div class="relative flex-[0_0_clamp(214px,34svh,270px)] min-h-0 grid place-items-center border-t border-b border-[rgba(23,42,69,.16)] min-[580px]:min-h-[300px] min-[580px]:flex-auto">
+  <svg bind:this={circleEl} viewBox="0 0 292 292" class="w-[min(100%,238px)] min-[580px]:w-[292px] [touch-action:none] overflow-visible select-none" role="application" aria-label={labels.hint} onpointerdown={(event) => startSwipe(event)} onpointermove={extendSwipe}>
+    <circle cx={CIRCLE} cy={CIRCLE} r={LETTER_RADIUS} class="[fill:none] stroke-[#172a45] [stroke-width:1.1] opacity-[.28] dark:stroke-[#fffdf7]" /><circle cx={CIRCLE} cy={CIRCLE} r="68" class="[fill:none] stroke-[#172a45] [stroke-width:1] opacity-[.12] dark:stroke-[#fffdf7]" /><circle cx={CIRCLE} cy={CIRCLE} r="47" class="[fill:none] stroke-primary [stroke-width:1.8] opacity-90" /><path d="M124 146a22 22 0 1 0 44 0a22 22 0 1 1-44 0Z" class="fill-[#172a45] opacity-[.83] dark:fill-[#fffdf7]" />
+    <text x={CIRCLE} y="142" text-anchor="middle" class={`font-['DM_Serif_Display'] text-[13px] tracking-[.08em] fill-[rgba(23,42,69,.52)] dark:fill-[rgba(255,253,247,.55)] ${activeWord.length > 0 ? 'fill-[#c98220] dark:fill-primary' : 'fill-[#a0621d] font-[\'DM_Sans\'] text-[10.8px] font-extrabold tracking-[.08em]'}`}>{coreReadout}</text><text x={CIRCLE} y="161" text-anchor="middle" class="fill-[rgba(23,42,69,.5)] font-['DM_Sans'] text-[5.8px] font-extrabold tracking-[.18em] dark:fill-[rgba(255,253,247,.55)]">{activeWord ? traceCaption : '·'}</text>
+    {#if selectedPath.length > 1}<polyline points={pathPoints()} class="[fill:none] stroke-primary [stroke-linecap:round] [stroke-linejoin:round] [stroke-width:10] opacity-90" />{/if}
     {#each circleLetters as letter, index (index)}
       {@const active = selectedPath.includes(index)}
       {@const point = position(index, circleLetters.length, active ? LETTER_BUBBLE_OUTWARD : 0)}
-      <g transform={`translate(${point.x} ${point.y})`} class:active class="letter-node" role="button" tabindex="0" aria-label={`Letter ${letter}`} onpointerdown={(event) => { event.stopPropagation(); startSwipe(event, index); }} onkeydown={(event) => { if (event.key === 'Enter' || event.key === ' ') chooseLetter(index); }}>
-        <circle r="30"></circle><text text-anchor="middle" dominant-baseline="central">{letter}</text>
+      <g transform={`translate(${point.x} ${point.y})`} class="[cursor:crosshair] transition-transform duration-[220ms] ease-[cubic-bezier(.34,1.56,.64,1)] motion-reduce:transition-none" role="button" tabindex="0" aria-label={`Letter ${letter}`} onpointerdown={(event) => { event.stopPropagation(); startSwipe(event, index); }} onkeydown={(event) => { if (event.key === 'Enter' || event.key === ' ') chooseLetter(index); }}>
+        <circle r="30" class="[transform-box:fill-box] [transform-origin:center] [transition:transform_.18s_cubic-bezier(.34,1.56,.64,1),fill_.18s_ease,stroke_.18s_ease] motion-reduce:transition-none {active ? 'fill-primary stroke-[#c98220] scale-[1.066667] dark:stroke-primary' : 'fill-[#fffdf7] stroke-[#172a45] [stroke-width:2] dark:fill-[#172a45] dark:stroke-[#fffdf7]'}"></circle><text text-anchor="middle" dominant-baseline="central" class="fill-[#172a45] font-['DM_Sans'] text-[20px] font-extrabold pointer-events-none">{letter}</text>
       </g>
     {/each}
   </svg>
 </div>
-
-<style>
-  .crossword-frame { position:relative;min-height:205px;flex:1 1 auto;display:grid;place-items:stretch;margin-top:0;padding:clamp(.35rem,1.6vw,.7rem);background-color:#ede4d5;background-image:linear-gradient(rgba(23,42,69,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.018) 1px,transparent 1px);background-size:24px 24px;border-top:0;border-bottom:2px solid rgba(23,42,69,.45);transition:transform .16s cubic-bezier(.23,1,.32,1); }.crossword-frame.shake { animation:shake .28s cubic-bezier(.23,1,.32,1); }
-  .crossword-scroll { position:relative;z-index:1;min-width:0;min-height:0;overflow:auto;display:grid;place-items:center;padding:clamp(.65rem,3vw,1.25rem);overscroll-behavior:contain;touch-action:pan-x pan-y;border:1px solid rgba(23,42,69,.12);background:linear-gradient(90deg,rgba(255,253,247,.3),rgba(255,253,247,.08) 18%,rgba(255,253,247,.08) 82%,rgba(255,253,247,.3));box-shadow:inset 0 0 0 6px rgba(255,253,247,.15);outline:0;scrollbar-color:rgba(23,42,69,.4) transparent; }
-  .crossword { --cell-size:clamp(2.35rem,10.2vw,3.1rem);position:relative;display:grid;width:max-content;min-width:calc(var(--cell-size) * 3); }
-  .crossword-cell { aspect-ratio:1;min-width:0;display:grid;place-items:center;border:1px solid #172a45;background:#fffdf7;color:#172a45;font-size:clamp(.7rem,3.4vw,1.1rem);font-weight:800;line-height:1;text-transform:uppercase;transition:background .18s ease,color .18s ease,transform .18s cubic-bezier(.23,1,.32,1); }
-  .crossword-cell.startAcross { border-left-width:4px; }.crossword-cell.endAcross { border-right-width:4px; }.crossword-cell.startDown { border-top-width:4px; }.crossword-cell.endDown { border-bottom-width:4px; }
-  .crossword-cell.hinted { position:relative;z-index:1;outline:3px solid #e6a527;outline-offset:-4px;background:#fff7dd; }
-  .crossword-cell.solved { background:#e6a527;transform:scale(.965);animation:solve-cell .32s cubic-bezier(.23,1,.32,1); }
-  .crossword-void { aspect-ratio:1; }
-  .frame-corner { position:absolute;z-index:2;width:13px;height:13px;border-color:#e6a527;border-style:solid;pointer-events:none; }.top-left { top:7px;left:7px;border-width:2px 0 0 2px; }.top-right { top:7px;right:7px;border-width:2px 2px 0 0; }.bottom-left { bottom:7px;left:7px;border-width:0 0 2px 2px; }.bottom-right { right:7px;bottom:7px;border-width:0 2px 2px 0; }
-  .completion-inline { position:relative;z-index:56;display:flex;align-items:center;justify-content:center;width:100%;height:100%;gap:.6rem;margin:0;color:#34824d;animation:completion-in .24s cubic-bezier(.23,1,.32,1) both; }
-  .completion-symbol { display:grid;place-items:center;width:1.8rem;height:1.8rem;flex:none;border:2px solid currentColor;border-radius:50%;font-family:'DM Sans',sans-serif;font-size:1.25rem;font-weight:800;line-height:1; }
-  .completion-result { display:grid;gap:.08rem;justify-items:start;text-align:left; }.completion-result strong { color:#34824d;font-family:'DM Serif Display',serif;font-size:1.05rem;font-weight:400;letter-spacing:-.02em;line-height:1; }.completion-result small { color:#172a45;font-family:'DM Sans',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.06em;line-height:1.2;text-transform:uppercase; }.completion-result b { color:#34824d;font-family:'DM Serif Display',serif;font-size:.88rem;letter-spacing:0; }
-  .completion-continue { min-height:1.85rem;padding:0 .8rem;border:1px solid #34824d;border-radius:999px;background:#34824d;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease; }.completion-continue:active { transform:scale(.96); }
-  .selection-area { position:relative;z-index:1;flex:0 0 auto;min-height:70px;padding:.75rem 0 .35rem;text-align:center;background:linear-gradient(90deg,transparent,rgba(23,42,69,.025) 22%,rgba(23,42,69,.025) 78%,transparent); }.selection-area.install-ready { min-height:96px; }.selection-area.completion-area { z-index:55;display:flex;align-items:center;justify-content:center;height:70px;min-height:70px;padding:0;background:transparent; }
-  @media (max-width:579px) { .selection-area { min-height:54px;padding:.45rem 0 .1rem; }.selection-area.install-ready { min-height:70px; }.selection-area.completion-area { height:54px;min-height:54px; } }
-  .idle-hint-trigger { position:absolute;z-index:70;top:.48rem;left:0;display:inline-flex;align-items:center;gap:.3rem;min-height:1.85rem;padding:0 .55rem;border:1px solid rgba(164,94,56,.58);border-radius:999px;background:#fffdf7;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:800;letter-spacing:.07em;opacity:0;transform:translateY(4px);animation:hint-fade-in .28s cubic-bezier(.23,1,.32,1) forwards;text-transform:uppercase; }.idle-hint-trigger :global(svg) { width:.9rem;height:.9rem; }.idle-hint-trigger:active { transform:translateY(4px) scale(.96); }
-  .selected-word { min-height:2.1rem;display:inline-flex;align-items:center;justify-content:center;gap:.48rem;color:rgba(23,42,69,.35);font-family:'DM Serif Display',serif;font-size:clamp(1.35rem,5vw,1.75rem);letter-spacing:.16em;line-height:1; }.selected-word :global(svg) { width:1.45rem;height:1.45rem;letter-spacing:0; }.selected-word.has-word { color:#172a45; }.selected-word.correct { color:#3f7a50; }.selected-word.wrong { color:#b54442; }
-  .hint-definition { max-width:min(32rem,74vw);color:#a45e38;font-family:'DM Sans',sans-serif;font-size:clamp(.63rem,2.5vw,.78rem);font-weight:700;letter-spacing:.01em;line-height:1.35;text-align:center; }
-  .tutorial-practice-status { display:flex;align-items:center;justify-content:center;gap:.5rem;margin:.2rem 0 0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.54rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase; }.tutorial-practice-status b { color:#172a45;font-size:.58rem;letter-spacing:.11em; }
-  .wiktionary-link { display:grid;place-items:center;width:1.25rem;height:1.25rem;border:1px solid #8b949c;border-radius:50%;background:#edf0ef;color:#69727a;letter-spacing:0;transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease,color .16s ease; }.wiktionary-link:hover,.wiktionary-link:focus-visible { background:#c9d0cf;color:#3f484e;outline:0; }.wiktionary-link:active { transform:scale(.94); }.selected-word .wiktionary-link :global(svg) { width:.85rem;height:.85rem;animation:none; }
-  .install-prompt { position:absolute;z-index:5;bottom:.25rem;left:50%;display:inline-flex;align-items:center;gap:.42rem;min-height:1.75rem;padding:.22rem .62rem;border:1px solid #172a45;border-radius:.2rem;background:#172a45;color:#fffdf7;box-shadow:0 3px 0 rgba(23,42,69,.16);font-family:'DM Sans',sans-serif;text-align:left;transform:translateX(-50%);transition:transform .16s cubic-bezier(.23,1,.32,1),background .16s ease; }.install-prompt:active { transform:translateX(-50%) scale(.97); }.install-prompt :global(svg) { width:1rem;height:1rem;color:#e6a527; }.install-prompt span { display:grid;gap:.02rem;line-height:1;white-space:nowrap; }.install-prompt strong { font-size:.57rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase; }.install-prompt small { color:rgba(255,253,247,.72);font-size:.5rem;font-weight:700;letter-spacing:.03em; }
-  .wheel-stage { position:relative;flex:0 0 clamp(214px,34svh,270px);min-height:0;display:grid;place-items:center;border-top:1px solid rgba(23,42,69,.16);border-bottom:1px solid rgba(23,42,69,.16); }
-  .letter-wheel { width:min(100%,238px);touch-action:none;overflow:visible;user-select:none; }.outer-ring,.inner-ring,.core-ring { fill:none; }.outer-ring { stroke:#172a45;stroke-width:1.1;stroke-dasharray:none;opacity:.28; }.inner-ring { stroke:#172a45;stroke-width:1;opacity:.12; }.core-ring { stroke:#e6a527;stroke-width:1.8;opacity:.9; }.core-mark { fill:#172a45;opacity:.83; }
-  .core-word { fill:rgba(23,42,69,.52);font-family:'DM Serif Display',serif;font-size:13px;letter-spacing:.08em; }.core-word.active-core { fill:#c98220; }.core-word.idle-core { fill:#a0621d;font-family:'DM Sans',sans-serif;font-size:10.8px;font-weight:800;letter-spacing:.08em; }.core-caption { fill:rgba(23,42,69,.5);font-family:'DM Sans',sans-serif;font-size:5.8px;font-weight:800;letter-spacing:.18em; }
-  .selection-line { fill:none;stroke:#e6a527;stroke-linecap:round;stroke-linejoin:round;stroke-width:10;opacity:.9; }
-  .letter-node { cursor:crosshair;transition:transform .22s cubic-bezier(.34,1.56,.64,1); }.letter-node>circle { fill:#fffdf7;stroke:#172a45;stroke-width:2;transform-box:fill-box;transform-origin:center;transition:transform .18s cubic-bezier(.34,1.56,.64,1),fill .18s ease,stroke .18s ease; }.letter-node text { fill:#172a45;font-family:'DM Sans',sans-serif;font-size:20px;font-weight:800;pointer-events:none; }.letter-node.active>circle { fill:#e6a527;stroke:#c98220;transform:scale(1.066667); }.letter-node.active text { fill:#172a45; }
-  @keyframes shake { 25% { transform: translateX(-7px); } 55% { transform: translateX(6px); } 80% { transform: translateX(-3px); } }
-  @keyframes solve-cell { 0% { transform: scale(.84); } 70% { transform: scale(1.05); } 100% { transform: scale(.965); } }
-  @keyframes completion-in { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: scale(1); } }
-  @keyframes hint-fade-in { to { opacity:1;transform:translateY(0); } }
-  :global(html.dark) .crossword-frame { background-color:#213a5d;border-color:#e6a527; }:global(html.dark) .crossword-cell { background:#fffdf7; }:global(html.dark) .outer-ring { stroke:#fffdf7; }:global(html.dark) .inner-ring { stroke:#fffdf7; }:global(html.dark) .core-mark { fill:#fffdf7; }:global(html.dark) .core-word,:global(html.dark) .core-caption { fill:rgba(255,253,247,.55); }:global(html.dark) .core-word.active-core { fill:#e6a527; }:global(html.dark) .letter-node>circle { fill:#172a45;stroke:#fffdf7; }:global(html.dark) .letter-node.active>circle { fill:#e6a527;stroke:#e6a527; }:global(html.dark) .letter-node.active text { fill:#172a45; }
-  :global(html.dark) .selected-word.has-word { color:#fffdf7; }:global(html.dark) .completion-result small { color:rgba(255,253,247,.74); }
-  :global(html.dark) .wiktionary-link { border-color:#84909b;background:#2b3d57;color:#d8dde1; }
-  @media (min-width:580px) { .crossword-frame { min-height:260px; }.wheel-stage { min-height:300px;flex-basis:auto; }.letter-wheel { width:292px; } }
-  @media (prefers-reduced-motion:reduce) { .letter-node:not(.active),.crossword-cell.solved,.completion-inline { animation:none; }.letter-node,.letter-node>circle { transition:none; } }
-</style>

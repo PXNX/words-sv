@@ -3,6 +3,8 @@
   import { m } from '$lib/paraglide/messages';
   import { getTextDirection } from '$lib/paraglide/runtime';
   import { settings } from '$lib/state/settings.svelte';
+  import { playableLanguages, wordMetadata } from '$lib/data/vocabulary';
+  import { readVocabularyProgressByLanguage } from '$lib/vocab/spacedRepetition';
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
   import IconPending from '~icons/material-symbols/radio-button-unchecked-rounded';
   import IconFlame from '~icons/material-symbols/local-fire-department-rounded';
@@ -21,8 +23,23 @@
     allTime: m.stats_alltime({}, { locale: settings.interfaceLocale }),
     modeCrossword: m.mode_crossword({}, { locale: settings.interfaceLocale }),
     modeWordle: m.mode_wordle({}, { locale: settings.interfaceLocale }),
-    completed: m.completed({}, { locale: settings.interfaceLocale })
+    completed: m.completed({}, { locale: settings.interfaceLocale }),
+    vocabHeading: m.stats_vocab_heading({}, { locale: settings.interfaceLocale }),
+    wordsPracticed: m.stats_words_practiced({}, { locale: settings.interfaceLocale }),
+    repetitions: m.stats_repetitions({}, { locale: settings.interfaceLocale }),
+    mostRepeated: m.stats_most_repeated({}, { locale: settings.interfaceLocale }),
+    noVocabProgress: m.stats_no_vocab_progress({}, { locale: settings.interfaceLocale })
   });
+
+  const vocabProgress = $derived(readVocabularyProgressByLanguage(playableLanguages.map((language) => language.code)));
+  const vocabProgressEntries = $derived(
+    playableLanguages
+      .filter((language) => vocabProgress[language.code])
+      .map((language) => ({ ...language, progress: vocabProgress[language.code] }))
+  );
+  function spellingOf(language: string, word: string) {
+    return wordMetadata[language as keyof typeof wordMetadata]?.[word]?.spelling ?? word;
+  }
 
   function formatMinutes(minutes: number) {
     const hours = Math.floor(minutes / 60);
@@ -59,5 +76,29 @@
     <h2 id="stats-alltime-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.allTime}</h2>
     <div class="flex items-center justify-between gap-4 pt-[.6rem] mt-[.6rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.68rem] font-extrabold"><span>{labels.streakBest}</span><strong class="text-success font-['DM_Serif_Display',serif] text-[1.35rem] leading-none">{settings.streak.bestStreak}</strong></div>
     <div class="flex items-center justify-between gap-4 pt-[.6rem] mt-[.6rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.68rem] font-extrabold"><span>{labels.completed}</span><strong class="text-success font-['DM_Serif_Display',serif] text-[1.35rem] leading-none">{settings.completedRounds}</strong></div>
+  </section>
+
+  <section class="mt-4 px-[.8rem] pt-[.7rem] pb-[.85rem] border border-base-content/[.17] dark:border-base-content/[.22] bg-[rgba(255,253,247,.55)] dark:bg-[rgba(255,253,247,.06)]" aria-labelledby="stats-vocab-heading">
+    <h2 id="stats-vocab-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.vocabHeading}</h2>
+    {#if vocabProgressEntries.length === 0}
+      <p class="m-0 pt-[.6rem] mt-[.6rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content/60 text-[.68rem] font-bold leading-[1.4]">{labels.noVocabProgress}</p>
+    {:else}
+      {#each vocabProgressEntries as language (language.code)}
+        <div class="pt-[.6rem] mt-[.6rem] border-t border-base-content/[.14] dark:border-base-content/[.22]">
+          <div class="flex items-center justify-between gap-4 text-base-content text-[.68rem] font-extrabold"><span>{language.label}</span><strong class="text-success font-['DM_Serif_Display',serif] text-[1.35rem] leading-none">{language.progress.wordsPracticed}</strong></div>
+          <div class="mt-[.15rem] flex items-center justify-between gap-4 text-base-content/60 text-[.58rem] font-extrabold uppercase tracking-[.06em]"><span>{labels.wordsPracticed}</span><span>{labels.repetitions}: {language.progress.totalRepetitions}</span></div>
+          {#if language.progress.mostRepeated.length > 0}
+            <div class="mt-[.45rem]">
+              <p class="m-0 text-accent text-[.54rem] font-extrabold tracking-[.08em] uppercase">{labels.mostRepeated}</p>
+              <ul class="m-0 mt-[.25rem] pl-0 grid gap-[.15rem] list-none">
+                {#each language.progress.mostRepeated as entry (entry.word)}
+                  <li class="flex items-center justify-between gap-4 text-base-content text-[.64rem] font-bold"><span>{spellingOf(language.code, entry.word)}</span><span class="text-base-content/60">×{entry.repetitions}</span></li>
+                {/each}
+              </ul>
+            </div>
+          {/if}
+        </div>
+      {/each}
+    {/if}
   </section>
 </section>

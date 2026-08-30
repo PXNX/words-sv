@@ -94,5 +94,11 @@
   "notifications_disable": "Desativar lembretes",
   "notifications_enabled": "Os lembretes estão ativados.",
   "notifications_denied": "As notificações estão bloqueadas neste navegador.",
-  "notifications_unavailable": "Lembretes por push não estão disponíveis neste navegador."
+  "notifications_unavailable": "Lembretes por push não estão disponíveis neste navegador.",
+  "read_more": "Saiba mais",
+  "stats_vocab_heading": "Vocabulário por idioma",
+  "stats_words_practiced": "Palavras praticadas",
+  "stats_repetitions": "Repetições",
+  "stats_most_repeated": "Palavras mais repetidas",
+  "stats_no_vocab_progress": "Pratique vocabulário para ver o progresso aqui."
 }
