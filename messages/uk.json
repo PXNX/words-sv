@@ -94,5 +94,11 @@
   "notifications_disable": "Вимкнути нагадування",
   "notifications_enabled": "Нагадування ввімкнено.",
   "notifications_denied": "Сповіщення заблоковані в цьому браузері.",
-  "notifications_unavailable": "Push-нагадування недоступні в цьому браузері."
+  "notifications_unavailable": "Push-нагадування недоступні в цьому браузері.",
+  "read_more": "Докладніше",
+  "stats_vocab_heading": "Словник за мовами",
+  "stats_words_practiced": "Опрацьовані слова",
+  "stats_repetitions": "Повторення",
+  "stats_most_repeated": "Найчастіше повторювані слова",
+  "stats_no_vocab_progress": "Потренуйте слова, щоб побачити прогрес тут."
 }

@@ -1,0 +1,76 @@
+{
+  "cœur": {
+    "definition": "Organe qui fait circuler le sang; aussi le centre des émotions.",
+    "type": "noun",
+    "article": "le"
+  },
+  "coule": {
+    "definition": "Se déplace comme un liquide."
+  },
+  "couleur": {
+    "definition": "La teinte visible d’un objet.",
+    "type": "noun",
+    "article": "la"
+  },
+  "école": {
+    "definition": "Lieu où les élèves apprennent.",
+    "type": "noun",
+    "article": "l’"
+  },
+  "fille": {
+    "definition": "Enfant ou jeune personne de sexe féminin.",
+    "type": "noun",
+    "article": "la"
+  },
+  "garçon": {
+    "definition": "Enfant ou jeune personne de sexe masculin.",
+    "type": "noun",
+    "article": "le"
+  },
+  "livre": {
+    "definition": "Ensemble de pages reliées pour lire.",
+    "type": "noun",
+    "article": "le"
+  },
+  "louer": {
+    "definition": "Prendre ou donner quelque chose pour une durée contre paiement."
+  },
+  "lueur": {
+    "definition": "Faible lumière dans l’obscurité.",
+    "type": "noun",
+    "article": "la"
+  },
+  "pomme": {
+    "definition": "Fruit rond qui pousse sur un pommier.",
+    "type": "noun",
+    "article": "la"
+  },
+  "porte": {
+    "definition": "Partie mobile qui ferme une entrée.",
+    "type": "noun",
+    "article": "la"
+  },
+  "roue": {
+    "definition": "Disque qui permet à un véhicule de se déplacer.",
+    "type": "noun",
+    "article": "la"
+  },
+  "roule": {
+    "definition": "Se déplace en tournant sur une surface."
+  },
+  "rue": {
+    "definition": "Voie dans une ville.",
+    "type": "noun",
+    "article": "la"
+  },
+  "table": {
+    "definition": "Meuble avec une surface plate.",
+    "type": "noun",
+    "article": "la"
+  },
+  "train": {
+    "definition": "Véhicule qui circule sur des rails.",
+    "type": "noun",
+    "article": "le"
+  }
+}

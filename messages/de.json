@@ -94,5 +94,11 @@
   "notifications_disable": "Erinnerungen deaktivieren",
   "notifications_enabled": "Erinnerungen sind aktiviert.",
   "notifications_denied": "Benachrichtigungen sind in diesem Browser blockiert.",
-  "notifications_unavailable": "Push-Erinnerungen sind in diesem Browser nicht verfügbar."
+  "notifications_unavailable": "Push-Erinnerungen sind in diesem Browser nicht verfügbar.",
+  "read_more": "Mehr erfahren",
+  "stats_vocab_heading": "Vokabeln je Sprache",
+  "stats_words_practiced": "Geübte Wörter",
+  "stats_repetitions": "Wiederholungen",
+  "stats_most_repeated": "Am häufigsten wiederholt",
+  "stats_no_vocab_progress": "Übe Vokabeln, um hier deinen Fortschritt zu sehen."
 }

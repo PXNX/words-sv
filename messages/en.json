@@ -94,5 +94,11 @@
   "notifications_disable": "Disable reminders",
   "notifications_enabled": "Reminders are enabled.",
   "notifications_denied": "Notifications are blocked in this browser.",
-  "notifications_unavailable": "Push reminders are not available in this browser."
+  "notifications_unavailable": "Push reminders are not available in this browser.",
+  "read_more": "Read more",
+  "stats_vocab_heading": "Vocabulary by language",
+  "stats_words_practiced": "Words practiced",
+  "stats_repetitions": "Repetitions",
+  "stats_most_repeated": "Most repeated words",
+  "stats_no_vocab_progress": "Practice vocabulary to see progress here."
 }

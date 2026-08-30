@@ -94,5 +94,11 @@
   "notifications_disable": "Отключить напоминания",
   "notifications_enabled": "Напоминания включены.",
   "notifications_denied": "Уведомления заблокированы в этом браузере.",
-  "notifications_unavailable": "Push-напоминания недоступны в этом браузере."
+  "notifications_unavailable": "Push-напоминания недоступны в этом браузере.",
+  "read_more": "Подробнее",
+  "stats_vocab_heading": "Словарь по языкам",
+  "stats_words_practiced": "Отработано слов",
+  "stats_repetitions": "Повторений",
+  "stats_most_repeated": "Самые повторяемые слова",
+  "stats_no_vocab_progress": "Потренируйте слова, чтобы увидеть прогресс здесь."
 }

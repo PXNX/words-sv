@@ -94,5 +94,11 @@
   "notifications_disable": "غیرفعال‌سازی یادآورها",
   "notifications_enabled": "یادآورها فعال هستند.",
   "notifications_denied": "اعلان‌ها در این مرورگر مسدود شده‌اند.",
-  "notifications_unavailable": "یادآورهای پوش در این مرورگر در دسترس نیستند."
+  "notifications_unavailable": "یادآورهای پوش در این مرورگر در دسترس نیستند.",
+  "read_more": "بیشتر بخوانید",
+  "stats_vocab_heading": "واژگان بر اساس زبان",
+  "stats_words_practiced": "واژه‌های تمرین‌شده",
+  "stats_repetitions": "تکرارها",
+  "stats_most_repeated": "پرتکرارترین واژه‌ها",
+  "stats_no_vocab_progress": "واژگان را تمرین کنید تا پیشرفت خود را اینجا ببینید."
 }

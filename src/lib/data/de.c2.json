@@ -1,0 +1,24 @@
+{
+  "betreuen": {
+    "definition": "Für jemanden sorgen und ihn unterstützen.",
+    "type": "verb"
+  },
+  "löhnen": {
+    "definition": "Sich wegen des Nutzens oder Ergebnisses auszahlen.",
+    "type": "verb"
+  },
+  "messen": {
+    "definition": "Die Größe, Menge oder Dauer von etwas bestimmen.",
+    "type": "verb"
+  },
+  "Stand": {
+    "definition": "Die aktuelle Lage oder der Zustand von etwas.",
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "wertlos": {
+    "definition": "Ohne Wert oder Nutzen.",
+    "type": "adjective"
+  }
+}
