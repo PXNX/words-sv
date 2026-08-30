@@ -4,21 +4,41 @@
   import { keyboardMarksFrom, type WordleMark } from './keyboardLayouts';
   import WordleGrid from './WordleGrid.svelte';
   import WordleKeyboard from './WordleKeyboard.svelte';
+  import { m } from '$lib/paraglide/messages';
+  import { settings } from '$lib/state/settings.svelte';
 
   type Entry = { word: string; marks: WordleMark[] };
   type Labels = { title: string; subtitle: string; empty: string; input: string; win: string; invalid: string; again: string };
+  type TutorialRound = { target: string; warmup: string };
 
-  let { words, level, language, labels, onGreen = () => {}, onWin = () => {} }: { words: string[]; level: string; language: string; labels: Labels; onGreen?: () => void; onWin?: () => void } = $props();
+  const WORDLE_TUTORIAL_KEY = 'wordcircle-wordle-tutorial-v1';
+  const tutorialRounds: Record<'de' | 'en', TutorialRound> = {
+    de: { target: 'TASSE', warmup: 'TASES' },
+    en: { target: 'TASTE', warmup: 'TATES' }
+  };
+  function isTutorialLanguage(value: string): value is 'de' | 'en' {
+    return value === 'de' || value === 'en';
+  }
+
+  let { words, level, language, labels, practice = false, onGreen = () => {}, onWin = () => {} }: { words: string[]; level: string; language: string; labels: Labels; practice?: boolean; onGreen?: () => void; onWin?: () => void } = $props();
 
   let target = $state('');
   let guess = $state('');
   let entries = $state<Entry[]>([]);
   let notice = $state('');
+  let practiceActive = $state(practice);
+  let practiceStep = $state(0);
 
   const candidates = $derived(fiveLetterWords(words));
   const won = $derived(entries.some((entry) => entry.word === target));
   const exhausted = $derived(entries.length >= 6 && !won);
   const keyboardMarks = $derived(keyboardMarksFrom(entries));
+  const tutorialRound = $derived(isTutorialLanguage(language) ? tutorialRounds[language] : null);
+  const practiceExpectedWord = $derived(tutorialRound ? (practiceStep === 0 ? tutorialRound.warmup : tutorialRound.target) : '');
+  const practiceFinished = $derived(practiceStep >= 2);
+  const practicePromptLabel = $derived(m.wordle_tutorial_prompt({}, { locale: settings.interfaceLocale }));
+  const practiceCompleteLabel = $derived(m.wordle_tutorial_complete({}, { locale: settings.interfaceLocale }));
+  const practiceContinueLabel = $derived(m.tutorial_start({}, { locale: settings.interfaceLocale }));
 
   function start() {
     target = candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : '';
@@ -75,11 +95,39 @@
     notice = '';
   }
 
+  function practicePress(letter: string) {
+    if (!tutorialRound || practiceFinished) return;
+    const expectedLetter = practiceExpectedWord[guess.length];
+    if (letter !== expectedLetter) return;
+    const nextGuess = `${guess}${letter}`;
+    guess = nextGuess;
+    if (nextGuess.length === 5) {
+      const marks = evaluateWordleGuess(tutorialRound.target, nextGuess) as WordleMark[];
+      entries = [...entries, { word: nextGuess, marks }];
+      guess = '';
+      practiceStep = practiceStep === 0 ? 1 : 2;
+    }
+  }
+
+  function practiceRemoveLetter() {
+    guess = guess.slice(0, -1);
+  }
+
+  function finishPractice() {
+    if (typeof localStorage !== 'undefined') localStorage.setItem(WORDLE_TUTORIAL_KEY, 'complete');
+    practiceActive = false;
+  }
+
+  $effect(() => {
+    if (practiceActive && !tutorialRound) practiceActive = false;
+  });
+
   $effect(() => {
     words;
     level;
     language;
     candidates;
+    if (practiceActive) return;
     restoreOrStart();
   });
 
@@ -100,7 +148,20 @@
     <p>{labels.subtitle}</p>
   </header>
 
-  {#if candidates.length === 0}
+  {#if practiceActive && tutorialRound}
+    <div class="wordle-board">
+      <WordleGrid rows={2} {entries} currentGuess={practiceFinished ? '' : guess} ariaLabel={labels.title} compact />
+      {#if practiceFinished}
+        <p class="mode-notice success">{practiceCompleteLabel}</p>
+        <button class="mode-reset" onclick={finishPractice}>{practiceContinueLabel}</button>
+      {:else}
+        <p class="practice-prompt">{practicePromptLabel} {practiceExpectedWord}</p>
+      {/if}
+    </div>
+    {#if !practiceFinished}
+      <WordleKeyboard {language} expectedLetter={practiceExpectedWord[guess.length]} ariaLabel={labels.input} onPress={practicePress} onRemove={practiceRemoveLetter} />
+    {/if}
+  {:else if candidates.length === 0}
     <div class="mode-empty">{labels.empty}</div>
   {:else}
     <div class="wordle-board">
@@ -121,5 +182,6 @@
   .mode-reset { min-height:2.45rem;padding:0 .9rem;border:1px solid #34824d;background:#34824d;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }
   .mode-notice { min-height:1rem;margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:800;text-align:center; }.mode-notice.success { color:#34824d; }
   .mode-empty { padding:1.25rem;border:1px solid rgba(164,94,56,.42);background:rgba(164,94,56,.08);color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:800;text-align:center; }
+  .practice-prompt { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:800;text-align:center; }
   :global(html.dark) .mode-view { background:linear-gradient(180deg,#213a5d,#172a45); }.mode-header h1 { color:#172a45; }:global(html.dark) .mode-header h1 { color:#fffdf7; }:global(html.dark) .mode-header p { color:rgba(255,253,247,.7); }
 </style>

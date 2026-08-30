@@ -66,6 +66,7 @@
 
   const CIRCLE = 146;
   const LETTER_RADIUS = 120;
+  const LETTER_BUBBLE_OUTWARD = 8;
   const GAME_STORAGE_KEY = 'wordcircle-active-round-v1';
   const ROUND_HISTORY_KEY = 'wordcircle-recent-base-words-v1';
 
@@ -254,9 +255,10 @@
     if (tutorialPractice) completeTutorial();
     else newRound();
   }
-  function position(index: number, total: number) {
+  function position(index: number, total: number, outward = 0) {
     const angle = (index / total) * Math.PI * 2 - Math.PI / 2;
-    return { x: CIRCLE + LETTER_RADIUS * Math.cos(angle), y: CIRCLE + LETTER_RADIUS * Math.sin(angle) };
+    const radius = LETTER_RADIUS + outward;
+    return { x: CIRCLE + radius * Math.cos(angle), y: CIRCLE + radius * Math.sin(angle) };
   }
   function pointFromEvent(event: PointerEvent) {
     const rect = circleEl?.getBoundingClientRect();
@@ -340,7 +342,7 @@
   }
   function pathPoints() {
     return selectedPath.map((index) => {
-      const point = position(index, circleLetters.length);
+      const point = position(index, circleLetters.length, LETTER_BUBBLE_OUTWARD);
       return `${point.x},${point.y}`;
     }).join(' ');
   }
@@ -417,8 +419,9 @@
     <text x={CIRCLE} y="142" text-anchor="middle" class:active-core={activeWord.length > 0} class:idle-core={!activeWord} class="core-word">{coreReadout}</text><text x={CIRCLE} y="161" text-anchor="middle" class="core-caption">{activeWord ? traceCaption : '·'}</text>
     {#if selectedPath.length > 1}<polyline points={pathPoints()} class="selection-line" />{/if}
     {#each circleLetters as letter, index (index)}
-      {@const point = position(index, circleLetters.length)}
-      <g transform={`translate(${point.x} ${point.y})`} class:active={selectedPath.includes(index)} class="letter-node" role="button" tabindex="0" aria-label={`Letter ${letter}`} onpointerdown={(event) => { event.stopPropagation(); startSwipe(event, index); }} onkeydown={(event) => { if (event.key === 'Enter' || event.key === ' ') chooseLetter(index); }}>
+      {@const active = selectedPath.includes(index)}
+      {@const point = position(index, circleLetters.length, active ? LETTER_BUBBLE_OUTWARD : 0)}
+      <g transform={`translate(${point.x} ${point.y})`} class:active class="letter-node" role="button" tabindex="0" aria-label={`Letter ${letter}`} onpointerdown={(event) => { event.stopPropagation(); startSwipe(event, index); }} onkeydown={(event) => { if (event.key === 'Enter' || event.key === ' ') chooseLetter(index); }}>
         <circle r="30"></circle><text text-anchor="middle" dominant-baseline="central">{letter}</text>
       </g>
     {/each}
@@ -451,7 +454,7 @@
   .letter-wheel { width:min(100%,238px);touch-action:none;overflow:visible;user-select:none; }.outer-ring,.inner-ring,.core-ring { fill:none; }.outer-ring { stroke:#172a45;stroke-width:1.1;stroke-dasharray:none;opacity:.28; }.inner-ring { stroke:#172a45;stroke-width:1;opacity:.12; }.core-ring { stroke:#e6a527;stroke-width:1.8;opacity:.9; }.core-mark { fill:#172a45;opacity:.83; }
   .core-word { fill:rgba(23,42,69,.52);font-family:'DM Serif Display',serif;font-size:13px;letter-spacing:.08em; }.core-word.active-core { fill:#c98220; }.core-word.idle-core { fill:#a0621d;font-family:'DM Sans',sans-serif;font-size:10.8px;font-weight:800;letter-spacing:.08em; }.core-caption { fill:rgba(23,42,69,.5);font-family:'DM Sans',sans-serif;font-size:5.8px;font-weight:800;letter-spacing:.18em; }
   .selection-line { fill:none;stroke:#e6a527;stroke-linecap:round;stroke-linejoin:round;stroke-width:10;opacity:.9; }
-  .letter-node { cursor:crosshair; }.letter-node>circle { fill:#fffdf7;stroke:#172a45;stroke-width:2;transform-box:fill-box;transform-origin:center; }.letter-node text { fill:#172a45;font-family:'DM Sans',sans-serif;font-size:20px;font-weight:800;pointer-events:none; }.letter-node.active>circle { fill:#e6a527;stroke:#c98220;transform:scale(1.066667); }.letter-node.active text { fill:#172a45; }
+  .letter-node { cursor:crosshair;transition:transform .22s cubic-bezier(.34,1.56,.64,1); }.letter-node>circle { fill:#fffdf7;stroke:#172a45;stroke-width:2;transform-box:fill-box;transform-origin:center;transition:transform .18s cubic-bezier(.34,1.56,.64,1),fill .18s ease,stroke .18s ease; }.letter-node text { fill:#172a45;font-family:'DM Sans',sans-serif;font-size:20px;font-weight:800;pointer-events:none; }.letter-node.active>circle { fill:#e6a527;stroke:#c98220;transform:scale(1.066667); }.letter-node.active text { fill:#172a45; }
   @keyframes shake { 25% { transform: translateX(-7px); } 55% { transform: translateX(6px); } 80% { transform: translateX(-3px); } }
   @keyframes solve-cell { 0% { transform: scale(.84); } 70% { transform: scale(1.05); } 100% { transform: scale(.965); } }
   @keyframes completion-in { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: scale(1); } }
@@ -460,5 +463,5 @@
   :global(html.dark) .selected-word.has-word { color:#fffdf7; }:global(html.dark) .completion-result small { color:rgba(255,253,247,.74); }
   :global(html.dark) .wiktionary-link { border-color:#84909b;background:#2b3d57;color:#d8dde1; }
   @media (min-width:580px) { .crossword-frame { min-height:260px; }.wheel-stage { min-height:300px;flex-basis:auto; }.letter-wheel { width:292px; } }
-  @media (prefers-reduced-motion:reduce) { .letter-node:not(.active),.crossword-cell.solved,.completion-inline { animation:none; } }
+  @media (prefers-reduced-motion:reduce) { .letter-node:not(.active),.crossword-cell.solved,.completion-inline { animation:none; }.letter-node,.letter-node>circle { transition:none; } }
 </style>

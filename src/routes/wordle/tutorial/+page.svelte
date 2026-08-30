@@ -1,100 +1,46 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { evaluateWordleGuess } from '$lib/wordle/wordleWords';
-  import { settings } from '$lib/state/settings.svelte';
   import { m } from '$lib/paraglide/messages';
+  import { getTextDirection } from '$lib/paraglide/runtime';
+  import { settings } from '$lib/state/settings.svelte';
   import TutorialDialog from '$lib/TutorialDialog.svelte';
-  import WordleGrid from '$lib/wordle/WordleGrid.svelte';
-  import WordleKeyboard from '$lib/wordle/WordleKeyboard.svelte';
-
-  type WordleMark = 'correct' | 'present' | 'absent';
-  type Entry = { word: string; marks: WordleMark[] };
-  type WordleTutorialRound = { target: string; warmup: string };
-
-  const WORDLE_TUTORIAL_KEY = 'wordcircle-wordle-tutorial-v1';
-  const wordleTutorialRounds: Record<'de' | 'en', WordleTutorialRound> = {
-    de: { target: 'TASSE', warmup: 'TASES' },
-    en: { target: 'TASTE', warmup: 'TATES' }
-  };
-  function isWordleTutorialLanguage(value: string): value is 'de' | 'en' {
-    return value === 'de' || value === 'en';
-  }
+  import { requestWordlePractice } from '$lib/wordle/practice';
 
   const labels = $derived({
+    kicker: m.wordle_tutorial_title({}, { locale: settings.interfaceLocale }),
     title: m.wordle_title({}, { locale: settings.interfaceLocale }),
-    input: m.wordle_input({}, { locale: settings.interfaceLocale }),
-    again: m.wordle_again({}, { locale: settings.interfaceLocale }),
-    tutorialTitle: m.wordle_tutorial_title({}, { locale: settings.interfaceLocale }),
-    tutorialExplain: m.wordle_tutorial_explain({}, { locale: settings.interfaceLocale }),
-    tutorialPrompt: m.wordle_tutorial_prompt({}, { locale: settings.interfaceLocale }),
-    tutorialComplete: m.wordle_tutorial_complete({}, { locale: settings.interfaceLocale }),
-    tutorialRepeat: m.wordle_tutorial_repeat({}, { locale: settings.interfaceLocale })
+    stepOrange: m.wordle_tutorial_step_orange({}, { locale: settings.interfaceLocale }),
+    stepGreen: m.wordle_tutorial_step_green({}, { locale: settings.interfaceLocale }),
+    stepRepeat: m.wordle_tutorial_step_repeat({}, { locale: settings.interfaceLocale }),
+    start: m.tutorial_start({}, { locale: settings.interfaceLocale })
   });
+  const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
 
-  const tutorialRound = $derived<WordleTutorialRound | null>(isWordleTutorialLanguage(settings.lang) ? wordleTutorialRounds[settings.lang] : null);
-
-  let step = $state(0);
-  let guess = $state('');
-  let entries = $state<Entry[]>([]);
-
-  const expected = $derived(tutorialRound ? (step === 0 ? tutorialRound.warmup : tutorialRound.target) : '');
-  const finished = $derived(step >= 2);
-  const prompt = $derived(finished ? labels.tutorialComplete : `${labels.tutorialPrompt} ${expected}`);
-
-  function press(letter: string) {
-    if (finished || !tutorialRound) return;
-    const expectedLetter = expected[guess.length];
-    if (letter !== expectedLetter) return;
-    const nextGuess = `${guess}${letter}`;
-    guess = nextGuess;
-    if (nextGuess.length === 5) {
-      const marks = evaluateWordleGuess(tutorialRound.target, nextGuess) as WordleMark[];
-      entries = [...entries, { word: nextGuess, marks }];
-      guess = '';
-      if (step === 0) step = 1;
-      else {
-        step = 2;
-        if (typeof localStorage !== 'undefined') localStorage.setItem(WORDLE_TUTORIAL_KEY, 'complete');
-      }
-    }
-  }
-
-  function removeLetter() {
-    guess = guess.slice(0, -1);
-  }
-
-  function finish() {
+  function beginPractice() {
+    requestWordlePractice();
     void goto('/wordle');
   }
 </script>
 
-<section class="wordle-tutorial-view" aria-label={labels.tutorialTitle}>
-  <TutorialDialog kicker={labels.tutorialTitle} title={labels.title}>
-    {#if tutorialRound}
-      <p class="tutorial-explanation">{labels.tutorialExplain}</p>
-      <p class="tutorial-repeats">{labels.tutorialRepeat}</p>
-      <WordleGrid rows={2} {entries} currentGuess={finished ? '' : guess} ariaLabel={labels.tutorialTitle} compact />
-      <p class="tutorial-prompt">{prompt}</p>
-      {#if finished}
-        <button class="tutorial-finish" type="button" onclick={finish}>{labels.again}</button>
-      {:else}
-        <WordleKeyboard language={settings.lang} expectedLetter={expected[guess.length]} ariaLabel={labels.input} onPress={press} onRemove={removeLetter} />
-      {/if}
-    {:else}
-      <button class="tutorial-finish" type="button" onclick={finish}>{labels.again}</button>
-    {/if}
+<div class="tutorial-panel" dir={interfaceDirection} lang={settings.interfaceLocale}>
+  <TutorialDialog kicker={labels.kicker} title={labels.title} cornerMark="02">
+    <ol class="tutorial-steps">
+      <li><b>1</b><span>{labels.stepOrange}</span></li>
+      <li><b>2</b><span>{labels.stepGreen}</span></li>
+      <li><b>3</b><span>{labels.stepRepeat}</span></li>
+    </ol>
+    <button class="tutorial-start" onclick={beginPractice}>{labels.start}</button>
   </TutorialDialog>
-</section>
+</div>
 
 <style>
-  .wordle-tutorial-view { flex:1 1 auto;min-height:0;display:grid;place-items:stretch;padding:0;overflow-x:hidden;overflow-y:auto;background:linear-gradient(180deg,rgba(237,228,213,.8),rgba(255,253,247,.65));border-top:3px double #172a45; }
-  .wordle-tutorial-view :global(.tutorial-dialog) { width:100%;height:100%;max-width:none;align-content:center;border-left:0;border-right:0;box-shadow:none; }
-  .tutorial-explanation,.tutorial-repeats,.tutorial-prompt { margin:0;font-family:'DM Sans',sans-serif;font-size:.69rem;font-weight:700;line-height:1.4; }
-  .tutorial-explanation { color:#172a45; }
-  .tutorial-repeats { padding:.45rem .55rem;border-left:3px solid #e6a527;background:rgba(230,165,39,.1);color:#76541b; }
-  .tutorial-prompt { color:#a45e38;text-align:center; }
-  .tutorial-finish { min-height:2.45rem;border:1px solid #172a45;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }
-  :global(html.dark) .wordle-tutorial-view { background:linear-gradient(180deg,#213a5d,#172a45); }
-  :global(html.dark) .tutorial-explanation { color:#fffdf7; }
-  :global(html.dark) .tutorial-repeats { color:#ffe3a5; }
+  .tutorial-panel { flex:1 1 auto;min-height:0;isolation:isolate;position:relative;display:grid;place-items:center;padding:clamp(1rem,6vw,2rem);background:linear-gradient(90deg,rgba(23,42,69,.055) 1px,transparent 1px) 1.15rem 0/1px 100%,linear-gradient(90deg,transparent calc(100% - 1.15rem),rgba(23,42,69,.055) calc(100% - 1.15rem),rgba(23,42,69,.055) calc(100% - 1.05rem),transparent calc(100% - 1.05rem)),#fffdf7; }
+  .tutorial-panel::before { content:'WORDCIRCLE · DAILY LANGUAGE FOLIO'; position:absolute;z-index:-1;top:1.35rem;left:1.55rem;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.48rem;font-weight:800;letter-spacing:.16em;opacity:.68; }
+  .tutorial-panel::after { content:'';position:absolute;z-index:-1;right:1.55rem;bottom:1.45rem;width:1.12rem;height:1.12rem;border:1px solid #172a45;border-radius:50%;box-shadow:.42rem .42rem 0 -1px #fffdf7,.42rem .42rem 0 0 #e6a527;opacity:.72; }
+  .tutorial-steps { display:grid;gap:.72rem;margin:0;padding:0;list-style:none; }.tutorial-steps li { display:grid;grid-template-columns:1.55rem 1fr;gap:.62rem;align-items:start;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;line-height:1.35; }.tutorial-steps b { display:grid;place-items:center;width:1.35rem;height:1.35rem;border:1px solid #172a45;border-radius:50%;background:#fffdf7;color:#a45e38;font-family:'DM Serif Display',serif;font-size:.9rem;font-weight:400; }
+  .tutorial-start { width:100%;min-height:2.45rem;margin-top:.75rem;border:1px solid #172a45;border-radius:0;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.67rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;box-shadow:3px 3px 0 #e6a527;transition:transform .16s cubic-bezier(.23,1,.32,1),box-shadow .16s ease; }.tutorial-start:active { transform:translate(2px,2px);box-shadow:1px 1px 0 #e6a527; }
+  :global(html.dark) .tutorial-panel { background:linear-gradient(90deg,rgba(255,253,247,.11) 1px,transparent 1px) 1.15rem 0/1px 100%,linear-gradient(90deg,transparent calc(100% - 1.15rem),rgba(255,253,247,.11) calc(100% - 1.15rem),rgba(255,253,247,.11) calc(100% - 1.05rem),transparent calc(100% - 1.05rem)),#172a45; }
+  :global(html.dark) .tutorial-panel::before { color:#fffdf7; }:global(html.dark) .tutorial-panel::after { border-color:#fffdf7;box-shadow:.42rem .42rem 0 -1px #172a45,.42rem .42rem 0 0 #e6a527; }
+  :global(html.dark) .tutorial-steps b { border-color:#fffdf7;background:#172a45;color:#e6a527; }
+  :global(html.dark) .tutorial-start { border-color:#e6a527;background:#e6a527;color:#172a45; }
 </style>
