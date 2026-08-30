@@ -49,6 +49,12 @@
     return hours > 0 ? `${hours}h ${String(minutes % 60).padStart(2, '0')}m` : `${minutes}m`;
   }
 
+  const RING_RADIUS = 16;
+  const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+  function ringOffset(percentage: number) {
+    return RING_CIRCUMFERENCE * (1 - Math.min(Math.max(percentage, 0), 100) / 100);
+  }
+
   let streakTimer: number | null = null;
   onMount(() => {
     void settings.refreshStreak();
@@ -88,9 +94,20 @@
     {:else}
       {#each vocabProgressEntries as language (language.code)}
         <div class="pt-[.6rem] mt-[.6rem] border-t border-base-content/[.14] dark:border-base-content/[.22]">
-          <div class="flex items-center justify-between gap-4 text-base-content text-[.68rem] font-extrabold"><span>{language.label}</span><strong class="text-success font-['DM_Serif_Display',serif] text-[1.35rem] leading-none">{language.progress.percentage}%</strong></div>
-          <div class="mt-[.15rem] flex items-center justify-between gap-4 text-base-content/60 text-[.58rem] font-extrabold uppercase tracking-[.06em]"><span>{labels.overallProgress}</span><span>{labels.masteredWords}: {language.progress.masteredWords}/{language.progress.totalWords}</span></div>
-          <div class="mt-[.15rem] flex items-center justify-between gap-4 text-base-content/60 text-[.58rem] font-extrabold uppercase tracking-[.06em]"><span>{labels.wordsPracticed}: {language.progress.wordsPracticed}</span><span>{labels.repetitions}: {language.progress.totalRepetitions}</span></div>
+          <div class="flex items-center gap-3">
+            <div class="relative shrink-0 w-[2.9rem] h-[2.9rem]" role="img" aria-label={`${language.label}: ${language.progress.percentage}%`}>
+              <svg viewBox="0 0 40 40" class="w-full h-full -rotate-90">
+                <circle cx="20" cy="20" r={RING_RADIUS} fill="none" stroke-width="4" class="stroke-base-content/15" />
+                <circle cx="20" cy="20" r={RING_RADIUS} fill="none" stroke-width="4" stroke-linecap="round" class="stroke-success transition-[stroke-dashoffset] duration-500" stroke-dasharray={RING_CIRCUMFERENCE} stroke-dashoffset={ringOffset(language.progress.percentage)} />
+              </svg>
+              <span class="absolute inset-0 flex items-center justify-center text-base-content text-[.6rem] font-extrabold" aria-hidden="true">{language.progress.percentage}%</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-4 text-base-content text-[.68rem] font-extrabold"><span>{language.label}</span></div>
+              <div class="mt-[.1rem] flex items-center justify-between gap-4 text-base-content/60 text-[.58rem] font-extrabold uppercase tracking-[.06em]"><span>{labels.overallProgress}</span><span>{labels.masteredWords}: {language.progress.masteredWords}/{language.progress.totalWords}</span></div>
+            </div>
+          </div>
+          <div class="mt-[.35rem] flex items-center justify-between gap-4 text-base-content/60 text-[.58rem] font-extrabold uppercase tracking-[.06em]"><span>{labels.wordsPracticed}: {language.progress.wordsPracticed}</span><span>{labels.repetitions}: {language.progress.totalRepetitions}</span></div>
           {#if language.progress.levelBreakdown.length > 0}
             <div class="mt-[.45rem]">
               <p class="m-0 text-accent text-[.54rem] font-extrabold tracking-[.08em] uppercase">{labels.byLevel}</p>
