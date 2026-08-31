@@ -4,9 +4,11 @@
   import { settings } from '$lib/state/settings.svelte';
   import { wordPools, wordMetadata } from '$lib/data/vocabulary';
   import { m } from '$lib/paraglide/messages';
-  import { pickLearningSection, insertLearningRepeat } from '$lib/vocab/learning';
   import { prioritizeLearningWords, updateReviewProgress } from '$lib/vocab/spacedRepetition';
-  import { articleChoiceOptions, gapSentenceSuffixes, grammarArticles, GRAMMAR_REVIEW_STORAGE_PREFIX } from '$lib/grammar/learning';
+  import { articleChoiceOptions, gapSentenceSuffixes, grammarArticles, pickRandomSection, shuffled, GRAMMAR_REVIEW_STORAGE_PREFIX } from '$lib/grammar/learning';
+  import { buildNounCasePrompt, type GrammarPrompt } from '$lib/grammar/cases';
+  import { buildAdjectivePrompt, isEligibleAdjective } from '$lib/grammar/adjectives';
+  import { buildVerbPrompt, verbConjugations } from '$lib/grammar/verbs';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
 
@@ -23,25 +25,38 @@
     tryAgain: m.learning_try_again({}, { locale: settings.interfaceLocale })
   });
 
+  // German gets the full case/adjective/verb engine below (`cases.ts`, `adjectives.ts`,
+  // `verbs.ts`); every other supported language falls back to the original single
+  // nominative-article drill, since only German has case, adjective-ending and
+  // hand-checked verb-conjugation data to draw on.
+  const isGerman = $derived(settings.lang === 'de');
   const metadata = $derived(wordMetadata[settings.lang]);
   const articleUniverse = $derived(grammarArticles[settings.lang] ?? []);
   const words = $derived(wordPools[settings.lang][settings.vocabularyLevel]);
-  const gapWords = $derived(words.filter((word) => Boolean(metadata[word]?.article)));
+
+  const nounPool = $derived(words.filter((word) => Boolean(metadata[word]?.article) && Boolean(metadata[word]?.gender)));
+  const adjectivePool = $derived(words.filter((word) => metadata[word]?.type === 'adjective' && isEligibleAdjective(metadata[word]?.spelling ?? word)));
+  const verbPool = $derived(words.filter((word) => Boolean(verbConjugations[word])));
+  const legacyArticleWords = $derived(words.filter((word) => Boolean(metadata[word]?.article)));
+
+  const eligibleKeys = $derived(
+    isGerman
+      ? [...nounPool.map((word) => `noun:${word}`), ...adjectivePool.map((word) => `adj:${word}`), ...verbPool.map((word) => `verb:${word}`)]
+      : legacyArticleWords.map((word) => `article:${word}`)
+  );
+  const isSupported = $derived(isGerman ? nounPool.length + adjectivePool.length + verbPool.length > 0 : articleUniverse.length > 0);
 
   let section = $state<string[]>([]);
   let queue = $state<string[]>([]);
   let position = $state(0);
   let answerStatus = $state<AnswerStatus>(null);
   let selectedChoice = $state<string | null>(null);
-  let choiceArticles = $state<string[]>([]);
+  let prompt = $state<GrammarPrompt | null>(null);
   let sourceKey = $state('');
   let choiceKey = $state('');
   let reviewProgress = $state<Record<string, { repetitions: number; dueAt: number }>>({});
 
-  const currentWord = $derived(queue[position] ?? '');
-  const currentArticle = $derived(metadata[currentWord]?.article ?? '');
-  const currentSpelling = $derived(metadata[currentWord]?.spelling ?? currentWord);
-  const currentSentenceSuffix = $derived(gapSentenceSuffixes[settings.lang]?.(currentSpelling) ?? currentSpelling);
+  const currentKey = $derived(queue[position] ?? '');
 
   function random() { return Math.random(); }
   function persistProgress() {
@@ -57,46 +72,76 @@
   }
   function startSection() {
     reviewProgress = loadProgress();
-    const prioritized = prioritizeLearningWords(gapWords, reviewProgress);
-    section = pickLearningSection(prioritized, random, 6);
+    const prioritized = prioritizeLearningWords(eligibleKeys, reviewProgress);
+    section = pickRandomSection(prioritized, random, 6);
     queue = [...section];
     position = 0;
+  }
+  function buildPromptForKey(key: string): GrammarPrompt | null {
+    const separator = key.indexOf(':');
+    const kind = key.slice(0, separator);
+    const word = key.slice(separator + 1);
+    if (kind === 'article') {
+      const article = metadata[word]?.article;
+      if (!article) return null;
+      const spelling = metadata[word]?.spelling ?? word;
+      const after = gapSentenceSuffixes[settings.lang]?.(spelling) ?? spelling;
+      const choices = articleChoiceOptions(article, articleUniverse, random);
+      if (choices.length < 2) return null;
+      return { before: '', after, correct: article, choices };
+    }
+    if (kind === 'noun') {
+      const gender = metadata[word]?.gender;
+      if (!gender) return null;
+      return buildNounCasePrompt(metadata[word]?.spelling ?? word, gender, random, shuffled);
+    }
+    if (kind === 'adj') {
+      if (nounPool.length === 0) return null;
+      const pairedNoun = nounPool[Math.floor(random() * nounPool.length)];
+      const gender = metadata[pairedNoun]?.gender;
+      if (!gender) return null;
+      const adjectiveSpelling = metadata[word]?.spelling ?? word;
+      const nounSpelling = metadata[pairedNoun]?.spelling ?? pairedNoun;
+      return buildAdjectivePrompt(adjectiveSpelling, nounSpelling, gender, random, shuffled);
+    }
+    if (kind === 'verb') return buildVerbPrompt(word, random, shuffled);
+    return null;
   }
   function resetPrompt() {
     answerStatus = null;
     selectedChoice = null;
-    if (!currentWord || !currentArticle) { choiceArticles = []; return; }
-    choiceArticles = articleChoiceOptions(currentArticle, articleUniverse, random);
+    prompt = currentKey ? buildPromptForKey(currentKey) : null;
   }
   function chooseAnswer(event: MouseEvent) {
-    if (answerStatus || !currentWord) return;
-    const chosenArticle = (event.currentTarget as HTMLButtonElement).value;
-    if (!chosenArticle) return;
-    const correct = chosenArticle === currentArticle;
-    selectedChoice = chosenArticle;
+    if (answerStatus || !prompt) return;
+    const chosen = (event.currentTarget as HTMLButtonElement).value;
+    if (!chosen) return;
+    const correct = chosen === prompt.correct;
+    selectedChoice = chosen;
     answerStatus = correct ? 'correct' : 'wrong';
-    reviewProgress = updateReviewProgress(reviewProgress, currentWord, correct);
+    reviewProgress = updateReviewProgress(reviewProgress, currentKey, correct);
     persistProgress();
     if (correct) playSuccessSound(settings.sound, 'grammar');
-    else { playErrorSound(settings.sound, 'grammar'); queue = insertLearningRepeat(queue, position, currentWord); }
+    else { playErrorSound(settings.sound, 'grammar'); queue = [...queue, currentKey]; }
   }
   function continueLearning() {
     position = position >= queue.length - 1 ? 0 : position + 1;
   }
-  function optionStateClasses(article: string) {
-    if (answerStatus !== null && article === currentArticle) return 'border-success bg-success text-[#fffdf7]';
-    if (answerStatus === 'wrong' && article === selectedChoice) return 'border-accent bg-[#fff2e8] text-[#8e4322] dark:bg-[#69332f] dark:text-[#fff7ed]';
+  function optionStateClasses(choice: string) {
+    if (!prompt) return '';
+    if (answerStatus !== null && choice === prompt.correct) return 'border-success bg-success text-[#fffdf7]';
+    if (answerStatus === 'wrong' && choice === selectedChoice) return 'border-accent bg-[#fff2e8] text-[#8e4322] dark:bg-[#69332f] dark:text-[#fff7ed]';
     return 'border-neutral/55 dark:border-neutral/60 bg-neutral-content text-base-content';
   }
 
   $effect(() => {
-    const nextSourceKey = `${settings.lang}|${settings.vocabularyLevel}|${gapWords.join('|')}`;
+    const nextSourceKey = `${settings.lang}|${settings.vocabularyLevel}|${eligibleKeys.join('|')}`;
     if (nextSourceKey === sourceKey) return;
     sourceKey = nextSourceKey;
     untrack(() => startSection());
   });
   $effect(() => {
-    const nextChoiceKey = `${currentWord}|${section.join('|')}|${position}`;
+    const nextChoiceKey = `${currentKey}|${position}|${queue.length}`;
     if (nextChoiceKey === choiceKey) return;
     choiceKey = nextChoiceKey;
     untrack(() => resetPrompt());
@@ -112,26 +157,26 @@
     <h1 class="my-[.16rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,7vw,2.65rem)] font-normal leading-none">{labels.title}</h1>
     <p class="m-0 text-base-content/60 text-[.65rem] font-extrabold">{Math.min(position + 1, queue.length)} / {queue.length || 6}</p>
   </header>
-  {#if articleUniverse.length === 0}
+  {#if !isSupported}
     <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{labels.unsupported}</div>
-  {:else if !currentWord}
+  {:else if !prompt}
     <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{labels.unavailable}</div>
   {:else}
     <article class="w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] border border-neutral border-t-[4px] border-t-double border-t-neutral shadow-[8px_8px_0_rgba(164,94,56,.16)] text-center bg-neutral-content">
-      <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.75rem,8vw,3rem)] font-normal tracking-[.04em] leading-[1.3]" lang={settings.lang}><span class="inline-block border-b-4 border-dotted border-accent text-accent px-[.3rem]">___</span> {currentSentenceSuffix}</p>
+      <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.55rem,7vw,2.6rem)] font-normal tracking-[.04em] leading-[1.3]" lang={settings.lang}>{prompt.before}<span class="inline-block border-b-4 border-dotted border-accent text-accent px-[.3rem]">___</span> {prompt.after}</p>
     </article>
-    {#if choiceArticles.length >= 2}
+    {#if prompt.choices.length >= 2}
       <section class="w-[min(100%,28rem)] grid gap-[.55rem]" aria-label={labels.chooseArticle}>
         <p class="m-0 text-accent text-[.6rem] font-black tracking-[.1em] text-center uppercase">{labels.chooseArticle}</p>
-        <div class="grid gap-[.45rem]" style={`grid-template-columns:repeat(${choiceArticles.length},minmax(0,1fr));`}>
-          {#each choiceArticles as article}
+        <div class="grid gap-[.45rem]" style={`grid-template-columns:repeat(${Math.min(prompt.choices.length, 3)},minmax(0,1fr));`}>
+          {#each prompt.choices as choice}
             <button
               type="button"
-              value={article}
+              value={choice}
               onclick={chooseAnswer}
               disabled={answerStatus !== null}
-              class="min-h-[2.8rem] px-[.75rem] py-[.55rem] flex items-center justify-center gap-[.4rem] border text-[.85rem] font-extrabold uppercase touch-manipulation active:scale-[.985] disabled:opacity-100 {optionStateClasses(article)}"
-            >{article}{#if answerStatus !== null && article === currentArticle}<IconCheck class="w-[1.15rem] h-[1.15rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && article === selectedChoice}<IconClose class="w-[1.15rem] h-[1.15rem] flex-none text-accent" aria-label={labels.tryAgain} />{/if}</button>
+              class="min-h-[2.8rem] px-[.75rem] py-[.55rem] flex items-center justify-center gap-[.4rem] border text-[.85rem] font-extrabold touch-manipulation active:scale-[.985] disabled:opacity-100 {optionStateClasses(choice)}"
+            >{choice}{#if answerStatus !== null && choice === prompt.correct}<IconCheck class="w-[1.15rem] h-[1.15rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && choice === selectedChoice}<IconClose class="w-[1.15rem] h-[1.15rem] flex-none text-accent" aria-label={labels.tryAgain} />{/if}</button>
           {/each}
         </div>
         {#if answerStatus}<button class="justify-self-center min-h-[2.45rem] px-[1rem] border border-[#172a45] bg-[#172a45] text-[#fffdf7] text-[.64rem] font-black tracking-[.08em] uppercase shadow-[3px_3px_0_#e6a527]" onclick={continueLearning}>{labels.continue}</button>{/if}
