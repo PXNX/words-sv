@@ -44,7 +44,9 @@
     "article": "die",
     "definition": "Straße, Hausnummer und Ort, wo jemand wohnt."
   },
-  "allein": {},
+  "allein": {
+    "type": "adjective"
+  },
   "also": {},
   "alt": {
     "type": "adjective"
@@ -182,7 +184,9 @@
     "definition": "Eine Tätigkeit ausüben, oft beruflich.",
     "type": "verb"
   },
-  "arbeitslos": {},
+  "arbeitslos": {
+    "type": "adjective"
+  },
   "Arbeitsplatz": {
     "type": "noun",
     "genus": "masculine",
@@ -261,7 +265,9 @@
     "article": "der",
     "definition": "Eine Person aus einem anderen Land."
   },
-  "ausländisch": {},
+  "ausländisch": {
+    "type": "adjective"
+  },
   "ausmachen": {
     "type": "verb"
   },
@@ -304,7 +310,9 @@
     "article": "der",
     "definition": "Eine Maschine, die ohne Personal Waren oder Tickets verkauft."
   },
-  "automatisch": {},
+  "automatisch": {
+    "type": "adjective"
+  },
   "Baby": {
     "type": "noun",
     "genus": "neuter",
@@ -407,7 +415,9 @@
     "article": "das",
     "definition": "Etwas, das eine allgemeine Aussage veranschaulicht."
   },
-  "bekannt": {},
+  "bekannt": {
+    "type": "adjective"
+  },
   "bekommen": {
     "type": "verb"
   },
@@ -420,11 +430,15 @@
     "article": "der",
     "definition": "Die Tätigkeit, mit der jemand Geld verdient."
   },
-  "besetzt": {},
+  "besetzt": {
+    "type": "adjective"
+  },
   "besichtigen": {
     "type": "verb"
   },
-  "besser": {},
+  "besser": {
+    "type": "adjective"
+  },
   "bestbestellen": {
     "type": "verb"
   },
@@ -453,7 +467,9 @@
     "article": "das",
     "definition": "Eine gemalte oder fotografierte Darstellung."
   },
-  "billig": {},
+  "billig": {
+    "type": "adjective"
+  },
   "Birne": {
     "type": "noun",
     "genus": "feminine",
@@ -464,11 +480,17 @@
   "bisschen": {
     "type": "verb"
   },
-  "bitte": {},
+  "Bitte": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
   "bitten": {
     "type": "verb"
   },
-  "bitter": {},
+  "bitter": {
+    "type": "adjective"
+  },
   "bleiben": {
     "type": "verb"
   },
@@ -496,11 +518,15 @@
     "article": "der",
     "definition": "Ein Blatt Papier oder eine gebogene Form."
   },
-  "böse": {},
+  "böse": {
+    "type": "adjective"
+  },
   "brauchen": {
     "type": "verb"
   },
-  "breit": {},
+  "breit": {
+    "type": "adjective"
+  },
   "Brief": {
     "type": "noun",
     "genus": "masculine",
@@ -723,12 +749,16 @@
     "article": "das",
     "definition": "Ein rundliches Nahrungsmittel von Vögeln."
   },
-  "eilig": {},
+  "eilig": {
+    "type": "adjective"
+  },
   "ein": {},
   "einen": {
     "type": "verb"
   },
-  "einfach": {},
+  "einfach": {
+    "type": "adjective"
+  },
   "Eingang": {
     "type": "noun",
     "genus": "masculine",
@@ -739,7 +769,8 @@
     "type": "verb"
   },
   "einladen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden bitten, zu einem Ereignis oder Ort zu kommen."
   },
   "Einladung": {
     "type": "noun",
@@ -845,7 +876,9 @@
     "article": "das",
     "definition": "Ein Fahrzeug mit zwei Rädern, das man mit den Beinen antreibt."
   },
-  "falsch": {},
+  "falsch": {
+    "type": "adjective"
+  },
   "Familie": {
     "type": "noun",
     "genus": "feminine",
@@ -888,8 +921,10 @@
   "feiern": {
     "type": "verb"
   },
-  "fernsehen": {
-    "type": "verb"
+  "Fernsehen": {
+    "type": "verb",
+    "genus": "neuter",
+    "article": "das"
   },
   "fertig": {
     "type": "adjective"
@@ -993,7 +1028,9 @@
     "article": "die",
     "definition": "Die Zeit ohne Arbeit oder Pflichten."
   },
-  "fremd": {},
+  "fremd": {
+    "type": "adjective"
+  },
   "freuen": {
     "type": "verb"
   },
@@ -1009,7 +1046,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "frites": {},
   "früher": {},
   "Frühstück": {
     "type": "noun",
@@ -1041,7 +1077,9 @@
     "article": "der",
     "definition": "Ein Mannschaftssport mit einem runden Ball."
   },
-  "ganz": {},
+  "ganz": {
+    "type": "adjective"
+  },
   "Garten": {
     "definition": "Ein Stück Land bei einem Haus, auf dem Pflanzen wachsen.",
     "type": "noun",
@@ -1079,7 +1117,9 @@
     "article": "der",
     "definition": "Der Tag, an dem jemand geboren wurde und jedes Jahr feiert."
   },
-  "geehrte": {},
+  "geehrte": {
+    "type": "adjective"
+  },
   "gefallen": {
     "type": "verb"
   },
@@ -1168,9 +1208,12 @@
     "definition": "Ein durchsichtiges Gefäß zum Trinken oder ein Werkstoff."
   },
   "glauben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas für wahr halten oder Vertrauen haben."
   },
-  "gleich": {},
+  "gleich": {
+    "type": "adjective"
+  },
   "Gleis": {
     "type": "noun",
     "genus": "neuter",
@@ -1183,7 +1226,9 @@
     "article": "das",
     "definition": "Ein Zustand der Zufriedenheit oder ein positiver Zufall."
   },
-  "glücklich": {},
+  "glücklich": {
+    "type": "adjective"
+  },
   "Glückwunsch": {
     "type": "noun",
     "genus": "masculine",
@@ -1238,8 +1283,12 @@
     "article": "der",
     "definition": "Ein freundliches Wort beim Treffen oder Abschied."
   },
-  "gültig": {},
-  "günstig": {},
+  "gültig": {
+    "type": "adjective"
+  },
+  "günstig": {
+    "type": "adjective"
+  },
   "gut": {
     "type": "adjective"
   },
@@ -1324,7 +1373,8 @@
     "definition": "Der Ort, aus dem jemand stammt und sich zugehörig fühlt."
   },
   "heiraten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit einer Person eine Ehe schließen."
   },
   "heißen": {
     "type": "verb"
@@ -1332,7 +1382,9 @@
   "helfen": {
     "type": "verb"
   },
-  "hell": {},
+  "hell": {
+    "type": "adjective"
+  },
   "Herd": {
     "type": "noun",
     "genus": "masculine",
@@ -1365,7 +1417,9 @@
     "article": "das",
     "definition": "Eine Freizeitbeschäftigung, die man gerne macht."
   },
-  "hoch": {},
+  "hoch": {
+    "type": "adjective"
+  },
   "Hochzeit": {
     "type": "noun",
     "genus": "feminine",
@@ -1407,7 +1461,9 @@
     "definition": "Eine Auskunft oder ein Wissen über etwas."
   },
   "ins": {},
-  "international": {},
+  "international": {
+    "type": "adjective"
+  },
   "Internet": {
     "type": "noun",
     "genus": "neuter",
@@ -1443,7 +1499,9 @@
     "article": "der",
     "definition": "Eine junge Person zwischen Kindheit und Erwachsenenalter."
   },
-  "jung": {},
+  "jung": {
+    "type": "adjective"
+  },
   "Junge": {
     "type": "noun",
     "genus": "masculine",
@@ -1511,7 +1569,9 @@
     "article": "der",
     "definition": "Ein kleiner Laden, oft für Zeitungen und Getränke."
   },
-  "klar": {},
+  "klar": {
+    "type": "adjective"
+  },
   "Klasse": {
     "type": "noun",
     "genus": "feminine",
@@ -1524,7 +1584,9 @@
     "article": "die",
     "definition": "Alles, was man am Körper trägt, um sich zu bedecken."
   },
-  "klein": {},
+  "klein": {
+    "type": "adjective"
+  },
   "kochen": {
     "type": "verb"
   },
@@ -1591,7 +1653,9 @@
     "article": "der",
     "definition": "Ein Gerät, das Lebensmittel kühl hält."
   },
-  "kulturell": {},
+  "kulturell": {
+    "type": "adjective"
+  },
   "kümmern": {
     "type": "verb"
   },
@@ -1625,16 +1689,22 @@
     "article": "das",
     "definition": "Ein Staat oder ländliche Gegend."
   },
-  "lang": {},
+  "lang": {
+    "type": "adjective"
+  },
   "lange": {},
-  "langsam": {},
+  "langsam": {
+    "type": "adjective"
+  },
   "lassen": {
     "type": "verb"
   },
   "laufen": {
     "type": "verb"
   },
-  "laut": {},
+  "laut": {
+    "type": "adjective"
+  },
   "leben": {
     "definition": "Existieren und seinen Alltag führen.",
     "type": "verb"
@@ -1645,7 +1715,9 @@
     "article": "die",
     "definition": "Nahrungsmittel zum Essen und Trinken."
   },
-  "ledig": {},
+  "ledig": {
+    "type": "adjective"
+  },
   "legen": {
     "type": "verb"
   },
@@ -1655,12 +1727,17 @@
     "article": "der",
     "definition": "Eine Person, die unterrichtet."
   },
-  "leicht": {},
+  "leicht": {
+    "type": "adjective"
+  },
   "leid": {},
   "leider": {},
-  "leise": {},
+  "leise": {
+    "type": "adjective"
+  },
   "lernen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Wissen oder Fähigkeiten erwerben."
   },
   "lesen": {
     "type": "verb"
@@ -1686,7 +1763,9 @@
   "lieben": {
     "type": "verb"
   },
-  "lieber": {},
+  "lieber": {
+    "type": "adjective"
+  },
   "liegen": {
     "type": "verb"
   },
@@ -1727,7 +1806,11 @@
     "article": "die",
     "definition": "Eine elektronische Nachricht."
   },
-  "mal": {},
+  "Mal": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
   "man": {},
   "Mann": {
     "type": "noun",
@@ -1735,7 +1818,9 @@
     "article": "der",
     "definition": "Eine erwachsene Person männlichen Geschlechts."
   },
-  "männlich": {},
+  "männlich": {
+    "type": "adjective"
+  },
   "Maschine": {
     "type": "noun",
     "genus": "feminine",
@@ -1801,7 +1886,9 @@
   "mögen": {
     "type": "verb"
   },
-  "möglich": {},
+  "möglich": {
+    "type": "adjective"
+  },
   "Moment": {
     "type": "noun",
     "genus": "masculine",
@@ -1913,7 +2000,11 @@
     "article": "der",
     "definition": "Ein bestimmter Platz oder eine Stadt."
   },
-  "paar": {},
+  "Paar": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
   "Papier": {
     "type": "noun",
     "genus": "neuter",
@@ -2040,7 +2131,9 @@
     "article": "die",
     "definition": "Ein Test, der Wissen oder Können überprüft."
   },
-  "pünktlich": {},
+  "pünktlich": {
+    "type": "adjective"
+  },
   "Rat": {
     "type": "noun",
     "genus": "masculine",
@@ -2120,7 +2213,9 @@
     "article": "die",
     "definition": "Der Empfangsbereich eines Hotels."
   },
-  "richtig": {},
+  "richtig": {
+    "type": "adjective"
+  },
   "riechen": {
     "type": "verb"
   },
@@ -2251,7 +2346,9 @@
   "schwer": {
     "type": "adjective"
   },
-  "schwere": {},
+  "schwere": {
+    "type": "adjective"
+  },
   "Schwester": {
     "type": "noun",
     "genus": "feminine",
@@ -2288,7 +2385,9 @@
   },
   "seinem": {},
   "seit": {},
-  "selbstständig": {},
+  "selbstständig": {
+    "type": "adjective"
+  },
   "sich": {},
   "sie": {},
   "sitzen": {
@@ -2480,7 +2579,9 @@
     "article": "der",
     "definition": "Eine Prüfung von Wissen oder Fähigkeiten."
   },
-  "teuer": {},
+  "teuer": {
+    "type": "adjective"
+  },
   "Text": {
     "type": "noun",
     "genus": "masculine",
@@ -2539,7 +2640,9 @@
     "type": "verb"
   },
   "tschüss": {},
-  "tun": {},
+  "tun": {
+    "type": "verb"
+  },
   "über": {},
   "übernachten": {
     "type": "verb"
@@ -2606,7 +2709,9 @@
     "article": "der",
     "definition": "Eine organisierte Gruppe mit gemeinsamem Ziel."
   },
-  "verheiratet": {},
+  "verheiratet": {
+    "type": "adjective"
+  },
   "verkaufen": {
     "type": "verb"
   },
@@ -2677,16 +2782,24 @@
     "article": "das",
     "definition": "Eine durchsichtige Flüssigkeit zum Trinken."
   },
-  "weg": {},
+  "Weg": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
   "weh": {},
-  "weiblich": {},
+  "weiblich": {
+    "type": "adjective"
+  },
   "Wein": {
     "type": "noun",
     "genus": "masculine",
     "article": "der",
     "definition": "Ein alkoholisches Getränk aus Weintrauben."
   },
-  "weit": {},
+  "weit": {
+    "type": "adjective"
+  },
   "weiter": {},
   "wenig": {},
   "wer": {},
@@ -2758,7 +2871,9 @@
     "article": "das",
     "definition": "Eine einzelne sprachliche Einheit."
   },
-  "wunderbar": {},
+  "wunderbar": {
+    "type": "adjective"
+  },
   "zahlen": {
     "type": "verb"
   },

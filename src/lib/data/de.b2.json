@@ -1,415 +1,1037 @@
 {
-  "abhängen": {},
-  "absatz": {},
-  "abschluß": {},
-  "abstrakt": {},
-  "abwerten": {},
-  "ähnlich": {},
-  "aktiv": {},
-  "analyse": {},
-  "ändern": {},
-  "anführen": {},
-  "angabe": {},
-  "anhänger": {},
-  "anordnen": {},
-  "anpassen": {},
-  "ansatz": {},
-  "ansicht": {},
-  "anspruch": {},
-  "anteil": {},
-  "anwesend": {},
-  "anzahl": {},
-  "arabisch": {},
-  "argument": {},
-  "art": {},
-  "artikel": {},
-  "asozial": {},
-  "aufbau": {},
-  "aufsatz": {},
-  "ausdruck": {},
-  "ausnahme": {},
-  "aussage": {},
-  "äußerung": {},
-  "aussicht": {},
-  "autorin": {},
-  "bachelor": {},
-  "basieren": {},
-  "basis": {},
-  "befassen": {},
-  "befinden": {},
-  "befragt": {},
-  "befreien": {},
-  "begabt": {},
-  "begegnen": {},
-  "begehen": {},
-  "behörde": {},
-  "beklagen": {
-    "definition": "Trauer oder Bedauern über etwas ausdrücken.",
+  "abhängen": {
     "type": "verb"
   },
-  "belasten": {},
-  "bemühung": {},
-  "benehmen": {},
-  "bereich": {},
-  "bereit": {},
-  "bereiten": {},
-  "besorgen": {},
-  "bestehen": {},
-  "bestimmt": {},
-  "betracht": {},
-  "bewahren": {},
-  "bewegung": {},
-  "beweis": {},
-  "bewerten": {},
-  "bewirken": {},
-  "bewohner": {},
-  "bezahlen": {},
-  "beziehen": {},
-  "bezug": {},
-  "bilden": {},
-  "bildung": {},
-  "blut": {},
-  "code": {},
-  "dach": {},
-  "dauer": {},
-  "debatte": {},
-  "diagramm": {},
-  "dialekt": {},
-  "dienen": {},
-  "dilemma": {},
-  "diplom": {},
-  "dominant": {},
-  "dozent": {},
-  "drittel": {},
-  "drohen": {},
-  "drohung": {},
-  "ebene": {},
-  "ehe": {},
-  "ehemalig": {},
-  "eigen": {},
-  "einbauen": {},
-  "eine": {},
-  "eingehen": {},
-  "einigen": {},
-  "einsam": {},
-  "einzeln": {},
-  "einzelne": {},
-  "einzig": {},
-  "element": {},
-  "empathie": {},
-  "endung": {},
-  "eng": {},
-  "enstehen": {},
-  "epoche": {},
-  "erfahren": {},
-  "erfüllen": {},
-  "ergänzen": {},
-  "ergebnis": {},
-  "erheben": {},
-  "erhöhen": {},
-  "erlebnis": {},
-  "erleiden": {},
-  "erlernen": {},
-  "erregen": {},
-  "erwägung": {},
-  "erwarten": {},
-  "erwerb": {},
-  "erwerben": {},
-  "erziehen": {},
-  "essay": {},
-  "existenz": {},
-  "extrem": {},
-  "fair": {},
-  "fakt": {},
-  "faktum": {},
-  "fakultät": {},
-  "fall": {},
-  "falle": {},
-  "feind": {},
-  "fokus": {},
-  "form": {},
-  "formal": {},
-  "forscher": {},
-  "frage": {},
-  "fraglich": {},
-  "franzose": {},
-  "freiheit": {},
-  "fügen": {},
-  "fürchten": {},
-  "gang": {},
-  "gebiet": {},
-  "gebildet": {},
-  "gedanke": {},
-  "gedicht": {},
-  "geeignet": {},
-  "gefühl": {},
-  "gegner": {},
-  "geistig": {},
-  "gelten": {},
-  "gemischt": {},
-  "genau": {},
-  "generell": {},
-  "genügend": {},
-  "gering": {},
-  "gesetz": {},
-  "gespräch": {},
-  "gewiß": {},
-  "Gewissen": {
-    "definition": "Die innere Stimme für richtiges und falsches Handeln.",
+  "Absatz": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Abschluß": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "abstrakt": {
+    "type": "adjective"
+  },
+  "abwerten": {
+    "type": "verb"
+  },
+  "ähnlich": {
+    "type": "adjective"
+  },
+  "aktiv": {
+    "type": "adjective"
+  },
+  "Analyse": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "anführen": {
+    "type": "verb"
+  },
+  "Anhänger": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "anordnen": {
+    "type": "verb"
+  },
+  "anpassen": {
+    "type": "verb"
+  },
+  "Ansatz": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Ansicht": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Anteil": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "anwesend": {
+    "type": "adjective"
+  },
+  "Anzahl": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "arabisch": {
+    "type": "adjective"
+  },
+  "Argument": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "gewohnt": {},
-  "glaube": {},
-  "graphik": {},
-  "grenze": {},
-  "gründen": {},
-  "gründung": {},
-  "gruppe": {},
-  "hälfte": {},
-  "haltung": {},
-  "harmonie": {},
-  "hausfrau": {},
-  "haushalt": {},
-  "heimweh": {},
-  "heirat": {},
-  "herkunft": {},
-  "heutig": {},
-  "hinsicht": {},
-  "hinweis": {},
-  "hoch": {},
-  "hormon": {},
-  "ideal": {},
-  "illegal": {},
-  "indirekt": {},
-  "inhalt": {},
-  "inner": {},
-  "intensiv": {},
-  "isoliert": {},
-  "jeweilig": {},
-  "jude": {},
-  "kämpfen": {},
-  "karriere": {},
-  "klang": {},
-  "klar": {},
-  "knapp": {},
-  "kohäsion": {},
-  "kommend": {},
-  "komplett": {},
-  "konflikt": {},
-  "konkret": {},
-  "konsens": {},
-  "kontext": {},
-  "konzept": {},
-  "korrekt": {},
-  "kräftig": {},
-  "krise": {},
-  "kritik": {},
-  "kritiker": {},
-  "lage": {},
-  "lang": {},
-  "länge": {},
-  "lauf": {},
-  "laufen": {},
-  "leben": {
-    "definition": "Existieren und seinen Alltag führen.",
+  "asozial": {
+    "type": "adjective"
+  },
+  "Aufbau": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Aufsatz": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Ausdruck": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Äußerung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Autorin": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Bachelor": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "basieren": {
     "type": "verb"
   },
-  "lebend": {},
+  "Basis": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "befassen": {
+    "type": "verb"
+  },
+  "befinden": {
+    "type": "verb"
+  },
+  "befragt": {
+    "type": "adjective"
+  },
+  "befreien": {
+    "type": "verb"
+  },
+  "begabt": {
+    "type": "adjective"
+  },
+  "begehen": {
+    "type": "verb"
+  },
+  "beklagen": {
+    "definition": "Trauer oder Bedauern über etwas ausdrücken.",
+    "type": "verb"
+  },
+  "belasten": {
+    "type": "verb"
+  },
+  "Bemühung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Benehmen": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "bereit": {
+    "type": "adjective"
+  },
+  "bereiten": {
+    "type": "verb"
+  },
+  "bestimmt": {
+    "type": "adjective"
+  },
+  "betracht": {},
+  "bewahren": {
+    "type": "verb"
+  },
+  "Beweis": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "bewerten": {
+    "type": "verb"
+  },
+  "bewirken": {
+    "type": "verb"
+  },
+  "beziehen": {
+    "type": "verb"
+  },
+  "Bezug": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "bilden": {
+    "type": "verb"
+  },
+  "Bildung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Blut": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Code": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Dach": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Dauer": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Debatte": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Diagramm": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Dilemma": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "dominant": {
+    "type": "adjective"
+  },
+  "Dozent": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Drittel": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "drohen": {
+    "type": "verb"
+  },
+  "Drohung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Ebene": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "ehemalig": {
+    "type": "adjective"
+  },
+  "einbauen": {
+    "type": "verb"
+  },
+  "eine": {},
+  "eingehen": {
+    "type": "verb"
+  },
+  "einigen": {
+    "type": "verb"
+  },
+  "einsam": {
+    "type": "adjective"
+  },
+  "einzelne": {},
+  "einzig": {
+    "type": "adjective"
+  },
+  "Element": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Empathie": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Endung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "eng": {
+    "type": "adjective"
+  },
+  "enstehen": {
+    "type": "verb"
+  },
+  "Epoche": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "erheben": {
+    "type": "verb"
+  },
+  "Erlebnis": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "erleiden": {
+    "type": "verb"
+  },
+  "erlernen": {
+    "type": "verb"
+  },
+  "erregen": {
+    "type": "verb"
+  },
+  "Erwägung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Erwerb": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "erwerben": {
+    "type": "verb"
+  },
+  "Essay": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Existenz": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "extrem": {
+    "type": "adjective"
+  },
+  "fair": {
+    "type": "adjective"
+  },
+  "Fakt": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Faktum": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Fakultät": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Falle": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Feind": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Fokus": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "formal": {
+    "type": "adjective"
+  },
+  "Forscher": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "fraglich": {
+    "type": "adjective"
+  },
+  "Franzose": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "fügen": {
+    "type": "verb"
+  },
+  "fürchten": {
+    "type": "verb"
+  },
+  "gebildet": {
+    "type": "adjective"
+  },
+  "Gedanke": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "geeignet": {
+    "type": "adjective"
+  },
+  "Gegner": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "geistig": {
+    "type": "adjective"
+  },
+  "gelten": {
+    "type": "verb"
+  },
+  "gemischt": {
+    "type": "adjective"
+  },
+  "genau": {
+    "type": "adjective"
+  },
+  "generell": {
+    "type": "adjective"
+  },
+  "genügend": {
+    "type": "adjective"
+  },
+  "gering": {
+    "type": "adjective"
+  },
+  "gewiß": {
+    "type": "adjective"
+  },
+  "gewohnt": {
+    "type": "adjective"
+  },
+  "Graphik": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Gründung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Haltung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Harmonie": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Heirat": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "heutig": {
+    "type": "adjective"
+  },
+  "Hinsicht": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Hinweis": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Hormon": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "ideal": {
+    "type": "adjective"
+  },
+  "illegal": {
+    "type": "adjective"
+  },
+  "indirekt": {
+    "type": "adjective"
+  },
+  "inner": {
+    "type": "adjective"
+  },
+  "intensiv": {
+    "type": "adjective"
+  },
+  "isoliert": {
+    "type": "adjective"
+  },
+  "jeweilig": {
+    "type": "adjective"
+  },
+  "Jude": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Klang": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "knapp": {
+    "type": "adjective"
+  },
+  "Kohäsion": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "kommend": {
+    "type": "adjective"
+  },
+  "komplett": {
+    "type": "adjective"
+  },
+  "konkret": {
+    "type": "adjective"
+  },
+  "Konsens": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Kontext": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Konzept": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "korrekt": {
+    "type": "adjective"
+  },
+  "kräftig": {
+    "type": "adjective"
+  },
+  "Kritik": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Kritiker": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Lauf": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "lebend": {
+    "type": "adjective"
+  },
   "lebendig": {
     "definition": "Voller Leben, Bewegung oder Energie.",
     "type": "adjective"
   },
-  "legal": {},
-  "legitim": {},
-  "lehnen": {},
-  "lehrer": {},
-  "lehrerin": {},
-  "leiden": {},
-  "lektor": {},
-  "leser": {},
-  "lexikon": {},
-  "linguist": {},
-  "lizenz": {},
-  "lohn": {},
-  "lohnen": {},
-  "mangelnd": {},
-  "männlich": {},
-  "maß": {},
-  "masse": {},
-  "maßnahme": {},
-  "master": {},
-  "mein": {},
-  "Mensch": {
-    "definition": "Eine Person.",
+  "legal": {
+    "type": "adjective"
+  },
+  "legitim": {
+    "type": "adjective"
+  },
+  "lehnen": {
+    "type": "verb"
+  },
+  "Lektor": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "merkmal": {},
-  "mitglied": {},
-  "mord": {},
-  "mühe": {},
-  "mundart": {},
-  "mündlich": {},
-  "muster": {},
-  "nation": {},
-  "national": {},
-  "neigung": {},
-  "nennen": {},
-  "norm": {},
-  "not": {},
-  "nützen": {},
-  "nutzlos": {},
-  "opfer": {},
-  "optimal": {},
-  "parallel": {},
-  "partner": {},
-  "pflege": {},
-  "phänomen": {},
-  "phase": {},
-  "physisch": {},
+  "Leser": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Linguist": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Lizenz": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "lohnen": {
+    "type": "verb"
+  },
+  "mangelnd": {
+    "type": "adjective"
+  },
+  "Maß": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Masse": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Maßnahme": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Master": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Merkmal": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Mord": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Mundart": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "mündlich": {
+    "type": "adjective"
+  },
+  "Muster": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Nation": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "national": {
+    "type": "adjective"
+  },
+  "Neigung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Norm": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Not": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "nutzlos": {
+    "type": "adjective"
+  },
+  "optimal": {
+    "type": "adjective"
+  },
+  "parallel": {
+    "type": "adjective"
+  },
+  "Pflege": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Phänomen": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Phase": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "physisch": {
+    "type": "adjective"
+  },
   "polen": {},
-  "polnisch": {},
-  "position": {},
+  "polnisch": {
+    "type": "adjective"
+  },
+  "Position": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
   "positive": {},
-  "prägen": {},
-  "präzis": {},
-  "presse": {},
-  "protest": {},
-  "prozeß": {},
-  "qual": {},
-  "qualität": {},
-  "quelle": {},
-  "radikal": {},
-  "rahmen": {},
-  "rasch": {},
-  "rasse": {},
-  "raum": {},
+  "prägen": {
+    "type": "verb"
+  },
+  "präzis": {
+    "type": "adjective"
+  },
+  "Protest": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Prozeß": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Qual": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Quelle": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "radikal": {
+    "type": "adjective"
+  },
+  "Rahmen": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "rasch": {
+    "type": "adjective"
+  },
+  "Rasse": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
   "rechen": {},
-  "recht": {},
-  "rede": {},
-  "regel": {},
-  "region": {},
-  "regional": {},
-  "reif": {},
-  "relativ": {},
-  "relevant": {},
-  "religiös": {},
-  "rentner": {},
-  "respekt": {},
-  "resultat": {},
-  "richtung": {},
-  "satz": {},
-  "schaden": {},
-  "schätzen": {},
-  "schlecht": {},
-  "schmerz": {},
-  "schock": {},
-  "schritt": {},
-  "schuldig": {},
-  "schwäche": {},
-  "seelisch": {},
-  "seminar": {},
-  "sicht": {},
-  "sichtbar": {},
-  "sieg": {},
-  "sinken": {},
-  "sinn": {},
-  "sinnlos": {},
-  "sinvoll": {},
-  "sozial": {},
-  "spitze": {},
-  "sprechen": {},
-  "sprecher": {},
-  "spüren": {},
-  "staat": {},
-  "stammen": {},
-  "standard": {},
-  "ständig": {},
-  "stärke": {},
-  "stärken": {},
-  "status": {},
-  "steigen": {},
+  "Rede": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "regional": {
+    "type": "adjective"
+  },
+  "reif": {
+    "type": "adjective"
+  },
+  "relativ": {
+    "type": "adjective"
+  },
+  "relevant": {
+    "type": "adjective"
+  },
+  "religiös": {
+    "type": "adjective"
+  },
+  "Rentner": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Resultat": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Schock": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "schuldig": {
+    "type": "adjective"
+  },
+  "Schwäche": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "seelisch": {
+    "type": "adjective"
+  },
+  "Sicht": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "sichtbar": {
+    "type": "adjective"
+  },
+  "sinnlos": {
+    "type": "adjective"
+  },
+  "sinvoll": {
+    "type": "adjective"
+  },
+  "sozial": {
+    "type": "adjective"
+  },
+  "Spitze": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Sprecher": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Staat": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Standard": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "ständig": {
+    "type": "adjective"
+  },
+  "Stärke": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "stärken": {
+    "type": "verb"
+  },
+  "Status": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
   "steigern": {
     "definition": "Etwas größer, stärker oder mehr machen.",
     "type": "verb"
   },
-  "stellung": {},
-  "stimme": {},
-  "stolz": {},
-  "strafe": {},
-  "streben": {},
-  "streit": {},
-  "Student": {
-    "definition": "Eine Person, die an einer Hochschule studiert.",
+  "Stellung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "stolz": {
+    "type": "adjective"
+  },
+  "streben": {
+    "type": "verb"
+  },
+  "stützen": {
+    "type": "verb"
+  },
+  "tätig": {
+    "type": "adjective"
+  },
+  "Tendenz": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "These": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "tief": {
+    "type": "adjective"
+  },
+  "Toleranz": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "trennen": {
+    "type": "verb"
+  },
+  "Trennung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "typisch": {
+    "type": "adjective"
+  },
+  "üblich": {
+    "type": "adjective"
+  },
+  "umfassen": {
+    "type": "verb"
+  },
+  "Umgang": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "studium": {},
-  "stufe": {},
-  "stützen": {},
-  "summe": {},
-  "tat": {},
-  "tätig": {},
-  "tendenz": {},
-  "text": {},
-  "these": {},
-  "tief": {},
-  "titel": {},
-  "toleranz": {},
-  "trennen": {},
-  "trennung": {},
-  "treten": {},
-  "typisch": {},
-  "üblich": {},
-  "umfassen": {},
-  "umgang": {},
-  "umgehen": {},
-  "umstand": {},
-  "ungefähr": {},
-  "urban": {},
-  "ursprung": {},
-  "variante": {},
-  "varietät": {},
-  "verfügen": {},
-  "vergehen": {},
-  "verlust": {},
-  "vermögen": {},
-  "vermuten": {},
-  "versuch": {},
-  "vielfalt": {},
-  "völlig": {},
-  "vor": {},
-  "vorfeld": {},
-  "vorgang": {},
-  "waffe": {},
-  "wähler": {},
-  "wandeln": {},
-  "weiblich": {},
-  "weise": {},
-  "welt": {},
-  "werk": {},
-  "wert": {},
-  "wertvoll": {},
-  "wesen": {},
-  "westen": {},
-  "wille": {},
-  "wirklich": {},
-  "witz": {},
-  "zahl": {},
-  "zeitlich": {},
-  "zeitraum": {},
-  "zensur": {},
-  "ziel": {},
-  "zitat": {},
-  "zone": {},
-  "zuhause": {},
-  "zunehmen": {},
-  "zustand": {},
-  "zweck": {},
-  "zweifel": {},
-  "zwingen": {}
+  "umgehen": {
+    "type": "verb"
+  },
+  "Umstand": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "ungefähr": {
+    "type": "adjective"
+  },
+  "urban": {
+    "type": "adjective"
+  },
+  "Ursprung": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Variante": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Varietät": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "verfügen": {
+    "type": "verb"
+  },
+  "vergehen": {
+    "type": "verb"
+  },
+  "Vermögen": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Versuch": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Vielfalt": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "völlig": {
+    "type": "adjective"
+  },
+  "Vorfeld": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Vorgang": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Waffe": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Wähler": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "wandeln": {
+    "type": "verb"
+  },
+  "wertvoll": {
+    "type": "adjective"
+  },
+  "Wesen": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Westen": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Wille": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "wirklich": {
+    "type": "adjective"
+  },
+  "zeitlich": {
+    "type": "adjective"
+  },
+  "Zeitraum": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Zensur": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Zitat": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "zunehmen": {
+    "type": "verb"
+  },
+  "zwingen": {
+    "type": "verb"
+  }
 }

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, untrack } from 'svelte';
-  import { playSuccessSound } from '$lib/sounds';
+  import { playSuccessSound, playErrorSound } from '$lib/sounds';
   import { settings } from '$lib/state/settings.svelte';
   import { wordPools, wordDefinitions, wordMetadata } from '$lib/data/vocabulary';
   import { m } from '$lib/paraglide/messages';
@@ -105,7 +105,7 @@
     reviewProgress = updateReviewProgress(reviewProgress, currentWord, correct);
     persistProgress();
     if (correct) { playSuccessSound(settings.sound, 'vocab'); void settings.recordStreak('vocab_correct'); }
-    if (!correct) queue = insertLearningRepeat(queue, position, currentWord);
+    else { playErrorSound(settings.sound, 'vocab'); queue = insertLearningRepeat(queue, position, currentWord); }
   }
   function continueLearning() {
     cancelSpeech();
@@ -145,7 +145,7 @@
 </script>
 
 <section
-  class="flex-1 min-h-0 grid content-center justify-items-center gap-4 p-[clamp(1rem,4vw,2rem)] overflow-x-hidden overflow-y-auto bg-[radial-gradient(circle_at_50%_15%,rgba(230,165,39,.18),transparent_34%),#ede4d5] dark:bg-[radial-gradient(circle_at_50%_15%,rgba(230,165,39,.18),transparent_34%),#213a5d] border-t-[3px] border-t-double border-t-[#172a45]"
+  class="flex-1 min-h-0 grid content-center justify-items-center gap-4 p-[clamp(1rem,4vw,2rem)] overflow-x-hidden overflow-y-auto bg-[color:#ede4d5] dark:bg-[color:#213a5d] bg-[image:radial-gradient(circle_at_50%_15%,rgba(230,165,39,.18),transparent_34%),linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:auto,24px_24px,24px_24px] border-t-[3px] border-t-double border-t-[#172a45]"
   aria-label={labels.title}
 >
   <header class="text-center">
@@ -160,7 +160,7 @@
       class="w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] border border-neutral border-t-[4px] border-t-double border-t-neutral shadow-[8px_8px_0_rgba(164,94,56,.16)] text-center {promptKind === 'audio' ? 'bg-[linear-gradient(145deg,#fffdf7,#fff4d9)] dark:bg-[linear-gradient(145deg,#172a45,#294666)]' : 'bg-neutral-content'}"
     >
       {#if promptKind === 'word'}
-        <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(2.35rem,11vw,4rem)] font-normal tracking-[.06em] leading-none" lang={settings.lang}>{currentDisplayWord}</p>
+        <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.9rem,9vw,3.2rem)] font-normal tracking-[.06em] leading-none" lang={settings.lang}>{currentDisplayWord}</p>
       {:else}
         <button class="inline-flex items-center justify-center gap-[.45rem] min-h-[2.4rem] px-[.95rem] border border-[#172a45] rounded-full bg-[#172a45] text-[#fffdf7] text-[.68rem] font-black tracking-[.08em] uppercase disabled:opacity-50" onclick={speak} disabled={!speechSupported}><IconVolume class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />{labels.listen}</button>
         <p class="m-0 text-accent text-[.62rem] font-extrabold leading-[1.35]">{labels.audioPrompt}</p>
