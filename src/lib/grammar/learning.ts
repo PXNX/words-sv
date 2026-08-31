@@ -21,7 +21,7 @@ export const gapSentenceSuffixes: Partial<Record<Language, (word: string) => str
   pt: (word) => `${word} está aqui.`
 };
 
-function shuffled<T>(values: T[], random: () => number): T[] {
+export function shuffled<T>(values: T[], random: () => number): T[] {
   const result = [...values];
   for (let index = result.length - 1; index > 0; index -= 1) {
     const swap = Math.floor(random() * (index + 1));
@@ -33,4 +33,11 @@ function shuffled<T>(values: T[], random: () => number): T[] {
 export function articleChoiceOptions(correctArticle: string, universe: string[], random: () => number, size = 3): string[] {
   const distractors = universe.filter((article) => article !== correctArticle);
   return shuffled([correctArticle, ...shuffled(distractors, random).slice(0, size - 1)], random);
+}
+
+// Picks a random subset of keys for one practice section. Unlike `pickLearningSection`
+// (vocab/learning.ts), this doesn't require the entries to be bare dictionary words — grammar
+// queue entries are `kind:WORD` keys, so no letters-only filter is applied here.
+export function pickRandomSection(keys: string[], random: () => number, size: number): string[] {
+  return shuffled(keys, random).slice(0, Math.min(size, keys.length));
 }
