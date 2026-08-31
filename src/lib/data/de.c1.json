@@ -1,129 +1,250 @@
 {
-  "abgeben": {},
-  "anwalt": {},
-  "ausüben": {},
-  "autonom": {},
-  "Beitrag": {
-    "definition": "Ein Anteil oder eine Leistung zu einer gemeinsamen Sache.",
+  "Anwalt": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "binden": {},
-  "brutal": {},
-  "bürger": {},
-  "dativ": {},
-  "ehefrau": {},
-  "einheit": {},
-  "einsatz": {},
-  "eintritt": {},
-  "enorm": {},
-  "erörtern": {},
-  "erwähnt": {},
-  "erwecken": {},
-  "erweisen": {},
-  "erzielen": {},
-  "ethisch": {},
-  "fassen": {},
-  "fehlend": {},
-  "funktion": {},
-  "ganz": {},
-  "ganze": {},
-  "gebilde": {},
-  "gerecht": {},
-  "gericht": {},
-  "gesamt": {},
-  "gewählt": {},
-  "Gewalt": {
-    "definition": "Kraft oder Macht, die Menschen verletzen oder zwingen kann.",
+  "ausüben": {
+    "type": "verb"
+  },
+  "autonom": {
+    "type": "adjective"
+  },
+  "binden": {
+    "type": "verb"
+  },
+  "brutal": {
+    "type": "adjective"
+  },
+  "Dativ": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Einheit": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "gewaltig": {},
-  "handlung": {},
-  "heftig": {},
-  "hektisch": {},
-  "jura": {},
-  "kampf": {},
-  "kapitel": {},
-  "kasus": {},
-  "kluft": {},
-  "konstant": {},
-  "kontrast": {},
-  "kritisch": {},
-  "künftig": {},
-  "landen": {},
-  "last": {},
-  "lebende": {},
-  "leiden": {},
-  "leisten": {
-    "definition": "Etwas schaffen, erbringen oder bezahlen.",
+  "Einsatz": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "enorm": {
+    "type": "adjective"
+  },
+  "erörtern": {
     "type": "verb"
   },
-  "marke": {},
-  "mauer": {},
-  "medizin": {},
-  "meinen": {},
+  "erwähnt": {
+    "type": "adjective"
+  },
+  "erwecken": {
+    "type": "verb"
+  },
+  "erweisen": {
+    "type": "verb"
+  },
+  "erzielen": {
+    "type": "verb"
+  },
+  "ethisch": {
+    "type": "adjective"
+  },
+  "fehlend": {
+    "type": "adjective"
+  },
+  "Funktion": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "ganze": {},
+  "Gebilde": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "gerecht": {
+    "type": "adjective"
+  },
+  "gesamt": {
+    "type": "adjective"
+  },
+  "gewählt": {
+    "type": "adjective"
+  },
+  "gewaltig": {
+    "type": "adjective"
+  },
+  "Handlung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "heftig": {
+    "type": "adjective"
+  },
+  "hektisch": {
+    "type": "adjective"
+  },
+  "Jura": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Kasus": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Kluft": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "konstant": {
+    "type": "adjective"
+  },
+  "Kontrast": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "kritisch": {
+    "type": "adjective"
+  },
+  "künftig": {
+    "type": "adjective"
+  },
+  "landen": {
+    "type": "verb"
+  },
+  "Last": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "lebende": {},
   "menschen": {},
-  "neigen": {},
-  "neuzeit": {},
-  "paradox": {},
+  "neigen": {
+    "type": "verb"
+  },
+  "Neuzeit": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "paradox": {
+    "type": "adjective"
+  },
   "Partei": {
     "definition": "Eine politische Gruppe mit gemeinsamen Zielen.",
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "passiv": {},
-  "patient": {},
-  "poesie": {},
-  "poetisch": {},
-  "praxis": {},
-  "prinzip": {},
-  "publikum": {},
-  "rache": {},
-  "rauchen": {},
-  "raucher": {},
-  "reform": {},
-  "regelung": {},
-  "rein": {},
-  "richten": {},
-  "richter": {},
-  "selten": {},
-  "senken": {},
-  "single": {},
-  "sportler": {},
-  "strafen": {},
-  "strömung": {},
-  "symbol": {},
-  "tate": {},
-  "täter": {},
-  "teilung": {},
-  "Theorie": {
-    "definition": "Eine begründete Erklärung für einen Zusammenhang.",
+  "passiv": {
+    "type": "adjective"
+  },
+  "Patient": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Poesie": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "tod": {},
-  "tödlich": {},
-  "tor": {},
-  "töten": {},
-  "tragen": {},
-  "trauen": {},
-  "unfähig": {},
-  "unrecht": {},
-  "Verbot": {
-    "definition": "Eine Regel, die etwas nicht erlaubt.",
+  "poetisch": {
+    "type": "adjective"
+  },
+  "Prinzip": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "wagen": {},
-  "wandel": {},
-  "wende": {},
+  "Rache": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "Raucher": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Regelung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "rein": {
+    "type": "adjective"
+  },
+  "richten": {
+    "type": "verb"
+  },
+  "senken": {
+    "type": "verb"
+  },
+  "Single": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "strafen": {
+    "type": "verb"
+  },
+  "Strömung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "tate": {},
+  "Teilung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "tödlich": {
+    "type": "adjective"
+  },
+  "töten": {
+    "type": "verb"
+  },
+  "trauen": {
+    "type": "verb"
+  },
+  "unfähig": {
+    "type": "adjective"
+  },
+  "Unrecht": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Wandel": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Wende": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
   "west": {},
-  "wohnraum": {},
-  "würde": {}
+  "Wohnraum": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Würde": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  }
 }

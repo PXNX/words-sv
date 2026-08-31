@@ -9,11 +9,6 @@
     "genus": "neuter",
     "article": "das"
   },
-  "Abfahrt": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Abfall": {
     "type": "noun",
     "genus": "masculine",
@@ -24,9 +19,17 @@
     "genus": "masculine",
     "article": "der"
   },
-  "abhängig": {},
-  "abitur": {},
-  "abnehmen": {},
+  "abhängig": {
+    "type": "adjective"
+  },
+  "Abitur": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "abnehmen": {
+    "type": "verb"
+  },
   "abonnieren": {
     "type": "verb"
   },
@@ -45,29 +48,17 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Absender": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Absenderin": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "absicht": {},
+  "Absicht": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
   "Abteilung": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "acht": {},
-  "Adresse": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Ahnung": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -82,7 +73,9 @@
     "genus": "feminine",
     "article": "die"
   },
-  "aktuell": {},
+  "aktuell": {
+    "type": "adjective"
+  },
   "akzeptieren": {
     "type": "verb"
   },
@@ -96,19 +89,17 @@
     "genus": "masculine",
     "article": "der"
   },
-  "allein": {},
-  "alltag": {},
+  "Alltag": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
   "Alphabet": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
   "Altenheim": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Alter": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
@@ -123,11 +114,6 @@
     "genus": "neuter",
     "article": "das"
   },
-  "Ampel": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Amt": {
     "type": "noun",
     "genus": "neuter",
@@ -136,59 +122,33 @@
   "analysieren": {
     "type": "verb"
   },
-  "anbieten": {},
-  "ändern": {
-    "type": "verb"
+  "Änderung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
   },
-  "änderung": {},
-  "anfang": {},
   "Angabe": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "angeben": {},
-  "Angst": {
+  "angeben": {
+    "type": "verb"
+  },
+  "Anlage": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Ankunft": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "anlage": {},
   "Anleitung": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "anmelden": {},
   "Annonce": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Anrede": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Anrufbeantworter": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Ansage": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Anschluss": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Anspruch": {
     "type": "noun",
@@ -200,58 +160,20 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Antwort": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "antworten": {
-    "type": "verb"
-  },
-  "anzeige": {},
-  "Anzug": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Apartment": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Apfel": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Apotheke": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Apparat": {
+  "Arbeiter": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "Appetit": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "arbeiten": {
-    "type": "verb"
-  },
-  "arbeiter": {},
   "Arbeiterin": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Arbeitsplatz": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Arbeitsstelle": {
     "type": "noun",
@@ -259,11 +181,6 @@
     "article": "die"
   },
   "Ärger": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Arm": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
@@ -296,13 +213,14 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Aufgabe": {
+  "auflösen": {
+    "type": "verb"
+  },
+  "Aufnahme": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "auflösen": {},
-  "aufnahme": {},
   "aufschreiben": {
     "type": "verb"
   },
@@ -310,11 +228,6 @@
     "type": "noun",
     "genus": "masculine",
     "article": "der"
-  },
-  "Auge": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
   },
   "Augenblick": {
     "type": "noun",
@@ -331,36 +244,15 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Ausflug": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Ausgabe": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Ausgang": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Aushilfe": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Auskunft": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "ausland": {},
-  "Ausländer": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Ausländerin": {
     "type": "noun",
@@ -372,8 +264,9 @@
     "genus": "feminine",
     "article": "die"
   },
-  "ausruhen": {},
-  "aussehen": {},
+  "ausruhen": {
+    "type": "verb"
+  },
   "außen": {
     "type": "verb"
   },
@@ -382,73 +275,22 @@
     "genus": "feminine",
     "article": "die"
   },
-  "auswahl": {},
-  "Ausweis": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Auto": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "autobahn": {},
-  "Automat": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "backen": {
-    "type": "verb"
-  },
-  "Bäckerei": {
+  "Auswahl": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "baden": {},
   "Badewanne": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Bahn": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Bahnhof": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Balkon": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Ball": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Ballett": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "Bank": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Bankleitzahl": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Bar": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -463,43 +305,29 @@
     "genus": "masculine",
     "article": "der"
   },
-  "basteln": {
-    "type": "verb"
-  },
   "Batterie": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Bauch": {
+  "Bauer": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "bauen": {},
-  "bauer": {},
   "Bauernhof": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "Baum": {
+  "beantragen": {
+    "type": "verb"
+  },
+  "Bedarf": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "beachten": {
-    "type": "verb"
-  },
-  "beantragen": {
-    "type": "verb"
-  },
-  "beantworten": {
-    "type": "verb"
-  },
-  "bedanken": {},
-  "bedarf": {},
-  "bedeuten": {},
   "Bedeutung": {
     "type": "noun",
     "genus": "feminine",
@@ -521,9 +349,6 @@
   "beeinflussen": {
     "type": "verb"
   },
-  "beenden": {
-    "type": "verb"
-  },
   "begegnen": {
     "type": "verb"
   },
@@ -532,16 +357,7 @@
     "genus": "masculine",
     "article": "der"
   },
-  "beginnen": {
-    "type": "verb"
-  },
   "begleiten": {
-    "type": "verb"
-  },
-  "begonnen": {
-    "type": "verb"
-  },
-  "begründen": {
     "type": "verb"
   },
   "Begründung": {
@@ -567,27 +383,14 @@
     "article": "die"
   },
   "beiden": {},
-  "Bein": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Beispiel": {
-    "definition": "Etwas, das einen Sachverhalt anschaulich macht.",
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "beißen": {
     "type": "verb"
   },
   "Beitrag": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
-  },
-  "bekommen": {
-    "type": "verb"
+    "article": "der",
+    "definition": "Ein Anteil oder eine Leistung zu einer gemeinsamen Sache."
   },
   "Beleg": {
     "type": "noun",
@@ -597,12 +400,15 @@
   "beleidigen": {
     "type": "verb"
   },
-  "beliebt": {},
-  "bemerken": {},
+  "beliebt": {
+    "type": "adjective"
+  },
+  "bemerken": {
+    "type": "verb"
+  },
   "benötigen": {
     "type": "verb"
   },
-  "benutzen": {},
   "Benzin": {
     "type": "noun",
     "genus": "neuter",
@@ -611,10 +417,11 @@
   "beobachten": {
     "type": "verb"
   },
-  "beraten": {
-    "type": "verb"
+  "Beratung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
   },
-  "beratung": {},
   "berechnen": {
     "type": "verb"
   },
@@ -623,20 +430,7 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Berg": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Bericht": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "berichten": {
-    "type": "verb"
-  },
-  "Beruf": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
@@ -655,11 +449,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Bescheid": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "beschließen": {
     "type": "verb"
   },
@@ -669,14 +458,12 @@
   "beschränken": {
     "type": "verb"
   },
-  "beschreiben": {
+  "besetzen": {
     "type": "verb"
   },
-  "beschrieben": {
+  "besitzen": {
     "type": "verb"
   },
-  "besetzen": {},
-  "besitzen": {},
   "besorgen": {
     "type": "verb"
   },
@@ -696,27 +483,12 @@
     "genus": "feminine",
     "article": "die"
   },
-  "bestanden": {
-    "type": "verb"
-  },
-  "bestätigen": {
-    "type": "verb"
-  },
   "Bestätigung": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "bestehen": {
-    "type": "verb"
-  },
-  "bestellen": {
-    "type": "verb"
-  },
   "bestrafen": {
-    "type": "verb"
-  },
-  "besuchen": {
     "type": "verb"
   },
   "Betrag": {
@@ -725,7 +497,8 @@
     "article": "der"
   },
   "betreuen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Für jemanden sorgen und ihn unterstützen."
   },
   "Betreuer": {
     "type": "noun",
@@ -742,7 +515,11 @@
     "genus": "feminine",
     "article": "die"
   },
-  "betrieb": {},
+  "Betrieb": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
   "betrogen": {
     "type": "verb"
   },
@@ -751,11 +528,6 @@
   },
   "betrunken": {
     "type": "verb"
-  },
-  "Bett": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
   },
   "Bevölkerung": {
     "type": "noun",
@@ -770,7 +542,9 @@
     "genus": "feminine",
     "article": "die"
   },
-  "beweisen": {},
+  "beweisen": {
+    "type": "verb"
+  },
   "bewiesen": {
     "type": "verb"
   },
@@ -784,9 +558,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "bezahlen": {
-    "type": "verb"
-  },
   "Beziehung": {
     "type": "noun",
     "genus": "feminine",
@@ -797,63 +568,19 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Bier": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "bieten": {
     "type": "verb"
   },
-  "bild": {},
   "Bildschirm": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "Biologie": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Birne": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "bisschen": {
-    "type": "verb"
-  },
-  "Bitte": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "bitten": {
-    "type": "verb"
-  },
-  "Blatt": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "bleiben": {},
-  "Bleistift": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "blick": {},
   "blitzen": {
     "type": "verb"
   },
   "blühen": {
     "type": "verb"
-  },
-  "Blume": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
   },
   "Bluse": {
     "type": "noun",
@@ -862,16 +589,6 @@
   },
   "bluten": {
     "type": "verb"
-  },
-  "Boden": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Bogen": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Bohne": {
     "type": "noun",
@@ -889,9 +606,6 @@
     "article": "die"
   },
   "braten": {
-    "type": "verb"
-  },
-  "brauchen": {
     "type": "verb"
   },
   "brechen": {
@@ -913,64 +627,25 @@
   "brennen": {
     "type": "verb"
   },
-  "Brief": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Briefmarke": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Brille": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "bringen": {
-    "type": "verb"
   },
   "Broschüre": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Brot": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Brücke": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Bruder": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Brust": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Buch": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "buchen": {
-    "type": "verb"
-  },
   "Buchhandlung": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "buchstabieren": {
-    "type": "verb"
   },
   "Buffet": {
     "type": "noun",
@@ -997,32 +672,16 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Büro": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "Bürste": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Bus": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Butter": {
+  "Chance": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Cafeteria": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "chance": {},
   "Chipkarte": {
     "type": "noun",
     "genus": "feminine",
@@ -1038,23 +697,7 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Dame": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "daneben": {
-    "type": "verb"
-  },
-  "danken": {
-    "type": "verb"
-  },
   "Darstellung": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Datei": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -1064,17 +707,12 @@
     "genus": "feminine",
     "article": "die"
   },
-  "datum": {},
-  "dauern": {},
   "Decke": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
   "dekorieren": {
-    "type": "verb"
-  },
-  "denken": {
     "type": "verb"
   },
   "Denkmal": {
@@ -1090,13 +728,9 @@
     "genus": "neuter",
     "article": "das"
   },
-  "Deutsch": {
-    "definition": "Die deutsche Sprache oder etwas aus Deutschland.",
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
+  "Deutsche": {
+    "type": "noun"
   },
-  "deutsche": {},
   "Dialekt": {
     "type": "noun",
     "genus": "masculine",
@@ -1125,11 +759,6 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Ding": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "Diplom": {
     "type": "noun",
     "genus": "neuter",
@@ -1144,9 +773,6 @@
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "diskutieren": {
-    "type": "verb"
   },
   "Distanz": {
     "type": "noun",
@@ -1166,10 +792,8 @@
   "donnern": {
     "type": "verb"
   },
-  "doppelt": {},
-  "dorf": {},
-  "draußen": {
-    "type": "verb"
+  "doppelt": {
+    "type": "adjective"
   },
   "Dreck": {
     "type": "noun",
@@ -1179,39 +803,22 @@
   "drehen": {
     "type": "verb"
   },
-  "drinnen": {
-    "type": "verb"
+  "Droge": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
   },
-  "droge": {},
   "Drogerie": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "drüben": {
-    "type": "verb"
-  },
-  "druck": {},
-  "drucken": {
-    "type": "verb"
-  },
-  "drücken": {},
-  "Drucker": {
+  "Druck": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
-  },
-  "Durchsage": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
   },
   "Durchschnitt": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Durst": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
@@ -1223,11 +830,6 @@
     "type": "verb"
   },
   "Ehe": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Ehefrau": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -1260,9 +862,11 @@
     "genus": "masculine",
     "article": "der"
   },
-  "eindruck": {},
-  "einen": {},
-  "einfach": {},
+  "Eindruck": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
   "Einfahrt": {
     "type": "noun",
     "genus": "feminine",
@@ -1283,12 +887,9 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Eingang": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
+  "einig": {
+    "type": "adjective"
   },
-  "einig": {},
   "Einkommen": {
     "type": "noun",
     "genus": "neuter",
@@ -1299,9 +900,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "einpacken": {
-    "type": "verb"
-  },
   "Einrichtung": {
     "type": "noun",
     "genus": "feminine",
@@ -1311,9 +909,6 @@
     "type": "noun",
     "genus": "neuter",
     "article": "das"
-  },
-  "einverstanden": {
-    "type": "verb"
   },
   "Einwohner": {
     "type": "noun",
@@ -1338,20 +933,7 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Eltern": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "empfangen": {
-    "type": "verb"
-  },
-  "Empfänger": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "empfehlen": {
     "type": "verb"
   },
   "Empfehlung": {
@@ -1359,18 +941,14 @@
     "genus": "feminine",
     "article": "die"
   },
-  "empfohlen": {
-    "type": "verb"
-  },
-  "enden": {
-    "type": "verb"
-  },
   "Energie": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "englisch": {},
+  "englisch": {
+    "type": "adjective"
+  },
   "Enkel": {
     "type": "noun",
     "genus": "masculine",
@@ -1387,7 +965,9 @@
   "entfernen": {
     "type": "verb"
   },
-  "entfernt": {},
+  "entfernt": {
+    "type": "adjective"
+  },
   "Entfernung": {
     "type": "noun",
     "genus": "feminine",
@@ -1420,14 +1000,6 @@
   },
   "entschlossen": {
     "type": "verb"
-  },
-  "entschuldigen": {
-    "type": "verb"
-  },
-  "Entschuldigung": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
   },
   "entsorgen": {
     "type": "verb"
@@ -1475,11 +1047,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Erfolg": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "erfordern": {
     "type": "verb"
   },
@@ -1492,38 +1059,36 @@
   "ergänzen": {
     "type": "verb"
   },
-  "ergeben": {},
-  "Ergebnis": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
+  "ergeben": {
+    "type": "verb"
   },
   "erhalten": {
     "type": "verb"
   },
-  "erhöhen": {},
-  "erhöhung": {},
-  "Erholung": {
+  "erhöhen": {
+    "type": "verb"
+  },
+  "Erhöhung": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "erinnern": {
-    "type": "verb"
+  "Erholung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
   },
   "Erinnerung": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "erkennen": {},
-  "erklären": {
+  "erkennen": {
     "type": "verb"
   },
   "erkundigen": {
     "type": "verb"
   },
-  "erlauben": {},
   "Erlaubnis": {
     "type": "noun",
     "genus": "feminine",
@@ -1564,30 +1129,21 @@
     "genus": "feminine",
     "article": "die"
   },
-  "erreichen": {
-    "type": "verb"
-  },
   "Ersatz": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "ersetzen": {},
+  "ersetzen": {
+    "type": "verb"
+  },
   "erstellen": {
     "type": "verb"
   },
   "erwachsen": {
     "type": "verb"
   },
-  "Erwachsene": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "erwarten": {
-    "type": "verb"
-  },
-  "erzählen": {
     "type": "verb"
   },
   "Erzählung": {
@@ -1606,21 +1162,25 @@
   "erzogen": {
     "type": "verb"
   },
-  "essen": {
-    "type": "verb"
-  },
   "Essig": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "europäer": {},
-  "experte": {},
-  "fabrik": {},
-  "Fach": {
+  "Europäer": {
     "type": "noun",
-    "genus": "neuter",
-    "article": "das"
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Experte": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "Fabrik": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
   },
   "Fachfrau": {
     "type": "noun",
@@ -1652,31 +1212,18 @@
     "genus": "feminine",
     "article": "die"
   },
-  "fahren": {
-    "type": "verb"
+  "Faktor": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
   },
-  "faktor": {},
   "Fall": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "fallen": {
-    "type": "verb"
-  },
-  "falsch": {},
-  "Familie": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "fangen": {
     "type": "verb"
-  },
-  "Farbe": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
   },
   "fassen": {
     "type": "verb"
@@ -1684,17 +1231,7 @@
   "faulenzen": {
     "type": "verb"
   },
-  "fehlen": {},
-  "fehler": {},
-  "feiern": {
-    "type": "verb"
-  },
   "Feld": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Fenster": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
@@ -1704,12 +1241,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Fernsehen": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "fest": {},
   "festhalten": {
     "type": "verb"
   },
@@ -1718,35 +1249,17 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Feuer": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "Feuerwehr": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Fieber": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
   },
   "Figur": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Film": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "finanzieren": {
-    "type": "verb"
-  },
-  "finden": {
     "type": "verb"
   },
   "Finger": {
@@ -1754,17 +1267,7 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Firma": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Fläche": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Flasche": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -1774,14 +1277,8 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Fleisch": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "flexibel": {},
-  "fliegen": {
-    "type": "verb"
+  "flexibel": {
+    "type": "adjective"
   },
   "fliehen": {
     "type": "verb"
@@ -1789,39 +1286,33 @@
   "fließen": {
     "type": "verb"
   },
-  "fließend": {},
+  "fließend": {
+    "type": "adjective"
+  },
   "Flucht": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Flug": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Flughafen": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Fluss": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Flüssigkeit": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "folge": {},
-  "folgen": {
+  "Folge": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "folgende": {
+    "type": "adjective"
+  },
+  "fordern": {
     "type": "verb"
   },
-  "folgende": {},
-  "fordern": {},
-  "fördern": {},
+  "fördern": {
+    "type": "verb"
+  },
   "Forderung": {
     "type": "noun",
     "genus": "feminine",
@@ -1836,11 +1327,6 @@
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Formular": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
   },
   "Forschung": {
     "type": "noun",
@@ -1872,17 +1358,6 @@
     "genus": "masculine",
     "article": "der"
   },
-  "fotografieren": {
-    "type": "verb"
-  },
-  "fragen": {
-    "type": "verb"
-  },
-  "Frau": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Freiheit": {
     "type": "noun",
     "genus": "feminine",
@@ -1890,11 +1365,6 @@
   },
   "fressen": {
     "type": "verb"
-  },
-  "Freund": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Freundschaft": {
     "type": "noun",
@@ -1924,13 +1394,12 @@
     "genus": "feminine",
     "article": "die"
   },
-  "früher": {},
-  "frühstücken": {
+  "führen": {
     "type": "verb"
   },
-  "fühlen": {},
-  "führen": {},
-  "füllen": {},
+  "füllen": {
+    "type": "verb"
+  },
   "Fundbüro": {
     "type": "noun",
     "genus": "neuter",
@@ -1938,11 +1407,6 @@
   },
   "funktionieren": {
     "type": "verb"
-  },
-  "Fuß": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Fußgänger": {
     "type": "noun",
@@ -1962,11 +1426,6 @@
   "füttern": {
     "type": "verb"
   },
-  "Gabel": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Galerie": {
     "type": "noun",
     "genus": "feminine",
@@ -1977,13 +1436,16 @@
     "genus": "masculine",
     "article": "der"
   },
-  "ganz": {},
   "Garage": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "garantie": {},
+  "Garantie": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
   "garantieren": {
     "type": "verb"
   },
@@ -1992,20 +1454,10 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Garten": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Gas": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
-  },
-  "Gast": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Gasthaus": {
     "type": "noun",
@@ -2022,14 +1474,6 @@
     "genus": "neuter",
     "article": "das"
   },
-  "Gebäude": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "geben": {
-    "type": "verb"
-  },
   "Gebiet": {
     "type": "noun",
     "genus": "neuter",
@@ -2040,22 +1484,25 @@
     "genus": "neuter",
     "article": "das"
   },
-  "gebrauch": {},
+  "Gebrauch": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
   "Gebrauchsanweisung": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "gebühr": {},
-  "Geburt": {
+  "Gebühr": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Geburtstag": {
+  "Geburt": {
     "type": "noun",
-    "genus": "masculine",
-    "article": "der"
+    "genus": "feminine",
+    "article": "die"
   },
   "Gedicht": {
     "type": "noun",
@@ -2067,7 +1514,11 @@
     "genus": "feminine",
     "article": "die"
   },
-  "gefahr": {},
+  "Gefahr": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
   "Gefängnis": {
     "type": "noun",
     "genus": "neuter",
@@ -2079,9 +1530,6 @@
     "article": "das"
   },
   "gegeben": {},
-  "gegen": {
-    "type": "verb"
-  },
   "Gegend": {
     "type": "noun",
     "genus": "feminine",
@@ -2112,29 +1560,18 @@
     "genus": "neuter",
     "article": "das"
   },
-  "gehen": {
-    "type": "verb"
-  },
-  "Geld": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "Gelegenheit": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "gelingen": {},
+  "gelingen": {
+    "type": "verb"
+  },
   "Gemeinschaft": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Gemüse": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
   },
   "genannt": {},
   "Generation": {
@@ -2142,24 +1579,15 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Gepäck": {
+  "Gerät": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "gerät": {},
-  "geraten": {},
+  "geraten": {
+    "type": "verb"
+  },
   "Gericht": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Geschäft": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Geschenk": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
@@ -2194,11 +1622,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Geschwister": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Gesellschaft": {
     "type": "noun",
     "genus": "feminine",
@@ -2209,41 +1632,30 @@
     "genus": "neuter",
     "article": "das"
   },
-  "Gesicht": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
+  "getrennt": {
+    "type": "adjective"
   },
-  "Gespräch": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "gestern": {
-    "type": "verb"
-  },
-  "Getränk": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "getrennt": {},
   "Gewalt": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Kraft oder Macht, die Menschen verletzen oder zwingen kann."
   },
   "Gewerkschaft": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "gewicht": {},
-  "gewinn": {},
+  "Gewinn": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
   "Gewissen": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Die innere Stimme für richtiges und falsches Handeln."
   },
   "Gewitter": {
     "type": "noun",
@@ -2268,30 +1680,11 @@
     "genus": "neuter",
     "article": "das"
   },
-  "Gitarre": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
+  "gleiche": {
+    "type": "adjective"
   },
-  "glauben": {
-    "type": "verb"
-  },
-  "gleiche": {},
-  "gleichen": {},
-  "Gleis": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Glück": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Glückwunsch": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
+  "gleichen": {
+    "type": "adjective"
   },
   "Gold": {
     "type": "noun",
@@ -2323,10 +1716,9 @@
     "genus": "feminine",
     "article": "die"
   },
-  "gratulieren": {
+  "greifen": {
     "type": "verb"
   },
-  "greifen": {},
   "Grenze": {
     "type": "noun",
     "genus": "feminine",
@@ -2342,7 +1734,11 @@
     "genus": "feminine",
     "article": "die"
   },
-  "grund": {},
+  "Grund": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
   "gründen": {
     "type": "verb"
   },
@@ -2351,27 +1747,13 @@
     "genus": "neuter",
     "article": "das"
   },
-  "Gruppe": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "grüßen": {
+  "gucken": {
     "type": "verb"
   },
-  "gucken": {},
   "Gymnastik": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Haar": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "haben": {
-    "type": "verb"
   },
   "Hafen": {
     "type": "noun",
@@ -2381,18 +1763,10 @@
   "hageln": {
     "type": "verb"
   },
-  "halb": {},
-  "Halbpension": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
+  "halb": {
+    "type": "adjective"
   },
   "Hälfte": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Halle": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -2402,29 +1776,19 @@
     "genus": "neuter",
     "article": "das"
   },
-  "Hals": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "halten": {},
-  "Haltestelle": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Hammer": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "Hand": {
+  "Handel": {
     "type": "noun",
-    "genus": "feminine",
-    "article": "die"
+    "genus": "masculine",
+    "article": "der"
   },
-  "handel": {},
-  "handeln": {},
+  "handeln": {
+    "type": "verb"
+  },
   "Händler": {
     "type": "noun",
     "genus": "masculine",
@@ -2445,32 +1809,11 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Handy": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "hängen": {
-    "type": "verb"
-  },
   "hassen": {
     "type": "verb"
   },
-  "häufig": {},
-  "Haus": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Hausaufgabe": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Haushalt": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
+  "häufig": {
+    "type": "adjective"
   },
   "Hausmeister": {
     "type": "noun",
@@ -2495,41 +1838,20 @@
   "heben": {
     "type": "verb"
   },
-  "Heft": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "Heim": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "heimat": {},
   "Heimweh": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "heiraten": {
-    "type": "verb"
-  },
-  "heißen": {
-    "type": "verb"
-  },
   "heizen": {
     "type": "verb"
   },
-  "held": {},
-  "helfen": {
-    "type": "verb"
-  },
-  "Hemd": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Herd": {
+  "Held": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
@@ -2538,11 +1860,6 @@
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Herr": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Hersteller": {
     "type": "noun",
@@ -2553,14 +1870,6 @@
     "type": "noun",
     "genus": "neuter",
     "article": "das"
-  },
-  "Himmel": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "hinten": {
-    "type": "verb"
   },
   "hinterlassen": {
     "type": "verb"
@@ -2575,31 +1884,15 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Hobby": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Hochzeit": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Hof": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "hoffen": {
-    "type": "verb"
-  },
   "Höhe": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "holen": {
-    "type": "verb"
   },
   "Holz": {
     "type": "noun",
@@ -2611,19 +1904,6 @@
     "genus": "masculine",
     "article": "der"
   },
-  "hören": {
-    "type": "verb"
-  },
-  "Hose": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Hotel": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "Hügel": {
     "type": "noun",
     "genus": "masculine",
@@ -2634,15 +1914,7 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Hunger": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "hupen": {
-    "type": "verb"
-  },
-  "husten": {
     "type": "verb"
   },
   "Hut": {
@@ -2651,11 +1923,6 @@
     "article": "der"
   },
   "Hütte": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Idee": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -2691,11 +1958,6 @@
   "innen": {
     "type": "verb"
   },
-  "Insel": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Inserat": {
     "type": "noun",
     "genus": "neuter",
@@ -2704,7 +1966,11 @@
   "installieren": {
     "type": "verb"
   },
-  "institut": {},
+  "Institut": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
   "Instrument": {
     "type": "noun",
     "genus": "neuter",
@@ -2728,31 +1994,14 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Interesse": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Interview": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "inzwischen": {
     "type": "verb"
   },
-  "Jacke": {
+  "Jugend": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Jeans": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "job": {},
-  "jugend": {},
   "Jugendherberge": {
     "type": "noun",
     "genus": "feminine",
@@ -2768,11 +2017,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Kaffee": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Kaffeehaus": {
     "type": "noun",
     "genus": "neuter",
@@ -2783,17 +2027,7 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Kalender": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Kälte": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Kamera": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -2811,7 +2045,11 @@
     "genus": "masculine",
     "article": "der"
   },
-  "kandidat": {},
+  "Kandidat": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
   "Kanne": {
     "type": "noun",
     "genus": "feminine",
@@ -2832,21 +2070,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Karte": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Käse": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Kasse": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Kassette": {
     "type": "noun",
     "genus": "feminine",
@@ -2862,7 +2085,11 @@
     "genus": "feminine",
     "article": "die"
   },
-  "kauf": {},
+  "Kauf": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
   "Käufer": {
     "type": "noun",
     "genus": "masculine",
@@ -2872,14 +2099,6 @@
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Keller": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "kennen": {
-    "type": "verb"
   },
   "Kenntnisse": {
     "type": "noun",
@@ -2896,35 +2115,10 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Kette": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Kind": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Kindergarten": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Kindheit": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Kino": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Kiosk": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Kirche": {
     "type": "noun",
@@ -2939,32 +2133,14 @@
   "klagen": {
     "type": "verb"
   },
-  "klappen": {},
+  "klappen": {
+    "type": "verb"
+  },
   "klären": {
     "type": "verb"
   },
-  "Klasse": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Klavier": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "kleben": {
     "type": "verb"
-  },
-  "Kleid": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Kleidung": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
   },
   "klettern": {
     "type": "verb"
@@ -2990,7 +2166,9 @@
   "klingeln": {
     "type": "verb"
   },
-  "klingen": {},
+  "klingen": {
+    "type": "verb"
+  },
   "Klinik": {
     "type": "noun",
     "genus": "feminine",
@@ -3019,17 +2197,6 @@
     "genus": "masculine",
     "article": "der"
   },
-  "kochen": {
-    "type": "verb"
-  },
-  "Koffer": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "kommen": {
-    "type": "verb"
-  },
   "Kommunikation": {
     "type": "noun",
     "genus": "feminine",
@@ -3055,11 +2222,6 @@
     "genus": "masculine",
     "article": "der"
   },
-  "König": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Konkurrenz": {
     "type": "noun",
     "genus": "feminine",
@@ -3073,38 +2235,24 @@
   "konsumieren": {
     "type": "verb"
   },
-  "kontakt": {},
-  "Konto": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "kontrollieren": {
+  "kopieren": {
     "type": "verb"
   },
-  "Konzert": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Kopf": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "kopieren": {},
   "Körper": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "kosten": {},
   "Kostüm": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "kraft": {},
+  "Kraft": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
   "Kraftfahrzeug": {
     "type": "noun",
     "genus": "neuter",
@@ -3114,16 +2262,6 @@
     "type": "noun",
     "genus": "neuter",
     "article": "das"
-  },
-  "Krankenhaus": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Krankenkasse": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
   },
   "Krankenpfleger": {
     "type": "noun",
@@ -3140,8 +2278,11 @@
     "genus": "masculine",
     "article": "der"
   },
-  "kredit": {},
-  "kreis": {},
+  "Kreis": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
   "Kreuz": {
     "type": "noun",
     "genus": "neuter",
@@ -3157,14 +2298,6 @@
     "genus": "masculine",
     "article": "der"
   },
-  "kriegen": {
-    "type": "verb"
-  },
-  "Krimi": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Krise": {
     "type": "noun",
     "genus": "feminine",
@@ -3173,32 +2306,7 @@
   "kritisieren": {
     "type": "verb"
   },
-  "Küche": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Kuchen": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Kugelschreiber": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "kultur": {},
-  "kümmern": {},
-  "kündigen": {
-    "type": "verb"
-  },
   "Kündigung": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Kunst": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -3223,8 +2331,9 @@
     "genus": "feminine",
     "article": "die"
   },
-  "kurz": {},
-  "kürzlich": {},
+  "kürzlich": {
+    "type": "adjective"
+  },
   "Kuss": {
     "type": "noun",
     "genus": "masculine",
@@ -3241,10 +2350,6 @@
   "lächeln": {
     "type": "verb"
   },
-  "lachen": {
-    "type": "verb"
-  },
-  "laden": {},
   "Lage": {
     "type": "noun",
     "genus": "feminine",
@@ -3255,12 +2360,6 @@
     "genus": "neuter",
     "article": "das"
   },
-  "Lampe": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "land": {},
   "Landschaft": {
     "type": "noun",
     "genus": "feminine",
@@ -3289,16 +2388,10 @@
     "genus": "masculine",
     "article": "der"
   },
-  "lassen": {
-    "type": "verb"
-  },
   "Laster": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
-  },
-  "laufen": {
-    "type": "verb"
   },
   "Laufwerk": {
     "type": "noun",
@@ -3315,10 +2408,6 @@
     "genus": "masculine",
     "article": "der"
   },
-  "leben": {
-    "definition": "Existieren und seinen Alltag führen.",
-    "type": "verb"
-  },
   "Lebenslauf": {
     "type": "noun",
     "genus": "masculine",
@@ -3329,18 +2418,10 @@
     "genus": "neuter",
     "article": "das"
   },
-  "legen": {
-    "type": "verb"
-  },
   "Lehre": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Lehrer": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Lehrerin": {
     "type": "noun",
@@ -3352,22 +2433,21 @@
     "genus": "masculine",
     "article": "der"
   },
-  "leicht": {},
   "leiden": {
     "type": "verb"
   },
-  "leihen": {
-    "type": "verb"
-  },
   "leisten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas schaffen, erbringen oder bezahlen."
   },
   "Leistung": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "leiten": {},
+  "leiten": {
+    "type": "verb"
+  },
   "Leiter": {
     "type": "noun",
     "genus": "masculine",
@@ -3377,10 +2457,6 @@
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "lernen": {
-    "definition": "Wissen oder Fähigkeiten erwerben.",
-    "type": "verb"
   },
   "Lerner": {
     "type": "noun",
@@ -3392,34 +2468,12 @@
     "genus": "feminine",
     "article": "die"
   },
-  "lesen": {
-    "type": "verb"
-  },
-  "Leute": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Lexikon": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "Licht": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "lieben": {
-    "type": "verb"
-  },
-  "Lied": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "liefern": {},
-  "liegen": {
+  "liefern": {
     "type": "verb"
   },
   "Limonade": {
@@ -3427,17 +2481,7 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Linie": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Lippe": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Liste": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -3460,45 +2504,39 @@
     "genus": "masculine",
     "article": "der"
   },
-  "logisch": {},
+  "logisch": {
+    "type": "adjective"
+  },
   "Lohn": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "lokal": {},
   "löschen": {
     "type": "verb"
   },
-  "lösen": {},
-  "lösung": {},
-  "luft": {},
-  "lügen": {
+  "lösen": {
     "type": "verb"
+  },
+  "Luft": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
   },
   "Lust": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "machen": {
-    "type": "verb"
-  },
-  "macht": {},
-  "Mädchen": {
+  "Macht": {
     "type": "noun",
-    "genus": "neuter",
-    "article": "das"
+    "genus": "feminine",
+    "article": "die"
   },
   "Magazin": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
-  },
-  "Magen": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Mahlzeit": {
     "type": "noun",
@@ -3510,17 +2548,12 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Mal": {
+  "Mama": {
     "type": "noun",
-    "genus": "neuter",
-    "article": "das"
+    "genus": "feminine",
+    "article": "die"
   },
-  "malen": {
-    "type": "verb"
-  },
-  "mama": {},
-  "mangel": {},
-  "Mann": {
+  "Mangel": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
@@ -3529,11 +2562,6 @@
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Mantel": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Mappe": {
     "type": "noun",
@@ -3558,18 +2586,16 @@
   "markieren": {
     "type": "verb"
   },
-  "Markt": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Marmelade": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "maschine": {},
-  "material": {},
+  "Material": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
   "Mauer": {
     "type": "noun",
     "genus": "feminine",
@@ -3600,39 +2626,33 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Meer": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "Mehl": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "mehrheit": {},
+  "Mehrheit": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
   "Mehrwertsteuer": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "meinen": {
-    "type": "verb"
-  },
   "meinetwegen": {
     "type": "verb"
-  },
-  "Meinung": {
-    "definition": "Eine persönliche Ansicht zu einem Thema.",
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
   },
   "meist": {},
   "meisten": {
     "type": "verb"
   },
-  "meister": {},
+  "Meister": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
   "melden": {
     "type": "verb"
   },
@@ -3641,49 +2661,34 @@
     "genus": "feminine",
     "article": "die"
   },
-  "menge": {},
   "Mensa": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Mensch": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Menü": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "merken": {},
-  "Messe": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "messen": {
-    "type": "verb"
-  },
-  "Messer": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
+    "type": "verb",
+    "definition": "Die Größe, Menge oder Dauer von etwas bestimmen."
   },
   "Metall": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "methode": {},
-  "Metropole": {
+  "Methode": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "mieten": {
-    "type": "verb"
+  "Metropole": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
   },
   "Mieter": {
     "type": "noun",
@@ -3700,23 +2705,19 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Milch": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Minderheit": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Mineralwasser": {
+  "Minister": {
     "type": "noun",
-    "genus": "neuter",
-    "article": "das"
+    "genus": "masculine",
+    "article": "der"
   },
-  "minister": {},
-  "mischen": {},
+  "mischen": {
+    "type": "verb"
+  },
   "Mitarbeiter": {
     "type": "noun",
     "genus": "masculine",
@@ -3732,19 +2733,8 @@
     "genus": "neuter",
     "article": "das"
   },
-  "Mitte": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "mittel": {},
   "mitten": {
     "type": "verb"
-  },
-  "Möbel": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
   },
   "Mobilbox": {
     "type": "noun",
@@ -3756,23 +2746,11 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Mobiltelefon": {
+  "Modell": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "Mode": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "modell": {},
-  "modern": {},
-  "mögen": {
-    "type": "verb"
-  },
-  "möglich": {},
-  "moment": {},
   "Mond": {
     "type": "noun",
     "genus": "masculine",
@@ -3798,40 +2776,15 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Müll": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Müllabfuhr": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Mund": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Münze": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Museum": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Musik": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Musiker": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Musikerin": {
     "type": "noun",
@@ -3848,22 +2801,12 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Mutter": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Nachfrage": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
   "Nachhilfe": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Nachricht": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -3888,11 +2831,6 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Nähe": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "nähen": {
     "type": "verb"
   },
@@ -3901,17 +2839,7 @@
     "genus": "neuter",
     "article": "das"
   },
-  "Name": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Nase": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Natur": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -3921,16 +2849,10 @@
     "genus": "masculine",
     "article": "der"
   },
-  "neben": {
-    "type": "verb"
-  },
   "Neffe": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
-  },
-  "nehmen": {
-    "type": "verb"
   },
   "nen": {
     "type": "verb"
@@ -3943,8 +2865,16 @@
     "genus": "masculine",
     "article": "der"
   },
-  "netz": {},
-  "netzwerk": {},
+  "Netz": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
+  "Netzwerk": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
   "Neuigkeit": {
     "type": "noun",
     "genus": "feminine",
@@ -3965,17 +2895,24 @@
     "genus": "feminine",
     "article": "die"
   },
-  "nomen": {},
+  "Nomen": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
   "Notausgang": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "note": {},
-  "notieren": {
-    "type": "verb"
+  "Note": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
   },
-  "nötig": {},
+  "nötig": {
+    "type": "adjective"
+  },
   "Notiz": {
     "type": "noun",
     "genus": "feminine",
@@ -3986,39 +2923,19 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Nummer": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
+  "nutzen": {
+    "type": "verb"
   },
-  "nutzen": {},
   "nützen": {
     "type": "verb"
   },
-  "nützlich": {},
-  "oben": {
-    "type": "verb"
+  "nützlich": {
+    "type": "adjective"
   },
-  "offen": {},
-  "öffnen": {
-    "type": "verb"
-  },
-  "Ohr": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Oma": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
+  "offen": {
+    "type": "adjective"
   },
   "Onkel": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Opa": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
@@ -4067,77 +2984,13 @@
     "genus": "neuter",
     "article": "das"
   },
-  "Ort": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "ost": {},
   "Ozean": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "Paar": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "packen": {
-    "type": "verb"
-  },
-  "Paket": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "Panne": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Papier": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Parfüm": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Park": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Partner": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Partnerin": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Party": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Pass": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "passen": {
-    "type": "verb"
-  },
-  "passieren": {
-    "type": "verb"
-  },
-  "Pause": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -4147,13 +3000,10 @@
     "genus": "neuter",
     "article": "das"
   },
-  "peinlich": {},
-  "Pension": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
+  "peinlich": {
+    "type": "adjective"
   },
-  "Person": {
+  "Pension": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -4178,9 +3028,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "pflanzen": {
-    "type": "verb"
-  },
   "Pflaster": {
     "type": "noun",
     "genus": "neuter",
@@ -4191,7 +3038,9 @@
     "genus": "feminine",
     "article": "die"
   },
-  "pflegen": {},
+  "pflegen": {
+    "type": "verb"
+  },
   "Pfleger": {
     "type": "noun",
     "genus": "masculine",
@@ -4202,21 +3051,15 @@
     "genus": "feminine",
     "article": "die"
   },
-  "pflicht": {},
-  "pfund": {},
-  "Pizza": {
+  "Pflicht": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Plakat": {
+  "Pfund": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
-  },
-  "plan": {},
-  "planen": {
-    "type": "verb"
   },
   "Planung": {
     "type": "noun",
@@ -4228,12 +3071,11 @@
     "genus": "neuter",
     "article": "das"
   },
-  "Platz": {
+  "Politik": {
     "type": "noun",
-    "genus": "masculine",
-    "article": "der"
+    "genus": "feminine",
+    "article": "die"
   },
-  "politik": {},
   "Politiker": {
     "type": "noun",
     "genus": "masculine",
@@ -4244,37 +3086,16 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Polizei": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
+  "populär": {
+    "type": "adjective"
   },
-  "Pommes": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "populär": {},
   "Portion": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "positiv": {},
-  "Post": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Postleitzahl": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Praktikum": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
+  "positiv": {
+    "type": "adjective"
   },
   "Präsentation": {
     "type": "noun",
@@ -4284,29 +3105,16 @@
   "präsentieren": {
     "type": "verb"
   },
-  "Praxis": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Preis": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Presse": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "privat": {},
+  "privat": {
+    "type": "adjective"
+  },
   "probieren": {
     "type": "verb"
-  },
-  "Problem": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
   },
   "Produktion": {
     "type": "noun",
@@ -4331,21 +3139,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Programm": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Projekt": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Prospekt": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "protestieren": {
     "type": "verb"
   },
@@ -4354,11 +3147,8 @@
     "genus": "masculine",
     "article": "der"
   },
-  "prüfen": {},
-  "Prüfung": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
+  "prüfen": {
+    "type": "verb"
   },
   "Publikum": {
     "type": "noun",
@@ -4370,21 +3160,17 @@
     "genus": "masculine",
     "article": "der"
   },
-  "punkt": {},
+  "Punkt": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
   "Puppe": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "putzen": {
-    "type": "verb"
-  },
   "Qualifikation": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Qualität": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -4394,20 +3180,10 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Quiz": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "Rabatt": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
-  },
-  "Rad": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
   },
   "Radfahrer": {
     "type": "noun",
@@ -4419,11 +3195,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Radio": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "Rand": {
     "type": "noun",
     "genus": "masculine",
@@ -4434,28 +3205,14 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Rat": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "raten": {
-    "type": "verb"
-  },
-  "Rathaus": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Raum": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "reagieren": {
     "type": "verb"
   },
-  "reaktion": {},
+  "Reaktion": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
   "realisieren": {
     "type": "verb"
   },
@@ -4469,13 +3226,7 @@
     "genus": "feminine",
     "article": "die"
   },
-  "rechnen": {},
-  "Recht": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "reden": {
+  "rechnen": {
     "type": "verb"
   },
   "reduzieren": {
@@ -4509,17 +3260,13 @@
     "genus": "feminine",
     "article": "die"
   },
-  "reich": {},
-  "reichen": {},
+  "reichen": {
+    "type": "verb"
+  },
   "Reifen": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
-  },
-  "Reihe": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
   },
   "Reihenfolge": {
     "type": "noun",
@@ -4527,22 +3274,6 @@
     "article": "die"
   },
   "reinigen": {
-    "type": "verb"
-  },
-  "Reis": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Reisebüro": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "reisen": {
-    "type": "verb"
-  },
-  "reiten": {
     "type": "verb"
   },
   "Reklame": {
@@ -4555,13 +3286,18 @@
     "genus": "masculine",
     "article": "der"
   },
-  "religion": {},
+  "Religion": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
   "rennen": {
     "type": "verb"
   },
-  "rente": {},
-  "reparieren": {
-    "type": "verb"
+  "Rente": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
   },
   "Reportage": {
     "type": "noun",
@@ -4583,23 +3319,8 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Rest": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Restaurant": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "retten": {
     "type": "verb"
-  },
-  "Rezept": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
   },
   "Richter": {
     "type": "noun",
@@ -4616,38 +3337,20 @@
     "genus": "feminine",
     "article": "die"
   },
-  "riechen": {
-    "type": "verb"
+  "riesig": {
+    "type": "adjective"
   },
-  "riesig": {},
-  "Rind": {
+  "Risiko": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "Ring": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "risiko": {},
-  "Rock": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "rolle": {},
-  "Roman": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Rose": {
+  "Rolle": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Rücken": {
+  "Roman": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
@@ -4662,62 +3365,35 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Rucksack": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Rücksicht": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "rufen": {
-    "type": "verb"
   },
   "Rufnummer": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Ruhe": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "rundfunk": {},
-  "Saal": {
+  "Rundfunk": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "Sache": {
+  "Saal": {
     "type": "noun",
-    "genus": "feminine",
-    "article": "die"
+    "genus": "masculine",
+    "article": "der"
   },
   "Sack": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "Saft": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "sagen": {
-    "type": "verb"
-  },
   "Saison": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Salat": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Salbe": {
     "type": "noun",
@@ -4729,18 +3405,10 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Salz": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
+  "sammeln": {
+    "type": "verb"
   },
-  "sammeln": {},
   "Sand": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Sänger": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
@@ -4760,8 +3428,10 @@
     "genus": "feminine",
     "article": "die"
   },
-  "schaden": {
-    "type": "verb"
+  "Schaden": {
+    "type": "verb",
+    "genus": "masculine",
+    "article": "der"
   },
   "schaffen": {
     "type": "verb"
@@ -4805,9 +3475,6 @@
     "genus": "masculine",
     "article": "der"
   },
-  "scheinen": {
-    "type": "verb"
-  },
   "schenken": {
     "type": "verb"
   },
@@ -4825,23 +3492,8 @@
   "schießen": {
     "type": "verb"
   },
-  "Schiff": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Schild": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "schimpfen": {
     "type": "verb"
-  },
-  "Schinken": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "schlagen": {
     "type": "verb"
@@ -4851,34 +3503,11 @@
     "genus": "feminine",
     "article": "die"
   },
-  "schlank": {},
-  "schlecht": {},
-  "schließen": {
-    "type": "verb"
+  "schlank": {
+    "type": "adjective"
   },
-  "schlimm": {},
-  "Schloss": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Schluss": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Schlüssel": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "schmecken": {
-    "type": "verb"
-  },
-  "Schmerz": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
+  "schlimm": {
+    "type": "adjective"
   },
   "Schmerzmittel": {
     "type": "noun",
@@ -4898,11 +3527,6 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Schnee": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Schnitzel": {
     "type": "noun",
     "genus": "neuter",
@@ -4913,18 +3537,14 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Schokolade": {
+  "schreien": {
+    "type": "verb"
+  },
+  "Schrift": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "schreiben": {
-    "type": "verb"
-  },
-  "schreien": {
-    "type": "verb"
-  },
-  "schrift": {},
   "Schriftsteller": {
     "type": "noun",
     "genus": "masculine",
@@ -4940,23 +3560,16 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Schuh": {
+  "Schuld": {
     "type": "noun",
-    "genus": "masculine",
-    "article": "der"
+    "genus": "feminine",
+    "article": "die"
   },
-  "schuld": {},
   "Schulden": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Schule": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "schüler": {},
   "Schülerin": {
     "type": "noun",
     "genus": "feminine",
@@ -4975,9 +3588,17 @@
   "schütteln": {
     "type": "verb"
   },
-  "schutz": {},
-  "schützen": {},
-  "schwach": {},
+  "Schutz": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "schützen": {
+    "type": "verb"
+  },
+  "schwach": {
+    "type": "adjective"
+  },
   "Schwangerschaft": {
     "type": "noun",
     "genus": "feminine",
@@ -4986,47 +3607,30 @@
   "schweigen": {
     "type": "verb"
   },
-  "Schwester": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Schwierigkeit": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "schwimmen": {
-    "type": "verb"
-  },
   "schwitzen": {
     "type": "verb"
   },
-  "See": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "sehen": {
-    "type": "verb"
-  },
-  "Sehenswürdigkeit": {
+  "Sekunde": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Seife": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "seite": {},
-  "sekunde": {},
   "selten": {
     "type": "verb"
   },
-  "seltsam": {},
-  "semester": {},
+  "seltsam": {
+    "type": "adjective"
+  },
+  "Semester": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
   "Seminar": {
     "type": "noun",
     "genus": "neuter",
@@ -5045,8 +3649,9 @@
     "genus": "feminine",
     "article": "die"
   },
-  "service": {},
-  "sichern": {},
+  "sichern": {
+    "type": "verb"
+  },
   "Sieg": {
     "type": "noun",
     "genus": "masculine",
@@ -5065,55 +3670,43 @@
     "genus": "feminine",
     "article": "die"
   },
-  "singen": {
+  "sinken": {
     "type": "verb"
   },
-  "sinken": {},
   "Sinn": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "sinnvoll": {},
-  "Situation": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
+  "sinnvoll": {
+    "type": "adjective"
   },
   "Sitz": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "sitzen": {
-    "type": "verb"
-  },
   "Socke": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Sofa": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "software": {},
-  "Sohn": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "sondern": {
-    "type": "verb"
-  },
-  "Sonne": {
+  "Software": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "sorge": {},
-  "sorgen": {},
+  "sondern": {
+    "type": "verb"
+  },
+  "Sorge": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "sorgen": {
+    "type": "verb"
+  },
   "Souvenir": {
     "type": "noun",
     "genus": "neuter",
@@ -5129,22 +3722,8 @@
     "genus": "feminine",
     "article": "die"
   },
-  "spanisch": {},
-  "sparen": {
-    "type": "verb"
-  },
-  "Spaß": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Spaziergang": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "speichern": {
-    "type": "verb"
+  "spanisch": {
+    "type": "adjective"
   },
   "Speisewagen": {
     "type": "noun",
@@ -5156,18 +3735,10 @@
     "genus": "masculine",
     "article": "der"
   },
-  "spielen": {
-    "type": "verb"
-  },
   "Spielzeug": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
-  },
-  "Sport": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Sportler": {
     "type": "noun",
@@ -5178,15 +3749,6 @@
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Sprache": {
-    "definition": "Ein System aus Wörtern und Regeln zur Verständigung.",
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "sprechen": {
-    "type": "verb"
   },
   "springen": {
     "type": "verb"
@@ -5212,11 +3774,6 @@
     "genus": "neuter",
     "article": "das"
   },
-  "Stadt": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "stammen": {
     "type": "verb"
   },
@@ -5225,8 +3782,14 @@
     "genus": "masculine",
     "article": "der"
   },
-  "star": {},
-  "stark": {},
+  "Star": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "stark": {
+    "type": "adjective"
+  },
   "Start": {
     "type": "noun",
     "genus": "masculine",
@@ -5245,7 +3808,11 @@
     "genus": "feminine",
     "article": "die"
   },
-  "stau": {},
+  "Stau": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
   "Staub": {
     "type": "noun",
     "genus": "masculine",
@@ -5270,9 +3837,6 @@
     "genus": "masculine",
     "article": "der"
   },
-  "stehen": {
-    "type": "verb"
-  },
   "stehlen": {
     "type": "verb"
   },
@@ -5284,26 +3848,24 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Stelle": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "stellen": {
-    "type": "verb"
-  },
   "Stempel": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "sterben": {},
+  "sterben": {
+    "type": "verb"
+  },
   "Stern": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "steuer": {},
+  "Steuer": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
   "Stiefel": {
     "type": "noun",
     "genus": "masculine",
@@ -5314,23 +3876,38 @@
     "genus": "masculine",
     "article": "der"
   },
-  "stil": {},
+  "Stil": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
   "Stimme": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "stimmen": {},
-  "stimmung": {},
+  "stimmen": {
+    "type": "verb"
+  },
+  "Stimmung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
   "stinken": {
     "type": "verb"
   },
-  "stoff": {},
-  "stoppen": {},
-  "stören": {
+  "Stoff": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
+  "stoppen": {
     "type": "verb"
   },
-  "stoßen": {},
+  "stoßen": {
+    "type": "verb"
+  },
   "Strafe": {
     "type": "noun",
     "genus": "feminine",
@@ -5345,11 +3922,6 @@
     "type": "noun",
     "genus": "masculine",
     "article": "der"
-  },
-  "Straße": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
   },
   "Strecke": {
     "type": "noun",
@@ -5369,7 +3941,9 @@
     "genus": "masculine",
     "article": "der"
   },
-  "streng": {},
+  "streng": {
+    "type": "adjective"
+  },
   "Stress": {
     "type": "noun",
     "genus": "masculine",
@@ -5385,31 +3959,17 @@
     "genus": "masculine",
     "article": "der"
   },
-  "studie": {},
-  "studieren": {
-    "type": "verb"
+  "Studie": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
   },
   "Studio": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "Studium": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "Stufe": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Stuhl": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Stunde": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -5422,10 +3982,11 @@
   "stürzen": {
     "type": "verb"
   },
-  "suchen": {
-    "type": "verb"
+  "Sucht": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
   },
-  "sucht": {},
   "Suchtmittel": {
     "type": "noun",
     "genus": "neuter",
@@ -5441,23 +4002,26 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Suppe": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Symbol": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "system": {},
+  "System": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
   "Szene": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "tabelle": {},
+  "Tabelle": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
   "Tablette": {
     "type": "noun",
     "genus": "feminine",
@@ -5468,16 +4032,7 @@
     "genus": "feminine",
     "article": "die"
   },
-  "talent": {},
-  "tanzen": {
-    "type": "verb"
-  },
-  "Tasche": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Taschengeld": {
+  "Talent": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
@@ -5512,8 +4067,14 @@
     "genus": "feminine",
     "article": "die"
   },
-  "tatsache": {},
-  "tauchen": {},
+  "Tatsache": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
+  "tauchen": {
+    "type": "verb"
+  },
   "tauschen": {
     "type": "verb"
   },
@@ -5526,15 +4087,6 @@
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Tee": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "teil": {},
-  "teilen": {
-    "type": "verb"
   },
   "Teilnahme": {
     "type": "noun",
@@ -5551,9 +4103,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "telefonieren": {
-    "type": "verb"
-  },
   "Teller": {
     "type": "noun",
     "genus": "masculine",
@@ -5569,17 +4118,7 @@
     "genus": "neuter",
     "article": "das"
   },
-  "Tennis": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "Teppich": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Termin": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
@@ -5594,44 +4133,19 @@
     "genus": "feminine",
     "article": "die"
   },
-  "test": {},
   "testen": {
     "type": "verb"
-  },
-  "Text": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Theater": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Thema": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
   },
   "Theorie": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine begründete Erklärung für einen Zusammenhang."
   },
   "Therapie": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Ticket": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Tier": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
   },
   "Tierpark": {
     "type": "noun",
@@ -5646,30 +4160,15 @@
   "tippen": {
     "type": "verb"
   },
-  "Tisch": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Titel": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "Tochter": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Tod": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
-  },
-  "Toilette": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
   },
   "Tor": {
     "type": "noun",
@@ -5681,7 +4180,9 @@
     "genus": "feminine",
     "article": "die"
   },
-  "total": {},
+  "total": {
+    "type": "adjective"
+  },
   "Tourismus": {
     "type": "noun",
     "genus": "masculine",
@@ -5691,9 +4192,6 @@
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "tragen": {
-    "type": "verb"
   },
   "Trainer": {
     "type": "noun",
@@ -5708,9 +4206,6 @@
   "trainieren": {
     "type": "verb"
   },
-  "treffen": {
-    "type": "verb"
-  },
   "Treffpunkt": {
     "type": "noun",
     "genus": "masculine",
@@ -5719,11 +4214,12 @@
   "treiben": {
     "type": "verb"
   },
-  "trend": {},
-  "treten": {
-    "type": "verb"
+  "Trend": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
   },
-  "trinken": {
+  "treten": {
     "type": "verb"
   },
   "Trinkgeld": {
@@ -5744,7 +4240,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "üben": {},
   "überfahren": {
     "type": "verb"
   },
@@ -5752,12 +4247,6 @@
     "type": "verb"
   },
   "überlegen": {
-    "type": "verb"
-  },
-  "übermorgen": {
-    "type": "verb"
-  },
-  "übernachten": {
     "type": "verb"
   },
   "Übernachtung": {
@@ -5782,20 +4271,12 @@
     "genus": "feminine",
     "article": "die"
   },
-  "übersetzen": {
-    "type": "verb"
-  },
   "Übersetzer": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
   "Übersetzerin": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Übersetzung": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -5814,22 +4295,29 @@
   "überzeugen": {
     "type": "verb"
   },
-  "übung": {},
+  "Übung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
   "Ufer": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "Uhr": {
+  "umarmen": {
+    "type": "verb"
+  },
+  "Umfrage": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "umarmen": {
-    "type": "verb"
+  "Umgebung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
   },
-  "umfrage": {},
-  "umgebung": {},
   "Umleitung": {
     "type": "noun",
     "genus": "feminine",
@@ -5858,17 +4346,16 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Unfall": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Unglück": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "uni": {},
+  "Uni": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
   "Uniform": {
     "type": "noun",
     "genus": "feminine",
@@ -5878,9 +4365,6 @@
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "unten": {
-    "type": "verb"
   },
   "unterbrochen": {
     "type": "verb"
@@ -5903,9 +4387,6 @@
   "unterlassen": {
     "type": "verb"
   },
-  "unternehmen": {
-    "type": "verb"
-  },
   "Unternehmer": {
     "type": "noun",
     "genus": "masculine",
@@ -5915,14 +4396,6 @@
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "unternommen": {
-    "type": "verb"
-  },
-  "Unterricht": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "unterrichten": {
     "type": "verb"
@@ -5938,16 +4411,8 @@
   "unterschieden": {
     "type": "verb"
   },
-  "unterschreiben": {
-    "type": "verb"
-  },
   "unterschrieben": {
     "type": "verb"
-  },
-  "Unterschrift": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
   },
   "unterstreichen": {
     "type": "verb"
@@ -5956,9 +4421,6 @@
     "type": "verb"
   },
   "unterstützen": {
-    "type": "verb"
-  },
-  "untersuchen": {
     "type": "verb"
   },
   "Untersuchung": {
@@ -5976,13 +4438,12 @@
     "genus": "feminine",
     "article": "die"
   },
-  "urteil": {},
-  "Verabredung": {
+  "Urteil": {
     "type": "noun",
-    "genus": "feminine",
-    "article": "die"
+    "genus": "neuter",
+    "article": "das"
   },
-  "Veranstaltung": {
+  "Verabredung": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -5992,19 +4453,14 @@
     "genus": "feminine",
     "article": "die"
   },
-  "verbieten": {
-    "type": "verb"
-  },
   "verbinden": {
     "type": "verb"
   },
   "Verbot": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
-  },
-  "verboten": {
-    "type": "verb"
+    "article": "das",
+    "definition": "Eine Regel, die etwas nicht erlaubt."
   },
   "verbrauchen": {
     "type": "verb"
@@ -6030,26 +4486,10 @@
     "genus": "masculine",
     "article": "der"
   },
-  "verdienen": {
-    "type": "verb"
-  },
-  "verein": {},
-  "vereinbaren": {
-    "type": "verb"
-  },
   "Vergangenheit": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "vergessen": {
-    "type": "verb"
-  },
-  "vergleichen": {
-    "type": "verb"
-  },
-  "verglichen": {
-    "type": "verb"
   },
   "vergrößern": {
     "type": "verb"
@@ -6070,28 +4510,10 @@
   "verhindern": {
     "type": "verb"
   },
-  "verkaufen": {
-    "type": "verb"
-  },
-  "Verkäufer": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Verkäuferin": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "Verkehr": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "Verkehrsmittel": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
   },
   "Verkehrszeichen": {
     "type": "noun",
@@ -6117,9 +4539,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "verlieren": {
-    "type": "verb"
-  },
   "Verlierer": {
     "type": "noun",
     "genus": "masculine",
@@ -6129,9 +4548,6 @@
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "verloren": {
-    "type": "verb"
   },
   "Verlust": {
     "type": "noun",
@@ -6143,11 +4559,6 @@
   },
   "vermieden": {
     "type": "verb"
-  },
-  "Vermieter": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
   },
   "Vermieterin": {
     "type": "noun",
@@ -6176,16 +4587,10 @@
   "verpacken": {
     "type": "verb"
   },
-  "verpassen": {
-    "type": "verb"
-  },
   "verpflegen": {
     "type": "verb"
   },
   "verraten": {
-    "type": "verb"
-  },
-  "verreisen": {
     "type": "verb"
   },
   "Versammlung": {
@@ -6196,16 +4601,7 @@
   "versäumen": {
     "type": "verb"
   },
-  "verschieben": {
-    "type": "verb"
-  },
-  "verschieden": {
-    "type": "verb"
-  },
   "verschmutzen": {
-    "type": "verb"
-  },
-  "verschoben": {
     "type": "verb"
   },
   "verschreiben": {
@@ -6234,17 +4630,20 @@
   "versprochen": {
     "type": "verb"
   },
-  "versuchen": {
-    "type": "verb"
-  },
   "verteilen": {
     "type": "verb"
   },
-  "vertrag": {},
+  "Vertrag": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
+  },
   "vertrauen": {
     "type": "verb"
   },
-  "vertraut": {},
+  "vertraut": {
+    "type": "adjective"
+  },
   "vertreten": {
     "type": "verb"
   },
@@ -6294,7 +4693,11 @@
     "genus": "feminine",
     "article": "die"
   },
-  "visum": {},
+  "Visum": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
   "Vitamin": {
     "type": "noun",
     "genus": "neuter",
@@ -6321,7 +4724,11 @@
   "vorgestern": {
     "type": "verb"
   },
-  "vorhaben": {},
+  "Vorhaben": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
   "Vorort": {
     "type": "noun",
     "genus": "masculine",
@@ -6333,11 +4740,6 @@
     "article": "der"
   },
   "Vorschrift": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Vorsicht": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -6362,11 +4764,6 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Vorwahl": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Vorwurf": {
     "type": "noun",
     "genus": "masculine",
@@ -6375,30 +4772,21 @@
   "wachsen": {
     "type": "verb"
   },
-  "Wagen": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
+  "wählen": {
+    "type": "verb"
   },
-  "wählen": {},
-  "wahr": {},
+  "wahr": {
+    "type": "adjective"
+  },
   "Wahrheit": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Wald": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Wand": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "wandern": {
-    "type": "verb"
   },
   "Wanderung": {
     "type": "noun",
@@ -6413,65 +4801,44 @@
   "warnen": {
     "type": "verb"
   },
-  "warten": {
-    "type": "verb"
+  "Wäsche": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
   },
-  "wäsche": {},
   "Waschmittel": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "Wasser": {
+  "Website": {
     "type": "noun",
-    "genus": "neuter",
-    "article": "das"
+    "genus": "feminine",
+    "article": "die"
   },
-  "website": {},
   "wechseln": {
     "type": "verb"
   },
-  "wecken": {
-    "type": "verb"
-  },
-  "Weg": {
+  "Weise": {
     "type": "noun",
-    "genus": "masculine",
-    "article": "der"
+    "genus": "feminine",
+    "article": "die"
   },
-  "wegen": {
-    "type": "verb"
-  },
-  "Wein": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "weinen": {
-    "type": "verb"
-  },
-  "weise": {},
-  "weit": {},
   "Weiterbildung": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Welt": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
+  "weltweit": {
+    "type": "adjective"
   },
-  "weltweit": {},
   "wenden": {
     "type": "verb"
   },
-  "werbung": {},
-  "werden": {
-    "type": "verb"
-  },
-  "werfen": {
-    "type": "verb"
+  "Werbung": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
   },
   "Werk": {
     "type": "noun",
@@ -6483,7 +4850,11 @@
     "genus": "feminine",
     "article": "die"
   },
-  "werkzeug": {},
+  "Werkzeug": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das"
+  },
   "Wert": {
     "type": "noun",
     "genus": "masculine",
@@ -6497,11 +4868,6 @@
   "wetten": {
     "type": "verb"
   },
-  "Wetter": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "Wetterbericht": {
     "type": "noun",
     "genus": "masculine",
@@ -6512,14 +4878,10 @@
     "genus": "feminine",
     "article": "die"
   },
-  "wichtig": {},
   "widersprechen": {
     "type": "verb"
   },
   "widersprochen": {
-    "type": "verb"
-  },
-  "wiederholen": {
     "type": "verb"
   },
   "Wiederholung": {
@@ -6535,26 +4897,21 @@
     "genus": "feminine",
     "article": "die"
   },
-  "willkommen": {
-    "type": "verb"
-  },
-  "Wind": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "winken": {
     "type": "verb"
   },
-  "wirken": {},
-  "wirkung": {},
-  "Wirtschaft": {
+  "wirken": {
+    "type": "verb"
+  },
+  "Wirkung": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "wissen": {
-    "type": "verb"
+  "Wirtschaft": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
   },
   "Wissenschaft": {
     "type": "noun",
@@ -6571,45 +4928,21 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Witz": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "wohnen": {
-    "type": "verb"
-  },
-  "Wohnort": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Wohnsitz": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
-  },
-  "Wohnung": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
   },
   "Wohnzimmer": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
-  "Wolke": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
   "Wolle": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "wort": {},
   "Wörterbuch": {
     "type": "noun",
     "genus": "neuter",
@@ -6620,19 +4953,10 @@
     "genus": "feminine",
     "article": "die"
   },
-  "wunder": {},
-  "Wurst": {
+  "Wunder": {
     "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Zahl": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "zahlen": {
-    "type": "verb"
+    "genus": "neuter",
+    "article": "das"
   },
   "zählen": {
     "type": "verb"
@@ -6642,33 +4966,12 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Zahn": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Zange": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
   },
-  "Zeichen": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "zeichnen": {
-    "type": "verb"
-  },
-  "zeigen": {
-    "type": "verb"
-  },
   "Zeile": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Zeit": {
     "type": "noun",
     "genus": "feminine",
     "article": "die"
@@ -6683,23 +4986,8 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Zeitung": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Zelt": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
   "zelten": {
     "type": "verb"
-  },
-  "Zentrum": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
   },
   "zerstören": {
     "type": "verb"
@@ -6709,26 +4997,7 @@
     "genus": "neuter",
     "article": "das"
   },
-  "Zettel": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
-  "zeugnis": {},
-  "ziehen": {
-    "type": "verb"
-  },
-  "Ziel": {
-    "type": "noun",
-    "genus": "neuter",
-    "article": "das"
-  },
-  "Zigarette": {
-    "type": "noun",
-    "genus": "feminine",
-    "article": "die"
-  },
-  "Zimmer": {
+  "Zeugnis": {
     "type": "noun",
     "genus": "neuter",
     "article": "das"
@@ -6748,11 +5017,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "Zoll": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Zone": {
     "type": "noun",
     "genus": "feminine",
@@ -6763,25 +5027,16 @@
     "genus": "masculine",
     "article": "der"
   },
-  "Zucker": {
-    "type": "noun",
-    "genus": "masculine",
-    "article": "der"
-  },
   "Zufall": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "zufrieden": {
-    "type": "verb"
-  },
-  "Zug": {
+  "Zugang": {
     "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
-  "zugang": {},
   "Zuhause": {
     "type": "noun",
     "genus": "neuter",
@@ -6840,7 +5095,11 @@
     "genus": "feminine",
     "article": "die"
   },
-  "zutaten": {},
+  "Zutaten": {
+    "type": "noun",
+    "genus": "feminine",
+    "article": "die"
+  },
   "Zweck": {
     "type": "noun",
     "genus": "masculine",
@@ -6858,8 +5117,5 @@
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "zwischen": {
-    "type": "verb"
   }
 }

@@ -1,14 +1,6 @@
 {
-  "betreuen": {
-    "definition": "Für jemanden sorgen und ihn unterstützen.",
-    "type": "verb"
-  },
   "löhnen": {
     "definition": "Sich wegen des Nutzens oder Ergebnisses auszahlen.",
-    "type": "verb"
-  },
-  "messen": {
-    "definition": "Die Größe, Menge oder Dauer von etwas bestimmen.",
     "type": "verb"
   },
   "Stand": {

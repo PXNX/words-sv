@@ -24,10 +24,12 @@
     homeCircle: m.home_circle({}, { locale: settings.interfaceLocale }),
     homeWordle: m.home_wordle({}, { locale: settings.interfaceLocale }),
     homeVocab: m.home_vocab({}, { locale: settings.interfaceLocale }),
+    homeGrammar: m.home_grammar({}, { locale: settings.interfaceLocale }),
     homePlay: m.home_play({}, { locale: settings.interfaceLocale }),
     modeCrossword: m.mode_crossword({}, { locale: settings.interfaceLocale }),
     modeWordle: m.mode_wordle({}, { locale: settings.interfaceLocale }),
     modeLearning: m.mode_learning({}, { locale: settings.interfaceLocale }),
+    modeGrammar: m.mode_grammar({}, { locale: settings.interfaceLocale }),
     tutorial: m.tutorial({}, { locale: settings.interfaceLocale }),
     onboardingIntro: m.onboarding_intro({}, { locale: settings.interfaceLocale }),
     onboardingTitle: m.onboarding_title({}, { locale: settings.interfaceLocale }),
@@ -53,7 +55,7 @@
     const value = (event.currentTarget as HTMLSelectElement).value;
     if (interfaceLocales.some((locale) => locale.code === value)) settings.setInterfaceLocale(value as typeof settings.interfaceLocale);
   }
-  function selectMode(mode: 'circle' | 'wordle' | 'vocab') {
+  function selectMode(mode: 'circle' | 'wordle' | 'vocab' | 'grammar') {
     void goto(`/${mode}`);
   }
   function openTutorial(mode: 'circle' | 'wordle') {
@@ -98,6 +100,7 @@
       <article><span class="home-index">01</span><div class="home-title-row"><h2>{labels.modeCrossword}</h2><button type="button" class="home-tutorial-link" onclick={() => openTutorial('circle')} aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></button></div><p>{labels.homeCircle}</p><button type="button" onclick={() => selectMode('circle')}>{labels.homePlay}</button></article>
       <article><span class="home-index">02</span><div class="home-title-row"><h2>{labels.modeWordle}</h2><button type="button" class="home-tutorial-link" onclick={() => openTutorial('wordle')} aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></button></div><p>{labels.homeWordle}</p><button type="button" onclick={() => selectMode('wordle')}>{labels.homePlay}</button></article>
       <article><span class="home-index">03</span><h2>{labels.modeLearning}</h2><p>{labels.homeVocab}</p><button type="button" onclick={() => selectMode('vocab')}>{labels.homePlay}</button></article>
+      <article><span class="home-index">04</span><h2>{labels.modeGrammar}</h2><p>{labels.homeGrammar}</p><button type="button" onclick={() => selectMode('grammar')}>{labels.homePlay}</button></article>
     </div>
     <button class="home-settings-link" onclick={() => void goto('/settings')}><IconSettings aria-hidden="true" /><span>{labels.settings}</span></button>
   {/if}

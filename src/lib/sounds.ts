@@ -1,12 +1,18 @@
-export type SuccessSound = 'circle' | 'wordle' | 'vocab';
+export type SuccessSound = 'circle' | 'wordle' | 'vocab' | 'grammar';
+export type ErrorSound = 'vocab' | 'grammar';
 
-const noteSets: Record<SuccessSound, number[]> = {
+const successNoteSets: Record<SuccessSound, number[]> = {
   circle: [523.25, 659.25, 783.99],
   wordle: [440, 659.25],
-  vocab: [587.33, 783.99]
+  vocab: [587.33, 783.99],
+  grammar: [659.25, 830.61]
+};
+const errorNoteSets: Record<ErrorSound, number[]> = {
+  vocab: [329.63, 246.94],
+  grammar: [329.63, 246.94]
 };
 
-export function playSuccessSound(enabled: boolean, kind: SuccessSound) {
+function playNotes(enabled: boolean, notes: number[]) {
   if (!enabled || typeof window === 'undefined') return;
   const legacyWindow = window as typeof window & { webkitAudioContext?: typeof AudioContext };
   const AudioContextClass = window.AudioContext ?? legacyWindow.webkitAudioContext;
@@ -14,7 +20,7 @@ export function playSuccessSound(enabled: boolean, kind: SuccessSound) {
   try {
     const context = new AudioContextClass();
     const start = context.currentTime;
-    noteSets[kind].forEach((frequency, index) => {
+    notes.forEach((frequency, index) => {
       const oscillator = context.createOscillator();
       const gain = context.createGain();
       oscillator.type = 'triangle';
@@ -28,4 +34,12 @@ export function playSuccessSound(enabled: boolean, kind: SuccessSound) {
     });
     window.setTimeout(() => void context.close(), 430);
   } catch { /* Audio is optional and must never block play. */ }
+}
+
+export function playSuccessSound(enabled: boolean, kind: SuccessSound) {
+  playNotes(enabled, successNoteSets[kind]);
+}
+
+export function playErrorSound(enabled: boolean, kind: ErrorSound) {
+  playNotes(enabled, errorNoteSets[kind]);
 }
