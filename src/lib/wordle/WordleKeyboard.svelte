@@ -42,6 +42,7 @@
           class:text-primary-content={marks[letter] === 'present'}
           class:border-[#69727a]={usedWithoutMatch && !expected}
           class:bg-[#69727a]={usedWithoutMatch}
+          class:wordle-key-used={usedWithoutMatch && !expected}
           class:border-[#e6a527]={expected}
           class:shadow-[inset_0_0_0_1px_#e6a527]={expected}
           class:opacity-[.42]={guided && !expected}
@@ -66,6 +67,7 @@
         class:text-primary-content={marks[letter] === 'present'}
         class:border-[#69727a]={usedWithoutMatch && !expected}
         class:bg-[#69727a]={usedWithoutMatch}
+        class:wordle-key-used={usedWithoutMatch && !expected}
         class:border-[#e6a527]={expected}
         class:shadow-[inset_0_0_0_1px_#e6a527]={expected}
         class:opacity-[.42]={guided && !expected}
@@ -80,3 +82,12 @@
     >⌫</button>
   </div>
 </div>
+
+<style>
+  /* Keep the spent-key state visible over the keyboard's neutral background utility. */
+  .wordle-key-used {
+    background-color: #69727a !important;
+    border-color: #69727a !important;
+    color: #fffdf7 !important;
+  }
+</style>
