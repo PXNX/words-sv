@@ -141,7 +141,10 @@
     untrack(() => startSection());
   });
   $effect(() => {
-    const nextChoiceKey = `${currentKey}|${position}|${queue.length}`;
+    // A wrong answer requeues the current prompt, changing queue.length without
+    // changing the prompt being displayed. Keep the red cross and Continue button
+    // visible until the learner explicitly advances.
+    const nextChoiceKey = `${currentKey}|${position}`;
     if (nextChoiceKey === choiceKey) return;
     choiceKey = nextChoiceKey;
     untrack(() => resetPrompt());
