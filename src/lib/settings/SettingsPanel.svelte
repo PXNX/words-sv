@@ -1,7 +1,7 @@
 <script lang="ts">
   import { m } from '$lib/paraglide/messages';
   import { getTextDirection } from '$lib/paraglide/runtime';
-  import { settings, interfaceLocales } from '$lib/state/settings.svelte';
+  import { settings, interfaceLocales, type WordleLength } from '$lib/state/settings.svelte';
   import { playableLanguages, vocabularyLevels, isLanguage, type VocabularyLevel } from '$lib/data/vocabulary';
   import { disablePush, enablePush, pushEnabled, pushSupported } from './pushClient';
   import { onMount } from 'svelte';
@@ -24,6 +24,7 @@
     behaviorGroup: m.behavior_group({}, { locale: settings.interfaceLocale }),
     gameLanguage: m.game_language({}, { locale: settings.interfaceLocale }),
     vocabulary: m.vocabulary({}, { locale: settings.interfaceLocale }),
+    wordleLength: 'Wordle length',
     includeLower: m.include_lower({}, { locale: settings.interfaceLocale }),
     backwards: m.backwards({}, { locale: settings.interfaceLocale }),
     interfaceLanguage: m.interface_language({}, { locale: settings.interfaceLocale }),
@@ -53,6 +54,10 @@
   }
   function selectVocabularyLevel(level: VocabularyLevel) {
     settings.setVocabularyLevel(level);
+  }
+  function selectWordleLength(event: Event) {
+    const value = Number((event.currentTarget as HTMLSelectElement).value);
+    if (value >= 3 && value <= 7) settings.setWordleLength(value as WordleLength);
   }
   async function toggleNotifications(next: boolean) {
     notificationBusy = true;
@@ -94,6 +99,7 @@
     <label class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.gameLanguage}</span><select class="max-w-[9.6rem] border border-[rgba(23,42,69,.28)] bg-[#fffdf7] text-[#172a45] text-[.64rem] font-extrabold outline-0 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2" aria-label={labels.gameLanguage} value={settings.lang} onchange={selectLanguageFromEvent}>{#each playableLanguages as language}<option value={language.code}>{language.label}</option>{/each}</select></label>
     <div class="flex items-start justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.vocabulary}</span><div class="flex p-[2px] rounded-full border border-base-content/[.22] dark:border-base-content/[.25]">{#each vocabularyLevels as level}<button class={`min-h-[1.65rem] min-w-[1.65rem] px-[.32rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.vocabularyLevel === level ? 'bg-[#172a45] text-[#fffdf7]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} onclick={() => selectVocabularyLevel(level)}>{level.toUpperCase()}</button>{/each}</div></div>
     {#if settings.vocabularyLevel !== 'a1'}<div class="flex items-center justify-between gap-4 mt-[.25rem] pt-[.35rem] border-t-0 text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.includeLower}</span><input aria-label={labels.includeLower} type="checkbox" class="toggle toggle-sm" checked={settings.includeLowerVocabulary} onchange={(event) => settings.setIncludeLowerVocabulary((event.currentTarget as HTMLInputElement).checked)} /></div>{/if}
+    <label class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.wordleLength}</span><select class="max-w-[9.6rem] border border-[rgba(23,42,69,.28)] bg-[#fffdf7] text-[#172a45] text-[.64rem] font-extrabold outline-0 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2" aria-label={labels.wordleLength} value={settings.wordleLength} onchange={selectWordleLength}>{#each [3, 4, 5, 6, 7] as length}<option value={length}>{length}</option>{/each}</select></label>
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.backwards}</span><input aria-label={labels.backwards} type="checkbox" class="toggle toggle-sm" checked={settings.allowBackwardWords} onchange={(event) => settings.setAllowBackwardWords((event.currentTarget as HTMLInputElement).checked)} /></div>
   </section>
 

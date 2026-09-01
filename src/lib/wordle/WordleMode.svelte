@@ -22,7 +22,7 @@
     return value === 'de' || value === 'en';
   }
 
-  let { words, level, language, labels, practice = false, onGreen = () => {}, onWin = () => {} }: { words: string[]; level: string; language: string; labels: Labels; practice?: boolean; onGreen?: () => void; onWin?: () => void } = $props();
+  let { words, level, language, wordLength = 5, labels, practice = false, onGreen = () => {}, onWin = () => {} }: { words: string[]; level: string; language: string; wordLength?: number; labels: Labels; practice?: boolean; onGreen?: () => void; onWin?: () => void } = $props();
 
   let target = $state('');
   let guess = $state('');
@@ -32,7 +32,7 @@
   let practiceStep = $state(0);
   let loadingNextRound = $state(false);
 
-  const candidates = $derived(fiveLetterWords(words));
+  const candidates = $derived(fiveLetterWords(words, wordLength));
   const won = $derived(entries.some((entry) => entry.word === target));
   const exhausted = $derived(entries.length >= 6 && !won);
   const keyboardMarks = $derived(keyboardMarksFrom(entries));
@@ -65,7 +65,7 @@
       start();
       return;
     }
-    const saved = readWordleState(localStorage.getItem(WORDLE_STATE_KEY), { language, level, candidates });
+    const saved = readWordleState(localStorage.getItem(WORDLE_STATE_KEY), { language, level, wordLength, candidates });
     if (!saved) {
       start();
       return;
@@ -79,7 +79,7 @@
   function submit() {
     const normalized = normalizePlayableWord(guess);
     if (won || exhausted) return;
-    if (!isValidWordleGuess(candidates, normalized) || entries.some((entry) => entry.word === normalized)) {
+    if (!isValidWordleGuess(candidates, normalized, wordLength) || entries.some((entry) => entry.word === normalized)) {
       notice = labels.invalid;
       guess = '';
       return;
@@ -96,9 +96,9 @@
 
   function press(letter: string) {
     if (won || exhausted) return;
-    const nextGuess = normalizePlayableWord(`${guess}${letter}`).slice(0, 5);
+    const nextGuess = normalizePlayableWord(`${guess}${letter}`).slice(0, wordLength);
     guess = nextGuess;
-    if (nextGuess.length === 5) submit();
+    if (nextGuess.length === wordLength) submit();
     else notice = '';
   }
 
@@ -138,6 +138,7 @@
     words;
     level;
     language;
+    wordLength;
     candidates;
     if (practiceActive) return;
     restoreOrStart();
@@ -165,7 +166,7 @@
 
   {#if practiceActive && tutorialRound}
     <div class="grid content-center justify-items-center gap-[.65rem]">
-      <WordleGrid rows={2} {entries} currentGuess={practiceFinished ? '' : guess} ariaLabel={labels.title} compact />
+      <WordleGrid rows={2} wordLength={5} {entries} currentGuess={practiceFinished ? '' : guess} ariaLabel={labels.title} compact />
       {#if practiceFinished}
         <p class="min-h-[1rem] m-0 text-success text-[.68rem] font-extrabold text-center">{practiceCompleteLabel}</p>
         <button class="min-h-[2.45rem] px-[.9rem] border border-success bg-success text-[#fffdf7] text-[.64rem] font-extrabold tracking-[.08em] uppercase" onclick={finishPractice}>{practiceContinueLabel}</button>
@@ -180,7 +181,7 @@
     <div class="p-[1.25rem] border border-accent/42 bg-accent/8 text-accent text-[.75rem] font-extrabold text-center">{labels.empty}</div>
   {:else}
     <div class="grid content-center justify-items-center gap-[.65rem]">
-      <WordleGrid rows={6} {entries} currentGuess={guess} ariaLabel={labels.title} />
+      <WordleGrid rows={6} {wordLength} {entries} currentGuess={guess} ariaLabel={labels.title} />
       {#if notice}<p class:text-accent={!won} class:text-success={won} class="min-h-[1rem] m-0 text-[.68rem] font-extrabold text-center">{notice}</p>{/if}
       {#if exhausted && !won}<p class="min-h-[1rem] m-0 text-accent text-[.68rem] font-extrabold text-center">{target}</p>{/if}
       {#if won || exhausted}<button class="inline-flex items-center justify-center gap-[.4rem] min-h-[2.45rem] px-[.9rem] border border-success bg-success text-[#fffdf7] text-[.64rem] font-extrabold tracking-[.08em] uppercase disabled:cursor-wait disabled:opacity-80" onclick={continueRound} disabled={loadingNextRound} aria-busy={loadingNextRound}>

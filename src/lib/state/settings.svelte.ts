@@ -5,6 +5,7 @@ import type { Locale } from '$lib/paraglide/runtime';
 
 export type Theme = 'light' | 'dark';
 export type InterfaceLocale = Locale;
+export type WordleLength = 3 | 4 | 5 | 6 | 7;
 
 export const interfaceLocales = [
   { code: 'de', label: 'Deutsch' },
@@ -27,6 +28,7 @@ const INCLUDE_LOWER_VOCABULARY_KEY = 'wordcircle-include-lower-vocabulary-v1';
 const LANGUAGE_KEY = 'wordcircle-language-v1';
 const INTERFACE_LOCALE_KEY = 'wordcircle-interface-locale-v1';
 const ROUND_TOTAL_KEY = 'wordcircle-completed-rounds-v1';
+const WORDLE_LENGTH_KEY = 'wordcircle-wordle-length-v1';
 
 function isInterfaceLocale(value: unknown): value is InterfaceLocale {
   return typeof value === 'string' && interfaceLocales.some((locale) => locale.code === value);
@@ -60,6 +62,11 @@ function readCompletedRounds() {
   const value = Number(localStorage.getItem(ROUND_TOTAL_KEY));
   return Number.isSafeInteger(value) && value >= 0 ? value : 0;
 }
+function readWordleLength(): WordleLength {
+  if (typeof localStorage === 'undefined') return 5;
+  const value = Number(localStorage.getItem(WORDLE_LENGTH_KEY));
+  return Number.isInteger(value) && value >= 3 && value <= 7 ? value as WordleLength : 5;
+}
 
 class SettingsStore {
   theme = $state<Theme>(typeof localStorage !== 'undefined' && localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light');
@@ -71,6 +78,7 @@ class SettingsStore {
   includeLowerVocabulary = $state(typeof localStorage !== 'undefined' && localStorage.getItem(INCLUDE_LOWER_VOCABULARY_KEY) === 'on');
   allowBackwardWords = $state(typeof localStorage !== 'undefined' && localStorage.getItem(BACKWARD_WORDS_KEY) === 'on');
   completedRounds = $state(readCompletedRounds());
+  wordleLength = $state<WordleLength>(readWordleLength());
   streak = $state<ClientStreak>(readStreak());
 
   hasStoredInterfaceLocale() {
@@ -112,6 +120,10 @@ class SettingsStore {
   setAllowBackwardWords(next: boolean) {
     this.allowBackwardWords = next;
     localStorage.setItem(BACKWARD_WORDS_KEY, next ? 'on' : 'off');
+  }
+  setWordleLength(next: WordleLength) {
+    this.wordleLength = next;
+    localStorage.setItem(WORDLE_LENGTH_KEY, String(next));
   }
   private normalizeVocabulary() {
     if ((this.vocabularyLevel === 'a1' || requiresCumulativePool(wordPools[this.lang], this.vocabularyLevel)) && !this.includeLowerVocabulary) {

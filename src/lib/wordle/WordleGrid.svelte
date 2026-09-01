@@ -2,7 +2,7 @@
   type WordleMark = 'correct' | 'present' | 'absent';
   type Entry = { word: string; marks: WordleMark[] };
 
-  let { rows, entries, currentGuess = '', ariaLabel, compact = false }: { rows: number; entries: Entry[]; currentGuess?: string; ariaLabel: string; compact?: boolean } = $props();
+  let { rows, wordLength = 5, entries, currentGuess = '', ariaLabel, compact = false }: { rows: number; wordLength?: number; entries: Entry[]; currentGuess?: string; ariaLabel: string; compact?: boolean } = $props();
 </script>
 
 <div
@@ -13,8 +13,8 @@
 >
   {#each Array(rows) as _, row}
     {@const entry = entries[row]}
-    <div class="grid gap-[clamp(.25rem,1.2vw,.42rem)] [grid-template-columns:repeat(5,clamp(2.35rem,12vw,3.35rem))] min-[580px]:[grid-template-columns:repeat(5,clamp(2.8rem,8vw,3.6rem))]">
-      {#each Array(5) as _, column}
+    <div class="grid gap-[clamp(.25rem,1.2vw,.42rem)]" style={`grid-template-columns:repeat(${wordLength},minmax(0,clamp(2.05rem,${Math.min(12, 60 / wordLength)}vw,3.35rem)));`}>
+      {#each Array(wordLength) as _, column}
         {@const letter = entry?.word[column] ?? (row === entries.length ? currentGuess[column] : '')}
         {@const mark = entry?.marks[column] ?? ''}
         <span

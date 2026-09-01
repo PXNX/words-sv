@@ -26,4 +26,4 @@
   const words = $derived(wordPools[settings.lang][settings.vocabularyLevel]);
 </script>
 
-<WordleMode {words} level={settings.vocabularyLevel} language={settings.lang} {labels} {practice} onGreen={() => playSuccessSound(settings.sound, 'wordle')} onWin={() => void settings.recordStreak('wordle_completed')} />
+<WordleMode {words} level={settings.vocabularyLevel} language={settings.lang} wordLength={settings.wordleLength} {labels} {practice} onGreen={() => playSuccessSound(settings.sound, 'wordle')} onWin={() => void settings.recordStreak('wordle_completed')} />
