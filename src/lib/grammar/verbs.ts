@@ -134,3 +134,21 @@ export function buildVerbPrompt(infinitive: string, random: () => number, shuffl
     choices: shuffle(forms, random)
   };
 }
+
+/** Identify person and tense together from a conjugated verb in context. */
+export function buildVerbPropertyPrompt(infinitive: string, random: () => number, shuffle: <T>(values: T[], random: () => number) => T[]): GrammarPrompt | null {
+  const entry = verbConjugations[infinitive];
+  if (!entry) return null;
+  const personIndex = Math.floor(random() * entry.forms.length);
+  const persons = ['1. Person Singular', '2. Person Singular', '3. Person Singular', '1. Person Plural', '2. Person Plural', '3. Person Plural'];
+  const tenses = ['Präsens', 'Präteritum', 'Perfekt'];
+  const tense = 'Präsens';
+  const correct = `${persons[personIndex]} · ${tense}`;
+  const choices = shuffle([
+    correct,
+    `${persons[(personIndex + 1) % persons.length]} · ${tense}`,
+    `${persons[personIndex]} · ${tenses[(tenses.indexOf(tense) + 1) % tenses.length]}`,
+    `${persons[(personIndex + 3) % persons.length]} · ${tenses[(tenses.indexOf(tense) + 2) % tenses.length]}`
+  ], random);
+  return { before: `${VERB_PRONOUNS[personIndex]} `, after: `${entry.forms[personIndex]} ${entry.after}`, correct, choices, question: 'Bestimme Person und Tempus.' };
+}
