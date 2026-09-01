@@ -106,6 +106,6 @@ export function buildNounPropertyPrompt(noun: string, gender: VocabularyGender, 
     `${labels[grammarCase]} · ${genders[gender]} · Plural`
   ], random);
   return random() < 0.5
-    ? { before: `${capitalize(article)} `, after: noun, correct, choices, question: 'Bestimme Kasus, Genus und Numerus.', highlight: noun }
+    ? { before: `${capitalize(article)} `, after: noun, correct, choices, question: 'Bestimme Kasus, Genus und Numerus.' }
     : { before, after: sentence.after, correct, choices, question: 'Bestimme Kasus, Genus und Numerus.', highlight: noun };
 }

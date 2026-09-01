@@ -150,5 +150,5 @@ export function buildVerbPropertyPrompt(infinitive: string, random: () => number
     `${persons[personIndex]} · ${tenses[(tenses.indexOf(tense) + 1) % tenses.length]}`,
     `${persons[(personIndex + 3) % persons.length]} · ${tenses[(tenses.indexOf(tense) + 2) % tenses.length]}`
   ], random);
-  return { before: `${VERB_PRONOUNS[personIndex]} `, after: `${entry.forms[personIndex]} ${entry.after}`, correct, choices, question: 'Bestimme Person und Tempus.' };
+  return { before: `${VERB_PRONOUNS[personIndex]} `, after: `${entry.forms[personIndex]} ${entry.after}`, correct, choices, question: 'Bestimme Person und Tempus.', highlight: entry.forms[personIndex] };
 }
