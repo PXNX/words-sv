@@ -1,5 +1,6 @@
 <script lang="ts">
   import { untrack } from 'svelte';
+  import { page } from '$app/state';
   import { playSuccessSound, playErrorSound } from '$lib/sounds';
   import { settings } from '$lib/state/settings.svelte';
   import { wordPools, wordMetadata } from '$lib/data/vocabulary';
@@ -30,6 +31,7 @@
   // nominative-article drill, since only German has case, adjective-ending and
   // hand-checked verb-conjugation data to draw on.
   const isGerman = $derived(settings.lang === 'de');
+  const grammarMode = $derived(page.url.searchParams.get('mode') === 'determine' ? 'determine' : 'fill');
   const metadata = $derived(wordMetadata[settings.lang]);
   const articleUniverse = $derived(grammarArticles[settings.lang] ?? []);
   const words = $derived(wordPools[settings.lang][settings.vocabularyLevel]);
@@ -41,7 +43,9 @@
 
   const eligibleKeys = $derived(
     isGerman
-      ? [...nounPool.map((word) => `noun:${word}`), ...adjectivePool.map((word) => `adj:${word}`), ...verbPool.map((word) => `verb:${word}`)]
+      ? grammarMode === 'determine'
+        ? [...nounPool.map((word) => `noun:${word}`), ...verbPool.map((word) => `verb:${word}`)]
+        : [...nounPool.map((word) => `noun:${word}`), ...adjectivePool.map((word) => `adj:${word}`), ...verbPool.map((word) => `verb:${word}`)]
       : legacyArticleWords.map((word) => `article:${word}`)
   );
   const isSupported = $derived(isGerman ? nounPool.length + adjectivePool.length + verbPool.length > 0 : articleUniverse.length > 0);
@@ -93,9 +97,9 @@
     if (kind === 'noun') {
       const gender = metadata[word]?.gender;
       if (!gender) return null;
-      return random() < 0.5
-        ? buildNounCasePrompt(metadata[word]?.spelling ?? word, gender, random, shuffled)
-        : buildNounPropertyPrompt(metadata[word]?.spelling ?? word, gender, random, shuffled);
+      return grammarMode === 'determine'
+        ? buildNounPropertyPrompt(metadata[word]?.spelling ?? word, gender, random, shuffled)
+        : buildNounCasePrompt(metadata[word]?.spelling ?? word, gender, random, shuffled);
     }
     if (kind === 'adj') {
       if (nounPool.length === 0) return null;
@@ -106,7 +110,7 @@
       const nounSpelling = metadata[pairedNoun]?.spelling ?? pairedNoun;
       return buildAdjectivePrompt(adjectiveSpelling, nounSpelling, gender, random, shuffled);
     }
-    if (kind === 'verb') return random() < 0.5 ? buildVerbPrompt(word, random, shuffled) : buildVerbPropertyPrompt(word, random, shuffled);
+    if (kind === 'verb') return grammarMode === 'determine' ? buildVerbPropertyPrompt(word, random, shuffled) : buildVerbPrompt(word, random, shuffled);
     return null;
   }
   function resetPrompt() {
@@ -169,7 +173,7 @@
   {:else}
     <article class="w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] border border-neutral border-t-[4px] border-t-double border-t-neutral shadow-[8px_8px_0_rgba(164,94,56,.16)] text-center bg-neutral-content">
             {#if prompt.question}<p class="m-0 text-accent text-[.62rem] font-black tracking-[.08em] uppercase">{prompt.question}</p>{/if}
-            <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.55rem,7vw,2.6rem)] font-normal tracking-[.04em] leading-[1.3]" lang={settings.lang}>{#if prompt.before}{prompt.before}{/if}{#if prompt.question}{prompt.after}{:else}<span class="inline-block border-b-4 border-dotted border-accent text-accent px-[.3rem]">___</span> {prompt.after}{/if}</p>
+            <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.55rem,7vw,2.6rem)] font-normal tracking-[.04em] leading-[1.3]" lang={settings.lang}>{#if prompt.before}{prompt.before}{/if}{#if prompt.question}{#if prompt.highlight && prompt.after.includes(prompt.highlight)}{@const highlightIndex = prompt.after.indexOf(prompt.highlight)}{prompt.after.slice(0, highlightIndex)}<mark class="bg-primary/25 text-accent px-[.15rem]">{prompt.highlight}</mark>{prompt.after.slice(highlightIndex + prompt.highlight.length)}{:else}{prompt.after}{/if}{:else}<span class="inline-block border-b-4 border-dotted border-accent text-accent px-[.3rem]">___</span> {prompt.after}{/if}</p>
     </article>
     {#if prompt.choices.length >= 2}
       <section class="w-[min(100%,28rem)] grid gap-[.55rem]" aria-label={labels.chooseArticle}>
