@@ -12,6 +12,8 @@
   import IconClose from '~icons/material-symbols/cancel-rounded';
   import IconDownload from '~icons/material-symbols/download-rounded';
   import IconHelp from '~icons/material-symbols/help-rounded';
+  import IconProgressActivity from '~icons/material-symbols/progress-activity';
+  import { tick } from 'svelte';
 
   type InstallPromptEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }> };
 
@@ -133,6 +135,7 @@
   let revealedHintWord = $state<string | null>(null);
   let idleHintTimer: number | null = null;
   let explainOpen = $state(false);
+  let loadingNextRound = $state(false);
 
   const labels = $derived({
     hint: m.hint({}, { locale: settings.interfaceLocale }),
@@ -257,9 +260,14 @@
     tutorialPractice = false;
     newRound(true);
   }
-  function continueRound() {
+  async function continueRound() {
+    if (loadingNextRound) return;
+    loadingNextRound = true;
+    // Let the button render its busy state before generating the next round.
+    await tick();
     if (tutorialPractice) completeTutorial();
     else newRound();
+    loadingNextRound = false;
   }
   function position(index: number, total: number, outward = 0) {
     const angle = (index / total) * Math.PI * 2 - Math.PI / 2;
@@ -424,7 +432,10 @@
         <strong class="text-success font-['DM_Serif_Display'] text-[1.05rem] font-normal tracking-[-.02em] leading-none">{labels.allDone}</strong>
         <small class="block text-base-content dark:text-base-content/74 font-['DM_Sans'] text-[.55rem] font-extrabold tracking-[.06em] leading-[1.2] uppercase">{labels.time} <b class="text-success font-['DM_Serif_Display'] text-[.88rem] tracking-normal">{formatDuration(completedDuration)}</b></small>
       </span>
-      <button class="min-h-[1.85rem] px-[.8rem] border border-success rounded-full bg-success text-[#fffdf7] font-['DM_Sans'] text-[.58rem] font-extrabold tracking-[.08em] uppercase [transition:transform_.16s_cubic-bezier(.23,1,.32,1),background_.16s_ease] active:scale-[.96]" onclick={continueRound}>{labels.continue}</button>
+      <button class="inline-flex items-center justify-center gap-[.35rem] min-h-[1.85rem] px-[.8rem] border border-success rounded-full bg-success text-[#fffdf7] font-['DM_Sans'] text-[.58rem] font-extrabold tracking-[.08em] uppercase [transition:transform_.16s_cubic-bezier(.23,1,.32,1),background_.16s_ease] active:scale-[.96] disabled:cursor-wait disabled:opacity-80" onclick={continueRound} disabled={loadingNextRound} aria-busy={loadingNextRound}>
+        {#if loadingNextRound}<IconProgressActivity class="w-[.85rem] h-[.85rem] animate-[startup-spin_1s_linear_infinite] motion-reduce:animate-none" aria-hidden="true" />{/if}
+        <span>{labels.continue}</span>
+      </button>
     </div>
   {:else}
     {#if idleHintReady}<button class="absolute z-[70] top-[.48rem] left-0 inline-flex items-center gap-[.3rem] min-h-[1.85rem] px-[.55rem] border border-[rgba(164,94,56,.58)] rounded-full bg-[#fffdf7] text-accent font-['DM_Sans'] text-[.56rem] font-extrabold tracking-[.07em] uppercase opacity-0 translate-y-1 animate-[hint-fade-in_.28s_cubic-bezier(.23,1,.32,1)_forwards] active:translate-y-1 active:scale-[.96]" onclick={showIdleHint}><IconHelp class="w-[.9rem] h-[.9rem]" aria-hidden="true" /><span>{labels.idleHint}</span></button>{/if}
