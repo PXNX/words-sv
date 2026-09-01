@@ -6,6 +6,8 @@
   import WordleKeyboard from './WordleKeyboard.svelte';
   import { m } from '$lib/paraglide/messages';
   import { settings } from '$lib/state/settings.svelte';
+  import IconProgressActivity from '~icons/material-symbols/progress-activity';
+  import { tick } from 'svelte';
 
   type Entry = { word: string; marks: WordleMark[] };
   type Labels = { title: string; subtitle: string; empty: string; input: string; win: string; invalid: string; again: string };
@@ -28,6 +30,7 @@
   let notice = $state('');
   let practiceActive = $state(practice);
   let practiceStep = $state(0);
+  let loadingNextRound = $state(false);
 
   const candidates = $derived(fiveLetterWords(words));
   const won = $derived(entries.some((entry) => entry.word === target));
@@ -46,6 +49,15 @@
     entries = [];
     notice = '';
     if (typeof localStorage !== 'undefined') localStorage.removeItem(WORDLE_STATE_KEY);
+  }
+
+  async function continueRound() {
+    if (loadingNextRound) return;
+    loadingNextRound = true;
+    // Yield once so the busy indicator is painted before the next round starts.
+    await tick();
+    start();
+    loadingNextRound = false;
   }
 
   function restoreOrStart() {
@@ -171,7 +183,10 @@
       <WordleGrid rows={6} {entries} currentGuess={guess} ariaLabel={labels.title} />
       {#if notice}<p class:text-accent={!won} class:text-success={won} class="min-h-[1rem] m-0 text-[.68rem] font-extrabold text-center">{notice}</p>{/if}
       {#if exhausted && !won}<p class="min-h-[1rem] m-0 text-accent text-[.68rem] font-extrabold text-center">{target}</p>{/if}
-      {#if won || exhausted}<button class="min-h-[2.45rem] px-[.9rem] border border-success bg-success text-[#fffdf7] text-[.64rem] font-extrabold tracking-[.08em] uppercase" onclick={start}>{labels.again}</button>{/if}
+      {#if won || exhausted}<button class="inline-flex items-center justify-center gap-[.4rem] min-h-[2.45rem] px-[.9rem] border border-success bg-success text-[#fffdf7] text-[.64rem] font-extrabold tracking-[.08em] uppercase disabled:cursor-wait disabled:opacity-80" onclick={continueRound} disabled={loadingNextRound} aria-busy={loadingNextRound}>
+        {#if loadingNextRound}<IconProgressActivity class="w-[1rem] h-[1rem] animate-[startup-spin_1s_linear_infinite] motion-reduce:animate-none" aria-hidden="true" />{/if}
+        <span>{labels.again}</span>
+      </button>{/if}
     </div>
 
     <WordleKeyboard {language} marks={keyboardMarks} disabled={won || exhausted} ariaLabel={labels.input} onPress={press} onRemove={removeLetter} />
