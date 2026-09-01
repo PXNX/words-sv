@@ -32,6 +32,7 @@
     modeGrammar: m.mode_grammar({}, { locale: settings.interfaceLocale }),
     modeHangman: 'Hangman',
     pronunciation: 'Aussprache',
+    alltag: 'Alltag',
     vocabularyGroup: 'Vokabeln',
     grammarGroup: 'Grammatik',
     grammarFill: 'Lücken füllen',
@@ -61,7 +62,7 @@
     const value = (event.currentTarget as HTMLSelectElement).value;
     if (interfaceLocales.some((locale) => locale.code === value)) settings.setInterfaceLocale(value as typeof settings.interfaceLocale);
   }
-  function selectMode(mode: 'circle' | 'wordle' | 'vocab' | 'grammar' | 'hangman' | 'pronunciation') {
+  function selectMode(mode: 'circle' | 'wordle' | 'vocab' | 'grammar' | 'hangman' | 'pronunciation' | 'alltag') {
     void goto(`/${mode}`);
   }
   function openTutorial(mode: 'circle' | 'wordle') {
@@ -112,6 +113,7 @@
       <article><span class="home-index">03</span><h2>{labels.modeLearning}</h2><p>{labels.homeVocab}</p><button type="button" onclick={() => selectMode('vocab')}>{labels.homePlay}</button></article>
       <article><span class="home-index">04</span><h2>{labels.modeHangman}</h2><p>Guess the hidden word one letter at a time.</p><button type="button" onclick={() => selectMode('hangman')}>{labels.homePlay}</button></article>
       <article><span class="home-index">05</span><h2>{labels.pronunciation}</h2><p>Listen to audio samples and practise speaking.</p><button type="button" onclick={() => selectMode('pronunciation')}>{labels.homePlay}</button></article>
+      <article><span class="home-index">06</span><h2>{labels.alltag}</h2><p>Präpositionen, Zahlen und Farben für den Alltag.</p><button type="button" onclick={() => selectMode('alltag')}>{labels.homePlay}</button></article>
     </div>
     <h2 class="home-group-heading">{labels.grammarGroup}</h2>
     <div class="home-games">
