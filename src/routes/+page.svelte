@@ -37,6 +37,7 @@
     grammarGroup: 'Grammatik',
     grammarFill: 'Lücken füllen',
     grammarDetermine: 'Bestimmung',
+    grammarOrder: 'Satzbau',
     tutorial: m.tutorial({}, { locale: settings.interfaceLocale }),
     onboardingIntro: m.onboarding_intro({}, { locale: settings.interfaceLocale }),
     onboardingTitle: m.onboarding_title({}, { locale: settings.interfaceLocale }),
@@ -68,7 +69,7 @@
   function openTutorial(mode: 'circle' | 'wordle') {
     void goto(`/${mode}/tutorial`);
   }
-  function openGrammar(mode: 'fill' | 'determine') {
+  function openGrammar(mode: 'fill' | 'determine' | 'order') {
     void goto(`/grammar?mode=${mode}`);
   }
 
@@ -119,6 +120,7 @@
     <div class="home-games">
       <article><span class="home-index">01</span><h2>{labels.grammarFill}</h2><p>{labels.homeGrammar}</p><button type="button" onclick={() => openGrammar('fill')}>{labels.homePlay}</button></article>
       <article><span class="home-index">02</span><h2>{labels.grammarDetermine}</h2><p>Kasus, Genus, Numerus, Person und Tempus bestimmen.</p><button type="button" onclick={() => openGrammar('determine')}>{labels.homePlay}</button></article>
+      <article><span class="home-index">03</span><h2>{labels.grammarOrder}</h2><p>Ordne Wörter und bilde einen korrekten Satz.</p><button type="button" onclick={() => openGrammar('order')}>{labels.homePlay}</button></article>
     </div>
     <button class="home-settings-link" onclick={() => void goto('/settings')}><IconSettings aria-hidden="true" /><span>{labels.settings}</span></button>
   {/if}
