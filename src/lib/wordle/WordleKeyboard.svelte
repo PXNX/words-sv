@@ -28,6 +28,7 @@
     <div class="flex justify-center gap-[clamp(.15rem,.8cqw,.3rem)]">
       {#each row.split('') as letter}
         {@const expected = guided && expectedLetter === letter}
+        {@const usedWithoutMatch = Boolean(marks[letter]) && marks[letter] !== 'correct' && marks[letter] !== 'present'}
         <button
           type="button"
           onclick={() => onPress(letter)}
@@ -39,8 +40,8 @@
           class:border-[#d39723]={marks[letter] === 'present' && !expected}
           class:bg-primary={marks[letter] === 'present'}
           class:text-primary-content={marks[letter] === 'present'}
-          class:border-[#69727a]={marks[letter] === 'absent' && !expected}
-          class:bg-[#69727a]={marks[letter] === 'absent'}
+          class:border-[#69727a]={usedWithoutMatch && !expected}
+          class:bg-[#69727a]={usedWithoutMatch}
           class:border-[#e6a527]={expected}
           class:shadow-[inset_0_0_0_1px_#e6a527]={expected}
           class:opacity-[.42]={guided && !expected}
@@ -51,6 +52,7 @@
   <div class="flex justify-center gap-[clamp(.15rem,.8cqw,.3rem)]">
     {#each layout.extras as letter}
       {@const expected = guided && expectedLetter === letter}
+      {@const usedWithoutMatch = Boolean(marks[letter]) && marks[letter] !== 'correct' && marks[letter] !== 'present'}
       <button
         type="button"
         onclick={() => onPress(letter)}
@@ -62,8 +64,8 @@
         class:border-[#d39723]={marks[letter] === 'present' && !expected}
         class:bg-primary={marks[letter] === 'present'}
         class:text-primary-content={marks[letter] === 'present'}
-        class:border-[#69727a]={marks[letter] === 'absent' && !expected}
-        class:bg-[#69727a]={marks[letter] === 'absent'}
+        class:border-[#69727a]={usedWithoutMatch && !expected}
+        class:bg-[#69727a]={usedWithoutMatch}
         class:border-[#e6a527]={expected}
         class:shadow-[inset_0_0_0_1px_#e6a527]={expected}
         class:opacity-[.42]={guided && !expected}
