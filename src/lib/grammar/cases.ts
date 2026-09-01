@@ -60,7 +60,7 @@ const templatesByCase: Record<GrammarCase, NounTemplate[]> = {
   ]
 };
 
-export type GrammarPrompt = { before: string; after: string; correct: string; choices: string[] };
+export type GrammarPrompt = { before: string; after: string; correct: string; choices: string[]; question?: string };
 
 export function pickCase(random: () => number): GrammarCase {
   return GRAMMAR_CASES[Math.floor(random() * GRAMMAR_CASES.length)];
@@ -87,4 +87,19 @@ export function buildNounCasePrompt(noun: string, gender: VocabularyGender, rand
   const templates = templatesByCase[grammarCase];
   const { before, after } = templates[Math.floor(random() * templates.length)](noun);
   return { before, after, correct, choices: shuffle(choices, random) };
+}
+
+/** Ask for several properties at once instead of filling a sentence gap. */
+export function buildNounPropertyPrompt(noun: string, gender: VocabularyGender, random: () => number, shuffle: <T>(values: T[], random: () => number) => T[]): GrammarPrompt {
+  const grammarCase = pickCase(random);
+  const labels: Record<GrammarCase, string> = { nominative: 'Nominativ', accusative: 'Akkusativ', dative: 'Dativ' };
+  const genders: Record<VocabularyGender, string> = { masculine: 'Maskulinum', feminine: 'Femininum', neuter: 'Neutrum' };
+  const correct = `${labels[grammarCase]} · ${genders[gender]} · Singular`;
+  const choices = shuffle([
+    correct,
+    `${labels[grammarCase === 'nominative' ? 'accusative' : 'nominative']} · ${genders[gender]} · Singular`,
+    `${labels[grammarCase]} · ${genders[gender === 'masculine' ? 'feminine' : 'masculine']} · Singular`,
+    `${labels[grammarCase]} · ${genders[gender]} · Plural`
+  ], random);
+  return { before: '', after: noun, correct, choices, question: 'Bestimme Kasus, Genus und Numerus.' };
 }

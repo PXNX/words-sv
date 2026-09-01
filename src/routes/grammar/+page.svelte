@@ -6,9 +6,9 @@
   import { m } from '$lib/paraglide/messages';
   import { prioritizeLearningWords, updateReviewProgress } from '$lib/vocab/spacedRepetition';
   import { articleChoiceOptions, gapSentenceSuffixes, grammarArticles, pickRandomSection, shuffled, GRAMMAR_REVIEW_STORAGE_PREFIX } from '$lib/grammar/learning';
-  import { buildNounCasePrompt, type GrammarPrompt } from '$lib/grammar/cases';
+  import { buildNounCasePrompt, buildNounPropertyPrompt, type GrammarPrompt } from '$lib/grammar/cases';
   import { buildAdjectivePrompt, isEligibleAdjective } from '$lib/grammar/adjectives';
-  import { buildVerbPrompt, verbConjugations } from '$lib/grammar/verbs';
+  import { buildVerbPrompt, buildVerbPropertyPrompt, verbConjugations } from '$lib/grammar/verbs';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
 
@@ -93,7 +93,9 @@
     if (kind === 'noun') {
       const gender = metadata[word]?.gender;
       if (!gender) return null;
-      return buildNounCasePrompt(metadata[word]?.spelling ?? word, gender, random, shuffled);
+      return random() < 0.5
+        ? buildNounCasePrompt(metadata[word]?.spelling ?? word, gender, random, shuffled)
+        : buildNounPropertyPrompt(metadata[word]?.spelling ?? word, gender, random, shuffled);
     }
     if (kind === 'adj') {
       if (nounPool.length === 0) return null;
@@ -104,7 +106,7 @@
       const nounSpelling = metadata[pairedNoun]?.spelling ?? pairedNoun;
       return buildAdjectivePrompt(adjectiveSpelling, nounSpelling, gender, random, shuffled);
     }
-    if (kind === 'verb') return buildVerbPrompt(word, random, shuffled);
+    if (kind === 'verb') return random() < 0.5 ? buildVerbPrompt(word, random, shuffled) : buildVerbPropertyPrompt(word, random, shuffled);
     return null;
   }
   function resetPrompt() {
@@ -166,7 +168,8 @@
     <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{labels.unavailable}</div>
   {:else}
     <article class="w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] border border-neutral border-t-[4px] border-t-double border-t-neutral shadow-[8px_8px_0_rgba(164,94,56,.16)] text-center bg-neutral-content">
-      <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.55rem,7vw,2.6rem)] font-normal tracking-[.04em] leading-[1.3]" lang={settings.lang}>{prompt.before}<span class="inline-block border-b-4 border-dotted border-accent text-accent px-[.3rem]">___</span> {prompt.after}</p>
+            {#if prompt.question}<p class="m-0 text-accent text-[.62rem] font-black tracking-[.08em] uppercase">{prompt.question}</p>{/if}
+            <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.55rem,7vw,2.6rem)] font-normal tracking-[.04em] leading-[1.3]" lang={settings.lang}>{#if prompt.before}{prompt.before}{/if}{#if prompt.question}{prompt.after}{:else}<span class="inline-block border-b-4 border-dotted border-accent text-accent px-[.3rem]">___</span> {prompt.after}{/if}</p>
     </article>
     {#if prompt.choices.length >= 2}
       <section class="w-[min(100%,28rem)] grid gap-[.55rem]" aria-label={labels.chooseArticle}>
