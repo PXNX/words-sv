@@ -60,7 +60,7 @@ const templatesByCase: Record<GrammarCase, NounTemplate[]> = {
   ]
 };
 
-export type GrammarPrompt = { before: string; after: string; correct: string; choices: string[]; question?: string };
+export type GrammarPrompt = { before: string; after: string; correct: string; choices: string[]; question?: string; highlight?: string };
 
 export function pickCase(random: () => number): GrammarCase {
   return GRAMMAR_CASES[Math.floor(random() * GRAMMAR_CASES.length)];
@@ -92,6 +92,10 @@ export function buildNounCasePrompt(noun: string, gender: VocabularyGender, rand
 /** Ask for several properties at once instead of filling a sentence gap. */
 export function buildNounPropertyPrompt(noun: string, gender: VocabularyGender, random: () => number, shuffle: <T>(values: T[], random: () => number) => T[]): GrammarPrompt {
   const grammarCase = pickCase(random);
+  const article = definiteArticlesByCase[grammarCase][gender];
+  const templates = templatesByCase[grammarCase];
+  const sentence = templates[Math.floor(random() * templates.length)](noun);
+  const before = sentence.before.length === 0 ? `${capitalize(article)} ` : `${sentence.before}${article} `;
   const labels: Record<GrammarCase, string> = { nominative: 'Nominativ', accusative: 'Akkusativ', dative: 'Dativ' };
   const genders: Record<VocabularyGender, string> = { masculine: 'Maskulinum', feminine: 'Femininum', neuter: 'Neutrum' };
   const correct = `${labels[grammarCase]} · ${genders[gender]} · Singular`;
@@ -101,5 +105,7 @@ export function buildNounPropertyPrompt(noun: string, gender: VocabularyGender, 
     `${labels[grammarCase]} · ${genders[gender === 'masculine' ? 'feminine' : 'masculine']} · Singular`,
     `${labels[grammarCase]} · ${genders[gender]} · Plural`
   ], random);
-  return { before: '', after: noun, correct, choices, question: 'Bestimme Kasus, Genus und Numerus.' };
+  return random() < 0.5
+    ? { before: `${capitalize(article)} `, after: noun, correct, choices, question: 'Bestimme Kasus, Genus und Numerus.', highlight: noun }
+    : { before, after: sentence.after, correct, choices, question: 'Bestimme Kasus, Genus und Numerus.', highlight: noun };
 }
