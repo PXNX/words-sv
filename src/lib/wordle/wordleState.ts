@@ -5,7 +5,7 @@ export const WORDLE_STATE_KEY = 'wordcircle-wordle-state-v1';
 const STATE_VERSION = 1;
 
 export type WordleEntry = { word: string; marks: WordleMark[] };
-export type WordleContext = { language: string; level: string; candidates: string[] };
+export type WordleContext = { language: string; level: string; wordLength?: number; candidates: string[] };
 export type WordleSnapshot = { target: string; entries: WordleEntry[]; guess: string };
 
 function sameMarks(actual: unknown, expected: WordleMark[]): boolean {
@@ -17,7 +17,7 @@ function sameMarks(actual: unknown, expected: WordleMark[]): boolean {
  * games deliberately do not restore: the next load starts a fresh Wordle.
  */
 export function readWordleState(serialized: string | null | undefined, context: WordleContext): WordleSnapshot | null {
-  const { language, level, candidates } = context;
+  const { language, level, wordLength = 5, candidates } = context;
   if (typeof serialized !== 'string' || !serialized) return null;
 
   try {
@@ -25,13 +25,13 @@ export function readWordleState(serialized: string | null | undefined, context: 
     if (!state || state.version !== STATE_VERSION || state.language !== language || state.level !== level) return null;
     if (typeof state.target !== 'string' || !candidates.includes(state.target)) return null;
     if (!Array.isArray(state.entries) || state.entries.length >= 6) return null;
-    if (typeof state.guess !== 'string' || state.guess !== normalizePlayableWord(state.guess) || Array.from(state.guess).length > 4) return null;
+    if (typeof state.guess !== 'string' || state.guess !== normalizePlayableWord(state.guess) || Array.from(state.guess).length >= wordLength) return null;
 
     const used = new Set<string>();
     for (const entry of state.entries) {
       if (!entry || typeof entry.word !== 'string' || !Array.isArray(entry.marks)) return null;
       if (!candidates.includes(entry.word) || entry.word === state.target || used.has(entry.word)) return null;
-      if (!sameMarks(entry.marks, evaluateWordleGuess(state.target, entry.word))) return null;
+      if (Array.from(entry.word).length !== wordLength || !sameMarks(entry.marks, evaluateWordleGuess(state.target, entry.word))) return null;
       used.add(entry.word);
     }
 

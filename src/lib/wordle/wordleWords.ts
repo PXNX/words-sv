@@ -9,21 +9,21 @@ export function isLetterWord(word: string, minimum: number, maximum: number = mi
 	return length >= minimum && length <= maximum && /^\p{L}+$/u.test(word);
 }
 
-export function fiveLetterWords(words: string[]): string[] {
-	return [...new Set(words.map(normalizePlayableWord).filter((word) => isLetterWord(word, 5)))];
+export function fiveLetterWords(words: string[], length = 5): string[] {
+	return [...new Set(words.map(normalizePlayableWord).filter((word) => isLetterWord(word, length)))];
 }
 
-export function isValidWordleGuess(candidates: string[], value: string): boolean {
+export function isValidWordleGuess(candidates: string[], value: string, length = 5): boolean {
 	const normalized = normalizePlayableWord(value);
-	return isLetterWord(normalized, 5) && candidates.includes(normalized);
+	return isLetterWord(normalized, length) && candidates.includes(normalized);
 }
 
 export function evaluateWordleGuess(answer: string, guess: string): WordleMark[] {
   const normalizedAnswer = normalizePlayableWord(answer);
   const normalizedGuess = normalizePlayableWord(guess);
-  if (normalizedAnswer.length !== 5 || normalizedGuess.length !== 5) throw new Error('Wordle words must contain five letters.');
+	if ([...normalizedAnswer].length !== [...normalizedGuess].length || ![3, 4, 5, 6, 7].includes([...normalizedAnswer].length)) throw new Error('Wordle words must contain three to seven letters.');
 
-  const marks: WordleMark[] = Array(5).fill('absent');
+	const marks: WordleMark[] = Array([...normalizedAnswer].length).fill('absent');
   const remaining = [...normalizedAnswer];
 
   [...normalizedGuess].forEach((letter, index) => {
