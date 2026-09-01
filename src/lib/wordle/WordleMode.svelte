@@ -6,6 +6,9 @@
   import WordleKeyboard from './WordleKeyboard.svelte';
   import { m } from '$lib/paraglide/messages';
   import { settings } from '$lib/state/settings.svelte';
+  import { wordDefinitions, wordMetadata } from '$lib/data/vocabulary';
+  import { wiktionaryUrl } from '$lib/wiktionary';
+  import IconHelp from '~icons/material-symbols/help-rounded';
   import IconProgressActivity from '~icons/material-symbols/progress-activity';
   import { tick } from 'svelte';
 
@@ -31,10 +34,12 @@
   let practiceActive = $state(practice);
   let practiceStep = $state(0);
   let loadingNextRound = $state(false);
+  let explanationWord = $state<string | null>(null);
 
   const candidates = $derived(fiveLetterWords(words, wordLength));
   const won = $derived(entries.some((entry) => entry.word === target));
-  const exhausted = $derived(entries.length >= 6 && !won);
+  const maxAttempts = $derived(wordLength + 1);
+  const exhausted = $derived(entries.length >= maxAttempts && !won);
   const keyboardMarks = $derived(keyboardMarksFrom(entries));
   const tutorialRound = $derived(isTutorialLanguage(language) ? tutorialRounds[language] : null);
   const practiceExpectedWord = $derived(tutorialRound ? (practiceStep === 0 ? tutorialRound.warmup : tutorialRound.target) : '');
@@ -42,12 +47,16 @@
   const practicePromptLabel = $derived(m.wordle_tutorial_prompt({}, { locale: settings.interfaceLocale }));
   const practiceCompleteLabel = $derived(m.wordle_tutorial_complete({}, { locale: settings.interfaceLocale }));
   const practiceContinueLabel = $derived(m.tutorial_start({}, { locale: settings.interfaceLocale }));
+  const explanationDefinition = $derived(explanationWord ? wordDefinitions[language as keyof typeof wordDefinitions]?.[explanationWord] ?? null : null);
+  const explanationSpelling = $derived(explanationWord ? wordMetadata[language as keyof typeof wordMetadata]?.[explanationWord]?.spelling ?? explanationWord : '');
+  const explanationHref = $derived(explanationWord ? wiktionaryUrl(language as keyof typeof wordDefinitions, explanationSpelling) : '#');
 
   function start() {
     target = candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : '';
     guess = '';
     entries = [];
     notice = '';
+    explanationWord = null;
     if (typeof localStorage !== 'undefined') localStorage.removeItem(WORDLE_STATE_KEY);
   }
 
@@ -181,7 +190,8 @@
     <div class="p-[1.25rem] border border-accent/42 bg-accent/8 text-accent text-[.75rem] font-extrabold text-center">{labels.empty}</div>
   {:else}
     <div class="grid content-center justify-items-center gap-[.65rem]">
-      <WordleGrid rows={6} {wordLength} {entries} currentGuess={guess} ariaLabel={labels.title} />
+      <WordleGrid rows={maxAttempts} {wordLength} {entries} currentGuess={guess} ariaLabel={labels.title} onExplain={(word) => (explanationWord = explanationWord === word ? null : word)} />
+      {#if explanationWord}<div class="flex items-start gap-[.45rem] max-w-[min(100%,28rem)] p-[.55rem_.7rem] border border-accent/35 bg-[#fff7dd] text-accent text-[.65rem] font-bold leading-[1.35] dark:bg-[#2b3d57]"><IconHelp class="w-[.9rem] h-[.9rem] flex-none mt-[.05rem]" aria-hidden="true" /><span>{explanationDefinition ?? 'No definition is available for this word yet.'}<a class="ml-1 font-extrabold underline underline-offset-2" href={explanationHref} target="_blank" rel="noreferrer">Wiktionary</a></span></div>{/if}
       {#if notice}<p class:text-accent={!won} class:text-success={won} class="min-h-[1rem] m-0 text-[.68rem] font-extrabold text-center">{notice}</p>{/if}
       {#if exhausted && !won}<p class="min-h-[1rem] m-0 text-accent text-[.68rem] font-extrabold text-center">{target}</p>{/if}
       {#if won || exhausted}<button class="inline-flex items-center justify-center gap-[.4rem] min-h-[2.45rem] px-[.9rem] border border-success bg-success text-[#fffdf7] text-[.64rem] font-extrabold tracking-[.08em] uppercase disabled:cursor-wait disabled:opacity-80" onclick={continueRound} disabled={loadingNextRound} aria-busy={loadingNextRound}>
