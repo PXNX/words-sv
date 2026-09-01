@@ -24,7 +24,7 @@ export function readWordleState(serialized: string | null | undefined, context: 
     const state = JSON.parse(serialized) as Partial<WordleSnapshot & { version: number; language: string; level: string }>;
     if (!state || state.version !== STATE_VERSION || state.language !== language || state.level !== level) return null;
     if (typeof state.target !== 'string' || !candidates.includes(state.target)) return null;
-    if (!Array.isArray(state.entries) || state.entries.length >= 6) return null;
+    if (!Array.isArray(state.entries) || state.entries.length >= wordLength + 1) return null;
     if (typeof state.guess !== 'string' || state.guess !== normalizePlayableWord(state.guess) || Array.from(state.guess).length >= wordLength) return null;
 
     const used = new Set<string>();
