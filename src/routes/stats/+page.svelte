@@ -111,9 +111,14 @@
           {#if language.progress.levelBreakdown.length > 0}
             <div class="mt-[.45rem]">
               <p class="m-0 text-accent text-[.54rem] font-extrabold tracking-[.08em] uppercase">{labels.byLevel}</p>
-              <ul class="m-0 mt-[.25rem] pl-0 grid gap-[.15rem] list-none">
+              <ul class="m-0 mt-[.3rem] pl-0 grid gap-[.45rem] list-none">
                 {#each language.progress.levelBreakdown as level (level.level)}
-                  <li class="flex items-center justify-between gap-4 text-base-content text-[.64rem] font-bold"><span>{level.level.toUpperCase()}</span><span class="text-base-content/60">{level.percentage}% ({level.masteredWords}/{level.totalWords})</span></li>
+                  <li class="grid gap-[.2rem]">
+                    <div class="flex items-center justify-between gap-4 text-base-content text-[.64rem] font-bold"><span>{level.level.toUpperCase()}</span><span class="text-base-content/60">{level.percentage}% ({level.masteredWords}/{level.totalWords})</span></div>
+                    <div class="h-[.4rem] w-full rounded-full bg-base-content/10 overflow-hidden" role="progressbar" aria-valuenow={level.percentage} aria-valuemin="0" aria-valuemax="100" aria-label={`${level.level.toUpperCase()}: ${level.percentage}%`}>
+                      <div class="h-full rounded-full bg-success transition-[width] duration-500" style={`width:${level.percentage}%`}></div>
+                    </div>
+                  </li>
                 {/each}
               </ul>
             </div>

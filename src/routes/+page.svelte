@@ -9,6 +9,16 @@
   import IconHelp from '~icons/material-symbols/help-rounded';
   import IconFlame from '~icons/material-symbols/local-fire-department-rounded';
   import IconChevronRight from '~icons/material-symbols/chevron-right-rounded';
+  import IconCrossword from '~icons/material-symbols/crossword-rounded';
+  import IconSpellcheck from '~icons/material-symbols/spellcheck-rounded';
+  import IconQuiz from '~icons/material-symbols/quiz-rounded';
+  import IconHangman from '~icons/material-symbols/extension-rounded';
+  import IconMic from '~icons/material-symbols/mic-rounded';
+  import IconEmoji from '~icons/material-symbols/sentiment-satisfied-rounded';
+  import IconEditNote from '~icons/material-symbols/edit-note-rounded';
+  import IconFactCheck from '~icons/material-symbols/fact-check-rounded';
+  import IconSort from '~icons/material-symbols/sort-rounded';
+  import IconSwapHoriz from '~icons/material-symbols/swap-horiz-rounded';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
 
@@ -28,16 +38,17 @@
     homePlay: m.home_play({}, { locale: settings.interfaceLocale }),
     modeCrossword: m.mode_crossword({}, { locale: settings.interfaceLocale }),
     modeWordle: m.mode_wordle({}, { locale: settings.interfaceLocale }),
-    modeLearning: m.mode_learning({}, { locale: settings.interfaceLocale }),
     modeGrammar: m.mode_grammar({}, { locale: settings.interfaceLocale }),
     modeHangman: 'Hangman',
     pronunciation: 'Aussprache',
-    alltag: 'Alltag',
+    alltag: 'Emoji',
+    wordQuiz: 'Word Quiz',
     vocabularyGroup: 'Vokabeln',
     grammarGroup: 'Grammatik',
     grammarFill: 'Lücken füllen',
     grammarDetermine: 'Bestimmung',
     grammarOrder: 'Satzbau',
+    grammarFalseFriends: 'Falsche Freunde',
     tutorial: m.tutorial({}, { locale: settings.interfaceLocale }),
     onboardingIntro: m.onboarding_intro({}, { locale: settings.interfaceLocale }),
     onboardingTitle: m.onboarding_title({}, { locale: settings.interfaceLocale }),
@@ -69,7 +80,7 @@
   function openTutorial(mode: 'circle' | 'wordle') {
     void goto(`/${mode}/tutorial`);
   }
-  function openGrammar(mode: 'fill' | 'determine' | 'order') {
+  function openGrammar(mode: 'fill' | 'determine' | 'order' | 'falsefriends') {
     void goto(`/grammar?mode=${mode}`);
   }
 
@@ -109,18 +120,19 @@
     </button>
     <h2 class="home-group-heading">{labels.vocabularyGroup}</h2>
     <div class="home-games">
-      <article><span class="home-index">01</span><div class="home-title-row"><h2>{labels.modeCrossword}</h2><button type="button" class="home-tutorial-link" onclick={() => openTutorial('circle')} aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></button></div><p>{labels.homeCircle}</p><button type="button" onclick={() => selectMode('circle')}>{labels.homePlay}</button></article>
-      <article><span class="home-index">02</span><div class="home-title-row"><h2>{labels.modeWordle}</h2><button type="button" class="home-tutorial-link" onclick={() => openTutorial('wordle')} aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></button></div><p>{labels.homeWordle}</p><button type="button" onclick={() => selectMode('wordle')}>{labels.homePlay}</button></article>
-      <article><span class="home-index">03</span><h2>{labels.modeLearning}</h2><p>{labels.homeVocab}</p><button type="button" onclick={() => selectMode('vocab')}>{labels.homePlay}</button></article>
-      <article><span class="home-index">04</span><h2>{labels.modeHangman}</h2><p>Guess the hidden word one letter at a time.</p><button type="button" onclick={() => selectMode('hangman')}>{labels.homePlay}</button></article>
-      <article><span class="home-index">05</span><h2>{labels.pronunciation}</h2><p>Listen to audio samples and practise speaking.</p><button type="button" onclick={() => selectMode('pronunciation')}>{labels.homePlay}</button></article>
-      <article><span class="home-index">06</span><h2>{labels.alltag}</h2><p>Präpositionen, Zahlen und Farben für den Alltag.</p><button type="button" onclick={() => selectMode('alltag')}>{labels.homePlay}</button></article>
+      <article><span class="home-icon" aria-hidden="true"><IconCrossword /></span><div class="home-title-row"><h2>{labels.modeCrossword}</h2><button type="button" class="home-tutorial-link" onclick={() => openTutorial('circle')} aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></button></div><p>{labels.homeCircle}</p><button type="button" onclick={() => selectMode('circle')}>{labels.homePlay}</button></article>
+      <article><span class="home-icon" aria-hidden="true"><IconSpellcheck /></span><div class="home-title-row"><h2>{labels.modeWordle}</h2><button type="button" class="home-tutorial-link" onclick={() => openTutorial('wordle')} aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></button></div><p>{labels.homeWordle}</p><button type="button" onclick={() => selectMode('wordle')}>{labels.homePlay}</button></article>
+      <article><span class="home-icon" aria-hidden="true"><IconQuiz /></span><h2>{labels.wordQuiz}</h2><p>{labels.homeVocab}</p><button type="button" onclick={() => selectMode('vocab')}>{labels.homePlay}</button></article>
+      <article><span class="home-icon" aria-hidden="true"><IconHangman /></span><h2>{labels.modeHangman}</h2><p>Guess the hidden word one letter at a time.</p><button type="button" onclick={() => selectMode('hangman')}>{labels.homePlay}</button></article>
+      <article><span class="home-icon" aria-hidden="true"><IconMic /></span><h2>{labels.pronunciation}</h2><p>Listen to audio samples and practise speaking.</p><button type="button" onclick={() => selectMode('pronunciation')}>{labels.homePlay}</button></article>
+      <article><span class="home-icon" aria-hidden="true"><IconEmoji /></span><h2>{labels.alltag}</h2><p>Präpositionen, Zahlen und Farben für den Alltag.</p><button type="button" onclick={() => selectMode('alltag')}>{labels.homePlay}</button></article>
     </div>
     <h2 class="home-group-heading">{labels.grammarGroup}</h2>
     <div class="home-games">
-      <article><span class="home-index">01</span><h2>{labels.grammarFill}</h2><p>{labels.homeGrammar}</p><button type="button" onclick={() => openGrammar('fill')}>{labels.homePlay}</button></article>
-      <article><span class="home-index">02</span><h2>{labels.grammarDetermine}</h2><p>Kasus, Genus, Numerus, Person und Tempus bestimmen.</p><button type="button" onclick={() => openGrammar('determine')}>{labels.homePlay}</button></article>
-      <article><span class="home-index">03</span><h2>{labels.grammarOrder}</h2><p>Ordne Wörter und bilde einen korrekten Satz.</p><button type="button" onclick={() => openGrammar('order')}>{labels.homePlay}</button></article>
+      <article><span class="home-icon" aria-hidden="true"><IconEditNote /></span><h2>{labels.grammarFill}</h2><p>{labels.homeGrammar}</p><button type="button" onclick={() => openGrammar('fill')}>{labels.homePlay}</button></article>
+      <article><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>{labels.grammarDetermine}</h2><p>Kasus, Genus, Numerus, Person und Tempus bestimmen.</p><button type="button" onclick={() => openGrammar('determine')}>{labels.homePlay}</button></article>
+      <article><span class="home-icon" aria-hidden="true"><IconSort /></span><h2>{labels.grammarOrder}</h2><p>Ordne Wörter und bilde einen korrekten Satz.</p><button type="button" onclick={() => openGrammar('order')}>{labels.homePlay}</button></article>
+      <article><span class="home-icon" aria-hidden="true"><IconSwapHoriz /></span><h2>{labels.grammarFalseFriends}</h2><p>Wörter, die täuschend ähnlich aussehen, aber etwas anderes bedeuten.</p><button type="button" onclick={() => openGrammar('falsefriends')}>{labels.homePlay}</button></article>
     </div>
     <button class="home-settings-link" onclick={() => void goto('/settings')}><IconSettings aria-hidden="true" /><span>{labels.settings}</span></button>
   {/if}
@@ -136,7 +148,8 @@
   .home-streak-detail { display:grid;gap:.15rem;justify-items:start; }.home-streak-detail b { color:#172a45;font-family:'DM Sans',sans-serif;font-size:.63rem;font-weight:800;line-height:1.3; }.home-streak-detail small { color:#596477;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:800; }
   .home-streak :global(.home-streak-arrow) { width:1.2rem;height:1.2rem;flex:none;color:rgba(23,42,69,.4); }
   .home-streak.qualified { border-left-color:#34824d; }.home-streak.qualified .home-streak-flame { border-color:rgba(52,130,77,.5);background:rgba(52,130,77,.14);color:#34824d; }.home-streak.qualified .home-streak-count strong,.home-streak.qualified .home-streak-detail b { color:#34824d; }
-  .home-games { display:grid;gap:.65rem; }.home-games article { position:relative;display:grid;grid-template-columns:2.25rem 1fr auto;gap:.6rem;align-items:center;padding:.8rem .75rem;border:1px solid rgba(23,42,69,.34);border-left:4px double #172a45;background:#fffdf7;box-shadow:4px 4px 0 rgba(230,165,39,.15); }.home-games article:nth-child(2) { border-left-color:#e6a527; }.home-games article:nth-child(3) { border-left-color:#34824d; }.home-index { align-self:start;color:#a45e38;font-family:'DM Serif Display',serif;font-size:1.15rem;line-height:1; }.home-title-row { grid-column:2;display:flex;align-items:center;gap:.4rem; }.home-games h2 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:1.08rem;font-weight:400;line-height:1; }.home-games p { grid-column:2;margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700;line-height:1.35; }.home-games button:not(.home-tutorial-link) { grid-column:3;grid-row:1 / span 2;min-height:2.15rem;padding:0 .62rem;border:1px solid #172a45;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }.home-games button:active,.home-language-choice button:active { transform:scale(.97); }.home-tutorial-link { display:grid;place-items:center;width:1.35rem;height:1.35rem;flex:none;padding:0;border:1px solid rgba(23,42,69,.3);border-radius:50%;background:transparent;color:#a45e38; }.home-tutorial-link :global(svg) { width:.78rem;height:.78rem; }.home-tutorial-link:active { transform:scale(.94); }
+  .home-games { display:grid;gap:.65rem; }.home-games article { position:relative;display:grid;grid-template-columns:2.5rem 1fr auto;gap:.6rem;align-items:center;padding:.8rem .75rem;border:1px solid rgba(23,42,69,.34);border-left:4px double #172a45;background:#fffdf7;box-shadow:4px 4px 0 rgba(230,165,39,.15); }.home-games article:nth-child(2) { border-left-color:#e6a527; }.home-games article:nth-child(3) { border-left-color:#34824d; }.home-icon { align-self:start;display:grid;place-items:center;width:2.1rem;height:2.1rem;border:1px solid rgba(23,42,69,.24);border-radius:50%;background:rgba(230,165,39,.14);color:#a45e38; }.home-icon :global(svg) { width:1.05rem;height:1.05rem; }.home-title-row { grid-column:2;display:flex;align-items:center;gap:.4rem; }.home-games h2 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:1.08rem;font-weight:400;line-height:1; }.home-games p { grid-column:2;margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700;line-height:1.35; }.home-games button:not(.home-tutorial-link) { grid-column:3;grid-row:1 / span 2;min-height:2.15rem;padding:0 .62rem;border:1px solid #172a45;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }.home-games button:active,.home-language-choice button:active { transform:scale(.97); }.home-tutorial-link { display:grid;place-items:center;width:1.35rem;height:1.35rem;flex:none;padding:0;border:1px solid rgba(23,42,69,.3);border-radius:50%;background:transparent;color:#a45e38; }.home-tutorial-link :global(svg) { width:.78rem;height:.78rem; }.home-tutorial-link:active { transform:scale(.94); }
+  @media (min-width:640px) { .home-games { grid-template-columns:repeat(2,minmax(0,1fr)); } }
   .home-onboarding { width:min(100%,27rem);display:grid;justify-self:center;gap:.9rem;padding:clamp(1.15rem,6vw,1.8rem);border:1px solid rgba(23,42,69,.32);border-top:4px double #172a45;background:#fffdf7;box-shadow:8px 8px 0 rgba(230,165,39,.18);text-align:center; }.home-language-choice { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem;margin-top:.45rem; }.home-language-choice button { min-width:0;min-height:2.7rem;border:1px solid #172a45;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:900;letter-spacing:.04em; }.home-language-choice button+button { background:#fffdf7;color:#172a45; }
   .home-onboarding-field { display:grid;gap:.3rem;text-align:left; }.home-onboarding-field>span { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }.home-onboarding-field select { min-height:2.4rem;padding:0 .6rem;border:1px solid rgba(23,42,69,.28);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:800; }
   :global(html.dark) .home-header h1,:global(html.dark) .home-onboarding h1,:global(html.dark) .home-games h2 { color:#fffdf7 !important;text-shadow:none; }
@@ -144,6 +157,7 @@
   :global(html.dark) .home-games article,:global(html.dark) .home-onboarding { border-color:rgba(255,253,247,.42);background:#213a5d; }
   :global(html.dark) .home-games button:not(.home-tutorial-link) { border-color:#e6a527;background:#e6a527;color:#172a45; }
   :global(html.dark) .home-tutorial-link { border-color:rgba(255,253,247,.4);color:#e6a527; }
+  :global(html.dark) .home-icon { border-color:rgba(255,253,247,.34);background:rgba(255,253,247,.12);color:#e6a527; }
   :global(html.dark) .home-language-choice button+button { border-color:#fffdf7;background:#213a5d;color:#fffdf7; }
   :global(html.dark) .home-onboarding-field select { border-color:rgba(255,253,247,.4);background:#213a5d;color:#fffdf7; }
   :global(html.dark) .home-settings-link { border-color:rgba(255,253,247,.32);color:rgba(255,253,247,.78); }
