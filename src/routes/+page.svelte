@@ -126,20 +126,20 @@
       <article><span class="home-icon" aria-hidden="true"><IconHangman /></span><h2>{labels.modeHangman}</h2><p>Guess the hidden word one letter at a time.</p><button type="button" onclick={() => selectMode('hangman')}>{labels.homePlay}</button></article>
       <article><span class="home-icon" aria-hidden="true"><IconMic /></span><h2>{labels.pronunciation}</h2><p>Listen to audio samples and practise speaking.</p><button type="button" onclick={() => selectMode('pronunciation')}>{labels.homePlay}</button></article>
       <article><span class="home-icon" aria-hidden="true"><IconEmoji /></span><h2>{labels.alltag}</h2><p>Präpositionen, Zahlen und Farben für den Alltag.</p><button type="button" onclick={() => selectMode('alltag')}>{labels.homePlay}</button></article>
+      <article><span class="home-icon" aria-hidden="true"><IconSwapHoriz /></span><h2>{labels.grammarFalseFriends}</h2><p>Wörter, die täuschend ähnlich aussehen, aber etwas anderes bedeuten.</p><button type="button" onclick={() => openGrammar('falsefriends')}>{labels.homePlay}</button></article>
     </div>
     <h2 class="home-group-heading">{labels.grammarGroup}</h2>
     <div class="home-games">
       <article><span class="home-icon" aria-hidden="true"><IconEditNote /></span><h2>{labels.grammarFill}</h2><p>{labels.homeGrammar}</p><button type="button" onclick={() => openGrammar('fill')}>{labels.homePlay}</button></article>
       <article><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>{labels.grammarDetermine}</h2><p>Kasus, Genus, Numerus, Person und Tempus bestimmen.</p><button type="button" onclick={() => openGrammar('determine')}>{labels.homePlay}</button></article>
       <article><span class="home-icon" aria-hidden="true"><IconSort /></span><h2>{labels.grammarOrder}</h2><p>Ordne Wörter und bilde einen korrekten Satz.</p><button type="button" onclick={() => openGrammar('order')}>{labels.homePlay}</button></article>
-      <article><span class="home-icon" aria-hidden="true"><IconSwapHoriz /></span><h2>{labels.grammarFalseFriends}</h2><p>Wörter, die täuschend ähnlich aussehen, aber etwas anderes bedeuten.</p><button type="button" onclick={() => openGrammar('falsefriends')}>{labels.homePlay}</button></article>
     </div>
     <button class="home-settings-link" onclick={() => void goto('/settings')}><IconSettings aria-hidden="true" /><span>{labels.settings}</span></button>
   {/if}
 </section>
 
 <style>
-  .home-view { flex:1 1 auto;min-height:0;display:grid;align-content:center;gap:clamp(1rem,4vw,1.8rem);overflow-x:hidden;overflow-y:auto; }
+  .home-view { flex:1 1 auto;min-height:0;display:grid;align-content:safe center;gap:clamp(1rem,4vw,1.8rem);padding:clamp(.6rem,3vw,1.1rem) clamp(.7rem,3.4vw,1.25rem);overflow-x:hidden;overflow-y:auto; }
   .home-header { display:grid;gap:.35rem;text-align:center; }.home-group-heading { margin:0 -.1rem -.35rem;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase; }.home-header p,.home-onboarding>p { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }.home-header h1,.home-onboarding h1 { margin:0;color:#172a45 !important;text-shadow:0 1px 0 rgba(255,253,247,.72);font-family:'DM Serif Display',serif;font-size:clamp(2.1rem,10vw,3.35rem);font-weight:400;letter-spacing:-.05em;line-height:.9; }.home-onboarding>span { color:#596477;font-family:'DM Sans',sans-serif;font-size:.73rem;font-weight:700;line-height:1.4; }
   .home-settings-link { justify-self:center;display:inline-flex;align-items:center;gap:.42rem;min-height:2rem;padding:0 .72rem;border:1px solid rgba(23,42,69,.28);background:transparent;color:#596477;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }.home-settings-link :global(svg) { width:.92rem;height:.92rem; }.home-settings-link:active { transform:scale(.97); }
   .home-streak { display:grid;grid-template-columns:auto auto 1fr auto;gap:.7rem;align-items:center;justify-self:center;width:min(100%,27rem);padding:.75rem .9rem;border:1px solid rgba(23,42,69,.28);border-left:4px double #e6a527;background:rgba(255,253,247,.78);box-shadow:4px 4px 0 rgba(230,165,39,.16);text-align:left;transition:transform .16s cubic-bezier(.23,1,.32,1); }.home-streak:active { transform:scale(.98); }
