@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { fade } from 'svelte/transition';
   import { m } from '$lib/paraglide/messages';
   import { settings } from '$lib/state/settings.svelte';
   import { normalizePlayableWord, isLetterWord } from '$lib/wordle/wordleWords';
@@ -55,17 +56,20 @@
   {:else}
     <div class="grid content-center justify-items-center gap-[.9rem]">
       <div class="flex items-end justify-center gap-[.7rem]" aria-label={`Wrong guesses: ${wrongGuesses} of 6`}>
-        <div class="relative w-[7rem] h-[7rem] border-b-4 border-base-content/70" aria-hidden="true">
-          <span class="absolute left-[1.1rem] bottom-0 w-1 h-[6.3rem] bg-base-content/70"></span>
-          <span class="absolute left-[1.1rem] top-[.35rem] w-[4.5rem] h-1 bg-base-content/70"></span>
-          <span class="absolute right-[1.4rem] top-[.35rem] w-1 h-[1.15rem] bg-base-content/70"></span>
-          {#if wrongGuesses >= 1}<span class="absolute right-[.72rem] top-[1.2rem] w-[1.45rem] h-[1.45rem] border-4 border-error rounded-full"></span>{/if}
-          {#if wrongGuesses >= 2}<span class="absolute right-[1.36rem] top-[2.55rem] w-1 h-[2.4rem] bg-error"></span>{/if}
-          {#if wrongGuesses >= 3}<span class="absolute right-[1.36rem] top-[2.9rem] w-[2rem] h-1 origin-left rotate-[-30deg] bg-error"></span>{/if}
-          {#if wrongGuesses >= 4}<span class="absolute right-[1.36rem] top-[2.9rem] w-[2rem] h-1 origin-left rotate-[30deg] bg-error"></span>{/if}
-          {#if wrongGuesses >= 5}<span class="absolute right-[1.36rem] top-[4.65rem] w-[2rem] h-1 origin-left rotate-[-45deg] bg-error"></span>{/if}
-          {#if wrongGuesses >= 6}<span class="absolute right-[1.36rem] top-[4.65rem] w-[2rem] h-1 origin-left rotate-[45deg] bg-error"></span>{/if}
-        </div>
+        <svg viewBox="0 0 120 140" class="w-[7.5rem] h-[8.75rem]" aria-hidden="true" fill="none">
+          <!-- gallows -->
+          <line x1="8" y1="132" x2="72" y2="132" class="stroke-base-content/70" stroke-width="5" stroke-linecap="round" />
+          <line x1="28" y1="132" x2="28" y2="10" class="stroke-base-content/70" stroke-width="5" stroke-linecap="round" />
+          <line x1="26" y1="10" x2="86" y2="10" class="stroke-base-content/70" stroke-width="5" stroke-linecap="round" />
+          <line x1="86" y1="10" x2="86" y2="24" class="stroke-base-content/70" stroke-width="5" stroke-linecap="round" />
+          <!-- figure -->
+          {#if wrongGuesses >= 1}<circle cx="86" cy="38" r="13" class="stroke-error" stroke-width="5" in:fade={{ duration: 200 }} />{/if}
+          {#if wrongGuesses >= 2}<line x1="86" y1="51" x2="86" y2="90" class="stroke-error" stroke-width="5" stroke-linecap="round" in:fade={{ duration: 200 }} />{/if}
+          {#if wrongGuesses >= 3}<line x1="86" y1="62" x2="66" y2="78" class="stroke-error" stroke-width="5" stroke-linecap="round" in:fade={{ duration: 200 }} />{/if}
+          {#if wrongGuesses >= 4}<line x1="86" y1="62" x2="106" y2="78" class="stroke-error" stroke-width="5" stroke-linecap="round" in:fade={{ duration: 200 }} />{/if}
+          {#if wrongGuesses >= 5}<line x1="86" y1="90" x2="68" y2="118" class="stroke-error" stroke-width="5" stroke-linecap="round" in:fade={{ duration: 200 }} />{/if}
+          {#if wrongGuesses >= 6}<line x1="86" y1="90" x2="104" y2="118" class="stroke-error" stroke-width="5" stroke-linecap="round" in:fade={{ duration: 200 }} />{/if}
+        </svg>
         <span class="text-accent text-[.65rem] font-extrabold">{wrongGuesses} / 6</span>
       </div>
       <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,8vw,2.7rem)] tracking-[.16em] leading-none" aria-label="Hidden word">{maskedWord}</p>

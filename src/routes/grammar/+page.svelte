@@ -10,6 +10,7 @@
   import { buildNounCasePrompt, buildNounPropertyPrompt, type GrammarPrompt } from '$lib/grammar/cases';
   import { buildAdjectivePrompt, isEligibleAdjective } from '$lib/grammar/adjectives';
   import { buildVerbPrompt, buildVerbPropertyPrompt, verbConjugations } from '$lib/grammar/verbs';
+  import { buildFalseFriendPrompt, falseFriendPairs } from '$lib/grammar/falseFriends';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
 
@@ -31,7 +32,12 @@
   // nominative-article drill, since only German has case, adjective-ending and
   // hand-checked verb-conjugation data to draw on.
   const isGerman = $derived(settings.lang === 'de');
-  const grammarMode = $derived(page.url.searchParams.get('mode') === 'determine' ? 'determine' : page.url.searchParams.get('mode') === 'order' ? 'order' : 'fill');
+  const grammarMode = $derived(
+    page.url.searchParams.get('mode') === 'determine' ? 'determine'
+    : page.url.searchParams.get('mode') === 'order' ? 'order'
+    : page.url.searchParams.get('mode') === 'falsefriends' ? 'falsefriends'
+    : 'fill'
+  );
   const orderSentences = [
     ['Ich', 'lerne', 'Deutsch', 'jeden', 'Tag'],
     ['Heute', 'geht', 'sie', 'ins', 'Kino'],
@@ -55,12 +61,20 @@
     isGerman
       ? grammarMode === 'order'
         ? orderSentences.map((_, index) => `order:${index}`)
+        : grammarMode === 'falsefriends'
+        ? falseFriendPairs.map((pair) => `ff:${pair.word}`)
         : grammarMode === 'determine'
         ? [...nounPool.map((word) => `noun:${word}`), ...verbPool.map((word) => `verb:${word}`)]
         : [...nounPool.map((word) => `noun:${word}`), ...adjectivePool.map((word) => `adj:${word}`), ...verbPool.map((word) => `verb:${word}`)]
       : legacyArticleWords.map((word) => `article:${word}`)
   );
-  const isSupported = $derived(isGerman ? nounPool.length + adjectivePool.length + verbPool.length > 0 : articleUniverse.length > 0);
+  const isSupported = $derived(
+    grammarMode === 'falsefriends'
+      ? isGerman && falseFriendPairs.length > 0
+      : isGerman
+      ? nounPool.length + adjectivePool.length + verbPool.length > 0
+      : articleUniverse.length > 0
+  );
 
   let section = $state<string[]>([]);
   let queue = $state<string[]>([]);
@@ -100,6 +114,10 @@
     const kind = key.slice(0, separator);
     const word = key.slice(separator + 1);
     if (kind === 'order') return { before: '', after: '', correct: '', choices: [], question: 'Bringe die Wörter in die richtige Reihenfolge.' };
+    if (kind === 'ff') {
+      const pair = falseFriendPairs.find((candidate) => candidate.word === word);
+      return pair ? buildFalseFriendPrompt(pair, falseFriendPairs, random, shuffled) : null;
+    }
     if (kind === 'article') {
       const article = metadata[word]?.article;
       if (!article) return null;
@@ -199,7 +217,7 @@
     <p class="m-0 text-base-content/60 text-[.65rem] font-extrabold">{Math.min(position + 1, queue.length)} / {queue.length || 6}</p>
   </header>
   {#if !isSupported}
-    <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{labels.unsupported}</div>
+    <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{grammarMode === 'falsefriends' ? 'Falsche Freunde sind aktuell nur für Deutsch verfügbar.' : labels.unsupported}</div>
   {:else if !prompt}
     <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{labels.unavailable}</div>
   {:else}
