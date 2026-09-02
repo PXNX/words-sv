@@ -2,7 +2,8 @@
   "Abend": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die Tageszeit zwischen Nachmittag und Nacht."
   },
   "abschließen": {
     "type": "verb"
@@ -10,12 +11,14 @@
   "Ahnung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein vages Gefühl oder eine Vermutung."
   },
   "Ampel": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine Anlage mit Lichtern, die den Verkehr regelt."
   },
   "ändern": {
     "type": "verb"
@@ -23,7 +26,8 @@
   "Angst": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein starkes Gefühl der Furcht."
   },
   "ansehen": {
     "type": "verb"
@@ -34,12 +38,14 @@
   "Anzug": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine formelle Kombination aus Jacke und Hose."
   },
   "Apparat": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein technisches Gerät für einen bestimmten Zweck."
   },
   "ärgern": {
     "type": "verb"
@@ -56,12 +62,14 @@
   "Autor": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die ein Buch oder einen Text geschrieben hat."
   },
   "Babysitter": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die auf Kinder aufpasst."
   },
   "backen": {
     "type": "verb"
@@ -69,12 +77,14 @@
   "Ball": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein rundes Spielobjekt zum Werfen oder Treten."
   },
   "Band": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine Gruppe von Musikern, die zusammen auftritt."
   },
   "basteln": {
     "type": "verb"
@@ -110,7 +120,8 @@
     "type": "verb"
   },
   "Bekannte": {
-    "type": "noun"
+    "type": "noun",
+    "definition": "Eine Person, die man kennt, aber nicht sehr gut."
   },
   "beraten": {
     "type": "verb"
@@ -118,7 +129,8 @@
   "Berg": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine hohe natürliche Erhebung der Erdoberfläche."
   },
   "berichten": {
     "type": "verb"
@@ -129,7 +141,8 @@
   "Bescheid": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Information oder Nachricht über etwas."
   },
   "beschreiben": {
     "type": "verb"
@@ -155,12 +168,14 @@
   "Besuch": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Aufenthalt bei einer anderen Person oder an einem Ort."
   },
   "Bewerbung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein schriftlicher Antrag auf eine Arbeitsstelle."
   },
   "beworben": {
     "type": "verb"
@@ -168,12 +183,14 @@
   "Biologie": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Wissenschaft von den Lebewesen."
   },
   "Blatt": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein dünnes Stück Papier oder ein Teil einer Pflanze."
   },
   "blau": {
     "type": "adjective"
@@ -184,7 +201,8 @@
   "Boden": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die untere Fläche eines Raumes oder der Erde."
   },
   "braun": {
     "type": "adjective"
@@ -192,7 +210,8 @@
   "Brücke": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Bauwerk, das über einen Fluss oder ein Tal führt."
   },
   "buchen": {
     "type": "verb"
@@ -203,27 +222,32 @@
   "Büro": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Raum, in dem man arbeitet, meist mit einem Schreibtisch."
   },
   "Cafeteria": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein einfaches Restaurant, oft in einer Schule oder Firma."
   },
   "Chefin": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine weibliche Person, die eine Firma oder Abteilung leitet."
   },
   "Club": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Ort zum Tanzen und Feiern, oft mit lauter Musik."
   },
   "Datei": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine Sammlung von Daten auf einem Computer."
   },
   "denken": {
     "type": "verb"
@@ -240,7 +264,8 @@
   "Ding": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Gegenstand, dessen Namen man nicht kennt oder nicht nennt."
   },
   "direkt": {
     "type": "adjective"
@@ -248,7 +273,8 @@
   "Disko": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Ort, an dem man tanzt und Musik hört."
   },
   "diskutieren": {
     "type": "verb"
@@ -256,7 +282,8 @@
   "Dollar": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die Währung der USA und einiger anderer Länder."
   },
   "dringend": {
     "type": "adjective"
@@ -279,7 +306,8 @@
   "E-Book": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Buch in digitaler Form."
   },
   "egal": {
     "type": "adjective"
@@ -290,7 +318,8 @@
   "Einkaufszentrum": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein großes Gebäude mit vielen Geschäften."
   },
   "einpacken": {
     "type": "verb"
@@ -304,7 +333,8 @@
   "Eis": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine kalte, süße Speise oder gefrorenes Wasser."
   },
   "empfohlen": {
     "type": "verb"
@@ -315,7 +345,8 @@
   "Erfolg": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein positives Ergebnis nach einer Anstrengung."
   },
   "erinnern": {
     "type": "verb"
@@ -332,22 +363,26 @@
   "Euro": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die gemeinsame Währung vieler europäischer Länder."
   },
   "Fach": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Unterrichtsgebiet in der Schule oder ein Teil eines Schranks."
   },
   "Fahrplan": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Übersicht über die Abfahrtszeiten von Bussen oder Zügen."
   },
   "Fahrt": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine Reise mit einem Fahrzeug."
   },
   "fallen": {
     "type": "verb"
@@ -355,7 +390,8 @@
   "Fan": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die eine Sache oder Person begeistert bewundert."
   },
   "faul": {
     "type": "adjective"
@@ -363,12 +399,14 @@
   "Feier": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein festliches Ereignis zu einem besonderen Anlass."
   },
   "Feiertag": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Tag, an dem man wegen eines besonderen Anlasses nicht arbeitet."
   },
   "Fenster": {
     "definition": "Eine Öffnung in einer Wand, durch die Licht und Luft kommen.",
@@ -382,7 +420,8 @@
   "Fest": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine größere Feier, oft mit vielen Gästen."
   },
   "fit": {
     "type": "adjective"
@@ -393,12 +432,14 @@
   "Flug": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Reise mit dem Flugzeug."
   },
   "Fluss": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein großes, natürlich fließendes Gewässer."
   },
   "fotografieren": {
     "type": "verb"
@@ -415,7 +456,8 @@
   "Frühling": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die Jahreszeit zwischen Winter und Sommer."
   },
   "fühlen": {
     "type": "verb"
@@ -426,22 +468,26 @@
   "Führerschein": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Dokument, das erlaubt, ein Fahrzeug zu fahren."
   },
   "Fundsachen": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Gegenstände, die jemand verloren hat und die aufbewahrt werden."
   },
   "Gabel": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Essbesteck mit Zinken zum Aufspießen von Essen."
   },
   "Gebäude": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Bauwerk wie ein Haus oder ein Turm."
   },
   "gelb": {
     "type": "adjective"
@@ -449,7 +495,8 @@
   "Gesicht": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Der vordere Teil des Kopfes mit Augen, Nase und Mund."
   },
   "gesund": {
     "type": "adjective"
@@ -457,17 +504,20 @@
   "Gitarre": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Saiteninstrument, das man mit den Fingern oder einem Plektrum spielt."
   },
   "Glaube": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die feste Überzeugung von etwas, oft religiös."
   },
   "Grad": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Einheit zur Messung von Temperatur oder Winkeln."
   },
   "grüßen": {
     "type": "verb"
@@ -478,7 +528,8 @@
   "Hals": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Der Körperteil zwischen Kopf und Schultern."
   },
   "hängen": {
     "type": "verb"
@@ -489,12 +540,14 @@
   "Haushalt": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die Führung einer Wohnung oder die Personen, die dort zusammenleben."
   },
   "Heft": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein kleines Buch mit leeren Seiten zum Schreiben."
   },
   "heiß": {
     "type": "adjective"
@@ -502,12 +555,14 @@
   "Hemd": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Kleidungsstück für den Oberkörper mit Kragen und Knöpfen."
   },
   "Herbst": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die Jahreszeit zwischen Sommer und Winter."
   },
   "herstellen": {
     "type": "verb"
@@ -515,7 +570,8 @@
   "Himmel": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Der Raum über der Erde, in dem sich Wolken und Sterne befinden."
   },
   "hoffen": {
     "type": "verb"
@@ -523,12 +579,14 @@
   "Homepage": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Startseite einer Website im Internet."
   },
   "Hose": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Kleidungsstück für die Beine."
   },
   "husten": {
     "type": "verb"
@@ -536,32 +594,38 @@
   "Idee": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein neuer Gedanke oder Einfall."
   },
   "Insel": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Stück Land, das ganz von Wasser umgeben ist."
   },
   "Interesse": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine Neigung, sich mit etwas zu beschäftigen."
   },
   "Interview": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Gespräch, in dem jemand Fragen beantwortet."
   },
   "Jahr": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Zeitraum von zwölf Monaten."
   },
   "Kalender": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Übersicht über die Tage, Wochen und Monate eines Jahres."
   },
   "kalt": {
     "type": "adjective"
@@ -569,42 +633,50 @@
   "Kamera": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Gerät, mit dem man Fotos oder Videos macht."
   },
   "Käse": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Lebensmittel, das aus Milch hergestellt wird."
   },
   "Katze": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein kleines Haustier, das miaut."
   },
   "Keller": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Der Raum eines Hauses unter der Erde."
   },
   "Kette": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Schmuckstück oder eine Reihe verbundener Glieder."
   },
   "Klavier": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein großes Musikinstrument mit schwarzen und weißen Tasten."
   },
   "Kleid": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Kleidungsstück für Frauen, das den Körper bedeckt."
   },
   "Klub": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Vereinigung von Menschen mit einem gemeinsamen Interesse."
   },
   "klug": {
     "type": "adjective"
@@ -612,12 +684,14 @@
   "König": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Der männliche Herrscher eines Landes."
   },
   "Kontakt": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Verbindung oder ein Austausch zwischen Menschen."
   },
   "kontrollieren": {
     "type": "verb"
@@ -625,27 +699,32 @@
   "Konzert": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine öffentliche Musikveranstaltung."
   },
   "Krankenhaus": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Gebäude, in dem kranke Menschen behandelt werden."
   },
   "Krankenkasse": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine Organisation, die die Kosten für ärztliche Behandlung übernimmt."
   },
   "Kredit": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Geld, das man sich von einer Bank leiht."
   },
   "Krimi": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Geschichte oder ein Film über ein Verbrechen."
   },
   "kühl": {
     "type": "adjective"
@@ -653,7 +732,8 @@
   "Kultur": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Gesamtheit der Traditionen, Kunst und Lebensweise einer Gesellschaft."
   },
   "kümmert": {
     "type": "verb"
@@ -664,12 +744,14 @@
   "Kunst": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein kreatives Werk wie Malerei, Musik oder Skulptur."
   },
   "Lampe": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Gerät, das Licht spendet."
   },
   "leer": {
     "type": "adjective"
@@ -680,22 +762,26 @@
   "Leute": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Mehrere Menschen."
   },
   "Lied": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein kurzes Musikstück mit Text zum Singen."
   },
   "Linie": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein langer, dünner Strich oder eine Verkehrsstrecke."
   },
   "Liste": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine geordnete Aufzählung von Dingen oder Namen."
   },
   "lügen": {
     "type": "verb"
@@ -703,12 +789,14 @@
   "Magen": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Das Organ, in dem die Nahrung verdaut wird."
   },
   "Mailbox": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein elektronischer Speicher für Nachrichten."
   },
   "malen": {
     "type": "verb"
@@ -716,12 +804,14 @@
   "Mantel": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein langes, warmes Kleidungsstück, das man über anderer Kleidung trägt."
   },
   "Markt": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Ort, an dem Waren verkauft werden."
   },
   "Meinung": {
     "type": "noun",
@@ -732,7 +822,8 @@
   "Menge": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine bestimmte Anzahl oder viele Menschen an einem Ort."
   },
   "Mensch": {
     "type": "noun",
@@ -746,47 +837,56 @@
   "Messe": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine große Ausstellung von Produkten einer Branche."
   },
   "Messer": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Werkzeug zum Schneiden mit einer scharfen Klinge."
   },
   "Million": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Zahl 1.000.000."
   },
   "Mineralwasser": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Wasser aus einer natürlichen Quelle mit Mineralstoffen."
   },
   "Minute": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Zeitabschnitt von sechzig Sekunden."
   },
   "Mittel": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Etwas, das man benutzt, um ein Ziel zu erreichen."
   },
   "Mobiltelefon": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein tragbares Telefon ohne Kabel."
   },
   "Mode": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Der aktuelle Stil bei Kleidung und Aussehen."
   },
   "Model": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine Person, die Kleidung oder Produkte präsentiert."
   },
   "modern": {
     "type": "verb"
@@ -794,47 +894,56 @@
   "Müll": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Abfall, den man wegwirft."
   },
   "Museum": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Gebäude, in dem Kunst oder historische Objekte gezeigt werden."
   },
   "Musik": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine Kunstform aus Tönen und Klängen."
   },
   "Musiker": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die beruflich Musik macht."
   },
   "Nachbar": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die in der Nähe wohnt."
   },
   "Nachricht": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine kurze Information, die man jemandem mitteilt."
   },
   "Nacht": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die dunkle Zeit zwischen Abend und Morgen."
   },
   "Nähe": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Ort oder Zeitpunkt, der nicht weit entfernt ist."
   },
   "Natur": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Alles, was nicht vom Menschen geschaffen wurde, wie Pflanzen und Tiere."
   },
   "neben": {
     "type": "verb"
@@ -848,7 +957,8 @@
   "Norden": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die Himmelsrichtung, die zum Nordpol zeigt."
   },
   "notieren": {
     "type": "verb"
@@ -856,12 +966,14 @@
   "Ohr": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Das Körperteil, mit dem man hört."
   },
   "Osten": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die Himmelsrichtung, in der die Sonne aufgeht."
   },
   "packen": {
     "type": "verb"
@@ -869,17 +981,20 @@
   "Paket": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein verpacktes Objekt, das man verschickt."
   },
   "Parfüm": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine duftende Flüssigkeit, die man auf die Haut aufträgt."
   },
   "Park": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine große Grünfläche in einer Stadt zur Erholung."
   },
   "parken": {
     "type": "verb"
@@ -893,12 +1008,14 @@
   "Passwort": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine geheime Zeichenfolge zum Schutz eines Zugangs."
   },
   "Pferd": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein großes Tier, auf dem man reiten kann."
   },
   "pflanzen": {
     "type": "verb"
@@ -906,12 +1023,14 @@
   "Pizza": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine italienische Speise aus Teig, Tomaten und Käse."
   },
   "Plakat": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein großes Blatt mit Werbung oder Informationen zum Aufhängen."
   },
   "planen": {
     "type": "verb"
@@ -919,17 +1038,20 @@
   "Polizist": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die für die Polizei arbeitet und für Sicherheit sorgt."
   },
   "Programm": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Plan von Ereignissen oder eine Software auf dem Computer."
   },
   "Projekt": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein geplantes Vorhaben mit einem bestimmten Ziel."
   },
   "putzen": {
     "type": "verb"
@@ -937,27 +1059,32 @@
   "Qualität": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Der Grad, wie gut etwas ist."
   },
   "Quiz": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Spiel, bei dem man Fragen beantworten muss."
   },
   "Rad": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein rundes Teil, das sich dreht, oder kurz für Fahrrad."
   },
   "Radio": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Gerät, das Musik und Nachrichten über Funk empfängt."
   },
   "Rate": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Teilbetrag, den man regelmäßig zurückzahlt."
   },
   "raten": {
     "type": "verb"
@@ -965,7 +1092,8 @@
   "Rathaus": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Das Gebäude, in dem die Verwaltung einer Stadt sitzt."
   },
   "Recht": {
     "type": "adjective",
@@ -981,12 +1109,14 @@
   "Reihe": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Mehrere Dinge oder Personen, die hintereinander angeordnet sind."
   },
   "Reinigung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Geschäft, das Kleidung säubert, oder das Säubern selbst."
   },
   "reiten": {
     "type": "verb"
@@ -1000,32 +1130,38 @@
   "Rest": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Der Teil, der von etwas übrig bleibt."
   },
   "Rezept": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine Anleitung zum Kochen oder eine ärztliche Verordnung für Medikamente."
   },
   "Rind": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein großes Nutztier, von dem Milch und Fleisch stammen."
   },
   "Ring": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein rundes Schmuckstück, das man am Finger trägt."
   },
   "Rock": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Kleidungsstück für Frauen, das ab der Taille abwärts reicht."
   },
   "Rose": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine Blume mit Stacheln und angenehmem Duft."
   },
   "rot": {
     "type": "adjective"
@@ -1033,12 +1169,14 @@
   "Rücken": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die hintere Seite des menschlichen Körpers."
   },
   "Rucksack": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Tasche, die man auf dem Rücken trägt."
   },
   "rufen": {
     "type": "verb"
@@ -1046,22 +1184,26 @@
   "Ruhe": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Zustand ohne Lärm oder Störung."
   },
   "Rundgang": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Spaziergang durch einen Ort, um ihn kennenzulernen."
   },
   "Sache": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Gegenstand oder eine Angelegenheit."
   },
   "Sänger": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die beruflich singt."
   },
   "sauber": {
     "type": "adjective"
@@ -1075,22 +1217,26 @@
   "Schiff": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein großes Wasserfahrzeug für Personen oder Waren."
   },
   "Schloss": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein großes, prunkvolles Gebäude oder eine Vorrichtung zum Absperren."
   },
   "Schmerz": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein unangenehmes körperliches Gefühl."
   },
   "Schnee": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Gefrorene, weiße Niederschlagsflocken im Winter."
   },
   "schneiden": {
     "type": "verb"
@@ -1104,7 +1250,8 @@
   "Schokolade": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine süße Speise aus Kakao."
   },
   "schwarz": {
     "type": "adjective"
@@ -1112,17 +1259,20 @@
   "Seife": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Mittel zum Waschen der Hände oder des Körpers."
   },
   "Seite": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine Fläche eines Blattes Papier oder eine Richtung."
   },
   "Sendung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Programm im Fernsehen oder Radio, oder ein verschicktes Paket."
   },
   "separat": {
     "type": "adjective"
@@ -1130,7 +1280,8 @@
   "Service": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Dienstleistung für Kunden."
   },
   "setzen": {
     "type": "verb"
@@ -1144,12 +1295,14 @@
   "Situation": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine bestimmte Lage zu einem bestimmten Zeitpunkt."
   },
   "Ski": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein schmales Brett zum Gleiten über Schnee."
   },
   "sonnig": {
     "type": "adjective"
@@ -1163,12 +1316,14 @@
   "Spaß": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Gefühl der Freude bei einer Tätigkeit."
   },
   "Spaziergang": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein langsamer Gang an der frischen Luft zur Erholung."
   },
   "speichern": {
     "type": "verb"
@@ -1183,22 +1338,26 @@
   "Stuhl": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Möbelstück zum Sitzen für eine Person."
   },
   "Suche": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Das Bemühen, etwas zu finden."
   },
   "Süden": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die Himmelsrichtung gegenüber dem Norden."
   },
   "Suppe": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine warme, flüssige Speise."
   },
   "surfen": {
     "type": "verb"
@@ -1209,12 +1368,14 @@
   "Süßigkeiten": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Süße Lebensmittel wie Bonbons oder Schokolade."
   },
   "Tablet": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein flacher, tragbarer Computer mit Touchscreen."
   },
   "täglich": {
     "type": "adjective"
@@ -1222,23 +1383,29 @@
   "Tante": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Schwester der Mutter oder des Vaters."
   },
   "Taschengeld": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Geld, das Kinder regelmäßig von den Eltern bekommen."
   },
   "Tasse": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein kleines Gefäß mit Henkel zum Trinken."
   },
-  "tausend": {},
+  "tausend": {
+    "type": "numeral"
+  },
   "Team": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine Gruppe von Menschen, die zusammenarbeitet."
   },
   "teilen": {
     "type": "verb"
@@ -1246,22 +1413,26 @@
   "Tennis": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine Sportart, bei der man mit einem Schläger einen Ball über ein Netz spielt."
   },
   "Theater": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Gebäude, in dem Schauspiele aufgeführt werden."
   },
   "Tier": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Lebewesen, das kein Mensch und keine Pflanze ist."
   },
   "Tourist": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die zum Vergnügen reist und Orte besichtigt."
   },
   "tragen": {
     "type": "verb"
@@ -1269,7 +1440,8 @@
   "Traum": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Bilder und Erlebnisse im Kopf während des Schlafens."
   },
   "träumen": {
     "type": "verb"
@@ -1277,7 +1449,8 @@
   "Tür": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein beweglicher Teil, der eine Öffnung zum Betreten eines Raumes verschließt."
   },
   "üben": {
     "type": "verb"
@@ -1291,7 +1464,8 @@
   "Übersetzung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Übertragung eines Textes in eine andere Sprache."
   },
   "überwiesen": {
     "type": "verb"
@@ -1308,7 +1482,8 @@
   "Unfall": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein plötzliches, ungewolltes Ereignis mit Schaden oder Verletzung."
   },
   "unterhält": {
     "type": "verb"
@@ -1328,7 +1503,8 @@
   "Veranstaltung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein organisiertes Ereignis für mehrere Personen."
   },
   "verbieten": {
     "type": "verb"
@@ -1348,12 +1524,14 @@
   "Verkehr": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die Bewegung von Fahrzeugen und Menschen auf den Straßen."
   },
   "Verkehrsmittel": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Fahrzeug wie Bus oder Bahn, mit dem man sich fortbewegt."
   },
   "verletzen": {
     "type": "verb"
@@ -1397,12 +1575,14 @@
   "Viertel": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Stadtteil oder der vierte Teil von etwas, zum Beispiel einer Stunde."
   },
   "Vogel": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Tier mit Federn, das meist fliegen kann."
   },
   "voll": {
     "type": "adjective"
@@ -1410,17 +1590,20 @@
   "Volleyball": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Sportart, bei der zwei Teams einen Ball mit den Händen über ein Netz spielen."
   },
   "Wagen": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein anderes Wort für Auto oder ein Teil eines Zuges."
   },
   "Wald": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine große Fläche mit vielen Bäumen."
   },
   "wecken": {
     "type": "verb"
@@ -1437,9 +1620,12 @@
   "Welt": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Erde mit allen Ländern und Menschen."
   },
-  "weniger": {},
+  "weniger": {
+    "type": "adverb"
+  },
   "werfen": {
     "type": "verb"
   },
@@ -1449,32 +1635,38 @@
   "Winter": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die kälteste Jahreszeit des Jahres."
   },
   "Witz": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine kurze Geschichte, die zum Lachen bringen soll."
   },
   "Wohnort": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Der Ort, an dem eine Person wohnt."
   },
   "Wolke": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine sichtbare Ansammlung von Wassertröpfchen am Himmel."
   },
   "Workshop": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Veranstaltung, bei der man praktisch etwas lernt."
   },
   "Wunsch": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Etwas, das man sich erhofft oder gerne hätte."
   },
   "wünschen": {
     "type": "verb"
@@ -1482,22 +1674,26 @@
   "Wurst": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Lebensmittel aus gewürztem, verarbeitetem Fleisch."
   },
   "Zahl": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Zeichen zum Zählen oder Rechnen."
   },
   "Zahn": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Einer der harten weißen Körper im Mund zum Beißen."
   },
   "Zeichen": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Symbol mit einer bestimmten Bedeutung."
   },
   "zeichnen": {
     "type": "verb"
@@ -1505,17 +1701,20 @@
   "Zelt": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine tragbare Unterkunft aus Stoff zum Übernachten im Freien."
   },
   "Zentrum": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Der mittlere und wichtigste Teil eines Ortes."
   },
   "Zettel": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein kleines Stück Papier für Notizen."
   },
   "ziehen": {
     "type": "verb"
@@ -1523,12 +1722,14 @@
   "Ziel": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Etwas, das man erreichen möchte, oder der Endpunkt einer Strecke."
   },
   "Zucker": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine süße Substanz zum Süßen von Speisen."
   },
   "zuhören": {
     "type": "verb"

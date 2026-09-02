@@ -5,12 +5,14 @@
   "Absatz": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Abschnitt in einem Text oder die Menge der verkauften Waren."
   },
   "Abschluß": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Der Zeitpunkt, an dem etwas erfolgreich beendet wird."
   },
   "abstrakt": {
     "type": "adjective"
@@ -27,7 +29,8 @@
   "Analyse": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine gründliche Untersuchung, um etwas genauer zu verstehen."
   },
   "anführen": {
     "type": "verb"
@@ -35,7 +38,8 @@
   "Anhänger": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Jemand, der eine bestimmte Idee, Partei oder Person unterstützt."
   },
   "anordnen": {
     "type": "verb"
@@ -46,17 +50,20 @@
   "Ansatz": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine bestimmte Methode oder ein erster Schritt zur Lösung eines Problems."
   },
   "Ansicht": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die persönliche Meinung, die jemand zu einem Thema hat."
   },
   "Anteil": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Der Teil einer Menge, der auf jemanden oder etwas entfällt."
   },
   "anwesend": {
     "type": "adjective"
@@ -64,7 +71,8 @@
   "Anzahl": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Menge einzelner Dinge oder Personen, ausgedrückt als Zahl."
   },
   "arabisch": {
     "type": "adjective"
@@ -72,7 +80,8 @@
   "Argument": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine Aussage, mit der eine Meinung begründet wird."
   },
   "asozial": {
     "type": "adjective"
@@ -80,32 +89,38 @@
   "Aufbau": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die Art, wie etwas aus einzelnen Teilen zusammengesetzt ist."
   },
   "Aufsatz": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein längerer geschriebener Text zu einem bestimmten Thema."
   },
   "Ausdruck": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine bestimmte Formulierung oder ein sprachliches Zeichen für etwas."
   },
   "Äußerung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Etwas, das jemand mündlich oder schriftlich mitteilt."
   },
   "Autorin": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine Frau, die literarische oder journalistische Texte verfasst."
   },
   "Bachelor": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Der erste akademische Abschluss nach einem Hochschulstudium."
   },
   "basieren": {
     "type": "verb"
@@ -113,7 +128,8 @@
   "Basis": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Grundlage, auf der etwas aufgebaut ist."
   },
   "befassen": {
     "type": "verb"
@@ -143,12 +159,14 @@
   "Bemühung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Anstrengung, die jemand unternimmt, um ein Ziel zu erreichen."
   },
   "Benehmen": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Die Art, wie sich jemand in Gesellschaft verhält."
   },
   "bereit": {
     "type": "adjective"
@@ -159,14 +177,20 @@
   "bestimmt": {
     "type": "adjective"
   },
-  "betracht": {},
+  "Betracht": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der",
+    "definition": "Nur in festen Wendungen gebräuchlich, etwa \"in Betracht ziehen\" (erwägen) oder \"in Betracht kommen\" (infrage kommen)."
+  },
   "bewahren": {
     "type": "verb"
   },
   "Beweis": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Etwas, das die Wahrheit einer Aussage eindeutig belegt."
   },
   "bewerten": {
     "type": "verb"
@@ -180,7 +204,8 @@
   "Bezug": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Der Zusammenhang zwischen einer Aussage und einer bestimmten Sache."
   },
   "bilden": {
     "type": "verb"
@@ -188,42 +213,50 @@
   "Bildung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Das Wissen und die Fähigkeiten, die durch Lernen erworben werden."
   },
   "Blut": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Die rote Flüssigkeit, die im Körper durch die Adern fließt."
   },
   "Code": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein System von Zeichen, das Informationen verschlüsselt darstellt."
   },
   "Dach": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Die obere Abdeckung eines Gebäudes, die vor Wetter schützt."
   },
   "Dauer": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Der Zeitraum, den etwas in Anspruch nimmt."
   },
   "Debatte": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine öffentliche Diskussion, bei der unterschiedliche Meinungen ausgetauscht werden."
   },
   "Diagramm": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine grafische Darstellung von Zahlen oder Zusammenhängen."
   },
   "Dilemma": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine schwierige Lage, in der man zwischen zwei Möglichkeiten wählen muss."
   },
   "dominant": {
     "type": "adjective"
@@ -231,12 +264,14 @@
   "Dozent": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Lehrender an einer Hochschule oder Universität."
   },
   "Drittel": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Einer von drei gleich großen Teilen eines Ganzen."
   },
   "drohen": {
     "type": "verb"
@@ -244,12 +279,14 @@
   "Drohung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Ankündigung, jemandem zu schaden, falls er nicht gehorcht."
   },
   "Ebene": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine bestimmte Stufe oder ein Bereich, auf dem etwas stattfindet."
   },
   "ehemalig": {
     "type": "adjective"
@@ -257,7 +294,9 @@
   "einbauen": {
     "type": "verb"
   },
-  "eine": {},
+  "eine": {
+    "type": "article"
+  },
   "eingehen": {
     "type": "verb"
   },
@@ -267,24 +306,29 @@
   "einsam": {
     "type": "adjective"
   },
-  "einzelne": {},
+  "einzelne": {
+    "type": "adjective"
+  },
   "einzig": {
     "type": "adjective"
   },
   "Element": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein einzelner Bestandteil eines größeren Ganzen."
   },
   "Empathie": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Fähigkeit, die Gefühle anderer Menschen nachzuempfinden."
   },
   "Endung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Der letzte Teil eines Wortes, der sich verändern kann."
   },
   "eng": {
     "type": "adjective"
@@ -295,7 +339,8 @@
   "Epoche": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein bestimmter Zeitabschnitt der Geschichte mit eigenen Merkmalen."
   },
   "erheben": {
     "type": "verb"
@@ -303,7 +348,8 @@
   "Erlebnis": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Etwas, das jemand persönlich erlebt und in Erinnerung behält."
   },
   "erleiden": {
     "type": "verb"
@@ -317,12 +363,14 @@
   "Erwägung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Das sorgfältige Nachdenken über verschiedene Möglichkeiten, bevor man entscheidet."
   },
   "Erwerb": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Das Erlangen von etwas, meist durch Kauf oder eigene Anstrengung."
   },
   "erwerben": {
     "type": "verb"
@@ -330,12 +378,14 @@
   "Essay": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein kurzer Text, in dem eine persönliche Meinung zu einem Thema dargelegt wird."
   },
   "Existenz": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Das Vorhandensein oder Dasein von etwas oder jemandem."
   },
   "extrem": {
     "type": "adjective"
@@ -346,32 +396,38 @@
   "Fakt": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine nachweisbare, unbestreitbare Tatsache."
   },
   "Faktum": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine einzelne, feststehende Tatsache."
   },
   "Fakultät": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine Abteilung einer Universität für ein bestimmtes Fachgebiet."
   },
   "Falle": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine Vorrichtung oder Situation, die jemanden überraschend gefangen nimmt."
   },
   "Feind": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Jemand, der einem anderen schaden will oder ihn ablehnt."
   },
   "Fokus": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Der Punkt, auf den sich die Aufmerksamkeit richtet."
   },
   "formal": {
     "type": "adjective"
@@ -379,7 +435,8 @@
   "Forscher": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die wissenschaftlich etwas untersucht."
   },
   "fraglich": {
     "type": "adjective"
@@ -387,7 +444,8 @@
   "Franzose": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein männlicher Staatsangehöriger Frankreichs."
   },
   "fügen": {
     "type": "verb"
@@ -401,7 +459,8 @@
   "Gedanke": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Vorstellung oder Idee, die im Kopf entsteht."
   },
   "geeignet": {
     "type": "adjective"
@@ -409,7 +468,8 @@
   "Gegner": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die gegen jemanden kämpft oder anderer Meinung ist."
   },
   "geistig": {
     "type": "adjective"
@@ -441,27 +501,32 @@
   "Graphik": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine bildliche Darstellung von Informationen oder Zahlen."
   },
   "Gründung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Errichtung einer neuen Organisation oder Institution."
   },
   "Haltung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die innere Einstellung oder die Körperhaltung einer Person."
   },
   "Harmonie": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Zustand des Einklangs ohne Streit oder Widerspruch."
   },
   "Heirat": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Der Vorgang, bei dem zwei Menschen offiziell Ehepartner werden."
   },
   "heutig": {
     "type": "adjective"
@@ -469,17 +534,20 @@
   "Hinsicht": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein bestimmter Aspekt oder Gesichtspunkt, unter dem man etwas betrachtet."
   },
   "Hinweis": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine kurze Information, die auf etwas aufmerksam macht."
   },
   "Hormon": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Botenstoff im Körper, der bestimmte Prozesse steuert."
   },
   "ideal": {
     "type": "adjective"
@@ -505,12 +573,14 @@
   "Jude": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Angehöriger des jüdischen Volkes oder Glaubens."
   },
   "Klang": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die Art, wie ein Ton oder eine Stimme akustisch wirkt."
   },
   "knapp": {
     "type": "adjective"
@@ -518,7 +588,8 @@
   "Kohäsion": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Der innere Zusammenhalt zwischen einzelnen Teilen oder Elementen."
   },
   "kommend": {
     "type": "adjective"
@@ -532,17 +603,20 @@
   "Konsens": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Übereinstimmung mehrerer Personen in einer strittigen Frage."
   },
   "Kontext": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Der Zusammenhang, in dem etwas steht oder verstanden wird."
   },
   "Konzept": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein durchdachter Plan oder eine grundlegende Idee für ein Vorhaben."
   },
   "korrekt": {
     "type": "adjective"
@@ -553,17 +627,20 @@
   "Kritik": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine bewertende Stellungnahme, die Schwächen oder Fehler aufzeigt."
   },
   "Kritiker": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die etwas beurteilt und Schwächen benennt."
   },
   "Lauf": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die Bewegung oder der Verlauf von etwas über die Zeit."
   },
   "lebend": {
     "type": "adjective"
@@ -584,22 +661,26 @@
   "Lektor": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die Texte für einen Verlag prüft und überarbeitet."
   },
   "Leser": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die einen Text liest."
   },
   "Linguist": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Wissenschaftler, der Sprache und ihre Strukturen erforscht."
   },
   "Lizenz": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine offizielle Erlaubnis, etwas Bestimmtes zu tun oder zu nutzen."
   },
   "lohnen": {
     "type": "verb"
@@ -610,37 +691,44 @@
   "Maß": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine bestimmte Größe, mit der etwas gemessen wird."
   },
   "Masse": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine große, ungeordnete Menge von Menschen oder Stoff."
   },
   "Maßnahme": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine gezielte Handlung, um ein bestimmtes Ziel zu erreichen."
   },
   "Master": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein akademischer Abschluss, der auf den Bachelor folgt."
   },
   "Merkmal": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine Eigenschaft, an der man etwas erkennen kann."
   },
   "Mord": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die absichtliche Tötung eines Menschen."
   },
   "Mundart": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die besondere Sprachform, die in einer bestimmten Region gesprochen wird."
   },
   "mündlich": {
     "type": "adjective"
@@ -648,12 +736,14 @@
   "Muster": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein wiederkehrendes Schema oder ein Beispiel für etwas."
   },
   "Nation": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Volk mit gemeinsamer Kultur, das meist einen eigenen Staat bildet."
   },
   "national": {
     "type": "adjective"
@@ -661,17 +751,20 @@
   "Neigung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die persönliche Vorliebe oder Tendenz zu etwas Bestimmtem."
   },
   "Norm": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine allgemein anerkannte Regel, an der man sich orientiert."
   },
   "Not": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Zustand großer Bedrängnis oder dringender Bedürftigkeit."
   },
   "nutzlos": {
     "type": "adjective"
@@ -685,31 +778,42 @@
   "Pflege": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Fürsorge für jemanden oder etwas, um dessen Zustand zu erhalten."
   },
   "Phänomen": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine auffällige Erscheinung, die beobachtet und erklärt werden soll."
   },
   "Phase": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein bestimmter Abschnitt innerhalb einer längeren Entwicklung."
   },
   "physisch": {
     "type": "adjective"
   },
-  "polen": {},
+  "Polen": {
+    "type": "noun",
+    "genus": "neuter",
+    "article": "das",
+    "definition": "Ein Land in Mitteleuropa, östlich von Deutschland, mit der Hauptstadt Warschau."
+  },
   "polnisch": {
     "type": "adjective"
   },
   "Position": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Der Standpunkt oder die Stelle, die jemand oder etwas einnimmt."
   },
-  "positive": {},
+  "positive": {
+    "type": "adjective"
+  },
   "prägen": {
     "type": "verb"
   },
@@ -719,22 +823,26 @@
   "Protest": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein deutlicher Widerspruch gegen etwas, oft öffentlich geäußert."
   },
   "Prozeß": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Ablauf, der sich über mehrere Schritte entwickelt."
   },
   "Qual": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein starkes körperliches oder seelisches Leiden."
   },
   "Quelle": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Der Ursprung, aus dem etwas stammt oder Information bezogen wird."
   },
   "radikal": {
     "type": "adjective"
@@ -742,7 +850,8 @@
   "Rahmen": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die äußere Umgrenzung oder der Zusammenhang, in dem etwas stattfindet."
   },
   "rasch": {
     "type": "adjective"
@@ -750,13 +859,20 @@
   "Rasse": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine Gruppe von Lebewesen mit gemeinsamen erblichen Merkmalen."
   },
-  "rechen": {},
+  "Rechen": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der",
+    "definition": "Ein Gartenwerkzeug mit Zinken zum Zusammenharken von Laub oder Gras."
+  },
   "Rede": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein mündlicher Vortrag vor einer Zuhörerschaft."
   },
   "regional": {
     "type": "adjective"
@@ -776,17 +892,20 @@
   "Rentner": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die nicht mehr arbeitet und eine Rente bezieht."
   },
   "Resultat": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Das Ergebnis, das am Ende eines Vorgangs steht."
   },
   "Schock": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein plötzlicher, heftiger seelischer oder körperlicher Zustand nach einem Ereignis."
   },
   "schuldig": {
     "type": "adjective"
@@ -794,7 +913,8 @@
   "Schwäche": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Mangel oder eine geringe Fähigkeit in einem bestimmten Bereich."
   },
   "seelisch": {
     "type": "adjective"
@@ -802,7 +922,8 @@
   "Sicht": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Art und Weise, wie jemand etwas betrachtet oder wahrnimmt."
   },
   "sichtbar": {
     "type": "adjective"
@@ -819,22 +940,26 @@
   "Spitze": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Der oberste oder vorderste Punkt von etwas."
   },
   "Sprecher": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die im Namen anderer öffentlich spricht."
   },
   "Staat": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein politisch organisiertes Gebilde mit eigenem Gebiet und eigener Regierung."
   },
   "Standard": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein allgemein festgelegtes Niveau, an dem sich etwas messen lässt."
   },
   "ständig": {
     "type": "adjective"
@@ -842,7 +967,8 @@
   "Stärke": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine besondere Fähigkeit oder Kraft, die jemand besitzt."
   },
   "stärken": {
     "type": "verb"
@@ -850,7 +976,8 @@
   "Status": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die gesellschaftliche Stellung oder der aktuelle Zustand von etwas."
   },
   "steigern": {
     "definition": "Etwas größer, stärker oder mehr machen.",
@@ -859,7 +986,8 @@
   "Stellung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Position, die jemand in einem Bereich oder einer Hierarchie innehat."
   },
   "stolz": {
     "type": "adjective"
@@ -876,12 +1004,14 @@
   "Tendenz": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine erkennbare Entwicklungsrichtung, in die sich etwas bewegt."
   },
   "These": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine Behauptung, die in einer Diskussion begründet werden soll."
   },
   "tief": {
     "type": "adjective"
@@ -889,7 +1019,8 @@
   "Toleranz": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Bereitschaft, andere Meinungen oder Lebensweisen zu akzeptieren."
   },
   "trennen": {
     "type": "verb"
@@ -897,7 +1028,8 @@
   "Trennung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Das Auseinandergehen zweier Personen oder Dinge, die zuvor verbunden waren."
   },
   "typisch": {
     "type": "adjective"
@@ -911,7 +1043,8 @@
   "Umgang": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die Art, wie man mit einer Person oder Sache verfährt."
   },
   "umgehen": {
     "type": "verb"
@@ -919,7 +1052,8 @@
   "Umstand": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine begleitende Bedingung, die eine Situation beeinflusst."
   },
   "ungefähr": {
     "type": "adjective"
@@ -930,17 +1064,20 @@
   "Ursprung": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Der Ausgangspunkt, von dem etwas seinen Anfang nimmt."
   },
   "Variante": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine leicht abweichende Form von etwas Bestehendem."
   },
   "Varietät": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine besondere Erscheinungsform einer Sprache oder Sache."
   },
   "verfügen": {
     "type": "verb"
@@ -951,17 +1088,20 @@
   "Vermögen": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Der gesamte Besitz einer Person, meist in Form von Geld."
   },
   "Versuch": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Vorgehen, mit dem man etwas erreichen oder herausfinden will."
   },
   "Vielfalt": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Das Vorhandensein vieler unterschiedlicher Formen oder Arten."
   },
   "völlig": {
     "type": "adjective"
@@ -969,22 +1109,26 @@
   "Vorfeld": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Die Zeit oder Phase kurz vor einem wichtigen Ereignis."
   },
   "Vorgang": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein Ablauf von Handlungen, der zu einem Ergebnis führt."
   },
   "Waffe": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Gegenstand, der dazu dient, jemanden anzugreifen oder zu verletzen."
   },
   "Wähler": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die bei einer Wahl ihre Stimme abgibt."
   },
   "wandeln": {
     "type": "verb"
@@ -995,17 +1139,20 @@
   "Wesen": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Lebewesen oder die innere Natur einer Person oder Sache."
   },
   "Westen": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die Himmelsrichtung, in der die Sonne untergeht."
   },
   "Wille": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die bewusste Entschlossenheit, etwas Bestimmtes zu tun oder zu erreichen."
   },
   "wirklich": {
     "type": "adjective"
@@ -1016,17 +1163,20 @@
   "Zeitraum": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein bestimmter Abschnitt zwischen zwei Zeitpunkten."
   },
   "Zensur": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die staatliche Kontrolle und Einschränkung von Medien oder Meinungen."
   },
   "Zitat": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Eine wörtlich übernommene Aussage aus einem Text oder von einer Person."
   },
   "zunehmen": {
     "type": "verb"
