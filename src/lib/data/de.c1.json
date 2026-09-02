@@ -2,7 +2,8 @@
   "Anwalt": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die andere in rechtlichen Angelegenheiten vertritt und berät."
   },
   "ausüben": {
     "type": "verb"
@@ -19,17 +20,20 @@
   "Dativ": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein grammatischer Fall, der meist das Objekt bezeichnet, dem etwas gegeben wird."
   },
   "Einheit": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein Ganzes, das aus mehreren zusammengehörigen Teilen besteht."
   },
   "Einsatz": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Der Gebrauch von Kraft, Mitteln oder Zeit für ein bestimmtes Ziel."
   },
   "enorm": {
     "type": "adjective"
@@ -58,13 +62,17 @@
   "Funktion": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Aufgabe oder Wirkungsweise einer Sache oder Person."
   },
-  "ganze": {},
+  "ganze": {
+    "type": "adjective"
+  },
   "Gebilde": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Etwas, das aus mehreren Teilen zu einer bestimmten Form zusammengesetzt ist."
   },
   "gerecht": {
     "type": "adjective"
@@ -81,7 +89,8 @@
   "Handlung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Etwas, das jemand bewusst tut oder unternimmt."
   },
   "heftig": {
     "type": "adjective"
@@ -92,17 +101,20 @@
   "Jura": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Die Wissenschaft vom Recht, die an Universitäten studiert wird."
   },
   "Kasus": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Die grammatische Form eines Wortes, die seine Rolle im Satz zeigt."
   },
   "Kluft": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein tiefer Unterschied oder Abstand zwischen zwei Seiten."
   },
   "konstant": {
     "type": "adjective"
@@ -110,7 +122,8 @@
   "Kontrast": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Ein auffälliger Unterschied zwischen zwei Dingen."
   },
   "kritisch": {
     "type": "adjective"
@@ -124,17 +137,26 @@
   "Last": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Etwas Schweres, das getragen werden muss, oder eine große Belastung."
   },
-  "lebende": {},
-  "menschen": {},
+  "lebende": {
+    "type": "adjective"
+  },
+  "Menschen": {
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der",
+    "definition": "Plural von \"der Mensch\": Lebewesen mit Verstand, Sprache und Kultur."
+  },
   "neigen": {
     "type": "verb"
   },
   "Neuzeit": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die geschichtliche Epoche seit etwa dem fünfzehnten Jahrhundert bis heute."
   },
   "paradox": {
     "type": "adjective"
@@ -151,12 +173,14 @@
   "Patient": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die medizinisch behandelt wird."
   },
   "Poesie": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Die Kunst, Gedichte zu schreiben, oder Dichtung im Allgemeinen."
   },
   "poetisch": {
     "type": "adjective"
@@ -164,22 +188,26 @@
   "Prinzip": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Grundsatz, nach dem jemand handelt oder etwas aufgebaut ist."
   },
   "Rache": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine Handlung, mit der man erlittenes Unrecht vergelten will."
   },
   "Raucher": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die regelmäßig raucht."
   },
   "Regelung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine verbindliche Vorschrift, die etwas ordnet oder festlegt."
   },
   "rein": {
     "type": "adjective"
@@ -193,7 +221,8 @@
   "Single": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Person, die ohne festen Partner lebt."
   },
   "strafen": {
     "type": "verb"
@@ -201,13 +230,14 @@
   "Strömung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine gerichtete Bewegung von Wasser, Luft oder Ideen."
   },
-  "tate": {},
   "Teilung": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Das Zerlegen von etwas Ganzem in mehrere Teile."
   },
   "tödlich": {
     "type": "adjective"
@@ -224,27 +254,31 @@
   "Unrecht": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein Verhalten oder Zustand, der gegen Recht und Gerechtigkeit verstößt."
   },
   "Wandel": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine allmähliche Veränderung über einen längeren Zeitraum."
   },
   "Wende": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Ein plötzlicher, entscheidender Wechsel der Richtung oder Lage."
   },
-  "west": {},
   "Wohnraum": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Fläche oder Räume, die zum Wohnen genutzt werden."
   },
   "Würde": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Der Wert und Respekt, der jedem Menschen zusteht."
   }
 }

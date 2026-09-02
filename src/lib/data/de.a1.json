@@ -1,6 +1,10 @@
 {
-  "ab": {},
-  "aber": {},
+  "ab": {
+    "type": "preposition"
+  },
+  "aber": {
+    "type": "conjunction"
+  },
   "abfahren": {
     "type": "verb"
   },
@@ -31,7 +35,9 @@
     "article": "der",
     "definition": "Die Person, von der ein Brief oder Paket kommt."
   },
-  "acht": {},
+  "acht": {
+    "type": "numeral"
+  },
   "Achtung": {
     "type": "noun",
     "genus": "feminine",
@@ -47,19 +53,27 @@
   "allein": {
     "type": "adjective"
   },
-  "also": {},
+  "also": {
+    "type": "adverb"
+  },
   "alt": {
     "type": "adjective"
   },
-  "alte": {},
+  "alte": {
+    "type": "adjective"
+  },
   "Alter": {
     "type": "noun",
     "genus": "neuter",
     "article": "das",
     "definition": "Die Anzahl der Lebensjahre einer Person."
   },
-  "am": {},
-  "an": {},
+  "am": {
+    "type": "preposition"
+  },
+  "an": {
+    "type": "preposition"
+  },
   "anbieten": {
     "type": "verb"
   },
@@ -205,8 +219,12 @@
     "article": "der",
     "definition": "Eine Person, die Kranke behandelt."
   },
-  "auch": {},
-  "auf": {},
+  "auch": {
+    "type": "adverb"
+  },
+  "auf": {
+    "type": "preposition"
+  },
   "Aufgabe": {
     "type": "noun",
     "genus": "feminine",
@@ -231,7 +249,9 @@
     "article": "das",
     "definition": "Das Körperteil, mit dem man sieht."
   },
-  "aus": {},
+  "aus": {
+    "type": "preposition"
+  },
   "Ausflug": {
     "type": "noun",
     "genus": "masculine",
@@ -352,7 +372,9 @@
     "article": "der",
     "definition": "Der Bereich am Bahnhof, wo man in den Zug einsteigt."
   },
-  "bald": {},
+  "bald": {
+    "type": "adverb"
+  },
   "Balkon": {
     "type": "noun",
     "genus": "masculine",
@@ -401,8 +423,12 @@
   "beginnen": {
     "type": "verb"
   },
-  "bei": {},
-  "beide": {},
+  "bei": {
+    "type": "preposition"
+  },
+  "beide": {
+    "type": "pronoun"
+  },
   "Bein": {
     "type": "noun",
     "genus": "neuter",
@@ -476,14 +502,17 @@
     "article": "die",
     "definition": "Eine süße Frucht mit runder Form."
   },
-  "bis": {},
+  "bis": {
+    "type": "preposition"
+  },
   "bisschen": {
     "type": "verb"
   },
   "Bitte": {
     "type": "noun",
     "genus": "feminine",
-    "article": "die"
+    "article": "die",
+    "definition": "Eine höfliche Aufforderung, etwas zu tun oder zu bekommen."
   },
   "bitten": {
     "type": "verb"
@@ -605,14 +634,18 @@
     "article": "der",
     "definition": "Die Person, die eine Firma oder Abteilung leitet."
   },
-  "circa": {},
+  "circa": {
+    "type": "adverb"
+  },
   "Computer": {
     "type": "noun",
     "genus": "masculine",
     "article": "der",
     "definition": "Ein elektronisches Gerät zum Rechnen und Arbeiten."
   },
-  "da": {},
+  "da": {
+    "type": "adverb"
+  },
   "Dame": {
     "type": "noun",
     "genus": "feminine",
@@ -628,12 +661,18 @@
     "article": "der",
     "definition": "Das Gefühl der Dankbarkeit."
   },
-  "danke": {},
+  "danke": {
+    "type": "interjection"
+  },
   "danken": {
     "type": "verb"
   },
-  "dann": {},
-  "das": {},
+  "dann": {
+    "type": "adverb"
+  },
+  "das": {
+    "type": "article"
+  },
   "Datum": {
     "type": "noun",
     "genus": "neuter",
@@ -643,13 +682,21 @@
   "dauern": {
     "type": "verb"
   },
-  "deine": {},
+  "deine": {
+    "type": "pronoun"
+  },
   "deinen": {
     "type": "verb"
   },
-  "denn": {},
-  "der": {},
-  "dich": {},
+  "denn": {
+    "type": "conjunction"
+  },
+  "der": {
+    "type": "article"
+  },
+  "dich": {
+    "type": "pronoun"
+  },
   "diesen": {
     "type": "verb"
   },
@@ -680,7 +727,9 @@
   "draußen": {
     "type": "verb"
   },
-  "drei": {},
+  "drei": {
+    "type": "numeral"
+  },
   "drucken": {
     "type": "verb"
   },
@@ -693,8 +742,12 @@
     "article": "der",
     "definition": "Ein Gerät, das Texte oder Bilder auf Papier druckt."
   },
-  "du": {},
-  "durch": {},
+  "du": {
+    "type": "pronoun"
+  },
+  "durch": {
+    "type": "preposition"
+  },
   "Durchsage": {
     "type": "noun",
     "genus": "feminine",
@@ -752,7 +805,9 @@
   "eilig": {
     "type": "adjective"
   },
-  "ein": {},
+  "ein": {
+    "type": "article"
+  },
   "einen": {
     "type": "verb"
   },
@@ -778,7 +833,9 @@
     "article": "die",
     "definition": "Eine Bitte, zu einem Ereignis zu kommen."
   },
-  "einmal": {},
+  "einmal": {
+    "type": "adverb"
+  },
   "einsteigen": {
     "type": "verb"
   },
@@ -827,7 +884,9 @@
     "article": "die",
     "definition": "Ein Ausdruck des Bedauerns."
   },
-  "er": {},
+  "er": {
+    "type": "pronoun"
+  },
   "Ergebnis": {
     "type": "noun",
     "genus": "neuter",
@@ -840,7 +899,9 @@
   "erlauben": {
     "type": "verb"
   },
-  "erst": {},
+  "erst": {
+    "type": "adverb"
+  },
   "Erwachsene": {
     "type": "noun",
     "genus": "masculine",
@@ -850,11 +911,15 @@
   "erzählen": {
     "type": "verb"
   },
-  "es": {},
+  "es": {
+    "type": "pronoun"
+  },
   "essen": {
     "type": "verb"
   },
-  "euer": {},
+  "euer": {
+    "type": "pronoun"
+  },
   "fahren": {
     "type": "verb"
   },
@@ -1046,7 +1111,9 @@
     "genus": "feminine",
     "article": "die"
   },
-  "früher": {},
+  "früher": {
+    "type": "adverb"
+  },
   "Frühstück": {
     "type": "noun",
     "genus": "neuter",
@@ -1062,9 +1129,15 @@
     "article": "die",
     "definition": "Ein geführter Rundgang, zum Beispiel durch ein Museum."
   },
-  "fünf": {},
-  "fünfzig": {},
-  "für": {},
+  "fünf": {
+    "type": "numeral"
+  },
+  "fünfzig": {
+    "type": "numeral"
+  },
+  "für": {
+    "type": "preposition"
+  },
   "Fuß": {
     "type": "noun",
     "genus": "masculine",
@@ -1144,15 +1217,21 @@
     "article": "das",
     "definition": "Pflanzliche Nahrungsmittel wie Karotten oder Tomaten."
   },
-  "geöffnet": {},
+  "geöffnet": {
+    "type": "adjective"
+  },
   "Gepäck": {
     "type": "noun",
     "genus": "neuter",
     "article": "das",
     "definition": "Koffer und Taschen, die man auf Reisen mitnimmt."
   },
-  "gerade": {},
-  "gern": {},
+  "gerade": {
+    "type": "adverb"
+  },
+  "gern": {
+    "type": "adverb"
+  },
   "Geschäft": {
     "type": "noun",
     "genus": "neuter",
@@ -1320,7 +1399,9 @@
     "article": "die",
     "definition": "Ein großer, überdachter Raum."
   },
-  "hallo": {},
+  "hallo": {
+    "type": "interjection"
+  },
   "halten": {
     "type": "verb"
   },
@@ -1400,8 +1481,12 @@
   "herzlich": {
     "type": "adjective"
   },
-  "heute": {},
-  "hier": {},
+  "heute": {
+    "type": "adverb"
+  },
+  "hier": {
+    "type": "adverb"
+  },
   "Hilfe": {
     "type": "noun",
     "genus": "feminine",
@@ -1450,17 +1535,27 @@
     "article": "der",
     "definition": "Das Bedürfnis, etwas zu essen."
   },
-  "ich": {},
-  "im": {},
-  "immer": {},
-  "in": {},
+  "ich": {
+    "type": "pronoun"
+  },
+  "im": {
+    "type": "preposition"
+  },
+  "immer": {
+    "type": "adverb"
+  },
+  "in": {
+    "type": "preposition"
+  },
   "Information": {
     "type": "noun",
     "genus": "feminine",
     "article": "die",
     "definition": "Eine Auskunft oder ein Wissen über etwas."
   },
-  "ins": {},
+  "ins": {
+    "type": "preposition"
+  },
   "international": {
     "type": "adjective"
   },
@@ -1470,7 +1565,9 @@
     "article": "das",
     "definition": "Ein weltweites Computernetzwerk."
   },
-  "ja": {},
+  "ja": {
+    "type": "particle"
+  },
   "Jacke": {
     "type": "noun",
     "genus": "feminine",
@@ -1486,7 +1583,9 @@
   "jeden": {
     "type": "verb"
   },
-  "jetzt": {},
+  "jetzt": {
+    "type": "adverb"
+  },
   "Job": {
     "type": "noun",
     "genus": "masculine",
@@ -1538,7 +1637,9 @@
   "kaufen": {
     "type": "verb"
   },
-  "kein": {},
+  "kein": {
+    "type": "pronoun"
+  },
   "kennen": {
     "type": "verb"
   },
@@ -1692,7 +1793,9 @@
   "lang": {
     "type": "adjective"
   },
-  "lange": {},
+  "lange": {
+    "type": "adverb"
+  },
   "langsam": {
     "type": "adjective"
   },
@@ -1730,8 +1833,12 @@
   "leicht": {
     "type": "adjective"
   },
-  "leid": {},
-  "leider": {},
+  "leid": {
+    "type": "adjective"
+  },
+  "leider": {
+    "type": "adverb"
+  },
   "leise": {
     "type": "adjective"
   },
@@ -1769,7 +1876,9 @@
   "liegen": {
     "type": "verb"
   },
-  "links": {},
+  "links": {
+    "type": "adverb"
+  },
   "Lkw": {
     "type": "noun",
     "genus": "masculine",
@@ -1809,9 +1918,12 @@
   "Mal": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Ein einzelner Zeitpunkt in einer Reihe von Wiederholungen."
   },
-  "man": {},
+  "man": {
+    "type": "pronoun"
+  },
   "Mann": {
     "type": "noun",
     "genus": "masculine",
@@ -1833,9 +1945,15 @@
     "article": "das",
     "definition": "Eine große Wassermasse mit Salzwasser."
   },
-  "mehr": {},
-  "mein": {},
-  "meinem": {},
+  "mehr": {
+    "type": "adverb"
+  },
+  "mein": {
+    "type": "pronoun"
+  },
+  "meinem": {
+    "type": "pronoun"
+  },
   "meinen": {
     "type": "verb"
   },
@@ -1854,8 +1972,12 @@
     "article": "die",
     "definition": "Ein weißes Getränk von Kühen."
   },
-  "mir": {},
-  "mit": {},
+  "mir": {
+    "type": "pronoun"
+  },
+  "mit": {
+    "type": "preposition"
+  },
   "mitbringen": {
     "type": "verb"
   },
@@ -1901,7 +2023,9 @@
     "article": "der",
     "definition": "Ein Zeitabschnitt von etwa vier Wochen."
   },
-  "morgen": {},
+  "morgen": {
+    "type": "adverb"
+  },
   "müde": {
     "type": "adjective"
   },
@@ -1920,7 +2044,9 @@
     "article": "die",
     "definition": "Eine erwachsene Person weiblichen Geschlechts, die ein Kind hat."
   },
-  "nach": {},
+  "nach": {
+    "type": "preposition"
+  },
   "nächsten": {
     "type": "verb"
   },
@@ -1933,18 +2059,30 @@
   "nehmen": {
     "type": "verb"
   },
-  "nein": {},
+  "nein": {
+    "type": "particle"
+  },
   "neu": {
     "type": "adjective"
   },
   "neuen": {
     "type": "verb"
   },
-  "neues": {},
-  "nicht": {},
-  "nichts": {},
-  "nie": {},
-  "noch": {},
+  "neues": {
+    "type": "adjective"
+  },
+  "nicht": {
+    "type": "adverb"
+  },
+  "nichts": {
+    "type": "pronoun"
+  },
+  "nie": {
+    "type": "adverb"
+  },
+  "noch": {
+    "type": "adverb"
+  },
   "normal": {
     "type": "adjective"
   },
@@ -1954,7 +2092,9 @@
     "article": "die",
     "definition": "Eine Zahl, die etwas identifiziert."
   },
-  "nur": {},
+  "nur": {
+    "type": "adverb"
+  },
   "oben": {
     "type": "verb"
   },
@@ -1964,12 +2104,18 @@
     "article": "das",
     "definition": "Süße Früchte, die man isst."
   },
-  "oder": {},
+  "oder": {
+    "type": "conjunction"
+  },
   "öffnen": {
     "type": "verb"
   },
-  "oft": {},
-  "ohne": {},
+  "oft": {
+    "type": "adverb"
+  },
+  "ohne": {
+    "type": "preposition"
+  },
   "Öl": {
     "type": "noun",
     "genus": "neuter",
@@ -2003,7 +2149,8 @@
   "Paar": {
     "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Zwei Dinge oder Personen, die zusammengehören."
   },
   "Papier": {
     "type": "noun",
@@ -2155,7 +2302,9 @@
     "article": "die",
     "definition": "Ein Dokument, das den zu zahlenden Betrag zeigt."
   },
-  "rechts": {},
+  "rechts": {
+    "type": "adverb"
+  },
   "Regen": {
     "type": "noun",
     "genus": "masculine",
@@ -2306,7 +2455,9 @@
   "schnell": {
     "type": "adjective"
   },
-  "schon": {},
+  "schon": {
+    "type": "adverb"
+  },
   "schön": {
     "type": "adjective"
   },
@@ -2379,28 +2530,42 @@
     "article": "die",
     "definition": "Ein Ort oder Bauwerk, das Touristen besuchen."
   },
-  "sehr": {},
+  "sehr": {
+    "type": "adverb"
+  },
   "sein": {
     "type": "verb"
   },
-  "seinem": {},
-  "seit": {},
+  "seinem": {
+    "type": "pronoun"
+  },
+  "seit": {
+    "type": "preposition"
+  },
   "selbstständig": {
     "type": "adjective"
   },
-  "sich": {},
-  "sie": {},
+  "sich": {
+    "type": "pronoun"
+  },
+  "sie": {
+    "type": "pronoun"
+  },
   "sitzen": {
     "type": "verb"
   },
-  "so": {},
+  "so": {
+    "type": "adverb"
+  },
   "Sofa": {
     "type": "noun",
     "genus": "neuter",
     "article": "das",
     "definition": "Ein bequemes Sitzmöbel für mehrere Personen."
   },
-  "sofort": {},
+  "sofort": {
+    "type": "adverb"
+  },
   "Sohn": {
     "type": "noun",
     "genus": "masculine",
@@ -2425,7 +2590,9 @@
   "spät": {
     "type": "adjective"
   },
-  "später": {},
+  "später": {
+    "type": "adverb"
+  },
   "Speisekarte": {
     "type": "noun",
     "genus": "feminine",
@@ -2639,11 +2806,15 @@
   "trinken": {
     "type": "verb"
   },
-  "tschüss": {},
+  "tschüss": {
+    "type": "interjection"
+  },
   "tun": {
     "type": "verb"
   },
-  "über": {},
+  "über": {
+    "type": "preposition"
+  },
   "übernachten": {
     "type": "verb"
   },
@@ -2656,20 +2827,30 @@
     "article": "die",
     "definition": "Ein Gerät, das die Zeit anzeigt."
   },
-  "um": {},
+  "um": {
+    "type": "preposition"
+  },
   "umziehen": {
     "type": "verb"
   },
-  "und": {},
-  "uns": {},
-  "unsere": {},
+  "und": {
+    "type": "conjunction"
+  },
+  "uns": {
+    "type": "pronoun"
+  },
+  "unsere": {
+    "type": "pronoun"
+  },
   "unserunten": {
     "type": "verb"
   },
   "unten": {
     "type": "verb"
   },
-  "unter": {},
+  "unter": {
+    "type": "preposition"
+  },
   "Unterricht": {
     "type": "noun",
     "genus": "masculine",
@@ -2739,10 +2920,18 @@
     "article": "der",
     "definition": "Eine Person aus der gleichen Familie."
   },
-  "viel": {},
-  "vielleicht": {},
-  "von": {},
-  "vor": {},
+  "viel": {
+    "type": "adjective"
+  },
+  "vielleicht": {
+    "type": "adverb"
+  },
+  "von": {
+    "type": "preposition"
+  },
+  "vor": {
+    "type": "preposition"
+  },
   "Vorname": {
     "type": "noun",
     "genus": "masculine",
@@ -2767,12 +2956,18 @@
   "wandern": {
     "type": "verb"
   },
-  "wann": {},
+  "wann": {
+    "type": "adverb"
+  },
   "warten": {
     "type": "verb"
   },
-  "warum": {},
-  "was": {},
+  "warum": {
+    "type": "adverb"
+  },
+  "was": {
+    "type": "pronoun"
+  },
   "waschen": {
     "type": "verb"
   },
@@ -2785,9 +2980,12 @@
   "Weg": {
     "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Eine Strecke oder Route von einem Ort zum anderen."
   },
-  "weh": {},
+  "weh": {
+    "type": "adjective"
+  },
   "weiblich": {
     "type": "adjective"
   },
@@ -2800,9 +2998,15 @@
   "weit": {
     "type": "adjective"
   },
-  "weiter": {},
-  "wenig": {},
-  "wer": {},
+  "weiter": {
+    "type": "adverb"
+  },
+  "wenig": {
+    "type": "adjective"
+  },
+  "wer": {
+    "type": "pronoun"
+  },
   "werden": {
     "type": "verb"
   },
@@ -2815,7 +3019,9 @@
   "wichtig": {
     "type": "adjective"
   },
-  "wie": {},
+  "wie": {
+    "type": "adverb"
+  },
   "wiederholen": {
     "type": "verb"
   },
@@ -2840,19 +3046,27 @@
     "article": "der",
     "definition": "Bewegte Luft."
   },
-  "wir": {},
+  "wir": {
+    "type": "pronoun"
+  },
   "wissen": {
     "type": "verb"
   },
-  "wo": {},
+  "wo": {
+    "type": "adverb"
+  },
   "Woche": {
     "type": "noun",
     "genus": "feminine",
     "article": "die",
     "definition": "Ein Zeitabschnitt von sieben Tagen."
   },
-  "woher": {},
-  "wohin": {},
+  "woher": {
+    "type": "adverb"
+  },
+  "wohin": {
+    "type": "adverb"
+  },
   "wohnen": {
     "type": "verb"
   },
@@ -2910,7 +3124,9 @@
     "article": "der",
     "definition": "Die Abgabe beim Grenzübertritt oder die Behörde dafür."
   },
-  "zu": {},
+  "zu": {
+    "type": "preposition"
+  },
   "zufrieden": {
     "type": "verb"
   },
@@ -2920,9 +3136,15 @@
     "article": "der",
     "definition": "Ein Fahrzeug auf Schienen für viele Fahrgäste."
   },
-  "zum": {},
-  "zurück": {},
-  "zurzeit": {},
+  "zum": {
+    "type": "preposition"
+  },
+  "zurück": {
+    "type": "adverb"
+  },
+  "zurzeit": {
+    "type": "adverb"
+  },
   "zusammen": {
     "type": "verb"
   },
