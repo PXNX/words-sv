@@ -18,7 +18,6 @@
 
   const labels = $derived({
     title: m.grammar_title({}, { locale: settings.interfaceLocale }),
-    section: m.learning_section({}, { locale: settings.interfaceLocale }),
     unavailable: m.grammar_unavailable({}, { locale: settings.interfaceLocale }),
     unsupported: m.grammar_unsupported({}, { locale: settings.interfaceLocale }),
     chooseArticle: m.grammar_choose_article({}, { locale: settings.interfaceLocale }),
@@ -37,6 +36,12 @@
     : page.url.searchParams.get('mode') === 'order' ? 'order'
     : page.url.searchParams.get('mode') === 'falsefriends' ? 'falsefriends'
     : 'fill'
+  );
+  const modeTitle = $derived(
+    grammarMode === 'order' ? 'Satzbau'
+    : grammarMode === 'determine' ? 'Bestimmung'
+    : grammarMode === 'falsefriends' ? 'Falsche Freunde'
+    : 'Lücken füllen'
   );
   const orderSentences = [
     ['Ich', 'lerne', 'Deutsch', 'jeden', 'Tag'],
@@ -208,12 +213,12 @@
 </script>
 
 <section
-  class="flex-1 min-h-0 grid content-center justify-items-center gap-4 p-[clamp(1rem,4vw,2rem)] overflow-x-hidden overflow-y-auto bg-[color:#ede4d5] dark:bg-[color:#213a5d] bg-[image:radial-gradient(circle_at_50%_15%,rgba(230,165,39,.18),transparent_34%),linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:auto,24px_24px,24px_24px] border-t-[3px] border-t-double border-t-[#172a45]"
+  class="flex-1 min-h-0 grid content-center justify-items-center gap-4 p-[clamp(1rem,4vw,2rem)] overflow-x-hidden overflow-y-auto bg-[color:#ede4d5] dark:bg-[color:#213a5d] bg-[image:radial-gradient(circle_at_50%_15%,rgba(230,165,39,.18),transparent_34%),linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:auto,24px_24px,24px_24px]"
   aria-label={labels.title}
 >
   <header class="text-center">
-    <span class="text-accent text-[.58rem] font-extrabold tracking-[.14em] uppercase">{labels.section} · {settings.vocabularyLevel.toUpperCase()}</span>
-    <h1 class="my-[.16rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,7vw,2.65rem)] font-normal leading-none">{labels.title}</h1>
+    <span class="text-accent text-[.58rem] font-extrabold tracking-[.14em] uppercase">{labels.title} · {settings.vocabularyLevel.toUpperCase()}</span>
+    <h1 class="my-[.16rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,7vw,2.65rem)] font-normal leading-none">{modeTitle}</h1>
     <p class="m-0 text-base-content/60 text-[.65rem] font-extrabold">{Math.min(position + 1, queue.length)} / {queue.length || 6}</p>
   </header>
   {#if !isSupported}
