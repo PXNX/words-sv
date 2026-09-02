@@ -43,6 +43,7 @@
     pronunciation: 'Aussprache',
     alltag: 'Emoji',
     wordQuiz: 'Word Quiz',
+    gamesGroup: 'Spiele',
     vocabularyGroup: 'Vokabeln',
     grammarGroup: 'Grammatik',
     grammarFill: 'Lücken füllen',
@@ -77,7 +78,7 @@
   function selectMode(mode: 'circle' | 'wordle' | 'vocab' | 'grammar' | 'hangman' | 'pronunciation' | 'alltag') {
     void goto(`/${mode}`);
   }
-  function openTutorial(mode: 'circle' | 'wordle') {
+  function openTutorial(mode: 'circle' | 'wordle' | 'hangman') {
     void goto(`/${mode}/tutorial`);
   }
   function openGrammar(mode: 'fill' | 'determine' | 'order' | 'falsefriends') {
@@ -118,12 +119,15 @@
       </span>
       <IconChevronRight class="home-streak-arrow" aria-hidden="true" />
     </button>
-    <h2 class="home-group-heading">{labels.vocabularyGroup}</h2>
+    <h2 class="home-group-heading">{labels.gamesGroup}</h2>
     <div class="home-games">
       <article><span class="home-icon" aria-hidden="true"><IconCrossword /></span><div class="home-title-row"><h2>{labels.modeCrossword}</h2><button type="button" class="home-tutorial-link" onclick={() => openTutorial('circle')} aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></button></div><p>{labels.homeCircle}</p><button type="button" onclick={() => selectMode('circle')}>{labels.homePlay}</button></article>
       <article><span class="home-icon" aria-hidden="true"><IconSpellcheck /></span><div class="home-title-row"><h2>{labels.modeWordle}</h2><button type="button" class="home-tutorial-link" onclick={() => openTutorial('wordle')} aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></button></div><p>{labels.homeWordle}</p><button type="button" onclick={() => selectMode('wordle')}>{labels.homePlay}</button></article>
+      <article><span class="home-icon" aria-hidden="true"><IconHangman /></span><div class="home-title-row"><h2>{labels.modeHangman}</h2><button type="button" class="home-tutorial-link" onclick={() => openTutorial('hangman')} aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></button></div><p>Guess the hidden word one letter at a time.</p><button type="button" onclick={() => selectMode('hangman')}>{labels.homePlay}</button></article>
+    </div>
+    <h2 class="home-group-heading">{labels.vocabularyGroup}</h2>
+    <div class="home-games">
       <article><span class="home-icon" aria-hidden="true"><IconQuiz /></span><h2>{labels.wordQuiz}</h2><p>{labels.homeVocab}</p><button type="button" onclick={() => selectMode('vocab')}>{labels.homePlay}</button></article>
-      <article><span class="home-icon" aria-hidden="true"><IconHangman /></span><h2>{labels.modeHangman}</h2><p>Guess the hidden word one letter at a time.</p><button type="button" onclick={() => selectMode('hangman')}>{labels.homePlay}</button></article>
       <article><span class="home-icon" aria-hidden="true"><IconMic /></span><h2>{labels.pronunciation}</h2><p>Listen to audio samples and practise speaking.</p><button type="button" onclick={() => selectMode('pronunciation')}>{labels.homePlay}</button></article>
       <article><span class="home-icon" aria-hidden="true"><IconEmoji /></span><h2>{labels.alltag}</h2><p>Präpositionen, Zahlen und Farben für den Alltag.</p><button type="button" onclick={() => selectMode('alltag')}>{labels.homePlay}</button></article>
       <article><span class="home-icon" aria-hidden="true"><IconSwapHoriz /></span><h2>{labels.grammarFalseFriends}</h2><p>Wörter, die täuschend ähnlich aussehen, aber etwas anderes bedeuten.</p><button type="button" onclick={() => openGrammar('falsefriends')}>{labels.homePlay}</button></article>

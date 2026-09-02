@@ -3,7 +3,7 @@
   import { settings } from '$lib/state/settings.svelte';
   import { wordMetadata } from '$lib/data/vocabulary';
   import { transcribeToIpa } from '$lib/vocab/ipa';
-  import { wordsMatch } from '$lib/vocab/speechMatch';
+  import { wordsMatch, bestGuess, ipaDiff, type CorrectionSegment } from '$lib/vocab/speechMatch';
   import { playSuccessSound } from '$lib/sounds';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconCheck from '~icons/material-symbols/check-rounded';
@@ -39,7 +39,9 @@
   let speaking = $state(false);
   let listening = $state(false);
   let heard = $state('');
+  let heardIpa = $state('');
   let matchState = $state<'idle' | 'correct' | 'incorrect'>('idle');
+  let correction = $state<CorrectionSegment[] | null>(null);
   let waveform = $state<number[]>(Array(BAR_COUNT).fill(IDLE_LEVEL));
   let mediaStream: MediaStream | null = null;
   let audioContext: AudioContext | null = null;
@@ -78,6 +80,8 @@
     practiced = false;
     matchState = 'idle';
     heard = '';
+    heardIpa = '';
+    correction = null;
     currentWord = candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : '';
   }
   function stopListening() {
@@ -105,13 +109,15 @@
     recognition.maxAlternatives = 3;
     recognition.onresult = (event) => {
       const result = event.results[event.results.length - 1];
-      const transcript = [...result].map((alternative) => alternative.transcript).join(' ');
+      const transcripts = [...result].map((alternative) => alternative.transcript);
       if (speaking) return;
-      heard = transcript;
+      heard = bestGuess(transcripts, spelling);
+      heardIpa = heard ? transcribeToIpa(heard, settings.lang) : '';
       if (!result.isFinal) return;
-      const isMatch = [...result].some((alternative) => wordsMatch(alternative.transcript, spelling));
+      const isMatch = transcripts.some((transcript) => wordsMatch(transcript, spelling));
       matchState = isMatch ? 'correct' : 'incorrect';
       practiced = true;
+      correction = isMatch ? null : ipaDiff(heardIpa, ipa);
       if (isMatch) {
         playSuccessSound(settings.sound, 'vocab');
         stopListening();
@@ -199,9 +205,18 @@
       <button class="inline-flex items-center justify-center gap-[.45rem] min-h-[2.5rem] px-[1rem] border border-[#172a45] rounded-full bg-[#172a45] text-[#fffdf7] text-[.68rem] font-black tracking-[.08em] uppercase disabled:opacity-50" onclick={speak} disabled={!speechSupported}><IconVolume class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />{speaking ? 'Playing sample' : 'Play audio sample'}</button>
 
       {#if matchState === 'correct'}
-        <p class="flex items-center gap-[.3rem] m-0 text-success text-[.68rem] font-extrabold"><IconCheck class="w-[1rem] h-[1rem]" aria-hidden="true" />Great pronunciation!{#if heard}<span class="text-base-content/50 font-bold">(heard "{heard}")</span>{/if}</p>
+        <div class="grid justify-items-center gap-[.35rem]">
+          <p class="flex items-center gap-[.4rem] m-0 px-[.75rem] py-[.35rem] rounded-full border border-success bg-success/15 text-success text-[.68rem] font-extrabold" role="status"><IconCheck class="w-[1.2rem] h-[1.2rem]" aria-hidden="true" />Great pronunciation!{#if heard}<span class="text-base-content/50 font-bold">(heard "{heard}")</span>{/if}</p>
+        </div>
       {:else if matchState === 'incorrect'}
-        <p class="flex items-center gap-[.3rem] m-0 text-error text-[.68rem] font-extrabold"><IconClose class="w-[1rem] h-[1rem]" aria-hidden="true" />Not quite{#if heard} — heard "{heard}"{/if}. Keep trying, we're still listening.</p>
+        <div class="grid justify-items-center gap-[.35rem]">
+          <p class="flex items-center gap-[.4rem] m-0 px-[.75rem] py-[.35rem] rounded-full border border-error bg-error/15 text-error text-[.68rem] font-extrabold" role="status"><IconClose class="w-[1.2rem] h-[1.2rem]" aria-hidden="true" />Not quite{#if heard} — heard "{heard}"{/if}. Keep trying, we're still listening.</p>
+          {#if correction && heardIpa}
+            <p class="m-0 text-base-content/60 text-[.65rem] font-bold">You said <span class="text-error font-mono">/{heardIpa}/</span></p>
+            <p class="m-0 font-mono text-[clamp(1.05rem,4.8vw,1.5rem)] tracking-[.03em]" aria-label={`Target pronunciation: ${ipa}`}>/{#each correction as segment, index (index)}<span class={segment.status === 'match' ? 'text-base-content' : segment.status === 'sub' ? 'text-error underline decoration-2 underline-offset-[3px]' : 'text-error/50 line-through'}>{segment.char}</span>{/each}/</p>
+            <p class="m-0 text-base-content/45 text-[.55rem] font-bold uppercase tracking-[.08em]">Underlined = wrong sound &middot; struck through = missing sound</p>
+          {/if}
+        </div>
       {:else if listening}
         <p class="flex items-center gap-[.3rem] m-0 text-accent text-[.68rem] font-extrabold"><span class="listening-dot" aria-hidden="true"></span>Listening for your voice…</p>
       {:else if !micSupported}
