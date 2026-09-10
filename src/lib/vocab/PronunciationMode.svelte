@@ -42,13 +42,17 @@
   let heardIpa = $state('');
   let matchState = $state<'idle' | 'correct' | 'incorrect'>('idle');
   let correction = $state<CorrectionSegment[] | null>(null);
+  let recognitionStalled = $state(false);
   let waveform = $state<number[]>(Array(BAR_COUNT).fill(IDLE_LEVEL));
   let mediaStream: MediaStream | null = null;
   let audioContext: AudioContext | null = null;
   let analyser: AnalyserNode | null = null;
   let animationFrame: number | null = null;
   let recognition: SpeechRecognitionLike | null = null;
+  let restartTimer: number | null = null;
   let stoppedIntentionally = true;
+  let consecutiveErrors = 0;
+  const MAX_CONSECUTIVE_ERRORS = 3;
 
   const candidates = $derived([...new Set(words.map((word) => word.toLocaleUpperCase()).filter((word) => Boolean(wordMetadata[settings.lang][word]))) ]);
   const spelling = $derived(currentWord ? wordMetadata[settings.lang][currentWord]?.spelling ?? currentWord : '');
@@ -82,11 +86,18 @@
     heard = '';
     heardIpa = '';
     correction = null;
+    recognitionStalled = false;
+    consecutiveErrors = 0;
     currentWord = candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : '';
+  }
+  function clearRestartTimer() {
+    if (restartTimer !== null) window.clearTimeout(restartTimer);
+    restartTimer = null;
   }
   function stopListening() {
     stoppedIntentionally = true;
     listening = false;
+    clearRestartTimer();
     if (animationFrame !== null) cancelAnimationFrame(animationFrame);
     animationFrame = null;
     analyser?.disconnect();
@@ -108,6 +119,7 @@
     recognition.interimResults = true;
     recognition.maxAlternatives = 3;
     recognition.onresult = (event) => {
+      consecutiveErrors = 0;
       const result = event.results[event.results.length - 1];
       const transcripts = [...result].map((alternative) => alternative.transcript);
       if (speaking) return;
@@ -119,18 +131,32 @@
       practiced = true;
       correction = isMatch ? null : ipaDiff(heardIpa, ipa);
       if (isMatch) {
-        playSuccessSound(settings.sound, 'vocab');
+        playSuccessSound(settings.sound, 'pronunciation');
         stopListening();
       }
     };
     recognition.onerror = (event) => {
-      if (event.error === 'not-allowed' || event.error === 'service-not-allowed') { recognitionSupported = false; }
+      if (event.error === 'not-allowed' || event.error === 'service-not-allowed') { recognitionSupported = false; return; }
+      // "no-speech" just means the mic heard silence — that's normal while waiting for the learner to talk, not a failure.
+      if (event.error === 'no-speech' || event.error === 'aborted') return;
+      consecutiveErrors += 1;
+      if (consecutiveErrors >= MAX_CONSECUTIVE_ERRORS) recognitionStalled = true;
     };
     recognition.onend = () => {
-      if (stoppedIntentionally || matchState === 'correct') return;
-      try { recognition?.start(); } catch { /* a start() call may already be pending */ }
+      if (stoppedIntentionally || matchState === 'correct' || recognitionStalled) return;
+      clearRestartTimer();
+      // A short delay avoids hammering the recognizer in a tight loop when it keeps failing instantly (e.g. blocked network access).
+      restartTimer = window.setTimeout(() => {
+        try { recognition?.start(); } catch { /* a start() call may already be pending */ }
+      }, 350);
     };
     try { recognition.start(); } catch { /* ignore duplicate start */ }
+  }
+  function retryAfterStall() {
+    recognitionStalled = false;
+    consecutiveErrors = 0;
+    stopListening();
+    void startListening();
   }
   async function startListening() {
     if (!micSupported || !currentWord) return;
@@ -185,7 +211,7 @@
 <section class="flex-1 min-h-0 grid content-center justify-items-center gap-4 p-[clamp(1rem,4vw,2rem)] overflow-y-auto bg-[color:#ede4d5] dark:bg-[color:#213a5d]" aria-label="Pronunciation practice">
   {#if currentWord}
     <header class="text-center"><span class="text-accent text-[.58rem] font-extrabold tracking-[.14em] uppercase">Pronunciation</span><h1 class="my-[.16rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,7vw,2.65rem)] font-normal leading-none">Listen & repeat</h1><p class="m-0 text-base-content/60 text-[.65rem] font-extrabold">Listen to the sample, then say the word — we're already listening.</p></header>
-    <article class="w-[min(100%,28rem)] grid justify-items-center gap-4 p-[clamp(1.4rem,7vw,2.2rem)] border border-neutral border-t-[4px] border-t-double border-t-neutral bg-neutral-content shadow-[8px_8px_0_rgba(164,94,56,.16)]">
+    <article class="w-[min(100%,28rem)] grid justify-items-center gap-4 p-[clamp(1.4rem,7vw,2.2rem)] rounded-2xl border border-neutral border-t-[4px] border-t-double border-t-neutral bg-neutral-content shadow-[0_12px_30px_rgba(23,42,69,.12)]">
       <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(2rem,10vw,3.3rem)] tracking-[.05em]">{spelling}</p>
       {#if ipa}<p class="m-0 -mt-2 text-accent/80 text-[.85rem] font-mono tracking-[.02em]" lang={settings.lang} aria-label={`International Phonetic Alphabet: ${ipa}`}>/{ipa}/</p>{/if}
 
@@ -204,7 +230,12 @@
 
       <button class="inline-flex items-center justify-center gap-[.45rem] min-h-[2.5rem] px-[1rem] border border-[#172a45] rounded-full bg-[#172a45] text-[#fffdf7] text-[.68rem] font-black tracking-[.08em] uppercase disabled:opacity-50" onclick={speak} disabled={!speechSupported}><IconVolume class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />{speaking ? 'Playing sample' : 'Play audio sample'}</button>
 
-      {#if matchState === 'correct'}
+      {#if recognitionStalled}
+        <div class="grid justify-items-center gap-[.4rem]">
+          <p class="flex items-center gap-[.4rem] m-0 px-[.75rem] py-[.35rem] rounded-full border border-error bg-error/15 text-error text-[.68rem] font-extrabold" role="status"><IconMicOff class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />Speech recognition isn't responding.</p>
+          <button type="button" class="min-h-[2.1rem] px-[.9rem] rounded-full border border-[#172a45] bg-transparent text-base-content text-[.62rem] font-extrabold tracking-[.06em] uppercase dark:border-[rgba(255,253,247,.5)]" onclick={retryAfterStall}>Try again</button>
+        </div>
+      {:else if matchState === 'correct'}
         <div class="grid justify-items-center gap-[.35rem]">
           <p class="flex items-center gap-[.4rem] m-0 px-[.75rem] py-[.35rem] rounded-full border border-success bg-success/15 text-success text-[.68rem] font-extrabold" role="status"><IconCheck class="w-[1.2rem] h-[1.2rem]" aria-hidden="true" />Great pronunciation!{#if heard}<span class="text-base-content/50 font-bold">(heard "{heard}")</span>{/if}</p>
           {#if heardIpa}<p class="m-0 text-base-content/60 text-[.65rem] font-bold">You said <span class="text-success font-mono">/{heardIpa}/</span></p>{/if}
@@ -229,7 +260,7 @@
         <p class="flex items-center gap-[.3rem] m-0 text-success text-[.68rem] font-extrabold"><IconCheck class="w-[1rem] h-[1rem]" aria-hidden="true" />Now repeat it aloud.</p>
       {/if}
     </article>
-    <button class="min-h-[2.45rem] px-[1rem] border border-success bg-success text-[#fffdf7] text-[.64rem] font-black tracking-[.08em] uppercase" onclick={nextWord}>Next word</button>
+    <button class="min-h-[2.45rem] px-[1.1rem] rounded-full border border-success bg-success text-[#fffdf7] text-[.64rem] font-black tracking-[.08em] uppercase" onclick={nextWord}>Next word</button>
   {:else}<p class="text-accent font-bold">No pronunciation words are available.</p>{/if}
 </section>
 
