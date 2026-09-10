@@ -21,7 +21,7 @@
         {@const letter = entry?.word[column] ?? (row === entries.length ? currentGuess[column] : '')}
         {@const mark = entry?.marks[column] ?? ''}
         <span
-          class="grid aspect-square place-items-center border border-[rgba(23,42,69,.34)] bg-[#fffdf7] text-[clamp(1rem,5vw,1.35rem)] font-black text-base-content dark:border-[rgba(255,253,247,.38)] dark:bg-[#172a45]"
+          class="grid aspect-square place-items-center rounded-lg border border-[rgba(23,42,69,.34)] bg-[#fffdf7] text-[clamp(1rem,5vw,1.35rem)] font-black text-base-content dark:border-[rgba(255,253,247,.38)] dark:bg-[#172a45]"
           class:border-success={mark === 'correct'}
           class:bg-success={mark === 'correct'}
           class:text-[#fffdf7]={mark === 'correct' || mark === 'absent'}

@@ -1,11 +1,12 @@
-export type SuccessSound = 'circle' | 'wordle' | 'vocab' | 'grammar';
+export type SuccessSound = 'circle' | 'wordle' | 'vocab' | 'grammar' | 'pronunciation';
 export type ErrorSound = 'vocab' | 'grammar';
 
 const successNoteSets: Record<SuccessSound, number[]> = {
   circle: [523.25, 659.25, 783.99],
   wordle: [440, 659.25],
   vocab: [587.33, 783.99],
-  grammar: [659.25, 830.61]
+  grammar: [659.25, 830.61],
+  pronunciation: [523.25, 659.25, 783.99, 1046.5]
 };
 const errorNoteSets: Record<ErrorSound, number[]> = {
   vocab: [329.63, 246.94],

@@ -52,7 +52,7 @@
   </header>
 
   {#if candidates.length === 0}
-    <div class="p-[1.25rem] border border-accent/42 bg-accent/8 text-accent text-[.75rem] font-extrabold text-center">No Hangman words are available for this level yet.</div>
+    <div class="p-[1.25rem] rounded-2xl border border-accent/42 bg-accent/8 text-accent text-[.75rem] font-extrabold text-center">No Hangman words are available for this level yet.</div>
   {:else}
     <div class="grid content-center justify-items-center gap-[.9rem]">
       <div class="flex items-end justify-center gap-[.7rem]" aria-label={`Wrong guesses: ${wrongGuesses} of 6`}>
@@ -75,7 +75,7 @@
       <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,8vw,2.7rem)] tracking-[.16em] leading-none" aria-label="Hidden word">{maskedWord}</p>
       {#if finished}
         <p class={won ? 'm-0 text-success text-[.7rem] font-extrabold' : 'm-0 text-error text-[.7rem] font-extrabold'}>{won ? 'Well done!' : `The word was ${target}.`}</p>
-        <button class="min-h-[2.45rem] px-[.9rem] border border-success bg-success text-[#fffdf7] text-[.64rem] font-extrabold tracking-[.08em] uppercase" onclick={start}>New word</button>
+        <button class="min-h-[2.45rem] px-[1rem] rounded-full border border-success bg-success text-[#fffdf7] text-[.64rem] font-extrabold tracking-[.08em] uppercase" onclick={start}>New word</button>
       {/if}
     </div>
 

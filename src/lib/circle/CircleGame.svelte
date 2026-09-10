@@ -73,6 +73,13 @@
   const GAME_STORAGE_KEY = 'wordcircle-active-round-v1';
   const ROUND_HISTORY_KEY = 'wordcircle-recent-base-words-v1';
 
+  // In definitions mode, tapping any crossword square should reveal a real definition — so only
+  // build rounds out of words that actually have one, otherwise crossing words (usually short
+  // filler words like articles or conjunctions) end up in the grid with nothing to show.
+  function withDefinitionsOnly(pool: string[]): string[] {
+    return showDefinitions ? pool.filter((word) => Boolean(wordDefinitions[settings.lang][word])) : pool;
+  }
+
   function readRecentBases(): string[] {
     if (typeof localStorage === 'undefined') return [];
     try {
@@ -114,7 +121,7 @@
     ? circleTutorialRounds[startingPracticeLanguage]!
     : initialGame
       ? roundFromStoredGame(initialGame)
-      : buildRound(selectedPool(wordPools[settings.lang], settings.vocabularyLevel, settings.includeLowerVocabulary), randomSeed(), [], settings.allowBackwardWords, hintableBaseWords);
+      : buildRound(withDefinitionsOnly(selectedPool(wordPools[settings.lang], settings.vocabularyLevel, settings.includeLowerVocabulary)), randomSeed(), [], settings.allowBackwardWords, hintableBaseWords);
 
   let roundNumber = $state(initialGame?.roundNumber ?? 1);
   let recentBaseWords = $state<string[]>(initialGame ? [...new Set([initialGame.words[0], ...initialRecentBases])] : initialRecentBases);
@@ -251,7 +258,7 @@
   }
   function newRound(resetCount = false) {
     if (resetCount) roundNumber = 0;
-    const nextRound = buildRound(selectedPool(wordPools[settings.lang], settings.vocabularyLevel, settings.includeLowerVocabulary), randomSeed(), recentBaseWords, settings.allowBackwardWords, hintableBaseWords);
+    const nextRound = buildRound(withDefinitionsOnly(selectedPool(wordPools[settings.lang], settings.vocabularyLevel, settings.includeLowerVocabulary)), randomSeed(), recentBaseWords, settings.allowBackwardWords, hintableBaseWords);
     currentRound = nextRound;
     recentBaseWords = [nextRound.words[0], ...recentBaseWords.filter((word) => word !== nextRound.words[0])].slice(0, 24);
     roundNumber += 1;
@@ -402,7 +409,7 @@
   class="relative min-h-[205px] min-[580px]:min-h-[260px] flex-1 grid place-items-stretch mt-0 p-[clamp(.35rem,1.6vw,.7rem)] bg-[#ede4d5] bg-[image:linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:24px_24px] border-t-0 border-b-2 border-b-[rgba(23,42,69,.45)] [transition:transform_.16s_cubic-bezier(.23,1,.32,1)] dark:bg-[#213a5d] dark:border-b-primary {shakeGrid ? 'animate-[shake_.28s_cubic-bezier(.23,1,.32,1)]' : ''}"
   aria-label="Crossword"
 >
-  <div class="relative z-[1] min-w-0 min-h-0 overflow-auto grid place-items-center p-[clamp(.65rem,3vw,1.25rem)] [overscroll-behavior:contain] [touch-action:pan-x_pan-y] border border-[rgba(23,42,69,.12)] bg-[linear-gradient(90deg,rgba(255,253,247,.3),rgba(255,253,247,.08)_18%,rgba(255,253,247,.08)_82%,rgba(255,253,247,.3))] shadow-[inset_0_0_0_6px_rgba(255,253,247,.15)] outline-0 [scrollbar-color:rgba(23,42,69,.4)_transparent]" aria-label="Scrollable crossword grid">
+  <div class="relative z-[1] min-w-0 min-h-0 overflow-auto grid place-items-center p-[clamp(.65rem,3vw,1.25rem)] rounded-2xl [overscroll-behavior:contain] [touch-action:pan-x_pan-y] border border-[rgba(23,42,69,.12)] bg-[linear-gradient(90deg,rgba(255,253,247,.3),rgba(255,253,247,.08)_18%,rgba(255,253,247,.08)_82%,rgba(255,253,247,.3))] shadow-[inset_0_0_0_6px_rgba(255,253,247,.15)] outline-0 [scrollbar-color:rgba(23,42,69,.4)_transparent]" aria-label="Scrollable crossword grid">
     <div class="relative grid w-max min-w-[calc(var(--cell-size)*3)] [--cell-size:clamp(2.35rem,10.2vw,3.1rem)]" style={`grid-template-columns: repeat(${grid.maxCol - grid.minCol + 1}, var(--cell-size));`}>
       {#each Array(grid.maxRow - grid.minRow + 1) as _, rowIndex}
         {#each Array(grid.maxCol - grid.minCol + 1) as _, colIndex}
@@ -410,7 +417,7 @@
           {@const solved = solvedCells.has(cellKey(row, col))}
           {@const hinted = hintedCells.has(cellKey(row, col)) && !solved}
           {#if cell}<div
-            class="aspect-square min-w-0 grid place-items-center border border-[#172a45] bg-[#fffdf7] text-[#172a45] text-[clamp(.7rem,3.4vw,1.1rem)] font-extrabold leading-none uppercase [transition:background_.18s_ease,color_.18s_ease,transform_.18s_cubic-bezier(.23,1,.32,1)]"
+            class="aspect-square min-w-0 grid place-items-center rounded-[4px] border border-[#172a45] bg-[#fffdf7] text-[#172a45] text-[clamp(.7rem,3.4vw,1.1rem)] font-extrabold leading-none uppercase [transition:background_.18s_ease,color_.18s_ease,transform_.18s_cubic-bezier(.23,1,.32,1)]"
             class:border-l-4={isWordStart(row, col, 'across')}
             class:border-r-4={isWordEnd(row, col, 'across')}
             class:border-t-4={isWordStart(row, col, 'down')}
