@@ -207,6 +207,7 @@
       {#if matchState === 'correct'}
         <div class="grid justify-items-center gap-[.35rem]">
           <p class="flex items-center gap-[.4rem] m-0 px-[.75rem] py-[.35rem] rounded-full border border-success bg-success/15 text-success text-[.68rem] font-extrabold" role="status"><IconCheck class="w-[1.2rem] h-[1.2rem]" aria-hidden="true" />Great pronunciation!{#if heard}<span class="text-base-content/50 font-bold">(heard "{heard}")</span>{/if}</p>
+          {#if heardIpa}<p class="m-0 text-base-content/60 text-[.65rem] font-bold">You said <span class="text-success font-mono">/{heardIpa}/</span></p>{/if}
         </div>
       {:else if matchState === 'incorrect'}
         <div class="grid justify-items-center gap-[.35rem]">
@@ -218,7 +219,10 @@
           {/if}
         </div>
       {:else if listening}
-        <p class="flex items-center gap-[.3rem] m-0 text-accent text-[.68rem] font-extrabold"><span class="listening-dot" aria-hidden="true"></span>Listening for your voice…</p>
+        <div class="grid justify-items-center gap-[.35rem]">
+          <p class="flex items-center gap-[.3rem] m-0 text-accent text-[.68rem] font-extrabold"><span class="listening-dot" aria-hidden="true"></span>Listening for your voice…</p>
+          {#if heard}<p class="m-0 text-base-content/60 text-[.65rem] font-bold">Heard so far: "{heard}"{#if heardIpa}<span class="font-mono"> /{heardIpa}/</span>{/if}</p>{/if}
+        </div>
       {:else if !micSupported}
         <p class="m-0 text-base-content/50 text-[.62rem] font-bold">Microphone input isn't available in this browser.</p>
       {:else if practiced}

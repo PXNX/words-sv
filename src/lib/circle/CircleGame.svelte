@@ -60,7 +60,7 @@
     en: 'P••••• · P•• · T••'
   };
 
-  let { practiceLanguage = null }: { practiceLanguage?: 'de' | 'en' | null } = $props();
+  let { practiceLanguage = null, showDefinitions = false }: { practiceLanguage?: 'de' | 'en' | null; showDefinitions?: boolean } = $props();
 
   // The circle route mounts a fresh component per navigation, so practiceLanguage never
   // changes after mount; freeze it once here rather than reading the prop repeatedly below.
@@ -236,6 +236,16 @@
     revealedHintWord = target;
     scheduleIdleHint(true);
   }
+  function revealCellDefinition(row: number, col: number) {
+    if (!showDefinitions) return;
+    const cell = inRange(row, col);
+    if (!cell) return;
+    const candidates = cell.words.filter((word) => Boolean(wordDefinitions[settings.lang][word]));
+    if (candidates.length === 0) return;
+    revealedHintWord = candidates.find((word) => !solvedSet.has(word)) ?? candidates[0];
+    idleHintReady = false;
+    scheduleIdleHint(true);
+  }
   function buzz(pattern: number | number[]) {
     if (settings.vibration && typeof navigator !== 'undefined' && 'vibrate' in navigator) navigator.vibrate(pattern);
   }
@@ -363,8 +373,8 @@
     }).join(' ');
   }
   function selectionAreaClasses() {
-    if (celebration) return 'relative z-[55] flex items-center justify-center h-[70px] min-h-[70px] p-0 bg-transparent max-[579px]:h-[54px] max-[579px]:min-h-[54px]';
-    const base = 'relative z-[1] flex-none pt-[.75rem] pb-[.35rem] text-center bg-[linear-gradient(90deg,transparent,rgba(23,42,69,.025)_22%,rgba(23,42,69,.025)_78%,transparent)] max-[579px]:pt-[.45rem] max-[579px]:pb-[.1rem]';
+    if (celebration) return 'relative z-[55] flex items-center justify-center h-[70px] min-h-[70px] p-0 bg-[#fffdf7] dark:bg-[#172a45] max-[579px]:h-[54px] max-[579px]:min-h-[54px]';
+    const base = 'relative z-[1] flex-none pt-[.75rem] pb-[.35rem] text-center bg-[linear-gradient(90deg,transparent,rgba(23,42,69,.025)_22%,rgba(23,42,69,.025)_78%,transparent),#fffdf7] dark:bg-[linear-gradient(90deg,transparent,rgba(255,253,247,.04)_22%,rgba(255,253,247,.04)_78%,transparent),#172a45] max-[579px]:pt-[.45rem] max-[579px]:pb-[.1rem]';
     const heights = installPrompt && !previewWord ? 'min-h-[96px] max-[579px]:min-h-[70px]' : 'min-h-[70px] max-[579px]:min-h-[54px]';
     return `${base} ${heights}`;
   }
@@ -415,7 +425,12 @@
             class:bg-primary={solved}
             class:scale-[.965]={solved}
             class:animate-[solve-cell_.32s_cubic-bezier(.23,1,.32,1)]={solved}
-            aria-label={solved ? cell.letter : 'open cell'}
+            class:cursor-pointer={showDefinitions}
+            role={showDefinitions ? 'button' : undefined}
+            tabindex={showDefinitions ? 0 : undefined}
+            onclick={showDefinitions ? () => revealCellDefinition(row, col) : undefined}
+            onkeydown={showDefinitions ? (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); revealCellDefinition(row, col); } } : undefined}
+            aria-label={solved ? cell.letter : showDefinitions ? 'Show definition' : 'open cell'}
           >{solved ? cell.letter : ''}</div>{:else}<div class="aspect-square"></div>{/if}
         {/each}
       {/each}
@@ -462,7 +477,7 @@
   {/if}
 </div>
 
-<div class="relative flex-[0_0_clamp(214px,34svh,270px)] min-h-0 grid place-items-center border-t border-b border-[rgba(23,42,69,.16)] min-[580px]:min-h-[300px] min-[580px]:flex-auto">
+<div class="relative flex-[0_0_clamp(214px,34svh,270px)] min-h-0 grid place-items-center border-t border-b border-[rgba(23,42,69,.16)] bg-[#fffdf7] dark:bg-[#172a45] min-[580px]:min-h-[300px] min-[580px]:flex-auto">
   <svg bind:this={circleEl} viewBox="0 0 292 292" class="w-[min(100%,238px)] min-[580px]:w-[292px] [touch-action:none] overflow-visible select-none" role="application" aria-label={labels.hint} onpointerdown={(event) => startSwipe(event)} onpointermove={extendSwipe}>
     <circle cx={CIRCLE} cy={CIRCLE} r={LETTER_RADIUS} class="[fill:none] stroke-[#172a45] [stroke-width:1.1] opacity-[.28] dark:stroke-[#fffdf7]" /><circle cx={CIRCLE} cy={CIRCLE} r="68" class="[fill:none] stroke-[#172a45] [stroke-width:1] opacity-[.12] dark:stroke-[#fffdf7]" /><circle cx={CIRCLE} cy={CIRCLE} r="47" class="[fill:none] stroke-primary [stroke-width:1.8] opacity-90" /><path d="M124 146a22 22 0 1 0 44 0a22 22 0 1 1-44 0Z" class="fill-[#172a45] opacity-[.83] dark:fill-[#fffdf7]" />
     <text x={CIRCLE} y="142" text-anchor="middle" class={`font-['DM_Serif_Display'] text-[13px] tracking-[.08em] fill-[rgba(23,42,69,.52)] dark:fill-[rgba(255,253,247,.55)] ${activeWord.length > 0 ? 'fill-[#c98220] dark:fill-primary' : 'fill-[#a0621d] font-[\'DM_Sans\'] text-[10.8px] font-extrabold tracking-[.08em]'}`}>{coreReadout}</text><text x={CIRCLE} y="161" text-anchor="middle" class="fill-[rgba(23,42,69,.5)] font-['DM_Sans'] text-[5.8px] font-extrabold tracking-[.18em] dark:fill-[rgba(255,253,247,.55)]">{activeWord ? traceCaption : '·'}</text>
