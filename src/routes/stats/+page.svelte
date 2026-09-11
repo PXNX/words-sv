@@ -65,7 +65,7 @@
   });
 </script>
 
-<section class="flex-1 min-h-0 m-0 p-[clamp(1rem,5vw,2rem)] overflow-x-hidden overflow-y-auto bg-[rgba(255,253,247,.98)] dark:bg-[rgba(23,42,69,.99)]" dir={interfaceDirection} lang={settings.interfaceLocale} aria-label={labels.title}>
+<section class="flex-1 min-h-0 m-0 px-[clamp(1rem,5vw,2rem)] pb-[clamp(1rem,5vw,2rem)] pt-[clamp(2.9rem,10vw,3.6rem)] overflow-x-hidden overflow-y-auto bg-[rgba(255,253,247,.98)] dark:bg-[rgba(23,42,69,.99)]" dir={interfaceDirection} lang={settings.interfaceLocale} aria-label={labels.title}>
   <header class="grid gap-[.2rem]"><p class="m-0 text-accent text-[.62rem] font-black tracking-[.12em] uppercase">{labels.kicker}</p><h1 class="m-0 text-base-content font-['DM_Serif_Display',serif] text-[clamp(1.6rem,7vw,2.2rem)] font-normal tracking-[-.03em] leading-none">{labels.title}</h1></header>
 
   <section class={`mt-[1.2rem] px-4 py-[.9rem] border border-base-content/[.28] dark:border-base-content/[.36] border-l-4 [border-left-style:double] dark:border-l-[rgba(255,253,247,.36)] shadow-[4px_4px_0_rgba(230,165,39,.15)] bg-[rgba(255,253,247,.72)] dark:bg-[#213a5d] ${settings.streak.qualified ? 'border-l-[#34824d]' : 'border-l-[#e6a527]'}`} aria-label={labels.streak}>

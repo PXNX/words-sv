@@ -85,7 +85,7 @@
   });
 </script>
 
-<aside class="flex-1 min-h-0 m-0 p-[clamp(1rem,5vw,2rem)] overflow-y-auto border-0 bg-[rgba(255,253,247,.98)] dark:bg-[rgba(23,42,69,.99)] shadow-[0_18px_55px_rgba(23,42,69,.2)] animate-[drop-in_.2s_cubic-bezier(.23,1,.32,1)]" aria-label={labels.settingsHint} dir={interfaceDirection} lang={settings.interfaceLocale}>
+<aside class="flex-1 min-h-0 m-0 px-[clamp(1rem,5vw,2rem)] pb-[clamp(1rem,5vw,2rem)] pt-[clamp(2.9rem,10vw,3.6rem)] overflow-y-auto border-0 bg-[rgba(255,253,247,.98)] dark:bg-[rgba(23,42,69,.99)] shadow-[0_18px_55px_rgba(23,42,69,.2)] animate-[drop-in_.2s_cubic-bezier(.23,1,.32,1)]" aria-label={labels.settingsHint} dir={interfaceDirection} lang={settings.interfaceLocale}>
   <div class="flex items-center gap-3 text-base-content">
     <span class="relative w-[34px] h-[34px] block flex-none" aria-hidden="true">
       <i class="absolute block w-[21px] h-[21px] rounded-full border-2 border-neutral top-[1px] left-[1px]"></i>
