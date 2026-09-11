@@ -1,10 +1,13 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { page } from '$app/state';
   import { m } from '$lib/paraglide/messages';
   import { getTextDirection } from '$lib/paraglide/runtime';
   import { settings } from '$lib/state/settings.svelte';
   import TutorialDialog from '$lib/TutorialDialog.svelte';
   import { requestCirclePractice } from '$lib/circle/practice';
+
+  const destination = $derived(page.url.searchParams.get('mode') === 'definitions' ? '/circle/definitions' : '/circle');
 
   const circleTutorialHints: Record<'de' | 'en', string> = {
     de: 'G••••• · G•• · T••',
@@ -27,7 +30,7 @@
 
   function beginPractice() {
     requestCirclePractice(tutorialLanguage);
-    void goto('/circle');
+    void goto(destination);
   }
 </script>
 

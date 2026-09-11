@@ -120,6 +120,7 @@
     recognition.maxAlternatives = 3;
     recognition.onresult = (event) => {
       consecutiveErrors = 0;
+      recognitionStalled = false;
       const result = event.results[event.results.length - 1];
       const transcripts = [...result].map((alternative) => alternative.transcript);
       if (speaking) return;
@@ -143,12 +144,15 @@
       if (consecutiveErrors >= MAX_CONSECUTIVE_ERRORS) recognitionStalled = true;
     };
     recognition.onend = () => {
-      if (stoppedIntentionally || matchState === 'correct' || recognitionStalled) return;
+      if (stoppedIntentionally || matchState === 'correct') return;
       clearRestartTimer();
-      // A short delay avoids hammering the recognizer in a tight loop when it keeps failing instantly (e.g. blocked network access).
+      // Keep retrying even once "stalled" (transient network/service errors happen on their own and
+      // shouldn't require the learner to notice and tap "Try again"), just back off so a persistently
+      // failing recognizer doesn't hammer in a tight loop.
+      const delay = Math.min(350 * 2 ** consecutiveErrors, 5000);
       restartTimer = window.setTimeout(() => {
         try { recognition?.start(); } catch { /* a start() call may already be pending */ }
-      }, 350);
+      }, delay);
     };
     try { recognition.start(); } catch { /* ignore duplicate start */ }
   }

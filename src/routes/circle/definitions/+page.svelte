@@ -9,7 +9,7 @@
 
   const practiceLanguage = browser ? consumeCirclePracticeRequest() : null;
   const needsTutorial = browser && !practiceLanguage && (settings.lang === 'de' || settings.lang === 'en') && localStorage.getItem(CIRCLE_TUTORIAL_STATE_KEY) !== 'complete';
-  if (needsTutorial) void goto('/circle/tutorial', { replaceState: true });
+  if (needsTutorial) void goto('/circle/tutorial?mode=definitions', { replaceState: true });
 </script>
 
 <CircleGame {practiceLanguage} showDefinitions />
