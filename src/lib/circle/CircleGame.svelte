@@ -464,7 +464,7 @@
 <svelte:window onpointerup={endSwipe} onpointercancel={endSwipe} />
 
 <div
-  class="relative min-h-[120px] max-h-[44svh] min-[580px]:min-h-[150px] flex-none grid place-items-stretch mt-0 p-[clamp(.35rem,1.6vw,.7rem)] bg-[#ede4d5] bg-[image:linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:24px_24px] border-t-0 border-b-2 border-b-[rgba(23,42,69,.45)] [transition:transform_.16s_cubic-bezier(.23,1,.32,1)] dark:bg-[#213a5d] dark:border-b-primary {shakeGrid ? 'animate-[shake_.28s_cubic-bezier(.23,1,.32,1)]' : ''}"
+  class="relative min-h-[120px] min-[580px]:min-h-[150px] flex-1 grid place-items-stretch mt-0 p-[clamp(.35rem,1.6vw,.7rem)] bg-[#ede4d5] bg-[image:linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:24px_24px] border-t-0 border-b-2 border-b-[rgba(23,42,69,.45)] [transition:transform_.16s_cubic-bezier(.23,1,.32,1)] dark:bg-[#213a5d] dark:border-b-primary {shakeGrid ? 'animate-[shake_.28s_cubic-bezier(.23,1,.32,1)]' : ''}"
   aria-label="Crossword"
 >
   <div class="relative z-[1] min-w-0 min-h-0 overflow-auto grid place-items-center p-[clamp(.65rem,3vw,1.25rem)] rounded-2xl [overscroll-behavior:contain] [touch-action:pan-x_pan-y] border border-[rgba(23,42,69,.12)] bg-[linear-gradient(90deg,rgba(255,253,247,.3),rgba(255,253,247,.08)_18%,rgba(255,253,247,.08)_82%,rgba(255,253,247,.3))] shadow-[inset_0_0_0_6px_rgba(255,253,247,.15)] outline-0 [scrollbar-color:rgba(23,42,69,.4)_transparent]" aria-label="Scrollable crossword grid">
