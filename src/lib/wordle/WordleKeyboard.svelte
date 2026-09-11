@@ -33,7 +33,7 @@
           type="button"
           onclick={() => onPress(letter)}
           disabled={disabled && !guided}
-          class="min-w-[clamp(1.5rem,8.5cqw,2.8rem)] h-[clamp(2.2rem,11cqw,3.35rem)] rounded-lg border border-[rgba(23,42,69,.28)] bg-[#fffdf7] text-[clamp(.65rem,3cqw,.9rem)] font-black text-base-content [touch-action:manipulation] [transition:transform_.1s_cubic-bezier(.23,1,.32,1),background_.1s_ease] dark:border-[rgba(255,253,247,.38)] dark:bg-[#172a45] active:scale-90 active:bg-primary disabled:opacity-45"
+          class="min-w-[clamp(1.65rem,9.2cqw,3.05rem)] h-[clamp(2.4rem,11.8cqw,3.6rem)] rounded-lg border border-[rgba(23,42,69,.28)] bg-[#fffdf7] text-[clamp(.7rem,3.2cqw,.95rem)] font-black text-base-content [touch-action:manipulation] [transition:transform_.1s_cubic-bezier(.23,1,.32,1),background_.1s_ease] dark:border-[rgba(255,253,247,.38)] dark:bg-[#172a45] active:scale-90 active:bg-primary disabled:opacity-45"
           class:border-success={marks[letter] === 'correct' && !expected}
           class:bg-success={marks[letter] === 'correct'}
           class:text-[#fffdf7]={marks[letter] === 'correct' || marks[letter] === 'absent'}
@@ -58,7 +58,7 @@
         type="button"
         onclick={() => onPress(letter)}
         disabled={disabled && !guided}
-        class="min-w-[clamp(1.8rem,9.5cqw,3.1rem)] h-[clamp(2.2rem,11cqw,3.35rem)] rounded-lg border border-[rgba(23,42,69,.28)] bg-[#fffdf7] text-[clamp(.65rem,3cqw,.9rem)] font-black text-base-content [touch-action:manipulation] [transition:transform_.1s_cubic-bezier(.23,1,.32,1),background_.1s_ease] dark:border-[rgba(255,253,247,.38)] dark:bg-[#172a45] active:scale-90 active:bg-primary disabled:opacity-45"
+        class="min-w-[clamp(1.95rem,10.2cqw,3.35rem)] h-[clamp(2.4rem,11.8cqw,3.6rem)] rounded-lg border border-[rgba(23,42,69,.28)] bg-[#fffdf7] text-[clamp(.7rem,3.2cqw,.95rem)] font-black text-base-content [touch-action:manipulation] [transition:transform_.1s_cubic-bezier(.23,1,.32,1),background_.1s_ease] dark:border-[rgba(255,253,247,.38)] dark:bg-[#172a45] active:scale-90 active:bg-primary disabled:opacity-45"
         class:border-success={marks[letter] === 'correct' && !expected}
         class:bg-success={marks[letter] === 'correct'}
         class:text-[#fffdf7]={marks[letter] === 'correct' || marks[letter] === 'absent'}
@@ -77,7 +77,7 @@
       type="button"
       onclick={onRemove}
       disabled={disabled && !guided}
-      class="min-w-[clamp(2.1rem,11cqw,3.5rem)] h-[clamp(2.2rem,11cqw,3.35rem)] rounded-lg border border-[rgba(23,42,69,.28)] bg-[#fffdf7] text-[clamp(.65rem,3cqw,.9rem)] font-black text-base-content [touch-action:manipulation] [transition:transform_.1s_cubic-bezier(.23,1,.32,1),background_.1s_ease] dark:border-[rgba(255,253,247,.38)] dark:bg-[#172a45] active:scale-90 active:bg-primary disabled:opacity-45"
+      class="min-w-[clamp(2.25rem,11.8cqw,3.75rem)] h-[clamp(2.4rem,11.8cqw,3.6rem)] rounded-lg border border-[rgba(23,42,69,.28)] bg-[#fffdf7] text-[clamp(.7rem,3.2cqw,.95rem)] font-black text-base-content [touch-action:manipulation] [transition:transform_.1s_cubic-bezier(.23,1,.32,1),background_.1s_ease] dark:border-[rgba(255,253,247,.38)] dark:bg-[#172a45] active:scale-90 active:bg-primary disabled:opacity-45"
       class:opacity-[.42]={guided}
     >⌫</button>
   </div>

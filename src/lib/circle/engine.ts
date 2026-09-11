@@ -173,7 +173,7 @@ export function randomSeed() {
   }
   return Math.floor(Math.random() * 2147483647) ^ Date.now();
 }
-export function buildRound(pool: string[], seed: number, excludedBases: string[] = [], allowBackward = false, hintableBaseWords: ReadonlySet<string> = new Set()): Round {
+export function buildRound(pool: string[], seed: number, excludedBases: string[] = [], allowBackward = false, hintableBaseWords: ReadonlySet<string> = new Set(), extraWords = 0): Round {
   const rng = makeRng(seed);
   const normalized = [...new Set(pool.map((word) => word.trim().normalize('NFC').toUpperCase()).filter((word) => /^\p{L}+$/u.test(word) && [...word].length >= 3 && [...word].length <= 8))];
   const bases = shuffle(normalized.filter((word) => [...word].length >= 5 && [...word].length <= 8 && normalized.filter((candidate) => candidate !== word && canSpell(candidate, [...word])).length >= 5), rng);
@@ -185,7 +185,7 @@ export function buildRound(pool: string[], seed: number, excludedBases: string[]
     const grid = emptyGrid();
     writePlacement(grid, { word: base, row: 0, col: 0, orientation: 'across' });
     const selected = [base];
-    const target = 6 + Math.floor(rng() * 3);
+    const target = 6 + extraWords + Math.floor(rng() * 3);
     const candidates = shuffle(normalized.filter((word) => word !== base && [...word].length >= 3 && canSpell(word, [...base])), rng);
     while (selected.length < target) {
       let placed = false;

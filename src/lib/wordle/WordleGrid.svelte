@@ -16,12 +16,12 @@
   {#each Array(rows) as _, row}
     {@const entry = entries[row]}
     <div class="flex items-center gap-[.35rem]">
-      <div class="grid gap-[clamp(.25rem,1.2vw,.42rem)]" style={`grid-template-columns:repeat(${wordLength},minmax(0,clamp(2.05rem,${Math.min(12, 60 / wordLength)}vw,3.35rem)));`}>
+      <div class="grid gap-[clamp(.2rem,1vw,.34rem)]" style={`grid-template-columns:repeat(${wordLength},minmax(0,clamp(1.6rem,${Math.min(10, 48 / wordLength)}vw,2.55rem)));`}>
       {#each Array(wordLength) as _, column}
         {@const letter = entry?.word[column] ?? (row === entries.length ? currentGuess[column] : '')}
         {@const mark = entry?.marks[column] ?? ''}
         <span
-          class="grid aspect-square place-items-center rounded-lg border border-[rgba(23,42,69,.34)] bg-[#fffdf7] text-[clamp(1rem,5vw,1.35rem)] font-black text-base-content dark:border-[rgba(255,253,247,.38)] dark:bg-[#172a45]"
+          class="grid aspect-square place-items-center rounded-lg border border-[rgba(23,42,69,.34)] bg-[#fffdf7] text-[clamp(.75rem,3.8vw,1.05rem)] font-black text-base-content dark:border-[rgba(255,253,247,.38)] dark:bg-[#172a45]"
           class:border-success={mark === 'correct'}
           class:bg-success={mark === 'correct'}
           class:text-[#fffdf7]={mark === 'correct' || mark === 'absent'}

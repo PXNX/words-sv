@@ -68,6 +68,9 @@
   // svelte-ignore state_referenced_locally
   const startingPracticeLanguage = practiceLanguage;
 
+  const CIRCLE = 146;
+  const LETTER_RADIUS = 120;
+  const LETTER_BUBBLE_OUTWARD = 8;
   const GAME_STORAGE_KEY = 'wordcircle-active-round-v1';
   const ROUND_HISTORY_KEY = 'wordcircle-recent-base-words-v1';
 
@@ -123,12 +126,15 @@
     ? circleTutorialRounds[startingPracticeLanguage]!
     : initialGame
       ? roundFromStoredGame(initialGame)
-      : buildRound(withDefinitionsOnly(selectedPool(wordPools[settings.lang], settings.vocabularyLevel, settings.includeLowerVocabulary)), randomSeed(), [], settings.allowBackwardWords, hintableBaseWords);
+      : buildRound(withDefinitionsOnly(selectedPool(wordPools[settings.lang], settings.vocabularyLevel, settings.includeLowerVocabulary)), randomSeed(), [], settings.allowBackwardWords, hintableBaseWords, showDefinitions ? 3 : 0);
 
   let roundNumber = $state(initialGame?.roundNumber ?? 1);
   let recentBaseWords = $state<string[]>(initialGame ? [...new Set([initialGame.words[0], ...initialRecentBases])] : initialRecentBases);
   let currentRound = $state<Round>(initialRound);
   let typedWord = $state('');
+  let selectedPath = $state<number[]>([]);
+  let isDragging = $state(false);
+  let circleEl = $state<SVGSVGElement>();
   let solvedWords = $state<string[]>(initialGame?.solvedWords ?? []);
   let feedback = $state<'correct' | 'wrong' | null>(null);
   let feedbackWord = $state('');
@@ -145,7 +151,7 @@
   let loadingNextRound = $state(false);
 
   const labels = $derived({
-    hint: m.hint({}, { locale: settings.interfaceLocale }),
+    hint: showDefinitions ? m.type_hint({}, { locale: settings.interfaceLocale }) : m.hint({}, { locale: settings.interfaceLocale }),
     allDone: m.all_done({}, { locale: settings.interfaceLocale }),
     time: m.time({}, { locale: settings.interfaceLocale }),
     continue: m.continue({}, { locale: settings.interfaceLocale }),
@@ -153,17 +159,21 @@
     readMore: m.read_more({}, { locale: settings.interfaceLocale }),
     install: m.install({}, { locale: settings.interfaceLocale }),
     installHint: m.install_hint({}, { locale: settings.interfaceLocale }),
-    tracePrompt: m.trace_prompt({}, { locale: settings.interfaceLocale }),
-    traceActive: m.trace_active({}, { locale: settings.interfaceLocale }),
+    tracePrompt: showDefinitions ? m.type_prompt({}, { locale: settings.interfaceLocale }) : m.trace_prompt({}, { locale: settings.interfaceLocale }),
+    traceActive: showDefinitions ? m.type_active({}, { locale: settings.interfaceLocale }) : m.trace_active({}, { locale: settings.interfaceLocale }),
     tutorial: m.tutorial({}, { locale: settings.interfaceLocale }),
     idleHint: m.idle_hint({}, { locale: settings.interfaceLocale })
   });
 
   const grid = $derived(currentRound.grid);
+  const circleLetters = $derived(currentRound.letters);
   const solvedSet = $derived(new Set(solvedWords));
   const maxWordLength = $derived(currentRound.words.reduce((max, word) => Math.max(max, word.length), 0));
-  const previewWord = $derived(typedWord || feedbackWord);
-  const coreReadout = $derived(typedWord || labels.tracePrompt);
+  const activeWord = $derived(selectedPath.map((index) => circleLetters[index]).join(''));
+  const currentInput = $derived(showDefinitions ? typedWord : activeWord);
+  const previewWord = $derived(currentInput || feedbackWord);
+  const coreReadout = $derived(currentInput || labels.tracePrompt);
+  const traceCaption = $derived(currentInput ? labels.traceActive : labels.tracePrompt);
   const tutorialHint = $derived(practiceLanguage ? circleTutorialHints[practiceLanguage] : '');
   const hintDefinition = $derived(revealedHintWord ? wordDefinitions[settings.lang][revealedHintWord] ?? null : null);
   const feedbackSpelling = $derived(wordMetadata[settings.lang][feedbackWord]?.spelling ?? feedbackWord);
@@ -180,6 +190,21 @@
       entry.word.split('').forEach((_letter, index) => keys.add(cellKey(entry.row + (entry.orientation === 'down' ? index : 0), entry.col + (entry.orientation === 'across' ? index : 0))));
     });
     return keys;
+  });
+  // While typing in keyboard mode, highlight the word slot the letters so far are filling —
+  // so the field being typed stays visible on the grid, not just in the readout text above.
+  const typingWord = $derived(
+    showDefinitions && typedWord
+      ? currentRound.words.find((word) => word === typedWord && !solvedSet.has(word)) ?? currentRound.words.find((word) => word.startsWith(typedWord) && !solvedSet.has(word)) ?? null
+      : null
+  );
+  const typingCells = $derived.by(() => {
+    const cells = new Map<string, string>();
+    if (!typingWord) return cells;
+    const placement = grid.placements.find((entry) => entry.word === typingWord);
+    if (!placement) return cells;
+    placementCells(placement).forEach((point, index) => cells.set(cellKey(point.row, point.col), typedWord[index] ?? ''));
+    return cells;
   });
 
   $effect(() => {
@@ -256,11 +281,12 @@
   }
   function newRound(resetCount = false) {
     if (resetCount) roundNumber = 0;
-    const nextRound = buildRound(withDefinitionsOnly(selectedPool(wordPools[settings.lang], settings.vocabularyLevel, settings.includeLowerVocabulary)), randomSeed(), recentBaseWords, settings.allowBackwardWords, hintableBaseWords);
+    const nextRound = buildRound(withDefinitionsOnly(selectedPool(wordPools[settings.lang], settings.vocabularyLevel, settings.includeLowerVocabulary)), randomSeed(), recentBaseWords, settings.allowBackwardWords, hintableBaseWords, showDefinitions ? 3 : 0);
     currentRound = nextRound;
     recentBaseWords = [nextRound.words[0], ...recentBaseWords.filter((word) => word !== nextRound.words[0])].slice(0, 24);
     roundNumber += 1;
     typedWord = '';
+    selectedPath = [];
     solvedWords = [];
     feedback = null;
     feedbackWord = '';
@@ -299,7 +325,6 @@
       }
       celebration = true;
     }
-    typedWord = '';
   }
   function pressLetter(letter: string) {
     if (celebration || typedWord.length >= maxWordLength) return;
@@ -321,7 +346,7 @@
     typedWord = next;
     buzz(7);
     const match = currentRound.words.find((word) => word === next && !solvedSet.has(word));
-    if (match) submitWord(match);
+    if (match) { submitWord(match); typedWord = ''; }
   }
   function removeTypedLetter() {
     if (celebration || !typedWord) return;
@@ -331,13 +356,90 @@
     explainOpen = false;
     typedWord = typedWord.slice(0, -1);
   }
+  function position(index: number, total: number, outward = 0) {
+    const angle = (index / total) * Math.PI * 2 - Math.PI / 2;
+    const radius = LETTER_RADIUS + outward;
+    return { x: CIRCLE + radius * Math.cos(angle), y: CIRCLE + radius * Math.sin(angle) };
+  }
+  function pointFromEvent(event: PointerEvent) {
+    const rect = circleEl?.getBoundingClientRect();
+    if (!rect) return null;
+    return { x: ((event.clientX - rect.left) / rect.width) * 292, y: ((event.clientY - rect.top) / rect.height) * 292 };
+  }
+  function nearestLetter(point: { x: number; y: number }) {
+    let closest = -1;
+    let distance = Infinity;
+    circleLetters.forEach((_letter, index) => {
+      const letter = position(index, circleLetters.length);
+      const nextDistance = Math.hypot(point.x - letter.x, point.y - letter.y);
+      if (nextDistance < distance) {
+        distance = nextDistance;
+        closest = index;
+      }
+    });
+    return distance < 36 ? closest : -1;
+  }
+  function chooseLetter(index: number) {
+    if (celebration || selectedPath.includes(index)) return;
+    noteGameInput();
+    feedback = null;
+    feedbackWord = '';
+    explainOpen = false;
+    selectedPath = [...selectedPath, index];
+    buzz(7);
+  }
+  function startSwipe(event: PointerEvent, knownIndex = -1) {
+    if (celebration) return;
+    event.preventDefault();
+    (event.currentTarget as Element).setPointerCapture?.(event.pointerId);
+    isDragging = true;
+    selectedPath = [];
+    feedback = null;
+    feedbackWord = '';
+    explainOpen = false;
+    const point = pointFromEvent(event);
+    const index = knownIndex >= 0 ? knownIndex : point ? nearestLetter(point) : -1;
+    if (index >= 0) chooseLetter(index);
+  }
+  function extendSwipe(event: PointerEvent) {
+    if (!isDragging) return;
+    const point = pointFromEvent(event);
+    if (!point) return;
+    const index = nearestLetter(point);
+    if (index >= 0 && index !== selectedPath.at(-1)) chooseLetter(index);
+  }
+  function endSwipe() {
+    if (!isDragging) return;
+    isDragging = false;
+    if (selectedPath.length < 2) {
+      selectedPath = [];
+      return;
+    }
+    const word = activeWord;
+    if (currentRound.words.includes(word) && !solvedSet.has(word)) {
+      submitWord(word);
+    } else {
+      feedbackWord = word;
+      feedback = 'wrong';
+      shakeGrid = true;
+      buzz([18, 18, 18]);
+      window.setTimeout(() => (shakeGrid = false), 280);
+    }
+    selectedPath = [];
+  }
+  function pathPoints() {
+    return selectedPath.map((index) => {
+      const point = position(index, circleLetters.length, LETTER_BUBBLE_OUTWARD);
+      return `${point.x},${point.y}`;
+    }).join(' ');
+  }
   function formatDuration(duration: number | null) {
     const seconds = Math.floor((duration ?? 0) / 1000);
     return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
   }
   function selectionAreaClasses() {
     if (celebration) return 'relative z-[55] flex items-center justify-center h-[70px] min-h-[70px] p-0 bg-[#fffdf7] dark:bg-[#172a45] max-[579px]:h-[54px] max-[579px]:min-h-[54px]';
-    const base = 'relative z-[1] flex-none pt-[.75rem] pb-[.35rem] text-center bg-[linear-gradient(90deg,transparent,rgba(23,42,69,.025)_22%,rgba(23,42,69,.025)_78%,transparent),#fffdf7] dark:bg-[linear-gradient(90deg,transparent,rgba(255,253,247,.04)_22%,rgba(255,253,247,.04)_78%,transparent),#172a45] max-[579px]:pt-[.45rem] max-[579px]:pb-[.1rem]';
+    const base = 'relative z-[1] flex-none pt-[.75rem] pb-[.35rem] text-center bg-[#fffdf7] bg-[image:linear-gradient(90deg,transparent,rgba(23,42,69,.025)_22%,rgba(23,42,69,.025)_78%,transparent)] dark:bg-[#172a45] dark:bg-[image:linear-gradient(90deg,transparent,rgba(255,253,247,.04)_22%,rgba(255,253,247,.04)_78%,transparent)] max-[579px]:pt-[.45rem] max-[579px]:pb-[.1rem]';
     const heights = installPrompt && !previewWord ? 'min-h-[96px] max-[579px]:min-h-[70px]' : 'min-h-[70px] max-[579px]:min-h-[54px]';
     return `${base} ${heights}`;
   }
@@ -359,30 +461,37 @@
   }
 </script>
 
+<svelte:window onpointerup={endSwipe} onpointercancel={endSwipe} />
+
 <div
-  class="relative min-h-[205px] min-[580px]:min-h-[260px] flex-1 grid place-items-stretch mt-0 p-[clamp(.35rem,1.6vw,.7rem)] bg-[#ede4d5] bg-[image:linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:24px_24px] border-t-0 border-b-2 border-b-[rgba(23,42,69,.45)] [transition:transform_.16s_cubic-bezier(.23,1,.32,1)] dark:bg-[#213a5d] dark:border-b-primary {shakeGrid ? 'animate-[shake_.28s_cubic-bezier(.23,1,.32,1)]' : ''}"
+  class="relative min-h-[120px] max-h-[44svh] min-[580px]:min-h-[150px] flex-none grid place-items-stretch mt-0 p-[clamp(.35rem,1.6vw,.7rem)] bg-[#ede4d5] bg-[image:linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:24px_24px] border-t-0 border-b-2 border-b-[rgba(23,42,69,.45)] [transition:transform_.16s_cubic-bezier(.23,1,.32,1)] dark:bg-[#213a5d] dark:border-b-primary {shakeGrid ? 'animate-[shake_.28s_cubic-bezier(.23,1,.32,1)]' : ''}"
   aria-label="Crossword"
 >
   <div class="relative z-[1] min-w-0 min-h-0 overflow-auto grid place-items-center p-[clamp(.65rem,3vw,1.25rem)] rounded-2xl [overscroll-behavior:contain] [touch-action:pan-x_pan-y] border border-[rgba(23,42,69,.12)] bg-[linear-gradient(90deg,rgba(255,253,247,.3),rgba(255,253,247,.08)_18%,rgba(255,253,247,.08)_82%,rgba(255,253,247,.3))] shadow-[inset_0_0_0_6px_rgba(255,253,247,.15)] outline-0 [scrollbar-color:rgba(23,42,69,.4)_transparent]" aria-label="Scrollable crossword grid">
-    <div class="relative grid w-max min-w-[calc(var(--cell-size)*3)] [--cell-size:clamp(2.7rem,12vw,3.7rem)]" style={`grid-template-columns: repeat(${grid.maxCol - grid.minCol + 1}, var(--cell-size));`}>
+    <div class="relative grid w-max min-w-[calc(var(--cell-size)*3)] [--cell-size:clamp(1.85rem,8.2vw,2.4rem)]" style={`grid-template-columns: repeat(${grid.maxCol - grid.minCol + 1}, var(--cell-size));`}>
       {#each Array(grid.maxRow - grid.minRow + 1) as _, rowIndex}
         {#each Array(grid.maxCol - grid.minCol + 1) as _, colIndex}
           {@const row = grid.minRow + rowIndex}{@const col = grid.minCol + colIndex}{@const cell = inRange(row, col)}
           {@const solved = solvedCells.has(cellKey(row, col))}
           {@const hinted = hintedCells.has(cellKey(row, col)) && !solved}
+          {@const typingLetter = typingCells.get(cellKey(row, col))}
+          {@const typing = typingLetter !== undefined && !solved}
           {#if cell}<div
-            class="aspect-square min-w-0 grid place-items-center rounded-[4px] border border-[#172a45] bg-[#fffdf7] text-[#172a45] text-[clamp(.85rem,3.9vw,1.3rem)] font-extrabold leading-none uppercase [transition:background_.18s_ease,color_.18s_ease,transform_.18s_cubic-bezier(.23,1,.32,1)]"
+            class="aspect-square min-w-0 grid place-items-center rounded-[4px] border border-[#172a45] bg-[#fffdf7] text-[#172a45] text-[clamp(.62rem,2.6vw,.92rem)] font-extrabold leading-none uppercase [transition:background_.18s_ease,color_.18s_ease,transform_.18s_cubic-bezier(.23,1,.32,1)]"
             class:border-l-4={isWordStart(row, col, 'across')}
             class:border-r-4={isWordEnd(row, col, 'across')}
             class:border-t-4={isWordStart(row, col, 'down')}
             class:border-b-4={isWordEnd(row, col, 'down')}
-            class:relative={hinted}
-            class:z-[1]={hinted}
-            class:outline={hinted}
-            class:outline-[3px]={hinted}
-            class:outline-offset-[-4px]={hinted}
+            class:relative={hinted || typing}
+            class:z-[1]={hinted || typing}
+            class:outline={hinted || typing}
+            class:outline-[3px]={hinted || typing}
+            class:outline-offset-[-4px]={hinted || typing}
             class:outline-primary={hinted}
+            class:outline-[#4a72c9]={typing}
             class:bg-[#fff7dd]={hinted}
+            class:bg-[#eaf0ff]={typing}
+            class:text-[#4a72c9]={typing && typingLetter}
             class:bg-primary={solved}
             class:scale-[.965]={solved}
             class:animate-[solve-cell_.32s_cubic-bezier(.23,1,.32,1)]={solved}
@@ -392,7 +501,7 @@
             onclick={showDefinitions ? () => revealCellDefinition(row, col) : undefined}
             onkeydown={showDefinitions ? (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); revealCellDefinition(row, col); } } : undefined}
             aria-label={solved ? cell.letter : showDefinitions ? 'Show definition' : 'open cell'}
-          >{solved ? cell.letter : ''}</div>{:else}<div class="aspect-square"></div>{/if}
+          >{solved ? cell.letter : typing ? typingLetter : ''}</div>{:else}<div class="aspect-square"></div>{/if}
         {/each}
       {/each}
     </div>
@@ -426,7 +535,7 @@
         <span class="max-w-[min(32rem,74vw)] text-accent font-['DM_Sans'] text-[clamp(.63rem,2.5vw,.78rem)] font-bold tracking-[.01em] leading-[1.35] text-center">{feedbackDefinition}<a class="ml-1 text-primary font-extrabold underline decoration-2 underline-offset-2 whitespace-nowrap" href={feedbackWiktionaryHref} target="_blank" rel="noreferrer">{labels.readMore}</a></span>
       {:else if previewWord}
         <span class={feedback === 'correct' ? 'text-[#3f7a50]' : ''}>{previewWord}</span>{#if feedback === 'correct'}<IconCheck class="w-[1.45rem] h-[1.45rem]" aria-label="Correct" />{#if feedbackDefinition}<button type="button" class="grid place-items-center w-[1.25rem] h-[1.25rem] border border-[#8b949c] rounded-full bg-[#edf0ef] text-[#69727a] tracking-normal [transition:transform_.16s_cubic-bezier(.23,1,.32,1),background_.16s_ease,color_.16s_ease] hover:bg-[#c9d0cf] hover:text-[#3f484e] focus-visible:bg-[#c9d0cf] focus-visible:text-[#3f484e] focus-visible:outline-0 active:scale-[.94] dark:border-[#84909b] dark:bg-[#2b3d57] dark:text-[#d8dde1]" onclick={() => (explainOpen = true)} aria-label={`${labels.explain}: ${feedbackSpelling}`}><IconHelp class="w-[.85rem] h-[.85rem]" aria-hidden="true" /></button>{:else}<a class="grid place-items-center w-[1.25rem] h-[1.25rem] border border-[#8b949c] rounded-full bg-[#edf0ef] text-[#69727a] tracking-normal [transition:transform_.16s_cubic-bezier(.23,1,.32,1),background_.16s_ease,color_.16s_ease] hover:bg-[#c9d0cf] hover:text-[#3f484e] focus-visible:bg-[#c9d0cf] focus-visible:text-[#3f484e] focus-visible:outline-0 active:scale-[.94] dark:border-[#84909b] dark:bg-[#2b3d57] dark:text-[#d8dde1]" href={feedbackWiktionaryHref} target="_blank" rel="noreferrer" aria-label={`${labels.explain}: ${feedbackSpelling}`}><IconHelp class="w-[.85rem] h-[.85rem]" aria-hidden="true" /><span class="sr-only">{labels.explain}</span></a>{/if}{:else if feedback === 'wrong'}<IconClose class="w-[1.45rem] h-[1.45rem]" aria-label="Incorrect" />{/if}
-      {:else}
+      {:else if showDefinitions}
         {coreReadout}
       {/if}
     </div>
@@ -440,6 +549,23 @@
   {/if}
 </div>
 
-<div class="relative flex-none grid place-items-center border-t border-[rgba(23,42,69,.16)] bg-[#fffdf7] dark:bg-[#172a45] pt-[.65rem] pb-[max(.65rem,env(safe-area-inset-bottom))]">
-  <WordleKeyboard language={settings.lang} disabled={celebration} ariaLabel={labels.hint} onPress={pressLetter} onRemove={removeTypedLetter} />
-</div>
+{#if showDefinitions}
+  <div class="relative flex-none grid place-items-center border-t border-[rgba(23,42,69,.16)] bg-[#fffdf7] dark:bg-[#172a45] pt-[.65rem] pb-[max(.65rem,env(safe-area-inset-bottom))]">
+    <WordleKeyboard language={settings.lang} disabled={celebration} ariaLabel={labels.hint} onPress={pressLetter} onRemove={removeTypedLetter} />
+  </div>
+{:else}
+  <div class="relative flex-[0_0_clamp(214px,34svh,270px)] min-h-0 grid place-items-center border-t border-b border-[rgba(23,42,69,.16)] bg-[#fffdf7] dark:bg-[#172a45] min-[580px]:min-h-[300px] min-[580px]:flex-auto">
+    <svg bind:this={circleEl} viewBox="0 0 292 292" class="w-[min(100%,238px)] min-[580px]:w-[292px] [touch-action:none] overflow-visible select-none" role="application" aria-label={labels.hint} onpointerdown={(event) => startSwipe(event)} onpointermove={extendSwipe}>
+      <circle cx={CIRCLE} cy={CIRCLE} r={LETTER_RADIUS} class="[fill:none] stroke-[#172a45] [stroke-width:1.1] opacity-[.28] dark:stroke-[#fffdf7]" /><circle cx={CIRCLE} cy={CIRCLE} r="68" class="[fill:none] stroke-[#172a45] [stroke-width:1] opacity-[.12] dark:stroke-[#fffdf7]" /><circle cx={CIRCLE} cy={CIRCLE} r="47" class="[fill:none] stroke-primary [stroke-width:1.8] opacity-90" /><path d="M124 146a22 22 0 1 0 44 0a22 22 0 1 1-44 0Z" class="fill-[#172a45] opacity-[.83] dark:fill-[#fffdf7]" />
+      <text x={CIRCLE} y="142" text-anchor="middle" class={`font-['DM_Serif_Display'] text-[13px] tracking-[.08em] fill-[rgba(23,42,69,.52)] dark:fill-[rgba(255,253,247,.55)] ${activeWord.length > 0 ? 'fill-[#c98220] dark:fill-primary' : 'fill-[#a0621d] font-[\'DM_Sans\'] text-[10.8px] font-extrabold tracking-[.08em]'}`}>{coreReadout}</text><text x={CIRCLE} y="161" text-anchor="middle" class="fill-[rgba(23,42,69,.5)] font-['DM_Sans'] text-[5.8px] font-extrabold tracking-[.18em] dark:fill-[rgba(255,253,247,.55)]">{activeWord ? traceCaption : '·'}</text>
+      {#if selectedPath.length > 1}<polyline points={pathPoints()} class="[fill:none] stroke-primary [stroke-linecap:round] [stroke-linejoin:round] [stroke-width:10] opacity-90" />{/if}
+      {#each circleLetters as letter, index (index)}
+        {@const active = selectedPath.includes(index)}
+        {@const point = position(index, circleLetters.length, active ? LETTER_BUBBLE_OUTWARD : 0)}
+        <g transform={`translate(${point.x} ${point.y})`} class="[cursor:crosshair] transition-transform duration-[220ms] ease-[cubic-bezier(.34,1.56,.64,1)] motion-reduce:transition-none" role="button" tabindex="0" aria-label={`Letter ${letter}`} onpointerdown={(event) => { event.stopPropagation(); startSwipe(event, index); }} onkeydown={(event) => { if (event.key === 'Enter' || event.key === ' ') chooseLetter(index); }}>
+          <circle r="30" class="[transform-box:fill-box] [transform-origin:center] [transition:transform_.18s_cubic-bezier(.34,1.56,.64,1),fill_.18s_ease,stroke_.18s_ease] motion-reduce:transition-none {active ? 'fill-primary stroke-[#c98220] scale-[1.066667] dark:stroke-primary' : 'fill-[#fffdf7] stroke-[#172a45] [stroke-width:2] dark:fill-[#172a45] dark:stroke-[#fffdf7]'}"></circle><text text-anchor="middle" dominant-baseline="central" class="fill-[#172a45] font-['DM_Sans'] text-[20px] font-extrabold pointer-events-none">{letter}</text>
+        </g>
+      {/each}
+    </svg>
+  </div>
+{/if}
