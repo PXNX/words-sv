@@ -7,7 +7,8 @@
   import TutorialDialog from '$lib/TutorialDialog.svelte';
   import { requestCirclePractice } from '$lib/circle/practice';
 
-  const destination = $derived(page.url.searchParams.get('mode') === 'definitions' ? '/circle/definitions' : '/circle');
+  const isDefinitionsMode = $derived(page.url.searchParams.get('mode') === 'definitions');
+  const destination = $derived(isDefinitionsMode ? '/circle/definitions' : '/circle');
 
   const circleTutorialHints: Record<'de' | 'en', string> = {
     de: 'G••••• · G•• · T••',
@@ -19,11 +20,11 @@
   const labels = $derived({
     kicker: m.tutorial_kicker({}, { locale: settings.interfaceLocale }),
     title: m.tutorial_title({}, { locale: settings.interfaceLocale }),
-    trace: m.tutorial_trace({}, { locale: settings.interfaceLocale }),
+    trace: isDefinitionsMode ? m.tutorial_type({}, { locale: settings.interfaceLocale }) : m.tutorial_trace({}, { locale: settings.interfaceLocale }),
     grid: m.tutorial_grid({}, { locale: settings.interfaceLocale }),
     help: m.tutorial_help({}, { locale: settings.interfaceLocale }),
     start: m.tutorial_start({}, { locale: settings.interfaceLocale }),
-    hint: m.hint({}, { locale: settings.interfaceLocale })
+    hint: isDefinitionsMode ? m.type_hint({}, { locale: settings.interfaceLocale }) : m.hint({}, { locale: settings.interfaceLocale })
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   const tutorialHint = $derived(circleTutorialHints[tutorialLanguage]);

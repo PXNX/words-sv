@@ -2,8 +2,8 @@
 	import '../app.css';
 	import type { Pathname } from '$app/types';
 	import { resolve } from '$app/paths';
-	import { goto } from '$app/navigation';
-	import { navigating, page } from '$app/state';
+	import { goto, onNavigate } from '$app/navigation';
+	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 	import { getTextDirection, locales, localizeHref, setLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages';
@@ -25,6 +25,16 @@
 		document.documentElement.lang = settings.interfaceLocale;
 		document.documentElement.dir = getTextDirection(settings.interfaceLocale);
 		void setLocale(settings.interfaceLocale, { reload: false });
+	});
+
+	onNavigate((navigation) => {
+		if (!document.startViewTransition) return;
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
 	});
 
 	onMount(() => {
@@ -60,7 +70,7 @@
 </div>
 
 <div class="portrait-content">
-	{#if !hydrated || navigating.to}
+	{#if !hydrated}
 		<StartupLoader />
 	{:else}
 		<main class="game-shell">
@@ -74,9 +84,10 @@
 
 <style>
 	:global(html),:global(body) { width:100%;min-height:100%;touch-action:pan-y; }
+	:global(::view-transition-old(root)),:global(::view-transition-new(root)) { animation-duration:.14s;animation-timing-function:ease-out; }
 	.portrait-content { width:100%;min-height:100svh; }
 	:global(.game-shell) { min-height:100svh;padding:0;display:flex;align-items:stretch;justify-content:center; }
-	.game-paper { position:relative;isolation:isolate;box-sizing:border-box;overflow:hidden;width:100%;height:100svh;min-height:0;padding:0;display:flex;flex-direction:column;border:0;background-color:#ede4d5;background-image:radial-gradient(circle at 50% 15%,rgba(230,165,39,.18),transparent 34%),linear-gradient(rgba(23,42,69,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.018) 1px,transparent 1px);background-size:auto,24px 24px,24px 24px;box-shadow:none; }
+	.game-paper { position:relative;isolation:isolate;box-sizing:border-box;overflow:hidden;width:100%;height:100svh;min-height:0;padding:0;display:flex;flex-direction:column;justify-content:center;border:0;background-color:#ede4d5;background-image:radial-gradient(circle at 50% 15%,rgba(230,165,39,.18),transparent 34%),linear-gradient(rgba(23,42,69,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.018) 1px,transparent 1px);background-size:auto,24px 24px,24px 24px;box-shadow:none; }
 	.game-paper::before { display:none; }
 	.home-trigger { position:absolute;z-index:105;top:.62rem;left:.62rem;display:grid;place-items:center;width:2.1rem;height:2.1rem;padding:0;border:1px solid rgba(23,42,69,.36);border-radius:50%;background:rgba(255,253,247,.94);color:#172a45;box-shadow:0 2px 0 rgba(23,42,69,.1); }.home-trigger :global(svg) { width:1rem;height:1rem; }.home-trigger:active { transform:scale(.96); }
 	:global(html.dark) .game-paper { background-color:#213a5d; }
