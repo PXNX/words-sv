@@ -114,5 +114,19 @@
   "stats_no_vocab_progress": "പുരോഗതി കാണാൻ പദസഞ്ചയം പരിശീലിക്കുക.",
   "stats_overall_progress": "മൊത്തം പുരോഗതി",
   "stats_mastered_words": "വൈദഗ്ധ്യം നേടിയ വാക്കുകൾ",
-  "stats_by_level": "ലെവൽ അനുസരിച്ച്"
+  "stats_by_level": "ലെവൽ അനുസരിച്ച്",
+  "story_title": "കഥകൾ",
+  "story_home": "ഒരു ചെറിയ കഥ വായിച്ച് സംഭാഷണത്തിൽ പങ്കെടുക്കൂ.",
+  "story_question": "എന്താണ് സംഭവിച്ചത്?",
+  "story_reply": "നിങ്ങൾ എന്ത് മറുപടി നൽകും?",
+  "story_finished": "കഥ പൂർത്തിയായി!",
+  "story_score": "{total}-ൽ {correct} എണ്ണം ആദ്യ ശ്രമത്തിൽ ശരി",
+  "story_next": "അടുത്ത കഥ",
+  "story_again": "വീണ്ടും വായിക്കുക",
+  "story_listen": "കേൾക്കുക",
+  "onboarding_name_title": "ഞങ്ങൾ നിങ്ങളെ എന്ത് വിളിക്കണം?",
+  "onboarding_name_label": "പേര്",
+  "onboarding_name_placeholder": "നിങ്ങളുടെ പേര്",
+  "onboarding_name_hint": "കഥകളിലെ കഥാപാത്രങ്ങൾ നിങ്ങളെ ഈ പേരിൽ വിളിക്കും.",
+  "home_greeting": "ഹായ്, {name}!"
 }

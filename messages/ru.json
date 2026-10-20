@@ -114,5 +114,19 @@
   "stats_no_vocab_progress": "Потренируйте слова, чтобы увидеть прогресс здесь.",
   "stats_overall_progress": "Общий прогресс",
   "stats_mastered_words": "Освоенные слова",
-  "stats_by_level": "По уровням"
+  "stats_by_level": "По уровням",
+  "story_title": "Истории",
+  "story_home": "Прочитай короткую историю и поучаствуй в разговоре.",
+  "story_question": "Что произошло?",
+  "story_reply": "Что ты ответишь?",
+  "story_finished": "История закончена!",
+  "story_score": "{correct} из {total} с первой попытки",
+  "story_next": "Следующая история",
+  "story_again": "Прочитать снова",
+  "story_listen": "Слушать",
+  "onboarding_name_title": "Как к тебе обращаться?",
+  "onboarding_name_label": "Имя",
+  "onboarding_name_placeholder": "Твоё имя",
+  "onboarding_name_hint": "Персонажи историй будут обращаться к тебе по этому имени.",
+  "home_greeting": "Привет, {name}!"
 }

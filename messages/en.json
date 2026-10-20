@@ -118,5 +118,19 @@
   "stats_no_vocab_progress": "Practice vocabulary to see progress here.",
   "stats_overall_progress": "Overall progress",
   "stats_mastered_words": "Mastered words",
-  "stats_by_level": "By level"
+  "stats_by_level": "By level",
+  "story_title": "Stories",
+  "story_home": "Read a short story and join the conversation.",
+  "story_question": "What happened?",
+  "story_reply": "How do you reply?",
+  "story_finished": "Story finished!",
+  "story_score": "{correct} of {total} answered on the first try",
+  "story_next": "Next story",
+  "story_again": "Read again",
+  "story_listen": "Listen",
+  "onboarding_name_title": "What should we call you?",
+  "onboarding_name_label": "First name",
+  "onboarding_name_placeholder": "Your first name",
+  "onboarding_name_hint": "The characters in the stories will talk to you by this name.",
+  "home_greeting": "Hi, {name}!"
 }
