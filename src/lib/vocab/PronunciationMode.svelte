@@ -3,7 +3,7 @@
   import { settings } from '$lib/state/settings.svelte';
   import { wordMetadata } from '$lib/data/vocabulary';
   import { transcribeToIpa } from '$lib/vocab/ipa';
-  import { wordsMatch, bestGuess, ipaDiff, type CorrectionSegment } from '$lib/vocab/speechMatch';
+  import { evaluateAttempt, ipaDiff, type CorrectionSegment } from '$lib/vocab/speechMatch';
   import { playSuccessSound } from '$lib/sounds';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconCheck from '~icons/material-symbols/check-rounded';
@@ -20,6 +20,7 @@
     maxAlternatives: number;
     start: () => void;
     stop: () => void;
+    abort: () => void;
     onresult: ((event: SpeechRecognitionEventLike) => void) | null;
     onerror: ((event: { error: string }) => void) | null;
     onend: (() => void) | null;
@@ -38,6 +39,9 @@
   let practiced = $state(false);
   let speaking = $state(false);
   let listening = $state(false);
+  // `liveHeard` follows interim results while the learner is talking; `heard`, `heardIpa` and
+  // `correction` only change on a final result, so the verdict on screen stays consistent.
+  let liveHeard = $state('');
   let heard = $state('');
   let heardIpa = $state('');
   let matchState = $state<'idle' | 'correct' | 'incorrect'>('idle');
@@ -50,7 +54,8 @@
   let animationFrame: number | null = null;
   let recognition: SpeechRecognitionLike | null = null;
   let restartTimer: number | null = null;
-  let stoppedIntentionally = true;
+  // Bumped on every start/stop so an in-flight getUserMedia from a previous word can tell it's stale.
+  let listenSession = 0;
   let consecutiveErrors = 0;
   const MAX_CONSECUTIVE_ERRORS = 3;
 
@@ -70,19 +75,27 @@
     if (!speechSupported || !currentWord) return;
     window.speechSynthesis.cancel();
     speaking = true;
+    // The recogniser would otherwise transcribe the sample itself and grade it as the learner's
+    // attempt, so pause it while the sample plays and resume once it's finished.
+    stopRecognition();
+    const resume = () => {
+      speaking = false;
+      if (listening && matchState !== 'correct' && !recognition) startRecognition();
+    };
     const utterance = new SpeechSynthesisUtterance(spelling);
     utterance.lang = speechLocale();
     utterance.rate = .72;
     utterance.voice = voices.find((voice) => voice.lang.toLowerCase().startsWith(settings.lang)) ?? voices.find((voice) => voice.default) ?? null;
     utterance.onstart = () => (speaking = true);
-    utterance.onend = () => (speaking = false);
-    utterance.onerror = () => (speaking = false);
+    utterance.onend = resume;
+    utterance.onerror = resume;
     window.speechSynthesis.speak(utterance);
     practiced = true;
   }
   function nextWord() {
     practiced = false;
     matchState = 'idle';
+    liveHeard = '';
     heard = '';
     heardIpa = '';
     correction = null;
@@ -94,10 +107,18 @@
     if (restartTimer !== null) window.clearTimeout(restartTimer);
     restartTimer = null;
   }
-  function stopListening() {
-    stoppedIntentionally = true;
-    listening = false;
+  function stopRecognition() {
     clearRestartTimer();
+    const instance = recognition;
+    recognition = null;
+    // abort() rather than stop(): stop() still delivers a final result for the audio captured so
+    // far, which would then be graded against whatever word is current by the time it arrives.
+    try { instance?.abort(); } catch { /* already stopped */ }
+  }
+  function stopListening() {
+    listenSession += 1;
+    listening = false;
+    stopRecognition();
     if (animationFrame !== null) cancelAnimationFrame(animationFrame);
     animationFrame = null;
     analyser?.disconnect();
@@ -106,55 +127,68 @@
     analyser = null;
     mediaStream?.getTracks().forEach((track) => track.stop());
     mediaStream = null;
-    try { recognition?.stop(); } catch { /* already stopped */ }
-    recognition = null;
     waveform = Array(BAR_COUNT).fill(IDLE_LEVEL);
+  }
+  function handleResult(event: SpeechRecognitionEventLike) {
+    consecutiveErrors = 0;
+    recognitionStalled = false;
+    const result = event.results[event.results.length - 1];
+    if (!result) return;
+    const transcripts = Array.from(result, (alternative) => alternative.transcript).filter((transcript) => transcript.trim());
+    if (transcripts.length === 0) return;
+    const attempt = evaluateAttempt(transcripts, spelling, settings.lang);
+    liveHeard = attempt.heard;
+    if (!result.isFinal) return;
+    heard = attempt.heard;
+    heardIpa = heard ? transcribeToIpa(heard, settings.lang) : '';
+    matchState = attempt.matched ? 'correct' : 'incorrect';
+    practiced = true;
+    correction = attempt.matched || !heardIpa ? null : ipaDiff(heardIpa, ipa);
+    if (attempt.matched) {
+      playSuccessSound(settings.sound, 'pronunciation');
+      stopListening();
+    }
   }
   function startRecognition() {
     const RecognitionCtor = recognitionSupported ? getRecognitionCtor() : null;
     if (!RecognitionCtor) return;
-    recognition = new RecognitionCtor();
-    recognition.lang = speechLocale();
-    recognition.continuous = false;
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 3;
-    recognition.onresult = (event) => {
-      consecutiveErrors = 0;
-      recognitionStalled = false;
-      const result = event.results[event.results.length - 1];
-      const transcripts = [...result].map((alternative) => alternative.transcript);
-      if (speaking) return;
-      heard = bestGuess(transcripts, spelling);
-      heardIpa = heard ? transcribeToIpa(heard, settings.lang) : '';
-      if (!result.isFinal) return;
-      const isMatch = transcripts.some((transcript) => wordsMatch(transcript, spelling));
-      matchState = isMatch ? 'correct' : 'incorrect';
-      practiced = true;
-      correction = isMatch ? null : ipaDiff(heardIpa, ipa);
-      if (isMatch) {
-        playSuccessSound(settings.sound, 'pronunciation');
-        stopListening();
-      }
+    const instance = new RecognitionCtor();
+    recognition = instance;
+    instance.lang = speechLocale();
+    instance.continuous = false;
+    instance.interimResults = true;
+    instance.maxAlternatives = 5;
+    // Every handler checks it still belongs to the active recogniser: events from one that was
+    // aborted (next word, sample playback) must not leak into the current attempt.
+    instance.onresult = (event) => {
+      if (recognition === instance && !speaking) handleResult(event);
     };
-    recognition.onerror = (event) => {
-      if (event.error === 'not-allowed' || event.error === 'service-not-allowed') { recognitionSupported = false; return; }
+    instance.onerror = (event) => {
+      if (recognition !== instance) return;
+      if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+        recognitionSupported = false;
+        stopRecognition();
+        return;
+      }
       // "no-speech" just means the mic heard silence — that's normal while waiting for the learner to talk, not a failure.
       if (event.error === 'no-speech' || event.error === 'aborted') return;
       consecutiveErrors += 1;
       if (consecutiveErrors >= MAX_CONSECUTIVE_ERRORS) recognitionStalled = true;
     };
-    recognition.onend = () => {
-      if (stoppedIntentionally || matchState === 'correct') return;
+    instance.onend = () => {
+      if (recognition !== instance || !listening || matchState === 'correct') return;
       clearRestartTimer();
+      liveHeard = '';
       // Keep retrying even once "stalled" (transient network/service errors happen on their own and
       // shouldn't require the learner to notice and tap "Try again"), just back off so a persistently
       // failing recognizer doesn't hammer in a tight loop.
       const delay = Math.min(350 * 2 ** consecutiveErrors, 5000);
       restartTimer = window.setTimeout(() => {
-        try { recognition?.start(); } catch { /* a start() call may already be pending */ }
+        if (recognition !== instance) return;
+        try { instance.start(); } catch { /* a start() call may already be pending */ }
       }, delay);
     };
-    try { recognition.start(); } catch { /* ignore duplicate start */ }
+    try { instance.start(); } catch { /* ignore duplicate start */ }
   }
   function retryAfterStall() {
     recognitionStalled = false;
@@ -164,18 +198,22 @@
   }
   async function startListening() {
     if (!micSupported || !currentWord) return;
-    stoppedIntentionally = false;
+    const session = ++listenSession;
+    let stream: MediaStream;
     try {
-      mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch {
-      listening = false;
+      if (session === listenSession) listening = false;
       return;
     }
+    // The word changed (or listening was paused) while the permission prompt was open.
+    if (session !== listenSession) { stream.getTracks().forEach((track) => track.stop()); return; }
+    mediaStream = stream;
     listening = true;
     audioContext = new AudioContext();
     analyser = audioContext.createAnalyser();
     analyser.fftSize = 64;
-    audioContext.createMediaStreamSource(mediaStream).connect(analyser);
+    audioContext.createMediaStreamSource(stream).connect(analyser);
     const samples = new Uint8Array(analyser.fftSize);
     const updateWaveform = () => {
       if (!analyser || !listening) return;
@@ -190,7 +228,7 @@
       animationFrame = requestAnimationFrame(updateWaveform);
     };
     updateWaveform();
-    startRecognition();
+    if (!speaking) startRecognition();
   }
   function toggleListening() {
     if (listening) stopListening();
@@ -249,14 +287,17 @@
           <p class="flex items-center gap-[.4rem] m-0 px-[.75rem] py-[.35rem] rounded-full border border-error bg-error/15 text-error text-[.68rem] font-extrabold" role="status"><IconClose class="w-[1.2rem] h-[1.2rem]" aria-hidden="true" />Not quite{#if heard} — heard "{heard}"{/if}. Keep trying, we're still listening.</p>
           {#if correction && heardIpa}
             <p class="m-0 text-base-content/60 text-[.65rem] font-bold">You said <span class="text-error font-mono">/{heardIpa}/</span></p>
-            <p class="m-0 font-mono text-[clamp(1.05rem,4.8vw,1.5rem)] tracking-[.03em]" aria-label={`Target pronunciation: ${ipa}`}>/{#each correction as segment, index (index)}<span class={segment.status === 'match' ? 'text-base-content' : segment.status === 'sub' ? 'text-error underline decoration-2 underline-offset-[3px]' : 'text-error/50 line-through'}>{segment.char}</span>{/each}/</p>
-            <p class="m-0 text-base-content/45 text-[.55rem] font-bold uppercase tracking-[.08em]">Underlined = wrong sound &middot; struck through = missing sound</p>
+            <p class="m-0 font-mono text-[clamp(1.05rem,4.8vw,1.5rem)] tracking-[.03em]" aria-label={`Target pronunciation: ${ipa}`}>/{#each correction as segment, index (index)}<span class={segment.status === 'match' ? 'text-base-content' : segment.status === 'sub' ? 'text-error underline decoration-2 underline-offset-[3px]' : segment.status === 'extra' ? 'text-error/60 text-[.6em] align-super' : 'text-error/50 line-through'}>{segment.status === 'extra' ? `+${segment.char}` : segment.char}</span>{/each}/</p>
+            <p class="m-0 text-base-content/45 text-[.55rem] font-bold uppercase tracking-[.08em]">Underlined = wrong sound &middot; struck through = missing sound &middot; + = extra sound</p>
           {/if}
+          {#if listening && liveHeard}<p class="m-0 text-base-content/50 text-[.6rem] font-bold">Hearing: "{liveHeard}"</p>{/if}
         </div>
+      {:else if listening && !recognitionSupported}
+        <p class="m-0 text-base-content/50 text-[.62rem] font-bold">Speech recognition isn't available or was blocked, so your attempt can't be checked — use the sample to practise.</p>
       {:else if listening}
         <div class="grid justify-items-center gap-[.35rem]">
           <p class="flex items-center gap-[.3rem] m-0 text-accent text-[.68rem] font-extrabold"><span class="listening-dot" aria-hidden="true"></span>Listening for your voice…</p>
-          {#if heard}<p class="m-0 text-base-content/60 text-[.65rem] font-bold">Heard so far: "{heard}"{#if heardIpa}<span class="font-mono"> /{heardIpa}/</span>{/if}</p>{/if}
+          {#if liveHeard}<p class="m-0 text-base-content/60 text-[.65rem] font-bold">Heard so far: "{liveHeard}"<span class="font-mono"> /{transcribeToIpa(liveHeard, settings.lang)}/</span></p>{/if}
         </div>
       {:else if !micSupported}
         <p class="m-0 text-base-content/50 text-[.62rem] font-bold">Microphone input isn't available in this browser.</p>
