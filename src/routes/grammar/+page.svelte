@@ -5,6 +5,7 @@
   import { settings } from '#lib/state/settings.svelte.js';
   import { wordPools, wordMetadata } from '#lib/data/vocabulary.js';
   import { m } from '#lib/paraglide/messages.js';
+  import { recordMissedWord } from '#lib/story/missedWords.js';
   import { prioritizeLearningWords, updateReviewProgress } from '#lib/vocab/spacedRepetition.js';
   import { articleChoiceOptions, gapSentenceSuffixes, grammarArticles, pickRandomSection, shuffled, GRAMMAR_REVIEW_STORAGE_PREFIX } from '#lib/grammar/learning.js';
   import { buildNounCasePrompt, buildNounPropertyPrompt, type GrammarPrompt } from '#lib/grammar/cases.js';
@@ -183,16 +184,21 @@
     reviewProgress = updateReviewProgress(reviewProgress, currentKey, correct);
     persistProgress();
     if (correct) playSuccessSound(settings.sound, 'grammar');
-    else { playErrorSound(settings.sound, 'grammar'); queue = [...queue, currentKey]; }
+    else { playErrorSound(settings.sound, 'grammar'); recordMissedGrammarWord(currentKey); queue = [...queue, currentKey]; }
+  }
+  // Word-based grammar prompts (noun:…, adj:…, verb:…, article:…) feed the story mode's practice list.
+  function recordMissedGrammarWord(key: string) {
+    const [kind, word] = key.split(':');
+    if (word && ['noun', 'adj', 'verb', 'article'].includes(kind)) recordMissedWord(settings.lang, word);
   }
   function continueLearning() {
     position = position >= queue.length - 1 ? 0 : position + 1;
   }
   function optionStateClasses(choice: string) {
     if (!prompt) return '';
-    if (answerStatus !== null && choice === prompt.correct) return 'border-success bg-success text-[#fffdf7]';
-    if (answerStatus === 'wrong' && choice === selectedChoice) return 'border-accent bg-[#fff2e8] text-[#8e4322] dark:bg-[#69332f] dark:text-[#fff7ed]';
-    return 'border-neutral/55 dark:border-neutral/60 bg-neutral-content text-base-content';
+    if (answerStatus !== null && choice === prompt.correct) return 'bg-success text-[#fffdf7]';
+    if (answerStatus === 'wrong' && choice === selectedChoice) return 'border-accent bg-[#fff2e8] text-[#8e4322] shadow-none dark:bg-[#69332f] dark:text-[#fff7ed]';
+    return '';
   }
 
   $effect(() => {
@@ -231,8 +237,8 @@
         <p class="m-0 text-accent text-[.62rem] font-black tracking-[.08em] uppercase">Bringe die Wörter in die richtige Reihenfolge.</p>
         <p class="m-0 min-h-[2.2rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.35rem,6vw,2.1rem)] leading-[1.3]">{selectedOrder.length > 0 ? selectedOrder.map((index) => orderWords[index]).join(' ') : '…'}</p>
       </article>
-      <div class="w-[min(100%,28rem)] flex flex-wrap justify-center gap-[.45rem]">{#each orderWords as word, index}<button type="button" class="min-h-[2.55rem] px-[.75rem] border text-[.75rem] font-extrabold {selectedOrder.includes(index) ? 'border-neutral/30 bg-neutral/30 text-base-content/35' : 'border-neutral/55 bg-neutral-content text-base-content'}" onclick={() => chooseOrderWord(index)} disabled={selectedOrder.includes(index) || answerStatus !== null}>{word}</button>{/each}</div>
-      {#if answerStatus === 'wrong'}<div class="flex items-center gap-[.35rem] text-error text-[.7rem] font-extrabold"><IconClose class="w-[1rem] h-[1rem]" aria-hidden="true" />Not quite. Try again.</div><button class="min-h-[2.35rem] px-[.8rem] border border-accent text-accent text-[.62rem] font-black uppercase" onclick={resetOrder}>Reset order</button>{:else if answerStatus === 'correct'}<div class="flex items-center gap-[.35rem] text-success text-[.7rem] font-extrabold"><IconCheck class="w-[1rem] h-[1rem]" aria-hidden="true" />Correct!</div><button class="min-h-[2.45rem] px-[1rem] border border-[#172a45] bg-[#172a45] text-[#fffdf7] text-[.64rem] font-black tracking-[.08em] uppercase shadow-[3px_3px_0_#e6a527]" onclick={continueLearning}>{labels.continue}</button>{/if}
+      <div class="w-[min(100%,28rem)] flex flex-wrap justify-center gap-[.45rem]">{#each orderWords as word, index}<button type="button" class="btn-play btn-play-choice min-h-[2.55rem] px-[.75rem] text-[.75rem] {selectedOrder.includes(index) ? 'border-neutral/30 bg-neutral/20 text-base-content/35 shadow-none' : ''}" onclick={() => chooseOrderWord(index)} disabled={selectedOrder.includes(index) || answerStatus !== null}>{word}</button>{/each}</div>
+      {#if answerStatus === 'wrong'}<div class="flex items-center gap-[.35rem] text-error text-[.7rem] font-extrabold"><IconClose class="w-[1rem] h-[1rem]" aria-hidden="true" />Not quite. Try again.</div><button class="btn-play btn-play-sm text-accent" onclick={resetOrder}>Reset order</button>{:else if answerStatus === 'correct'}<div class="flex items-center gap-[.35rem] text-success text-[.7rem] font-extrabold"><IconCheck class="w-[1rem] h-[1rem]" aria-hidden="true" />Correct!</div><button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>{/if}
     {:else}
     <article class="w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] border border-neutral border-t-[4px] border-t-double border-t-neutral shadow-[8px_8px_0_rgba(164,94,56,.16)] text-center bg-neutral-content">
             {#if prompt.question}<p class="m-0 text-accent text-[.62rem] font-black tracking-[.08em] uppercase">{prompt.question}</p>{/if}
@@ -248,11 +254,11 @@
               value={choice}
               onclick={chooseAnswer}
               disabled={answerStatus !== null}
-              class="min-h-[2.8rem] px-[.75rem] py-[.55rem] flex items-center justify-center gap-[.4rem] border text-[.85rem] font-extrabold touch-manipulation active:scale-[.985] disabled:opacity-100 {optionStateClasses(choice)}"
+              class="btn-play btn-play-choice gap-[.4rem] text-[.85rem] touch-manipulation disabled:opacity-100 {optionStateClasses(choice)}"
             >{choice}{#if answerStatus !== null && choice === prompt.correct}<IconCheck class="w-[1.15rem] h-[1.15rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && choice === selectedChoice}<IconClose class="w-[1.15rem] h-[1.15rem] flex-none text-error" aria-label={labels.tryAgain} />{/if}</button>
           {/each}
         </div>
-        {#if answerStatus}<button class="justify-self-center min-h-[2.45rem] px-[1rem] border border-[#172a45] bg-[#172a45] text-[#fffdf7] text-[.64rem] font-black tracking-[.08em] uppercase shadow-[3px_3px_0_#e6a527]" onclick={continueLearning}>{labels.continue}</button>{/if}
+        {#if answerStatus}<button class="justify-self-center btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>{/if}
       </section>
     {/if}
     {/if}

@@ -12,6 +12,8 @@ export default defineConfig({
     tailwindcss(),
     sveltekit({
       preprocess: vitePreprocess(),
+      // Also checked whenever the app regains focus; drives the update hint on the home screen
+      version: { pollInterval: 5 * 60 * 1000 },
       adapter: adapter({ fallback: 'index.html' })
     }),
     Icons({ compiler: 'svelte', autoInstall: false }),

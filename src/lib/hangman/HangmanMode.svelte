@@ -5,6 +5,7 @@
   import { normalizePlayableWord, isLetterWord } from '#lib/wordle/wordleWords.js';
   import { keyboardLayoutFor, type WordleMark } from '#lib/wordle/keyboardLayouts.js';
   import WordleKeyboard from '#lib/wordle/WordleKeyboard.svelte';
+  import { recordMissedWord } from '#lib/story/missedWords.js';
 
   let { words, language }: { words: string[]; language: string } = $props();
   let target = $state('');
@@ -35,6 +36,14 @@
     guessed = [...guessed, letter];
   }
   function removeLetter() {}
+
+  // A lost round's word goes on the story mode's practice list.
+  let recordedLoss = '';
+  $effect(() => {
+    if (!lost || recordedLoss === target) return;
+    recordedLoss = target;
+    recordMissedWord(language, target);
+  });
 
   $effect(() => {
     words;
@@ -75,7 +84,7 @@
       <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,8vw,2.7rem)] tracking-[.16em] leading-none" aria-label="Hidden word">{maskedWord}</p>
       {#if finished}
         <p class={won ? 'm-0 text-success text-[.7rem] font-extrabold' : 'm-0 text-error text-[.7rem] font-extrabold'}>{won ? 'Well done!' : `The word was ${target}.`}</p>
-        <button class="min-h-[2.45rem] px-[1rem] rounded-full border border-success bg-success text-[#fffdf7] text-[.64rem] font-extrabold tracking-[.08em] uppercase" onclick={start}>New word</button>
+        <button class="btn-play btn-play-go" onclick={start}>New word</button>
       {/if}
     </div>
 

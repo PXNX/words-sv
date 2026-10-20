@@ -1,19 +1,24 @@
 import type { Language, VocabularyLevel } from '#lib/data/vocabulary.js';
 import { vocabularyLevels } from '#lib/data/vocabulary.js';
+import type { SoundEffect } from '#lib/sounds.js';
 
 export type Text = Record<Language, string>;
 export type CharacterId = 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello' | 'lilith';
+export type Mood = 'neutral' | 'happy' | 'sad' | 'surprised' | 'curious';
 export type SceneId = 'cafe' | 'park' | 'station' | 'home' | 'office' | 'flat' | 'square' | 'attic';
 
 // `{name}` is replaced with the learner's first name, so characters can speak to them directly.
 // The first option of every question/reply is the correct one; the UI shuffles them.
+// `mood` sets the speaker's face when the text alone would read it wrong (see moodFor);
+// `sfx` plays a sound effect when the beat appears; `focus` names the vocabulary word a generated
+// question practises, so answering it right can take the word off the learner's missed list.
 export type StoryBeat =
-  | { kind: 'narration'; text: Text }
-  | { kind: 'line'; speaker: CharacterId; text: Text }
-  | { kind: 'question'; prompt: Text; options: Text[] }
-  | { kind: 'reply'; to: CharacterId; options: Text[] };
+  | { kind: 'narration'; text: Text; sfx?: SoundEffect }
+  | { kind: 'line'; speaker: CharacterId; text: Text; sfx?: SoundEffect; mood?: Mood }
+  | { kind: 'question'; prompt: Text; options: Text[]; focus?: string }
+  | { kind: 'reply'; to: CharacterId; options: Text[]; focus?: string };
 
-export type Story = { id: string; level: VocabularyLevel; scene: SceneId; cast: CharacterId[]; title: Text; beats: StoryBeat[] };
+export type Story = { id: string; level: VocabularyLevel; scene: SceneId; cast: CharacterId[]; title: Text; beats: StoryBeat[]; generated?: boolean };
 
 export const characterNames: Record<CharacterId, Text> = {
   mia: { de: 'Mia', en: 'Mia', fr: 'Mia', it: 'Mia', es: 'Mia', pt: 'Mia', uk: 'Мія' },
@@ -70,7 +75,7 @@ export const stories: Story[] = [
     title: { de: 'Lilith hat Hunger', en: 'Lilith is hungry', fr: 'Lilith a faim', it: 'Lilith ha fame', es: 'Lilith tiene hambre', pt: 'A Lilith está com fome', uk: 'Ліліт голодна' },
     beats: [
       { kind: 'narration', text: { de: 'Es ist Abend. Mia und Tom sind zu Hause. Ihre Katze Lilith schläft auf dem Sofa.', en: 'It is evening. Mia and Tom are at home. Their cat Lilith is sleeping on the sofa.', fr: 'C’est le soir. Mia et Tom sont à la maison. Leur chatte Lilith dort sur le canapé.', it: 'È sera. Mia e Tom sono a casa. La loro gatta Lilith dorme sul divano.', es: 'Es de noche. Mia y Tom están en casa. Su gata Lilith duerme en el sofá.', pt: 'É noite. Mia e Tom estão em casa. A gata deles, Lilith, está dormindo no sofá.', uk: 'Вечір. Мія і Том удома. Їхня кішка Ліліт спить на дивані.' } },
-      { kind: 'line', speaker: 'lilith', text: { de: 'Miau! Miau!', en: 'Meow! Meow!', fr: 'Miaou ! Miaou !', it: 'Miao! Miao!', es: '¡Miau! ¡Miau!', pt: 'Miau! Miau!', uk: 'Няв! Няв!' } },
+      { kind: 'line', speaker: 'lilith', sfx: 'meow', text: { de: 'Miau! Miau!', en: 'Meow! Meow!', fr: 'Miaou ! Miaou !', it: 'Miao! Miao!', es: '¡Miau! ¡Miau!', pt: 'Miau! Miau!', uk: 'Няв! Няв!' } },
       { kind: 'line', speaker: 'tom', text: { de: 'Mia, wo ist das Katzenfutter?', en: 'Mia, where is the cat food?', fr: 'Mia, où est la nourriture pour chat ?', it: 'Mia, dov’è il cibo per gatti?', es: 'Mia, ¿dónde está la comida del gato?', pt: 'Mia, onde está a ração da gata?', uk: 'Міє, де котячий корм?' } },
       { kind: 'line', speaker: 'mia', text: { de: 'In der Küche, neben dem Kühlschrank.', en: 'In the kitchen, next to the fridge.', fr: 'Dans la cuisine, à côté du frigo.', it: 'In cucina, accanto al frigorifero.', es: 'En la cocina, al lado de la nevera.', pt: 'Na cozinha, ao lado da geladeira.', uk: 'На кухні, біля холодильника.' } },
       { kind: 'line', speaker: 'tom', text: { de: 'Lilith hat Hunger. Hallo {name}! Möchtest du Lilith füttern?', en: 'Lilith is hungry. Hi {name}! Would you like to feed Lilith?', fr: 'Lilith a faim. Salut {name} ! Tu veux donner à manger à Lilith ?', it: 'Lilith ha fame. Ciao {name}! Vuoi dare da mangiare a Lilith?', es: 'Lilith tiene hambre. ¡Hola, {name}! ¿Quieres darle de comer a Lilith?', pt: 'A Lilith está com fome. Oi, {name}! Você quer dar comida para a Lilith?', uk: 'Ліліт голодна. Привіт, {name}! Хочеш погодувати Ліліт?' } },
@@ -80,7 +85,7 @@ export const stories: Story[] = [
         { de: 'Der Zug ist spät.', en: 'The train is late.', fr: 'Le train est en retard.', it: 'Il treno è in ritardo.', es: 'El tren llega tarde.', pt: 'O trem está atrasado.', uk: 'Потяг запізнюється.' }
       ] },
       { kind: 'line', speaker: 'mia', text: { de: 'Danke, {name}! Lilith mag Fisch.', en: 'Thanks, {name}! Lilith loves fish.', fr: 'Merci, {name} ! Lilith adore le poisson.', it: 'Grazie, {name}! Lilith adora il pesce.', es: '¡Gracias, {name}! A Lilith le encanta el pescado.', pt: 'Obrigada, {name}! A Lilith adora peixe.', uk: 'Дякую, {name}! Ліліт любить рибу.' } },
-      { kind: 'narration', text: { de: 'Lilith frisst und schnurrt. Jetzt ist sie glücklich.', en: 'Lilith eats and purrs. Now she is happy.', fr: 'Lilith mange et ronronne. Maintenant, elle est contente.', it: 'Lilith mangia e fa le fusa. Adesso è felice.', es: 'Lilith come y ronronea. Ahora está feliz.', pt: 'A Lilith come e ronrona. Agora ela está feliz.', uk: 'Ліліт їсть і муркоче. Тепер вона щаслива.' } },
+      { kind: 'narration', sfx: 'purr', text: { de: 'Lilith frisst und schnurrt. Jetzt ist sie glücklich.', en: 'Lilith eats and purrs. Now she is happy.', fr: 'Lilith mange et ronronne. Maintenant, elle est contente.', it: 'Lilith mangia e fa le fusa. Adesso è felice.', es: 'Lilith come y ronronea. Ahora está feliz.', pt: 'A Lilith come e ronrona. Agora ela está feliz.', uk: 'Ліліт їсть і муркоче. Тепер вона щаслива.' } },
       { kind: 'question', prompt: { de: 'Wo ist das Katzenfutter?', en: 'Where is the cat food?', fr: 'Où est la nourriture pour chat ?', it: 'Dov’è il cibo per gatti?', es: '¿Dónde está la comida del gato?', pt: 'Onde está a ração da gata?', uk: 'Де котячий корм?' }, options: [
         { de: 'In der Küche', en: 'In the kitchen', fr: 'Dans la cuisine', it: 'In cucina', es: 'En la cocina', pt: 'Na cozinha', uk: 'На кухні' },
         { de: 'Im Bad', en: 'In the bathroom', fr: 'Dans la salle de bain', it: 'In bagno', es: 'En el baño', pt: 'No banheiro', uk: 'У ванній' },
@@ -151,6 +156,39 @@ export const stories: Story[] = [
         { de: 'Nach Hamburg', en: 'To Hamburg', fr: 'À Hambourg', it: 'Ad Amburgo', es: 'A Hamburgo', pt: 'Para Hamburgo', uk: 'До Гамбурга' },
         { de: 'Nach Berlin', en: 'To Berlin', fr: 'À Berlin', it: 'A Berlino', es: 'A Berlín', pt: 'Para Berlim', uk: 'До Берліна' },
         { de: 'Nach München', en: 'To Munich', fr: 'À Munich', it: 'A Monaco', es: 'A Múnich', pt: 'Para Munique', uk: 'До Мюнхена' }
+      ] }
+    ]
+  },
+  {
+    id: 'a2-loud-morning',
+    level: 'a2',
+    scene: 'home',
+    cast: ['mia', 'tom', 'lilith'],
+    title: { de: 'Ein lauter Morgen', en: 'A noisy morning', fr: 'Un matin bruyant', it: 'Una mattina rumorosa', es: 'Una mañana ruidosa', pt: 'Uma manhã barulhenta', uk: 'Гучний ранок' },
+    beats: [
+      { kind: 'narration', text: { de: 'Es ist Sonntagmorgen. Mia macht Frühstück, und Lilith sitzt auf dem Küchentisch.', en: 'It is Sunday morning. Mia is making breakfast, and Lilith is sitting on the kitchen table.', fr: 'C’est dimanche matin. Mia prépare le petit-déjeuner et Lilith est assise sur la table de la cuisine.', it: 'È domenica mattina. Mia prepara la colazione e Lilith è seduta sul tavolo della cucina.', es: 'Es domingo por la mañana. Mia prepara el desayuno y Lilith está sentada en la mesa de la cocina.', pt: 'É domingo de manhã. A Mia está fazendo o café da manhã, e a Lilith está sentada na mesa da cozinha.', uk: 'Неділя, ранок. Мія готує сніданок, а Ліліт сидить на кухонному столі.' } },
+      { kind: 'narration', sfx: 'glass', text: { de: 'Plötzlich – klirr! Ein Glas fällt auf den Boden.', en: 'Suddenly – crash! A glass falls on the floor.', fr: 'Soudain… crac ! Un verre tombe par terre.', it: 'All’improvviso… crash! Un bicchiere cade per terra.', es: 'De repente… ¡crac! Un vaso se cae al suelo.', pt: 'De repente… crash! Um copo cai no chão.', uk: 'Раптом – дзень! Склянка падає на підлогу.' } },
+      { kind: 'line', speaker: 'mia', mood: 'surprised', text: { de: 'Lilith! Das war mein Lieblingsglas!', en: 'Lilith! That was my favourite glass!', fr: 'Lilith ! C’était mon verre préféré !', it: 'Lilith! Era il mio bicchiere preferito!', es: '¡Lilith! ¡Era mi vaso favorito!', pt: 'Lilith! Era o meu copo favorito!', uk: 'Ліліт! Це була моя улюблена склянка!' } },
+      { kind: 'line', speaker: 'lilith', sfx: 'meow', mood: 'sad', text: { de: 'Miau …', en: 'Meow…', fr: 'Miaou…', it: 'Miao…', es: 'Miau…', pt: 'Miau…', uk: 'Няв…' } },
+      { kind: 'line', speaker: 'tom', text: { de: 'Keine Sorge, ich hole den Besen. Pass auf, {name}, da liegen Scherben!', en: 'Don’t worry, I’ll get the broom. Careful, {name}, there are shards on the floor!', fr: 'Pas de souci, je vais chercher le balai. Attention, {name}, il y a des morceaux de verre !', it: 'Tranquilla, prendo la scopa. Attenzione, {name}, ci sono dei cocci!', es: 'Tranquila, voy a por la escoba. ¡Cuidado, {name}, hay cristales en el suelo!', pt: 'Não se preocupe, vou pegar a vassoura. Cuidado, {name}, tem cacos no chão!', uk: 'Не хвилюйся, я принесу віник. Обережно, {name}, тут уламки!' } },
+      { kind: 'reply', to: 'tom', options: [
+        { de: 'Danke, ich passe auf!', en: 'Thanks, I’ll be careful!', fr: 'Merci, je fais attention !', it: 'Grazie, faccio attenzione!', es: '¡Gracias, tendré cuidado!', pt: 'Valeu, vou tomar cuidado!', uk: 'Дякую, дивитимуся під ноги!' },
+        { de: 'Ich esse die Scherben.', en: 'I’ll eat the shards.', fr: 'Je mange les morceaux de verre.', it: 'Mangio i cocci.', es: 'Me como los cristales.', pt: 'Eu como os cacos.', uk: 'Я з’їм уламки.' },
+        { de: 'Das Glas ist sehr lecker.', en: 'The glass is very tasty.', fr: 'Le verre est très bon.', it: 'Il bicchiere è molto buono.', es: 'El vaso está muy rico.', pt: 'O copo é muito gostoso.', uk: 'Склянка дуже смачна.' }
+      ] },
+      { kind: 'narration', sfx: 'brakes', text: { de: 'Draußen bremst ein Auto ganz laut. Alle laufen zum Fenster.', en: 'Outside, a car brakes very loudly. Everyone runs to the window.', fr: 'Dehors, une voiture freine très fort. Tout le monde court à la fenêtre.', it: 'Fuori una macchina frena fortissimo. Tutti corrono alla finestra.', es: 'Fuera, un coche frena muy fuerte. Todos corren a la ventana.', pt: 'Lá fora, um carro freia muito forte. Todo mundo corre para a janela.', uk: 'Надворі голосно гальмує машина. Усі біжать до вікна.' } },
+      { kind: 'line', speaker: 'tom', mood: 'happy', text: { de: 'Zum Glück ist nichts passiert. Eine Katze ist über die Straße gelaufen.', en: 'Luckily nothing happened. A cat ran across the street.', fr: 'Heureusement, il ne s’est rien passé. Un chat a traversé la rue.', it: 'Per fortuna non è successo niente. Un gatto ha attraversato la strada.', es: 'Por suerte no ha pasado nada. Un gato ha cruzado la calle.', pt: 'Ainda bem que não aconteceu nada. Um gato atravessou a rua.', uk: 'На щастя, нічого не сталося. Вулицю перебіг кіт.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Heute sind alle Katzen ein bisschen wild!', en: 'All the cats are a bit wild today!', fr: 'Aujourd’hui, tous les chats sont un peu fous !', it: 'Oggi tutti i gatti sono un po’ scatenati!', es: '¡Hoy todos los gatos están un poco locos!', pt: 'Hoje todos os gatos estão meio agitados!', uk: 'Сьогодні всі коти трохи дикі!' } },
+      { kind: 'line', speaker: 'lilith', mood: 'happy', text: { de: 'Schnurr … Ich bin ganz brav.', en: 'Purr… I am very good.', fr: 'Ronron… Je suis très sage.', it: 'Ron ron… Io sono bravissima.', es: 'Rrrr… Yo soy muy buena.', pt: 'Rrrr… Eu sou muito boazinha.', uk: 'Мур… Я дуже чемна.' } },
+      { kind: 'question', prompt: { de: 'Was ist auf den Boden gefallen?', en: 'What fell on the floor?', fr: 'Qu’est-ce qui est tombé par terre ?', it: 'Che cosa è caduto per terra?', es: '¿Qué se ha caído al suelo?', pt: 'O que caiu no chão?', uk: 'Що впало на підлогу?' }, options: [
+        { de: 'Ein Glas', en: 'A glass', fr: 'Un verre', it: 'Un bicchiere', es: 'Un vaso', pt: 'Um copo', uk: 'Склянка' },
+        { de: 'Ein Teller', en: 'A plate', fr: 'Une assiette', it: 'Un piatto', es: 'Un plato', pt: 'Um prato', uk: 'Тарілка' },
+        { de: 'Ein Buch', en: 'A book', fr: 'Un livre', it: 'Un libro', es: 'Un libro', pt: 'Um livro', uk: 'Книжка' }
+      ] },
+      { kind: 'question', prompt: { de: 'Warum hat das Auto gebremst?', en: 'Why did the car brake?', fr: 'Pourquoi la voiture a-t-elle freiné ?', it: 'Perché la macchina ha frenato?', es: '¿Por qué ha frenado el coche?', pt: 'Por que o carro freou?', uk: 'Чому машина загальмувала?' }, options: [
+        { de: 'Eine Katze ist über die Straße gelaufen.', en: 'A cat ran across the street.', fr: 'Un chat a traversé la rue.', it: 'Un gatto ha attraversato la strada.', es: 'Un gato ha cruzado la calle.', pt: 'Um gato atravessou a rua.', uk: 'Вулицю перебіг кіт.' },
+        { de: 'Die Ampel war rot.', en: 'The traffic light was red.', fr: 'Le feu était rouge.', it: 'Il semaforo era rosso.', es: 'El semáforo estaba en rojo.', pt: 'O semáforo estava vermelho.', uk: 'Світлофор був червоний.' },
+        { de: 'Tom stand auf der Straße.', en: 'Tom was standing in the street.', fr: 'Tom était au milieu de la rue.', it: 'Tom era in mezzo alla strada.', es: 'Tom estaba en la calle.', pt: 'O Tom estava no meio da rua.', uk: 'Том стояв на дорозі.' }
       ] }
     ]
   },
@@ -320,6 +358,21 @@ export function storiesFor(level: VocabularyLevel, includeLower: boolean): Story
   if (exact.length) return exact;
   const nearest = lower[0]?.level;
   return lower.filter((story) => story.level === nearest);
+}
+
+/**
+ * The face a character makes while saying a line. Every story has German text, so the German line is
+ * read for cues: regret reads sad, exclamations of shock surprised, questions curious and friendly
+ * exclamations happy. An explicit `mood` on the beat wins.
+ */
+export function moodFor(beat: Extract<StoryBeat, { kind: 'line' }>): Mood {
+  if (beat.mood) return beat.mood;
+  const text = beat.text.de;
+  if (/oh nein|leider|schade|vergessen|tut mir leid|entschuldigung!/i.test(text)) return 'sad';
+  if (/^(oh|ach)\b|plötzlich|meine güte|wow/i.test(text)) return 'surprised';
+  if (/\?\s*$/.test(text)) return 'curious';
+  if (/!|danke|super|gern|toll|schön|genau|glück|willkommen/i.test(text)) return 'happy';
+  return 'neutral';
 }
 
 export function fillName(text: string, name: string) {

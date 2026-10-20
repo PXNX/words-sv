@@ -129,5 +129,12 @@
   "onboarding_name_placeholder": "आपका पहला नाम",
   "onboarding_name_hint": "कहानियों के पात्र आपको इसी नाम से बुलाएँगे।",
   "home_greeting": "नमस्ते, {name}!",
-  "home_cast": "मिया, टॉम और लिलिथ के साथ मिलकर सीखें"
+  "home_cast": "मिया, टॉम और लिलिथ के साथ मिलकर सीखें",
+  "update_app_hint": "लिलिथ को ऐप का नया संस्करण मिला है।",
+  "update_app_button": "अपडेट करें",
+  "update_app_dismiss": "बाद में",
+  "story_for_you": "आपके लिए",
+  "story_practice_words": "मेरे शब्दों का अभ्यास करें",
+  "pet_lilith": "लिलिथ को सहलाएँ",
+  "story_auto_read": "अपने-आप पढ़कर सुनाएँ"
 }

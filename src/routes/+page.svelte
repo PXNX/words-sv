@@ -5,6 +5,8 @@
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings, interfaceLocales, FIRST_NAME_MAX_LENGTH } from '#lib/state/settings.svelte.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
+  import UpdateAppHint from '#lib/UpdateAppHint.svelte';
+  import { playSoundEffect } from '#lib/sounds.js';
   import { playableLanguages, type Language } from '#lib/data/vocabulary.js';
   import IconSettings from '~icons/material-symbols/settings-rounded';
   import IconHelp from '~icons/material-symbols/help-rounded';
@@ -73,6 +75,7 @@
     nameHint: m.onboarding_name_hint({}, { locale: settings.interfaceLocale }),
     continue: m.continue({}, { locale: settings.interfaceLocale }),
     homeCast: m.home_cast({}, { locale: settings.interfaceLocale }),
+    petLilith: m.pet_lilith({}, { locale: settings.interfaceLocale }),
     greeting: m.home_greeting({ name: settings.firstName }, { locale: settings.interfaceLocale })
   });
 
@@ -92,6 +95,12 @@
   function selectOnboardingInterfaceLocale(event: Event) {
     const value = (event.currentTarget as HTMLSelectElement).value;
     if (interfaceLocales.some((locale) => locale.code === value)) settings.setInterfaceLocale(value as typeof settings.interfaceLocale);
+  }
+  let petting = $state(false);
+  function petLilith() {
+    playSoundEffect(settings.sound, 'purr');
+    petting = false;
+    requestAnimationFrame(() => (petting = true));
   }
   function selectMode(mode: 'circle' | 'wordle' | 'vocab' | 'grammar' | 'hangman' | 'pronunciation' | 'alltag' | 'story') {
     void goto(`/${mode}`);
@@ -154,8 +163,9 @@
       <button type="submit" class="btn-play btn-play-ink home-name-submit" disabled={!nameDraft.trim()}>{labels.continue}</button>
     </form>
   {:else}
+    <UpdateAppHint />
     <header class="home-header">
-      <div class="home-family" aria-hidden="true"><span class="home-family-people"><StoryCharacter id="mia" /><StoryCharacter id="tom" /></span><img class="home-lilith" src="/images/lilith-sit.png" alt="" width="349" height="512" /></div>
+      <div class="home-family"><span class="home-family-people" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="tom" /></span><button type="button" class="home-lilith-pet" class:petting onclick={petLilith} onanimationend={() => (petting = false)} aria-label={labels.petLilith}><img class="home-lilith" src="/images/lilith-sit.png" alt="" width="349" height="512" /></button></div>
       <p>{labels.greeting} · {labels.homeKicker}</p><h1>{labels.homeTitle}</h1><span class="home-cast-note">{labels.homeCast}</span>
     </header>
     <button type="button" class:qualified={settings.streak.qualified} class="card-play home-streak" onclick={() => void goto('/stats')} aria-label={`${labels.streak}: ${settings.streak.streakCount}`}>
@@ -209,6 +219,11 @@
   .home-family-people :global(.story-character) { width:4rem;height:5.4rem; }.home-family-people :global(.story-character + .story-character) { margin-inline-start:-.9rem; }
   .home-family::after { content:'';position:absolute;inset:auto -.6rem 0;height:2px;border-radius:2px;background:#172a45; }
   .home-lilith { display:block;width:auto;height:5.3rem;margin-inline-start:-1.35rem;filter:drop-shadow(2px 0 0 #fffdf7) drop-shadow(-2px 0 0 #fffdf7) drop-shadow(0 2px 0 #fffdf7) drop-shadow(0 -2px 0 #fffdf7) drop-shadow(2px 3px 0 rgba(23,42,69,.22));rotate:3deg;transform-origin:50% 100%;animation:lilith-breathe 4.5s ease-in-out infinite; }
+  .home-lilith-pet { display:block;margin-inline-start:-1.35rem;padding:0;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transform-origin:50% 100%; }.home-lilith-pet .home-lilith { margin:0; }
+  .home-lilith-pet:focus-visible { outline:3px dashed #e6a527;outline-offset:2px;border-radius:1rem; }
+  .home-lilith-pet.petting { animation:lilith-wiggle .9s var(--play-ease); }
+  @keyframes lilith-wiggle { 0%,100% { rotate:0deg; } 20% { rotate:-4deg; } 45% { rotate:3deg; } 70% { rotate:-1.5deg; } }
+  @media (prefers-reduced-motion:reduce) { .home-lilith-pet.petting { animation:none; } }
   .home-cast-note { justify-self:center;color:#596477;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700; }
   @keyframes lilith-breathe { 0%,100% { scale:1; } 50% { scale:1.018 1.012; } }
   @media (prefers-reduced-motion:reduce) { .home-lilith { animation:none; } }

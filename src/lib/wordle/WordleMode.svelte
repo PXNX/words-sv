@@ -11,6 +11,7 @@
   import IconHelp from '~icons/material-symbols/help-rounded';
   import IconProgressActivity from '~icons/material-symbols/progress-activity';
   import { tick } from 'svelte';
+  import { recordMissedWord } from '#lib/story/missedWords.js';
 
   type Entry = { word: string; marks: WordleMark[] };
   type Labels = { title: string; subtitle: string; empty: string; input: string; win: string; invalid: string; again: string };
@@ -153,6 +154,14 @@
     restoreOrStart();
   });
 
+  // A lost round's word goes on the story mode's practice list.
+  let recordedLoss = '';
+  $effect(() => {
+    if (!exhausted || practiceActive || !target || recordedLoss === target) return;
+    recordedLoss = target;
+    recordMissedWord(language, target);
+  });
+
   $effect(() => {
     if (typeof localStorage === 'undefined' || !target) return;
     if (won || exhausted) {
@@ -178,7 +187,7 @@
       <WordleGrid rows={2} wordLength={5} {entries} currentGuess={practiceFinished ? '' : guess} ariaLabel={labels.title} compact />
       {#if practiceFinished}
         <p class="min-h-[1rem] m-0 text-success text-[.68rem] font-extrabold text-center">{practiceCompleteLabel}</p>
-        <button class="min-h-[2.45rem] px-[.9rem] border border-success bg-success text-[#fffdf7] text-[.64rem] font-extrabold tracking-[.08em] uppercase" onclick={finishPractice}>{practiceContinueLabel}</button>
+        <button class="btn-play btn-play-go" onclick={finishPractice}>{practiceContinueLabel}</button>
       {:else}
         <p class="m-0 text-accent text-[.68rem] font-extrabold text-center">{practicePromptLabel} {practiceExpectedWord}</p>
       {/if}
@@ -194,7 +203,7 @@
       {#if explanationWord}<div class="flex items-start gap-[.45rem] max-w-[min(100%,28rem)] p-[.55rem_.7rem] border border-accent/35 bg-[#fff7dd] text-accent text-[.65rem] font-bold leading-[1.35] dark:bg-[#2b3d57]"><IconHelp class="w-[.9rem] h-[.9rem] flex-none mt-[.05rem]" aria-hidden="true" /><span>{explanationDefinition ?? 'No definition is available for this word yet.'}<a class="ml-1 font-extrabold underline underline-offset-2" href={explanationHref} target="_blank" rel="noreferrer">Wiktionary</a></span></div>{/if}
       {#if notice}<p class:text-accent={!won} class:text-success={won} class="min-h-[1rem] m-0 text-[.68rem] font-extrabold text-center">{notice}</p>{/if}
       {#if exhausted && !won}<p class="min-h-[1rem] m-0 text-accent text-[.68rem] font-extrabold text-center">{target}</p>{/if}
-      {#if won || exhausted}<button class="inline-flex items-center justify-center gap-[.4rem] min-h-[2.45rem] px-[.9rem] border border-success bg-success text-[#fffdf7] text-[.64rem] font-extrabold tracking-[.08em] uppercase disabled:cursor-wait disabled:opacity-80" onclick={continueRound} disabled={loadingNextRound} aria-busy={loadingNextRound}>
+      {#if won || exhausted}<button class="btn-play btn-play-go disabled:cursor-wait disabled:opacity-80" onclick={continueRound} disabled={loadingNextRound} aria-busy={loadingNextRound}>
         {#if loadingNextRound}<IconProgressActivity class="w-[1rem] h-[1rem] animate-[startup-spin_1s_linear_infinite] motion-reduce:animate-none" aria-hidden="true" />{/if}
         <span>{labels.again}</span>
       </button>{/if}

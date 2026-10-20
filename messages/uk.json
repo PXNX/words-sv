@@ -129,5 +129,12 @@
   "onboarding_name_placeholder": "Твоє ім’я",
   "onboarding_name_hint": "Персонажі історій звертатимуться до тебе на це ім’я.",
   "home_greeting": "Привіт, {name}!",
-  "home_cast": "Вчимося разом із Мією, Томом і Ліліт"
+  "home_cast": "Вчимося разом із Мією, Томом і Ліліт",
+  "update_app_hint": "Ліліт знайшла нову версію застосунку.",
+  "update_app_button": "Оновити",
+  "update_app_dismiss": "Пізніше",
+  "story_for_you": "Для тебе",
+  "story_practice_words": "Повторити мої слова",
+  "pet_lilith": "Погладити Ліліт",
+  "story_auto_read": "Читати вголос автоматично"
 }
