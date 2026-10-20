@@ -12,6 +12,8 @@
   import IconProgressActivity from '~icons/material-symbols/progress-activity';
   import { tick } from 'svelte';
   import { recordMissedWord } from '#lib/story/missedWords.js';
+  import Companion from '#lib/story/Companion.svelte';
+  import type { Mood } from '#lib/story/stories.js';
 
   type Entry = { word: string; marks: WordleMark[] };
   type Labels = { title: string; subtitle: string; empty: string; input: string; win: string; invalid: string; again: string };
@@ -42,6 +44,9 @@
   const maxAttempts = $derived(wordLength + 1);
   const exhausted = $derived(entries.length >= maxAttempts && !won);
   const keyboardMarks = $derived(keyboardMarksFrom(entries));
+  // Lilith cheers along with the latest guess: the more green letters, the bigger her reaction.
+  const lastGreens = $derived(entries.at(-1)?.marks.filter((mark) => mark === 'correct').length ?? 0);
+  const lilithMood = $derived<Mood>(won ? 'happy' : exhausted ? 'sad' : lastGreens >= 3 ? 'surprised' : lastGreens >= 1 ? 'happy' : 'curious');
   const tutorialRound = $derived(isTutorialLanguage(language) ? tutorialRounds[language] : null);
   const practiceExpectedWord = $derived(tutorialRound ? (practiceStep === 0 ? tutorialRound.warmup : tutorialRound.target) : '');
   const practiceFinished = $derived(practiceStep >= 2);
@@ -176,10 +181,13 @@
   class="flex-1 min-h-0 grid grid-rows-[auto_1fr_auto] content-stretch gap-[clamp(.75rem,2.8vw,1.2rem)] pt-[clamp(1.25rem,7svh,4rem)] px-[clamp(.8rem,3vw,1.25rem)] pb-[clamp(1rem,3vw,1.5rem)] overflow-x-hidden overflow-y-auto bg-[linear-gradient(180deg,rgba(237,228,213,.8),rgba(255,253,247,.65))] dark:bg-[linear-gradient(180deg,#213a5d,#172a45)]"
   aria-label={labels.title}
 >
-  <header class="text-center">
-    <span class="text-accent text-[.58rem] font-extrabold tracking-[.14em]">{level.toUpperCase()}</span>
-    <h1 class="my-[.15rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.65rem,6vw,2.4rem)] font-normal leading-none">{labels.title}</h1>
-    <p class="m-0 text-base-content/60 text-[.67rem] font-bold leading-[1.35]">{labels.subtitle}</p>
+  <header class="flex items-end justify-center gap-[.6rem]">
+    <div class="text-center">
+      <span class="text-accent text-[.58rem] font-extrabold tracking-[.14em]">{level.toUpperCase()}</span>
+      <h1 class="my-[.15rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.65rem,6vw,2.4rem)] font-normal leading-none">{labels.title}</h1>
+      <p class="m-0 text-base-content/60 text-[.67rem] font-bold leading-[1.35]">{labels.subtitle}</p>
+    </div>
+    <Companion id="lilith" mood={practiceActive ? 'happy' : lilithMood} size="sm" />
   </header>
 
   {#if practiceActive && tutorialRound}

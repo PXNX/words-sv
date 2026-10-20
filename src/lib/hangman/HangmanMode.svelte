@@ -6,6 +6,8 @@
   import { keyboardLayoutFor, type WordleMark } from '#lib/wordle/keyboardLayouts.js';
   import WordleKeyboard from '#lib/wordle/WordleKeyboard.svelte';
   import { recordMissedWord } from '#lib/story/missedWords.js';
+  import Companion from '#lib/story/Companion.svelte';
+  import type { Mood } from '#lib/story/stories.js';
 
   let { words, language }: { words: string[]; language: string } = $props();
   let target = $state('');
@@ -25,6 +27,10 @@
   });
   const maskedWord = $derived(target.split('').map((letter) => guessedSet.has(letter) ? letter : '•').join(' '));
   const layout = $derived(keyboardLayoutFor(language));
+  // Lilith watches the letters: pleased by a hit, startled by a miss, worried when the figure is nearly done.
+  const lastGuess = $derived(guessed.at(-1));
+  const lilithMood = $derived<Mood>(won ? 'happy' : lost ? 'sad' : !lastGuess ? 'curious' : !target.includes(lastGuess) ? (wrongGuesses >= 4 ? 'sad' : 'surprised') : 'happy');
+  const lilithLine = $derived(won ? 'Purr! You got it!' : lost ? 'Meow… next time!' : '');
 
   function start() {
     target = candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : '';
@@ -79,7 +85,7 @@
           {#if wrongGuesses >= 5}<line x1="86" y1="90" x2="68" y2="118" class="stroke-error" stroke-width="5" stroke-linecap="round" in:fade={{ duration: 200 }} />{/if}
           {#if wrongGuesses >= 6}<line x1="86" y1="90" x2="104" y2="118" class="stroke-error" stroke-width="5" stroke-linecap="round" in:fade={{ duration: 200 }} />{/if}
         </svg>
-        <span class="text-accent text-[.65rem] font-extrabold">{wrongGuesses} / 6</span>
+        <span class="grid justify-items-start gap-[.2rem]"><Companion id="lilith" mood={lilithMood} line={lilithLine} /><span class="text-accent text-[.65rem] font-extrabold">{wrongGuesses} / 6</span></span>
       </div>
       <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,8vw,2.7rem)] tracking-[.16em] leading-none" aria-label="Hidden word">{maskedWord}</p>
       {#if finished}
