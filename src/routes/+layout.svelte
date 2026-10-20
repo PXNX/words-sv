@@ -81,7 +81,7 @@
 	{:else}
 		<main class="game-shell">
 			<section class="game-paper" class:paper-wide={isHome} class:paper-list={isListPage} aria-label={shellLabel}>
-				{#if !isHome}<button class="home-trigger" onclick={() => void goto('/')} aria-label={homeLabel}><IconHome aria-hidden="true" /></button>{/if}
+				{#if !isHome}<button class="btn-play btn-play-round home-trigger" onclick={() => void goto('/')} aria-label={homeLabel}><IconHome aria-hidden="true" /></button>{/if}
 				{@render children()}
 			</section>
 		</main>
@@ -95,9 +95,8 @@
 	:global(.game-shell) { min-height:100svh;padding:0;display:flex;align-items:stretch;justify-content:center; }
 	.game-paper { position:relative;isolation:isolate;box-sizing:border-box;overflow:hidden;width:100%;height:100svh;min-height:0;padding:0;display:flex;flex-direction:column;justify-content:center;border:0;background-color:#ede4d5;background-image:radial-gradient(circle at 50% 15%,rgba(230,165,39,.18),transparent 34%),linear-gradient(rgba(23,42,69,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.018) 1px,transparent 1px);background-size:auto,24px 24px,24px 24px;box-shadow:none; }
 	.game-paper::before { display:none; }
-	.home-trigger { position:absolute;z-index:105;top:.62rem;left:.62rem;display:grid;place-items:center;width:2.1rem;height:2.1rem;padding:0;border:1px solid rgba(23,42,69,.36);border-radius:50%;background:rgba(255,253,247,.94);color:#172a45;box-shadow:0 2px 0 rgba(23,42,69,.1); }.home-trigger :global(svg) { width:1rem;height:1rem; }.home-trigger:active { transform:scale(.96); }
+	.home-trigger { position:absolute;z-index:105;top:.62rem;left:.62rem; }.home-trigger :global(svg) { width:1rem;height:1rem; }
 	:global(html.dark) .game-paper { background-color:#213a5d; }
-	:global(html.dark) .home-trigger { border-color:rgba(255,253,247,.42);background:rgba(23,42,69,.94);color:#fffdf7; }
 	/* Phones (and phones held sideways, which are too short for a frame) stay full-bleed. Anything with room
 	   around it gets a framed paper sheet: wider for the home menu, medium for lists, game-sized otherwise. */
 	@media (min-width:700px) and (min-height:560px) {
@@ -109,9 +108,5 @@
 		.game-paper::before { content:'';display:block;position:absolute;z-index:-1;inset:8px;border:1px solid rgba(23,42,69,.13);border-radius:1.1rem;pointer-events:none; }
 		:global(html.dark) .game-paper { border-color:rgba(255,253,247,.18);box-shadow:0 24px 70px rgba(0,0,0,.35); }
 		:global(html.dark) .game-paper::before { border-color:rgba(255,253,247,.14); }
-	}
-	@media (hover:hover) {
-		.home-trigger { cursor:pointer;transition:transform .16s cubic-bezier(.23,1,.32,1),box-shadow .16s; }
-		.home-trigger:hover { transform:translateY(-1px);box-shadow:0 4px 10px rgba(23,42,69,.16); }
 	}
 </style>

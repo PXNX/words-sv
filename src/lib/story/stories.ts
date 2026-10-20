@@ -2,7 +2,7 @@ import type { Language, VocabularyLevel } from '#lib/data/vocabulary.js';
 import { vocabularyLevels } from '#lib/data/vocabulary.js';
 
 export type Text = Record<Language, string>;
-export type CharacterId = 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello';
+export type CharacterId = 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello' | 'lilith';
 export type SceneId = 'cafe' | 'park' | 'station' | 'home' | 'office' | 'flat' | 'square' | 'attic';
 
 // `{name}` is replaced with the learner's first name, so characters can speak to them directly.
@@ -22,7 +22,8 @@ export const characterNames: Record<CharacterId, Text> = {
   tom: { de: 'Tom', en: 'Tom', fr: 'Tom', it: 'Tom', es: 'Tom', pt: 'Tom', uk: 'Том' },
   kim: { de: 'Kim', en: 'Kim', fr: 'Kim', it: 'Kim', es: 'Kim', pt: 'Kim', uk: 'Кім' },
   paul: { de: 'Herr Paul', en: 'Mr Paul', fr: 'M. Paul', it: 'Sig. Paul', es: 'Sr. Paul', pt: 'Sr. Paul', uk: 'Пан Пауль' },
-  bello: { de: 'Bello', en: 'Bello', fr: 'Bello', it: 'Bello', es: 'Bello', pt: 'Bello', uk: 'Белло' }
+  bello: { de: 'Bello', en: 'Bello', fr: 'Bello', it: 'Bello', es: 'Bello', pt: 'Bello', uk: 'Белло' },
+  lilith: { de: 'Lilith', en: 'Lilith', fr: 'Lilith', it: 'Lilith', es: 'Lilith', pt: 'Lilith', uk: 'Ліліт' }
 };
 
 export const stories: Story[] = [
@@ -58,6 +59,37 @@ export const stories: Story[] = [
         { de: 'Nein.', en: 'No.', fr: 'Non.', it: 'No.', es: 'No.', pt: 'Não.', uk: 'Ні.' },
         { de: 'Ja, einen.', en: 'Yes, one piece.', fr: 'Oui, un.', it: 'Sì, una.', es: 'Sí, uno.', pt: 'Sim, um.', uk: 'Так, одне.' },
         { de: 'Ja, zwei.', en: 'Yes, two pieces.', fr: 'Oui, deux.', it: 'Sì, due.', es: 'Sí, dos.', pt: 'Sim, dois.', uk: 'Так, два.' }
+      ] }
+    ]
+  },
+  {
+    id: 'a1-lilith',
+    level: 'a1',
+    scene: 'home',
+    cast: ['mia', 'tom', 'lilith'],
+    title: { de: 'Lilith hat Hunger', en: 'Lilith is hungry', fr: 'Lilith a faim', it: 'Lilith ha fame', es: 'Lilith tiene hambre', pt: 'A Lilith está com fome', uk: 'Ліліт голодна' },
+    beats: [
+      { kind: 'narration', text: { de: 'Es ist Abend. Mia und Tom sind zu Hause. Ihre Katze Lilith schläft auf dem Sofa.', en: 'It is evening. Mia and Tom are at home. Their cat Lilith is sleeping on the sofa.', fr: 'C’est le soir. Mia et Tom sont à la maison. Leur chatte Lilith dort sur le canapé.', it: 'È sera. Mia e Tom sono a casa. La loro gatta Lilith dorme sul divano.', es: 'Es de noche. Mia y Tom están en casa. Su gata Lilith duerme en el sofá.', pt: 'É noite. Mia e Tom estão em casa. A gata deles, Lilith, está dormindo no sofá.', uk: 'Вечір. Мія і Том удома. Їхня кішка Ліліт спить на дивані.' } },
+      { kind: 'line', speaker: 'lilith', text: { de: 'Miau! Miau!', en: 'Meow! Meow!', fr: 'Miaou ! Miaou !', it: 'Miao! Miao!', es: '¡Miau! ¡Miau!', pt: 'Miau! Miau!', uk: 'Няв! Няв!' } },
+      { kind: 'line', speaker: 'tom', text: { de: 'Mia, wo ist das Katzenfutter?', en: 'Mia, where is the cat food?', fr: 'Mia, où est la nourriture pour chat ?', it: 'Mia, dov’è il cibo per gatti?', es: 'Mia, ¿dónde está la comida del gato?', pt: 'Mia, onde está a ração da gata?', uk: 'Міє, де котячий корм?' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'In der Küche, neben dem Kühlschrank.', en: 'In the kitchen, next to the fridge.', fr: 'Dans la cuisine, à côté du frigo.', it: 'In cucina, accanto al frigorifero.', es: 'En la cocina, al lado de la nevera.', pt: 'Na cozinha, ao lado da geladeira.', uk: 'На кухні, біля холодильника.' } },
+      { kind: 'line', speaker: 'tom', text: { de: 'Lilith hat Hunger. Hallo {name}! Möchtest du Lilith füttern?', en: 'Lilith is hungry. Hi {name}! Would you like to feed Lilith?', fr: 'Lilith a faim. Salut {name} ! Tu veux donner à manger à Lilith ?', it: 'Lilith ha fame. Ciao {name}! Vuoi dare da mangiare a Lilith?', es: 'Lilith tiene hambre. ¡Hola, {name}! ¿Quieres darle de comer a Lilith?', pt: 'A Lilith está com fome. Oi, {name}! Você quer dar comida para a Lilith?', uk: 'Ліліт голодна. Привіт, {name}! Хочеш погодувати Ліліт?' } },
+      { kind: 'reply', to: 'tom', options: [
+        { de: 'Ja, gern!', en: 'Yes, I’d love to!', fr: 'Oui, avec plaisir !', it: 'Sì, volentieri!', es: '¡Sí, claro!', pt: 'Sim, claro!', uk: 'Так, залюбки!' },
+        { de: 'Ich bin eine Katze.', en: 'I am a cat.', fr: 'Je suis un chat.', it: 'Io sono un gatto.', es: 'Yo soy un gato.', pt: 'Eu sou um gato.', uk: 'Я кіт.' },
+        { de: 'Der Zug ist spät.', en: 'The train is late.', fr: 'Le train est en retard.', it: 'Il treno è in ritardo.', es: 'El tren llega tarde.', pt: 'O trem está atrasado.', uk: 'Потяг запізнюється.' }
+      ] },
+      { kind: 'line', speaker: 'mia', text: { de: 'Danke, {name}! Lilith mag Fisch.', en: 'Thanks, {name}! Lilith loves fish.', fr: 'Merci, {name} ! Lilith adore le poisson.', it: 'Grazie, {name}! Lilith adora il pesce.', es: '¡Gracias, {name}! A Lilith le encanta el pescado.', pt: 'Obrigada, {name}! A Lilith adora peixe.', uk: 'Дякую, {name}! Ліліт любить рибу.' } },
+      { kind: 'narration', text: { de: 'Lilith frisst und schnurrt. Jetzt ist sie glücklich.', en: 'Lilith eats and purrs. Now she is happy.', fr: 'Lilith mange et ronronne. Maintenant, elle est contente.', it: 'Lilith mangia e fa le fusa. Adesso è felice.', es: 'Lilith come y ronronea. Ahora está feliz.', pt: 'A Lilith come e ronrona. Agora ela está feliz.', uk: 'Ліліт їсть і муркоче. Тепер вона щаслива.' } },
+      { kind: 'question', prompt: { de: 'Wo ist das Katzenfutter?', en: 'Where is the cat food?', fr: 'Où est la nourriture pour chat ?', it: 'Dov’è il cibo per gatti?', es: '¿Dónde está la comida del gato?', pt: 'Onde está a ração da gata?', uk: 'Де котячий корм?' }, options: [
+        { de: 'In der Küche', en: 'In the kitchen', fr: 'Dans la cuisine', it: 'In cucina', es: 'En la cocina', pt: 'Na cozinha', uk: 'На кухні' },
+        { de: 'Im Bad', en: 'In the bathroom', fr: 'Dans la salle de bain', it: 'In bagno', es: 'En el baño', pt: 'No banheiro', uk: 'У ванній' },
+        { de: 'Im Auto', en: 'In the car', fr: 'Dans la voiture', it: 'In macchina', es: 'En el coche', pt: 'No carro', uk: 'В машині' }
+      ] },
+      { kind: 'question', prompt: { de: 'Was mag Lilith?', en: 'What does Lilith love?', fr: 'Qu’est-ce que Lilith adore ?', it: 'Che cosa adora Lilith?', es: '¿Qué le encanta a Lilith?', pt: 'O que a Lilith adora?', uk: 'Що любить Ліліт?' }, options: [
+        { de: 'Fisch', en: 'Fish', fr: 'Le poisson', it: 'Il pesce', es: 'El pescado', pt: 'Peixe', uk: 'Рибу' },
+        { de: 'Kuchen', en: 'Cake', fr: 'Le gâteau', it: 'La torta', es: 'El pastel', pt: 'Bolo', uk: 'Торт' },
+        { de: 'Kaffee', en: 'Coffee', fr: 'Le café', it: 'Il caffè', es: 'El café', pt: 'Café', uk: 'Каву' }
       ] }
     ]
   },

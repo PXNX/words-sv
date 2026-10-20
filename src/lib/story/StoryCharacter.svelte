@@ -4,7 +4,7 @@
   let { id, talking = false, label = '' }: { id: CharacterId; talking?: boolean; label?: string } = $props();
 
   type Look = { skin: string; hair: string; hairStyle: 'bun' | 'short' | 'curly' | 'bob' | 'bald'; top: string; glasses?: boolean; beard?: boolean; moustache?: boolean; outfit: 'plain' | 'hoodie' | 'cardigan' | 'apron' | 'blazer' | 'tie' };
-  const looks: Record<Exclude<CharacterId, 'bello'>, Look> = {
+  const looks: Record<Exclude<CharacterId, 'bello' | 'lilith'>, Look> = {
     mia: { skin: '#f2c7a5', hair: '#c4522e', hairStyle: 'bun', top: '#e6a527', outfit: 'plain' },
     leo: { skin: '#d9a07a', hair: '#3b2a20', hairStyle: 'short', top: '#4b78c2', glasses: true, beard: true, outfit: 'hoodie' },
     oma: { skin: '#f0cfb5', hair: '#d8d4cc', hairStyle: 'bun', top: '#8a62b6', glasses: true, outfit: 'cardigan' },
@@ -12,7 +12,7 @@
     kim: { skin: '#f1d2b0', hair: '#1c1f26', hairStyle: 'bob', top: '#172a45', outfit: 'blazer' },
     paul: { skin: '#e8b994', hair: '#a7a49e', hairStyle: 'bald', top: '#8c5b3d', moustache: true, outfit: 'tie' }
   };
-  const look = $derived(id === 'bello' ? null : looks[id]);
+  const look = $derived(id === 'bello' || id === 'lilith' ? null : looks[id]);
 </script>
 
 <svg class="story-character" class:talking viewBox="0 0 120 150" role="img" aria-label={label}>
@@ -48,6 +48,24 @@
     {#if look.moustache}<path d="M47 73q6-6 13-2 7-4 13 2-13 3-26 0Z" fill={look.hair} />{/if}
     <path class="story-mouth-closed" d="M52 76q8 6 16 0" fill="none" stroke="#7a2e2a" stroke-width="2.4" stroke-linecap="round" />
     <ellipse class="story-mouth-open" cx="60" cy="78" rx="6" ry="4.5" fill="#7a2e2a" />
+  {:else if id === 'lilith'}
+    <!-- Lilith, Mia and Tom's Siamese-Persian cat: cream coat, seal-brown points, blue eyes, a fluffy ruff -->
+    <path class="story-tail" d="M86 142q30 0 26-30-2-12-10-14" fill="none" stroke="#5b4234" stroke-width="11" stroke-linecap="round" />
+    <ellipse cx="60" cy="120" rx="34" ry="29" fill="#efe2cf" />
+    <ellipse cx="60" cy="136" rx="30" ry="13" fill="#d8c3a6" />
+    <path d="M38 92q22 24 44 0l-3 17q-19 14-38 0Z" fill="#fbf5ea" />
+    <g fill="#5b4234"><ellipse cx="47" cy="145" rx="8.5" ry="5.5" /><ellipse cx="73" cy="145" rx="8.5" ry="5.5" /></g>
+    <path d="M43 91q17 9 34 0" fill="none" stroke="#4b78c2" stroke-width="4" stroke-linecap="round" /><circle cx="60" cy="97" r="3.6" fill="#e6a527" stroke="#a45e38" stroke-width="1" />
+    <path d="M29 50 33 20 55 36Z" fill="#5b4234" /><path d="M91 50 87 20 65 36Z" fill="#5b4234" />
+    <path d="M34 44 36 28 48 37Z" fill="#c98a8a" opacity=".55" /><path d="M86 44 84 28 72 37Z" fill="#c98a8a" opacity=".55" />
+    <g fill="#efe2cf"><ellipse cx="60" cy="63" rx="33" ry="29" /><circle cx="30" cy="74" r="9" /><circle cx="90" cy="74" r="9" /><circle cx="38" cy="84" r="8" /><circle cx="82" cy="84" r="8" /></g>
+    <ellipse cx="60" cy="70" rx="18" ry="14.5" fill="#5b4234" opacity=".88" />
+    <path d="M60 38v10M53 40l2 9M67 40l-2 9" stroke="#cdb497" stroke-width="2" stroke-linecap="round" />
+    <g class="story-eyes"><circle cx="49" cy="64" r="5.8" fill="#6fb3e0" stroke="#172a45" stroke-width="1.2" /><circle cx="71" cy="64" r="5.8" fill="#6fb3e0" stroke="#172a45" stroke-width="1.2" /><ellipse cx="49" cy="64.5" rx="2" ry="3.6" fill="#172a45" /><ellipse cx="71" cy="64.5" rx="2" ry="3.6" fill="#172a45" /><circle cx="50.6" cy="62" r="1.4" fill="#fffdf7" /><circle cx="72.6" cy="62" r="1.4" fill="#fffdf7" /></g>
+    <path d="M56.5 72h7L60 76Z" fill="#d79a96" />
+    <path class="story-mouth-closed" d="M60 76q-2 3.5-5.5 2M60 76q2 3.5 5.5 2" fill="none" stroke="#2b1d16" stroke-width="1.6" stroke-linecap="round" />
+    <ellipse class="story-mouth-open" cx="60" cy="80" rx="3.6" ry="3" fill="#df8eb1" />
+    <path d="M42 74 20 70M42 78 21 80M78 74l22-4M78 78l21 2" stroke="rgba(23,42,69,.28)" stroke-width="1.1" stroke-linecap="round" />
   {:else}
     <!-- Bello the dog -->
     <path d="M90 118q18-14 14-30" fill="none" stroke="#b07a4a" stroke-width="7" stroke-linecap="round" class="story-tail" />

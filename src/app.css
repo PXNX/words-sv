@@ -122,8 +122,8 @@ body {
   background-blend-mode: multiply, multiply;
 }
 
-button, input { font: inherit; }
-button:focus-visible { outline: 3px solid rgba(230, 165, 39, 0.55); outline-offset: 3px; }
+@layer base { button, input { font: inherit; } }
+@layer base { button:focus-visible { outline: 3px solid rgba(230, 165, 39, 0.55); outline-offset: 3px; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 1ms !important; transition-duration: 1ms !important; }
@@ -136,3 +136,102 @@ button:focus-visible { outline: 3px solid rgba(230, 165, 39, 0.55); outline-offs
 @keyframes hint-fade-in { to { opacity: 1; transform: translateY(0); } }
 @keyframes drop-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes startup-spin { to { transform: rotate(360deg); } }
+
+/*
+ * Playful-but-calm interaction styles, borrowed from ww3-sv's chunky buttons and softened for learners:
+ * a thinner ink outline, a short hard offset shadow, slightly irregular corners, a gentle lift on hover
+ * and a small squash on press. Kept in the components layer so Tailwind utilities on the same element win.
+ */
+:root {
+  --play-line: #172a45;
+  --play-outline: 2px solid var(--play-line);
+  --play-shadow: 3px 3px 0 var(--play-line);
+  --play-shadow-lift: 4px 5px 0 var(--play-line);
+  --play-shadow-press: 1px 1px 0 var(--play-line);
+  --play-radius: 16px 10px 15px 11px / 11px 15px 10px 16px;
+  --play-ease: cubic-bezier(.34, 1.4, .64, 1);
+}
+html.dark { --play-line: #0b1626; }
+
+@layer components {
+  .btn-play {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .45rem;
+    min-height: 2.6rem;
+    padding: .45rem 1.15rem;
+    border: var(--play-outline);
+    border-radius: var(--play-radius);
+    background: #fffdf7;
+    color: #172a45;
+    box-shadow: var(--play-shadow);
+    font-family: 'DM Sans', sans-serif;
+    font-size: .68rem;
+    font-weight: 900;
+    letter-spacing: .07em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: translate .2s var(--play-ease), scale .2s var(--play-ease), box-shadow .2s var(--play-ease), background-color .2s ease, color .2s ease;
+  }
+  .btn-play :where(svg) { width: 1.1rem; height: 1.1rem; flex: none; }
+  @media (hover: hover) {
+    .btn-play:not(:disabled):hover { translate: -1px -1px; box-shadow: var(--play-shadow-lift); }
+  }
+  .btn-play:not(:disabled):active { translate: 2px 2px; scale: 1.03 .95; box-shadow: var(--play-shadow-press); }
+  .btn-play:disabled { cursor: not-allowed; opacity: .5; box-shadow: var(--play-shadow-press); }
+  .btn-play[aria-busy='true'] { cursor: wait; opacity: .8; }
+  .btn-play:focus-visible { outline: 3px dashed #e6a527; outline-offset: 4px; }
+
+  /* Colour variants: ink for the main action, sun for highlights, go for "correct / next" moments */
+  .btn-play-ink { background: #172a45; color: #fffdf7; }
+  .btn-play-sun { background: #e6a527; color: #172a45; }
+  .btn-play-go { background: #34824d; color: #fffdf7; }
+  .btn-play-soft { border-color: rgba(23, 42, 69, .45); box-shadow: 2px 2px 0 rgba(23, 42, 69, .22); color: #3d4b60; }
+  @media (hover: hover) {
+    .btn-play-soft:not(:disabled):hover { border-color: var(--play-line); box-shadow: 3px 3px 0 rgba(23, 42, 69, .3); color: #172a45; }
+  }
+
+  /* Sizes and shapes */
+  .btn-play-sm { min-height: 2.05rem; padding: .3rem .8rem; font-size: .6rem; }
+  .btn-play-round { width: 2.2rem; min-height: 0; height: 2.2rem; padding: 0; border-radius: 48% 52% 50% 50% / 52% 48% 52% 48%; }
+  .btn-play-round.btn-play-sm { width: 1.75rem; height: 1.75rem; }
+  .btn-play-round.btn-play-sm :where(svg) { width: .9rem; height: .9rem; }
+  /* Answer tiles: sentence case, larger type, left-aligned when they hold longer text */
+  .btn-play-choice { min-height: 2.8rem; padding: .55rem .85rem; font-size: .8rem; font-weight: 800; letter-spacing: 0; text-transform: none; }
+
+  html.dark .btn-play { background: #213a5d; color: #fffdf7; }
+  html.dark .btn-play-ink,
+  html.dark .btn-play-sun { background: #e6a527; color: #172a45; }
+  html.dark .btn-play-go { background: #34824d; color: #fffdf7; }
+  html.dark .btn-play-soft { border-color: rgba(255, 253, 247, .3); box-shadow: 2px 2px 0 var(--play-line); color: rgba(255, 253, 247, .8); }
+
+  /* Sticker cards: the same ink outline and hard shadow, resting at a slight tilt that straightens on hover */
+  .card-play {
+    border: var(--play-outline);
+    border-radius: 20px 13px 18px 14px / 14px 18px 13px 20px;
+    background: #fffdf7;
+    box-shadow: var(--play-shadow);
+    rotate: var(--tilt, 0deg);
+    -webkit-tap-highlight-color: transparent;
+    transition: rotate .25s var(--play-ease), translate .25s var(--play-ease), scale .2s var(--play-ease), box-shadow .25s var(--play-ease);
+  }
+  @media (hover: hover) {
+    .card-play:hover { rotate: 0deg; translate: -1px -2px; box-shadow: var(--play-shadow-lift); }
+  }
+  .card-play:focus-visible { rotate: 0deg; outline: 3px dashed #e6a527; outline-offset: 4px; }
+  .card-play:active { translate: 2px 2px; scale: .985; box-shadow: var(--play-shadow-press); }
+  html.dark .card-play { background: #213a5d; }
+
+  @keyframes play-pop { 0% { scale: .6; opacity: 0; } 65% { scale: 1.06; opacity: 1; } 100% { scale: 1; } }
+  .pop-in { animation: play-pop .38s var(--play-ease) both; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn-play, .card-play { transition: none; }
+    .btn-play:not(:disabled):active { scale: none; }
+    .card-play { rotate: 0deg; }
+    .pop-in { animation: none; }
+  }
+}

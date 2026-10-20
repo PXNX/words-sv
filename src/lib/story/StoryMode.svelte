@@ -163,7 +163,7 @@
         {#if beat.kind === 'narration'}
           <li class="story-narration">
             <p>{say(beat.text[lang])}</p>
-            {#if speechSupported}<button type="button" class="story-listen" onclick={() => speak(say(beat.text[lang]))} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
+            {#if speechSupported}<button type="button" class="btn-play btn-play-round btn-play-sm story-listen" onclick={() => speak(say(beat.text[lang]))} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
           </li>
         {:else if beat.kind === 'line'}
           <li class="story-line">
@@ -172,7 +172,7 @@
               <b>{characterNames[beat.speaker][lang]}</b>
               <p>{say(beat.text[lang])}</p>
             </div>
-            {#if speechSupported}<button type="button" class="story-listen" onclick={() => speak(say(beat.text[lang]))} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
+            {#if speechSupported}<button type="button" class="btn-play btn-play-round btn-play-sm story-listen" onclick={() => speak(say(beat.text[lang]))} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
           </li>
         {:else if beat.kind === 'question'}
           <li class="story-question" class:solved={solved[index]}>
@@ -200,7 +200,7 @@
         <div class="story-options" lang={lang}>
           {#each orders[currentIndex] ?? [] as option (option)}
             {@const missed = wrong[currentIndex]?.includes(option)}
-            <button type="button" class:missed disabled={missed} onclick={() => choose(option)}>{say(current.options[option][lang])}{#if missed}<IconClose aria-hidden="true" />{/if}</button>
+            <button type="button" class="btn-play btn-play-choice" class:missed disabled={missed} onclick={() => choose(option)}>{say(current.options[option][lang])}{#if missed}<IconClose aria-hidden="true" />{/if}</button>
           {/each}
         </div>
       {:else if finished}
@@ -208,12 +208,12 @@
           <strong>{labels.finished}</strong>
           <span>{m.story_score({ correct: String(firstTry), total: String(interactiveIndices.length) }, { locale: settings.interfaceLocale })}</span>
           <div>
-            <button type="button" class="story-secondary" onclick={() => story && start(story)}>{labels.again}</button>
-            <button type="button" class="story-primary" onclick={() => start(pickStory(story?.id))}>{labels.next}</button>
+            <button type="button" class="btn-play story-secondary" onclick={() => story && start(story)}>{labels.again}</button>
+            <button type="button" class="btn-play btn-play-ink story-primary" onclick={() => start(pickStory(story?.id))}>{labels.next}</button>
           </div>
         </div>
       {:else}
-        <button type="button" class="story-primary story-continue" onclick={advance} dir={interfaceDirection}>{labels.continue}</button>
+        <button type="button" class="btn-play btn-play-ink story-primary story-continue" onclick={advance} dir={interfaceDirection}>{labels.continue}</button>
       {/if}
     </footer>
   </section>
@@ -255,23 +255,16 @@
   .story-question.solved { border-style:solid;border-color:rgba(52,130,77,.45);background:rgba(52,130,77,.07); }
   .story-answer { display:inline-flex;align-items:center;gap:.25rem;color:#34824d;font-size:.76rem;font-weight:800; }
   .story-answer :global(svg) { width:1rem;height:1rem;flex:none; }
-  .story-listen { flex:none;align-self:center;display:grid;place-items:center;width:1.7rem;height:1.7rem;padding:0;border:1px solid rgba(23,42,69,.22);border-radius:50%;background:transparent;color:#a45e38; }
-  .story-listen :global(svg) { width:.95rem;height:.95rem; }
-  .story-listen:active { transform:scale(.94); }
+  .story-listen { flex:none;align-self:center;box-shadow:2px 2px 0 #172a45;color:#a45e38; }
 
   .story-footer { flex:none;display:grid;gap:.45rem; }
   .story-prompt { display:flex;flex-wrap:wrap;justify-content:space-between;gap:.3rem;margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase; }
   .story-prompt span { color:#c0392b;letter-spacing:.02em;text-transform:none; }
   .story-options { display:grid;gap:.42rem; }
-  .story-options button { display:flex;align-items:center;justify-content:space-between;gap:.5rem;min-height:2.7rem;padding:.55rem .85rem;border:1px solid rgba(23,42,69,.4);border-radius:.85rem;background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:800;line-height:1.3;text-align:start;transition:transform .12s ease; }
-  .story-options button:active { transform:scale(.98); }
-  .story-options button.missed { border-color:#c0392b;background:#fff2e8;color:#c0392b;opacity:.8;animation:story-shake .3s ease; }
+  .story-options button { justify-content:space-between;line-height:1.3;text-align:start; }
+  .story-options button.missed { border-color:#c0392b;background:#fff2e8;color:#c0392b;box-shadow:none;opacity:.8;animation:story-shake .3s ease; }
   .story-options button :global(svg) { width:1.1rem;height:1.1rem;flex:none; }
-  .story-primary,.story-secondary { min-height:2.6rem;padding:0 1.1rem;border:1px solid #172a45;border-radius:999px;font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }
-  .story-primary { background:#172a45;color:#fffdf7;box-shadow:0 3px 0 #e6a527; }
-  .story-secondary { background:#fffdf7;color:#172a45; }
-  .story-primary:active,.story-secondary:active { transform:scale(.97); }
-  .story-continue { justify-self:center;min-width:min(100%,14rem); }
+    .story-continue { justify-self:center;min-width:min(100%,14rem); }
   .story-finished { display:grid;justify-items:center;gap:.35rem;padding:.8rem;border:1px solid rgba(52,130,77,.4);border-top:3px solid #34824d;border-radius:1rem;background:#fffdf7;text-align:center;font-family:'DM Sans',sans-serif; }
   .story-finished strong { color:#34824d;font-family:'DM Serif Display',serif;font-size:1.3rem;font-weight:400; }
   .story-finished span { color:#596477;font-size:.68rem;font-weight:700; }
@@ -285,7 +278,7 @@
   :global(html.dark) .story-stage { border-color:rgba(255,253,247,.3); }
   :global(html.dark) .story-narration { background:rgba(255,253,247,.08); }
   :global(html.dark) .story-narration p { color:rgba(255,253,247,.78); }
-  :global(html.dark) .story-bubble,:global(html.dark) .story-options button,:global(html.dark) .story-finished,:global(html.dark) .story-secondary { border-color:rgba(255,253,247,.36);background:#213a5d;color:#fffdf7; }
+  :global(html.dark) .story-bubble,:global(html.dark) .story-finished { border-color:rgba(255,253,247,.36);background:#213a5d;color:#fffdf7; }
   :global(html.dark) .story-bubble p,:global(html.dark) .story-question p { color:#fffdf7; }
   :global(html.dark) .story-line--you .story-bubble { border-color:#e6a527;background:#e6a527; }
   :global(html.dark) .story-line--you .story-bubble b,:global(html.dark) .story-line--you .story-bubble p { color:#172a45; }
@@ -293,6 +286,5 @@
   :global(html.dark) .story-answer,:global(html.dark) .story-finished strong { color:#8ed8a2; }
   :global(html.dark) .story-finished span { color:rgba(255,253,247,.72); }
   :global(html.dark) .story-options button.missed { border-color:#f08a7e;background:rgba(192,57,43,.2);color:#ffc2b8; }
-  :global(html.dark) .story-primary { border-color:#e6a527;background:#e6a527;color:#172a45;box-shadow:0 3px 0 rgba(0,0,0,.25); }
-  :global(html.dark) .story-listen { border-color:rgba(255,253,247,.3);color:#e6a527; }
+  :global(html.dark) .story-listen { box-shadow:2px 2px 0 #0b1626;color:#e6a527; }
 </style>
