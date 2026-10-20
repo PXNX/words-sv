@@ -12,7 +12,7 @@
   import { generateStory, hasMissedWords } from './generated';
   import { clearMissedWord, recordMissedWord } from './missedWords';
   import { applyVoice, type Speaker } from './voices';
-  import { sentenceGroups, splitSounds } from './speech';
+  import { intonationOf, pauseAfter, sentences, splitSounds } from './speech';
   import { LipSync } from './lipSync.svelte';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconVolumeOff from '~icons/material-symbols/volume-off-rounded';
@@ -28,7 +28,6 @@
 
   const labels = $derived({
     title: m.story_title({}, { locale: settings.interfaceLocale }),
-    question: m.story_question({}, { locale: settings.interfaceLocale }),
     reply: m.story_reply({}, { locale: settings.interfaceLocale }),
     finished: m.story_finished({}, { locale: settings.interfaceLocale }),
     next: m.story_next({}, { locale: settings.interfaceLocale }),
@@ -255,7 +254,7 @@
     for (const part of parts) {
       if (token !== performing) return;
       if (part.kind === 'say') {
-        await speakSentences(part.text, speaker, mood);
+        await speakSentences(part.text, speaker, mood, token);
       } else if (slotSound && settings.sound) {
         playSoundEffect(true, slotSound);
         if (speaker !== 'narrator') lipSync.pulse(Math.min(soundEffectSeconds[slotSound], 0.9));
@@ -266,10 +265,17 @@
     }
     if (token === performing) lipSync.stop();
   }
-  function speakSentences(text: string, speaker: Speaker, mood: Mood) {
+  // One utterance per sentence, each with its own melody, and a short breath in between.
+  async function speakSentences(text: string, speaker: Speaker, mood: Mood, token: number) {
+    const parts = sentences(text);
+    for (const [index, sentence] of parts.entries()) {
+      if (token !== performing) return;
+      await speakSentence(sentence, speaker, mood);
+      if (index < parts.length - 1 && token === performing) await wait(pauseAfter[intonationOf(sentence)]);
+    }
+  }
+  function speakSentence(sentence: string, speaker: Speaker, mood: Mood) {
     return new Promise<void>((resolve) => {
-      const groups = sentenceGroups(text);
-      if (!groups.length) return resolve();
       const locale = speechLocales[lang] ?? lang;
       const baseRate = settings.vocabularyLevel === 'a1' || settings.vocabularyLevel === 'a2' ? 0.85 : 1;
       let safety = 0;
@@ -277,20 +283,16 @@
         clearTimeout(safety);
         resolve();
       };
-      liveUtterances = groups.map((group, index) => {
-        const utterance = new SpeechSynthesisUtterance(group);
-        utterance.lang = locale;
-        applyVoice(utterance, speaker, lang, locale, story?.cast ?? [], baseRate, mood);
-        if (speaker !== 'narrator') lipSync.track(utterance, group);
-        if (index === groups.length - 1) {
-          utterance.addEventListener('end', done);
-          utterance.addEventListener('error', done);
-        }
-        window.speechSynthesis.speak(utterance);
-        return utterance;
-      });
+      const utterance = new SpeechSynthesisUtterance(sentence);
+      utterance.lang = locale;
+      applyVoice(utterance, speaker, lang, locale, story?.cast ?? [], baseRate, mood);
+      if (speaker !== 'narrator') lipSync.track(utterance, sentence);
+      utterance.addEventListener('end', done);
+      utterance.addEventListener('error', done);
+      liveUtterances = [utterance];
+      window.speechSynthesis.speak(utterance);
       // Some engines never fire `end`; the story must not hang on them.
-      safety = window.setTimeout(done, 4000 + (text.length * 110) / baseRate);
+      safety = window.setTimeout(done, 4000 + (sentence.length * 110) / baseRate);
     });
   }
   function cancelSpeech() {
@@ -370,11 +372,11 @@
             </div>
             {#if speechSupported}<button type="button" class="btn-play btn-play-round btn-play-sm story-listen" onclick={() => readBeat(beat, index)} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
           </li>
-        {:else if beat.kind === 'question'}
-          <li class="story-question" class:solved={solved[index]}>
-            <small dir={interfaceDirection} lang={settings.interfaceLocale}>{labels.question}</small>
+        {:else if beat.kind === 'question' && solved[index]}
+          <!-- An open question is asked above the answers; once solved it joins the transcript -->
+          <li class="story-question solved">
             <p>{say(beat.prompt[lang])}</p>
-            {#if solved[index]}<span class="story-answer"><IconCheck aria-hidden="true" />{say(beat.options[0][lang])}</span>{/if}
+            <span class="story-answer"><IconCheck aria-hidden="true" />{say(beat.options[0][lang])}</span>
           </li>
         {:else if beat.kind === 'reply' && solved[index]}
           <li class="story-line story-line--you">
@@ -389,9 +391,9 @@
 
     <footer class="story-footer">
       {#if awaitingAnswer && isInteractive(current)}
-        <p class="story-prompt" dir={interfaceDirection} lang={settings.interfaceLocale}>
-          {current.kind === 'reply' ? labels.reply : labels.question}
-          {#if wrong[currentIndex]?.length}<span>{labels.tryAgain}</span>{/if}
+        <p class="story-prompt" class:story-prompt--question={current.kind === 'question'}>
+          {#if current.kind === 'question'}<span lang={lang}>{say(current.prompt[lang])}</span>{:else}<span dir={interfaceDirection} lang={settings.interfaceLocale}>{labels.reply}</span>{/if}
+          {#if wrong[currentIndex]?.length}<span class="story-try-again" dir={interfaceDirection} lang={settings.interfaceLocale}>{labels.tryAgain}</span>{/if}
         </p>
         <div class="story-options" lang={lang}>
           {#each orders[currentIndex] ?? [] as option (option)}
@@ -472,7 +474,6 @@
   .story-line--you .story-bubble b { color:#e6a527; }
   .story-line--you .story-bubble p { color:#fffdf7; }
   .story-question { display:grid;gap:.2rem;padding:.55rem .75rem;border:1px dashed rgba(164,94,56,.55);border-radius:.8rem;background:rgba(230,165,39,.08); }
-  .story-question small { color:#a45e38;font-size:.55rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase; }
   .story-question p { margin:0;color:#172a45;font-size:.82rem;font-weight:800;line-height:1.35; }
   .story-question.solved { border-style:solid;border-color:rgba(52,130,77,.45);background:rgba(52,130,77,.07); }
   .story-answer { display:inline-flex;align-items:center;gap:.25rem;color:#34824d;font-size:.76rem;font-weight:800; }
@@ -481,7 +482,9 @@
 
   .story-footer { flex:none;display:grid;gap:.45rem; }
   .story-prompt { display:flex;flex-wrap:wrap;justify-content:space-between;gap:.3rem;margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase; }
-  .story-prompt span { color:#c0392b;letter-spacing:.02em;text-transform:none; }
+  .story-prompt .story-try-again { color:#c0392b;letter-spacing:.02em;text-transform:none; }
+  .story-prompt--question { align-items:baseline;color:#172a45;font-size:.88rem;font-weight:800;letter-spacing:0;line-height:1.35;text-transform:none; }
+  .story-prompt--question .story-try-again { font-size:.62rem;font-weight:900; }
   .story-options { display:grid;gap:.42rem; }
   .story-options button { justify-content:space-between;line-height:1.3;text-align:start; }
   .story-options button.missed { border-color:#c0392b;background:#fff2e8;color:#c0392b;box-shadow:none;opacity:.8;animation:story-shake .3s ease; }
@@ -506,7 +509,7 @@
   :global(html.dark) .story-narration { background:rgba(255,253,247,.08); }
   :global(html.dark) .story-narration p { color:rgba(255,253,247,.78); }
   :global(html.dark) .story-bubble,:global(html.dark) .story-finished { border-color:rgba(255,253,247,.36);background:#213a5d;color:#fffdf7; }
-  :global(html.dark) .story-bubble p,:global(html.dark) .story-question p { color:#fffdf7; }
+  :global(html.dark) .story-bubble p,:global(html.dark) .story-question p,:global(html.dark) .story-prompt--question { color:#fffdf7; }
   :global(html.dark) .story-line.speaking .story-bubble { border-color:#e6a527;box-shadow:3px 3px 0 #0b1626; }
   :global(html.dark) .story-line--you .story-bubble { border-color:#e6a527;background:#e6a527; }
   :global(html.dark) .story-line--you .story-bubble b,:global(html.dark) .story-line--you .story-bubble p { color:#172a45; }

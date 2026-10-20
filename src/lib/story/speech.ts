@@ -54,17 +54,11 @@ export function intonationOf(sentence: string): Intonation {
   return 'statement';
 }
 
-// Sentences end in . ! ? or … followed by a space (or the end); neighbouring sentences of the same
-// kind stay together, since every utterance adds a small pause.
-export function sentenceGroups(text: string): string[] {
-  const sentences = text.match(/.+?(?:[.!?…]+["“”»«„'’)]*(?=\s|$)|$)/gsu)?.map((sentence) => sentence.trim()).filter(Boolean) ?? [];
-  const groups: string[] = [];
-  let previous: Intonation | null = null;
-  for (const sentence of sentences) {
-    const intonation = intonationOf(sentence);
-    if (groups.length && intonation === previous) groups[groups.length - 1] += ` ${sentence}`;
-    else groups.push(sentence);
-    previous = intonation;
-  }
-  return groups;
+// Sentences end in . ! ? or … followed by a space (or the end). Each one is spoken on its own, with
+// its own melody and a breath before the next.
+export function sentences(text: string): string[] {
+  return text.match(/.+?(?:[.!?…]+["“”»«„'’)]*(?=\s|$)|$)/gsu)?.map((sentence) => sentence.trim()).filter(Boolean) ?? [];
 }
+
+// The breath after a sentence: an exclamation or question lingers a moment, a trailing "…" longest.
+export const pauseAfter: Record<Intonation, number> = { statement: 420, question: 520, exclamation: 480, trailing: 650 };
