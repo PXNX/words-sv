@@ -129,5 +129,12 @@
   "onboarding_name_placeholder": "نام کوچک تو",
   "onboarding_name_hint": "شخصیت‌های داستان‌ها تو را با این نام صدا می‌زنند.",
   "home_greeting": "سلام، {name}!",
-  "home_cast": "با میا، تام و لیلیت با هم یاد می‌گیریم"
+  "home_cast": "با میا، تام و لیلیت با هم یاد می‌گیریم",
+  "update_app_hint": "لیلیت نسخهٔ تازه‌ای از برنامه پیدا کرد.",
+  "update_app_button": "به‌روزرسانی",
+  "update_app_dismiss": "بعداً",
+  "story_for_you": "مخصوص تو",
+  "story_practice_words": "تمرین واژه‌های من",
+  "pet_lilith": "نوازش لیلیت",
+  "story_auto_read": "خواندن خودکار با صدای بلند"
 }

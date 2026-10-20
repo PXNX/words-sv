@@ -5,6 +5,7 @@
   import { wordPools, wordDefinitions, wordMetadata } from '#lib/data/vocabulary.js';
   import { m } from '#lib/paraglide/messages.js';
   import { definitionChoiceWords, insertLearningRepeat, pickLearningSection } from '#lib/vocab/learning.js';
+  import { recordMissedWord } from '#lib/story/missedWords.js';
   import { VOCABULARY_REVIEW_STORAGE_PREFIX, prioritizeLearningWords, updateReviewProgress } from '#lib/vocab/spacedRepetition.js';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
@@ -105,7 +106,7 @@
     reviewProgress = updateReviewProgress(reviewProgress, currentWord, correct);
     persistProgress();
     if (correct) { playSuccessSound(settings.sound, 'vocab'); void settings.recordStreak('vocab_correct'); }
-    else { playErrorSound(settings.sound, 'vocab'); queue = insertLearningRepeat(queue, position, currentWord); }
+    else { playErrorSound(settings.sound, 'vocab'); recordMissedWord(settings.lang, currentWord); queue = insertLearningRepeat(queue, position, currentWord); }
   }
   function continueLearning() {
     cancelSpeech();
@@ -113,9 +114,9 @@
   }
   function optionText(word: string) { return isDefinitionPrompt ? definitions[word] : displayWord(word); }
   function optionStateClasses(word: string) {
-    if (answerStatus !== null && word === currentWord) return 'border-success bg-success text-[#fffdf7]';
-    if (answerStatus === 'wrong' && word === selectedChoice) return 'border-accent bg-[#fff2e8] text-[#8e4322] dark:bg-[#69332f] dark:text-[#fff7ed]';
-    return 'border-neutral/55 dark:border-neutral/60 bg-neutral-content text-base-content';
+    if (answerStatus !== null && word === currentWord) return 'bg-success text-[#fffdf7]';
+    if (answerStatus === 'wrong' && word === selectedChoice) return 'border-accent bg-[#fff2e8] text-[#8e4322] shadow-none dark:bg-[#69332f] dark:text-[#fff7ed]';
+    return '';
   }
 
   onMount(() => {
@@ -162,7 +163,7 @@
       {#if promptKind === 'word'}
         <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.9rem,9vw,3.2rem)] font-normal tracking-[.06em] leading-none" lang={settings.lang}>{currentDisplayWord}</p>
       {:else}
-        <button class="inline-flex items-center justify-center gap-[.45rem] min-h-[2.4rem] px-[.95rem] border border-[#172a45] rounded-full bg-[#172a45] text-[#fffdf7] text-[.68rem] font-black tracking-[.08em] uppercase disabled:opacity-50" onclick={speak} disabled={!speechSupported}><IconVolume class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />{labels.listen}</button>
+        <button class="btn-play btn-play-ink" onclick={speak} disabled={!speechSupported}><IconVolume class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />{labels.listen}</button>
         <p class="m-0 text-accent text-[.62rem] font-extrabold leading-[1.35]">{labels.audioPrompt}</p>
       {/if}
       {#if speechStatus && promptKind === 'audio'}<p class="m-0 text-accent text-[.62rem] font-extrabold leading-[1.35]">{speechStatus}</p>{/if}
@@ -177,11 +178,11 @@
               value={word}
               onclick={chooseAnswer}
               disabled={answerStatus !== null}
-              class="min-h-[2.8rem] px-[.75rem] py-[.55rem] flex items-center justify-between gap-[.65rem] border text-[.72rem] font-bold leading-[1.3] text-left touch-manipulation active:scale-[.985] disabled:opacity-100 {optionStateClasses(word)}"
+              class="btn-play btn-play-choice justify-between gap-[.65rem] text-[.72rem] font-bold leading-[1.3] text-left touch-manipulation disabled:opacity-100 {optionStateClasses(word)}"
             ><span class="flex-1">{optionText(word)}</span>{#if answerStatus !== null && word === currentWord}<IconCheck class="w-[1.25rem] h-[1.25rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && word === selectedChoice}<IconClose class="w-[1.25rem] h-[1.25rem] flex-none text-accent" aria-label={labels.tryAgain} />{/if}</button>
           {/each}
         </div>
-        {#if answerStatus}<button class="justify-self-center min-h-[2.45rem] px-[1rem] border border-[#172a45] bg-[#172a45] text-[#fffdf7] text-[.64rem] font-black tracking-[.08em] uppercase shadow-[3px_3px_0_#e6a527]" onclick={continueLearning}>{labels.continue}</button>{/if}
+        {#if answerStatus}<button class="justify-self-center btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>{/if}
       </section>
     {:else}<p class="max-w-[24rem] m-0 text-base-content/60 text-[.75rem] font-bold leading-[1.45] text-center">{currentDefinition || labels.unavailable}</p>{/if}
   {/if}

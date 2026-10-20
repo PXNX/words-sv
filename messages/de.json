@@ -133,5 +133,12 @@
   "onboarding_name_placeholder": "Dein Vorname",
   "onboarding_name_hint": "Die Figuren in den Geschichten sprechen dich mit diesem Namen an.",
   "home_greeting": "Hallo, {name}!",
-  "home_cast": "Gemeinsam lernen mit Mia, Tom und Lilith"
+  "home_cast": "Gemeinsam lernen mit Mia, Tom und Lilith",
+  "update_app_hint": "Lilith hat eine neue Version der App gefunden.",
+  "update_app_button": "Aktualisieren",
+  "update_app_dismiss": "Später",
+  "story_for_you": "Für dich",
+  "story_practice_words": "Meine Wörter üben",
+  "pet_lilith": "Lilith streicheln",
+  "story_auto_read": "Automatisch vorlesen"
 }
