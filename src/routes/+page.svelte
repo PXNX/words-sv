@@ -150,7 +150,7 @@
       <div class="home-family"><span class="home-family-people" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="tom" /></span><button type="button" class="home-lilith-pet" class:petting onclick={petLilith} onanimationend={() => (petting = false)} aria-label={labels.petLilith}><span class="home-lilith"><StoryCharacter id="lilith" mood={petting ? 'happy' : 'neutral'} /></span></button></div>
       <h1>{labels.homeTitle}</h1><span class="home-cast-note">{labels.homeCast}</span>
     </header>
-    <a class:qualified={settings.streak.qualified} class="card-play home-streak" href="/stats" aria-label={`${labels.streak}: ${settings.streak.streakCount}`}>
+    <a class:qualified={settings.streak.qualified} class="card-play home-streak" href="/progress" aria-label={`${labels.streak}: ${settings.streak.streakCount}`}>
       <span class="home-streak-flame" aria-hidden="true"><IconFlame /></span>
       <span class="home-streak-count"><strong>{settings.streak.streakCount}</strong><small>{labels.streak}</small></span>
       <span class="home-streak-detail">
