@@ -9,6 +9,7 @@
 	import { m } from '$lib/paraglide/messages';
 	import { settings } from '$lib/state/settings.svelte';
 	import StartupLoader from '$lib/StartupLoader.svelte';
+	import { pageTitle } from '$lib/seo';
 	import IconHome from '~icons/material-symbols/home-rounded';
 	let { children } = $props();
 	let hydrated = $state(false);
@@ -60,6 +61,8 @@
 		};
 	});
 </script>
+
+<svelte:head><title>{pageTitle(page.url.pathname)}</title></svelte:head>
 
 <div style="display:none">
 	{#each locales as locale (locale)}
