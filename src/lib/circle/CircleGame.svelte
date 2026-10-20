@@ -513,7 +513,7 @@
 <div class={selectionAreaClasses()} aria-live="polite">
   {#if celebration}
     <div class="relative z-[56] flex items-center justify-center w-full h-full gap-[.6rem] m-0 text-success animate-[completion-in_.24s_cubic-bezier(.23,1,.32,1)_both] motion-reduce:animate-none">
-      <span class="block w-[2.4rem] h-[3rem] flex-none [&_.story-character]:w-full [&_.story-character]:h-full" aria-hidden="true"><StoryCharacter id="tom" mood="happy" /></span>
+      <span class="block w-[2.4rem] h-[3rem] flex-none [&_.story-character]:w-full [&_.story-character]:h-full" aria-hidden="true"><StoryCharacter id="lilith" mood="happy" /></span>
       <span class="grid gap-[.08rem] justify-items-start text-left">
         <strong class="text-success font-['DM_Serif_Display'] text-[1.05rem] font-normal tracking-[-.02em] leading-none">{labels.allDone}</strong>
         <small class="block text-base-content dark:text-base-content/74 font-['DM_Sans'] text-[.55rem] font-extrabold tracking-[.06em] leading-[1.2] uppercase">{labels.time} <b class="text-success font-['DM_Serif_Display'] text-[.88rem] tracking-normal">{formatDuration(completedDuration)}</b></small>
