@@ -1,15 +1,17 @@
 <script lang="ts">
   import { onMount, untrack } from 'svelte';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { wordMetadata } from '#lib/data/vocabulary.js';
+  import { wordDefinitions, wordMetadata } from '#lib/data/vocabulary.js';
   import { transcribeToIpa } from '#lib/vocab/ipa.js';
   import { evaluateAttempt, ipaDiff, type CorrectionSegment } from '#lib/vocab/speechMatch.js';
+  import { wiktionaryUrl } from '#lib/wiktionary.js';
   import { playSuccessSound } from '#lib/sounds.js';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
   import IconMic from '~icons/material-symbols/mic-rounded';
   import IconMicOff from '~icons/material-symbols/mic-off-rounded';
+  import IconHelp from '~icons/material-symbols/question-mark-rounded';
 
   type SpeechRecognitionResult = ArrayLike<{ transcript: string }> & { isFinal: boolean };
   type SpeechRecognitionEventLike = { results: ArrayLike<SpeechRecognitionResult> };
@@ -38,7 +40,7 @@
   let micSupported = $state(false);
   let recognitionSupported = $state(false);
   let voices = $state<SpeechSynthesisVoice[]>([]);
-  let practiced = $state(false);
+  let showDefinition = $state(false);
   let speaking = $state(false);
   let listening = $state(false);
   // `liveHeard` follows interim results while the learner is talking; `heard`, `heardIpa` and
@@ -71,6 +73,7 @@
 
   const candidates = $derived([...new Set(words.map((word) => word.toLocaleUpperCase()).filter((word) => Boolean(wordMetadata[settings.lang][word]))) ]);
   const spelling = $derived(currentWord ? wordMetadata[settings.lang][currentWord]?.spelling ?? currentWord : '');
+  const definition = $derived(currentWord ? wordDefinitions[settings.lang][currentWord] ?? null : null);
   const ipa = $derived(spelling ? transcribeToIpa(spelling, settings.lang) : '');
   const waveState = $derived(matchState === 'correct' ? 'correct' : matchState === 'incorrect' ? 'incorrect' : speaking ? 'speaking' : listening ? 'listening' : 'idle');
 
@@ -100,10 +103,9 @@
     utterance.onend = resume;
     utterance.onerror = resume;
     window.speechSynthesis.speak(utterance);
-    practiced = true;
   }
   function nextWord() {
-    practiced = false;
+    showDefinition = false;
     matchState = 'idle';
     liveHeard = '';
     heard = '';
@@ -156,11 +158,13 @@
     heard = attempt.heard;
     heardIpa = heard ? transcribeToIpa(heard, settings.lang) : '';
     matchState = attempt.matched ? 'correct' : 'incorrect';
-    practiced = true;
     correction = attempt.matched || !heardIpa ? null : ipaDiff(heardIpa, ipa);
     if (attempt.matched) {
       playSuccessSound(settings.sound, 'pronunciation');
       stopListening();
+    } else {
+      // Say the word back the right way; speak() pauses the recogniser so it won't grade the sample.
+      speak();
     }
   }
   function startRecognition() {
@@ -296,13 +300,22 @@
 
 <section class="flex-1 min-h-0 grid content-center justify-items-center gap-4 p-[clamp(1rem,4vw,2rem)] overflow-y-auto bg-[color:#ede4d5] dark:bg-[color:#213a5d]" aria-label="Pronunciation practice">
   {#if currentWord}
-    <header class="text-center"><span class="text-accent text-[.58rem] font-extrabold tracking-[.14em] uppercase">Pronunciation</span><h1 class="my-[.16rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,7vw,2.65rem)] font-normal leading-none">Listen & repeat</h1><p class="m-0 text-base-content/60 text-[.65rem] font-extrabold">Listen to the sample, then say the word — we're already listening.</p></header>
-    <article class="w-[min(100%,28rem)] grid justify-items-center gap-4 p-[clamp(1.4rem,7vw,2.2rem)] rounded-2xl border border-neutral border-t-[4px] border-t-double border-t-neutral bg-neutral-content shadow-[0_12px_30px_rgba(23,42,69,.12)]">
-      <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(2rem,10vw,3.3rem)] tracking-[.05em]">{spelling}</p>
-      {#if ipa}<p class="m-0 -mt-2 text-accent/80 text-[.85rem] font-mono tracking-[.02em]" lang={settings.lang} aria-label={`International Phonetic Alphabet: ${ipa}`}>/{ipa}/</p>{/if}
+    <h1 class="m-0 text-center text-base-content font-['DM_Serif_Display'] text-[clamp(1.4rem,6vw,2rem)] font-normal leading-none">Listen & repeat</h1>
+    <article class="w-[min(100%,26rem)] grid justify-items-center gap-5 p-[clamp(1.4rem,7vw,2.2rem)] rounded-2xl border border-neutral bg-neutral-content shadow-[0_12px_30px_rgba(23,42,69,.12)]">
+      <div class="grid justify-items-center gap-1 text-center">
+        <div class="flex items-center gap-[.5rem]">
+          <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(2rem,10vw,3.3rem)] tracking-[.05em] leading-tight">{spelling}</p>
+          <button type="button" class="btn-play btn-play-soft btn-play-round btn-play-sm flex-none" onclick={() => (showDefinition = !showDefinition)} aria-expanded={showDefinition} aria-label={showDefinition ? 'Hide meaning' : 'Show meaning'}><IconHelp aria-hidden="true" /></button>
+        </div>
+        {#if matchState === 'incorrect' && correction}
+          <p class="m-0 text-[.95rem] font-mono tracking-[.03em]" lang={settings.lang} title="Underlined = wrong sound · struck through = missing · + = extra" aria-label={`Correct pronunciation: ${ipa}`}>/{#each correction as segment, index (index)}<span class={segment.status === 'match' ? 'text-accent/80' : segment.status === 'sub' ? 'px-[.05em] rounded-sm bg-error/15 text-error font-bold underline decoration-2 underline-offset-[3px]' : segment.status === 'extra' ? 'text-error/60 text-[.6em] align-super' : 'px-[.05em] rounded-sm bg-error/15 text-error/60 line-through'}>{segment.status === 'extra' ? `+${segment.char}` : segment.char}</span>{/each}/</p>
+        {:else if ipa}<p class="m-0 text-accent/80 text-[.85rem] font-mono tracking-[.02em]" lang={settings.lang} aria-label={`International Phonetic Alphabet: ${ipa}`}>/{ipa}/</p>{/if}
+        {#if showDefinition}<p class="m-0 mt-[.4rem] max-w-[22rem] text-base-content/70 text-[.72rem] font-bold leading-[1.4]">{definition ?? 'No definition is available for this word yet.'} <a class="text-accent font-extrabold underline underline-offset-2" href={wiktionaryUrl(settings.lang, spelling)} target="_blank" rel="noreferrer">Wiktionary</a></p>{/if}
+      </div>
 
-      <div class="flex items-center gap-[.5rem]">
-        <div class={`wave-panel wave-state-${waveState}`} aria-label={listening ? 'Live microphone waveform' : speaking ? 'Audio waveform playing' : 'Audio waveform idle'} aria-live="polite">
+      <div class="flex items-center gap-[.6rem]">
+        <button type="button" class="btn-play btn-play-ink btn-play-round flex-none" onclick={speak} disabled={!speechSupported} aria-label={speaking ? 'Playing sample' : 'Play audio sample'}><IconVolume aria-hidden="true" /></button>
+        <div class={`wave-panel wave-state-${waveState}`} aria-hidden="true">
           {#each waveform as level, index (index)}
             <span class="wave-bar" class:wave-active={speaking || (exclusiveMic && listening && hearingSound)} style={`--wave-delay:${index * 40}ms;--wave-height:${level}rem;`}></span>
           {/each}
@@ -314,44 +327,29 @@
         {/if}
       </div>
 
-      <button class="inline-flex items-center justify-center gap-[.45rem] min-h-[2.5rem] px-[1rem] border border-[#172a45] rounded-full bg-[#172a45] text-[#fffdf7] text-[.68rem] font-black tracking-[.08em] uppercase disabled:opacity-50" onclick={speak} disabled={!speechSupported}><IconVolume class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />{speaking ? 'Playing sample' : 'Play audio sample'}</button>
-
-      {#if recognitionNeedsTap}
-        <button type="button" class="btn-play btn-play-sm" onclick={() => startListening(true)}><IconMic class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />Tap to start listening</button>
-      {:else if recognitionStalled}
-        <div class="grid justify-items-center gap-[.4rem]">
-          <p class="flex items-center gap-[.4rem] m-0 px-[.75rem] py-[.35rem] rounded-full border border-error bg-error/15 text-error text-[.68rem] font-extrabold" role="status"><IconMicOff class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />Speech recognition isn't responding.</p>
-          <button type="button" class="min-h-[2.1rem] px-[.9rem] rounded-full border border-[#172a45] bg-transparent text-base-content text-[.62rem] font-extrabold tracking-[.06em] uppercase dark:border-[rgba(255,253,247,.5)]" onclick={retryAfterStall}>Try again</button>
-        </div>
-      {:else if matchState === 'correct'}
-        <div class="grid justify-items-center gap-[.35rem]">
-          <p class="flex items-center gap-[.4rem] m-0 px-[.75rem] py-[.35rem] rounded-full border border-success bg-success/15 text-success text-[.68rem] font-extrabold" role="status"><IconCheck class="w-[1.2rem] h-[1.2rem]" aria-hidden="true" />Great pronunciation!{#if heard}<span class="text-base-content/50 font-bold">(heard "{heard}")</span>{/if}</p>
-          {#if heardIpa}<p class="m-0 text-base-content/60 text-[.65rem] font-bold">You said <span class="text-success font-mono">/{heardIpa}/</span></p>{/if}
-        </div>
-      {:else if matchState === 'incorrect'}
-        <div class="grid justify-items-center gap-[.35rem]">
-          <p class="flex items-center gap-[.4rem] m-0 px-[.75rem] py-[.35rem] rounded-full border border-error bg-error/15 text-error text-[.68rem] font-extrabold" role="status"><IconClose class="w-[1.2rem] h-[1.2rem]" aria-hidden="true" />Not quite{#if heard} — heard "{heard}"{/if}. Keep trying, we're still listening.</p>
-          {#if correction && heardIpa}
-            <p class="m-0 text-base-content/60 text-[.65rem] font-bold">You said <span class="text-error font-mono">/{heardIpa}/</span></p>
-            <p class="m-0 font-mono text-[clamp(1.05rem,4.8vw,1.5rem)] tracking-[.03em]" aria-label={`Target pronunciation: ${ipa}`}>/{#each correction as segment, index (index)}<span class={segment.status === 'match' ? 'text-base-content' : segment.status === 'sub' ? 'text-error underline decoration-2 underline-offset-[3px]' : segment.status === 'extra' ? 'text-error/60 text-[.6em] align-super' : 'text-error/50 line-through'}>{segment.status === 'extra' ? `+${segment.char}` : segment.char}</span>{/each}/</p>
-            <p class="m-0 text-base-content/45 text-[.55rem] font-bold uppercase tracking-[.08em]">Underlined = wrong sound &middot; struck through = missing sound &middot; + = extra sound</p>
-          {/if}
-          {#if listening && liveHeard}<p class="m-0 text-base-content/50 text-[.6rem] font-bold">Hearing: "{liveHeard}"</p>{/if}
-        </div>
-      {:else if listening && !recognitionSupported}
-        <p class="m-0 text-base-content/50 text-[.62rem] font-bold">Speech recognition isn't available or was blocked, so your attempt can't be checked — use the sample to practise.</p>
-      {:else if listening}
-        <div class="grid justify-items-center gap-[.35rem]">
-          <p class="flex items-center gap-[.3rem] m-0 text-accent text-[.68rem] font-extrabold"><span class="listening-dot" aria-hidden="true"></span>Listening for your voice…</p>
-          {#if liveHeard}<p class="m-0 text-base-content/60 text-[.65rem] font-bold">Heard so far: "{liveHeard}"<span class="font-mono"> /{transcribeToIpa(liveHeard, settings.lang)}/</span></p>{/if}
-        </div>
-      {:else if !micSupported}
-        <p class="m-0 text-base-content/50 text-[.62rem] font-bold">Microphone input isn't available in this browser.</p>
-      {:else if practiced}
-        <p class="flex items-center gap-[.3rem] m-0 text-success text-[.68rem] font-extrabold"><IconCheck class="w-[1rem] h-[1rem]" aria-hidden="true" />Now repeat it aloud.</p>
-      {/if}
+      <div class="min-h-[2.6rem] grid justify-items-center content-start gap-[.35rem] text-center text-[.7rem] font-extrabold" role="status" aria-live="polite">
+        {#if recognitionNeedsTap}
+          <button type="button" class="btn-play btn-play-sm" onclick={() => startListening(true)}><IconMic aria-hidden="true" />Tap to start listening</button>
+        {:else if recognitionStalled}
+          <p class="flex items-center gap-[.35rem] m-0 text-error"><IconMicOff class="w-[1rem] h-[1rem]" aria-hidden="true" />Speech recognition isn't responding.</p>
+          <button type="button" class="btn-play btn-play-sm" onclick={retryAfterStall}>Try again</button>
+        {:else if matchState === 'correct'}
+          <p class="flex items-center gap-[.35rem] m-0 text-success"><IconCheck class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />Great pronunciation!</p>
+        {:else if matchState === 'incorrect'}
+          <p class="flex items-center gap-[.35rem] m-0 text-error"><IconClose class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />Not quite{#if heard} — heard "{heard}"{/if}.</p>
+          <p class="m-0 text-base-content/55 font-bold">{speaking ? 'Listen to the correct way…' : correction ? 'The marked sounds were off. Try again.' : 'Try again.'}</p>
+        {:else if listening && !recognitionSupported}
+          <p class="m-0 text-base-content/50 font-bold">Your speech can't be checked in this browser — use the sample to practise.</p>
+        {:else if listening}
+          <p class="flex items-center gap-[.35rem] m-0 text-accent"><span class="listening-dot" aria-hidden="true"></span>{liveHeard ? `"${liveHeard}"` : 'Say the word…'}</p>
+        {:else if !micSupported}
+          <p class="m-0 text-base-content/50 font-bold">Microphone input isn't available in this browser.</p>
+        {:else}
+          <p class="m-0 text-base-content/50 font-bold">Tap the mic to start listening.</p>
+        {/if}
+      </div>
     </article>
-    <button class="min-h-[2.45rem] px-[1.1rem] rounded-full border border-success bg-success text-[#fffdf7] text-[.64rem] font-black tracking-[.08em] uppercase" onclick={nextWord}>Next word</button>
+    <button type="button" class={`btn-play ${matchState === 'correct' ? 'btn-play-go' : 'btn-play-ink'}`} onclick={nextWord}>Next word</button>
   {:else}<p class="text-accent font-bold">No pronunciation words are available.</p>{/if}
 </section>
 
