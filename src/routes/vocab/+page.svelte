@@ -49,15 +49,15 @@
 
   const currentWord = $derived(queue[position] ?? '');
   const currentDefinition = $derived(definitions[currentWord] ?? '');
-  const currentArticle = $derived(articleFor(currentWord));
-  const currentDisplayWord = $derived(currentArticle ? `${currentArticle} ${currentWord}` : currentWord);
+  const currentDisplayWord = $derived(displayWord(currentWord));
   const definitionWords = $derived(words.map((word) => word.trim().toUpperCase()).filter((word) => Boolean(definitions[word])));
   const isDefinitionPrompt = $derived(promptKind === 'word');
 
   function random() { return Math.random(); }
   function speechLocale() { return ({ de: 'de-DE', en: 'en-US', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', pt: 'pt-PT', uk: 'uk-UA' } as Record<string, string>)[settings.lang] ?? settings.lang; }
   function articleFor(word: string) { const entry = metadata[word]; if (!entry || entry.type !== 'noun') return ''; if (entry.article) return entry.article; const articlesByGender: Record<string, Record<string, string>> = { de: { masculine: 'der', feminine: 'die', neuter: 'das' } }; return entry.gender ? articlesByGender[settings.lang]?.[entry.gender] ?? '' : ''; }
-  function displayWord(word: string) { const article = articleFor(word); return article ? `${article} ${word}` : word; }
+  // Pools are uppercased for matching; show the dictionary spelling so German nouns read "Abfahrt", not "ABFAHRT".
+  function displayWord(word: string) { const article = articleFor(word); const spelling = metadata[word]?.spelling ?? word; return article ? `${article} ${spelling}` : spelling; }
   function cancelSpeech() { if (typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel(); }
   function speak() {
     if (!speechSupported || !currentWord) { speechStatus = labels.speechUnavailable; return; }

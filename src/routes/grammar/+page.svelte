@@ -247,7 +247,7 @@
     {#if prompt.choices.length >= 2}
       <section class="w-[min(100%,28rem)] grid gap-[.55rem]" aria-label={labels.chooseArticle}>
         <p class="m-0 text-accent text-[.6rem] font-black tracking-[.1em] text-center uppercase">{labels.chooseArticle}</p>
-        <div class="grid gap-[.45rem]" style={`grid-template-columns:repeat(${Math.min(prompt.choices.length, 3)},minmax(0,1fr));`}>
+        <div class="grid gap-[.45rem]" style={`grid-template-columns:repeat(${grammarMode === 'determine' ? 2 : Math.min(prompt.choices.length, 3)},minmax(0,1fr));`}>
           {#each prompt.choices as choice}
             <button
               type="button"
