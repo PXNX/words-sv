@@ -12,7 +12,8 @@ import { intonationOf, type Intonation } from './speech';
  * so repeated lines never sound copy-pasted.
  */
 type VoiceGender = 'female' | 'male';
-type VoiceProfile = { gender: VoiceGender; pitch: number; rate: number; volume: number };
+// `accent` lists regional locales the speaker prefers among the voices of the language, best first.
+type VoiceProfile = { gender: VoiceGender; pitch: number; rate: number; volume: number; accent?: string[] };
 export type Speaker = CharacterId | 'narrator';
 
 const profiles: Record<Speaker, VoiceProfile> = {
@@ -26,11 +27,37 @@ const profiles: Record<Speaker, VoiceProfile> = {
   tom: { gender: 'male', pitch: 1, rate: 1, volume: 1 },
   leo: { gender: 'male', pitch: 1.12, rate: 1.07, volume: 1 },
   paul: { gender: 'male', pitch: 0.78, rate: 0.9, volume: 1 },
-  bello: { gender: 'male', pitch: 1.5, rate: 1.14, volume: 1 }
+  bello: { gender: 'male', pitch: 1.5, rate: 1.14, volume: 1 },
+  // Hans takes his time and speaks low and warm, in an Austrian or Swiss voice where there is one:
+  // the closest a speech engine gets to a Bavarian accent.
+  hans: { gender: 'male', pitch: 0.86, rate: 0.9, volume: 1, accent: ['de-at', 'de-ch'] },
+  // Albert speaks crisply and a little quicker than the others, with no time to waste.
+  albert: { gender: 'male', pitch: 0.95, rate: 1.06, volume: 1 },
+  sabine: { gender: 'female', pitch: 1, rate: 1.02, volume: 1 },
+  // Enzo the pizza baker talks fast and lively; Jana rattles off her sentences like code.
+  enzo: { gender: 'male', pitch: 1.06, rate: 1.08, volume: 1 },
+  jana: { gender: 'female', pitch: 1.12, rate: 1.1, volume: 1 },
+  // Herr Becker speaks like a teacher: measured and clear.
+  becker: { gender: 'male', pitch: 0.92, rate: 0.94, volume: 1 },
+  // The animals mostly speak in sounds; when they do talk, their voices match their size.
+  bird: { gender: 'female', pitch: 1.7, rate: 1.18, volume: 0.9 },
+  cow: { gender: 'female', pitch: 0.78, rate: 0.82, volume: 1 },
+  horse: { gender: 'male', pitch: 0.95, rate: 1.04, volume: 1 },
+  giraffe: { gender: 'female', pitch: 1.12, rate: 0.86, volume: 0.9 },
+  elephant: { gender: 'male', pitch: 0.68, rate: 0.84, volume: 1 },
+  snake: { gender: 'female', pitch: 0.98, rate: 0.86, volume: 0.85 }
 };
 
 // Who picks first when voices are scarce: the narrator talks most, then the main characters.
-const priority: Speaker[] = ['narrator', 'mia', 'tom', 'lilith', 'oma', 'paul', 'kim', 'leo', 'bello'];
+// A speaker whose regional voice is installed jumps the queue, so nobody else takes it.
+const priority: Speaker[] = ['narrator', 'mia', 'tom', 'lilith', 'oma', 'paul', 'kim', 'leo', 'hans', 'albert', 'sabine', 'enzo', 'jana', 'becker', 'bello', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
+const animals: Speaker[] = ['bello', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
+
+function accentRank(speaker: Speaker, voice: SpeechSynthesisVoice) {
+  const accent = profiles[speaker].accent ?? [];
+  const rank = accent.findIndex((locale) => voice.lang.toLowerCase().startsWith(locale));
+  return rank === -1 ? accent.length : rank;
+}
 
 // How a line's mood changes the delivery: sad lines slow down and drop, excited ones speed up.
 const moodShape: Record<Mood, { pitch: number; rate: number; volume: number }> = {
@@ -83,7 +110,9 @@ let cached: { key: string; casting: Casting } | null = null;
 // of unknown gender, else the least used voice of their gender (which then counts as shared).
 function castVoices(cast: Speaker[], language: string, locale: string): Casting {
   const voices = voicesFor(language, locale, window.speechSynthesis.getVoices());
-  const speakers = priority.filter((speaker) => speaker === 'narrator' || cast.includes(speaker));
+  const hasAccentVoice = (speaker: Speaker) => voices.some((voice) => accentRank(speaker, voice) < (profiles[speaker].accent?.length ?? 0));
+  const speakers = priority.filter((speaker) => speaker === 'narrator' || cast.includes(speaker))
+    .sort((left, right) => Number(!hasAccentVoice(left)) - Number(!hasAccentVoice(right)));
   const key = `${language}|${locale}|${speakers.join()}|${voices.map((voice) => voice.voiceURI).join()}`;
   if (cached?.key === key) return cached.casting;
 
@@ -92,7 +121,7 @@ function castVoices(cast: Speaker[], language: string, locale: string): Casting 
   for (const speaker of speakers) {
     const gender = profiles[speaker].gender;
     const unused = (voice: SpeechSynthesisVoice) => !uses.has(voice);
-    const ofGender = voices.filter((voice) => genderOf(voice) === gender);
+    const ofGender = voices.filter((voice) => genderOf(voice) === gender).sort((left, right) => accentRank(speaker, left) - accentRank(speaker, right));
     const pool = ofGender.length ? ofGender : voices.filter((voice) => genderOf(voice) === null);
     const voice = ofGender.find(unused)
       ?? voices.find((voice) => genderOf(voice) === null && unused(voice))
@@ -115,8 +144,8 @@ export function applyVoice(utterance: SpeechSynthesisUtterance, speaker: Speaker
   const { voice, shared } = castVoices(cast, language, locale).get(speaker) ?? { voice: null, shared: true };
   const shape = moodShape[mood];
   // With a voice of their own, characters keep it close to its natural pitch; a shared voice needs
-  // the full profile to tell the speakers apart. Bello is a dog either way.
-  const ownPitch = shared || speaker === 'bello' ? profile.pitch : 1 + (profile.pitch - 1) * 0.35;
+  // the full profile to tell the speakers apart. Animals keep their full profile either way.
+  const ownPitch = shared || animals.includes(speaker) ? profile.pitch : 1 + (profile.pitch - 1) * 0.35;
   const tone = intonationShape[intonationOf(utterance.text)];
   utterance.voice = voice;
   if (voice) utterance.lang = voice.lang;

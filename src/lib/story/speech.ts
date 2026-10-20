@@ -9,7 +9,7 @@ export type SpeechPart = { kind: 'say'; text: string } | { kind: 'sound' };
 export type Intonation = 'statement' | 'question' | 'exclamation' | 'trailing';
 
 const sounds: Record<Language, string> = {
-  de: 'klirr|krach|klopf(?:[, ]+klopf)*|poch(?:[, ]+poch)*|miau|wuff|wau|ding[- ]dong|schepper',
+  de: 'klirr|krach|klopf(?:[, ]+klopf)*|poch(?:[, ]+poch)*|miau|wuff|wau|ding[- ]dong|schepper|piep(?:[, ]+piep)*|tschilp|muh+|wieher+|törö+|s{3,}|zisch|brumm+|wusch',
   en: 'crash|knock(?:[, ]+knock)*|meow|miaow|woof|ding[- ]dong|bang',
   fr: 'crac|toc(?:[, ]+toc)*|miaou|ouaf|wouf|ding[- ]dong|boum',
   it: 'crash|toc(?:[, ]+toc)*|miao|bau|din[- ]don',

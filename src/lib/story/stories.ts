@@ -1,11 +1,11 @@
 import type { Language, VocabularyLevel } from '#lib/data/vocabulary.js';
-import { vocabularyLevels } from '#lib/data/vocabulary.js';
+import { playableLanguages, vocabularyLevels } from '#lib/data/vocabulary.js';
 import type { SoundEffect } from '#lib/sounds.js';
 
 export type Text = Record<Language, string>;
-export type CharacterId = 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello' | 'lilith';
+export type CharacterId = 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello' | 'lilith' | 'hans' | 'albert' | 'sabine' | 'enzo' | 'jana' | 'becker' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake';
 export type Mood = 'neutral' | 'happy' | 'sad' | 'surprised' | 'curious';
-export type SceneId = 'cafe' | 'park' | 'station' | 'home' | 'office' | 'flat' | 'square' | 'attic';
+export type SceneId = 'cafe' | 'park' | 'station' | 'home' | 'office' | 'flat' | 'square' | 'attic' | 'beergarden' | 'farm' | 'zoo' | 'butcher' | 'bakery' | 'boutique' | 'perfumery' | 'workshop' | 'beach' | 'airport';
 export type Weather = 'sunny' | 'cloudy' | 'rainy' | 'snowy';
 export type StoryProp = 'ball';
 
@@ -16,15 +16,18 @@ export type StoryProp = 'ball';
 // is read aloud); `prop` brings a prop onto the stage; `focus` names the vocabulary word a generated
 // question practises, so answering it right can take the word off the learner's missed list.
 // `word` is that word as written: `asker` (or the line's speaker) pronounces it, even when the story
-// is not being read aloud, and a question's `asker` reads its prompt.
+// is not being read aloud, and a question's `asker` reads its prompt. `noisy` drowns a line in noise (say,
+// a plane taking off): its `sfx` roars under the speech, the voice gets quieter and some words are
+// lost in the text, so the learner has to listen closely.
 export type StoryBeat =
   | { kind: 'narration'; text: Text; sfx?: SoundEffect; prop?: StoryProp }
-  | { kind: 'line'; speaker: CharacterId; text: Text; sfx?: SoundEffect; mood?: Mood; word?: string }
+  | { kind: 'line'; speaker: CharacterId; text: Text; sfx?: SoundEffect; mood?: Mood; word?: string; noisy?: boolean }
   | { kind: 'question'; prompt: Text; options: Text[]; focus?: string; asker?: CharacterId; word?: string }
   | { kind: 'reply'; to: CharacterId; options: Text[]; focus?: string; word?: string };
 
-// `weathers` limits the random weather where the text depends on it.
-export type Story = { id: string; level: VocabularyLevel; scene: SceneId; cast: CharacterId[]; title: Text; beats: StoryBeat[]; generated?: boolean; weathers?: Weather[]; weather?: Weather };
+// `weathers` limits the random weather where the text depends on it; `languages` limits a story to learners
+// of those languages (their texts then only need to be written in those languages, see `german`).
+export type Story = { id: string; level: VocabularyLevel; scene: SceneId; cast: CharacterId[]; title: Text; beats: StoryBeat[]; generated?: boolean; weathers?: Weather[]; weather?: Weather; languages?: Language[] };
 
 export const characterNames: Record<CharacterId, Text> = {
   mia: { de: 'Mia', en: 'Mia', fr: 'Mia', it: 'Mia', es: 'Mia', pt: 'Mia', uk: 'Мія' },
@@ -34,7 +37,19 @@ export const characterNames: Record<CharacterId, Text> = {
   kim: { de: 'Kim', en: 'Kim', fr: 'Kim', it: 'Kim', es: 'Kim', pt: 'Kim', uk: 'Кім' },
   paul: { de: 'Herr Paul', en: 'Mr Paul', fr: 'M. Paul', it: 'Sig. Paul', es: 'Sr. Paul', pt: 'Sr. Paul', uk: 'Пан Пауль' },
   bello: { de: 'Bello', en: 'Bello', fr: 'Bello', it: 'Bello', es: 'Bello', pt: 'Bello', uk: 'Белло' },
-  lilith: { de: 'Lilith', en: 'Lilith', fr: 'Lilith', it: 'Lilith', es: 'Lilith', pt: 'Lilith', uk: 'Ліліт' }
+  lilith: { de: 'Lilith', en: 'Lilith', fr: 'Lilith', it: 'Lilith', es: 'Lilith', pt: 'Lilith', uk: 'Ліліт' },
+  hans: { de: 'Hans', en: 'Hans', fr: 'Hans', it: 'Hans', es: 'Hans', pt: 'Hans', uk: 'Ганс' },
+  albert: { de: 'Albert', en: 'Albert', fr: 'Albert', it: 'Albert', es: 'Albert', pt: 'Albert', uk: 'Альберт' },
+  sabine: { de: 'Sabine', en: 'Sabine', fr: 'Sabine', it: 'Sabine', es: 'Sabine', pt: 'Sabine', uk: 'Сабіна' },
+  enzo: { de: 'Enzo', en: 'Enzo', fr: 'Enzo', it: 'Enzo', es: 'Enzo', pt: 'Enzo', uk: 'Енцо' },
+  jana: { de: 'Jana', en: 'Jana', fr: 'Jana', it: 'Jana', es: 'Jana', pt: 'Jana', uk: 'Яна' },
+  becker: { de: 'Herr Becker', en: 'Mr Becker', fr: 'M. Becker', it: 'Sig. Becker', es: 'Sr. Becker', pt: 'Sr. Becker', uk: 'Пан Беккер' },
+  bird: { de: 'Pieps', en: 'Pieps', fr: 'Pieps', it: 'Pieps', es: 'Pieps', pt: 'Pieps', uk: 'Піпс' },
+  cow: { de: 'Berta', en: 'Berta', fr: 'Berta', it: 'Berta', es: 'Berta', pt: 'Berta', uk: 'Берта' },
+  horse: { de: 'Blitz', en: 'Blitz', fr: 'Blitz', it: 'Blitz', es: 'Blitz', pt: 'Blitz', uk: 'Бліц' },
+  giraffe: { de: 'Gisela', en: 'Gisela', fr: 'Gisela', it: 'Gisela', es: 'Gisela', pt: 'Gisela', uk: 'Гізела' },
+  elephant: { de: 'Benno', en: 'Benno', fr: 'Benno', it: 'Benno', es: 'Benno', pt: 'Benno', uk: 'Бенно' },
+  snake: { de: 'Zischi', en: 'Zischi', fr: 'Zischi', it: 'Zischi', es: 'Zischi', pt: 'Zischi', uk: 'Зіші' }
 };
 
 export const stories: Story[] = [
@@ -70,6 +85,21 @@ export const stories: Story[] = [
         { de: 'Nein.', en: 'No.', fr: 'Non.', it: 'No.', es: 'No.', pt: 'Não.', uk: 'Ні.' },
         { de: 'Ja, einen.', en: 'Yes, one piece.', fr: 'Oui, un.', it: 'Sì, una.', es: 'Sí, uno.', pt: 'Sim, um.', uk: 'Так, одне.' },
         { de: 'Ja, zwei.', en: 'Yes, two pieces.', fr: 'Oui, deux.', it: 'Sì, due.', es: 'Sí, dos.', pt: 'Sim, dois.', uk: 'Так, два.' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wo ist Mia?', en: 'Where is Mia?', fr: 'Où est Mia ?', it: 'Dov’è Mia?', es: '¿Dónde está Mia?', pt: 'Onde a Mia está?', uk: 'Де Мія?' }, options: [
+        { de: 'Im Café', en: 'At the café', fr: 'Au café', it: 'Al bar', es: 'En la cafetería', pt: 'No café', uk: 'У кав’ярні' },
+        { de: 'Im Park', en: 'In the park', fr: 'Au parc', it: 'Al parco', es: 'En el parque', pt: 'No parque', uk: 'У парку' },
+        { de: 'Am Bahnhof', en: 'At the station', fr: 'À la gare', it: 'In stazione', es: 'En la estación', pt: 'Na estação', uk: 'На вокзалі' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wann ist Mia im Café?', en: 'When is Mia at the café?', fr: 'Quand Mia est-elle au café ?', it: 'Quando è al bar Mia?', es: '¿Cuándo está Mia en la cafetería?', pt: 'Quando a Mia está no café?', uk: 'Коли Мія в кав’ярні?' }, options: [
+        { de: 'Am Morgen', en: 'In the morning', fr: 'Le matin', it: 'Di mattina', es: 'Por la mañana', pt: 'De manhã', uk: 'Уранці' },
+        { de: 'Am Mittag', en: 'At noon', fr: 'À midi', it: 'A mezzogiorno', es: 'A mediodía', pt: 'Ao meio-dia', uk: 'Опівдні' },
+        { de: 'Am Abend', en: 'In the evening', fr: 'Le soir', it: 'Di sera', es: 'Por la noche', pt: 'À noite', uk: 'Увечері' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wer fragt Mia, was sie trinken möchte?', en: 'Who asks Mia what she would like to drink?', fr: 'Qui demande à Mia ce qu’elle veut boire ?', it: 'Chi chiede a Mia cosa vuole bere?', es: '¿Quién le pregunta a Mia qué quiere beber?', pt: 'Quem pergunta à Mia o que ela quer beber?', uk: 'Хто питає Мію, що вона хоче випити?' }, options: [
+        { de: 'Tom', en: 'Tom', fr: 'Tom', it: 'Tom', es: 'Tom', pt: 'O Tom', uk: 'Том' },
+        { de: 'Leo', en: 'Leo', fr: 'Léo', it: 'Leo', es: 'Leo', pt: 'O Léo', uk: 'Лео' },
+        { de: 'Oma', en: 'Grandma', fr: 'Mamie', it: 'La nonna', es: 'La abuela', pt: 'A Vovó', uk: 'Бабуся' }
       ] }
     ]
   },
@@ -101,6 +131,21 @@ export const stories: Story[] = [
         { de: 'Fisch', en: 'Fish', fr: 'Le poisson', it: 'Il pesce', es: 'El pescado', pt: 'Peixe', uk: 'Рибу' },
         { de: 'Kuchen', en: 'Cake', fr: 'Le gâteau', it: 'La torta', es: 'El pastel', pt: 'Bolo', uk: 'Торт' },
         { de: 'Kaffee', en: 'Coffee', fr: 'Le café', it: 'Il caffè', es: 'El café', pt: 'Café', uk: 'Каву' }
+      ] },
+      { kind: 'question', prompt: { de: 'Was für ein Tier ist Lilith?', en: 'What animal is Lilith?', fr: 'Quel animal est Lilith ?', it: 'Che animale è Lilith?', es: '¿Qué animal es Lilith?', pt: 'Que animal é a Lilith?', uk: 'Яка тварина Ліліт?' }, options: [
+        { de: 'Eine Katze', en: 'A cat', fr: 'Une chatte', it: 'Una gatta', es: 'Una gata', pt: 'Uma gata', uk: 'Кішка' },
+        { de: 'Ein Hund', en: 'A dog', fr: 'Un chien', it: 'Un cane', es: 'Un perro', pt: 'Um cachorro', uk: 'Собака' },
+        { de: 'Ein Vogel', en: 'A bird', fr: 'Un oiseau', it: 'Un uccello', es: 'Un pájaro', pt: 'Um pássaro', uk: 'Пташка' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wo schläft Lilith?', en: 'Where is Lilith sleeping?', fr: 'Où dort Lilith ?', it: 'Dove dorme Lilith?', es: '¿Dónde duerme Lilith?', pt: 'Onde a Lilith está dormindo?', uk: 'Де спить Ліліт?' }, options: [
+        { de: 'Auf dem Sofa', en: 'On the sofa', fr: 'Sur le canapé', it: 'Sul divano', es: 'En el sofá', pt: 'No sofá', uk: 'На дивані' },
+        { de: 'Im Bett', en: 'In the bed', fr: 'Dans le lit', it: 'Nel letto', es: 'En la cama', pt: 'Na cama', uk: 'У ліжку' },
+        { de: 'Auf dem Tisch', en: 'On the table', fr: 'Sur la table', it: 'Sul tavolo', es: 'En la mesa', pt: 'Na mesa', uk: 'На столі' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wie ist Lilith am Ende?', en: 'How is Lilith at the end?', fr: 'Comment est Lilith à la fin ?', it: 'Com’è Lilith alla fine?', es: '¿Cómo está Lilith al final?', pt: 'Como a Lilith está no final?', uk: 'Яка Ліліт наприкінці?' }, options: [
+        { de: 'Glücklich', en: 'Happy', fr: 'Contente', it: 'Felice', es: 'Feliz', pt: 'Feliz', uk: 'Щаслива' },
+        { de: 'Traurig', en: 'Sad', fr: 'Triste', it: 'Triste', es: 'Triste', pt: 'Triste', uk: 'Сумна' },
+        { de: 'Wütend', en: 'Angry', fr: 'En colère', it: 'Arrabbiata', es: 'Enfadada', pt: 'Brava', uk: 'Сердита' }
       ] }
     ]
   },
@@ -132,6 +177,21 @@ export const stories: Story[] = [
         { de: 'Im Park', en: 'In the park', fr: 'Au parc', it: 'Al parco', es: 'En el parque', pt: 'No parque', uk: 'У парку' },
         { de: 'Im Kino', en: 'At the cinema', fr: 'Au cinéma', it: 'Al cinema', es: 'En el cine', pt: 'No cinema', uk: 'У кіно' },
         { de: 'In der Schule', en: 'At school', fr: 'À l’école', it: 'A scuola', es: 'En la escuela', pt: 'Na escola', uk: 'У школі' }
+      ] },
+      { kind: 'question', prompt: { de: 'Welcher Tag ist heute?', en: 'What day is it today?', fr: 'Quel jour est-ce aujourd’hui ?', it: 'Che giorno è oggi?', es: '¿Qué día es hoy?', pt: 'Que dia é hoje?', uk: 'Який сьогодні день?' }, options: [
+        { de: 'Sonntag', en: 'Sunday', fr: 'Dimanche', it: 'Domenica', es: 'Domingo', pt: 'Domingo', uk: 'Неділя' },
+        { de: 'Montag', en: 'Monday', fr: 'Lundi', it: 'Lunedì', es: 'Lunes', pt: 'Segunda-feira', uk: 'Понеділок' },
+        { de: 'Freitag', en: 'Friday', fr: 'Vendredi', it: 'Venerdì', es: 'Viernes', pt: 'Sexta-feira', uk: 'П’ятниця' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wer ist Bello?', en: 'Who is Bello?', fr: 'Qui est Bello ?', it: 'Chi è Bello?', es: '¿Quién es Bello?', pt: 'Quem é o Bello?', uk: 'Хто такий Белло?' }, options: [
+        { de: 'Leos Hund', en: 'Leo’s dog', fr: 'Le chien de Léo', it: 'Il cane di Leo', es: 'El perro de Leo', pt: 'O cachorro do Léo', uk: 'Собака Лео' },
+        { de: 'Leos Bruder', en: 'Leo’s brother', fr: 'Le frère de Léo', it: 'Il fratello di Leo', es: 'El hermano de Leo', pt: 'O irmão do Léo', uk: 'Брат Лео' },
+        { de: 'Omas Katze', en: 'Grandma’s cat', fr: 'Le chat de Mamie', it: 'Il gatto della nonna', es: 'El gato de la abuela', pt: 'O gato da Vovó', uk: 'Кіт бабусі' }
+      ] },
+      { kind: 'question', prompt: { de: 'Was sagt Oma über Bello?', en: 'What does Grandma say about Bello?', fr: 'Que dit Mamie de Bello ?', it: 'Cosa dice la nonna di Bello?', es: '¿Qué dice la abuela de Bello?', pt: 'O que a Vovó diz do Bello?', uk: 'Що каже бабуся про Белло?' }, options: [
+        { de: 'Er ist sehr lieb.', en: 'He is very sweet.', fr: 'Il est très gentil.', it: 'È molto buono.', es: 'Es muy bueno.', pt: 'Ele é muito bonzinho.', uk: 'Він дуже милий.' },
+        { de: 'Er ist sehr böse.', en: 'He is very naughty.', fr: 'Il est très méchant.', it: 'È molto cattivo.', es: 'Es muy malo.', pt: 'Ele é muito bravo.', uk: 'Він дуже злий.' },
+        { de: 'Er ist sehr alt.', en: 'He is very old.', fr: 'Il est très vieux.', it: 'È molto vecchio.', es: 'Es muy viejo.', pt: 'Ele é muito velho.', uk: 'Він дуже старий.' }
       ] }
     ]
   },
@@ -165,6 +225,21 @@ export const stories: Story[] = [
         { de: 'Nach Hamburg', en: 'To Hamburg', fr: 'À Hambourg', it: 'Ad Amburgo', es: 'A Hamburgo', pt: 'Para Hamburgo', uk: 'До Гамбурга' },
         { de: 'Nach Berlin', en: 'To Berlin', fr: 'À Berlin', it: 'A Berlino', es: 'A Berlín', pt: 'Para Berlim', uk: 'До Берліна' },
         { de: 'Nach München', en: 'To Munich', fr: 'À Munich', it: 'A Monaco', es: 'A Múnich', pt: 'Para Munique', uk: 'До Мюнхена' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wie lange wartet Mia schon am Bahnhof?', en: 'How long has Mia already been waiting at the station?', fr: 'Depuis combien de temps Mia attend-elle à la gare ?', it: 'Da quanto tempo Mia aspetta in stazione?', es: '¿Cuánto tiempo lleva Mia esperando en la estación?', pt: 'Há quanto tempo a Mia está esperando na estação?', uk: 'Скільки часу Мія вже чекає на вокзалі?' }, options: [
+        { de: 'Zwanzig Minuten', en: 'Twenty minutes', fr: 'Depuis vingt minutes', it: 'Da venti minuti', es: 'Veinte minutos', pt: 'Há vinte minutos', uk: 'Двадцять хвилин' },
+        { de: 'Dreißig Minuten', en: 'Thirty minutes', fr: 'Depuis trente minutes', it: 'Da trenta minuti', es: 'Treinta minutos', pt: 'Há trinta minutos', uk: 'Тридцять хвилин' },
+        { de: 'Eine Stunde', en: 'An hour', fr: 'Depuis une heure', it: 'Da un’ora', es: 'Una hora', pt: 'Há uma hora', uk: 'Годину' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wen will Mia besuchen?', en: 'Who does Mia want to visit?', fr: 'Qui Mia veut-elle aller voir ?', it: 'Chi vuole andare a trovare Mia?', es: '¿A quién quiere visitar Mia?', pt: 'Quem a Mia quer visitar?', uk: 'Кого хоче відвідати Мія?' }, options: [
+        { de: 'Ihre Schwester', en: 'Her sister', fr: 'Sa sœur', it: 'Sua sorella', es: 'A su hermana', pt: 'A irmã', uk: 'Сестру' },
+        { de: 'Ihre Mutter', en: 'Her mother', fr: 'Sa mère', it: 'Sua madre', es: 'A su madre', pt: 'A mãe', uk: 'Маму' },
+        { de: 'Ihren Bruder', en: 'Her brother', fr: 'Son frère', it: 'Suo fratello', es: 'A su hermano', pt: 'O irmão', uk: 'Брата' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wann fährt der Bus ab?', en: 'When does the bus leave?', fr: 'À quelle heure part le bus ?', it: 'A che ora parte l’autobus?', es: '¿A qué hora sale el autobús?', pt: 'A que horas sai o ônibus?', uk: 'О котрій відправляється автобус?' }, options: [
+        { de: 'Um zehn Uhr', en: 'At ten o’clock', fr: 'À dix heures', it: 'Alle dieci', es: 'A las diez', pt: 'Às dez', uk: 'О десятій' },
+        { de: 'Um neun Uhr', en: 'At nine o’clock', fr: 'À neuf heures', it: 'Alle nove', es: 'A las nueve', pt: 'Às nove', uk: 'О дев’ятій' },
+        { de: 'Um elf Uhr', en: 'At eleven o’clock', fr: 'À onze heures', it: 'Alle undici', es: 'A las once', pt: 'Às onze', uk: 'Об одинадцятій' }
       ] }
     ]
   },
@@ -198,6 +273,21 @@ export const stories: Story[] = [
         { de: 'Eine Katze ist über die Straße gelaufen.', en: 'A cat ran across the street.', fr: 'Un chat a traversé la rue.', it: 'Un gatto ha attraversato la strada.', es: 'Un gato ha cruzado la calle.', pt: 'Um gato atravessou a rua.', uk: 'Вулицю перебіг кіт.' },
         { de: 'Die Ampel war rot.', en: 'The traffic light was red.', fr: 'Le feu était rouge.', it: 'Il semaforo era rosso.', es: 'El semáforo estaba en rojo.', pt: 'O semáforo estava vermelho.', uk: 'Світлофор був червоний.' },
         { de: 'Tom stand auf der Straße.', en: 'Tom was standing in the street.', fr: 'Tom était au milieu de la rue.', it: 'Tom era in mezzo alla strada.', es: 'Tom estaba en la calle.', pt: 'O Tom estava no meio da rua.', uk: 'Том стояв на дорозі.' }
+      ] },
+      { kind: 'question', prompt: { de: 'Was macht Mia am Anfang?', en: 'What is Mia doing at the start?', fr: 'Que fait Mia au début ?', it: 'Che cosa fa Mia all’inizio?', es: '¿Qué hace Mia al principio?', pt: 'O que a Mia está fazendo no começo?', uk: 'Що робить Мія на початку?' }, options: [
+        { de: 'Sie macht Frühstück.', en: 'She is making breakfast.', fr: 'Elle prépare le petit-déjeuner.', it: 'Prepara la colazione.', es: 'Prepara el desayuno.', pt: 'Está fazendo o café da manhã.', uk: 'Готує сніданок.' },
+        { de: 'Sie schläft noch.', en: 'She is still sleeping.', fr: 'Elle dort encore.', it: 'Dorme ancora.', es: 'Todavía duerme.', pt: 'Ainda está dormindo.', uk: 'Ще спить.' },
+        { de: 'Sie putzt die Küche.', en: 'She is cleaning the kitchen.', fr: 'Elle nettoie la cuisine.', it: 'Pulisce la cucina.', es: 'Limpia la cocina.', pt: 'Está limpando a cozinha.', uk: 'Прибирає кухню.' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wo sitzt Lilith am Anfang?', en: 'Where is Lilith sitting at the start?', fr: 'Où est assise Lilith au début ?', it: 'Dov’è seduta Lilith all’inizio?', es: '¿Dónde está sentada Lilith al principio?', pt: 'Onde a Lilith está sentada no começo?', uk: 'Де сидить Ліліт на початку?' }, options: [
+        { de: 'Auf dem Küchentisch', en: 'On the kitchen table', fr: 'Sur la table de la cuisine', it: 'Sul tavolo della cucina', es: 'En la mesa de la cocina', pt: 'Na mesa da cozinha', uk: 'На кухонному столі' },
+        { de: 'Auf dem Sofa', en: 'On the sofa', fr: 'Sur le canapé', it: 'Sul divano', es: 'En el sofá', pt: 'No sofá', uk: 'На дивані' },
+        { de: 'Auf dem Fensterbrett', en: 'On the windowsill', fr: 'Sur le rebord de la fenêtre', it: 'Sul davanzale', es: 'En la ventana', pt: 'Na janela', uk: 'На підвіконні' }
+      ] },
+      { kind: 'question', prompt: { de: 'Was holt Tom?', en: 'What does Tom get?', fr: 'Qu’est-ce que Tom va chercher ?', it: 'Che cosa prende Tom?', es: '¿Qué va a buscar Tom?', pt: 'O que o Tom vai pegar?', uk: 'Що принесе Том?' }, options: [
+        { de: 'Den Besen', en: 'The broom', fr: 'Le balai', it: 'La scopa', es: 'La escoba', pt: 'A vassoura', uk: 'Віник' },
+        { de: 'Den Staubsauger', en: 'The vacuum cleaner', fr: 'L’aspirateur', it: 'L’aspirapolvere', es: 'La aspiradora', pt: 'O aspirador', uk: 'Пилосос' },
+        { de: 'Ein neues Glas', en: 'A new glass', fr: 'Un nouveau verre', it: 'Un bicchiere nuovo', es: 'Un vaso nuevo', pt: 'Um copo novo', uk: 'Нову склянку' }
       ] }
     ]
   },
@@ -352,17 +442,194 @@ export const stories: Story[] = [
         { de: 'Der Name eines Verlags', en: 'The name of a publisher', fr: 'Le nom d’un éditeur', it: 'Il nome di un editore', es: 'El nombre de una editorial', pt: 'O nome de uma editora', uk: 'Назва видавництва' }
       ] }
     ]
+  },
+  // Hans from Bavaria (beer, sausages, Gemütlichkeit) and Albert, a strict Prussian from Berlin, live
+  // on their dialects, so their stories are for German learners only.
+  {
+    id: 'b2-beergarden',
+    level: 'b2',
+    scene: 'beergarden',
+    cast: ['mia', 'hans', 'albert'],
+    languages: ['de'],
+    weathers: ['sunny', 'cloudy'],
+    title: german('Im Biergarten'),
+    beats: [
+      { kind: 'narration', text: german('Mia verbringt ein langes Wochenende in München. Ihr Bekannter Hans hat darauf bestanden, ihr seinen Lieblingsbiergarten zu zeigen – und zufällig sitzt am selben Tisch Albert, ein Geschäftsreisender aus Berlin.') },
+      { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Servus, Mia! Griaß di, {name}! Hock di her. A Maß Bier und a paar Weißwürscht – mehr braucht da Mensch ned zum Glücklichsein.') },
+      { kind: 'line', speaker: 'albert', text: german('Verzeihung, aber es ist gerade mal elf Uhr vormittags. Bier um diese Uhrzeit wäre in Berlin, gelinde gesagt, ungewöhnlich.') },
+      { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Ja mei, deswegen san mia ja in Bayern! Weißwürscht isst ma eh nur bis zwölfe – des is Tradition.') },
+      { kind: 'line', speaker: 'albert', mood: 'curious', text: german('Bis zwölf? Wer hat sich denn diese Regel ausgedacht? Das klingt mir nach typisch bayerischer Unordnung.') },
+      { kind: 'question', prompt: german('Warum gibt es die Weißwürste schon am Vormittag?'), options: [
+        german('Weil man sie traditionell nur bis zwölf Uhr isst.'),
+        german('Weil Albert um zwölf Uhr abreisen muss.'),
+        german('Weil der Biergarten mittags schließt.')
+      ] },
+      { kind: 'line', speaker: 'hans', mood: 'curious', text: german('{name}, sag amoi: Schmeckt dir die Weißwurscht, oder bist du aa so a Preiß wie da Albert?') },
+      { kind: 'reply', to: 'hans', options: [
+        german('Sie schmeckt ausgezeichnet – vor allem mit süßem Senf und einer frischen Brezel.'),
+        german('Am liebsten esse ich sie um Mitternacht, mit Ketchup.'),
+        german('Die Weißwurst ist leider schon um elf Uhr abgefahren.')
+      ] },
+      { kind: 'line', speaker: 'albert', mood: 'happy', text: german('Na jut, ick geb’s ja zu: Das schmeckt gar nicht übel. Aber der Senf ist entschieden zu süß.') },
+      { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Prost, Albert! Siehgst, a bisserl Gemütlichkeit hat no koan Preißn umbracht.') },
+      { kind: 'narration', text: german('Albert hebt seinen Krug – sehr ordentlich, genau auf Augenhöhe – und stößt zum ersten Mal an diesem Tag lächelnd an.') },
+      { kind: 'question', prompt: german('Was gefällt Albert am Essen nicht?'), options: [
+        german('Der Senf ist ihm zu süß.'),
+        german('Die Brezel ist ihm zu salzig.'),
+        german('Die Würste sind ihm zu klein.')
+      ] },
+      { kind: 'question', prompt: german('Wie verhält sich Albert am Ende?'), options: [
+        german('Er stößt lächelnd mit Hans an.'),
+        german('Er verlässt beleidigt den Biergarten.'),
+        german('Er bestellt einen Kaffee statt Bier.')
+      ] },
+      { kind: 'question', prompt: german('Wo verbringt Mia ihr langes Wochenende?'), options: [
+        german('In München'),
+        german('In Berlin'),
+        german('In Hamburg')
+      ] },
+      { kind: 'question', prompt: german('Wie findet Albert es, schon um elf Uhr Bier zu trinken?'), options: [
+        german('Ungewöhnlich – in Berlin würde man das nicht tun.'),
+        german('Völlig normal, das macht er jeden Tag.'),
+        german('Zu spät, er trinkt sonst schon um neun.')
+      ] },
+      { kind: 'question', prompt: german('Wen meint Hans, wenn er von einem „Preiß“ spricht?'), options: [
+        german('Albert aus Berlin'),
+        german('Den Kellner im Biergarten'),
+        german('Einen Metzger aus München')
+      ] }
+    ]
+  },
+  {
+    id: 'c1-delay',
+    level: 'c1',
+    scene: 'station',
+    cast: ['albert', 'hans'],
+    languages: ['de'],
+    title: german('Verspätung'),
+    beats: [
+      { kind: 'narration', text: german('Am Münchner Hauptbahnhof leuchtet auf der Anzeigetafel ein Wort, das Albert zutiefst verabscheut: „Verspätung“. Sein ICE nach Berlin fährt voraussichtlich erst neunzig Minuten später ab.') },
+      { kind: 'narration', text: german('Aus dem Lautsprecher kommt eine Durchsage: „Grund dafür ist die verspätete Bereitstellung des Zuges. Der Zug hatte bereits auf seiner vorherigen Fahrt Verspätung.“') },
+      { kind: 'line', speaker: 'albert', mood: 'neutral', text: german('Aha. Der Zug ist verspätet, weil der Zug verspätet ist. Eine Begründung von bestechender Logik.') },
+      { kind: 'line', speaker: 'albert', mood: 'surprised', text: german('Neunzig Minuten! Ick fass es nicht. Pünktlichkeit ist die Höflichkeit der Könige – aber davon hat die Bahn offenbar noch nie etwas gehört.') },
+      { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Geh, Albert, reg di ned auf, des ändert eh nix. I hab a Brotzeit dabei: Leberkas, Brezn und an Obazdn.') },
+      { kind: 'line', speaker: 'albert', mood: 'curious', text: german('Sie haben eine vollständige Mahlzeit im Rucksack? Für eine Zugfahrt von viereinhalb Stunden?') },
+      { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Freilich! A Bayer verreist nia ohne Proviant. Und a Bier für d’Fahrt – rein zur Beruhigung der Nerven, verstehst?') },
+      { kind: 'question', prompt: german('Worüber ärgert sich Albert?'), options: [
+        german('Dass sein Zug voraussichtlich anderthalb Stunden später abfährt.'),
+        german('Dass Hans sein Bier ausgetrunken hat.'),
+        german('Dass der Zug ohne ihn abgefahren ist.')
+      ] },
+      { kind: 'line', speaker: 'albert', mood: 'curious', text: german('{name}, Sie sind doch ein vernünftiger Mensch. Finden Sie nicht auch, dass man sich über eine solche Verspätung schriftlich beschweren sollte?') },
+      { kind: 'reply', to: 'albert', options: [
+        german('Eine Beschwerde kann nicht schaden, aber an der Abfahrtszeit ändert sie nichts – wir könnten die Wartezeit also genauso gut mit Hans’ Brotzeit verbringen.'),
+        german('Unbedingt, und zwar persönlich beim Lokführer, während der Zug fährt.'),
+        german('Nein, denn neunzig Minuten Verspätung gelten bei der Bahn als überpünktlich.')
+      ] },
+      { kind: 'line', speaker: 'albert', mood: 'neutral', text: german('Hm. Ihre Argumentation ist bestechend logisch. Na schön – den Antrag auf Fahrgastrechte reiche ich trotzdem ein. Ordnung muss sein.') },
+      { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Recht hast! Und jetzt a Stückerl Leberkas, nacha schaut die Welt glei ganz anders aus.') },
+      { kind: 'narration', text: german('Neunzig Minuten später sitzen beide im Zug. Albert füllt gewissenhaft ein Formular aus, während Hans zufrieden schläft – den Kopf auf Alberts Schulter.') },
+      { kind: 'question', prompt: german('Wie geht Albert schließlich mit der Verspätung um?'), options: [
+        german('Er reicht eine Beschwerde ein, nimmt die Wartezeit aber gelassener hin.'),
+        german('Er sagt die Reise ab und fliegt nach Berlin.'),
+        german('Er verlangt, dass Hans den Zug fährt.')
+      ] },
+      { kind: 'question', prompt: german('Was versteht Hans unter einer „Brotzeit“?'), options: [
+        german('Mitgebrachtes Essen wie Leberkäse, Brezeln und Obazda'),
+        german('Eine kurze Pause zum Schlafen'),
+        german('Die genaue Abfahrtszeit des Zuges')
+      ] },
+      { kind: 'question', prompt: german('Welchen Grund nennt die Durchsage für die Verspätung?'), options: [
+        german('Der Zug hatte schon auf seiner vorherigen Fahrt Verspätung.'),
+        german('Der Lokführer hat verschlafen.'),
+        german('Ein Sturm hat die Oberleitung beschädigt.')
+      ] },
+      { kind: 'question', prompt: german('Warum findet Albert die Begründung der Bahn absurd?'), options: [
+        german('Weil sie die Verspätung nur mit einer anderen Verspätung erklärt.'),
+        german('Weil die Durchsage auf Bairisch war.'),
+        german('Weil der Zug in Wahrheit pünktlich ist.')
+      ] },
+      { kind: 'question', prompt: german('Was macht Hans während der Zugfahrt?'), options: [
+        german('Er schläft zufrieden an Alberts Schulter.'),
+        german('Er füllt ein Beschwerdeformular aus.'),
+        german('Er streitet mit dem Schaffner.')
+      ] }
+    ]
+  },
+  {
+    id: 'b2-platform',
+    level: 'b2',
+    scene: 'station',
+    cast: ['sabine', 'enzo', 'jana', 'becker'],
+    languages: ['de'],
+    title: german('Personen im Gleis'),
+    beats: [
+      { kind: 'narration', text: german('Freitagabend, Gleis 7 in Köln. Der Regionalexpress nach Bonn hätte vor zwanzig Minuten abfahren sollen. Auf dem Bahnsteig warten unter anderem eine Polizistin, ein Pizzabäcker, eine Programmiererin und ein Lehrer – und du.') },
+      { kind: 'narration', text: german('Der Lautsprecher knackt: „Information zum RE 5 nach Bonn: Wegen der Verspätung eines vorausfahrenden Zuges verzögert sich die Abfahrt um etwa fünfzehn Minuten. Wir bitten um Entschuldigung.“') },
+      { kind: 'line', speaker: 'becker', mood: 'sad', text: german('Fünfzehn Minuten, sagen sie. Bei der Bahn heißt das erfahrungsgemäß: mindestens eine halbe Stunde. Dabei muss ich morgen früh vierzig Klassenarbeiten zurückgeben – korrigiert habe ich erst zwölf.') },
+      { kind: 'line', speaker: 'jana', mood: 'happy', text: german('Dann korrigieren Sie doch einfach hier! Ich programmiere auch gerade – na ja, ich versuche es. Das WLAN am Bahnsteig ist ungefähr so zuverlässig wie der Fahrplan.') },
+      { kind: 'narration', text: german('Wieder knackt der Lautsprecher: „Achtung, eine weitere Information: Aufgrund von Personen im Gleis ist der Zugverkehr zwischen Köln und Bonn vorübergehend eingestellt.“') },
+      { kind: 'line', speaker: 'enzo', mood: 'surprised', text: german('Personen im Gleis? Mamma mia! Hoffentlich ist niemandem etwas passiert.') },
+      { kind: 'line', speaker: 'sabine', mood: 'neutral', text: german('Keine Sorge. Ein paar Jugendliche haben über die Gleise abgekürzt. Meine Kollegen holen sie gerade da runter – das ist nicht nur verboten, sondern lebensgefährlich.') },
+      { kind: 'question', prompt: german('Warum wird der Zugverkehr eingestellt?'), options: [
+        german('Weil sich Personen im Gleis befinden.'),
+        german('Weil die Polizistin den Zug angehalten hat.'),
+        german('Weil das WLAN am Bahnsteig ausgefallen ist.')
+      ] },
+      { kind: 'line', speaker: 'enzo', mood: 'happy', text: german('Na gut, dann machen wir das Beste daraus. Ich habe noch drei Pizzen dabei, eigentlich für eine Lieferung nach Bonn. {name}, willst du ein Stück? Margherita oder Salami?') },
+      { kind: 'reply', to: 'enzo', options: [
+        german('Gern ein Stück Margherita – danke, das ist echt nett von dir!'),
+        german('Ich hätte gern eine Fahrkarte nach Bonn, bitte.'),
+        german('Die Margherita befindet sich leider im Gleis.')
+      ] },
+      { kind: 'line', speaker: 'becker', mood: 'curious', text: german('Pizza und Klassenarbeiten – die beste Pause seit Wochen. Jana, können Sie mir die Bahn-App erklären? Bei mir steht, der Zug sei schon abgefahren.') },
+      { kind: 'line', speaker: 'jana', mood: 'happy', text: german('Ein bekannter Fehler: Die App kennt den Fahrplan, aber nicht die Wirklichkeit. Ehrlich gesagt würde ich das gern mal selbst reparieren.') },
+      { kind: 'narration', text: german('Vierzig Minuten später fährt der Zug endlich ein. Herr Becker hat zwanzig Arbeiten korrigiert, Jana hat einen Fehlerbericht geschrieben, und von Enzos Pizzen ist nichts mehr übrig.') },
+      { kind: 'line', speaker: 'sabine', mood: 'happy', text: german('Gute Fahrt allerseits! Und denkt dran: Bitte hinter der weißen Linie bleiben.') },
+      { kind: 'question', prompt: german('Weshalb verzögerte sich die Abfahrt zuerst?'), options: [
+        german('Wegen der Verspätung eines vorausfahrenden Zuges'),
+        german('Wegen eines Streiks der Lokführer'),
+        german('Wegen eines Unwetters zwischen Köln und Bonn')
+      ] },
+      { kind: 'question', prompt: german('Wofür waren Enzos Pizzen eigentlich gedacht?'), options: [
+        german('Für eine Lieferung nach Bonn'),
+        german('Für die Polizei am Bahnsteig'),
+        german('Für Herrn Beckers Klasse')
+      ] },
+      { kind: 'question', prompt: german('Wer befand sich im Gleis?'), options: [
+        german('Ein paar Jugendliche, die abgekürzt haben'),
+        german('Ein Bauarbeiter mit seinem Werkzeug'),
+        german('Ein entlaufener Hund')
+      ] },
+      { kind: 'question', prompt: german('Was hat Jana während der Wartezeit geschrieben?'), options: [
+        german('Einen Fehlerbericht zur Bahn-App'),
+        german('Eine Beschwerde an die Polizei'),
+        german('Eine Klassenarbeit für Herrn Becker')
+      ] },
+      { kind: 'question', prompt: german('Worum bittet die Polizistin zum Schluss?'), options: [
+        german('Hinter der weißen Linie zu bleiben'),
+        german('Die Fahrkarten bereitzuhalten'),
+        german('Keine Pizza im Zug zu essen')
+      ] }
+    ]
   }
 ];
+
+// The same text in every language slot, for stories limited to German learners (see `languages`).
+function german(text: string): Text {
+  return Object.fromEntries(playableLanguages.map(({ code }) => [code, text])) as Text;
+}
 
 /**
  * Stories at the learner's level come first; when lower vocabulary is included, easier stories
  * follow. If nothing matches exactly (sparse levels), fall back to the nearest lower level.
+ * Stories limited to other languages are left out.
  */
-export function storiesFor(level: VocabularyLevel, includeLower: boolean): Story[] {
+export function storiesFor(language: Language, level: VocabularyLevel, includeLower: boolean): Story[] {
   const rank = vocabularyLevels.indexOf(level);
-  const exact = stories.filter((story) => story.level === level);
-  const lower = stories.filter((story) => vocabularyLevels.indexOf(story.level) < rank).sort((a, b) => vocabularyLevels.indexOf(b.level) - vocabularyLevels.indexOf(a.level));
+  const available = stories.filter((story) => !story.languages || story.languages.includes(language));
+  const exact = available.filter((story) => story.level === level);
+  const lower = available.filter((story) => vocabularyLevels.indexOf(story.level) < rank).sort((a, b) => vocabularyLevels.indexOf(b.level) - vocabularyLevels.indexOf(a.level));
   if (includeLower) return [...exact, ...lower];
   if (exact.length) return exact;
   const nearest = lower[0]?.level;
@@ -388,7 +655,7 @@ export function fillName(text: string, name: string) {
   return text.replaceAll('{name}', name);
 }
 
-const outdoorScenes: SceneId[] = ['park', 'station', 'square'];
+const outdoorScenes: SceneId[] = ['park', 'station', 'square', 'beergarden', 'farm', 'zoo', 'beach', 'airport'];
 const weathers: Weather[] = ['sunny', 'cloudy', 'rainy', 'snowy'];
 const weatherLines: Record<Weather, { indoor: Text; outdoor: Text }> = {
   sunny: {
