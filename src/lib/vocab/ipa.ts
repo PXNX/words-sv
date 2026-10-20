@@ -107,7 +107,6 @@ function frenchIpa(word: string): string {
 	const multiCharRules: Rule[] = [
 		[/eau/g, 'o'],
 		[/eu/g, 'ø'],
-		[/ai|ei/g, 'ɛ'],
 		[/au/g, 'o'],
 		[/ou/g, 'u'],
 		[/oi/g, 'wa'],
@@ -116,6 +115,7 @@ function frenchIpa(word: string): string {
 		[/ch/g, 'ʃ'],
 		[/qu/g, 'k'],
 		[/ain|ein/g, 'ɛ̃'],
+		[/ai|ei/g, 'ɛ'],
 		[/an|en/g, 'ɑ̃'],
 		[/on/g, 'ɔ̃'],
 		[/un/g, 'œ̃'],
