@@ -49,7 +49,7 @@ export function playErrorSound(enabled: boolean, kind: ErrorSound) {
  * Story sound effects, synthesized with Web Audio so they need no asset downloads and work offline.
  * Kept deliberately soft: they colour a scene for learners, they should never startle.
  */
-export type SoundEffect = 'purr' | 'meow' | 'glass' | 'brakes' | 'doorbell' | 'knock' | 'rain';
+export type SoundEffect = 'purr' | 'meow' | 'glass' | 'brakes' | 'doorbell' | 'knock' | 'rain' | 'bark';
 
 let effectContext: AudioContext | null = null;
 
@@ -229,6 +229,36 @@ function rain(context: AudioContext, start: number) {
   source.start(start);
 }
 
+// A friendly "woof woof": a short throaty tone dropping in pitch through a bark-like formant,
+// with a puff of breath on each bark.
+function bark(context: AudioContext, start: number) {
+  [0, 0.34].forEach((offset, index) => {
+    const at = start + offset;
+    const length = index ? 0.2 : 0.17;
+    const voice = context.createOscillator();
+    voice.type = 'sawtooth';
+    voice.frequency.setValueAtTime(330, at);
+    voice.frequency.linearRampToValueAtTime(560, at + 0.035);
+    voice.frequency.exponentialRampToValueAtTime(240, at + length);
+    const formant = filter(context, 'bandpass', 1100, 2.2);
+    formant.frequency.setValueAtTime(1400, at);
+    formant.frequency.exponentialRampToValueAtTime(700, at + length);
+    const gain = context.createGain();
+    gain.gain.setValueAtTime(0.0001, at);
+    gain.gain.exponentialRampToValueAtTime(0.24, at + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.0001, at + length);
+    voice.connect(formant).connect(gain).connect(context.destination);
+    voice.start(at);
+    voice.stop(at + length + 0.02);
+    const breath = noise(context, length);
+    const breathGain = context.createGain();
+    breathGain.gain.setValueAtTime(0.09, at);
+    breathGain.gain.exponentialRampToValueAtTime(0.0001, at + length * 0.8);
+    breath.connect(filter(context, 'bandpass', 1800, 1.2)).connect(breathGain).connect(context.destination);
+    breath.start(at);
+  });
+}
+
 const effects: Record<SoundEffect, (context: AudioContext, start: number) => void> = {
   purr,
   meow,
@@ -236,8 +266,12 @@ const effects: Record<SoundEffect, (context: AudioContext, start: number) => voi
   brakes,
   doorbell: (context, start) => { bell(context, start, 659.25); bell(context, start + 0.45, 523.25); },
   knock,
-  rain
+  rain,
+  bark
 };
+
+// Roughly how long each effect stands out, so story speech can pause while one plays.
+export const soundEffectSeconds: Record<SoundEffect, number> = { purr: 2.2, meow: 0.7, glass: 0.8, brakes: 1.3, doorbell: 1.4, knock: 0.6, rain: 1.2, bark: 0.6 };
 
 export function playSoundEffect(enabled: boolean, effect: SoundEffect) {
   if (!enabled) return;

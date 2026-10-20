@@ -6,19 +6,25 @@ export type Text = Record<Language, string>;
 export type CharacterId = 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello' | 'lilith';
 export type Mood = 'neutral' | 'happy' | 'sad' | 'surprised' | 'curious';
 export type SceneId = 'cafe' | 'park' | 'station' | 'home' | 'office' | 'flat' | 'square' | 'attic';
+export type Weather = 'sunny' | 'cloudy' | 'rainy' | 'snowy';
+export type StoryProp = 'ball';
 
 // `{name}` is replaced with the learner's first name, so characters can speak to them directly.
 // The first option of every question/reply is the correct one; the UI shuffles them.
 // `mood` sets the speaker's face when the text alone would read it wrong (see moodFor);
-// `sfx` plays a sound effect when the beat appears; `focus` names the vocabulary word a generated
+// `sfx` plays a sound effect when the beat appears (in place of any onomatopoeia in the text when it
+// is read aloud); `prop` brings a prop onto the stage; `focus` names the vocabulary word a generated
 // question practises, so answering it right can take the word off the learner's missed list.
+// `word` is that word as written: `asker` (or the line's speaker) pronounces it, even when the story
+// is not being read aloud, and a question's `asker` reads its prompt.
 export type StoryBeat =
-  | { kind: 'narration'; text: Text; sfx?: SoundEffect }
-  | { kind: 'line'; speaker: CharacterId; text: Text; sfx?: SoundEffect; mood?: Mood }
-  | { kind: 'question'; prompt: Text; options: Text[]; focus?: string }
-  | { kind: 'reply'; to: CharacterId; options: Text[]; focus?: string };
+  | { kind: 'narration'; text: Text; sfx?: SoundEffect; prop?: StoryProp }
+  | { kind: 'line'; speaker: CharacterId; text: Text; sfx?: SoundEffect; mood?: Mood; word?: string }
+  | { kind: 'question'; prompt: Text; options: Text[]; focus?: string; asker?: CharacterId; word?: string }
+  | { kind: 'reply'; to: CharacterId; options: Text[]; focus?: string; word?: string };
 
-export type Story = { id: string; level: VocabularyLevel; scene: SceneId; cast: CharacterId[]; title: Text; beats: StoryBeat[]; generated?: boolean };
+// `weathers` limits the random weather where the text depends on it.
+export type Story = { id: string; level: VocabularyLevel; scene: SceneId; cast: CharacterId[]; title: Text; beats: StoryBeat[]; generated?: boolean; weathers?: Weather[]; weather?: Weather };
 
 export const characterNames: Record<CharacterId, Text> = {
   mia: { de: 'Mia', en: 'Mia', fr: 'Mia', it: 'Mia', es: 'Mia', pt: 'Mia', uk: 'Мія' },
@@ -106,7 +112,8 @@ export const stories: Story[] = [
     title: { de: 'Im Park', en: 'In the park', fr: 'Au parc', it: 'Al parco', es: 'En el parque', pt: 'No parque', uk: 'У парку' },
     beats: [
       { kind: 'narration', text: { de: 'Es ist Sonntag. Leo ist mit seinem Hund Bello im Park.', en: 'It is Sunday. Leo is in the park with his dog Bello.', fr: 'C’est dimanche. Léo est au parc avec son chien Bello.', it: 'È domenica. Leo è al parco con il suo cane Bello.', es: 'Es domingo. Leo está en el parque con su perro Bello.', pt: 'É domingo. O Léo está no parque com o seu cachorro Bello.', uk: 'Сьогодні неділя. Лео в парку зі своїм собакою Белло.' } },
-      { kind: 'narration', text: { de: 'Bello sieht einen roten Ball. Er läuft schnell weg.', en: 'Bello sees a red ball. He runs away fast.', fr: 'Bello voit un ballon rouge. Il part en courant.', it: 'Bello vede una palla rossa. Corre via veloce.', es: 'Bello ve una pelota roja. Sale corriendo.', pt: 'O Bello vê uma bola vermelha. Ele sai correndo.', uk: 'Белло бачить червоний м’яч. Він швидко тікає.' } },
+      { kind: 'narration', prop: 'ball', text: { de: 'Bello sieht einen roten Ball. Er läuft schnell weg.', en: 'Bello sees a red ball. He runs away fast.', fr: 'Bello voit un ballon rouge. Il part en courant.', it: 'Bello vede una palla rossa. Corre via veloce.', es: 'Bello ve una pelota roja. Sale corriendo.', pt: 'O Bello vê uma bola vermelha. Ele sai correndo.', uk: 'Белло бачить червоний м’яч. Він швидко тікає.' } },
+      { kind: 'line', speaker: 'bello', sfx: 'bark', mood: 'happy', text: { de: 'Wuff! Wuff!', en: 'Woof! Woof!', fr: 'Ouaf ! Ouaf !', it: 'Bau! Bau!', es: '¡Guau! ¡Guau!', pt: 'Au! Au!', uk: 'Гав! Гав!' } },
       { kind: 'line', speaker: 'oma', text: { de: 'Oh! Ist das dein Hund?', en: 'Oh! Is that your dog?', fr: 'Oh ! C’est ton chien ?', it: 'Oh! È il tuo cane?', es: '¡Oh! ¿Es tu perro?', pt: 'Ah! Esse cachorro é seu?', uk: 'Ой! Це твій собака?' } },
       { kind: 'line', speaker: 'leo', text: { de: 'Ja, das ist Bello. Entschuldigung!', en: 'Yes, that’s Bello. Sorry!', fr: 'Oui, c’est Bello. Pardon !', it: 'Sì, è Bello. Scusi!', es: 'Sí, es Bello. ¡Perdón!', pt: 'Sim, é o Bello. Desculpa!', uk: 'Так, це Белло. Вибачте!' } },
       { kind: 'line', speaker: 'oma', text: { de: 'Kein Problem. Er ist sehr lieb. Hier ist der Ball.', en: 'No problem. He is very sweet. Here is the ball.', fr: 'Pas de problème. Il est très gentil. Voici le ballon.', it: 'Nessun problema. È molto buono. Ecco la palla.', es: 'No pasa nada. Es muy bueno. Aquí está la pelota.', pt: 'Sem problema. Ele é muito bonzinho. Aqui está a bola.', uk: 'Нічого страшного. Він дуже милий. Ось м’яч.' } },
@@ -133,6 +140,8 @@ export const stories: Story[] = [
     level: 'a2',
     scene: 'station',
     cast: ['mia', 'paul'],
+    // "It is snowing heavily" is a wrong answer for why the train is late.
+    weathers: ['sunny', 'cloudy', 'rainy'],
     title: { de: 'Verspätung', en: 'Delayed', fr: 'En retard', it: 'In ritardo', es: 'Con retraso', pt: 'Atrasado', uk: 'Затримка' },
     beats: [
       { kind: 'narration', text: { de: 'Mia will heute zu ihrer Schwester nach Hamburg fahren. Sie wartet schon zwanzig Minuten am Bahnhof.', en: 'Mia wants to visit her sister in Hamburg today. She has already been waiting at the station for twenty minutes.', fr: 'Aujourd’hui, Mia veut aller chez sa sœur à Hambourg. Elle attend à la gare depuis vingt minutes.', it: 'Oggi Mia vuole andare da sua sorella ad Amburgo. Aspetta in stazione già da venti minuti.', es: 'Hoy Mia quiere ir a ver a su hermana en Hamburgo. Ya lleva veinte minutos esperando en la estación.', pt: 'Hoje a Mia quer visitar a irmã em Hamburgo. Ela já está esperando na estação há vinte minutos.', uk: 'Сьогодні Мія хоче поїхати до сестри в Гамбург. Вона вже двадцять хвилин чекає на вокзалі.' } },
@@ -377,4 +386,38 @@ export function moodFor(beat: Extract<StoryBeat, { kind: 'line' }>): Mood {
 
 export function fillName(text: string, name: string) {
   return text.replaceAll('{name}', name);
+}
+
+const outdoorScenes: SceneId[] = ['park', 'station', 'square'];
+const weathers: Weather[] = ['sunny', 'cloudy', 'rainy', 'snowy'];
+const weatherLines: Record<Weather, { indoor: Text; outdoor: Text }> = {
+  sunny: {
+    indoor: { de: 'Draußen ist das Wetter schön und klar.', en: 'Outside, the weather is lovely and clear.', fr: 'Dehors, il fait beau.', it: 'Fuori il tempo è bello e sereno.', es: 'Fuera hace buen tiempo.', pt: 'Lá fora, o tempo está bonito.', uk: 'Надворі гарна ясна погода.' },
+    outdoor: { de: 'Die Sonne scheint, und der Himmel ist blau.', en: 'The sun is shining, and the sky is blue.', fr: 'Le soleil brille et le ciel est bleu.', it: 'Il sole splende e il cielo è azzurro.', es: 'Hace sol y el cielo está azul.', pt: 'O sol está brilhando, e o céu está azul.', uk: 'Світить сонце, і небо блакитне.' }
+  },
+  cloudy: {
+    indoor: { de: 'Draußen ist der Himmel grau.', en: 'Outside, the sky is grey.', fr: 'Dehors, le ciel est gris.', it: 'Fuori il cielo è grigio.', es: 'Fuera, el cielo está gris.', pt: 'Lá fora, o céu está cinzento.', uk: 'Надворі небо сіре.' },
+    outdoor: { de: 'Es ist bewölkt, und ein kühler Wind weht.', en: 'It is cloudy, and a cool wind is blowing.', fr: 'Le ciel est nuageux et un vent frais souffle.', it: 'È nuvoloso e soffia un vento fresco.', es: 'Está nublado y sopla un viento fresco.', pt: 'Está nublado, e sopra um vento fresco.', uk: 'Хмарно, і дме прохолодний вітер.' }
+  },
+  rainy: {
+    indoor: { de: 'Draußen regnet es.', en: 'Outside, it is raining.', fr: 'Dehors, il pleut.', it: 'Fuori piove.', es: 'Fuera está lloviendo.', pt: 'Lá fora está chovendo.', uk: 'Надворі йде дощ.' },
+    outdoor: { de: 'Es regnet ein bisschen, aber das ist nicht schlimm.', en: 'It is raining a little, but that’s fine.', fr: 'Il pleut un peu, mais ce n’est pas grave.', it: 'Piove un po’, ma non importa.', es: 'Llueve un poco, pero no pasa nada.', pt: 'Está chovendo um pouco, mas tudo bem.', uk: 'Трохи накрапає дощ, але це не страшно.' }
+  },
+  snowy: {
+    indoor: { de: 'Draußen schneit es. Alles ist weiß.', en: 'Outside, it is snowing. Everything is white.', fr: 'Dehors, il neige. Tout est blanc.', it: 'Fuori nevica. È tutto bianco.', es: 'Fuera está nevando. Todo está blanco.', pt: 'Lá fora está nevando. Tudo está branco.', uk: 'Надворі падає сніг. Усе біле.' },
+    outdoor: { de: 'Es schneit, und es ist kalt.', en: 'It is snowing, and it is cold.', fr: 'Il neige et il fait froid.', it: 'Nevica e fa freddo.', es: 'Está nevando y hace frío.', pt: 'Está nevando, e faz frio.', uk: 'Падає сніг, і холодно.' }
+  }
+};
+
+/**
+ * Every playthrough gets its own weather: the scene shows it and a line after the opening narration
+ * describes it, so the same story reads a little differently each time.
+ */
+export function withWeather(story: Story): Story {
+  const choices = story.weathers ?? weathers;
+  const weather = choices[Math.floor(Math.random() * choices.length)];
+  const lines = weatherLines[weather];
+  const beat: StoryBeat = { kind: 'narration', text: outdoorScenes.includes(story.scene) ? lines.outdoor : lines.indoor, sfx: weather === 'rainy' ? 'rain' : undefined };
+  const at = story.beats[0]?.kind === 'narration' ? 1 : 0;
+  return { ...story, weather, beats: [...story.beats.slice(0, at), beat, ...story.beats.slice(at)] };
 }

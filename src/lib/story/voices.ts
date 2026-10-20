@@ -1,4 +1,5 @@
 import type { CharacterId, Mood } from './stories';
+import { intonationOf, type Intonation } from './speech';
 
 /*
  * Every story character gets a voice of their own. Instead of pitching one voice up and down, the
@@ -38,6 +39,16 @@ const moodShape: Record<Mood, { pitch: number; rate: number; volume: number }> =
   sad: { pitch: 0.93, rate: 0.9, volume: 0.88 },
   surprised: { pitch: 1.1, rate: 1.07, volume: 1 },
   curious: { pitch: 1.04, rate: 0.98, volume: 1 }
+};
+
+// Speech engines take one pitch per utterance, so lines are spoken sentence by sentence and each
+// sentence is shifted as a whole: a question sits higher and a little slower, an exclamation brighter
+// and quicker, a trailing "…" lower and softer.
+const intonationShape: Record<Intonation, { pitch: number; rate: number; volume: number }> = {
+  statement: { pitch: 1, rate: 1, volume: 1 },
+  question: { pitch: 1.09, rate: 0.96, volume: 1 },
+  exclamation: { pitch: 1.07, rate: 1.06, volume: 1.1 },
+  trailing: { pitch: 0.94, rate: 0.88, volume: 0.9 }
 };
 
 const FEMALE_NAMES = /female|woman|frau|anna|katja|hedda|marlene|vicki|petra|helena|amala|amelie|amélie|denise|elsa|seraphina|ingrid|isabella|elena|laura|lucia|lucía|paulina|monica|mónica|alice|federica|francisca|luciana|camila|vit[oó]ria|thalita|polina|lesya|zira|hazel|susan|libby|sonia|serena|kate|samantha|victoria|karen|moira|tessa|fiona|audrey|aur[ée]lie|julie|marie|eloise|ximena|elvira|dalia|raquel|fernanda|leila|aria|jenny|michelle|ana\b|emma|ava|natasha|clara|sylvie|ariane|vivienne|brigitte|leni|louisa|giselle|irma|elke|joanna|nancy|sara|jane|emily|maisie|bella|abbie|hollie|olivia|mia\b|neerja|imani|leah|molly|annette|amanda|nanami|heloisa|brenda|giovanna|leticia|manuela|yolanda|beatriz|estrella|irene|isidora|paloma|salome|teresa|larissa|catarina|raquel|fabiola|giuseppina|isabella|palmira|pierina|elsa|imelda|valeria|jacqueline|coralie|josephine|yvette|celeste|gisela|klarissa|maja|tanja/i;
@@ -106,10 +117,10 @@ export function applyVoice(utterance: SpeechSynthesisUtterance, speaker: Speaker
   // With a voice of their own, characters keep it close to its natural pitch; a shared voice needs
   // the full profile to tell the speakers apart. Bello is a dog either way.
   const ownPitch = shared || speaker === 'bello' ? profile.pitch : 1 + (profile.pitch - 1) * 0.35;
-  const isQuestion = /\?\s*$/.test(utterance.text);
+  const tone = intonationShape[intonationOf(utterance.text)];
   utterance.voice = voice;
   if (voice) utterance.lang = voice.lang;
-  utterance.pitch = Math.min(2, Math.max(0.1, ownPitch * shape.pitch * (isQuestion ? 1.03 : 1) * wobble(0.025)));
-  utterance.rate = Math.min(10, Math.max(0.1, baseRate * profile.rate * shape.rate * wobble(0.03)));
-  utterance.volume = Math.min(1, profile.volume * shape.volume);
+  utterance.pitch = Math.min(2, Math.max(0.1, ownPitch * shape.pitch * tone.pitch * wobble(0.025)));
+  utterance.rate = Math.min(10, Math.max(0.1, baseRate * profile.rate * shape.rate * tone.rate * wobble(0.03)));
+  utterance.volume = Math.min(1, profile.volume * shape.volume * tone.volume);
 }

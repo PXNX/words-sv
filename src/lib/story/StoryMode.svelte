@@ -4,14 +4,15 @@
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { playErrorSound, playSoundEffect, playSuccessSound } from '#lib/sounds.js';
-  import { characterNames, fillName, moodFor, storiesFor, type CharacterId, type Mood, type Story, type StoryBeat } from './stories';
+  import { playErrorSound, playSoundEffect, playSuccessSound, soundEffectSeconds } from '#lib/sounds.js';
+  import { characterNames, fillName, moodFor, storiesFor, withWeather, type CharacterId, type Mood, type Story, type StoryBeat } from './stories';
   import type { SoundEffect } from '#lib/sounds.js';
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
   import { generateStory, hasMissedWords } from './generated';
   import { clearMissedWord, recordMissedWord } from './missedWords';
   import { applyVoice, type Speaker } from './voices';
+  import { sentenceGroups, splitSounds } from './speech';
   import { LipSync } from './lipSync.svelte';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconVolumeOff from '~icons/material-symbols/volume-off-rounded';
@@ -22,6 +23,8 @@
   const AUTO_READ_KEY = 'wordcircle-story-auto-read-v1';
   const startlingSounds: SoundEffect[] = ['glass', 'brakes', 'doorbell', 'knock'];
   const speechLocales: Record<string, string> = { de: 'de-DE', en: 'en-GB', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', pt: 'pt-BR', uk: 'uk-UA' };
+  // The sound a pet makes in place of a spoken "Miau!" or "Wuff!", and while it talks otherwise.
+  const petSounds: Partial<Record<CharacterId, { slot: SoundEffect; start: SoundEffect }>> = { lilith: { slot: 'meow', start: 'purr' }, bello: { slot: 'bark', start: 'bark' } };
 
   const labels = $derived({
     title: m.story_title({}, { locale: settings.interfaceLocale }),
@@ -40,7 +43,10 @@
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
 
+  // `story` is the playthrough (with its random weather); `written` the story as written, for "again".
   let story = $state<Story | null>(null);
+  let written: Story | null = null;
+  let run = 0;
   let revealed = $state(1);
   let orders = $state<number[][]>([]);
   let wrong = $state<Record<number, number[]>>({});
@@ -50,6 +56,15 @@
   const lipSync = new LipSync();
   let autoRead = $state(typeof localStorage !== 'undefined' && localStorage.getItem(AUTO_READ_KEY) === 'on');
   let reaction = $state<{ who: CharacterId | 'all'; mood: Mood } | null>(null);
+  let petted = $state(false);
+  let hearts = $state(0);
+  let heartsShown = $state(false);
+  let heartsTimer = 0;
+  let pettedTimer = 0;
+  // Bumped whenever speech is cancelled or replaced, so a running performance knows to stop.
+  let performing = 0;
+  // Chrome drops utterances that are garbage-collected mid-speech, before their end event fires.
+  let liveUtterances: SpeechSynthesisUtterance[] = [];
 
   const lang = $derived(settings.lang);
   const name = $derived(settings.firstName);
@@ -62,12 +77,20 @@
   const speaker = $derived(lipSync.speaker ?? lineSpeaker);
   const interactiveIndices = $derived(story ? story.beats.flatMap((beat, index) => (isInteractive(beat) ? [index] : [])) : []);
   const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.length).length);
+  const ballThrown = $derived(Boolean(story?.beats.slice(0, revealed).some((beat) => beat.kind === 'narration' && beat.prop === 'ball')));
+  const lilithHappy = $derived(Boolean(story?.cast.includes('lilith')) && castMood('lilith') === 'happy');
 
   function isInteractive(beat: StoryBeat | null): beat is Extract<StoryBeat, { kind: 'question' | 'reply' }> {
     return beat?.kind === 'question' || beat?.kind === 'reply';
   }
   function say(text: string) {
     return fillName(text, name);
+  }
+  function canSpeak() {
+    return typeof window !== 'undefined' && 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+  }
+  function wait(ms: number) {
+    return new Promise<void>((resolve) => setTimeout(resolve, ms));
   }
   function shuffledOrder(length: number) {
     const order = Array.from({ length }, (_, index) => index);
@@ -91,33 +114,47 @@
   }
   function start(next: Story) {
     cancelSpeech();
-    story = next;
+    run += 1;
+    written = next;
+    const playthrough = withWeather(next);
+    story = playthrough;
     revealed = 1;
     wrong = {};
     solved = {};
-    orders = next.beats.map((beat) => (isInteractive(beat) ? shuffledOrder(beat.options.length) : []));
+    orders = playthrough.beats.map((beat) => (isInteractive(beat) ? shuffledOrder(beat.options.length) : []));
     reaction = null;
-    presentBeat(next.beats[0]);
+    presentBeat(playthrough.beats[0], 0);
   }
-  // A beat's own sound effect (or Lilith purring whenever she speaks), plus the narration or line
-  // read aloud in its speaker's voice when auto-read is on.
-  function presentBeat(beat: StoryBeat | undefined) {
-    if (!beat) return;
-    playBeatSound(beat);
-    if (autoRead && story) readBeat(beat, story.beats.indexOf(beat));
+  // A beat's sound: played where the text has onomatopoeia ("klirr!", "Miau!") when read aloud,
+  // otherwise as the beat appears. Lilith purrs and Bello barks whenever they talk.
+  function beatSounds(beat: StoryBeat): { start: SoundEffect | null; slot: SoundEffect | null } {
+    if (beat.kind === 'narration') return { start: beat.sfx ?? null, slot: beat.sfx ?? null };
+    if (beat.kind !== 'line') return { start: null, slot: null };
+    const pet = petSounds[beat.speaker];
+    return { start: beat.sfx ?? pet?.start ?? null, slot: beat.sfx ?? pet?.slot ?? null };
   }
   function playBeatSound(beat: StoryBeat) {
-    if ((beat.kind === 'narration' || beat.kind === 'line') && beat.sfx) playSoundEffect(settings.sound, beat.sfx);
-    else if (beat.kind === 'line' && beat.speaker === 'lilith') playSoundEffect(settings.sound, 'purr');
+    if (beat.kind !== 'narration' && beat.kind !== 'line') return;
+    const sounds = beatSounds(beat);
+    const sound = splitSounds(beat.text[lang], lang).some((part) => part.kind === 'sound') ? sounds.slot : sounds.start;
+    if (sound) playSoundEffect(settings.sound, sound);
+  }
+  // With auto-read the beat is read aloud (sounds included); without it, its sound plays and a
+  // practice word in the line is still pronounced by whoever says it.
+  function presentBeat(beat: StoryBeat | undefined, index: number) {
+    if (!beat) return;
+    if (autoRead && canSpeak()) {
+      readBeat(beat, index);
+      return;
+    }
+    playBeatSound(beat);
+    if (beat.kind === 'line' && beat.word) void perform(beat.word, beat.speaker, index, moodFor(beat));
   }
   function readBeat(beat: StoryBeat, index: number) {
-    if (beat.kind === 'narration') speak(say(beat.text[lang]));
-    else if (beat.kind === 'line') speak(say(beat.text[lang]), beat.speaker, index, moodFor(beat));
-  }
-  // Replaying a beat brings its sound effect back too.
-  function replayBeat(beat: StoryBeat, index: number) {
-    playBeatSound(beat);
-    readBeat(beat, index);
+    const sounds = beatSounds(beat);
+    if (beat.kind === 'narration') void perform(say(beat.text[lang]), 'narrator', index, 'neutral', sounds.start, sounds.slot);
+    else if (beat.kind === 'line') void perform(say(beat.text[lang]), beat.speaker, index, moodFor(beat), sounds.start, sounds.slot);
+    else if (beat.kind === 'question') void perform(say(beat.prompt[lang]), beat.asker ?? 'narrator', index, 'curious');
   }
   function toggleAutoRead() {
     autoRead = !autoRead;
@@ -128,11 +165,26 @@
   // Faces in the scene: whoever is talking shows the line's mood, a loud sound startles everyone,
   // and answering makes the character you talk to (or the whole cast) react.
   function castMood(member: CharacterId): Mood {
+    if (member === 'lilith' && petted) return 'happy';
     if (reaction && (reaction.who === 'all' || reaction.who === member)) return reaction.mood;
     if (current?.kind === 'narration' && current.sfx && startlingSounds.includes(current.sfx)) return 'surprised';
     if (current?.kind === 'line' && current.speaker === member) return moodFor(current);
     if (current?.kind === 'reply' && current.to === member) return 'curious';
     return 'neutral';
+  }
+  // Hearts rise above Lilith whenever she is happy; a burst plays out even if her mood moves on.
+  function burstHearts() {
+    hearts += 1;
+    heartsShown = true;
+    clearTimeout(heartsTimer);
+    heartsTimer = window.setTimeout(() => (heartsShown = false), 2200);
+  }
+  function petLilith() {
+    playSoundEffect(settings.sound, 'purr');
+    petted = true;
+    burstHearts();
+    clearTimeout(pettedTimer);
+    pettedTimer = window.setTimeout(() => (petted = false), 1600);
   }
   function storyForYou() {
     return generateStory(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary);
@@ -157,39 +209,95 @@
     if (!story || awaitingAnswer || revealed >= story.beats.length) return;
     revealed += 1;
     reaction = null;
-    presentBeat(story.beats[revealed - 1]);
+    presentBeat(story.beats[revealed - 1], revealed - 1);
     if (revealed === story.beats.length && !isInteractive(story.beats[revealed - 1]) && !story.generated) markCompleted(story.id);
   }
   function choose(option: number) {
-    if (!story || !awaitingAnswer) return;
-    const focus = current?.kind === 'question' || current?.kind === 'reply' ? current.focus : undefined;
-    const who = current?.kind === 'reply' ? current.to : 'all';
+    if (!story || !isInteractive(current) || !awaitingAnswer) return;
+    const beat = current;
+    const who = beat.kind === 'reply' ? beat.to : 'all';
     reaction = { who, mood: option === 0 ? 'happy' : 'curious' };
     if (option === 0) {
-      if (focus && !wrong[currentIndex]?.length) clearMissedWord(lang, focus);
+      if (beat.focus && !wrong[currentIndex]?.length) clearMissedWord(lang, beat.focus);
       solved = { ...solved, [currentIndex]: true };
       playSuccessSound(settings.sound, 'vocab');
       if (revealed === story.beats.length && !story.generated) markCompleted(story.id);
+      void continueAfter(beat);
       return;
     }
-    if (focus) recordMissedWord(lang, focus);
+    if (beat.focus) recordMissedWord(lang, beat.focus);
     wrong = { ...wrong, [currentIndex]: [...(wrong[currentIndex] ?? []), option] };
     playErrorSound(settings.sound, 'vocab');
     if (settings.vibration && 'vibrate' in navigator) navigator.vibrate(60);
   }
-  function speak(text: string, speaker: Speaker = 'narrator', beat: number | null = null, mood: Mood = 'neutral') {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) return;
-    lipSync.stop();
+  // A right answer carries the story on by itself: after the chime, whoever asked pronounces the
+  // practised word, then the next beat follows (unless the learner already moved on).
+  async function continueAfter(beat: Extract<StoryBeat, { kind: 'question' | 'reply' }>) {
+    const at = { run, revealed };
+    const still = () => at.run === run && at.revealed === revealed;
+    await wait(450);
+    if (!still()) return;
+    const asker = beat.kind === 'question' ? beat.asker : beat.to;
+    if (beat.word && asker && canSpeak()) await perform(beat.word, asker, null, 'happy');
+    else await wait(500);
+    if (still()) advance();
+  }
+  // Reads a text in the speaker's voice: sentence by sentence for intonation, with the beat's sound
+  // effect in place of any onomatopoeia. Resolves when done or when something else starts speaking.
+  async function perform(text: string, speaker: Speaker, beat: number | null, mood: Mood, startSound: SoundEffect | null = null, slotSound: SoundEffect | null = null) {
+    if (!canSpeak()) return;
+    const token = ++performing;
     window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = speechLocales[lang] ?? lang;
-    applyVoice(utterance, speaker, lang, utterance.lang, story?.cast ?? [], settings.vocabularyLevel === 'a1' || settings.vocabularyLevel === 'a2' ? 0.85 : 1, mood);
-    if (speaker !== 'narrator') lipSync.attach(utterance, text, speaker, beat);
-    window.speechSynthesis.speak(utterance);
+    const parts = splitSounds(text, lang);
+    if (startSound && !parts.some((part) => part.kind === 'sound')) playSoundEffect(settings.sound, startSound);
+    if (speaker === 'narrator') lipSync.stop();
+    else lipSync.start(speaker, beat);
+    for (const part of parts) {
+      if (token !== performing) return;
+      if (part.kind === 'say') {
+        await speakSentences(part.text, speaker, mood);
+      } else if (slotSound && settings.sound) {
+        playSoundEffect(true, slotSound);
+        if (speaker !== 'narrator') lipSync.pulse(Math.min(soundEffectSeconds[slotSound], 0.9));
+        await wait(soundEffectSeconds[slotSound] * 1000);
+      } else {
+        await wait(250);
+      }
+    }
+    if (token === performing) lipSync.stop();
+  }
+  function speakSentences(text: string, speaker: Speaker, mood: Mood) {
+    return new Promise<void>((resolve) => {
+      const groups = sentenceGroups(text);
+      if (!groups.length) return resolve();
+      const locale = speechLocales[lang] ?? lang;
+      const baseRate = settings.vocabularyLevel === 'a1' || settings.vocabularyLevel === 'a2' ? 0.85 : 1;
+      let safety = 0;
+      const done = () => {
+        clearTimeout(safety);
+        resolve();
+      };
+      liveUtterances = groups.map((group, index) => {
+        const utterance = new SpeechSynthesisUtterance(group);
+        utterance.lang = locale;
+        applyVoice(utterance, speaker, lang, locale, story?.cast ?? [], baseRate, mood);
+        if (speaker !== 'narrator') lipSync.track(utterance, group);
+        if (index === groups.length - 1) {
+          utterance.addEventListener('end', done);
+          utterance.addEventListener('error', done);
+        }
+        window.speechSynthesis.speak(utterance);
+        return utterance;
+      });
+      // Some engines never fire `end`; the story must not hang on them.
+      safety = window.setTimeout(done, 4000 + (text.length * 110) / baseRate);
+    });
   }
   function cancelSpeech() {
+    performing += 1;
+    liveUtterances = [];
     lipSync.stop();
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+    if (canSpeak()) window.speechSynthesis.cancel();
   }
 
   // A new level (or the "include lower levels" toggle) means a different story pool.
@@ -203,11 +311,18 @@
     solved;
     void tick().then(() => transcript?.scrollTo({ top: transcript.scrollHeight, behavior: 'smooth' }));
   });
+  $effect(() => {
+    if (lilithHappy) untrack(burstHearts);
+  });
 
   onMount(() => {
     if (!settings.firstName) void goto('/', { replaceState: true });
-    speechSupported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
-    return cancelSpeech;
+    speechSupported = canSpeak();
+    return () => {
+      cancelSpeech();
+      clearTimeout(heartsTimer);
+      clearTimeout(pettedTimer);
+    };
   });
 </script>
 
@@ -220,12 +335,19 @@
     </header>
 
     <div class="story-stage">
-      <StoryScene scene={story.scene} />
+      <StoryScene scene={story.scene} weather={story.weather} />
+      <!-- Like on a theatre stage, the house lights go down while someone talks -->
+      <div class="story-dark" class:on={speaker !== null} aria-hidden="true"></div>
       <div class="story-cast">
         {#each story.cast as member (member)}
           <figure class:active={speaker === member} class:speaking={lipSync.speaker === member} class:dimmed={speaker !== null && speaker !== member} class:pet={member === 'bello' || member === 'lilith'}>
+            <span class="story-beam" aria-hidden="true"></span>
             <StoryCharacter id={member} mood={castMood(member)} talking={!lipSync.speaker && current?.kind === 'line' && current.speaker === member} mouth={lipSync.speaker === member ? lipSync.open : null} label={characterNames[member][lang]} />
-            {#if member === 'lilith'}<button type="button" class="story-pet" onclick={() => playSoundEffect(settings.sound, 'purr')} aria-label={labels.petLilith}></button>{/if}
+            {#if member === 'lilith'}<button type="button" class="story-pet" onclick={petLilith} aria-label={labels.petLilith}></button>{/if}
+            {#if member === 'lilith' && heartsShown}
+              {#key hearts}<span class="story-hearts" aria-hidden="true">{#each [0, 1, 2] as heart (heart)}<svg viewBox="0 0 24 22" style:--heart={heart}><path d="M12 21C5.2 15.4 1 11.6 1 7.1A5.6 5.6 0 0 1 12 5.2 5.6 5.6 0 0 1 23 7.1c0 4.5-4.2 8.3-11 13.9Z" /></svg>{/each}</span>{/key}
+            {/if}
+            {#if member === 'bello' && ballThrown}<span class="story-ball" aria-hidden="true"><span></span></span>{/if}
             <figcaption>{characterNames[member][lang]}</figcaption>
           </figure>
         {/each}
@@ -237,7 +359,7 @@
         {#if beat.kind === 'narration'}
           <li class="story-narration">
             <p>{say(beat.text[lang])}</p>
-            {#if speechSupported}<button type="button" class="btn-play btn-play-round btn-play-sm story-listen" onclick={() => replayBeat(beat, index)} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
+            {#if speechSupported}<button type="button" class="btn-play btn-play-round btn-play-sm story-listen" onclick={() => readBeat(beat, index)} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
           </li>
         {:else if beat.kind === 'line'}
           <li class="story-line" class:current={index === currentIndex} class:speaking={lipSync.beat === index}>
@@ -246,7 +368,7 @@
               <b>{characterNames[beat.speaker][lang]}</b>
               <p>{say(beat.text[lang])}</p>
             </div>
-            {#if speechSupported}<button type="button" class="btn-play btn-play-round btn-play-sm story-listen" onclick={() => replayBeat(beat, index)} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
+            {#if speechSupported}<button type="button" class="btn-play btn-play-round btn-play-sm story-listen" onclick={() => readBeat(beat, index)} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
           </li>
         {:else if beat.kind === 'question'}
           <li class="story-question" class:solved={solved[index]}>
@@ -282,7 +404,7 @@
           <strong>{labels.finished}</strong>
           <span>{m.story_score({ correct: String(firstTry), total: String(interactiveIndices.length) }, { locale: settings.interfaceLocale })}</span>
           <div>
-            <button type="button" class="btn-play story-secondary" onclick={() => story && start(story)}>{labels.again}</button>
+            <button type="button" class="btn-play story-secondary" onclick={() => written && start(written)}>{labels.again}</button>
             <button type="button" class="btn-play btn-play-ink story-primary" onclick={() => start(pickStory(story?.id))}>{labels.next}</button>
             {#if !story.generated}<button type="button" class="btn-play btn-play-sun" onclick={() => { const generated = storyForYou(); if (generated) start(generated); }}>{labels.practiceWords}</button>{/if}
           </div>
@@ -314,7 +436,20 @@
   .story-cast figure.active::before { opacity:1;transform:scale(1); }
   .story-cast figure.speaking::before { animation:story-spotlight 1.1s ease-in-out infinite alternate; }
   .story-cast figure { isolation:isolate; }
-  .story-cast figure.dimmed { opacity:.72;filter:saturate(.75); }
+  /* Theatre lighting: the stage darkens, a beam falls on the speaker and the others stay in the dark */
+  .story-dark { position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(11,22,38,.28),rgba(11,22,38,.5));opacity:0;transition:opacity .35s ease;pointer-events:none; }
+  .story-dark.on { opacity:1; }
+  .story-beam { position:absolute;z-index:-2;bottom:4%;left:50%;width:170%;height:180%;translate:-50% 0;background:linear-gradient(to bottom,rgba(255,244,214,.62),rgba(255,244,214,.26) 65%,rgba(255,244,214,.08));clip-path:polygon(41% 0,59% 0,100% 100%,0 100%);opacity:0;transition:opacity .3s ease;pointer-events:none; }
+  .story-cast figure.active .story-beam { opacity:1; }
+  .story-cast figure.dimmed { filter:brightness(.48) saturate(.7); }
+  .story-cast figure.dimmed figcaption { opacity:.8; }
+  /* Little hearts float up over Lilith when she is happy */
+  .story-hearts { position:absolute;z-index:3;top:2%;left:50%;width:0;height:0;pointer-events:none; }
+  .story-hearts svg { position:absolute;left:calc((var(--heart) - 1) * .95rem - .42rem);width:.84rem;height:.78rem;fill:#e0475b;stroke:#fffdf7;stroke-width:1.6;opacity:0;animation:story-heart 1.9s cubic-bezier(.23,1,.32,1) calc(var(--heart) * .22s) both; }
+  .story-hearts svg:nth-child(2) { top:-.45rem;width:1rem;height:.92rem; }
+  /* Bello's red ball sails in from the side, lands and bounces next to him */
+  .story-ball { position:absolute;z-index:3;right:-34%;bottom:4%;width:1.05rem;height:1.05rem;animation:story-ball-x 1.15s cubic-bezier(.25,.6,.35,1) both;pointer-events:none; }
+  .story-ball span { display:block;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 34% 30%,#ff9d8f,#d64b45 52%,#9c2a25);box-shadow:inset -2px -2px 0 rgba(23,42,69,.18),0 0 0 1.5px #172a45;animation:story-ball-y 1.15s linear both,story-ball-spin 1.15s cubic-bezier(.25,.6,.35,1) both; }
   .story-cast figcaption { position:absolute;bottom:.3rem;padding:.08rem .45rem;border-radius:999px;background:rgba(255,253,247,.92);color:#172a45;font-family:'DM Sans',sans-serif;font-size:.55rem;font-weight:900;letter-spacing:.04em;white-space:nowrap; }
   .story-cast figure.active figcaption { background:#172a45;color:#fffdf7;box-shadow:2px 2px 0 #e6a527; }
 
@@ -360,7 +495,11 @@
   @keyframes story-in { from { opacity:0;transform:translateY(6px); } to { opacity:1;transform:none; } }
   @keyframes story-spotlight { from { transform:scale(.94); } to { transform:scale(1.06); } }
   @keyframes story-shake { 0%,100% { transform:none; } 25% { transform:translateX(-4px); } 75% { transform:translateX(4px); } }
-  @media (prefers-reduced-motion:reduce) { .story-transcript > li,.story-options button.missed,.story-cast figure.speaking::before { animation:none; } .story-cast figure,.story-cast figure::before { transition:none; } }
+  @keyframes story-heart { 0% { opacity:0;transform:translateY(.5rem) scale(.4); } 18% { opacity:1;transform:translateY(0) scale(1.1); } 30% { transform:translateY(-.3rem) scale(1); } 60% { transform:translate(.2rem,-1.3rem) rotate(8deg); } 100% { opacity:0;transform:translate(-.15rem,-2.6rem) rotate(-6deg) scale(.85); } }
+  @keyframes story-ball-x { 0% { transform:translateX(13rem); } 72% { transform:translateX(0); } 86% { transform:translateX(-.45rem); } 100% { transform:translateX(-.6rem); } }
+  @keyframes story-ball-y { 0% { translate:0 -3.5rem;animation-timing-function:ease-out; } 30% { translate:0 -6.2rem;animation-timing-function:ease-in; } 72% { translate:0 0;animation-timing-function:ease-out; } 82% { translate:0 -1.1rem;animation-timing-function:ease-in; } 91% { translate:0 0;animation-timing-function:ease-out; } 96% { translate:0 -.3rem;animation-timing-function:ease-in; } 100% { translate:0 0; } }
+  @keyframes story-ball-spin { from { rotate:0deg; } to { rotate:-760deg; } }
+  @media (prefers-reduced-motion:reduce) { .story-transcript > li,.story-options button.missed,.story-cast figure.speaking::before,.story-ball,.story-ball span { animation:none; } .story-hearts svg { animation:none;opacity:1; } .story-cast figure,.story-cast figure::before,.story-dark,.story-beam { transition:none; } }
 
   :global(html.dark) .story-header h1 { color:#fffdf7; }
   :global(html.dark) .story-stage { border-color:rgba(255,253,247,.3); }
