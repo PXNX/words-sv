@@ -14,7 +14,17 @@
     office: { back: '#e7ecef', floor: '#c4cbd3' },
     flat: { back: '#f2eee6', floor: '#c9a27e' },
     square: { back: '#d7e8f0', floor: '#b8aa98' },
-    attic: { back: '#c9a27e', floor: '#7a5536' }
+    attic: { back: '#c9a27e', floor: '#7a5536' },
+    beergarden: { back: '#cfe6f2', floor: '#c9b48a' },
+    farm: { back: '#cfe6f2', floor: '#b89a5e' },
+    zoo: { back: '#cfe6f2', floor: '#c9b48a' },
+    butcher: { back: '#dfeae6', floor: '#b9c2c6' },
+    bakery: { back: '#f6e3d3', floor: '#c08a5c' },
+    boutique: { back: '#f2e4ea', floor: '#d9c2a6' },
+    perfumery: { back: '#f1e7f2', floor: '#cdb8c9' },
+    workshop: { back: '#e7ecef', floor: '#9aa3ad' },
+    beach: { back: '#f6b06a', floor: '#ecd3a0' },
+    airport: { back: '#cfe6f2', floor: '#7d8794' }
   };
   const palette = $derived(palettes[scene]);
 
@@ -28,7 +38,17 @@
     office: { x: 30, y: 26, w: 160, h: 96 },
     flat: { x: 130, y: 24, w: 140, h: 110 },
     square: { x: 0, y: 0, w: 400, h: 172 },
-    attic: { x: 174, y: 60, w: 52, h: 52, round: true }
+    attic: { x: 174, y: 60, w: 52, h: 52, round: true },
+    beergarden: { x: 0, y: 0, w: 400, h: 172 },
+    farm: { x: 0, y: 0, w: 400, h: 172 },
+    zoo: { x: 0, y: 0, w: 400, h: 172 },
+    butcher: { x: 24, y: 22, w: 92, h: 62 },
+    bakery: { x: 296, y: 22, w: 84, h: 62 },
+    boutique: { x: 150, y: 18, w: 100, h: 58 },
+    perfumery: { x: 28, y: 24, w: 80, h: 64 },
+    workshop: { x: 150, y: 18, w: 100, h: 54 },
+    beach: { x: 0, y: 0, w: 400, h: 172 },
+    airport: { x: 0, y: 0, w: 400, h: 172 }
   };
   const sky = $derived(skies[scene]);
   const outdoor = $derived(sky.w === 400);
@@ -46,8 +66,19 @@
   const clouds = $derived(outdoor
     ? [{ x: 70, y: 30, s: 1.1 }, { x: 220, y: 18, s: 0.9 }, { x: 330, y: 40, s: 1.2 }]
     : [{ x: sky.x + sky.w * 0.3, y: sky.y + sky.h * 0.3, s: unit / 110 }, { x: sky.x + sky.w * 0.75, y: sky.y + sky.h * 0.45, s: unit / 140 }]);
-  const cloudColour = $derived(weather === 'rainy' ? '#7d8b9b' : weather === 'snowy' ? '#eef2f6' : weather === 'cloudy' ? '#f3f5f7' : '#ffffff');
+  // The beach is always at sunset: a warm gradient and a big low sun in place of the usual sky.
+  const sunset = $derived(scene === 'beach');
+  const cloudColour = $derived(weather === 'rainy' ? '#7d8b9b' : weather === 'snowy' ? '#eef2f6' : weather === 'cloudy' ? '#f3f5f7' : sunset ? '#fcd9d0' : '#ffffff');
+  const pastels = ['#f3b6cf', '#b9d4ef', '#bfe3c4', '#f6dc95', '#d6c1ec'];
 </script>
+
+{#snippet bottle(x: number, y: number, colour: string, kind: number)}
+  <g stroke="#7a6a8a" stroke-width="1">
+    {#if kind === 0}<rect x={x - 6} y={y - 14} width="12" height="14" rx="2" fill={colour} />{:else if kind === 1}<circle cx={x} cy={y - 7} r="7" fill={colour} />{:else}<path d="M{x - 4} {y}v-14l4-4 4 4v14Z" fill={colour} />{/if}
+    <rect x={x - 2} y={y - (kind === 2 ? 22 : 18)} width="4" height="4" fill="#e6a527" />
+    <rect x={x - 3} y={y - 11} width="2" height="6" fill="#ffffff" stroke="none" opacity=".6" />
+  </g>
+{/snippet}
 
 {#snippet cloud(x: number, y: number, s: number)}
   <g class="story-cloud" transform="translate({x} {y}) scale({s})" fill={cloudColour}><circle cx="-16" cy="4" r="12" /><circle cx="2" cy="-4" r="16" /><circle cx="20" cy="5" r="11" /><rect x="-28" y="4" width="58" height="12" rx="6" /></g>
@@ -120,6 +151,17 @@
     <circle cx="200" cy="86" r="26" fill="none" stroke="#8c5b3d" stroke-width="6" /><path d="M200 60v52M174 86h52" stroke="#8c5b3d" stroke-width="4" />
     <path d="M200 112 140 220h120Z" fill="#fff6c8" opacity={weather === 'sunny' ? 0.35 : 0.18} />
     <g fill="#a87850" stroke="#5a3d25" stroke-width="2"><rect x="24" y="130" width="64" height="44" /><rect x="320" y="120" width="54" height="54" /></g><rect x="332" y="110" width="30" height="10" fill="#fffdf7" stroke="#5a3d25" stroke-width="1.5" />
+  {:else if scene === 'beergarden'}
+    <!-- chestnut trees, a blue-and-white maypole and bunting, a long table with two litre mugs -->
+    <g fill="#4d8f5c"><circle cx="40" cy="70" r="40" /><circle cx="86" cy="56" r="30" /><circle cx="350" cy="64" r="38" /><circle cx="306" cy="52" r="26" /></g>
+    <rect x="52" y="96" width="12" height="80" fill="#8c5b3d" /><rect x="340" y="94" width="12" height="80" fill="#8c5b3d" />
+    {#if weather === 'snowy'}<g fill="#ffffff" opacity=".9"><path d="M4 50q36-22 72 0q-36-8-72 0Z" /><path d="M316 44q34-20 68 0q-34-7-68 0Z" /></g>{/if}
+    <rect x="196" y="18" width="8" height="156" fill="#fffdf7" stroke="#172a45" stroke-width="1.5" />
+    <g fill="#4b78c2">{#each [0, 1, 2, 3, 4, 5, 6] as i (i)}<path d="M196 {26 + i * 21}l8-6v8l-8 6Z" />{/each}</g>
+    <path d="M70 16q65 22 130 4 65 18 130-4" fill="none" stroke="#172a45" stroke-width="1.5" />
+    <g stroke="#172a45" stroke-width=".8">{#each Array.from({ length: 12 }, (_, i) => i) as i (i)}<path d="M{82 + i * 22} {i < 6 ? 20 + i * 0.6 : 23 - (i - 6) * 0.6}l5 10 5-10Z" fill={i % 2 ? '#4b78c2' : '#fffdf7'} />{/each}</g>
+    <g fill="#a87850" stroke="#5a3d25" stroke-width="2"><rect x="96" y="140" width="100" height="8" /><rect x="104" y="148" width="7" height="26" /><rect x="180" y="148" width="7" height="26" /></g>
+    <g stroke="#a45e38" stroke-width="1.5"><rect x="118" y="120" width="16" height="20" rx="2" fill="#e6b52e" /><rect x="116" y="116" width="20" height="7" rx="3.5" fill="#fffdf7" /><path d="M134 125q7 0 7 6t-7 6" fill="none" /><rect x="158" y="120" width="16" height="20" rx="2" fill="#e6b52e" /><rect x="156" y="116" width="20" height="7" rx="3.5" fill="#fffdf7" /><path d="M174 125q7 0 7 6t-7 6" fill="none" /></g>
   {/if}
   <rect y="172" width="400" height="48" fill={palette.floor} />
   <rect y="172" width="400" height="4" fill="rgba(23,42,69,.14)" />

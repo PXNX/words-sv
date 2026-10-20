@@ -4,7 +4,7 @@
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { playErrorSound, playSoundEffect, playSuccessSound, soundEffectSeconds } from '#lib/sounds.js';
+  import { playErrorSound, playSoundEffect, playSuccessSound, soundEffectSeconds, stopSoundEffects } from '#lib/sounds.js';
   import { characterNames, fillName, moodFor, storiesFor, withWeather, type CharacterId, type Mood, type Story, type StoryBeat } from './stories';
   import type { SoundEffect } from '#lib/sounds.js';
   import StoryCharacter from './StoryCharacter.svelte';
@@ -18,13 +18,28 @@
   import IconVolumeOff from '~icons/material-symbols/volume-off-rounded';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
+  import IconQuestion from '~icons/material-symbols/question-mark-rounded';
 
   const COMPLETED_KEY = 'wordcircle-story-completed-v1';
   const AUTO_READ_KEY = 'wordcircle-story-auto-read-v1';
   const startlingSounds: SoundEffect[] = ['glass', 'brakes', 'doorbell', 'knock'];
   const speechLocales: Record<string, string> = { de: 'de-DE', en: 'en-GB', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', pt: 'pt-BR', uk: 'uk-UA' };
+  // Reading pace grows a little with the learner's level: unhurried for beginners, close to natural
+  // speed at the top.
+  const levelRates: Record<string, number> = { a1: 0.9, a2: 0.95, b1: 1.03, b2: 1.07, c1: 1.11, c2: 1.15 };
   // The sound a pet makes in place of a spoken "Miau!" or "Wuff!", and while it talks otherwise.
-  const petSounds: Partial<Record<CharacterId, { slot: SoundEffect; start: SoundEffect }>> = { lilith: { slot: 'meow', start: 'purr' }, bello: { slot: 'bark', start: 'bark' } };
+  const petSounds: Partial<Record<CharacterId, { slot: SoundEffect; start: SoundEffect }>> = {
+    lilith: { slot: 'meow', start: 'purr' },
+    bello: { slot: 'bark', start: 'bark' },
+    bird: { slot: 'tweet', start: 'tweet' },
+    cow: { slot: 'moo', start: 'moo' },
+    horse: { slot: 'neigh', start: 'neigh' },
+    giraffe: { slot: 'hum', start: 'hum' },
+    elephant: { slot: 'trumpet', start: 'trumpet' },
+    snake: { slot: 'hiss', start: 'hiss' }
+  };
+  // Small animals stand in the smaller slot on stage.
+  const smallAnimals: CharacterId[] = ['bello', 'lilith', 'bird', 'snake'];
 
   const labels = $derived({
     title: m.story_title({}, { locale: settings.interfaceLocale }),
@@ -53,7 +68,8 @@
   let transcript = $state<HTMLElement | null>(null);
   let speechSupported = $state(false);
   const lipSync = new LipSync();
-  let autoRead = $state(typeof localStorage !== 'undefined' && localStorage.getItem(AUTO_READ_KEY) === 'on');
+  // Stories are read aloud unless the learner has switched it off.
+  let autoRead = $state(typeof localStorage === 'undefined' || localStorage.getItem(AUTO_READ_KEY) !== 'off');
   let reaction = $state<{ who: CharacterId | 'all'; mood: Mood } | null>(null);
   let petted = $state(false);
   let hearts = $state(0);
@@ -64,6 +80,8 @@
   let performing = 0;
   // Chrome drops utterances that are garbage-collected mid-speech, before their end event fires.
   let liveUtterances: SpeechSynthesisUtterance[] = [];
+  // Set once the learner leaves the story, so nothing still pending starts speaking or playing sounds.
+  let left = false;
 
   const lang = $derived(settings.lang);
   const name = $derived(settings.firstName);
@@ -78,7 +96,13 @@
   const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.length).length);
   const ballThrown = $derived(Boolean(story?.beats.slice(0, revealed).some((beat) => beat.kind === 'narration' && beat.prop === 'ball')));
   const lilithHappy = $derived(Boolean(story?.cast.includes('lilith')) && castMood('lilith') === 'happy');
+  const purring = $derived(current ? [beatSounds(current).start, beatSounds(current).slot].includes('purr') : false);
 
+  // Roughly every third longer word is lost in the noise of a `noisy` line.
+  function drownedWords(text: string) {
+    let count = 0;
+    return text.split(/(\s+)/).map((part) => ({ text: part, lost: /\p{L}{4,}/u.test(part) && ++count % 3 === 2 }));
+  }
   function isInteractive(beat: StoryBeat | null): beat is Extract<StoryBeat, { kind: 'question' | 'reply' }> {
     return beat?.kind === 'question' || beat?.kind === 'reply';
   }
@@ -86,7 +110,7 @@
     return fillName(text, name);
   }
   function canSpeak() {
-    return typeof window !== 'undefined' && 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+    return !left && typeof window !== 'undefined' && 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
   }
   function wait(ms: number) {
     return new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -133,7 +157,7 @@
     return { start: beat.sfx ?? pet?.start ?? null, slot: beat.sfx ?? pet?.slot ?? null };
   }
   function playBeatSound(beat: StoryBeat) {
-    if (beat.kind !== 'narration' && beat.kind !== 'line') return;
+    if (left || (beat.kind !== 'narration' && beat.kind !== 'line')) return;
     const sounds = beatSounds(beat);
     const sound = splitSounds(beat.text[lang], lang).some((part) => part.kind === 'sound') ? sounds.slot : sounds.start;
     if (sound) playSoundEffect(settings.sound, sound);
@@ -152,7 +176,7 @@
   function readBeat(beat: StoryBeat, index: number) {
     const sounds = beatSounds(beat);
     if (beat.kind === 'narration') void perform(say(beat.text[lang]), 'narrator', index, 'neutral', sounds.start, sounds.slot);
-    else if (beat.kind === 'line') void perform(say(beat.text[lang]), beat.speaker, index, moodFor(beat), sounds.start, sounds.slot);
+    else if (beat.kind === 'line') void perform(say(beat.text[lang]), beat.speaker, index, moodFor(beat), sounds.start, sounds.slot, beat.noisy);
     else if (beat.kind === 'question') void perform(say(beat.prompt[lang]), beat.asker ?? 'narrator', index, 'curious');
   }
   function toggleAutoRead() {
@@ -165,13 +189,15 @@
   // and answering makes the character you talk to (or the whole cast) react.
   function castMood(member: CharacterId): Mood {
     if (member === 'lilith' && petted) return 'happy';
+    if (member === 'lilith' && current?.kind === 'narration' && current.sfx === 'purr') return 'happy';
     if (reaction && (reaction.who === 'all' || reaction.who === member)) return reaction.mood;
     if (current?.kind === 'narration' && current.sfx && startlingSounds.includes(current.sfx)) return 'surprised';
     if (current?.kind === 'line' && current.speaker === member) return moodFor(current);
     if (current?.kind === 'reply' && current.to === member) return 'curious';
     return 'neutral';
   }
-  // Hearts rise above Lilith whenever she is happy; a burst plays out even if her mood moves on.
+  // Hearts rise above Lilith only when she is happy and purring (being petted, or a purring beat);
+  // a burst plays out even if her mood moves on.
   function burstHearts() {
     hearts += 1;
     heartsShown = true;
@@ -192,7 +218,7 @@
   // words follows whenever there are words to practise; once everything is read, written stories
   // and generated ones take turns.
   function pickStory(skip?: string): Story {
-    const pool = storiesFor(settings.vocabularyLevel, settings.includeLowerVocabulary);
+    const pool = storiesFor(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary);
     const completed = readCompleted();
     const unread = pool.find((candidate) => !completed.includes(candidate.id) && candidate.id !== skip);
     if (story && !story.generated && (!unread || hasMissedWords(settings.lang))) {
@@ -243,7 +269,7 @@
   }
   // Reads a text in the speaker's voice: sentence by sentence for intonation, with the beat's sound
   // effect in place of any onomatopoeia. Resolves when done or when something else starts speaking.
-  async function perform(text: string, speaker: Speaker, beat: number | null, mood: Mood, startSound: SoundEffect | null = null, slotSound: SoundEffect | null = null) {
+  async function perform(text: string, speaker: Speaker, beat: number | null, mood: Mood, startSound: SoundEffect | null = null, slotSound: SoundEffect | null = null, noisy = false) {
     if (!canSpeak()) return;
     const token = ++performing;
     window.speechSynthesis.cancel();
@@ -254,7 +280,7 @@
     for (const part of parts) {
       if (token !== performing) return;
       if (part.kind === 'say') {
-        await speakSentences(part.text, speaker, mood, token);
+        await speakSentences(part.text, speaker, mood, token, noisy);
       } else if (slotSound && settings.sound) {
         playSoundEffect(true, slotSound);
         if (speaker !== 'narrator') lipSync.pulse(Math.min(soundEffectSeconds[slotSound], 0.9));
@@ -266,18 +292,18 @@
     if (token === performing) lipSync.stop();
   }
   // One utterance per sentence, each with its own melody, and a short breath in between.
-  async function speakSentences(text: string, speaker: Speaker, mood: Mood, token: number) {
+  async function speakSentences(text: string, speaker: Speaker, mood: Mood, token: number, noisy: boolean) {
     const parts = sentences(text);
     for (const [index, sentence] of parts.entries()) {
       if (token !== performing) return;
-      await speakSentence(sentence, speaker, mood);
+      await speakSentence(sentence, speaker, mood, noisy);
       if (index < parts.length - 1 && token === performing) await wait(pauseAfter[intonationOf(sentence)]);
     }
   }
-  function speakSentence(sentence: string, speaker: Speaker, mood: Mood) {
+  function speakSentence(sentence: string, speaker: Speaker, mood: Mood, noisy: boolean) {
     return new Promise<void>((resolve) => {
       const locale = speechLocales[lang] ?? lang;
-      const baseRate = settings.vocabularyLevel === 'a1' || settings.vocabularyLevel === 'a2' ? 0.85 : 1;
+      const baseRate = levelRates[settings.vocabularyLevel] ?? 1;
       let safety = 0;
       const done = () => {
         clearTimeout(safety);
@@ -286,6 +312,8 @@
       const utterance = new SpeechSynthesisUtterance(sentence);
       utterance.lang = locale;
       applyVoice(utterance, speaker, lang, locale, story?.cast ?? [], baseRate, mood);
+      // Under a roaring plane the voice is barely carrying.
+      if (noisy) utterance.volume *= 0.45;
       if (speaker !== 'narrator') lipSync.track(utterance, sentence);
       utterance.addEventListener('end', done);
       utterance.addEventListener('error', done);
@@ -314,14 +342,29 @@
     void tick().then(() => transcript?.scrollTo({ top: transcript.scrollHeight, behavior: 'smooth' }));
   });
   $effect(() => {
-    if (lilithHappy) untrack(burstHearts);
+    if (lilithHappy && purring) untrack(burstHearts);
   });
+
+  // Leaving the story (another page, or the tab going away) silences it at once: speech, sound
+  // effects still ringing out, and anything queued to follow a right answer.
+  function leave() {
+    left = true;
+    run += 1;
+    cancelSpeech();
+    stopSoundEffects();
+  }
 
   onMount(() => {
     if (!settings.firstName) void goto('/', { replaceState: true });
     speechSupported = canSpeak();
+    const onPageHide = () => leave();
+    const onPageShow = (event: PageTransitionEvent) => { if (event.persisted) left = false; };
+    window.addEventListener('pagehide', onPageHide);
+    window.addEventListener('pageshow', onPageShow);
     return () => {
-      cancelSpeech();
+      window.removeEventListener('pagehide', onPageHide);
+      window.removeEventListener('pageshow', onPageShow);
+      leave();
       clearTimeout(heartsTimer);
       clearTimeout(pettedTimer);
     };
@@ -342,7 +385,7 @@
       <div class="story-dark" class:on={speaker !== null} aria-hidden="true"></div>
       <div class="story-cast">
         {#each story.cast as member (member)}
-          <figure class:active={speaker === member} class:speaking={lipSync.speaker === member} class:dimmed={speaker !== null && speaker !== member} class:pet={member === 'bello' || member === 'lilith'}>
+          <figure class:active={speaker === member} class:speaking={lipSync.speaker === member} class:dimmed={speaker !== null && speaker !== member} class:pet={smallAnimals.includes(member)}>
             <span class="story-beam" aria-hidden="true"></span>
             <StoryCharacter id={member} mood={castMood(member)} talking={!lipSync.speaker && current?.kind === 'line' && current.speaker === member} mouth={lipSync.speaker === member ? lipSync.open : null} label={characterNames[member][lang]} />
             {#if member === 'lilith'}<button type="button" class="story-pet" onclick={petLilith} aria-label={labels.petLilith}></button>{/if}
@@ -368,15 +411,23 @@
             <span class="story-avatar" aria-hidden="true"><StoryCharacter id={beat.speaker} mood={moodFor(beat)} mouth={lipSync.beat === index && lipSync.speaker === beat.speaker ? lipSync.open : null} /></span>
             <div class="story-bubble">
               <b>{characterNames[beat.speaker][lang]}</b>
-              <p>{say(beat.text[lang])}</p>
+              {#if beat.noisy && index === currentIndex}
+                <!-- While the plane roars, some words are lost; they come back once the story moves on -->
+                <p>{#each drownedWords(say(beat.text[lang])) as part, at (at)}{#if part.lost}<span class="story-drowned">{part.text}</span>{:else}{part.text}{/if}{/each}</p>
+              {:else}
+                <p>{say(beat.text[lang])}</p>
+              {/if}
             </div>
             {#if speechSupported}<button type="button" class="btn-play btn-play-round btn-play-sm story-listen" onclick={() => readBeat(beat, index)} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
           </li>
         {:else if beat.kind === 'question' && solved[index]}
           <!-- An open question is asked above the answers; once solved it joins the transcript -->
           <li class="story-question solved">
-            <p>{say(beat.prompt[lang])}</p>
-            <span class="story-answer"><IconCheck aria-hidden="true" />{say(beat.options[0][lang])}</span>
+            <span class="story-question-badge" aria-hidden="true"><IconQuestion /></span>
+            <div>
+              <p>{say(beat.prompt[lang])}</p>
+              <span class="story-answer"><IconCheck aria-hidden="true" />{say(beat.options[0][lang])}</span>
+            </div>
           </li>
         {:else if beat.kind === 'reply' && solved[index]}
           <li class="story-line story-line--you">
@@ -392,7 +443,7 @@
     <footer class="story-footer">
       {#if awaitingAnswer && isInteractive(current)}
         <p class="story-prompt" class:story-prompt--question={current.kind === 'question'}>
-          {#if current.kind === 'question'}<span lang={lang}>{say(current.prompt[lang])}</span>{:else}<span dir={interfaceDirection} lang={settings.interfaceLocale}>{labels.reply}</span>{/if}
+          {#if current.kind === 'question'}<span class="story-question-badge" aria-hidden="true"><IconQuestion /></span><span class="story-prompt-text" lang={lang}>{say(current.prompt[lang])}</span>{:else}<span dir={interfaceDirection} lang={settings.interfaceLocale}>{labels.reply}</span>{/if}
           {#if wrong[currentIndex]?.length}<span class="story-try-again" dir={interfaceDirection} lang={settings.interfaceLocale}>{labels.tryAgain}</span>{/if}
         </p>
         <div class="story-options" lang={lang}>
@@ -465,6 +516,7 @@
   .story-bubble { min-width:0;padding:.5rem .75rem;border:1px solid rgba(23,42,69,.16);border-radius:1rem 1rem 1rem .3rem;background:#fffdf7;box-shadow:0 4px 12px rgba(23,42,69,.06); }
   .story-bubble b { display:block;color:#a45e38;font-size:.56rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }
   .story-bubble p { margin:.12rem 0 0;color:#172a45;font-size:.84rem;font-weight:700;line-height:1.4; }
+  .story-drowned { filter:blur(3.5px);opacity:.55;user-select:none; }
   .story-line .story-bubble,.story-line .story-avatar { transition:border-color .2s ease,box-shadow .2s ease,translate .2s cubic-bezier(.34,1.4,.64,1); }
   .story-line.current:not(.story-line--you) .story-bubble { border-color:rgba(230,165,39,.7); }
   .story-line.speaking .story-bubble { border:2px solid #172a45;box-shadow:3px 3px 0 #e6a527; }
@@ -473,7 +525,8 @@
   .story-line--you .story-bubble { border-color:#172a45;border-radius:1rem 1rem .3rem 1rem;background:#172a45; }
   .story-line--you .story-bubble b { color:#e6a527; }
   .story-line--you .story-bubble p { color:#fffdf7; }
-  .story-question { display:grid;gap:.2rem;padding:.55rem .75rem;border:1px dashed rgba(164,94,56,.55);border-radius:.8rem;background:rgba(230,165,39,.08); }
+  .story-question { display:flex;align-items:flex-start;gap:.5rem;padding:.55rem .75rem;border:1px dashed rgba(164,94,56,.55);border-radius:.8rem;background:rgba(230,165,39,.08); }
+  .story-question > div { display:grid;gap:.2rem;min-width:0; }
   .story-question p { margin:0;color:#172a45;font-size:.82rem;font-weight:800;line-height:1.35; }
   .story-question.solved { border-style:solid;border-color:rgba(52,130,77,.45);background:rgba(52,130,77,.07); }
   .story-answer { display:inline-flex;align-items:center;gap:.25rem;color:#34824d;font-size:.76rem;font-weight:800; }
@@ -483,7 +536,13 @@
   .story-footer { flex:none;display:grid;gap:.45rem; }
   .story-prompt { display:flex;flex-wrap:wrap;justify-content:space-between;gap:.3rem;margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase; }
   .story-prompt .story-try-again { color:#c0392b;letter-spacing:.02em;text-transform:none; }
-  .story-prompt--question { align-items:baseline;color:#172a45;font-size:.88rem;font-weight:800;letter-spacing:0;line-height:1.35;text-transform:none; }
+  /* An open question stands apart from the dialogue: a bold card with a question badge */
+  .story-prompt--question { flex-wrap:nowrap;align-items:center;gap:.6rem;padding:.65rem .8rem;border:2px solid #172a45;border-radius:.9rem;background:#fff4d6;box-shadow:3px 3px 0 #e6a527;color:#172a45;font-size:.92rem;font-weight:800;letter-spacing:0;line-height:1.35;text-transform:none;animation:story-in .28s cubic-bezier(.23,1,.32,1); }
+  .story-prompt-text { flex:1;min-width:0; }
+  .story-question-badge { flex:none;display:grid;place-items:center;width:1.75rem;height:1.75rem;border-radius:50%;background:#172a45;color:#e6a527; }
+  .story-question-badge :global(svg) { width:1.15rem;height:1.15rem; }
+  .story-question .story-question-badge { width:1.35rem;height:1.35rem;background:#34824d;color:#fffdf7; }
+  .story-question .story-question-badge :global(svg) { width:.9rem;height:.9rem; }
   .story-prompt--question .story-try-again { font-size:.62rem;font-weight:900; }
   .story-options { display:grid;gap:.42rem; }
   .story-options button { justify-content:space-between;line-height:1.3;text-align:start; }
@@ -502,7 +561,7 @@
   @keyframes story-ball-x { 0% { transform:translateX(13rem); } 72% { transform:translateX(0); } 86% { transform:translateX(-.45rem); } 100% { transform:translateX(-.6rem); } }
   @keyframes story-ball-y { 0% { translate:0 -3.5rem;animation-timing-function:ease-out; } 30% { translate:0 -6.2rem;animation-timing-function:ease-in; } 72% { translate:0 0;animation-timing-function:ease-out; } 82% { translate:0 -1.1rem;animation-timing-function:ease-in; } 91% { translate:0 0;animation-timing-function:ease-out; } 96% { translate:0 -.3rem;animation-timing-function:ease-in; } 100% { translate:0 0; } }
   @keyframes story-ball-spin { from { rotate:0deg; } to { rotate:-760deg; } }
-  @media (prefers-reduced-motion:reduce) { .story-transcript > li,.story-options button.missed,.story-cast figure.speaking::before,.story-ball,.story-ball span { animation:none; } .story-hearts svg { animation:none;opacity:1; } .story-cast figure,.story-cast figure::before,.story-dark,.story-beam { transition:none; } }
+  @media (prefers-reduced-motion:reduce) { .story-transcript > li,.story-prompt--question,.story-options button.missed,.story-cast figure.speaking::before,.story-ball,.story-ball span { animation:none; } .story-hearts svg { animation:none;opacity:1; } .story-cast figure,.story-cast figure::before,.story-dark,.story-beam { transition:none; } }
 
   :global(html.dark) .story-header h1 { color:#fffdf7; }
   :global(html.dark) .story-stage { border-color:rgba(255,253,247,.3); }
@@ -514,6 +573,8 @@
   :global(html.dark) .story-line--you .story-bubble { border-color:#e6a527;background:#e6a527; }
   :global(html.dark) .story-line--you .story-bubble b,:global(html.dark) .story-line--you .story-bubble p { color:#172a45; }
   :global(html.dark) .story-question { border-color:rgba(230,165,39,.5);background:rgba(230,165,39,.1); }
+  :global(html.dark) .story-prompt--question { border-color:#e6a527;background:#2b4a70;box-shadow:3px 3px 0 #0b1626; }
+  :global(html.dark) .story-prompt--question .story-question-badge { background:#e6a527;color:#172a45; }
   :global(html.dark) .story-answer,:global(html.dark) .story-finished strong { color:#8ed8a2; }
   :global(html.dark) .story-finished span { color:rgba(255,253,247,.72); }
   :global(html.dark) .story-options button.missed { border-color:#f08a7e;background:rgba(192,57,43,.2);color:#ffc2b8; }

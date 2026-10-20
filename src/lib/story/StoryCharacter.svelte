@@ -10,8 +10,23 @@
   // Gradient ids must be unique per instance: the same character can be on screen several times.
   const uid = $props.id();
 
-  type Look = { skin: string; hair: string; hairStyle: 'bun' | 'short' | 'curly' | 'bob' | 'bald'; top: string; glasses?: boolean; beard?: boolean; moustache?: boolean; outfit: 'plain' | 'hoodie' | 'cardigan' | 'apron' | 'blazer' | 'tie' };
-  const looks: Record<Exclude<CharacterId, 'bello' | 'lilith'>, Look> = {
+  type Look = { skin: string; hair: string; hairStyle: 'bun' | 'short' | 'curly' | 'bob' | 'bald'; top: string; glasses?: boolean; monocle?: boolean; beard?: boolean; moustache?: boolean | 'kaiser'; hat?: 'tyrolean' | 'police' | 'toque'; headphones?: boolean; outfit: 'plain' | 'hoodie' | 'cardigan' | 'apron' | 'blazer' | 'tie' | 'tracht' | 'waistcoat' | 'police' | 'chef' };
+  // Animals are hand-drawn branches below rather than entries in `looks`.
+  type Animal = 'bello' | 'lilith' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake';
+  const animals: readonly CharacterId[] = ['bello', 'lilith', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
+  const looks: Record<Exclude<CharacterId, Animal>, Look> = {
+    // Sabine, police officer: peaked cap and navy uniform with a star badge.
+    sabine: { skin: '#f0c9a8', hair: '#c9a04a', hairStyle: 'bob', top: '#1f3a6b', hat: 'police', outfit: 'police' },
+    // Enzo, pizza baker: chef's hat, white jacket, red neckerchief and a proper moustache.
+    enzo: { skin: '#d9a47e', hair: '#1f1a17', hairStyle: 'short', top: '#fffdf7', moustache: true, hat: 'toque', outfit: 'chef' },
+    // Jana, programmer: big headphones, glasses and a green hoodie.
+    jana: { skin: '#f3d3b8', hair: '#5b3a8a', hairStyle: 'bob', top: '#34824d', glasses: true, headphones: true, outfit: 'hoodie' },
+    // Herr Becker, teacher: glasses, a neat beard and a cardigan.
+    becker: { skin: '#e9bf9d', hair: '#6b5a4a', hairStyle: 'short', top: '#a45e38', glasses: true, beard: true, outfit: 'cardigan' },
+    // Hans from Bavaria: rosy cheeks, full beard, Tyrolean hat and lederhosen braces over a white shirt.
+    hans: { skin: '#f1b996', hair: '#7a4a2a', hairStyle: 'short', top: '#fffdf7', beard: true, hat: 'tyrolean', outfit: 'tracht' },
+    // Albert from Berlin: grey parting, upturned Kaiser moustache, monocle and a buttoned waistcoat.
+    albert: { skin: '#ecc8ab', hair: '#9a968f', hairStyle: 'short', top: '#2a3140', moustache: 'kaiser', monocle: true, outfit: 'waistcoat' },
     mia: { skin: '#f2c7a5', hair: '#c4522e', hairStyle: 'bun', top: '#e6a527', outfit: 'plain' },
     leo: { skin: '#d9a07a', hair: '#3b2a20', hairStyle: 'short', top: '#4b78c2', glasses: true, beard: true, outfit: 'hoodie' },
     oma: { skin: '#f0cfb5', hair: '#d8d4cc', hairStyle: 'bun', top: '#8a62b6', glasses: true, outfit: 'cardigan' },
@@ -19,7 +34,7 @@
     kim: { skin: '#f1d2b0', hair: '#1c1f26', hairStyle: 'bob', top: '#172a45', outfit: 'blazer' },
     paul: { skin: '#e8b994', hair: '#a7a49e', hairStyle: 'bald', top: '#8c5b3d', moustache: true, outfit: 'tie' }
   };
-  const look = $derived(id === 'bello' || id === 'lilith' ? null : looks[id]);
+  const look = $derived(animals.includes(id) ? null : looks[id as Exclude<CharacterId, Animal>]);
 
   // Eyebrows carry most of a face's mood; mouths and eyes follow below.
   const brows: Record<Mood, string> = {
@@ -36,9 +51,27 @@
   };
   // Lilith tilts her head like in her portrait, a little more when curious.
   const lilithTilt = $derived(mood === 'curious' ? -14 : mood === 'sad' ? -3 : -7);
+  // Bello-style brows for the other animals, around eyes at (lx, y) and (rx, y); none when neutral or happy.
+  function animalBrows(lx: number, rx: number, y: number): string | null {
+    const b = y - 7;
+    if (mood === 'sad') return `M${lx - 5} ${b}q5 0 9-3.5M${rx + 5} ${b}q-5 0-9-3.5`;
+    if (mood === 'surprised') return `M${lx - 5} ${b - 2}q5-4 10 0M${rx - 5} ${b - 2}q5-4 10 0`;
+    if (mood === 'curious') return `M${lx - 5} ${b - 2}q5-4 10 0M${rx - 5} ${b + 1}q5-2 10 0`;
+    return null;
+  }
 </script>
 
 <svg class="story-character" class:talking class:lip-synced={lipSynced} viewBox="0 0 120 150" role="img" aria-label={label}>
+  <!-- Bello-style eyes and brows shared by the farm and zoo animals. -->
+  {#snippet animalEyes(lx: number, rx: number, y: number, r: number, browColor: string)}
+    {@const brow = animalBrows(lx, rx, y)}
+    {#if mood === 'happy'}
+      <path class="story-eyes" d="M{lx - r} {y + 1}q{r} {-r * 1.2} {r * 2} 0M{rx - r} {y + 1}q{r} {-r * 1.2} {r * 2} 0" fill="none" stroke="#172a45" stroke-width="2.4" stroke-linecap="round" />
+    {:else}
+      <g class="story-eyes" fill="#172a45"><circle cx={mood === 'curious' ? lx + 1 : lx} cy={mood === 'curious' ? y - 1 : y} r={mood === 'surprised' ? r * 1.25 : r} /><circle cx={mood === 'curious' ? rx + 1 : rx} cy={mood === 'curious' ? y - 1 : y} r={mood === 'surprised' ? r * 1.25 : r} /></g>
+    {/if}
+    {#if brow}<path d={brow} fill="none" stroke={browColor} stroke-width="2.2" stroke-linecap="round" />{/if}
+  {/snippet}
   {#if look}
     <!-- hair behind the head -->
     {#if look.hairStyle === 'bun'}<circle cx="60" cy="54" r="33" fill={look.hair} /><circle cx="60" cy="19" r={id === 'oma' ? 10 : 13} fill={look.hair} />{/if}
@@ -51,6 +84,10 @@
     {#if look.outfit === 'blazer'}<path d="m48 103 12 24 12-24Z" fill="#fffdf7" /><path d="m48 103 12 24-7 6M72 103l-12 24 7 6" fill="none" stroke="rgba(255,253,247,.4)" stroke-width="1.6" />{/if}
     {#if look.outfit === 'tie'}<path d="m49 103 11 20 11-20Z" fill="#fffdf7" /><path d="m57 106h6l2 22-5 6-5-6Z" fill="#d64b45" />{/if}
     {#if look.outfit === 'plain'}<path d="M47 104q13 12 26 0" fill="none" stroke="#fffdf7" stroke-width="3" stroke-linecap="round" />{/if}
+    {#if look.outfit === 'police'}<path d="m49 103 11 14 11-14Z" fill="#8ab4d9" /><path d="M26 116l14-7M94 116l-14-7" stroke="#e6b52e" stroke-width="3" stroke-linecap="round" /><path d="m44 116 2.4 4.8 5.3.8-3.8 3.7.9 5.3-4.8-2.5-4.8 2.5.9-5.3-3.8-3.7 5.3-.8Z" fill="#e6b52e" /><rect x="64" y="126" width="22" height="7" rx="1.5" fill="#fffdf7" /><path d="M67 129.5h16" stroke="#1f3a6b" stroke-width="1.6" stroke-dasharray="2 1" />{/if}
+    {#if look.outfit === 'chef'}<path d="M60 112v38" stroke="rgba(23,42,69,.15)" stroke-width="1.5" /><g fill="rgba(23,42,69,.35)"><circle cx="52" cy="122" r="2" /><circle cx="52" cy="134" r="2" /><circle cx="68" cy="122" r="2" /><circle cx="68" cy="134" r="2" /></g><path d="m48 102 12 12 12-12-12 4Z" fill="#d64b45" />{/if}
+    {#if look.outfit === 'tracht'}<path d="M47 104q13 10 26 0" fill="none" stroke="#4b78c2" stroke-width="3" stroke-dasharray="3 2" /><path d="M41 106 49 150M79 106l-8 44" stroke="#6b4426" stroke-width="6" /><path d="M44 127h32" stroke="#6b4426" stroke-width="5" /><circle cx="60" cy="127" r="3.2" fill="#fffdf7" stroke="#34824d" stroke-width="1.5" />{/if}
+    {#if look.outfit === 'waistcoat'}<path d="m49 103 11 20 11-20Z" fill="#fffdf7" /><path d="M42 106 60 126l18-20 -2 44H44Z" fill="#596477" /><path d="m55 104 5 5 5-5-5 3Z" fill="#172a45" /><g fill="#e6b52e"><circle cx="60" cy="133" r="1.8" /><circle cx="60" cy="142" r="1.8" /></g><path d="M48 135q6 6 12 0" fill="none" stroke="#e6b52e" stroke-width="1.4" />{/if}
     <!-- neck, ears, head -->
     <rect x="51" y="82" width="18" height="22" rx="6" fill={look.skin} />
     <circle cx="30" cy="60" r="6" fill={look.skin} /><circle cx="90" cy="60" r="6" fill={look.skin} />
@@ -62,6 +99,25 @@
     {#if look.hairStyle === 'curly'}<g fill={look.hair}><circle cx="37" cy="44" r="10" /><circle cx="46" cy="33" r="11" /><circle cx="60" cy="29" r="12" /><circle cx="74" cy="33" r="11" /><circle cx="83" cy="44" r="10" /></g>{/if}
     {#if look.hairStyle === 'bob'}<path d="M30 52c0-19 13-29 30-29s30 10 30 29q-30-9-60 0Z" fill={look.hair} />{/if}
     {#if look.hairStyle === 'bald'}<g fill={look.hair}><ellipse cx="32" cy="52" rx="5" ry="10" /><ellipse cx="88" cy="52" rx="5" ry="10" /></g>{/if}
+    {#if look.hat === 'tyrolean'}
+      <!-- green felt hat with a leather band, an edelweiss and a tuft of chamois hair -->
+      <path d="M78 30q6-14 15-19-2 11-11 20Z" fill="#596477" />
+      <path d="M38 34q0-22 22-22t22 22q-22 5-44 0Z" fill="#3c7350" />
+      <path d="M38.5 29q21.5 5 43 0v5q-21.5 5-43 0Z" fill="#8c5b3d" />
+      <path d="M22 37q38-11 76 0-38 7-76 0Z" fill="#2e5a3c" />
+      <circle cx="46" cy="31.5" r="2.4" fill="#fffdf7" />
+    {:else if look.hat === 'police'}
+      <!-- peaked police cap with a white band, black visor and a gold star -->
+      <path d="M27 35q3-22 33-23 30 1 33 23-33 8-66 0Z" fill="#1f3a6b" />
+      <path d="M28 30q32 8 64 0v5q-32 8-64 0Z" fill="#fffdf7" />
+      <path d="M34 37q26 8 52 0l3 5q-29 9-58 0Z" fill="#111a2b" />
+      <circle cx="60" cy="24" r="3.4" fill="#e6b52e" />
+    {:else if look.hat === 'toque'}
+      <!-- tall white chef's hat -->
+      <g fill="#fffdf7" stroke="rgba(23,42,69,.25)" stroke-width="1.2"><circle cx="45" cy="16" r="10" /><circle cx="60" cy="9" r="12" /><circle cx="75" cy="16" r="10" /></g>
+      <rect x="38" y="18" width="44" height="18" rx="3" fill="#fffdf7" stroke="rgba(23,42,69,.25)" stroke-width="1.2" />
+    {/if}
+    {#if look.headphones}<path d="M27 58q0-36 33-36t33 36" fill="none" stroke="#172a45" stroke-width="4" /><rect x="21" y="51" width="11" height="17" rx="4.5" fill="#d64b45" /><rect x="88" y="51" width="11" height="17" rx="4.5" fill="#d64b45" />{/if}
     <!-- face -->
     <g fill="#f19a8a" opacity={mood === 'happy' ? 0.62 : 0.38}><circle cx="43" cy="70" r="4.5" /><circle cx="77" cy="70" r="4.5" /></g>
     {#if mood === 'happy'}
@@ -73,8 +129,10 @@
     {/if}
     <path class="story-brows" d={brows[mood]} fill="none" stroke={look.hairStyle === 'bald' || id === 'oma' ? '#8a857d' : look.hair} stroke-width="2.2" stroke-linecap="round" />
     {#if look.glasses}<g fill="none" stroke="#172a45" stroke-width="1.8"><circle cx="49" cy="60" r="7.5" /><circle cx="71" cy="60" r="7.5" /><path d="M56.5 60h7" /></g>{/if}
+    {#if look.monocle}<circle cx="71" cy="60" r="7.5" fill="rgba(255,253,247,.18)" stroke="#c9a227" stroke-width="1.8" /><path d="M78.5 61q6 16 0 36" fill="none" stroke="#c9a227" stroke-width="1" />{/if}
     <path d="M60 62q-3 5 0 7" fill="none" stroke="rgba(23,42,69,.4)" stroke-width="1.8" stroke-linecap="round" />
-    {#if look.moustache}<path d="M47 73q6-6 13-2 7-4 13 2-13 3-26 0Z" fill={look.hair} />{/if}
+    {#if look.moustache === 'kaiser'}<path d="M60 71c-5-3-11-3-15 0-3 2-5 0-6-4 0 5 3 8 7 8 6 0 10-2 14-3 4 1 8 3 14 3 4 0 7-3 7-8-1 4-3 6-6 4-4-3-10-3-15 0Z" fill={look.hair} />
+    {:else if look.moustache}<path d="M47 73q6-6 13-2 7-4 13 2-13 3-26 0Z" fill={look.hair} />{/if}
     {#if mood === 'happy'}
       <path class="story-mouth-closed" d="M50 74.5q10 12 20 0q-10 3-20 0Z" fill="#7a2e2a" />
     {:else if mood === 'surprised'}

@@ -10,12 +10,15 @@ import type { Story, StoryBeat, Text } from './stories';
  * each word into a small evening at home, so every generated story is grammatical in every
  * language: the words are always quoted, never inflected. Every part of the evening (title, opening,
  * greeting, the exercises and who asks them, Lilith's remark, what happens around the house, the
- * goodbye) is drawn at random, so no two evenings read alike.
+ * goodbye) is drawn at random, so no two evenings read alike. From B2 on, German evenings get a
+ * guest: Hans from Bavaria, who mostly cares about beer and sausages, or Albert, a strict Prussian
+ * from Berlin, each with a touch of their dialect.
  *
  * Who says what is fixed where a language marks the speaker's gender: Mia greets and explains,
  * Tom asks about a word he read and says goodbye; confirmations and listening tasks suit either.
  */
 type Cue = { text: string; sfx?: SoundEffect };
+type Guest = 'hans' | 'albert';
 type Templates = {
   titles: string[];
   openings: Cue[];
@@ -31,9 +34,12 @@ type Templates = {
   lilithLines: string[];
   interludes: Cue[];
   closings: string[];
+  guests?: Record<Guest, { arrivals: Cue[]; greetings: string[]; remarks: string[] }>;
   closingNarrations: string[];
   articleAsk?: string;
 };
+
+const GUEST_LEVEL: VocabularyLevel = 'b2';
 
 const templates: Record<Language, Templates> = {
   de: {
@@ -67,6 +73,18 @@ const templates: Record<Language, Templates> = {
       { text: 'Lilith jagt ein Wollknäuel quer durchs Zimmer.', sfx: 'meow' }
     ],
     closings: ['Super gemacht, {name}! Lilith ist stolz auf dich.', 'Toll, {name}! Diese Wörter vergisst du nicht so schnell.', 'Das war ein schöner Abend, {name}. Bis bald!'],
+    guests: {
+      hans: {
+        arrivals: [{ text: 'Ding-dong! Hans aus München steht vor der Tür – mit einer Tüte Brezn und einem Sixpack Bier.', sfx: 'doorbell' }, { text: 'Es klopft. Nachbar Hans kommt herein und bringt den Duft von frischen Weißwürsten mit.', sfx: 'knock' }],
+        greetings: ['Servus beinand! Griaß di, {name}! Lernt’s ihr wieder Wörter? Do bin i dabei – solang’s a Brotzeit gibt.', 'Griaß Gott miteinand! I hab Weißwürscht dabei. Wer mitlernt, kriagt oane.'],
+        remarks: ['Ja mei, des Wort is schwer. Aber mit a Maß Bier geht’s glei leichter.', 'Lilith, des is mei Weißwurscht, ned deine!', 'I sag’s ja: Lernen macht hungrig. Wo is’n da Senf?']
+      },
+      albert: {
+        arrivals: [{ text: 'Punkt sieben Uhr klingelt es. Natürlich ist es Albert aus Berlin – auf die Sekunde pünktlich.', sfx: 'doorbell' }, { text: 'Es klopft dreimal, kurz und präzise. Albert, der Gast aus Berlin, steht mit einem Notizbuch vor der Tür.', sfx: 'knock' }],
+        greetings: ['Juten Abend. Wie ich höre, wird hier Vokabular geübt. Dann bitte mit System, {name}.', 'Guten Abend allerseits. {name}, ich erwarte heute präzise Antworten. Ordnung muss sein.'],
+        remarks: ['Korrekt. So gehört sich das.', 'Na also, det war doch schon janz ordentlich.', 'Lilith, runter vom Tisch! Katzen haben auf dem Wörterbuch nichts zu suchen.']
+      }
+    },
     closingNarrations: ['Lilith rollt sich auf deinem Schoß zusammen und schnurrt.', 'Mia kocht noch einen Tee, und Lilith schläft auf dem Sofa ein.', 'Lilith gähnt, streckt sich und schnurrt zufrieden.'],
     articleAsk: '{name}, sagt man der, die oder das „{word}“?'
   },
@@ -270,7 +288,7 @@ const templates: Record<Language, Templates> = {
   }
 };
 
-const WORDS_PER_STORY = 3;
+const WORDS_PER_STORY = 6;
 const ARTICLES = ['der', 'die', 'das'];
 
 function same(text: string): Text {
@@ -392,17 +410,25 @@ export function generateStory(language: Language, level: VocabularyLevel, includ
     { kind: 'narration', text: same(opening.text), sfx: opening.sfx },
     { kind: 'line', speaker: 'mia', text: same(pick(missed > 0 ? text.introsMissed : text.introsNew)) }
   ];
-  // Lilith speaks up after one word and something happens around the house after one or two
-  // others, each at a random point of the evening.
+  const guest = text.guests && vocabularyLevels.indexOf(level) >= vocabularyLevels.indexOf(GUEST_LEVEL) ? pick<Guest>(['hans', 'albert']) : null;
+  const visit = guest && text.guests ? text.guests[guest] : null;
+  if (guest && visit) {
+    const arrival = pick(visit.arrivals);
+    beats.push({ kind: 'narration', text: same(arrival.text), sfx: arrival.sfx }, { kind: 'line', speaker: guest, text: same(pick(visit.greetings)) });
+  }
+  // Lilith and the guest each speak up after one word and something happens around the house after
+  // one to three others, each at a random point of the evening.
   const lilithAfter = Math.floor(Math.random() * words.length);
-  const interludes = shuffled(text.interludes).slice(0, words.length > 2 ? 2 : 1);
+  const guestAfter = Math.floor(Math.random() * words.length);
+  const interludes = shuffled(text.interludes).slice(0, Math.min(3, Math.ceil(words.length / 2)));
   const interludeAfter = shuffled(words.map((_, index) => index)).slice(0, interludes.length);
   words.forEach((word, index) => {
     beats.push(...exerciseFor(language, level, word, text, pick<'mia' | 'tom'>(['mia', 'tom'])));
     if (index === lilithAfter) beats.push({ kind: 'line', speaker: 'lilith', text: same(pick(text.lilithLines)), sfx: 'meow' });
+    if (guest && visit && index === guestAfter) beats.push({ kind: 'line', speaker: guest, text: same(pick(visit.remarks)) });
     const interlude = interludes[interludeAfter.indexOf(index)];
     if (interlude) beats.push({ kind: 'narration', text: same(interlude.text), sfx: interlude.sfx });
   });
   beats.push({ kind: 'line', speaker: 'tom', text: same(pick(text.closings)) }, { kind: 'narration', text: same(pick(text.closingNarrations)), sfx: 'purr' });
-  return { id: `generated-${Date.now()}`, level, scene: 'home', cast: ['mia', 'tom', 'lilith'], title: same(pick(text.titles)), beats, generated: true };
+  return { id: `generated-${Date.now()}`, level, scene: 'home', cast: guest ? ['mia', 'tom', 'lilith', guest] : ['mia', 'tom', 'lilith'], title: same(pick(text.titles)), beats, generated: true };
 }

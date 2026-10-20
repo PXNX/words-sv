@@ -49,7 +49,7 @@ export function playErrorSound(enabled: boolean, kind: ErrorSound) {
  * Story sound effects, synthesized with Web Audio so they need no asset downloads and work offline.
  * Kept deliberately soft: they colour a scene for learners, they should never startle.
  */
-export type SoundEffect = 'purr' | 'meow' | 'glass' | 'brakes' | 'doorbell' | 'knock' | 'rain' | 'bark';
+export type SoundEffect = 'purr' | 'meow' | 'glass' | 'brakes' | 'doorbell' | 'knock' | 'rain' | 'bark' | 'tweet' | 'moo' | 'neigh' | 'trumpet' | 'hiss' | 'hum' | 'airplane' | 'waves';
 
 let effectContext: AudioContext | null = null;
 
@@ -106,24 +106,101 @@ function purr(context: AudioContext, start: number) {
   lfo.stop(start + length);
 }
 
+// Animal voices are shaped like speech: a buzzing voice (two slightly detuned sawtooths with
+// vibrato) plus breath noise, sent through three formant filters whose frequencies glide from vowel
+// to vowel, then through a "mouth" lowpass that opens and closes. Every call varies a little, so
+// repeated meows and barks never sound copy-pasted.
+type Keyframes = [seconds: number, value: number][];
+type VoiceShape = { length: number; pitch: Keyframes; formants: [Keyframes, Keyframes, Keyframes]; mouth: Keyframes; loudness: Keyframes; breath: number; vibrato?: number; growl?: number };
+
+function glide(param: AudioParam, start: number, frames: Keyframes, scale = 1) {
+  param.setValueAtTime(frames[0][1] * scale, start + frames[0][0]);
+  for (const [at, value] of frames.slice(1)) param.linearRampToValueAtTime(value * scale, start + at);
+}
+
+function vary(amount: number) {
+  return 1 + (Math.random() * 2 - 1) * amount;
+}
+
+function animalVoice(context: AudioContext, start: number, shape: VoiceShape) {
+  const end = start + shape.length;
+  const pitchScale = vary(0.08);
+  const formantScale = vary(0.05);
+  const source = context.createGain();
+  source.gain.value = 0.5;
+  for (const detune of [-7, 6]) {
+    const oscillator = context.createOscillator();
+    oscillator.type = 'sawtooth';
+    oscillator.detune.value = detune;
+    glide(oscillator.frequency, start, shape.pitch, pitchScale);
+    if (shape.vibrato) {
+      const lfo = context.createOscillator();
+      lfo.frequency.value = 5.5 * vary(0.15);
+      const depth = context.createGain();
+      depth.gain.value = shape.vibrato;
+      lfo.connect(depth).connect(oscillator.frequency);
+      lfo.start(start);
+      lfo.stop(end);
+    }
+    oscillator.connect(source);
+    oscillator.start(start);
+    oscillator.stop(end + 0.02);
+  }
+  // A growl is the voice fluttering roughly 70 times a second, as in a dog's throat.
+  let voiced: AudioNode = source;
+  if (shape.growl) {
+    const flutter = context.createGain();
+    flutter.gain.value = 1 - shape.growl / 2;
+    const lfo = context.createOscillator();
+    lfo.frequency.value = 70 * vary(0.2);
+    const depth = context.createGain();
+    depth.gain.value = shape.growl / 2;
+    lfo.connect(depth).connect(flutter.gain);
+    lfo.start(start);
+    lfo.stop(end);
+    source.connect(flutter);
+    voiced = flutter;
+  }
+  const breath = noise(context, shape.length + 0.05);
+  const breathGain = context.createGain();
+  breathGain.gain.value = shape.breath;
+  breath.connect(breathGain);
+  breath.start(start);
+
+  const mouth = filter(context, 'lowpass', 1000, 0.9);
+  glide(mouth.frequency, start, shape.mouth, formantScale);
+  const loudness = context.createGain();
+  glide(loudness.gain, start, shape.loudness);
+  mouth.connect(loudness).connect(context.destination);
+  shape.formants.forEach((frames, index) => {
+    const formant = filter(context, 'bandpass', 1000, [5, 7, 9][index]);
+    glide(formant.frequency, start, frames, formantScale);
+    const weight = context.createGain();
+    weight.gain.value = [1, 0.7, 0.35][index];
+    voiced.connect(formant);
+    breathGain.connect(formant);
+    formant.connect(weight).connect(mouth);
+  });
+}
+
+// "Mi-a-u": the mouth opens from a hum to a bright "i", widens to "a" as the pitch peaks, then
+// closes to "u" while the pitch falls away.
 function meow(context: AudioContext, start: number) {
-  const oscillator = context.createOscillator();
-  oscillator.type = 'sawtooth';
-  oscillator.frequency.setValueAtTime(480, start);
-  oscillator.frequency.linearRampToValueAtTime(720, start + 0.16);
-  oscillator.frequency.exponentialRampToValueAtTime(380, start + 0.62);
-  const formant = filter(context, 'bandpass', 900, 3);
-  formant.frequency.setValueAtTime(800, start);
-  formant.frequency.linearRampToValueAtTime(1500, start + 0.2);
-  formant.frequency.linearRampToValueAtTime(950, start + 0.62);
-  const gain = context.createGain();
-  gain.gain.setValueAtTime(0.0001, start);
-  gain.gain.exponentialRampToValueAtTime(0.16, start + 0.06);
-  gain.gain.setValueAtTime(0.16, start + 0.4);
-  gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.68);
-  oscillator.connect(formant).connect(gain).connect(context.destination);
-  oscillator.start(start);
-  oscillator.stop(start + 0.7);
+  const length = 0.72 * vary(0.12);
+  const at = (share: number) => share * length;
+  animalVoice(context, start, {
+    length,
+    pitch: [[0, 470], [at(0.25), 760], [at(0.5), 720], [at(1), 400]],
+    formants: [
+      [[0, 450], [at(0.2), 600], [at(0.45), 1000], [at(0.8), 650], [at(1), 450]],
+      [[0, 1700], [at(0.2), 2300], [at(0.45), 1600], [at(0.8), 1050], [at(1), 850]],
+      [[0, 2900], [at(0.45), 3100], [at(1), 2600]]
+    ],
+    mouth: [[0, 650], [at(0.15), 3800], [at(0.6), 3400], [at(1), 900]],
+    loudness: [[0, 0.0001], [at(0.08), 0.2], [at(0.45), 0.25], [at(0.85), 0.15], [at(1), 0.0001]],
+    breath: 0.12,
+    vibrato: 9
+  });
 }
 
 // Shattering glass: a bright crash of filtered noise followed by scattered high tinkles.
@@ -229,33 +306,37 @@ function rain(context: AudioContext, start: number) {
   source.start(start);
 }
 
-// A friendly "woof woof": a short throaty tone dropping in pitch through a bark-like formant,
-// with a puff of breath on each bark.
+// A friendly "woof woof": each bark bursts out of an open "wo" with a rough, growly throat, the
+// pitch jumping up and dropping away, plus a soft chest thump underneath. The second bark comes a
+// little early or late and sounds slightly different, like a real dog.
 function bark(context: AudioContext, start: number) {
-  [0, 0.34].forEach((offset, index) => {
+  [0, 0.3 * vary(0.15)].forEach((offset, index) => {
     const at = start + offset;
-    const length = index ? 0.2 : 0.17;
-    const voice = context.createOscillator();
-    voice.type = 'sawtooth';
-    voice.frequency.setValueAtTime(330, at);
-    voice.frequency.linearRampToValueAtTime(560, at + 0.035);
-    voice.frequency.exponentialRampToValueAtTime(240, at + length);
-    const formant = filter(context, 'bandpass', 1100, 2.2);
-    formant.frequency.setValueAtTime(1400, at);
-    formant.frequency.exponentialRampToValueAtTime(700, at + length);
-    const gain = context.createGain();
-    gain.gain.setValueAtTime(0.0001, at);
-    gain.gain.exponentialRampToValueAtTime(0.24, at + 0.012);
-    gain.gain.exponentialRampToValueAtTime(0.0001, at + length);
-    voice.connect(formant).connect(gain).connect(context.destination);
-    voice.start(at);
-    voice.stop(at + length + 0.02);
-    const breath = noise(context, length);
-    const breathGain = context.createGain();
-    breathGain.gain.setValueAtTime(0.09, at);
-    breathGain.gain.exponentialRampToValueAtTime(0.0001, at + length * 0.8);
-    breath.connect(filter(context, 'bandpass', 1800, 1.2)).connect(breathGain).connect(context.destination);
-    breath.start(at);
+    const length = (index ? 0.21 : 0.18) * vary(0.1);
+    const time = (share: number) => share * length;
+    animalVoice(context, at, {
+      length,
+      pitch: [[0, 300], [time(0.15), 470], [time(0.5), 360], [time(1), 210]],
+      formants: [
+        [[0, 450], [time(0.2), 750], [time(1), 480]],
+        [[0, 900], [time(0.2), 1250], [time(1), 850]],
+        [[0, 2400], [time(1), 2200]]
+      ],
+      mouth: [[0, 1200], [time(0.15), 3600], [time(1), 900]],
+      loudness: [[0, 0.0001], [time(0.06), 0.45], [time(0.4), 0.3], [time(1), 0.0001]],
+      breath: 0.35,
+      growl: 0.7
+    });
+    const thump = context.createOscillator();
+    thump.frequency.setValueAtTime(140, at);
+    thump.frequency.exponentialRampToValueAtTime(70, at + 0.09);
+    const thumpGain = context.createGain();
+    thumpGain.gain.setValueAtTime(0.0001, at);
+    thumpGain.gain.exponentialRampToValueAtTime(0.15, at + 0.01);
+    thumpGain.gain.exponentialRampToValueAtTime(0.0001, at + 0.1);
+    thump.connect(thumpGain).connect(context.destination);
+    thump.start(at);
+    thump.stop(at + 0.12);
   });
 }
 
@@ -271,7 +352,7 @@ const effects: Record<SoundEffect, (context: AudioContext, start: number) => voi
 };
 
 // Roughly how long each effect stands out, so story speech can pause while one plays.
-export const soundEffectSeconds: Record<SoundEffect, number> = { purr: 2.2, meow: 0.7, glass: 0.8, brakes: 1.3, doorbell: 1.4, knock: 0.6, rain: 1.2, bark: 0.6 };
+export const soundEffectSeconds: Record<SoundEffect, number> = { purr: 2.2, meow: 0.8, glass: 0.8, brakes: 1.3, doorbell: 1.4, knock: 0.6, rain: 1.2, bark: 0.6 };
 
 export function playSoundEffect(enabled: boolean, effect: SoundEffect) {
   if (!enabled) return;
@@ -279,4 +360,12 @@ export function playSoundEffect(enabled: boolean, effect: SoundEffect) {
     const context = audioContext();
     if (context) effects[effect](context, context.currentTime + 0.02);
   } catch { /* Audio is optional and must never block play. */ }
+}
+
+// Cuts off every sound effect still playing, e.g. a purr when the learner leaves a story. The next
+// effect starts a fresh audio context.
+export function stopSoundEffects() {
+  const context = effectContext;
+  effectContext = null;
+  if (context) void context.close().catch(() => {});
 }
