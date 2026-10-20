@@ -11,7 +11,8 @@ type VoiceProfile = { gender?: VoiceGender; pitch: number; rate: number; volume:
 export type Speaker = CharacterId | 'narrator';
 
 const profiles: Record<Speaker, VoiceProfile> = {
-  narrator: { pitch: 1, rate: 1, volume: 1 },
+  // The storyteller reads the narration in a deep, calm, unhurried male voice.
+  narrator: { gender: 'male', pitch: 0.72, rate: 0.85, volume: 0.95 },
   mia: { gender: 'female', pitch: 1.1, rate: 1, volume: 1 },
   kim: { gender: 'female', pitch: 1.2, rate: 1.06, volume: 1 },
   oma: { gender: 'female', pitch: 0.88, rate: 0.86, volume: 1 },
@@ -23,10 +24,11 @@ const profiles: Record<Speaker, VoiceProfile> = {
   bello: { gender: 'male', pitch: 1.55, rate: 1.15, volume: 1 }
 };
 
-// Order in which characters of one gender claim voices; Lilith gets first pick of the soft voices.
+// Order in which speakers of one gender claim voices; Lilith gets first pick of the soft voices and
+// the narrator first pick of the male ones (natural voices sort first, so that is the calmest).
 const claimOrder: Record<VoiceGender, Speaker[]> = {
   female: ['mia', 'lilith', 'kim', 'oma'],
-  male: ['tom', 'leo', 'paul', 'bello']
+  male: ['narrator', 'tom', 'leo', 'paul', 'bello']
 };
 
 const FEMALE_NAMES = /female|woman|frau|anna|katja|hedda|marlene|vicki|petra|helena|amala|amelie|amélie|denise|elsa|seraphina|ingrid|isabella|elena|laura|lucia|lucía|paulina|monica|mónica|alice|federica|francisca|luciana|camila|vit[oó]ria|thalita|polina|lesya|zira|hazel|susan|libby|sonia|serena|kate|samantha|victoria|karen|moira|tessa|fiona|audrey|aur[ée]lie|julie|marie|eloise|ximena|elvira|dalia|raquel|fernanda|leila/i;
