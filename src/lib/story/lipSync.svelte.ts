@@ -31,24 +31,39 @@ export class LipSync {
   #frame = 0;
   #token = 0;
 
-  attach(utterance: SpeechSynthesisUtterance, text: string, speaker: string, beat: number | null) {
-    const token = ++this.#token;
+  /**
+   * Hands the spotlight to a speaker for a whole line, which may be spoken as several utterances
+   * (one per sentence) with sound effects in between.
+   */
+  start(speaker: string, beat: number | null) {
+    this.stop();
+    this.speaker = speaker;
+    this.beat = beat;
+  }
+
+  /** Moves the mouth along with one utterance of the current line. */
+  track(utterance: SpeechSynthesisUtterance, text: string) {
+    const token = this.#token;
     const rate = utterance.rate || 1;
     utterance.addEventListener('start', () => {
-      if (token !== this.#token) return;
-      this.speaker = speaker;
-      this.beat = beat;
-      this.#schedule(text, 0, rate);
+      if (token === this.#token) this.#schedule(text, 0, rate);
     });
     utterance.addEventListener('boundary', (event) => {
       if (token !== this.#token || (event.name && event.name !== 'word')) return;
       this.#schedule(text, event.charIndex, rate);
     });
-    const finish = () => {
-      if (token === this.#token) this.stop();
+    const close = () => {
+      if (token === this.#token) this.#play([{ at: performance.now(), open: this.open }, { at: performance.now() + 80, open: 0 }]);
     };
-    utterance.addEventListener('end', finish);
-    utterance.addEventListener('error', finish);
+    utterance.addEventListener('end', close);
+    utterance.addEventListener('error', close);
+  }
+
+  /** Opens and closes the mouth for a sound the speaker makes, like a meow or a bark. */
+  pulse(seconds: number) {
+    const now = performance.now();
+    const length = seconds * 1000;
+    this.#play([{ at: now, open: this.open }, { at: now + length * 0.2, open: 0.95 }, { at: now + length * 0.55, open: 0.7 }, { at: now + length, open: 0 }]);
   }
 
   stop() {
@@ -79,8 +94,12 @@ export class LipSync {
       }
     }
     frames.push({ at: at + 80, open: 0 });
+    this.#play(frames);
+  }
+
+  #play(frames: Keyframe[]) {
     this.#frames = frames;
-    if (!this.#frame) this.#frame = requestAnimationFrame(this.#tick);
+    if (!this.#frame && this.speaker) this.#frame = requestAnimationFrame(this.#tick);
   }
 
   #tick = (now: number) => {
