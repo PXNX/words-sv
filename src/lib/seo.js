@@ -96,8 +96,8 @@ export const pages = {
 		kicker: 'Lesen',
 		icon: 'auto-stories-rounded'
 	},
-	'/stats': {
-		title: 'Statistik',
+	'/progress': {
+		title: 'Dein Fortschritt',
 		description: 'Deine tägliche Serie und dein Lernfortschritt auf einen Blick.',
 		kicker: 'Fortschritt',
 		icon: 'local-fire-department-rounded'
