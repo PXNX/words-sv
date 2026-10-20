@@ -24,6 +24,8 @@
     onresult: ((event: SpeechRecognitionEventLike) => void) | null;
     onerror: ((event: { error: string }) => void) | null;
     onend: (() => void) | null;
+    onsoundstart: (() => void) | null;
+    onsoundend: (() => void) | null;
   };
   type SpeechRecognitionCtor = new () => SpeechRecognitionLike;
 
@@ -47,6 +49,13 @@
   let matchState = $state<'idle' | 'correct' | 'incorrect'>('idle');
   let correction = $state<CorrectionSegment[] | null>(null);
   let recognitionStalled = $state(false);
+  // The browser refused to start the recogniser without a tap (iOS Safari outside a user gesture).
+  let recognitionNeedsTap = $state(false);
+  // Mobile browsers (Android Chrome, iOS Safari) can't share the microphone between getUserMedia and
+  // SpeechRecognition: while the waveform stream holds it, the recogniser hears nothing. There the
+  // recogniser gets the mic to itself and the waveform animates from its sound events instead.
+  let exclusiveMic = $state(false);
+  let hearingSound = $state(false);
   let waveform = $state<number[]>(Array(BAR_COUNT).fill(IDLE_LEVEL));
   let mediaStream: MediaStream | null = null;
   let audioContext: AudioContext | null = null;
@@ -58,6 +67,7 @@
   let listenSession = 0;
   let consecutiveErrors = 0;
   const MAX_CONSECUTIVE_ERRORS = 3;
+  let startedByTap = false;
 
   const candidates = $derived([...new Set(words.map((word) => word.toLocaleUpperCase()).filter((word) => Boolean(wordMetadata[settings.lang][word]))) ]);
   const spelling = $derived(currentWord ? wordMetadata[settings.lang][currentWord]?.spelling ?? currentWord : '');
@@ -115,10 +125,7 @@
     // far, which would then be graded against whatever word is current by the time it arrives.
     try { instance?.abort(); } catch { /* already stopped */ }
   }
-  function stopListening() {
-    listenSession += 1;
-    listening = false;
-    stopRecognition();
+  function releaseMicStream() {
     if (animationFrame !== null) cancelAnimationFrame(animationFrame);
     animationFrame = null;
     analyser?.disconnect();
@@ -128,6 +135,13 @@
     mediaStream?.getTracks().forEach((track) => track.stop());
     mediaStream = null;
     waveform = Array(BAR_COUNT).fill(IDLE_LEVEL);
+  }
+  function stopListening() {
+    listenSession += 1;
+    listening = false;
+    hearingSound = false;
+    stopRecognition();
+    releaseMicStream();
   }
   function handleResult(event: SpeechRecognitionEventLike) {
     consecutiveErrors = 0;
@@ -166,8 +180,20 @@
     instance.onerror = (event) => {
       if (recognition !== instance) return;
       if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
-        recognitionSupported = false;
-        stopRecognition();
+        // Without a tap this may just be iOS insisting on a user gesture; after one it's a real block.
+        if (startedByTap) {
+          recognitionSupported = false;
+          stopRecognition();
+        } else {
+          stopListening();
+          recognitionNeedsTap = true;
+        }
+        return;
+      }
+      // The waveform stream is holding the mic, so the recogniser can't get at it: hand it over.
+      if (event.error === 'audio-capture' && mediaStream) {
+        exclusiveMic = true;
+        releaseMicStream();
         return;
       }
       // "no-speech" just means the mic heard silence — that's normal while waiting for the learner to talk, not a failure.
@@ -175,7 +201,14 @@
       consecutiveErrors += 1;
       if (consecutiveErrors >= MAX_CONSECUTIVE_ERRORS) recognitionStalled = true;
     };
+    instance.onsoundstart = () => {
+      if (recognition === instance) hearingSound = true;
+    };
+    instance.onsoundend = () => {
+      if (recognition === instance) hearingSound = false;
+    };
     instance.onend = () => {
+      if (recognition === instance) hearingSound = false;
       if (recognition !== instance || !listening || matchState === 'correct') return;
       clearRestartTimer();
       liveHeard = '';
@@ -194,11 +227,19 @@
     recognitionStalled = false;
     consecutiveErrors = 0;
     stopListening();
-    void startListening();
+    void startListening(true);
   }
-  async function startListening() {
+  async function startListening(fromTap = false) {
     if (!micSupported || !currentWord) return;
     const session = ++listenSession;
+    startedByTap = fromTap;
+    recognitionNeedsTap = false;
+    if (exclusiveMic && recognitionSupported) {
+      listening = true;
+      // Started synchronously (no await before it) so a tap still counts as the gesture iOS requires.
+      if (!speaking) startRecognition();
+      return;
+    }
     let stream: MediaStream;
     try {
       stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -232,12 +273,15 @@
   }
   function toggleListening() {
     if (listening) stopListening();
-    else void startListening();
+    else void startListening(true);
   }
   onMount(() => {
     speechSupported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
     micSupported = Boolean(navigator.mediaDevices?.getUserMedia);
     recognitionSupported = Boolean(getRecognitionCtor());
+    exclusiveMic = recognitionSupported && (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
+    // The recogniser asks for the mic itself, so getUserMedia isn't required when it owns the mic.
+    micSupported = micSupported || exclusiveMic;
     const refreshVoices = () => (voices = window.speechSynthesis.getVoices());
     if (speechSupported) { refreshVoices(); window.speechSynthesis.addEventListener('voiceschanged', refreshVoices); }
     nextWord();
@@ -260,7 +304,7 @@
       <div class="flex items-center gap-[.5rem]">
         <div class={`wave-panel wave-state-${waveState}`} aria-label={listening ? 'Live microphone waveform' : speaking ? 'Audio waveform playing' : 'Audio waveform idle'} aria-live="polite">
           {#each waveform as level, index (index)}
-            <span class="wave-bar" class:wave-active={speaking} style={`--wave-delay:${index * 40}ms;--wave-height:${level}rem;`}></span>
+            <span class="wave-bar" class:wave-active={speaking || (exclusiveMic && listening && hearingSound)} style={`--wave-delay:${index * 40}ms;--wave-height:${level}rem;`}></span>
           {/each}
         </div>
         {#if micSupported}
@@ -272,7 +316,9 @@
 
       <button class="inline-flex items-center justify-center gap-[.45rem] min-h-[2.5rem] px-[1rem] border border-[#172a45] rounded-full bg-[#172a45] text-[#fffdf7] text-[.68rem] font-black tracking-[.08em] uppercase disabled:opacity-50" onclick={speak} disabled={!speechSupported}><IconVolume class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />{speaking ? 'Playing sample' : 'Play audio sample'}</button>
 
-      {#if recognitionStalled}
+      {#if recognitionNeedsTap}
+        <button type="button" class="btn-play btn-play-sm" onclick={() => startListening(true)}><IconMic class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />Tap to start listening</button>
+      {:else if recognitionStalled}
         <div class="grid justify-items-center gap-[.4rem]">
           <p class="flex items-center gap-[.4rem] m-0 px-[.75rem] py-[.35rem] rounded-full border border-error bg-error/15 text-error text-[.68rem] font-extrabold" role="status"><IconMicOff class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />Speech recognition isn't responding.</p>
           <button type="button" class="min-h-[2.1rem] px-[.9rem] rounded-full border border-[#172a45] bg-transparent text-base-content text-[.62rem] font-extrabold tracking-[.06em] uppercase dark:border-[rgba(255,253,247,.5)]" onclick={retryAfterStall}>Try again</button>
