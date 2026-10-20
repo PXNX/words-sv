@@ -3,9 +3,11 @@
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { playableLanguages, type Language } from '#lib/data/vocabulary.js';
+  import { playableLanguages, wordMetadata, type Language } from '#lib/data/vocabulary.js';
   import { readVocabularyProgressByLanguage } from '#lib/vocab/spacedRepetition.js';
   import { readGrammarProgressByLanguage } from '#lib/grammar/learning.js';
+  import { readMissedWords } from '#lib/story/missedWords.js';
+  import IconExpand from '~icons/material-symbols/expand-more-rounded';
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
   import IconPending from '~icons/material-symbols/radio-button-unchecked-rounded';
   import IconFlame from '~icons/material-symbols/local-fire-department-rounded';
@@ -13,8 +15,8 @@
   import type { Mood } from '#lib/story/stories.js';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
-  // Lilith purrs once the daily goal is met and gets restless when the streak is about to run out.
-  const streakMood = $derived<Mood>(settings.streak.qualified ? 'happy' : settings.streak.minutesRemaining < 120 ? 'surprised' : 'curious');
+  // Lilith is happy once today keeps the streak going and sad until it does.
+  const streakMood = $derived<Mood>(settings.streak.qualified ? 'happy' : 'sad');
 
   const labels = $derived({
     title: m.stats_title({}, { locale: settings.interfaceLocale }),
@@ -35,7 +37,10 @@
     repetitions: m.stats_repetitions({}, { locale: settings.interfaceLocale }),
     masteredWords: m.stats_mastered_words({}, { locale: settings.interfaceLocale }),
     nothingYet: m.stats_nothing_yet({}, { locale: settings.interfaceLocale }),
-    noProgress: m.stats_no_progress({}, { locale: settings.interfaceLocale })
+    noProgress: m.stats_no_progress({}, { locale: settings.interfaceLocale }),
+    topWords: m.stats_top_words({}, { locale: settings.interfaceLocale }),
+    trickyWords: m.stats_tricky_words({}, { locale: settings.interfaceLocale }),
+    noneYet: m.stats_none_yet({}, { locale: settings.interfaceLocale })
   });
 
   // One accent colour per language keeps the cards apart without extra decoration.
@@ -52,13 +57,28 @@
   const languageCodes = playableLanguages.map((language) => language.code);
   const vocabProgress = $derived(readVocabularyProgressByLanguage(languageCodes));
   const grammarProgress = $derived(readGrammarProgressByLanguage(languageCodes));
-  // Languages with any vocabulary or grammar practice, the most practised first.
+  // Languages with any vocabulary or grammar practice, the most practised first. Tricky words
+  // are the ones most often answered wrong anywhere in the app (see `missedWords.ts`).
   const practicedLanguages = $derived(
     playableLanguages
-      .map((language) => ({ ...language, vocab: vocabProgress[language.code], grammar: grammarProgress[language.code] }))
-      .filter((language) => language.vocab || language.grammar)
+      .map((language) => ({
+        ...language,
+        vocab: vocabProgress[language.code],
+        grammar: grammarProgress[language.code],
+        trickyWords: readMissedWords(language.code).sort((left, right) => right.count - left.count).slice(0, 5)
+      }))
+      .filter((language) => language.vocab || language.grammar || language.trickyWords.length > 0)
       .sort((left, right) => (right.vocab?.totalRepetitions ?? 0) + (right.grammar?.totalRepetitions ?? 0) - (left.vocab?.totalRepetitions ?? 0) - (left.grammar?.totalRepetitions ?? 0))
   );
+
+  // Clicking a language card reveals its top and tricky words.
+  let expandedLanguages = $state<Language[]>([]);
+  function toggleLanguage(code: Language) {
+    expandedLanguages = expandedLanguages.includes(code) ? expandedLanguages.filter((entry) => entry !== code) : [...expandedLanguages, code];
+  }
+  function spellingOf(language: Language, word: string) {
+    return wordMetadata[language]?.[word.toLocaleUpperCase()]?.spelling ?? word.toLocaleLowerCase();
+  }
 
   function formatMinutes(minutes: number) {
     const hours = Math.floor(minutes / 60);
@@ -126,10 +146,17 @@
   {/if}
 
   {#each practicedLanguages as language (language.code)}
+    {@const expanded = expandedLanguages.includes(language.code)}
     <section class="panel-play mt-4 overflow-hidden border-t-[6px]" style={`border-top-color:${languageColors[language.code]};--lang:${languageColors[language.code]}`} aria-labelledby={`progress-lang-${language.code}`}>
-      <h3 id={`progress-lang-${language.code}`} class="m-0 px-[.9rem] pt-[.7rem] text-base-content font-['DM_Serif_Display',serif] text-[1.3rem] font-normal leading-none">{language.label}</h3>
+      <h3 id={`progress-lang-${language.code}`} class="m-0">
+        <button type="button" class="w-full flex items-center justify-between gap-3 px-[.9rem] pt-[.7rem] bg-transparent border-0 cursor-pointer text-start text-base-content font-['DM_Serif_Display',serif] text-[1.3rem] font-normal leading-none" aria-expanded={expanded} aria-controls={`progress-words-${language.code}`} onclick={() => toggleLanguage(language.code)}>
+          {language.label}<IconExpand class={`w-[1.4rem] h-[1.4rem] text-base-content/50 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} aria-hidden="true" />
+        </button>
+      </h3>
 
-      <div class="px-[.9rem] pb-[.8rem]">
+      <!-- The header button handles keyboard access; the rest of the card is just a larger click target. -->
+      <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+      <div class="px-[.9rem] pb-[.8rem] cursor-pointer" onclick={() => toggleLanguage(language.code)}>
         <div class="flex items-end gap-3 pt-[.6rem]">
           <Companion id="tom" mood={language.vocab ? 'happy' : 'curious'} size="sm" />
           <div class="flex-1 min-w-0 pb-[.2rem]">
@@ -157,6 +184,25 @@
             {/if}
           </div>
         </div>
+
+        {#if expanded}
+          <div id={`progress-words-${language.code}`} class="grid grid-cols-2 gap-4 mt-[.7rem] pt-[.6rem] border-t border-base-content/[.14] dark:border-base-content/[.22]">
+            {#each [{ heading: labels.topWords, words: language.vocab?.mostRepeated.map((entry) => ({ word: entry.word, count: entry.repetitions })) ?? [] }, { heading: labels.trickyWords, words: language.trickyWords.map((entry) => ({ word: entry.word, count: entry.count })) }] as list (list.heading)}
+              <div class="min-w-0">
+                <h4 class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.1em] uppercase">{list.heading}</h4>
+                {#if list.words.length > 0}
+                  <ol class="m-0 mt-[.3rem] p-0 list-none grid gap-[.2rem]">
+                    {#each list.words as entry (entry.word)}
+                      <li class="flex items-center justify-between gap-2 text-base-content text-[.66rem] font-bold"><span class="truncate">{spellingOf(language.code, entry.word)}</span><span class="text-base-content/50 tabular-nums">×{entry.count}</span></li>
+                    {/each}
+                  </ol>
+                {:else}
+                  <p class="m-0 mt-[.3rem] text-base-content/50 text-[.64rem] font-bold">{labels.noneYet}</p>
+                {/if}
+              </div>
+            {/each}
+          </div>
+        {/if}
       </div>
     </section>
   {/each}
