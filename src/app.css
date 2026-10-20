@@ -225,6 +225,47 @@ html.dark { --play-line: #0b1626; }
   .card-play:active { translate: 2px 2px; scale: .985; box-shadow: var(--play-shadow-press); }
   html.dark .card-play { background: #213a5d; }
 
+  /* Static counterpart of the sticker card for content to read (prompts, dialogs, settings groups): no tilt, no press */
+  .panel-play {
+    border: var(--play-outline);
+    border-radius: 20px 13px 18px 14px / 14px 18px 13px 20px;
+    background: #fffdf7;
+    box-shadow: 4px 4px 0 var(--play-line);
+  }
+  html.dark .panel-play { background: #213a5d; }
+  /* Soft amber note for hints and explanations */
+  .note-play {
+    border: 2px solid rgba(164, 94, 56, .45);
+    border-radius: 14px 9px 13px 10px / 10px 13px 9px 14px;
+    background: #fff7dd;
+    box-shadow: 2px 2px 0 rgba(164, 94, 56, .22);
+  }
+  html.dark .note-play { border-color: rgba(230, 165, 39, .5); background: #2b3d57; box-shadow: 2px 2px 0 var(--play-line); }
+  /* Segmented control (level, light/dark) in the same ink outline */
+  .seg-play {
+    display: flex;
+    gap: 2px;
+    padding: 2px;
+    border: 2px solid var(--play-line);
+    border-radius: 999px;
+    background: #fffdf7;
+    box-shadow: 2px 2px 0 var(--play-line);
+  }
+  .seg-play > button { cursor: pointer; transition: background-color .18s ease, color .18s ease, scale .18s var(--play-ease); }
+  .seg-play > button:active { scale: .94; }
+  html.dark .seg-play { background: #213a5d; }
+  html.dark .seg-play { border-color: rgba(255, 253, 247, .45); }
+  /* Text fields and selects */
+  .field-play {
+    border: 2px solid rgba(23, 42, 69, .5);
+    border-radius: 9px 6px 9px 7px;
+    background: #fffdf7;
+  }
+  /* daisyUI toggles in the ink outline */
+  .toggle { border: 2px solid var(--play-line); }
+  html.dark .toggle { border-color: rgba(255, 253, 247, .45); }
+  .field-play:focus-visible { outline: 3px dashed #e6a527; outline-offset: 2px; }
+
   @keyframes play-pop { 0% { scale: .6; opacity: 0; } 65% { scale: 1.06; opacity: 1; } 100% { scale: 1; } }
   .pop-in { animation: play-pop .38s var(--play-ease) both; }
 

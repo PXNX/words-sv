@@ -5,7 +5,6 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
 import Icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
-import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
   plugins: [
@@ -14,51 +13,10 @@ export default defineConfig({
       preprocess: vitePreprocess(),
       // Also checked whenever the app regains focus; drives the update hint on the home screen
       version: { pollInterval: 5 * 60 * 1000 },
+      // src/service-worker.ts is built and registered by SvelteKit itself (served as /service-worker.js)
       adapter: adapter({ fallback: 'index.html' })
     }),
     Icons({ compiler: 'svelte', autoInstall: false }),
-    VitePWA({
-			strategies: 'injectManifest',
-			srcDir: 'src',
-			filename: 'sw.ts',
-      registerType: 'autoUpdate',
-      injectRegister: false,
-      includeAssets: [
-        'favicon.svg',
-        'icons/wordcircle-192.png',
-        'icons/wordcircle-512.png'
-      ],
-      manifest: {
-        name: 'WordCircle',
-        short_name: 'WordCircle',
-        description: 'Ein zweisprachiges Wisch-Wortspiel mit Wortkreis und Kreuzworträtsel.',
-        theme_color: '#172A45',
-        background_color: '#FFFDF7',
-        display: 'standalone',
-        start_url: '/',
-        scope: '/',
-        lang: 'de',
-        icons: [
-          {
-            src: '/icons/wordcircle-192.png',
-            sizes: '192x192',
-            type: 'image/png',
-            purpose: 'any'
-          },
-
-          {
-            src: '/icons/wordcircle-512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any maskable'
-          }
-        ]
-      },
-			injectManifest: {
-        globPatterns: ['**/*.{html,js,css,png,svg,json,webmanifest}']
-      },
-      devOptions: { enabled: true, type: 'module' }
-    }),
 
     paraglideVitePlugin({
       project: './project.inlang',

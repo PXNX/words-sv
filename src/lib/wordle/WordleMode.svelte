@@ -200,7 +200,7 @@
   {:else}
     <div class="grid content-center justify-items-center gap-[.65rem]">
       <WordleGrid rows={maxAttempts} {wordLength} {entries} currentGuess={guess} ariaLabel={labels.title} onExplain={(word) => (explanationWord = explanationWord === word ? null : word)} />
-      {#if explanationWord}<div class="flex items-start gap-[.45rem] max-w-[min(100%,28rem)] p-[.55rem_.7rem] border border-accent/35 bg-[#fff7dd] text-accent text-[.65rem] font-bold leading-[1.35] dark:bg-[#2b3d57]"><IconHelp class="w-[.9rem] h-[.9rem] flex-none mt-[.05rem]" aria-hidden="true" /><span>{explanationDefinition ?? 'No definition is available for this word yet.'}<a class="ml-1 font-extrabold underline underline-offset-2" href={explanationHref} target="_blank" rel="noreferrer">Wiktionary</a></span></div>{/if}
+      {#if explanationWord}<div class="note-play pop-in flex items-start gap-[.45rem] max-w-[min(100%,28rem)] p-[.55rem_.7rem] text-accent text-[.65rem] font-bold leading-[1.35]"><IconHelp class="w-[.9rem] h-[.9rem] flex-none mt-[.05rem]" aria-hidden="true" /><span>{explanationDefinition ?? 'No definition is available for this word yet.'}<a class="ml-1 font-extrabold underline underline-offset-2" href={explanationHref} target="_blank" rel="noreferrer">Wiktionary</a></span></div>{/if}
       {#if notice}<p class:text-accent={!won} class:text-success={won} class="min-h-[1rem] m-0 text-[.68rem] font-extrabold text-center">{notice}</p>{/if}
       {#if exhausted && !won}<p class="min-h-[1rem] m-0 text-accent text-[.68rem] font-extrabold text-center">{target}</p>{/if}
       {#if won || exhausted}<button class="btn-play btn-play-go disabled:cursor-wait disabled:opacity-80" onclick={continueRound} disabled={loadingNextRound} aria-busy={loadingNextRound}>

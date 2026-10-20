@@ -152,7 +152,7 @@
     </div>
   {:else if needsName}
     <form class="home-onboarding" onsubmit={submitName}>
-      <div class="home-onboarding-cast" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="tom" /><img class="home-lilith" src="/images/lilith-sit.png" alt="" width="349" height="512" /></div>
+      <div class="home-onboarding-cast" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="tom" /><span class="home-lilith"><StoryCharacter id="lilith" /></span></div>
       <h1>{labels.nameTitle}</h1>
       <label class="home-onboarding-field">
         <span>{labels.nameLabel}</span>
@@ -165,7 +165,7 @@
   {:else}
     <UpdateAppHint />
     <header class="home-header">
-      <div class="home-family"><span class="home-family-people" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="tom" /></span><button type="button" class="home-lilith-pet" class:petting onclick={petLilith} onanimationend={() => (petting = false)} aria-label={labels.petLilith}><img class="home-lilith" src="/images/lilith-sit.png" alt="" width="349" height="512" /></button></div>
+      <div class="home-family"><span class="home-family-people" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="tom" /></span><button type="button" class="home-lilith-pet" class:petting onclick={petLilith} onanimationend={() => (petting = false)} aria-label={labels.petLilith}><span class="home-lilith"><StoryCharacter id="lilith" mood={petting ? 'happy' : 'neutral'} /></span></button></div>
       <p>{labels.greeting} · {labels.homeKicker}</p><h1>{labels.homeTitle}</h1><span class="home-cast-note">{labels.homeCast}</span>
     </header>
     <button type="button" class:qualified={settings.streak.qualified} class="card-play home-streak" onclick={() => void goto('/stats')} aria-label={`${labels.streak}: ${settings.streak.streakCount}`}>
@@ -218,7 +218,7 @@
   .home-family-people { display:flex;align-items:flex-end;height:100%;padding:.55rem .9rem 0 .55rem;border:2px solid #172a45;border-bottom-width:0;border-radius:3.2rem 3.2rem .4rem .4rem;background:radial-gradient(circle at 50% 85%,#f7e2b0,#fbf1da 70%);overflow:hidden; }
   .home-family-people :global(.story-character) { width:4rem;height:5.4rem; }.home-family-people :global(.story-character + .story-character) { margin-inline-start:-.9rem; }
   .home-family::after { content:'';position:absolute;inset:auto -.6rem 0;height:2px;border-radius:2px;background:#172a45; }
-  .home-lilith { display:block;width:auto;height:5.3rem;margin-inline-start:-1.35rem;filter:drop-shadow(2px 0 0 #fffdf7) drop-shadow(-2px 0 0 #fffdf7) drop-shadow(0 2px 0 #fffdf7) drop-shadow(0 -2px 0 #fffdf7) drop-shadow(2px 3px 0 rgba(23,42,69,.22));rotate:3deg;transform-origin:50% 100%;animation:lilith-breathe 4.5s ease-in-out infinite; }
+  .home-lilith { display:block;width:4.4rem;height:5.5rem;margin-inline-start:-1.35rem;transform-origin:50% 100%;animation:lilith-breathe 4.5s ease-in-out infinite; }.home-lilith :global(.story-character) { width:100%;height:100%; }
   .home-lilith-pet { display:block;margin-inline-start:-1.35rem;padding:0;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transform-origin:50% 100%; }.home-lilith-pet .home-lilith { margin:0; }
   .home-lilith-pet:focus-visible { outline:3px dashed #e6a527;outline-offset:2px;border-radius:1rem; }
   .home-lilith-pet.petting { animation:lilith-wiggle .9s var(--play-ease); }
@@ -230,7 +230,7 @@
   .home-games { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem; }.home-games article { position:relative;display:grid;grid-template-rows:auto auto 1fr;justify-items:center;gap:.3rem;padding:1rem .6rem .9rem;border-top-width:5px;text-align:center;cursor:pointer; }.home-games article:nth-child(4n+1) { --tilt:-.7deg; }.home-games article:nth-child(4n+2) { --tilt:.5deg; }.home-games article:nth-child(4n+3) { --tilt:-.3deg; }.home-games article:nth-child(4n) { --tilt:.6deg; }.home-games article.home-story-card { --tilt:-.35deg; }.home-games article.streak-done { border-top-color:#34824d; }.home-games article.streak-pending { border-top-color:#e6a527; }.home-games article.streak-none { border-top-color:#172a45; }.home-icon { display:grid;place-items:center;width:2.6rem;height:2.6rem;border:2px solid #172a45;border-radius:48% 52% 46% 54% / 54% 46% 52% 48%;background:#f7e2b0;color:#a45e38;transition:rotate .25s var(--play-ease); }.home-icon :global(svg) { width:1.3rem;height:1.3rem; }.home-games h2 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:.98rem;font-weight:400;line-height:1.15; }.home-games p { margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:700;line-height:1.35; }.home-tutorial-link { position:absolute;top:.45rem;right:.45rem;box-shadow:2px 2px 0 #172a45;color:#a45e38; }
   .home-onboarding { width:min(100%,27rem);display:grid;justify-self:center;gap:.9rem;padding:clamp(1.15rem,6vw,1.8rem);border-radius:22px 14px 20px 15px / 15px 20px 14px 22px;border:2px solid #172a45;background:#fffdf7;box-shadow:4px 4px 0 #172a45;text-align:center; }.home-language-choice { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem;margin-top:.45rem; }.home-language-choice button { min-width:0;min-height:2.8rem;font-size:.72rem;letter-spacing:.04em;text-transform:none; }.home-language-choice button:first-child { background:#172a45;color:#fffdf7; }
   .home-onboarding-field { display:grid;gap:.3rem;text-align:left; }.home-onboarding-field>span { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }.home-onboarding-field select { min-height:2.4rem;padding:0 .6rem;border-radius:.7rem;border:1px solid rgba(23,42,69,.28);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:800; }
-  .home-onboarding-cast { display:flex;justify-content:center;align-items:flex-end;gap:.4rem;height:5.2rem; }.home-onboarding-cast .home-lilith { height:4.6rem;margin-inline-start:-.6rem; }.home-onboarding-cast :global(.story-character) { width:4.4rem;height:100%; }
+  .home-onboarding-cast { display:flex;justify-content:center;align-items:flex-end;gap:.4rem;height:5.2rem; }.home-onboarding-cast .home-lilith { width:3.7rem;height:4.6rem;margin-inline-start:-.6rem; }.home-onboarding-cast :global(.story-character) { width:4.4rem;height:100%; }
   .home-onboarding-field input { min-height:2.6rem;padding:0 .75rem;border-radius:.7rem;border:1px solid rgba(23,42,69,.28);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:800; }.home-onboarding-field input:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
   .home-name-submit { min-height:2.8rem;font-size:.72rem; }
   .home-games article.home-story-card { grid-column:1 / -1;grid-template-columns:auto 1fr auto;grid-template-rows:none;align-items:center;justify-items:start;gap:.75rem;padding:.75rem .9rem;text-align:start; }.home-story-card div { display:grid;gap:.2rem; }.home-story-cast { display:flex;align-items:flex-end;height:3.6rem; }.home-story-cast :global(.story-character) { width:2.9rem;height:100%; }.home-story-cast :global(.story-character + .story-character) { width:2.3rem;height:75%;margin-inline-start:-.5rem; }
@@ -243,7 +243,7 @@
     .home-games p { font-size:.74rem; }
     .home-group-heading,.home-header p { font-size:.7rem; }
     .home-cast-note { font-size:.72rem; }
-    .home-family { height:7.2rem; }.home-family-people :global(.story-character) { width:4.6rem;height:6.3rem; }.home-lilith { height:6.2rem; }
+    .home-family { height:7.2rem; }.home-family-people :global(.story-character) { width:4.6rem;height:6.3rem; }.home-lilith { width:5rem;height:6.3rem; }
     .home-streak-detail b { font-size:.74rem; }.home-streak-detail small { font-size:.66rem; }.home-streak-count small { font-size:.58rem; }
     .home-settings-link { font-size:.66rem; }
     .home-onboarding>span { font-size:.82rem; }.home-onboarding>p,.home-onboarding-field>span { font-size:.68rem; }.home-onboarding-field select,.home-language-choice button,.home-name-submit { font-size:.8rem; }
@@ -252,7 +252,7 @@
   @media (min-width:700px) and (min-height:560px) { .home-view { padding:clamp(1.5rem,3.5vw,2.75rem) clamp(1.5rem,4vw,3rem); } }
   :global(html.dark) .home-onboarding-field input { border-color:rgba(255,253,247,.4);background:#213a5d;color:#fffdf7; }
   :global(html.dark) .home-header h1,:global(html.dark) .home-onboarding h1,:global(html.dark) .home-games h2 { color:#fffdf7 !important;text-shadow:none; }
-  :global(html.dark) .home-family-people { border-color:#0b1626;background:radial-gradient(circle at 50% 85%,#2b4a73,#213a5d 70%); }:global(html.dark) .home-family::after { background:#0b1626; }:global(html.dark) .home-lilith { filter:drop-shadow(2px 0 0 #fffdf7) drop-shadow(-2px 0 0 #fffdf7) drop-shadow(0 2px 0 #fffdf7) drop-shadow(0 -2px 0 #fffdf7) drop-shadow(2px 3px 0 #0b1626); }
+  :global(html.dark) .home-family-people { border-color:#0b1626;background:radial-gradient(circle at 50% 85%,#2b4a73,#213a5d 70%); }:global(html.dark) .home-family::after { background:#0b1626; }
   :global(html.dark) .home-onboarding>span,:global(html.dark) .home-cast-note,:global(html.dark) .home-games p { color:rgba(255,253,247,.72); }
   :global(html.dark) .home-onboarding { border-color:#0b1626;background:#213a5d;box-shadow:4px 4px 0 #0b1626; }:global(html.dark) .home-games article.streak-none { border-top-color:#0b1626; }
   :global(html.dark) .home-tutorial-link { box-shadow:2px 2px 0 #0b1626;color:#e6a527; }
