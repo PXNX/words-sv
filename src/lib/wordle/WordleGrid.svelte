@@ -21,7 +21,7 @@
         {@const letter = entry?.word[column] ?? (row === entries.length ? currentGuess[column] : '')}
         {@const mark = entry?.marks[column] ?? ''}
         <span
-          class="grid aspect-square place-items-center rounded-lg border border-[rgba(23,42,69,.34)] bg-[#fffdf7] text-[clamp(.75rem,3.8vw,1.05rem)] font-black text-base-content dark:border-[rgba(255,253,247,.38)] dark:bg-[#172a45]"
+          class="grid aspect-square place-items-center rounded-[10px_7px_10px_8px] border-2 border-[rgba(23,42,69,.4)] bg-[#fffdf7] shadow-[0_2px_0_rgba(23,42,69,.22)] text-[clamp(.75rem,3.8vw,1.05rem)] font-black text-base-content dark:border-[rgba(255,253,247,.38)] dark:bg-[#172a45]"
           class:border-success={mark === 'correct'}
           class:bg-success={mark === 'correct'}
           class:text-[#fffdf7]={mark === 'correct' || mark === 'absent'}
@@ -33,7 +33,7 @@
         >{letter}</span>
       {/each}
       </div>
-      {#if entry && onExplain}<button type="button" class="grid place-items-center w-[1.55rem] h-[1.55rem] flex-none border border-[#8b949c] rounded-full bg-[#edf0ef] text-[#69727a] [transition:transform_.16s_cubic-bezier(.23,1,.32,1),background_.16s_ease,color_.16s_ease] hover:bg-[#c9d0cf] hover:text-[#3f484e] active:scale-[.94] dark:border-[#84909b] dark:bg-[#2b3d57] dark:text-[#d8dde1]" onclick={() => onExplain(entry.word)} aria-label={`Explain ${entry.word}`}><IconHelp class="w-[.95rem] h-[.95rem]" aria-hidden="true" /></button>{/if}
+      {#if entry && onExplain}<button type="button" class="btn-play btn-play-soft btn-play-round btn-play-sm flex-none" onclick={() => onExplain(entry.word)} aria-label={`Explain ${entry.word}`}><IconHelp class="w-[.95rem] h-[.95rem]" aria-hidden="true" /></button>{/if}
     </div>
   {/each}
 </div>

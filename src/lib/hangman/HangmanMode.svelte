@@ -61,9 +61,9 @@
   </header>
 
   {#if candidates.length === 0}
-    <div class="p-[1.25rem] rounded-2xl border border-accent/42 bg-accent/8 text-accent text-[.75rem] font-extrabold text-center">No Hangman words are available for this level yet.</div>
+    <div class="note-play p-[1.25rem] text-accent text-[.75rem] font-extrabold text-center">No Hangman words are available for this level yet.</div>
   {:else}
-    <div class="grid content-center justify-items-center gap-[.9rem]">
+    <div class="panel-play w-[min(100%,26rem)] justify-self-center grid content-center justify-items-center gap-[.9rem] px-[clamp(1rem,5vw,1.6rem)] py-[clamp(1rem,4vw,1.4rem)]">
       <div class="flex items-end justify-center gap-[.7rem]" aria-label={`Wrong guesses: ${wrongGuesses} of 6`}>
         <svg viewBox="0 0 120 140" class="w-[7.5rem] h-[8.75rem]" aria-hidden="true" fill="none">
           <!-- gallows -->

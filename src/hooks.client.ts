@@ -1,14 +1,5 @@
 /**
- * Papier & Tinte PWA bootstrap: register the root worker explicitly because
- * SvelteKit renders from app.html rather than Vite's conventional index.html.
+ * The service worker (src/service-worker.ts) is registered by SvelteKit as /service-worker.js.
+ * Older builds registered /sw.js; static/sw.js now retires those registrations on its own.
  */
-if ('serviceWorker' in navigator) {
-  const registerServiceWorker = () => {
-    void navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch((error) => {
-      console.warn('WordCircle service worker registration failed.', error);
-    });
-  };
-
-  if (document.readyState === 'complete') registerServiceWorker();
-  else window.addEventListener('load', registerServiceWorker, { once: true });
-}
+export {};

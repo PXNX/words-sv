@@ -158,7 +158,7 @@
     <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{labels.unavailable}</div>
   {:else}
     <article
-      class="w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] border border-neutral border-t-[4px] border-t-double border-t-neutral shadow-[8px_8px_0_rgba(164,94,56,.16)] text-center {promptKind === 'audio' ? 'bg-[linear-gradient(145deg,#fffdf7,#fff4d9)] dark:bg-[linear-gradient(145deg,#172a45,#294666)]' : 'bg-neutral-content'}"
+      class="w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center {promptKind === 'audio' ? 'bg-[linear-gradient(145deg,#fffdf7,#fff4d9)] dark:bg-[linear-gradient(145deg,#172a45,#294666)]' : ''}"
     >
       {#if promptKind === 'word'}
         <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.9rem,9vw,3.2rem)] font-normal tracking-[.06em] leading-none" lang={settings.lang}>{currentDisplayWord}</p>

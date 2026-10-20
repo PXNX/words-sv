@@ -9,6 +9,7 @@
     type Placement, type Round, type StoredGame
   } from './engine';
   import WordleKeyboard from '#lib/wordle/WordleKeyboard.svelte';
+  import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
   import IconClose from '~icons/material-symbols/cancel-rounded';
   import IconDownload from '~icons/material-symbols/download-rounded';
@@ -467,7 +468,7 @@
   class="relative min-h-[120px] min-[580px]:min-h-[150px] flex-1 grid place-items-stretch mt-0 p-[clamp(.35rem,1.6vw,.7rem)] bg-[#ede4d5] bg-[image:linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:24px_24px] border-t-0 border-b-2 border-b-[rgba(23,42,69,.45)] [transition:transform_.16s_cubic-bezier(.23,1,.32,1)] dark:bg-[#213a5d] dark:border-b-primary {shakeGrid ? 'animate-[shake_.28s_cubic-bezier(.23,1,.32,1)]' : ''}"
   aria-label="Crossword"
 >
-  <div class="relative z-[1] min-w-0 min-h-0 overflow-auto grid place-items-center p-[clamp(.65rem,3vw,1.25rem)] rounded-2xl [overscroll-behavior:contain] [touch-action:pan-x_pan-y] border border-[rgba(23,42,69,.12)] bg-[linear-gradient(90deg,rgba(255,253,247,.3),rgba(255,253,247,.08)_18%,rgba(255,253,247,.08)_82%,rgba(255,253,247,.3))] shadow-[inset_0_0_0_6px_rgba(255,253,247,.15)] outline-0 [scrollbar-color:rgba(23,42,69,.4)_transparent]" aria-label="Scrollable crossword grid">
+  <div class="relative z-[1] min-w-0 min-h-0 overflow-auto grid place-items-center p-[clamp(.65rem,3vw,1.25rem)] rounded-[22px_14px_20px_15px/15px_20px_14px_22px] [overscroll-behavior:contain] [touch-action:pan-x_pan-y] border-2 border-[rgba(23,42,69,.16)] bg-[linear-gradient(90deg,rgba(255,253,247,.3),rgba(255,253,247,.08)_18%,rgba(255,253,247,.08)_82%,rgba(255,253,247,.3))] shadow-[inset_0_0_0_6px_rgba(255,253,247,.15)] outline-0 [scrollbar-color:rgba(23,42,69,.4)_transparent]" aria-label="Scrollable crossword grid">
     <div class="relative grid w-max min-w-[calc(var(--cell-size)*3)] [--cell-size:clamp(1.85rem,8.2vw,2.4rem)]" style={`grid-template-columns: repeat(${grid.maxCol - grid.minCol + 1}, var(--cell-size));`}>
       {#each Array(grid.maxRow - grid.minRow + 1) as _, rowIndex}
         {#each Array(grid.maxCol - grid.minCol + 1) as _, colIndex}
@@ -512,7 +513,7 @@
 <div class={selectionAreaClasses()} aria-live="polite">
   {#if celebration}
     <div class="relative z-[56] flex items-center justify-center w-full h-full gap-[.6rem] m-0 text-success animate-[completion-in_.24s_cubic-bezier(.23,1,.32,1)_both] motion-reduce:animate-none">
-      <span class="grid place-items-center w-[1.8rem] h-[1.8rem] flex-none border-2 border-current rounded-full font-['DM_Sans'] text-[1.25rem] font-extrabold leading-none" aria-hidden="true">✓</span>
+      <span class="block w-[2.4rem] h-[3rem] flex-none [&_.story-character]:w-full [&_.story-character]:h-full" aria-hidden="true"><StoryCharacter id="tom" mood="happy" /></span>
       <span class="grid gap-[.08rem] justify-items-start text-left">
         <strong class="text-success font-['DM_Serif_Display'] text-[1.05rem] font-normal tracking-[-.02em] leading-none">{labels.allDone}</strong>
         <small class="block text-base-content dark:text-base-content/74 font-['DM_Sans'] text-[.55rem] font-extrabold tracking-[.06em] leading-[1.2] uppercase">{labels.time} <b class="text-success font-['DM_Serif_Display'] text-[.88rem] tracking-normal">{formatDuration(completedDuration)}</b></small>
@@ -534,14 +535,14 @@
       {:else if explainOpen && feedback === 'correct'}
         <span class="max-w-[min(32rem,74vw)] text-accent font-['DM_Sans'] text-[clamp(.63rem,2.5vw,.78rem)] font-bold tracking-[.01em] leading-[1.35] text-center">{feedbackDefinition}<a class="ml-1 text-primary font-extrabold underline decoration-2 underline-offset-2 whitespace-nowrap" href={feedbackWiktionaryHref} target="_blank" rel="noreferrer">{labels.readMore}</a></span>
       {:else if previewWord}
-        <span class={feedback === 'correct' ? 'text-[#3f7a50]' : ''}>{previewWord}</span>{#if feedback === 'correct'}<IconCheck class="w-[1.45rem] h-[1.45rem]" aria-label="Correct" />{#if feedbackDefinition}<button type="button" class="grid place-items-center w-[1.25rem] h-[1.25rem] border border-[#8b949c] rounded-full bg-[#edf0ef] text-[#69727a] tracking-normal [transition:transform_.16s_cubic-bezier(.23,1,.32,1),background_.16s_ease,color_.16s_ease] hover:bg-[#c9d0cf] hover:text-[#3f484e] focus-visible:bg-[#c9d0cf] focus-visible:text-[#3f484e] focus-visible:outline-0 active:scale-[.94] dark:border-[#84909b] dark:bg-[#2b3d57] dark:text-[#d8dde1]" onclick={() => (explainOpen = true)} aria-label={`${labels.explain}: ${feedbackSpelling}`}><IconHelp class="w-[.85rem] h-[.85rem]" aria-hidden="true" /></button>{:else}<a class="grid place-items-center w-[1.25rem] h-[1.25rem] border border-[#8b949c] rounded-full bg-[#edf0ef] text-[#69727a] tracking-normal [transition:transform_.16s_cubic-bezier(.23,1,.32,1),background_.16s_ease,color_.16s_ease] hover:bg-[#c9d0cf] hover:text-[#3f484e] focus-visible:bg-[#c9d0cf] focus-visible:text-[#3f484e] focus-visible:outline-0 active:scale-[.94] dark:border-[#84909b] dark:bg-[#2b3d57] dark:text-[#d8dde1]" href={feedbackWiktionaryHref} target="_blank" rel="noreferrer" aria-label={`${labels.explain}: ${feedbackSpelling}`}><IconHelp class="w-[.85rem] h-[.85rem]" aria-hidden="true" /><span class="sr-only">{labels.explain}</span></a>{/if}{:else if feedback === 'wrong'}<IconClose class="w-[1.45rem] h-[1.45rem]" aria-label="Incorrect" />{/if}
+        <span class={feedback === 'correct' ? 'text-[#3f7a50]' : ''}>{previewWord}</span>{#if feedback === 'correct'}<IconCheck class="w-[1.45rem] h-[1.45rem]" aria-label="Correct" />{#if feedbackDefinition}<button type="button" class="btn-play btn-play-soft btn-play-round btn-play-sm w-[1.45rem]! h-[1.45rem]! tracking-normal" onclick={() => (explainOpen = true)} aria-label={`${labels.explain}: ${feedbackSpelling}`}><IconHelp class="w-[.85rem] h-[.85rem]" aria-hidden="true" /></button>{:else}<a class="btn-play btn-play-soft btn-play-round btn-play-sm w-[1.45rem]! h-[1.45rem]! tracking-normal" href={feedbackWiktionaryHref} target="_blank" rel="noreferrer" aria-label={`${labels.explain}: ${feedbackSpelling}`}><IconHelp class="w-[.85rem] h-[.85rem]" aria-hidden="true" /><span class="sr-only">{labels.explain}</span></a>{/if}{:else if feedback === 'wrong'}<IconClose class="w-[1.45rem] h-[1.45rem]" aria-label="Incorrect" />{/if}
       {:else if showDefinitions}
         {coreReadout}
       {/if}
     </div>
     {#if tutorialPractice}<p class="flex items-center justify-center gap-[.5rem] mt-[.2rem] text-accent font-['DM_Sans'] text-[.54rem] font-extrabold tracking-[.07em] uppercase"><span>{labels.tutorial}</span><b class="text-base-content text-[.58rem] tracking-[.11em]">{tutorialHint}</b></p>{/if}
     {#if installPrompt && !previewWord}
-      <button class="absolute z-[5] bottom-[.25rem] left-1/2 -translate-x-1/2 inline-flex items-center gap-[.42rem] min-h-[1.75rem] py-[.22rem] px-[.62rem] border border-[#172a45] rounded-[.2rem] bg-[#172a45] text-[#fffdf7] shadow-[0_3px_0_rgba(23,42,69,.16)] font-['DM_Sans'] text-left [transition:transform_.16s_cubic-bezier(.23,1,.32,1),background_.16s_ease] active:scale-[.97]" onclick={installApp}>
+      <button class="btn-play btn-play-ink btn-play-sm absolute z-[5] bottom-[.25rem] left-1/2 -translate-x-1/2 gap-[.42rem] min-h-[1.75rem] py-[.22rem] px-[.62rem] normal-case tracking-normal text-left" onclick={installApp}>
         <IconDownload class="w-[1rem] h-[1rem] text-primary" aria-hidden="true" />
         <span class="grid gap-[.02rem] leading-none whitespace-nowrap"><strong class="text-[.57rem] font-extrabold tracking-[.07em] uppercase">{labels.install}</strong><small class="text-[rgba(255,253,247,.72)] text-[.5rem] font-bold tracking-[.03em]">{labels.installHint}</small></span>
       </button>
