@@ -1,9 +1,9 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { browser } from '$app/environment';
-  import CircleGame from '$lib/circle/CircleGame.svelte';
-  import { settings } from '$lib/state/settings.svelte';
-  import { consumeCirclePracticeRequest } from '$lib/circle/practice';
+  import { browser } from '$app/env';
+  import CircleGame from '#lib/circle/CircleGame.svelte';
+  import { settings } from '#lib/state/settings.svelte.js';
+  import { consumeCirclePracticeRequest } from '#lib/circle/practice.js';
 
   const CIRCLE_TUTORIAL_STATE_KEY = 'wordcircle-tutorial-state-v1';
 
@@ -12,4 +12,4 @@
   if (needsTutorial) void goto('/circle/tutorial', { replaceState: true });
 </script>
 
-<CircleGame {practiceLanguage} />
+<CircleGame practiceLanguage={practiceLanguage} />

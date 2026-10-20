@@ -1,4 +1,4 @@
-import { vocabularyLevels, type VocabularyLevel } from '$lib/data/vocabulary';
+import { vocabularyLevels, type VocabularyLevel } from '#lib/data/vocabulary.js';
 
 export type Orientation = 'across' | 'down';
 export type Placement = { word: string; row: number; col: number; orientation: Orientation; reversed?: boolean };

@@ -4,10 +4,10 @@
   import { keyboardMarksFrom, type WordleMark } from './keyboardLayouts';
   import WordleGrid from './WordleGrid.svelte';
   import WordleKeyboard from './WordleKeyboard.svelte';
-  import { m } from '$lib/paraglide/messages';
-  import { settings } from '$lib/state/settings.svelte';
-  import { wordDefinitions, wordMetadata } from '$lib/data/vocabulary';
-  import { wiktionaryUrl } from '$lib/wiktionary';
+  import { m } from '#lib/paraglide/messages.js';
+  import { settings } from '#lib/state/settings.svelte.js';
+  import { wordDefinitions, wordMetadata } from '#lib/data/vocabulary.js';
+  import { wiktionaryUrl } from '#lib/wiktionary.js';
   import IconHelp from '~icons/material-symbols/help-rounded';
   import IconProgressActivity from '~icons/material-symbols/progress-activity';
   import { tick } from 'svelte';

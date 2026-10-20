@@ -1,16 +1,16 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import { page } from '$app/state';
-  import { playSuccessSound, playErrorSound } from '$lib/sounds';
-  import { settings } from '$lib/state/settings.svelte';
-  import { wordPools, wordMetadata } from '$lib/data/vocabulary';
-  import { m } from '$lib/paraglide/messages';
-  import { prioritizeLearningWords, updateReviewProgress } from '$lib/vocab/spacedRepetition';
-  import { articleChoiceOptions, gapSentenceSuffixes, grammarArticles, pickRandomSection, shuffled, GRAMMAR_REVIEW_STORAGE_PREFIX } from '$lib/grammar/learning';
-  import { buildNounCasePrompt, buildNounPropertyPrompt, type GrammarPrompt } from '$lib/grammar/cases';
-  import { buildAdjectivePrompt, isEligibleAdjective } from '$lib/grammar/adjectives';
-  import { buildVerbPrompt, buildVerbPropertyPrompt, verbConjugations } from '$lib/grammar/verbs';
-  import { buildFalseFriendPrompt, falseFriendPairs } from '$lib/grammar/falseFriends';
+  import { playSuccessSound, playErrorSound } from '#lib/sounds.js';
+  import { settings } from '#lib/state/settings.svelte.js';
+  import { wordPools, wordMetadata } from '#lib/data/vocabulary.js';
+  import { m } from '#lib/paraglide/messages.js';
+  import { prioritizeLearningWords, updateReviewProgress } from '#lib/vocab/spacedRepetition.js';
+  import { articleChoiceOptions, gapSentenceSuffixes, grammarArticles, pickRandomSection, shuffled, GRAMMAR_REVIEW_STORAGE_PREFIX } from '#lib/grammar/learning.js';
+  import { buildNounCasePrompt, buildNounPropertyPrompt, type GrammarPrompt } from '#lib/grammar/cases.js';
+  import { buildAdjectivePrompt, isEligibleAdjective } from '#lib/grammar/adjectives.js';
+  import { buildVerbPrompt, buildVerbPropertyPrompt, verbConjugations } from '#lib/grammar/verbs.js';
+  import { buildFalseFriendPrompt, falseFriendPairs } from '#lib/grammar/falseFriends.js';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
 

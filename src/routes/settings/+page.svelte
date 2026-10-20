@@ -1,5 +1,5 @@
 <script lang="ts">
-  import SettingsPanel from '$lib/settings/SettingsPanel.svelte';
+  import SettingsPanel from '#lib/settings/SettingsPanel.svelte';
 </script>
 
 <SettingsPanel />

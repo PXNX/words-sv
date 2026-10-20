@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { m } from '$lib/paraglide/messages';
-  import { settings } from '$lib/state/settings.svelte';
-  import { playSuccessSound } from '$lib/sounds';
-  import { hintableBaseWords, wordDefinitions, wordMetadata, wordPools, type Language } from '$lib/data/vocabulary';
-  import { wiktionaryUrl } from '$lib/wiktionary';
+  import { m } from '#lib/paraglide/messages.js';
+  import { settings } from '#lib/state/settings.svelte.js';
+  import { playSuccessSound } from '#lib/sounds.js';
+  import { hintableBaseWords, wordDefinitions, wordMetadata, wordPools, type Language } from '#lib/data/vocabulary.js';
+  import { wiktionaryUrl } from '#lib/wiktionary.js';
   import {
     buildRound, cellKey, gridFromPlacements, isPlacement, placementCells, randomSeed, roundFromStoredGame, selectedPool,
     type Placement, type Round, type StoredGame
   } from './engine';
-  import WordleKeyboard from '$lib/wordle/WordleKeyboard.svelte';
+  import WordleKeyboard from '#lib/wordle/WordleKeyboard.svelte';
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
   import IconClose from '~icons/material-symbols/cancel-rounded';
   import IconDownload from '~icons/material-symbols/download-rounded';
@@ -107,7 +107,7 @@
       const validStartedAt = typeof game.startedAt === 'undefined' || (Number.isSafeInteger(game.startedAt) && game.startedAt > 0);
       const validCompletedDuration = typeof game.completedDuration === 'undefined' || (Number.isSafeInteger(game.completedDuration) && game.completedDuration >= 0);
       if (game.version !== 1 || game.language !== settings.lang || !Number.isInteger(game.roundNumber) || (game.roundNumber ?? 0) < 1 || !validWords || !validLetters || !validPlacements || !validSolvedWords || !validStartedAt || !validCompletedDuration) return null;
-      return { version: 1, language: game.language, roundNumber: game.roundNumber, words: words as string[], letters: letters as string[], placements: placements as Placement[], solvedWords: [...new Set(solvedWords as string[])], startedAt: game.startedAt, completedDuration: game.completedDuration };
+      return { version: 1, language: game.language, roundNumber: game.roundNumber as number, words: words as string[], letters: letters as string[], placements: placements as Placement[], solvedWords: [...new Set(solvedWords as string[])], startedAt: game.startedAt, completedDuration: game.completedDuration };
     } catch {
       return null;
     }
@@ -554,8 +554,8 @@
     <WordleKeyboard language={settings.lang} disabled={celebration} ariaLabel={labels.hint} onPress={pressLetter} onRemove={removeTypedLetter} />
   </div>
 {:else}
-  <div class="relative flex-[0_0_clamp(214px,34svh,270px)] min-h-0 grid place-items-center border-t border-b border-[rgba(23,42,69,.16)] bg-[#fffdf7] dark:bg-[#172a45] min-[580px]:min-h-[300px] min-[580px]:flex-auto">
-    <svg bind:this={circleEl} viewBox="0 0 292 292" class="w-[min(100%,238px)] min-[580px]:w-[292px] [touch-action:none] overflow-visible select-none" role="application" aria-label={labels.hint} onpointerdown={(event) => startSwipe(event)} onpointermove={extendSwipe}>
+  <div class="relative flex-[0_0_clamp(214px,34svh,270px)] min-[580px]:flex-[0_0_clamp(214px,34svh,340px)] min-h-0 grid place-items-center border-t border-b border-[rgba(23,42,69,.16)] bg-[#fffdf7] dark:bg-[#172a45]">
+    <svg bind:this={circleEl} viewBox="0 0 292 292" class="w-[min(100%,238px)] min-[580px]:w-[min(292px,31svh)] [touch-action:none] overflow-visible select-none" role="application" aria-label={labels.hint} onpointerdown={(event) => startSwipe(event)} onpointermove={extendSwipe}>
       <circle cx={CIRCLE} cy={CIRCLE} r={LETTER_RADIUS} class="[fill:none] stroke-[#172a45] [stroke-width:1.1] opacity-[.28] dark:stroke-[#fffdf7]" /><circle cx={CIRCLE} cy={CIRCLE} r="68" class="[fill:none] stroke-[#172a45] [stroke-width:1] opacity-[.12] dark:stroke-[#fffdf7]" /><circle cx={CIRCLE} cy={CIRCLE} r="47" class="[fill:none] stroke-primary [stroke-width:1.8] opacity-90" /><path d="M124 146a22 22 0 1 0 44 0a22 22 0 1 1-44 0Z" class="fill-[#172a45] opacity-[.83] dark:fill-[#fffdf7]" />
       <text x={CIRCLE} y="142" text-anchor="middle" class={`font-['DM_Serif_Display'] text-[13px] tracking-[.08em] fill-[rgba(23,42,69,.52)] dark:fill-[rgba(255,253,247,.55)] ${activeWord.length > 0 ? 'fill-[#c98220] dark:fill-primary' : 'fill-[#a0621d] font-[\'DM_Sans\'] text-[10.8px] font-extrabold tracking-[.08em]'}`}>{coreReadout}</text><text x={CIRCLE} y="161" text-anchor="middle" class="fill-[rgba(23,42,69,.5)] font-['DM_Sans'] text-[5.8px] font-extrabold tracking-[.18em] dark:fill-[rgba(255,253,247,.55)]">{activeWord ? traceCaption : '·'}</text>
       {#if selectedPath.length > 1}<polyline points={pathPoints()} class="[fill:none] stroke-primary [stroke-linecap:round] [stroke-linejoin:round] [stroke-width:10] opacity-90" />{/if}

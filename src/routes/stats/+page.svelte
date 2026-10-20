@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { m } from '$lib/paraglide/messages';
-  import { getTextDirection } from '$lib/paraglide/runtime';
-  import { settings } from '$lib/state/settings.svelte';
-  import { playableLanguages, wordMetadata } from '$lib/data/vocabulary';
-  import { readVocabularyProgressByLanguage } from '$lib/vocab/spacedRepetition';
+  import { m } from '#lib/paraglide/messages.js';
+  import { getTextDirection } from '#lib/paraglide/runtime.js';
+  import { settings } from '#lib/state/settings.svelte.js';
+  import { playableLanguages, wordMetadata } from '#lib/data/vocabulary.js';
+  import { readVocabularyProgressByLanguage } from '#lib/vocab/spacedRepetition.js';
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
   import IconPending from '~icons/material-symbols/radio-button-unchecked-rounded';
   import IconFlame from '~icons/material-symbols/local-fire-department-rounded';

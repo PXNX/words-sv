@@ -1,5 +1,5 @@
 <script lang="ts">
-  let { status = 404 } = $props<{ status?: number }>();
+  let { status = 404 }: { status?: number } = $props();
 </script>
 
 <svelte:head><title>{status} · WordCircle</title></svelte:head>

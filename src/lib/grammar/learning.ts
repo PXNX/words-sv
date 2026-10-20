@@ -1,9 +1,9 @@
-import type { Language } from '$lib/data/vocabulary';
+import type { Language } from '#lib/data/vocabulary.js';
 
 export const GRAMMAR_REVIEW_STORAGE_PREFIX = 'wordcircle-grammar-review-v1';
 
 // Only languages whose nouns carry a grammatical-gender article in the vocabulary data
-// (see `article` in `$lib/data/vocabulary`) can offer a gap-fill article exercise.
+// (see `article` in `#lib/data/vocabulary.js`) can offer a gap-fill article exercise.
 export const grammarArticles: Partial<Record<Language, string[]>> = {
   de: ['der', 'die', 'das'],
   fr: ['le', 'la', 'l’'],

@@ -1,10 +1,10 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
-  import { m } from '$lib/paraglide/messages';
-  import { settings } from '$lib/state/settings.svelte';
-  import { normalizePlayableWord, isLetterWord } from '$lib/wordle/wordleWords';
-  import { keyboardLayoutFor, type WordleMark } from '$lib/wordle/keyboardLayouts';
-  import WordleKeyboard from '$lib/wordle/WordleKeyboard.svelte';
+  import { m } from '#lib/paraglide/messages.js';
+  import { settings } from '#lib/state/settings.svelte.js';
+  import { normalizePlayableWord, isLetterWord } from '#lib/wordle/wordleWords.js';
+  import { keyboardLayoutFor, type WordleMark } from '#lib/wordle/keyboardLayouts.js';
+  import WordleKeyboard from '#lib/wordle/WordleKeyboard.svelte';
 
   let { words, language }: { words: string[]; language: string } = $props();
   let target = $state('');

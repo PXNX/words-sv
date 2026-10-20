@@ -1,4 +1,4 @@
-import { vocabularyLevels, wordPools, type Language, type VocabularyLevel } from '$lib/data/vocabulary';
+import { vocabularyLevels, wordPools, type Language, type VocabularyLevel } from '#lib/data/vocabulary.js';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const INTERVAL_DAYS = [1, 2, 4, 8, 16, 32];

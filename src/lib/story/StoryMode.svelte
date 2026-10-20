@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onMount, tick, untrack } from 'svelte';
   import { goto } from '$app/navigation';
-  import { m } from '$lib/paraglide/messages';
-  import { getTextDirection } from '$lib/paraglide/runtime';
-  import { settings } from '$lib/state/settings.svelte';
-  import { playErrorSound, playSuccessSound } from '$lib/sounds';
+  import { m } from '#lib/paraglide/messages.js';
+  import { getTextDirection } from '#lib/paraglide/runtime.js';
+  import { settings } from '#lib/state/settings.svelte.js';
+  import { playErrorSound, playSuccessSound } from '#lib/sounds.js';
   import { characterNames, fillName, storiesFor, type Story, type StoryBeat } from './stories';
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';

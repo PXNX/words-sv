@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { settings } from '$lib/state/settings.svelte';
+  import { settings } from '#lib/state/settings.svelte.js';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
 

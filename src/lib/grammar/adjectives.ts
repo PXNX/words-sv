@@ -1,4 +1,4 @@
-import type { VocabularyGender } from '$lib/data/vocabulary';
+import type { VocabularyGender } from '#lib/data/vocabulary.js';
 import { articleTable, capitalize, pickArticleKind, pickCase, uniqueEndingsAcrossGenders, type ArticleKind, type GrammarCase, type GrammarPrompt } from './cases';
 
 // Endings for an attributive adjective after a der-word (weak declension) and after

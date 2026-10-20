@@ -1,7 +1,7 @@
-import { requiresCumulativePool } from '$lib/circle/engine';
-import { wordPools, isLanguage, isVocabularyLevel, type Language, type VocabularyLevel } from '$lib/data/vocabulary';
-import { readStreak, syncStreak, type ClientStreak, type StreakEvent } from '$lib/clientStreak';
-import type { Locale } from '$lib/paraglide/runtime';
+import { requiresCumulativePool } from '#lib/circle/engine.js';
+import { wordPools, isLanguage, isVocabularyLevel, type Language, type VocabularyLevel } from '#lib/data/vocabulary.js';
+import { readStreak, syncStreak, type ClientStreak, type StreakEvent } from '#lib/clientStreak.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 
 export type Theme = 'light' | 'dark';
 export type InterfaceLocale = Locale;
