@@ -114,5 +114,19 @@
   "stats_no_vocab_progress": "Потренуйте слова, щоб побачити прогрес тут.",
   "stats_overall_progress": "Загальний прогрес",
   "stats_mastered_words": "Опановані слова",
-  "stats_by_level": "За рівнями"
+  "stats_by_level": "За рівнями",
+  "story_title": "Історії",
+  "story_home": "Прочитай коротку історію та долучайся до розмови.",
+  "story_question": "Що сталося?",
+  "story_reply": "Що ти відповіси?",
+  "story_finished": "Історію завершено!",
+  "story_score": "{correct} з {total} з першої спроби",
+  "story_next": "Наступна історія",
+  "story_again": "Прочитати ще раз",
+  "story_listen": "Слухати",
+  "onboarding_name_title": "Як до тебе звертатися?",
+  "onboarding_name_label": "Ім’я",
+  "onboarding_name_placeholder": "Твоє ім’я",
+  "onboarding_name_hint": "Персонажі історій звертатимуться до тебе на це ім’я.",
+  "home_greeting": "Привіт, {name}!"
 }

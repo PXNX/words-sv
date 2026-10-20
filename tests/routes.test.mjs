@@ -90,7 +90,7 @@ test('unknown routes receive a branded 404 page with a clear return route', () =
 test('Vercel keeps static files first and falls back to the app for direct mode routes, including their tutorial sub-routes', () => {
 	assert.deepEqual(vercelConfig.routes, [
 		{ handle: 'filesystem' },
-		{ src: '/(circle(?:/tutorial|/definitions)?|wordle(?:/tutorial)?|hangman(?:/tutorial)?|vocab|pronunciation|alltag|grammar|stats|settings)/?', dest: '/$1/index.html' }
+		{ src: '/(circle(?:/tutorial|/definitions)?|wordle(?:/tutorial)?|hangman(?:/tutorial)?|vocab|pronunciation|alltag|grammar|story|stats|settings)/?', dest: '/$1/index.html' }
 	]);
 	});
 

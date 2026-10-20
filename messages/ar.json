@@ -114,5 +114,19 @@
   "stats_no_vocab_progress": "تدرّب على المفردات لترى تقدمك هنا.",
   "stats_overall_progress": "التقدم الإجمالي",
   "stats_mastered_words": "الكلمات المُتقَنة",
-  "stats_by_level": "حسب المستوى"
+  "stats_by_level": "حسب المستوى",
+  "story_title": "قصص",
+  "story_home": "اقرأ قصة قصيرة وشارك في المحادثة.",
+  "story_question": "ماذا حدث؟",
+  "story_reply": "بماذا تجيب؟",
+  "story_finished": "انتهت القصة!",
+  "story_score": "{correct} من {total} صحيحة من المحاولة الأولى",
+  "story_next": "القصة التالية",
+  "story_again": "اقرأ مرة أخرى",
+  "story_listen": "استمع",
+  "onboarding_name_title": "بماذا نناديك؟",
+  "onboarding_name_label": "الاسم الأول",
+  "onboarding_name_placeholder": "اسمك الأول",
+  "onboarding_name_hint": "ستناديك شخصيات القصص بهذا الاسم.",
+  "home_greeting": "مرحبًا، {name}!"
 }

@@ -118,5 +118,19 @@
   "stats_no_vocab_progress": "Übe Vokabeln, um hier deinen Fortschritt zu sehen.",
   "stats_overall_progress": "Gesamtfortschritt",
   "stats_mastered_words": "Gemeisterte Wörter",
-  "stats_by_level": "Nach Level"
+  "stats_by_level": "Nach Level",
+  "story_title": "Geschichten",
+  "story_home": "Lies eine kurze Geschichte und rede mit.",
+  "story_question": "Was ist passiert?",
+  "story_reply": "Was antwortest du?",
+  "story_finished": "Geschichte geschafft!",
+  "story_score": "{correct} von {total} beim ersten Versuch richtig",
+  "story_next": "Nächste Geschichte",
+  "story_again": "Nochmal lesen",
+  "story_listen": "Anhören",
+  "onboarding_name_title": "Wie sollen wir dich nennen?",
+  "onboarding_name_label": "Vorname",
+  "onboarding_name_placeholder": "Dein Vorname",
+  "onboarding_name_hint": "Die Figuren in den Geschichten sprechen dich mit diesem Namen an.",
+  "home_greeting": "Hallo, {name}!"
 }

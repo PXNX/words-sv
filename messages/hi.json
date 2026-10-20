@@ -114,5 +114,19 @@
   "stats_no_vocab_progress": "प्रगति देखने के लिए शब्दावली का अभ्यास करें।",
   "stats_overall_progress": "कुल प्रगति",
   "stats_mastered_words": "पूर्णतः सीखे गए शब्द",
-  "stats_by_level": "स्तर के अनुसार"
+  "stats_by_level": "स्तर के अनुसार",
+  "story_title": "कहानियाँ",
+  "story_home": "एक छोटी कहानी पढ़ें और बातचीत में शामिल हों।",
+  "story_question": "क्या हुआ?",
+  "story_reply": "आप क्या जवाब देंगे?",
+  "story_finished": "कहानी पूरी हुई!",
+  "story_score": "{total} में से {correct} पहली कोशिश में सही",
+  "story_next": "अगली कहानी",
+  "story_again": "फिर से पढ़ें",
+  "story_listen": "सुनें",
+  "onboarding_name_title": "हम आपको किस नाम से बुलाएँ?",
+  "onboarding_name_label": "पहला नाम",
+  "onboarding_name_placeholder": "आपका पहला नाम",
+  "onboarding_name_hint": "कहानियों के पात्र आपको इसी नाम से बुलाएँगे।",
+  "home_greeting": "नमस्ते, {name}!"
 }

@@ -114,5 +114,19 @@
   "stats_no_vocab_progress": "Pratique vocabulário para ver o progresso aqui.",
   "stats_overall_progress": "Progresso geral",
   "stats_mastered_words": "Palavras dominadas",
-  "stats_by_level": "Por nível"
+  "stats_by_level": "Por nível",
+  "story_title": "Histórias",
+  "story_home": "Leia uma história curta e participe da conversa.",
+  "story_question": "O que aconteceu?",
+  "story_reply": "Como você responde?",
+  "story_finished": "História concluída!",
+  "story_score": "{correct} de {total} certas na primeira tentativa",
+  "story_next": "Próxima história",
+  "story_again": "Ler de novo",
+  "story_listen": "Ouvir",
+  "onboarding_name_title": "Como devemos chamar você?",
+  "onboarding_name_label": "Primeiro nome",
+  "onboarding_name_placeholder": "Seu primeiro nome",
+  "onboarding_name_hint": "Os personagens das histórias vão chamar você por este nome.",
+  "home_greeting": "Oi, {name}!"
 }

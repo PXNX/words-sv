@@ -3,7 +3,8 @@
   import { goto } from '$app/navigation';
   import { m } from '$lib/paraglide/messages';
   import { getTextDirection } from '$lib/paraglide/runtime';
-  import { settings, interfaceLocales } from '$lib/state/settings.svelte';
+  import { settings, interfaceLocales, FIRST_NAME_MAX_LENGTH } from '$lib/state/settings.svelte';
+  import StoryCharacter from '$lib/story/StoryCharacter.svelte';
   import { playableLanguages, type Language } from '$lib/data/vocabulary';
   import IconSettings from '~icons/material-symbols/settings-rounded';
   import IconHelp from '~icons/material-symbols/help-rounded';
@@ -19,6 +20,7 @@
   import IconFactCheck from '~icons/material-symbols/fact-check-rounded';
   import IconSort from '~icons/material-symbols/sort-rounded';
   import IconSwapHoriz from '~icons/material-symbols/swap-horiz-rounded';
+  import IconStory from '~icons/material-symbols/auto-stories-rounded';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
 
@@ -26,6 +28,9 @@
 
   let rootOnboarding = $state(false);
   let streakTimer: number | null = null;
+  let nameDraft = $state('');
+  // Existing users who finished the language step before names existed still get asked once.
+  const needsName = $derived(!rootOnboarding && !settings.firstName);
 
   const labels = $derived({
     settings: m.settings({}, { locale: settings.interfaceLocale }),
@@ -59,7 +64,15 @@
     streak: m.streak({}, { locale: settings.interfaceLocale }),
     streakDone: m.streak_done({}, { locale: settings.interfaceLocale }),
     streakProgress: m.streak_progress({}, { locale: settings.interfaceLocale }),
-    streakTimeLeft: m.streak_time_left({}, { locale: settings.interfaceLocale })
+    streakTimeLeft: m.streak_time_left({}, { locale: settings.interfaceLocale }),
+    story: m.story_title({}, { locale: settings.interfaceLocale }),
+    homeStory: m.story_home({}, { locale: settings.interfaceLocale }),
+    nameTitle: m.onboarding_name_title({}, { locale: settings.interfaceLocale }),
+    nameLabel: m.onboarding_name_label({}, { locale: settings.interfaceLocale }),
+    namePlaceholder: m.onboarding_name_placeholder({}, { locale: settings.interfaceLocale }),
+    nameHint: m.onboarding_name_hint({}, { locale: settings.interfaceLocale }),
+    continue: m.continue({}, { locale: settings.interfaceLocale }),
+    greeting: m.home_greeting({ name: settings.firstName }, { locale: settings.interfaceLocale })
   });
 
   function formatMinutes(minutes: number) {
@@ -71,11 +84,15 @@
     localStorage.setItem(ROOT_ONBOARDING_KEY, 'complete');
     rootOnboarding = false;
   }
+  function submitName(event: SubmitEvent) {
+    event.preventDefault();
+    settings.setFirstName(nameDraft);
+  }
   function selectOnboardingInterfaceLocale(event: Event) {
     const value = (event.currentTarget as HTMLSelectElement).value;
     if (interfaceLocales.some((locale) => locale.code === value)) settings.setInterfaceLocale(value as typeof settings.interfaceLocale);
   }
-  function selectMode(mode: 'circle' | 'wordle' | 'vocab' | 'grammar' | 'hangman' | 'pronunciation' | 'alltag') {
+  function selectMode(mode: 'circle' | 'wordle' | 'vocab' | 'grammar' | 'hangman' | 'pronunciation' | 'alltag' | 'story') {
     void goto(`/${mode}`);
   }
   function openTutorial(mode: 'circle' | 'wordle' | 'hangman') {
@@ -123,8 +140,20 @@
       <div class="home-language-choice">{#each playableLanguages as language}<button type="button" onclick={() => finishRootOnboarding(language.code)}>{language.label}</button>{/each}</div>
       <span>{labels.onboardingSubtitle}</span>
     </div>
+  {:else if needsName}
+    <form class="home-onboarding" onsubmit={submitName}>
+      <div class="home-onboarding-cast" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="leo" /></div>
+      <h1>{labels.nameTitle}</h1>
+      <label class="home-onboarding-field">
+        <span>{labels.nameLabel}</span>
+        <!-- svelte-ignore a11y_autofocus -->
+        <input bind:value={nameDraft} type="text" name="given-name" autocomplete="given-name" autocapitalize="words" maxlength={FIRST_NAME_MAX_LENGTH} placeholder={labels.namePlaceholder} required autofocus />
+      </label>
+      <span>{labels.nameHint}</span>
+      <button type="submit" class="home-name-submit" disabled={!nameDraft.trim()}>{labels.continue}</button>
+    </form>
   {:else}
-    <header class="home-header"><p>{labels.homeKicker}</p><h1>{labels.homeTitle}</h1></header>
+    <header class="home-header"><p>{labels.greeting} · {labels.homeKicker}</p><h1>{labels.homeTitle}</h1></header>
     <button type="button" class:qualified={settings.streak.qualified} class="home-streak" onclick={() => void goto('/stats')} aria-label={`${labels.streak}: ${settings.streak.streakCount}`}>
       <span class="home-streak-flame" aria-hidden="true"><IconFlame /></span>
       <span class="home-streak-count"><strong>{settings.streak.streakCount}</strong><small>{labels.streak}</small></span>
@@ -139,6 +168,10 @@
       <article class={streakClass('circle')} role="button" tabindex="0" onclick={() => void goto('/circle/definitions')} onkeydown={(event) => activateOnKey(event, () => void goto('/circle/definitions'))}><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>Kreuzwort</h2><p>Same crossword, but tap any square for that word's definition.</p></article>
       <article class={streakClass('wordle')} role="button" tabindex="0" onclick={() => selectMode('wordle')} onkeydown={(event) => activateOnKey(event, () => selectMode('wordle'))}><span class="home-icon" aria-hidden="true"><IconSpellcheck /></span><h2>{labels.modeWordle}</h2><p>{labels.homeWordle}</p><button type="button" class="home-tutorial-link" onclick={(event) => { event.stopPropagation(); openTutorial('wordle'); }} aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></button></article>
       <article class={streakClass(null)} role="button" tabindex="0" onclick={() => selectMode('hangman')} onkeydown={(event) => activateOnKey(event, () => selectMode('hangman'))}><span class="home-icon" aria-hidden="true"><IconHangman /></span><h2>{labels.modeHangman}</h2><p>Guess the hidden word one letter at a time.</p><button type="button" class="home-tutorial-link" onclick={(event) => { event.stopPropagation(); openTutorial('hangman'); }} aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></button></article>
+    </div>
+    <h2 class="home-group-heading">{labels.story}</h2>
+    <div class="home-games">
+      <article class="home-story-card {streakClass(null)}" role="button" tabindex="0" onclick={() => selectMode('story')} onkeydown={(event) => activateOnKey(event, () => selectMode('story'))}><span class="home-icon" aria-hidden="true"><IconStory /></span><div><h2>{labels.story}</h2><p>{labels.homeStory}</p></div><span class="home-story-cast" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="bello" /></span></article>
     </div>
     <h2 class="home-group-heading">{labels.vocabularyGroup}</h2>
     <div class="home-games">
@@ -170,6 +203,12 @@
   .home-games { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem; }.home-games article { position:relative;display:grid;grid-template-rows:auto auto 1fr;justify-items:center;gap:.3rem;padding:1rem .6rem .9rem;border-radius:1.15rem;border:1px solid rgba(23,42,69,.14);border-top:3px solid #172a45;background:#fffdf7;box-shadow:0 8px 20px rgba(23,42,69,.08);text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .16s cubic-bezier(.23,1,.32,1); }.home-games article:active { transform:scale(.97); }.home-games article.streak-done { border-top-color:#34824d; }.home-games article.streak-pending { border-top-color:#e6a527; }.home-games article.streak-none { border-top-color:#172a45; }.home-icon { display:grid;place-items:center;width:2.6rem;height:2.6rem;border:1px solid rgba(23,42,69,.24);border-radius:50%;background:rgba(230,165,39,.14);color:#a45e38; }.home-icon :global(svg) { width:1.3rem;height:1.3rem; }.home-games h2 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:.98rem;font-weight:400;line-height:1.15; }.home-games p { margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:700;line-height:1.35; }.home-language-choice button:active { transform:scale(.97); }.home-tutorial-link { position:absolute;top:.5rem;right:.5rem;display:grid;place-items:center;width:1.35rem;height:1.35rem;flex:none;padding:0;border:1px solid rgba(23,42,69,.3);border-radius:50%;background:#fffdf7;color:#a45e38;cursor:pointer; }.home-tutorial-link :global(svg) { width:.78rem;height:.78rem; }.home-tutorial-link:active { transform:scale(.94); }
   .home-onboarding { width:min(100%,27rem);display:grid;justify-self:center;gap:.9rem;padding:clamp(1.15rem,6vw,1.8rem);border-radius:1.3rem;border:1px solid rgba(23,42,69,.32);border-top:4px double #172a45;background:#fffdf7;box-shadow:0 12px 30px rgba(23,42,69,.14);text-align:center; }.home-language-choice { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem;margin-top:.45rem; }.home-language-choice button { min-width:0;min-height:2.7rem;border-radius:999px;border:1px solid #172a45;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:900;letter-spacing:.04em; }.home-language-choice button+button { background:#fffdf7;color:#172a45; }
   .home-onboarding-field { display:grid;gap:.3rem;text-align:left; }.home-onboarding-field>span { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }.home-onboarding-field select { min-height:2.4rem;padding:0 .6rem;border-radius:.7rem;border:1px solid rgba(23,42,69,.28);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:800; }
+  .home-onboarding-cast { display:flex;justify-content:center;gap:.4rem;height:5.2rem; }.home-onboarding-cast :global(.story-character) { width:4.4rem;height:100%; }
+  .home-onboarding-field input { min-height:2.6rem;padding:0 .75rem;border-radius:.7rem;border:1px solid rgba(23,42,69,.28);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:800; }.home-onboarding-field input:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
+  .home-name-submit { min-height:2.7rem;border-radius:999px;border:1px solid #172a45;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase; }.home-name-submit:disabled { opacity:.45; }.home-name-submit:not(:disabled):active { transform:scale(.97); }
+  .home-games article.home-story-card { grid-column:1 / -1;grid-template-columns:auto 1fr auto;grid-template-rows:none;align-items:center;justify-items:start;gap:.75rem;padding:.75rem .9rem;text-align:start; }.home-story-card div { display:grid;gap:.2rem; }.home-story-cast { display:flex;align-items:flex-end;height:3.6rem; }.home-story-cast :global(.story-character) { width:2.9rem;height:100%; }.home-story-cast :global(.story-character + .story-character) { width:2.3rem;height:75%;margin-inline-start:-.5rem; }
+  :global(html.dark) .home-onboarding-field input { border-color:rgba(255,253,247,.4);background:#213a5d;color:#fffdf7; }
+  :global(html.dark) .home-name-submit { border-color:#e6a527;background:#e6a527;color:#172a45; }
   :global(html.dark) .home-header h1,:global(html.dark) .home-onboarding h1,:global(html.dark) .home-games h2 { color:#fffdf7 !important;text-shadow:none; }
   :global(html.dark) .home-onboarding>span,:global(html.dark) .home-games p { color:rgba(255,253,247,.72); }
   :global(html.dark) .home-games article,:global(html.dark) .home-onboarding { border-color:rgba(255,253,247,.42);background:#213a5d; }

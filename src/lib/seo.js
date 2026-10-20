@@ -90,6 +90,12 @@ export const pages = {
 		kicker: 'Grammatik',
 		icon: 'edit-note-rounded'
 	},
+	'/story': {
+		title: 'Geschichten',
+		description: 'Lies eine kurze Geschichte und rede mit.',
+		kicker: 'Lesen',
+		icon: 'auto-stories-rounded'
+	},
 	'/stats': {
 		title: 'Statistik',
 		description: 'Deine tägliche Serie und dein Lernfortschritt auf einen Blick.',

@@ -114,5 +114,19 @@
   "stats_no_vocab_progress": "واژگان را تمرین کنید تا پیشرفت خود را اینجا ببینید.",
   "stats_overall_progress": "پیشرفت کلی",
   "stats_mastered_words": "واژه‌های تسلط‌یافته",
-  "stats_by_level": "بر اساس سطح"
+  "stats_by_level": "بر اساس سطح",
+  "story_title": "داستان‌ها",
+  "story_home": "یک داستان کوتاه بخوان و در گفتگو شرکت کن.",
+  "story_question": "چه اتفاقی افتاد؟",
+  "story_reply": "چه جوابی می‌دهی؟",
+  "story_finished": "داستان تمام شد!",
+  "story_score": "{correct} از {total} در اولین تلاش درست",
+  "story_next": "داستان بعدی",
+  "story_again": "دوباره بخوان",
+  "story_listen": "گوش بده",
+  "onboarding_name_title": "چه صدایت کنیم؟",
+  "onboarding_name_label": "نام کوچک",
+  "onboarding_name_placeholder": "نام کوچک تو",
+  "onboarding_name_hint": "شخصیت‌های داستان‌ها تو را با این نام صدا می‌زنند.",
+  "home_greeting": "سلام، {name}!"
 }

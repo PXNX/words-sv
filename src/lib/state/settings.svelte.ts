@@ -29,6 +29,8 @@ const LANGUAGE_KEY = 'wordcircle-language-v1';
 const INTERFACE_LOCALE_KEY = 'wordcircle-interface-locale-v1';
 const ROUND_TOTAL_KEY = 'wordcircle-completed-rounds-v1';
 const WORDLE_LENGTH_KEY = 'wordcircle-wordle-length-v1';
+const FIRST_NAME_KEY = 'wordcircle-first-name-v1';
+export const FIRST_NAME_MAX_LENGTH = 30;
 
 function isInterfaceLocale(value: unknown): value is InterfaceLocale {
   return typeof value === 'string' && interfaceLocales.some((locale) => locale.code === value);
@@ -80,6 +82,7 @@ class SettingsStore {
   completedRounds = $state(readCompletedRounds());
   wordleLength = $state<WordleLength>(readWordleLength());
   streak = $state<ClientStreak>(readStreak());
+  firstName = $state(typeof localStorage === 'undefined' ? '' : localStorage.getItem(FIRST_NAME_KEY) ?? '');
 
   hasStoredInterfaceLocale() {
     return typeof localStorage !== 'undefined' && Boolean(localStorage.getItem(INTERFACE_LOCALE_KEY));
@@ -120,6 +123,12 @@ class SettingsStore {
   setAllowBackwardWords(next: boolean) {
     this.allowBackwardWords = next;
     localStorage.setItem(BACKWARD_WORDS_KEY, next ? 'on' : 'off');
+  }
+  setFirstName(next: string) {
+    const name = next.trim().replace(/\s+/g, ' ').slice(0, FIRST_NAME_MAX_LENGTH);
+    if (!name) return;
+    this.firstName = name;
+    localStorage.setItem(FIRST_NAME_KEY, name);
   }
   setWordleLength(next: WordleLength) {
     this.wordleLength = next;
