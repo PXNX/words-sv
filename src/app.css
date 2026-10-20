@@ -166,6 +166,7 @@ html.dark { --play-line: #0b1626; }
     background: #fffdf7;
     color: #172a45;
     box-shadow: var(--play-shadow);
+    text-decoration: none;
     font-family: 'DM Sans', sans-serif;
     font-size: .68rem;
     font-weight: 900;

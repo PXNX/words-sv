@@ -33,6 +33,10 @@
 	onNavigate((navigation) => {
 		if (navigation.shallow && navigation.type === 'goto') return;
 		if (!document.startViewTransition) return;
+		// Going deeper (home → mode → tutorial) slides forward, going up or back in history slides back.
+		const depth = (path = '/') => path.split('/').filter(Boolean).length;
+		const back = navigation.delta !== undefined ? navigation.delta < 0 : depth(navigation.to?.url.pathname) < depth(navigation.from?.url.pathname);
+		document.documentElement.dataset.navDirection = back ? 'back' : 'forward';
 		return new Promise((resolve) => {
 			document.startViewTransition(async () => {
 				resolve();
@@ -90,7 +94,17 @@
 
 <style>
 	:global(html),:global(body) { width:100%;min-height:100%;touch-action:pan-y; }
-	:global(::view-transition-old(root)),:global(::view-transition-new(root)) { animation-duration:.14s;animation-timing-function:ease-out; }
+	:global(::view-transition-old(root)) { animation:.22s cubic-bezier(.4,0,1,1) both vt-out; }
+	:global(::view-transition-new(root)) { animation:.32s cubic-bezier(.2,.9,.3,1.15) both vt-in; }
+	:global(html[data-nav-direction='back']::view-transition-old(root)) { animation-name:vt-out-back; }
+	:global(html[data-nav-direction='back']::view-transition-new(root)) { animation-name:vt-in-back; }
+	@keyframes -global-vt-out { to { opacity:0;transform:translateX(-12%) scale(.96); } }
+	@keyframes -global-vt-in { from { opacity:0;transform:translateX(18%) rotate(1.2deg); } }
+	@keyframes -global-vt-out-back { to { opacity:0;transform:translateX(12%) scale(.96); } }
+	@keyframes -global-vt-in-back { from { opacity:0;transform:translateX(-18%) rotate(-1.2deg); } }
+	@media (prefers-reduced-motion:reduce) { :global(html[data-nav-direction]::view-transition-old(root)) { animation:.12s ease-out both vt-fade-out; } :global(html[data-nav-direction]::view-transition-new(root)) { animation:.12s ease-out both vt-fade-in; } }
+	@keyframes -global-vt-fade-out { to { opacity:0; } }
+	@keyframes -global-vt-fade-in { from { opacity:0; } }
 	.portrait-content { width:100%;min-height:100svh; }
 	:global(.game-shell) { min-height:100svh;padding:0;display:flex;align-items:stretch;justify-content:center; }
 	.game-paper { position:relative;isolation:isolate;box-sizing:border-box;overflow:hidden;width:100%;height:100svh;min-height:0;padding:0;display:flex;flex-direction:column;justify-content:center;border:0;background-color:#ede4d5;background-image:radial-gradient(circle at 50% 15%,rgba(230,165,39,.18),transparent 34%),linear-gradient(rgba(23,42,69,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.018) 1px,transparent 1px);background-size:auto,24px 24px,24px 24px;box-shadow:none; }

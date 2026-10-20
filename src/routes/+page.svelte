@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings, interfaceLocales, FIRST_NAME_MAX_LENGTH } from '#lib/state/settings.svelte.js';
@@ -36,7 +35,6 @@
 
   const labels = $derived({
     settings: m.settings({}, { locale: settings.interfaceLocale }),
-    homeKicker: m.home_kicker({}, { locale: settings.interfaceLocale }),
     homeTitle: m.home_title({}, { locale: settings.interfaceLocale }),
     homeCircle: m.home_circle({}, { locale: settings.interfaceLocale }),
     homeWordle: m.home_wordle({}, { locale: settings.interfaceLocale }),
@@ -75,8 +73,7 @@
     nameHint: m.onboarding_name_hint({}, { locale: settings.interfaceLocale }),
     continue: m.continue({}, { locale: settings.interfaceLocale }),
     homeCast: m.home_cast({}, { locale: settings.interfaceLocale }),
-    petLilith: m.pet_lilith({}, { locale: settings.interfaceLocale }),
-    greeting: m.home_greeting({ name: settings.firstName }, { locale: settings.interfaceLocale })
+    petLilith: m.pet_lilith({}, { locale: settings.interfaceLocale })
   });
 
   function formatMinutes(minutes: number) {
@@ -101,21 +98,6 @@
     playSoundEffect(settings.sound, 'purr');
     petting = false;
     requestAnimationFrame(() => (petting = true));
-  }
-  function selectMode(mode: 'circle' | 'wordle' | 'vocab' | 'grammar' | 'hangman' | 'pronunciation' | 'alltag' | 'story') {
-    void goto(`/${mode}`);
-  }
-  function openTutorial(mode: 'circle' | 'wordle' | 'hangman') {
-    void goto(`/${mode}/tutorial`);
-  }
-  function openGrammar(mode: 'fill' | 'determine' | 'order' | 'falsefriends') {
-    void goto(`/grammar?mode=${mode}`);
-  }
-  function activateOnKey(event: KeyboardEvent, action: () => void) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      action();
-    }
   }
   // Only Circle, Kreuzwort (same completion signal as Circle), Wordle and Word Quiz count
   // toward the daily streak — color those by today's status and leave every other mode neutral.
@@ -166,41 +148,41 @@
     <UpdateAppHint />
     <header class="home-header">
       <div class="home-family"><span class="home-family-people" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="tom" /></span><button type="button" class="home-lilith-pet" class:petting onclick={petLilith} onanimationend={() => (petting = false)} aria-label={labels.petLilith}><span class="home-lilith"><StoryCharacter id="lilith" mood={petting ? 'happy' : 'neutral'} /></span></button></div>
-      <p>{labels.greeting} · {labels.homeKicker}</p><h1>{labels.homeTitle}</h1><span class="home-cast-note">{labels.homeCast}</span>
+      <h1>{labels.homeTitle}</h1><span class="home-cast-note">{labels.homeCast}</span>
     </header>
-    <button type="button" class:qualified={settings.streak.qualified} class="card-play home-streak" onclick={() => void goto('/stats')} aria-label={`${labels.streak}: ${settings.streak.streakCount}`}>
+    <a class:qualified={settings.streak.qualified} class="card-play home-streak" href="/stats" aria-label={`${labels.streak}: ${settings.streak.streakCount}`}>
       <span class="home-streak-flame" aria-hidden="true"><IconFlame /></span>
       <span class="home-streak-count"><strong>{settings.streak.streakCount}</strong><small>{labels.streak}</small></span>
       <span class="home-streak-detail">
         {#if settings.streak.qualified}<b>{labels.streakDone}</b>{:else}<b>{labels.streakProgress}: {settings.streak.vocabCorrect}/{settings.streak.vocabularyGoal}</b><small>{labels.streakTimeLeft}: {formatMinutes(settings.streak.minutesRemaining)}</small>{/if}
       </span>
       <IconChevronRight class="home-streak-arrow" aria-hidden="true" />
-    </button>
+    </a>
     <h2 class="home-group-heading">{labels.gamesGroup}</h2>
     <div class="home-games home-games--games">
-      <article class="card-play {streakClass('circle')}" role="button" tabindex="0" onclick={() => selectMode('circle')} onkeydown={(event) => activateOnKey(event, () => selectMode('circle'))}><span class="home-icon" aria-hidden="true"><IconCrossword /></span><h2>{labels.modeCrossword}</h2><p>{labels.homeCircle}</p><button type="button" class="btn-play btn-play-round btn-play-sm home-tutorial-link" onclick={(event) => { event.stopPropagation(); openTutorial('circle'); }} aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></button></article>
-      <article class="card-play {streakClass('circle')}" role="button" tabindex="0" onclick={() => void goto('/circle/definitions')} onkeydown={(event) => activateOnKey(event, () => void goto('/circle/definitions'))}><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>Kreuzwort</h2><p>Same crossword, but tap any square for that word's definition.</p></article>
-      <article class="card-play {streakClass('wordle')}" role="button" tabindex="0" onclick={() => selectMode('wordle')} onkeydown={(event) => activateOnKey(event, () => selectMode('wordle'))}><span class="home-icon" aria-hidden="true"><IconSpellcheck /></span><h2>{labels.modeWordle}</h2><p>{labels.homeWordle}</p><button type="button" class="btn-play btn-play-round btn-play-sm home-tutorial-link" onclick={(event) => { event.stopPropagation(); openTutorial('wordle'); }} aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></button></article>
-      <article class="card-play {streakClass(null)}" role="button" tabindex="0" onclick={() => selectMode('hangman')} onkeydown={(event) => activateOnKey(event, () => selectMode('hangman'))}><span class="home-icon" aria-hidden="true"><IconHangman /></span><h2>{labels.modeHangman}</h2><p>Guess the hidden word one letter at a time.</p><button type="button" class="btn-play btn-play-round btn-play-sm home-tutorial-link" onclick={(event) => { event.stopPropagation(); openTutorial('hangman'); }} aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></button></article>
+      <div class="home-card-slot"><a class="card-play {streakClass('circle')}" href="/circle"><span class="home-icon" aria-hidden="true"><IconCrossword /></span><h2>{labels.modeCrossword}</h2><p>{labels.homeCircle}</p></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/circle/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
+      <a class="card-play {streakClass('circle')}" href="/circle/definitions"><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>Kreuzwort</h2><p>Same crossword, but tap any square for that word's definition.</p></a>
+      <div class="home-card-slot"><a class="card-play {streakClass('wordle')}" href="/wordle"><span class="home-icon" aria-hidden="true"><IconSpellcheck /></span><h2>{labels.modeWordle}</h2><p>{labels.homeWordle}</p></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/wordle/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
+      <div class="home-card-slot"><a class="card-play {streakClass(null)}" href="/hangman"><span class="home-icon" aria-hidden="true"><IconHangman /></span><h2>{labels.modeHangman}</h2><p>Guess the hidden word one letter at a time.</p></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/hangman/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
     </div>
     <h2 class="home-group-heading">{labels.story}</h2>
     <div class="home-games">
-      <article class="card-play home-story-card {streakClass(null)}" role="button" tabindex="0" onclick={() => selectMode('story')} onkeydown={(event) => activateOnKey(event, () => selectMode('story'))}><span class="home-icon" aria-hidden="true"><IconStory /></span><div><h2>{labels.story}</h2><p>{labels.homeStory}</p></div><span class="home-story-cast" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="lilith" /></span></article>
+      <a class="card-play home-story-card {streakClass(null)}" href="/story"><span class="home-icon" aria-hidden="true"><IconStory /></span><div><h2>{labels.story}</h2><p>{labels.homeStory}</p></div><span class="home-story-cast" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="lilith" /></span></a>
     </div>
     <h2 class="home-group-heading">{labels.vocabularyGroup}</h2>
     <div class="home-games">
-      <article class="card-play {streakClass('vocab')}" role="button" tabindex="0" onclick={() => selectMode('vocab')} onkeydown={(event) => activateOnKey(event, () => selectMode('vocab'))}><span class="home-icon" aria-hidden="true"><IconQuiz /></span><h2>{labels.wordQuiz}</h2><p>{labels.homeVocab}</p></article>
-      <article class="card-play {streakClass(null)}" role="button" tabindex="0" onclick={() => selectMode('pronunciation')} onkeydown={(event) => activateOnKey(event, () => selectMode('pronunciation'))}><span class="home-icon" aria-hidden="true"><IconMic /></span><h2>{labels.pronunciation}</h2><p>Listen to audio samples and practise speaking.</p></article>
-      <article class="card-play {streakClass(null)}" role="button" tabindex="0" onclick={() => selectMode('alltag')} onkeydown={(event) => activateOnKey(event, () => selectMode('alltag'))}><span class="home-icon" aria-hidden="true"><IconEmoji /></span><h2>{labels.alltag}</h2><p>Präpositionen, Zahlen und Farben für den Alltag.</p></article>
-      <article class="card-play {streakClass(null)}" role="button" tabindex="0" onclick={() => openGrammar('falsefriends')} onkeydown={(event) => activateOnKey(event, () => openGrammar('falsefriends'))}><span class="home-icon" aria-hidden="true"><IconSwapHoriz /></span><h2>{labels.grammarFalseFriends}</h2><p>Wörter, die täuschend ähnlich aussehen, aber etwas anderes bedeuten.</p></article>
+      <a class="card-play {streakClass('vocab')}" href="/vocab"><span class="home-icon" aria-hidden="true"><IconQuiz /></span><h2>{labels.wordQuiz}</h2><p>{labels.homeVocab}</p></a>
+      <a class="card-play {streakClass(null)}" href="/pronunciation"><span class="home-icon" aria-hidden="true"><IconMic /></span><h2>{labels.pronunciation}</h2><p>Listen to audio samples and practise speaking.</p></a>
+      <a class="card-play {streakClass(null)}" href="/alltag"><span class="home-icon" aria-hidden="true"><IconEmoji /></span><h2>{labels.alltag}</h2><p>Präpositionen, Zahlen und Farben für den Alltag.</p></a>
+      <a class="card-play {streakClass(null)}" href="/grammar?mode=falsefriends"><span class="home-icon" aria-hidden="true"><IconSwapHoriz /></span><h2>{labels.grammarFalseFriends}</h2><p>Wörter, die täuschend ähnlich aussehen, aber etwas anderes bedeuten.</p></a>
     </div>
     <h2 class="home-group-heading">{labels.grammarGroup}</h2>
     <div class="home-games">
-      <article class="card-play {streakClass(null)}" role="button" tabindex="0" onclick={() => openGrammar('fill')} onkeydown={(event) => activateOnKey(event, () => openGrammar('fill'))}><span class="home-icon" aria-hidden="true"><IconEditNote /></span><h2>{labels.grammarFill}</h2><p>{labels.homeGrammar}</p></article>
-      <article class="card-play {streakClass(null)}" role="button" tabindex="0" onclick={() => openGrammar('determine')} onkeydown={(event) => activateOnKey(event, () => openGrammar('determine'))}><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>{labels.grammarDetermine}</h2><p>Kasus, Genus, Numerus, Person und Tempus bestimmen.</p></article>
-      <article class="card-play {streakClass(null)}" role="button" tabindex="0" onclick={() => openGrammar('order')} onkeydown={(event) => activateOnKey(event, () => openGrammar('order'))}><span class="home-icon" aria-hidden="true"><IconSort /></span><h2>{labels.grammarOrder}</h2><p>Ordne Wörter und bilde einen korrekten Satz.</p></article>
+      <a class="card-play {streakClass(null)}" href="/grammar?mode=fill"><span class="home-icon" aria-hidden="true"><IconEditNote /></span><h2>{labels.grammarFill}</h2><p>{labels.homeGrammar}</p></a>
+      <a class="card-play {streakClass(null)}" href="/grammar?mode=determine"><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>{labels.grammarDetermine}</h2><p>Kasus, Genus, Numerus, Person und Tempus bestimmen.</p></a>
+      <a class="card-play {streakClass(null)}" href="/grammar?mode=order"><span class="home-icon" aria-hidden="true"><IconSort /></span><h2>{labels.grammarOrder}</h2><p>Ordne Wörter und bilde einen korrekten Satz.</p></a>
     </div>
-    <button class="btn-play btn-play-soft btn-play-sm home-settings-link" onclick={() => void goto('/settings')}><IconSettings aria-hidden="true" /><span>{labels.settings}</span></button>
+    <a class="btn-play btn-play-soft btn-play-sm home-settings-link" href="/settings"><IconSettings aria-hidden="true" /><span>{labels.settings}</span></a>
   {/if}
 </section>
 
@@ -214,7 +196,7 @@
   .home-streak-detail { display:grid;gap:.15rem;justify-items:start; }.home-streak-detail b { color:#172a45;font-family:'DM Sans',sans-serif;font-size:.63rem;font-weight:800;line-height:1.3; }.home-streak-detail small { color:#596477;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:800; }
   .home-streak :global(.home-streak-arrow) { width:1.2rem;height:1.2rem;flex:none;color:rgba(23,42,69,.4); }
   .home-streak.qualified .home-streak-flame { background:#cfe6d4;color:#34824d; }.home-streak.qualified .home-streak-count strong,.home-streak.qualified .home-streak-detail b { color:#34824d; }
-  .home-family { position:relative;justify-self:center;display:flex;align-items:flex-end;height:6.2rem;margin-bottom:.35rem; }
+  .home-family { position:relative;justify-self:center;display:flex;align-items:flex-end;height:6.2rem;margin-top:clamp(1rem,5vh,2.25rem);margin-bottom:.6rem; }
   .home-family-people { display:flex;align-items:flex-end;height:100%;padding:.55rem .9rem 0 .55rem;border:2px solid #172a45;border-bottom-width:0;border-radius:3.2rem 3.2rem .4rem .4rem;background:radial-gradient(circle at 50% 85%,#f7e2b0,#fbf1da 70%);overflow:hidden; }
   .home-family-people :global(.story-character) { width:4rem;height:5.4rem; }.home-family-people :global(.story-character + .story-character) { margin-inline-start:-.9rem; }
   .home-family::after { content:'';position:absolute;inset:auto -.6rem 0;height:2px;border-radius:2px;background:#172a45; }
@@ -227,18 +209,18 @@
   .home-cast-note { justify-self:center;color:#596477;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700; }
   @keyframes lilith-breathe { 0%,100% { scale:1; } 50% { scale:1.018 1.012; } }
   @media (prefers-reduced-motion:reduce) { .home-lilith { animation:none; } }
-  .home-games { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem; }.home-games article { position:relative;display:grid;grid-template-rows:auto auto 1fr;justify-items:center;gap:.3rem;padding:1rem .6rem .9rem;border-top-width:5px;text-align:center;cursor:pointer; }.home-games article:nth-child(4n+1) { --tilt:-.7deg; }.home-games article:nth-child(4n+2) { --tilt:.5deg; }.home-games article:nth-child(4n+3) { --tilt:-.3deg; }.home-games article:nth-child(4n) { --tilt:.6deg; }.home-games article.home-story-card { --tilt:-.35deg; }.home-games article.streak-done { border-top-color:#34824d; }.home-games article.streak-pending { border-top-color:#e6a527; }.home-games article.streak-none { border-top-color:#172a45; }.home-icon { display:grid;place-items:center;width:2.6rem;height:2.6rem;border:2px solid #172a45;border-radius:48% 52% 46% 54% / 54% 46% 52% 48%;background:#f7e2b0;color:#a45e38;transition:rotate .25s var(--play-ease); }.home-icon :global(svg) { width:1.3rem;height:1.3rem; }.home-games h2 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:.98rem;font-weight:400;line-height:1.15; }.home-games p { margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:700;line-height:1.35; }.home-tutorial-link { position:absolute;top:.45rem;right:.45rem;box-shadow:2px 2px 0 #172a45;color:#a45e38; }
+  .home-games { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem; }.home-games a.card-play,.home-streak { color:inherit;text-decoration:none; }.home-card-slot { position:relative;display:grid; }.home-games .card-play { position:relative;display:grid;grid-template-rows:auto auto 1fr;justify-items:center;gap:.3rem;padding:1rem .6rem .9rem;border-top-width:5px;text-align:center;cursor:pointer; }.home-games > :nth-child(4n+1) { --tilt:-.7deg; }.home-games > :nth-child(4n+2) { --tilt:.5deg; }.home-games > :nth-child(4n+3) { --tilt:-.3deg; }.home-games > :nth-child(4n) { --tilt:.6deg; }.home-games .card-play.home-story-card { --tilt:-.35deg; }.home-games .card-play.streak-done { border-top-color:#34824d; }.home-games .card-play.streak-pending { border-top-color:#e6a527; }.home-games .card-play.streak-none { border-top-color:#172a45; }.home-icon { display:grid;place-items:center;width:2.6rem;height:2.6rem;border:2px solid #172a45;border-radius:48% 52% 46% 54% / 54% 46% 52% 48%;background:#f7e2b0;color:#a45e38;transition:rotate .25s var(--play-ease); }.home-icon :global(svg) { width:1.3rem;height:1.3rem; }.home-games h2 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:.98rem;font-weight:400;line-height:1.15; }.home-games p { margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:700;line-height:1.35; }.home-tutorial-link { position:absolute;top:.45rem;right:.45rem;box-shadow:2px 2px 0 #172a45;color:#a45e38; }
   .home-onboarding { width:min(100%,27rem);display:grid;justify-self:center;gap:.9rem;padding:clamp(1.15rem,6vw,1.8rem);border-radius:22px 14px 20px 15px / 15px 20px 14px 22px;border:2px solid #172a45;background:#fffdf7;box-shadow:4px 4px 0 #172a45;text-align:center; }.home-language-choice { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem;margin-top:.45rem; }.home-language-choice button { min-width:0;min-height:2.8rem;font-size:.72rem;letter-spacing:.04em;text-transform:none; }.home-language-choice button:first-child { background:#172a45;color:#fffdf7; }
   .home-onboarding-field { display:grid;gap:.3rem;text-align:left; }.home-onboarding-field>span { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }.home-onboarding-field select { min-height:2.4rem;padding:0 .6rem;border-radius:.7rem;border:1px solid rgba(23,42,69,.28);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:800; }
   .home-onboarding-cast { display:flex;justify-content:center;align-items:flex-end;gap:.4rem;height:5.2rem; }.home-onboarding-cast .home-lilith { width:3.7rem;height:4.6rem;margin-inline-start:-.6rem; }.home-onboarding-cast :global(.story-character) { width:4.4rem;height:100%; }
   .home-onboarding-field input { min-height:2.6rem;padding:0 .75rem;border-radius:.7rem;border:1px solid rgba(23,42,69,.28);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:800; }.home-onboarding-field input:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
   .home-name-submit { min-height:2.8rem;font-size:.72rem; }
-  .home-games article.home-story-card { grid-column:1 / -1;grid-template-columns:auto 1fr auto;grid-template-rows:none;align-items:center;justify-items:start;gap:.75rem;padding:.75rem .9rem;text-align:start; }.home-story-card div { display:grid;gap:.2rem; }.home-story-cast { display:flex;align-items:flex-end;height:3.6rem; }.home-story-cast :global(.story-character) { width:2.9rem;height:100%; }.home-story-cast :global(.story-character + .story-character) { width:2.3rem;height:75%;margin-inline-start:-.5rem; }
-  @media (hover:hover) { .home-games article:hover .home-icon { rotate:-8deg; } }
-  @media (prefers-reduced-motion:reduce) { .home-icon { transition:none; } .home-games article:hover .home-icon { rotate:none; } }
+  .home-games .card-play.home-story-card { grid-column:1 / -1;grid-template-columns:auto 1fr auto;grid-template-rows:none;align-items:center;justify-items:start;gap:.75rem;padding:.75rem .9rem;text-align:start; }.home-story-card div { display:grid;gap:.2rem; }.home-story-cast { display:flex;align-items:flex-end;height:3.6rem; }.home-story-cast :global(.story-character) { width:2.9rem;height:100%; }.home-story-cast :global(.story-character + .story-character) { width:2.3rem;height:75%;margin-inline-start:-.5rem; }
+  @media (hover:hover) { .home-games .card-play:hover .home-icon { rotate:-8deg; } }
+  @media (prefers-reduced-motion:reduce) { .home-icon { transition:none; } .home-games .card-play:hover .home-icon { rotate:none; } }
   @media (min-width:640px) {
     .home-games { gap:.8rem; }
-    .home-games article { padding:1.2rem .9rem 1.1rem; }
+    .home-games .card-play { padding:1.2rem .9rem 1.1rem; }
     .home-games h2 { font-size:1.12rem; }
     .home-games p { font-size:.74rem; }
     .home-group-heading,.home-header p { font-size:.7rem; }
@@ -254,7 +236,7 @@
   :global(html.dark) .home-header h1,:global(html.dark) .home-onboarding h1,:global(html.dark) .home-games h2 { color:#fffdf7 !important;text-shadow:none; }
   :global(html.dark) .home-family-people { border-color:#0b1626;background:radial-gradient(circle at 50% 85%,#2b4a73,#213a5d 70%); }:global(html.dark) .home-family::after { background:#0b1626; }
   :global(html.dark) .home-onboarding>span,:global(html.dark) .home-cast-note,:global(html.dark) .home-games p { color:rgba(255,253,247,.72); }
-  :global(html.dark) .home-onboarding { border-color:#0b1626;background:#213a5d;box-shadow:4px 4px 0 #0b1626; }:global(html.dark) .home-games article.streak-none { border-top-color:#0b1626; }
+  :global(html.dark) .home-onboarding { border-color:#0b1626;background:#213a5d;box-shadow:4px 4px 0 #0b1626; }:global(html.dark) .home-games .card-play.streak-none { border-top-color:#0b1626; }
   :global(html.dark) .home-tutorial-link { box-shadow:2px 2px 0 #0b1626;color:#e6a527; }
   :global(html.dark) .home-icon,:global(html.dark) .home-streak-flame { border-color:#0b1626;background:#172a45;color:#e6a527; }
   :global(html.dark) .home-language-choice button:first-child { background:#e6a527;color:#172a45; }
