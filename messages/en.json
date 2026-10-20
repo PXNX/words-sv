@@ -132,5 +132,6 @@
   "onboarding_name_label": "First name",
   "onboarding_name_placeholder": "Your first name",
   "onboarding_name_hint": "The characters in the stories will talk to you by this name.",
-  "home_greeting": "Hi, {name}!"
+  "home_greeting": "Hi, {name}!",
+  "home_cast": "Learning together with Mia, Tom and Lilith"
 }

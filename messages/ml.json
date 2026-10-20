@@ -128,5 +128,6 @@
   "onboarding_name_label": "പേര്",
   "onboarding_name_placeholder": "നിങ്ങളുടെ പേര്",
   "onboarding_name_hint": "കഥകളിലെ കഥാപാത്രങ്ങൾ നിങ്ങളെ ഈ പേരിൽ വിളിക്കും.",
-  "home_greeting": "ഹായ്, {name}!"
+  "home_greeting": "ഹായ്, {name}!",
+  "home_cast": "മിയ, ടോം, ലിലിത്ത് എന്നിവരോടൊപ്പം ഒരുമിച്ച് പഠിക്കാം"
 }

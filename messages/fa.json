@@ -128,5 +128,6 @@
   "onboarding_name_label": "نام کوچک",
   "onboarding_name_placeholder": "نام کوچک تو",
   "onboarding_name_hint": "شخصیت‌های داستان‌ها تو را با این نام صدا می‌زنند.",
-  "home_greeting": "سلام، {name}!"
+  "home_greeting": "سلام، {name}!",
+  "home_cast": "با میا، تام و لیلیت با هم یاد می‌گیریم"
 }

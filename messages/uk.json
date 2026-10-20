@@ -128,5 +128,6 @@
   "onboarding_name_label": "Ім’я",
   "onboarding_name_placeholder": "Твоє ім’я",
   "onboarding_name_hint": "Персонажі історій звертатимуться до тебе на це ім’я.",
-  "home_greeting": "Привіт, {name}!"
+  "home_greeting": "Привіт, {name}!",
+  "home_cast": "Вчимося разом із Мією, Томом і Ліліт"
 }
