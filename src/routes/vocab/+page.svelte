@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onMount, untrack } from 'svelte';
-  import { playSuccessSound, playErrorSound } from '$lib/sounds';
-  import { settings } from '$lib/state/settings.svelte';
-  import { wordPools, wordDefinitions, wordMetadata } from '$lib/data/vocabulary';
-  import { m } from '$lib/paraglide/messages';
-  import { definitionChoiceWords, insertLearningRepeat, pickLearningSection } from '$lib/vocab/learning';
-  import { VOCABULARY_REVIEW_STORAGE_PREFIX, prioritizeLearningWords, updateReviewProgress } from '$lib/vocab/spacedRepetition';
+  import { playSuccessSound, playErrorSound } from '#lib/sounds.js';
+  import { settings } from '#lib/state/settings.svelte.js';
+  import { wordPools, wordDefinitions, wordMetadata } from '#lib/data/vocabulary.js';
+  import { m } from '#lib/paraglide/messages.js';
+  import { definitionChoiceWords, insertLearningRepeat, pickLearningSection } from '#lib/vocab/learning.js';
+  import { VOCABULARY_REVIEW_STORAGE_PREFIX, prioritizeLearningWords, updateReviewProgress } from '#lib/vocab/spacedRepetition.js';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';

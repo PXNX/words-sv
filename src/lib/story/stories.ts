@@ -1,5 +1,5 @@
-import type { Language, VocabularyLevel } from '$lib/data/vocabulary';
-import { vocabularyLevels } from '$lib/data/vocabulary';
+import type { Language, VocabularyLevel } from '#lib/data/vocabulary.js';
+import { vocabularyLevels } from '#lib/data/vocabulary.js';
 
 export type Text = Record<Language, string>;
 export type CharacterId = 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello';

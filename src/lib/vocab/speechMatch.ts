@@ -1,5 +1,5 @@
-import type { Language } from '$lib/data/vocabulary';
-import { transcribeToIpa } from '$lib/vocab/ipa';
+import type { Language } from '#lib/data/vocabulary.js';
+import { transcribeToIpa } from '#lib/vocab/ipa.js';
 
 // Compares a speech-recognition transcript against the word being practised. Recognisers return
 // real dictionary words, so a different spelling almost always means a different word ("Maus" for

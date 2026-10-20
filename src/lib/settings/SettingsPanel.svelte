@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { m } from '$lib/paraglide/messages';
-  import { getTextDirection } from '$lib/paraglide/runtime';
-  import { settings, interfaceLocales, FIRST_NAME_MAX_LENGTH, type WordleLength } from '$lib/state/settings.svelte';
-  import { playableLanguages, vocabularyLevels, isLanguage, type VocabularyLevel } from '$lib/data/vocabulary';
+  import { m } from '#lib/paraglide/messages.js';
+  import { getTextDirection } from '#lib/paraglide/runtime.js';
+  import { settings, interfaceLocales, FIRST_NAME_MAX_LENGTH, type WordleLength } from '#lib/state/settings.svelte.js';
+  import { playableLanguages, vocabularyLevels, isLanguage, type VocabularyLevel } from '#lib/data/vocabulary.js';
   import { disablePush, enablePush, pushEnabled, pushSupported } from './pushClient';
   import { onMount } from 'svelte';
   import IconDark from '~icons/material-symbols/dark-mode-rounded';

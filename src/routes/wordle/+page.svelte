@@ -1,12 +1,12 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { browser } from '$app/environment';
-  import WordleMode from '$lib/wordle/WordleMode.svelte';
-  import { playSuccessSound } from '$lib/sounds';
-  import { settings } from '$lib/state/settings.svelte';
-  import { wordPools } from '$lib/data/vocabulary';
-  import { m } from '$lib/paraglide/messages';
-  import { consumeWordlePracticeRequest } from '$lib/wordle/practice';
+  import { browser } from '$app/env';
+  import WordleMode from '#lib/wordle/WordleMode.svelte';
+  import { playSuccessSound } from '#lib/sounds.js';
+  import { settings } from '#lib/state/settings.svelte.js';
+  import { wordPools } from '#lib/data/vocabulary.js';
+  import { m } from '#lib/paraglide/messages.js';
+  import { consumeWordlePracticeRequest } from '#lib/wordle/practice.js';
 
   const WORDLE_TUTORIAL_KEY = 'wordcircle-wordle-tutorial-v1';
 
@@ -26,4 +26,13 @@
   const words = $derived(wordPools[settings.lang][settings.vocabularyLevel]);
 </script>
 
-<WordleMode {words} level={settings.vocabularyLevel} language={settings.lang} wordLength={settings.wordleLength} {labels} {practice} onGreen={() => playSuccessSound(settings.sound, 'wordle')} onWin={() => void settings.recordStreak('wordle_completed')} />
+<WordleMode
+  words={words}
+  level={settings.vocabularyLevel}
+  language={settings.lang}
+  wordLength={settings.wordleLength}
+  labels={labels}
+  practice={practice}
+  onGreen={() => playSuccessSound(settings.sound, 'wordle')}
+  onWin={() => void settings.recordStreak('wordle_completed')}
+/>

@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onMount, untrack } from 'svelte';
-  import { settings } from '$lib/state/settings.svelte';
-  import { wordMetadata } from '$lib/data/vocabulary';
-  import { transcribeToIpa } from '$lib/vocab/ipa';
-  import { evaluateAttempt, ipaDiff, type CorrectionSegment } from '$lib/vocab/speechMatch';
-  import { playSuccessSound } from '$lib/sounds';
+  import { settings } from '#lib/state/settings.svelte.js';
+  import { wordMetadata } from '#lib/data/vocabulary.js';
+  import { transcribeToIpa } from '#lib/vocab/ipa.js';
+  import { evaluateAttempt, ipaDiff, type CorrectionSegment } from '#lib/vocab/speechMatch.js';
+  import { playSuccessSound } from '#lib/sounds.js';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';

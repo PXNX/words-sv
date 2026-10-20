@@ -1,4 +1,4 @@
-import type { VocabularyGender } from '$lib/data/vocabulary';
+import type { VocabularyGender } from '#lib/data/vocabulary.js';
 
 export type GrammarCase = 'nominative' | 'accusative' | 'dative';
 export type ArticleKind = 'definite' | 'indefinite';

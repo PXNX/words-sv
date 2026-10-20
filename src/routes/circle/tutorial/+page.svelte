@@ -1,11 +1,11 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
-  import { m } from '$lib/paraglide/messages';
-  import { getTextDirection } from '$lib/paraglide/runtime';
-  import { settings } from '$lib/state/settings.svelte';
-  import TutorialDialog from '$lib/TutorialDialog.svelte';
-  import { requestCirclePractice } from '$lib/circle/practice';
+  import { m } from '#lib/paraglide/messages.js';
+  import { getTextDirection } from '#lib/paraglide/runtime.js';
+  import { settings } from '#lib/state/settings.svelte.js';
+  import TutorialDialog from '#lib/TutorialDialog.svelte';
+  import { requestCirclePractice } from '#lib/circle/practice.js';
 
   const isDefinitionsMode = $derived(page.url.searchParams.get('mode') === 'definitions');
   const destination = $derived(isDefinitionsMode ? '/circle/definitions' : '/circle');

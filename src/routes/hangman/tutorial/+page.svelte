@@ -1,9 +1,9 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { m } from '$lib/paraglide/messages';
-  import { getTextDirection } from '$lib/paraglide/runtime';
-  import { settings } from '$lib/state/settings.svelte';
-  import TutorialDialog from '$lib/TutorialDialog.svelte';
+  import { m } from '#lib/paraglide/messages.js';
+  import { getTextDirection } from '#lib/paraglide/runtime.js';
+  import { settings } from '#lib/state/settings.svelte.js';
+  import TutorialDialog from '#lib/TutorialDialog.svelte';
 
   const HANGMAN_TUTORIAL_KEY = 'wordcircle-hangman-tutorial-v1';
 

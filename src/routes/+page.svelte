@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import { m } from '$lib/paraglide/messages';
-  import { getTextDirection } from '$lib/paraglide/runtime';
-  import { settings, interfaceLocales, FIRST_NAME_MAX_LENGTH } from '$lib/state/settings.svelte';
-  import StoryCharacter from '$lib/story/StoryCharacter.svelte';
-  import { playableLanguages, type Language } from '$lib/data/vocabulary';
+  import { m } from '#lib/paraglide/messages.js';
+  import { getTextDirection } from '#lib/paraglide/runtime.js';
+  import { settings, interfaceLocales, FIRST_NAME_MAX_LENGTH } from '#lib/state/settings.svelte.js';
+  import StoryCharacter from '#lib/story/StoryCharacter.svelte';
+  import { playableLanguages, type Language } from '#lib/data/vocabulary.js';
   import IconSettings from '~icons/material-symbols/settings-rounded';
   import IconHelp from '~icons/material-symbols/help-rounded';
   import IconFlame from '~icons/material-symbols/local-fire-department-rounded';
@@ -207,6 +207,26 @@
   .home-onboarding-field input { min-height:2.6rem;padding:0 .75rem;border-radius:.7rem;border:1px solid rgba(23,42,69,.28);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:800; }.home-onboarding-field input:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
   .home-name-submit { min-height:2.7rem;border-radius:999px;border:1px solid #172a45;background:#172a45;color:#fffdf7;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase; }.home-name-submit:disabled { opacity:.45; }.home-name-submit:not(:disabled):active { transform:scale(.97); }
   .home-games article.home-story-card { grid-column:1 / -1;grid-template-columns:auto 1fr auto;grid-template-rows:none;align-items:center;justify-items:start;gap:.75rem;padding:.75rem .9rem;text-align:start; }.home-story-card div { display:grid;gap:.2rem; }.home-story-cast { display:flex;align-items:flex-end;height:3.6rem; }.home-story-cast :global(.story-character) { width:2.9rem;height:100%; }.home-story-cast :global(.story-character + .story-character) { width:2.3rem;height:75%;margin-inline-start:-.5rem; }
+  @media (hover:hover) {
+    .home-games article,.home-streak,.home-settings-link,.home-language-choice button,.home-tutorial-link { cursor:pointer; }
+    .home-games article { transition:transform .16s cubic-bezier(.23,1,.32,1),box-shadow .16s; }
+    .home-games article:hover,.home-streak:hover { transform:translateY(-2px);box-shadow:0 14px 28px rgba(23,42,69,.13); }
+    .home-games article:active,.home-streak:active { transform:scale(.98); }
+    .home-settings-link:hover { border-color:rgba(23,42,69,.5);color:#172a45; }
+  }
+  .home-games article:focus-visible { outline:3px solid rgba(230,165,39,.55);outline-offset:3px; }
+  @media (min-width:640px) {
+    .home-games { gap:.8rem; }
+    .home-games article { padding:1.2rem .9rem 1.1rem; }
+    .home-games h2 { font-size:1.12rem; }
+    .home-games p { font-size:.74rem; }
+    .home-group-heading,.home-header p { font-size:.7rem; }
+    .home-streak-detail b { font-size:.74rem; }.home-streak-detail small { font-size:.66rem; }.home-streak-count small { font-size:.58rem; }
+    .home-settings-link { font-size:.66rem;min-height:2.3rem;padding:0 1rem; }
+    .home-onboarding>span { font-size:.82rem; }.home-onboarding>p,.home-onboarding-field>span { font-size:.68rem; }.home-onboarding-field select,.home-language-choice button,.home-name-submit { font-size:.8rem; }
+  }
+  @media (min-width:760px) { .home-games { grid-template-columns:repeat(4,minmax(0,1fr)); } }
+  @media (min-width:700px) and (min-height:560px) { .home-view { padding:clamp(1.5rem,3.5vw,2.75rem) clamp(1.5rem,4vw,3rem); } }
   :global(html.dark) .home-onboarding-field input { border-color:rgba(255,253,247,.4);background:#213a5d;color:#fffdf7; }
   :global(html.dark) .home-name-submit { border-color:#e6a527;background:#e6a527;color:#172a45; }
   :global(html.dark) .home-header h1,:global(html.dark) .home-onboarding h1,:global(html.dark) .home-games h2 { color:#fffdf7 !important;text-shadow:none; }

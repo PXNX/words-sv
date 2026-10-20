@@ -1,4 +1,4 @@
-import { isLetterWord, normalizePlayableWord } from '$lib/wordle/wordleWords';
+import { isLetterWord, normalizePlayableWord } from '#lib/wordle/wordleWords.js';
 
 export function pickLearningSection(words: string[], random: () => number, size = 6): string[] {
 	const normalized = [...new Set(words.map(normalizePlayableWord).filter((word) => isLetterWord(word, 3, 18)))];

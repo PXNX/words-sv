@@ -1,20 +1,22 @@
 <script lang="ts">
 	import '../app.css';
-	import type { Pathname } from '$app/types';
+	import type { Path } from '$app/types';
 	import { resolve } from '$app/paths';
 	import { goto, onNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
-	import { getTextDirection, locales, localizeHref, setLocale } from '$lib/paraglide/runtime';
-	import { m } from '$lib/paraglide/messages';
-	import { settings } from '$lib/state/settings.svelte';
-	import StartupLoader from '$lib/StartupLoader.svelte';
-	import { pageTitle } from '$lib/seo';
+	import { getTextDirection, locales, localizeHref, setLocale } from '#lib/paraglide/runtime.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { settings } from '#lib/state/settings.svelte.js';
+	import StartupLoader from '#lib/StartupLoader.svelte';
+	import { pageTitle } from '#lib/seo.js';
 	import IconHome from '~icons/material-symbols/home-rounded';
 	let { children } = $props();
 	let hydrated = $state(false);
 
-	const isHome = $derived((page.url.pathname.replace(/\/+$/, '') || '/') === '/');
+	const routePath = $derived(page.url.pathname.replace(/\/+$/, '') || '/');
+	const isHome = $derived(routePath === '/');
+	const isListPage = $derived(routePath === '/settings' || routePath === '/stats');
 	const homeLabel = $derived(m.home_button({}, { locale: settings.interfaceLocale }));
 	const shellLabel = $derived(m.label({}, { locale: settings.interfaceLocale }));
 
@@ -29,6 +31,7 @@
 	});
 
 	onNavigate((navigation) => {
+		if (navigation.shallow && navigation.type === 'goto') return;
 		if (!document.startViewTransition) return;
 		return new Promise((resolve) => {
 			document.startViewTransition(async () => {
@@ -67,7 +70,7 @@
 <div style="display:none">
 	{#each locales as locale (locale)}
 		<a
-			href={resolve(localizeHref(page.url.pathname, { locale }) as Pathname)}
+			href={resolve(localizeHref(page.url.pathname, { locale }) as Path)}
 		>{locale}</a>
 	{/each}
 </div>
@@ -77,7 +80,7 @@
 		<StartupLoader />
 	{:else}
 		<main class="game-shell">
-			<section class="game-paper" aria-label={shellLabel}>
+			<section class="game-paper" class:paper-wide={isHome} class:paper-list={isListPage} aria-label={shellLabel}>
 				{#if !isHome}<button class="home-trigger" onclick={() => void goto('/')} aria-label={homeLabel}><IconHome aria-hidden="true" /></button>{/if}
 				{@render children()}
 			</section>
@@ -95,13 +98,20 @@
 	.home-trigger { position:absolute;z-index:105;top:.62rem;left:.62rem;display:grid;place-items:center;width:2.1rem;height:2.1rem;padding:0;border:1px solid rgba(23,42,69,.36);border-radius:50%;background:rgba(255,253,247,.94);color:#172a45;box-shadow:0 2px 0 rgba(23,42,69,.1); }.home-trigger :global(svg) { width:1rem;height:1rem; }.home-trigger:active { transform:scale(.96); }
 	:global(html.dark) .game-paper { background-color:#213a5d; }
 	:global(html.dark) .home-trigger { border-color:rgba(255,253,247,.42);background:rgba(23,42,69,.94);color:#fffdf7; }
-	@media (orientation:landscape) {
-		:global(body) { background:#ede4d5; }
-		.portrait-content { width:min(100svh,430px);min-height:100svh;margin:0 auto;box-shadow:0 0 0 1px rgba(23,42,69,.15),0 0 42px rgba(23,42,69,.2); }
-		:global(.game-shell) { padding:clamp(.25rem,1.2vw,.55rem); }
-		.game-paper { width:min(100%,660px);height:calc(100svh - clamp(.5rem,2.4vw,1.1rem));border:1px solid rgba(23,42,69,.17);box-shadow:0 24px 70px rgba(30,33,44,.13),0 2px 0 rgba(23,42,69,.08); }
-		.game-paper::before { content:'';display:block;position:absolute;z-index:-1;inset:8px;border:1px solid rgba(23,42,69,.13);pointer-events:none; }
+	/* Phones (and phones held sideways, which are too short for a frame) stay full-bleed. Anything with room
+	   around it gets a framed paper sheet: wider for the home menu, medium for lists, game-sized otherwise. */
+	@media (min-width:700px) and (min-height:560px) {
+		:global(html.dark body) { background-color:#172a45;background-image:none; }
+		:global(.game-shell) { padding:clamp(.75rem,2.2vw,1.75rem); }
+		.game-paper { --paper-width:640px;width:min(100%,var(--paper-width));height:calc(100svh - 2 * clamp(.75rem,2.2vw,1.75rem));border:1px solid rgba(23,42,69,.17);border-radius:1.5rem;box-shadow:0 24px 70px rgba(30,33,44,.13),0 2px 0 rgba(23,42,69,.08); }
+		.game-paper.paper-list { --paper-width:760px; }
+		.game-paper.paper-wide { --paper-width:1000px; }
+		.game-paper::before { content:'';display:block;position:absolute;z-index:-1;inset:8px;border:1px solid rgba(23,42,69,.13);border-radius:1.1rem;pointer-events:none; }
 		:global(html.dark) .game-paper { border-color:rgba(255,253,247,.18);box-shadow:0 24px 70px rgba(0,0,0,.35); }
 		:global(html.dark) .game-paper::before { border-color:rgba(255,253,247,.14); }
+	}
+	@media (hover:hover) {
+		.home-trigger { cursor:pointer;transition:transform .16s cubic-bezier(.23,1,.32,1),box-shadow .16s; }
+		.home-trigger:hover { transform:translateY(-1px);box-shadow:0 4px 10px rgba(23,42,69,.16); }
 	}
 </style>

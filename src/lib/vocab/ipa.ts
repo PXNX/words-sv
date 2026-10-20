@@ -1,4 +1,4 @@
-import type { Language } from '$lib/data/vocabulary';
+import type { Language } from '#lib/data/vocabulary.js';
 
 // Approximate grapheme-to-phoneme transcription used only to give learners a rough
 // pronunciation hint next to a word. These are heuristic rule sets, not a full
