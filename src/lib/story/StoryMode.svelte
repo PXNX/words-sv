@@ -99,18 +99,30 @@
     reaction = null;
     presentBeat(next.beats[0]);
   }
-  // A beat's own sound effect (or Lilith purring whenever she speaks), plus the line read aloud
-  // in the speaker's voice when auto-read is on.
+  // A beat's own sound effect (or Lilith purring whenever she speaks), plus the narration or line
+  // read aloud in its speaker's voice when auto-read is on.
   function presentBeat(beat: StoryBeat | undefined) {
     if (!beat) return;
+    playBeatSound(beat);
+    if (autoRead && story) readBeat(beat, story.beats.indexOf(beat));
+  }
+  function playBeatSound(beat: StoryBeat) {
     if ((beat.kind === 'narration' || beat.kind === 'line') && beat.sfx) playSoundEffect(settings.sound, beat.sfx);
     else if (beat.kind === 'line' && beat.speaker === 'lilith') playSoundEffect(settings.sound, 'purr');
-    if (autoRead && beat.kind === 'line' && story) speak(say(beat.text[lang]), beat.speaker, story.beats.indexOf(beat));
+  }
+  function readBeat(beat: StoryBeat, index: number) {
+    if (beat.kind === 'narration') speak(say(beat.text[lang]));
+    else if (beat.kind === 'line') speak(say(beat.text[lang]), beat.speaker, index, moodFor(beat));
+  }
+  // Replaying a beat brings its sound effect back too.
+  function replayBeat(beat: StoryBeat, index: number) {
+    playBeatSound(beat);
+    readBeat(beat, index);
   }
   function toggleAutoRead() {
     autoRead = !autoRead;
     localStorage.setItem(AUTO_READ_KEY, autoRead ? 'on' : 'off');
-    if (autoRead && current?.kind === 'line') speak(say(current.text[lang]), current.speaker, currentIndex);
+    if (autoRead && current) readBeat(current, currentIndex);
     else if (!autoRead) cancelSpeech();
   }
   // Faces in the scene: whoever is talking shows the line's mood, a loud sound startles everyone,
@@ -165,13 +177,13 @@
     playErrorSound(settings.sound, 'vocab');
     if (settings.vibration && 'vibrate' in navigator) navigator.vibrate(60);
   }
-  function speak(text: string, speaker: Speaker = 'narrator', beat: number | null = null) {
+  function speak(text: string, speaker: Speaker = 'narrator', beat: number | null = null, mood: Mood = 'neutral') {
     if (typeof window === 'undefined' || !('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) return;
     lipSync.stop();
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = speechLocales[lang] ?? lang;
-    applyVoice(utterance, speaker, lang, settings.vocabularyLevel === 'a1' || settings.vocabularyLevel === 'a2' ? 0.85 : 1);
+    applyVoice(utterance, speaker, lang, utterance.lang, story?.cast ?? [], settings.vocabularyLevel === 'a1' || settings.vocabularyLevel === 'a2' ? 0.85 : 1, mood);
     if (speaker !== 'narrator') lipSync.attach(utterance, text, speaker, beat);
     window.speechSynthesis.speak(utterance);
   }
@@ -225,7 +237,7 @@
         {#if beat.kind === 'narration'}
           <li class="story-narration">
             <p>{say(beat.text[lang])}</p>
-            {#if speechSupported}<button type="button" class="btn-play btn-play-round btn-play-sm story-listen" onclick={() => speak(say(beat.text[lang]))} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
+            {#if speechSupported}<button type="button" class="btn-play btn-play-round btn-play-sm story-listen" onclick={() => replayBeat(beat, index)} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
           </li>
         {:else if beat.kind === 'line'}
           <li class="story-line" class:current={index === currentIndex} class:speaking={lipSync.beat === index}>
@@ -234,7 +246,7 @@
               <b>{characterNames[beat.speaker][lang]}</b>
               <p>{say(beat.text[lang])}</p>
             </div>
-            {#if speechSupported}<button type="button" class="btn-play btn-play-round btn-play-sm story-listen" onclick={() => speak(say(beat.text[lang]), beat.speaker, index)} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
+            {#if speechSupported}<button type="button" class="btn-play btn-play-round btn-play-sm story-listen" onclick={() => replayBeat(beat, index)} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
           </li>
         {:else if beat.kind === 'question'}
           <li class="story-question" class:solved={solved[index]}>
