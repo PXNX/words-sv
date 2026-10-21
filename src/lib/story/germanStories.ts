@@ -627,5 +627,103 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Womit vergleicht Jana das Produzieren von Dubstep?'), options: [german('Mit Code schreiben'), german('Mit Kochen'), german('Mit Autofahren')] },
       { kind: 'question', prompt: german('Wie endet der Nachmittag?'), options: [german('Oma tanzt zu Dubstep, und alle sind zufrieden.'), german('Alle gehen wütend nach Hause.'), german('Oma verbietet jede Musik.')] }
     ]
+  },
+  {
+    id: 'b2-favourite-food',
+    level: 'b2',
+    scene: 'square',
+    cast: ['ali', 'fritz', 'mia'],
+    languages: ['de'],
+    weathers: ['sunny', 'cloudy'],
+    title: german('Das Lieblingsessen der Deutschen'),
+    beats: [
+      { kind: 'narration', text: german('Mittagspause auf dem Marktplatz. Mia schreibt für ihre Lokalzeitung einen Artikel über das Lieblingsessen der Deutschen und befragt zwei Experten: Ali vom Dönerladen an der Ecke und Bauer Fritz, der am Marktstand Kartoffeln verkauft.') },
+      { kind: 'line', speaker: 'ali', mood: 'happy', text: german('Ganz klar: der Döner! Mein Freund, schau dir die Schlange vor meinem Laden an. Schätzungen zufolge gibt es in Deutschland über 16.000 Dönerläden – mehr als Filialen aller großen Burgerketten zusammen.') },
+      { kind: 'line', speaker: 'fritz', text: german('Ach was. Das Lieblingsessen der Deutschen ist und bleibt der Schweinebraten mit Knödeln. Oder ein ordentliches Schnitzel. Das hat schon mein Großvater gegessen.') },
+      { kind: 'line', speaker: 'mia', text: german('Interessanterweise sagen die Umfragen etwas anderes. Bei der Frage nach dem Lieblingsgericht landen seit Jahren Spaghetti Bolognese auf Platz eins, knapp vor Schnitzel und Rouladen. Und in Kantinen ist die Currywurst seit Jahrzehnten ganz vorne dabei.') },
+      { kind: 'line', speaker: 'fritz', mood: 'surprised', text: german('Spaghetti? Ein italienisches Gericht? Meine Güte, wo soll das noch hinführen.') },
+      { kind: 'line', speaker: 'ali', mood: 'laughing', text: german('Haha, Fritz, das ist doch das Schöne! Der Döner im Brot, wie man ihn hier kennt, wurde in den Siebzigerjahren in Berlin erfunden. Er ist so deutsch wie dein Braten.') },
+      { kind: 'line', speaker: 'mia', mood: 'curious', text: german('Woran liegt es eurer Meinung nach, dass gerade solche Gerichte so beliebt sind?') },
+      { kind: 'line', speaker: 'ali', text: german('Schnell, satt, bezahlbar. Die Leute haben eine halbe Stunde Pause und wollen etwas Warmes. Allerdings ist der Preis in den letzten Jahren von dreieinhalb auf fast acht Euro gestiegen: Fleisch, Energie, Miete – alles teurer.') },
+      { kind: 'line', speaker: 'fritz', text: german('Und bei Nudeln mit Soße weiß jedes Kind, was es bekommt. Vertrautheit, verstehst du? Was man als Kind gegessen hat, isst man ein Leben lang am liebsten.') },
+      { kind: 'line', speaker: 'mia', mood: 'curious', text: german('{name}, für meinen Artikel brauche ich noch eine dritte Stimme. Was ist deiner Meinung nach das typischste Gericht in Deutschland – und warum?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Ich glaube, es gibt kein einzelnes typisches Gericht mehr. Die deutsche Küche ist durch Migration vielfältig geworden – der Döner gehört genauso dazu wie das Schnitzel.'),
+        german('Das typischste Gericht ist ein Fahrrad mit Senf, weil es so schnell ist.'),
+        german('In Deutschland isst man grundsätzlich nur dienstags.')
+      ] },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Perfekt, das wird mein Schlusssatz. Und jetzt habe ich Hunger. Ali, einmal mit allem – und Fritz, ein Kilo Kartoffeln für heute Abend.') },
+      { kind: 'question', prompt: german('Wie viele Dönerläden gibt es Schätzungen zufolge in Deutschland?'), options: [german('Über 16.000'), german('Rund 1.600'), german('Über 160.000')] },
+      { kind: 'question', prompt: german('Welches Gericht landet laut Umfragen auf Platz eins?'), options: [german('Spaghetti Bolognese'), german('Schweinebraten mit Knödeln'), german('Currywurst')] },
+      { kind: 'question', prompt: german('Wo und wann wurde der Döner im Brot erfunden?'), options: [german('In den Siebzigerjahren in Berlin'), german('In den Fünfzigerjahren in Istanbul'), german('In den Neunzigerjahren in München')] },
+      { kind: 'question', prompt: german('Warum ist der Dönerpreis laut Ali gestiegen?'), options: [german('Weil Fleisch, Energie und Miete teurer geworden sind'), german('Weil die Portionen doppelt so groß sind'), german('Weil weniger Leute Döner essen')] },
+      { kind: 'question', prompt: german('Wie erklärt Fritz die Beliebtheit einfacher Gerichte?'), options: [german('Mit Vertrautheit aus der Kindheit'), german('Mit Werbung im Fernsehen'), german('Mit niedrigen Preisen im Supermarkt')] },
+      { kind: 'question', prompt: german('Welches Gericht ist in Kantinen seit Jahrzehnten ganz vorne dabei?'), options: [german('Die Currywurst'), german('Die Rouladen'), german('Der Döner')] }
+    ]
+  },
+  {
+    id: 'b2-wine',
+    level: 'b2',
+    scene: 'cafe',
+    cast: ['enzo', 'oma', 'albert'],
+    languages: ['de'],
+    title: german('Welcher Wein passt dazu?'),
+    beats: [
+      { kind: 'narration', text: german('Oma feiert nächste Woche ihren achtzigsten Geburtstag mit einem Abendessen für zwölf Gäste. Enzo, der Pizzabäcker, hat in seiner Familie in der Toskana viel über Wein gelernt und berät sie gemeinsam mit Albert.') },
+      { kind: 'line', speaker: 'oma', text: german('Es gibt drei Gänge: zuerst Spargel mit Sauce hollandaise, dann Entenbrust mit Rotkohl und zum Nachtisch Käse und Apfelstrudel. Und welchen Wein soll ich dazu servieren?') },
+      { kind: 'line', speaker: 'enzo', mood: 'happy', text: german('Che bello! Die wichtigste Regel: Wein und Essen sollen sich nicht gegenseitig erschlagen. Leichte Gerichte, leichte Weine. Kräftige Gerichte, kräftige Weine.') },
+      { kind: 'line', speaker: 'albert', text: german('Zum Spargel empfehle ich einen trockenen Silvaner oder Weißburgunder. Spargel ist heikel: Er lässt viele Weine metallisch schmecken, vor allem solche mit viel Gerbstoff.') },
+      { kind: 'line', speaker: 'oma', mood: 'curious', text: german('Gerbstoff? Was ist das denn genau?') },
+      { kind: 'line', speaker: 'enzo', text: german('Die Tannine, Signora! Sie kommen aus den Schalen der roten Trauben und machen den Mund trocken, ein bisschen wie schwarzer Tee. Bei fettem Fleisch ist das perfekt, denn Fett macht die Tannine weich. Deshalb passt zur Ente ein Spätburgunder: fruchtig, nicht zu schwer.') },
+      { kind: 'line', speaker: 'albert', text: german('Und beim Nachtisch gilt eine Regel, die viele nicht kennen: Der Wein muss süßer sein als das Dessert. Sonst schmeckt er plötzlich sauer und dünn.') },
+      { kind: 'line', speaker: 'enzo', text: german('Zum Blauschimmelkäse ein edelsüßer Wein, eine Riesling-Auslese zum Beispiel. Salz und Süße – das ist wie ein Tanz.') },
+      { kind: 'line', speaker: 'oma', mood: 'curious', text: german('{name}, du hast doch auch gut zugehört. Was würdest du servieren, wenn einer der Gäste ein scharfes Thai-Curry möchte?') },
+      { kind: 'reply', to: 'oma', options: [
+        german('Am besten einen halbtrockenen Riesling: Die leichte Süße und die Säure mildern die Schärfe, und er hat wenig Alkohol.'),
+        german('Einen sehr schweren Rotwein mit 15 Prozent Alkohol, damit es richtig brennt.'),
+        german('Zum Curry serviert man grundsätzlich nur Spülwasser.')
+      ] },
+      { kind: 'line', speaker: 'albert', text: german('Korrekt. Alkohol verstärkt die Schärfe, Süße dämpft sie. Das ist schlicht Chemie.') },
+      { kind: 'line', speaker: 'oma', mood: 'happy', text: german('Gut. Dann brauche ich für zwölf Leute sechs Flaschen Weißwein, sechs Flaschen Rotwein und zwei Flaschen Süßwein. Und eine Kiste Wasser für den Albert.') },
+      { kind: 'question', prompt: german('Was ist laut Enzo die wichtigste Regel?'), options: [german('Wein und Essen sollen sich nicht gegenseitig überdecken.'), german('Zu Fleisch immer Weißwein.'), german('Je teurer der Wein, desto besser.')] },
+      { kind: 'question', prompt: german('Warum ist Spargel beim Wein heikel?'), options: [german('Er lässt viele Weine metallisch schmecken.'), german('Er macht jeden Wein süßer.'), german('Er verträgt nur Rotwein.')] },
+      { kind: 'question', prompt: german('Warum passt ein Rotwein mit Tanninen gut zu fettem Fleisch?'), options: [german('Weil das Fett die Tannine weich macht'), german('Weil die Tannine das Fleisch zarter machen'), german('Weil Fett den Alkohol verstärkt')] },
+      { kind: 'question', prompt: german('Was gilt beim Dessertwein?'), options: [german('Der Wein muss süßer sein als das Dessert.'), german('Der Wein muss trockener sein als das Dessert.'), german('Zum Dessert trinkt man keinen Wein.')] },
+      { kind: 'question', prompt: german('Wie alt wird Oma?'), options: [german('Achtzig'), german('Siebzig'), german('Neunzig')] },
+      { kind: 'question', prompt: german('Wie viele Flaschen Wein braucht Oma insgesamt?'), options: [german('Vierzehn'), german('Zwölf'), german('Sechs')] }
+    ]
+  },
+  {
+    id: 'b2-immigration-office',
+    level: 'b2',
+    scene: 'office',
+    cast: ['kumar', 'mia', 'kim'],
+    languages: ['de'],
+    title: german('Auf der Ausländerbehörde'),
+    beats: [
+      { kind: 'narration', text: german('Kumars Visum läuft in drei Wochen ab. Nach vier Monaten Wartezeit hat er endlich einen Termin bei der Ausländerbehörde bekommen: Dienstag, 8:15 Uhr, Zimmer 214. Mia begleitet ihn zur Unterstützung.') },
+      { kind: 'line', speaker: 'kumar', mood: 'worried', text: german('Ich bin so nervös, Mia. Was ist, wenn ein Dokument fehlt? Dann muss ich wieder vier Monate warten!') },
+      { kind: 'line', speaker: 'mia', text: german('Wir haben gestern Abend alles zweimal kontrolliert. Reisepass, biometrisches Foto, Arbeitsvertrag, Mietvertrag, Meldebescheinigung, Nachweis der Krankenversicherung. Das passt.') },
+      { kind: 'narration', text: german('Um 8:40 Uhr wird Kumars Wartenummer aufgerufen: 147. Frau Kim, die Sachbearbeiterin, blättert in seiner Akte.') },
+      { kind: 'line', speaker: 'kim', text: german('Guten Morgen. Sie beantragen eine Blaue Karte EU. Ihr Bruttojahresgehalt liegt laut Arbeitsvertrag bei 52.000 Euro – damit erfüllen Sie die Gehaltsgrenze für IT-Fachkräfte. Haben Sie einen Nachweis über Ihren Hochschulabschluss?') },
+      { kind: 'line', speaker: 'kumar', mood: 'surprised', text: german('Oh nein. Mein Bachelorzeugnis aus Bangalore … das liegt zu Hause im blauen Ordner.') },
+      { kind: 'line', speaker: 'kim', text: german('Das ist kein Problem, solange Ihr Abschluss bereits als gleichwertig anerkannt ist. Sie können das Zeugnis innerhalb von zwei Wochen per E-Mail nachreichen.') },
+      { kind: 'line', speaker: 'mia', mood: 'curious', text: german('Und was passiert, wenn das Visum abläuft, bevor die Karte fertig ist? Die Produktion dauert ja oft mehrere Wochen.') },
+      { kind: 'line', speaker: 'kim', text: german('Dann stelle ich ihm eine Fiktionsbescheinigung aus. Damit gilt sein bisheriger Aufenthalt als fortbestehend, und er darf weiterarbeiten und auch reisen – mit gewissen Einschränkungen.') },
+      { kind: 'line', speaker: 'kim', mood: 'curious', text: german('{name}, Sie sind als Begleitung hier. Haben Sie noch eine Frage zum Verfahren?') },
+      { kind: 'reply', to: 'kim', options: [
+        german('Ja: Wie erfährt Herr Kumar, wann er die fertige Karte abholen kann?'),
+        german('Ja: Darf ich die Blaue Karte auch in Grün bekommen?'),
+        german('Nein, ich warte nur auf den Bus nach Bangalore.')
+      ] },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Er bekommt einen Brief von der Bundesdruckerei mit einem PIN-Brief und einem Abholtermin. Die Gebühr beträgt 100 Euro, Sie können vorne am Automaten mit Karte zahlen.') },
+      { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Danke! Mia, heute Abend koche ich für dich. Mein bestes Curry. Und danach spüle ich sogar.') },
+      { kind: 'question', prompt: german('Wann und wo ist Kumars Termin?'), options: [german('Am Dienstag um 8:15 Uhr in Zimmer 214'), german('Am Montag um 8:40 Uhr in Zimmer 147'), german('Am Freitag um 14 Uhr in Zimmer 241')] },
+      { kind: 'question', prompt: german('Wie lange hat Kumar auf den Termin gewartet?'), options: [german('Vier Monate'), german('Drei Wochen'), german('Zwei Wochen')] },
+      { kind: 'question', prompt: german('Welches Dokument hat Kumar vergessen?'), options: [german('Sein Bachelorzeugnis'), german('Seinen Reisepass'), german('Seinen Mietvertrag')] },
+      { kind: 'question', prompt: german('Bis wann kann er das fehlende Dokument nachreichen?'), options: [german('Innerhalb von zwei Wochen'), german('Bis morgen früh'), german('Innerhalb von vier Monaten')] },
+      { kind: 'question', prompt: german('Wozu dient die Fiktionsbescheinigung?'), options: [german('Sein Aufenthalt gilt als fortbestehend, bis die Karte fertig ist.'), german('Sie ersetzt seinen Reisepass dauerhaft.'), german('Sie erlaubt ihm, den Arbeitgeber zu wechseln.')] },
+      { kind: 'question', prompt: german('Wie hoch ist die Gebühr?'), options: [german('100 Euro'), german('52 Euro'), german('214 Euro')] }
+    ]
   }
 ];
