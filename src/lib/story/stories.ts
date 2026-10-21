@@ -5,7 +5,7 @@ import type { SoundEffect } from '#lib/sounds.js';
 export type Text = Record<Language, string>;
 export type CharacterId = 'seagull' | 'ludwig' | 'deer' | 'fox' | 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello' | 'lilith' | 'hans' | 'albert' | 'sabine' | 'enzo' | 'jana' | 'becker' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake' | 'ali' | 'robert' | 'fritz' | 'tobias' | 'selma' | 'kumar' | 'simon';
 export type Mood = 'neutral' | 'happy' | 'sad' | 'surprised' | 'curious' | 'angry' | 'worried' | 'laughing' | 'sleepy';
-export type SceneId = 'berlin' | 'cliffs' | 'mainau' | 'lindau' | 'castle' | 'alps' | 'forest' | 'cafe' | 'park' | 'station' | 'home' | 'office' | 'flat' | 'square' | 'attic' | 'beergarden' | 'farm' | 'zoo' | 'butcher' | 'bakery' | 'boutique' | 'perfumery' | 'workshop' | 'beach' | 'airport';
+export type SceneId = 'hamburg' | 'berlin' | 'cliffs' | 'mainau' | 'lindau' | 'castle' | 'alps' | 'forest' | 'cafe' | 'park' | 'station' | 'home' | 'office' | 'flat' | 'square' | 'attic' | 'beergarden' | 'farm' | 'zoo' | 'butcher' | 'bakery' | 'boutique' | 'perfumery' | 'workshop' | 'beach' | 'airport';
 export type Weather = 'sunny' | 'cloudy' | 'rainy' | 'snowy';
 export type StoryProp = 'ball' | 'wool' | 'eagle';
 // Something a character holds (or, for Lilith, has in front of her) from that beat on.
@@ -682,7 +682,7 @@ export function fillName(text: string, name: string) {
   return text.replaceAll('{name}', name);
 }
 
-const outdoorScenes: SceneId[] = ['berlin', 'cliffs', 'mainau', 'lindau', 'castle', 'alps', 'forest', 'park', 'station', 'square', 'beergarden', 'farm', 'zoo', 'beach', 'airport'];
+const outdoorScenes: SceneId[] = ['hamburg', 'berlin', 'cliffs', 'mainau', 'lindau', 'castle', 'alps', 'forest', 'park', 'station', 'square', 'beergarden', 'farm', 'zoo', 'beach', 'airport'];
 const weathers: Weather[] = ['sunny', 'cloudy', 'rainy', 'snowy'];
 const weatherLines: Record<Weather, { indoor: Text; outdoor: Text }> = {
   sunny: {

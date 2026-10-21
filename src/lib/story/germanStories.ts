@@ -1224,5 +1224,42 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Wie findet Kumar die Currysoße?'), options: [german('Lecker, aber sehr mild'), german('Viel zu scharf'), german('Zu süß')] },
       { kind: 'question', prompt: german('Wo sind sie am Abend?'), options: [german('Auf der Kuppel des Reichstags'), german('Auf dem Fernsehturm'), german('An der Spree beim Baden')] }
     ]
+  },
+  {
+    id: 'a2-hamburg',
+    level: 'a2',
+    scene: 'hamburg',
+    cast: ['tom', 'simon'],
+    languages: ['de'],
+    title: german('Ein Tag in Hamburg'),
+    beats: [
+      { kind: 'narration', text: german('Sonntag, fünf Uhr morgens in Hamburg. Tom und Simon sind mit dir auf dem Fischmarkt. Es ist noch dunkel, aber überall rufen die Händler laut.') },
+      { kind: 'line', speaker: 'tom', mood: 'happy', text: german('Hier ist jeden Sonntag Markt, von fünf bis halb zehn. Hör mal, der Obsthändler ruft: „Ein ganzer Korb Bananen für zehn Euro!“') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('{name}, was kaufen wir zum Frühstück?') },
+      { kind: 'reply', to: 'tom', options: [
+        german('Drei Fischbrötchen und drei heiße Kaffee.'),
+        german('Einen Kran und zwei Schiffe.'),
+        german('Ich kaufe den ganzen Hafen.')
+      ] },
+      { kind: 'narration', text: german('Um neun Uhr geht ihr zur Elbphilharmonie. Unten steht ein altes Haus aus roten Ziegeln, oben ein Dach aus Glas, das aussieht wie Wellen.') },
+      { kind: 'line', speaker: 'simon', mood: 'happy', text: german('Fantastisch! Das Gebäude ist hundertzehn Meter hoch, und die Glasfassade hat über tausend einzelne Fenster. Jedes ist ein bisschen anders gebogen.') },
+      { kind: 'line', speaker: 'tom', mood: 'laughing', text: german('Haha, Simon, du redest über Fenster wie andere Leute über Fußball.') },
+      { kind: 'line', speaker: 'simon', text: german('Fenster sind spannender als Fußball. Und schaut mal da drüben: die großen roten Kräne. Hamburg hat den größten Hafen Deutschlands.') },
+      { kind: 'narration', text: german('Mittags macht ihr eine Hafenrundfahrt. Das Boot fährt an roten, blauen und gelben Containern vorbei und durch die Speicherstadt mit ihren alten Backsteinhäusern. Die Fahrt dauert eine Stunde und kostet zwanzig Euro.') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Und, {name}? Wie gefällt dir Hamburg?') },
+      { kind: 'reply', to: 'tom', options: [
+        german('Sehr gut! Besonders der Hafen und die Elbphilharmonie.'),
+        german('Gar nicht, hier gibt es zu viel Wasser zum Trinken.'),
+        german('Ich bin ein Container.')
+      ] },
+      { kind: 'line', speaker: 'simon', text: german('Das freut mich. In Hamburg sagt man übrigens: Es gibt kein schlechtes Wetter, nur falsche Kleidung.') },
+      { kind: 'question', prompt: german('Wann ist der Fischmarkt?'), options: [german('Jeden Sonntag von fünf bis halb zehn'), german('Jeden Montagabend'), german('Nur im Dezember')] },
+      { kind: 'question', prompt: german('Wie viel kostet der Korb Bananen?'), options: [german('Zehn Euro'), german('Ein Euro'), german('Hundert Euro')] },
+      { kind: 'question', prompt: german('Wie hoch ist die Elbphilharmonie?'), options: [german('Hundertzehn Meter'), german('Elf Meter'), german('Tausend Meter')] },
+      { kind: 'question', prompt: german('Woraus ist der untere Teil der Elbphilharmonie?'), options: [german('Aus roten Ziegeln'), german('Aus Holz'), german('Aus Glas')] },
+      { kind: 'question', prompt: german('Welche Farben haben die Container?'), options: [german('Rot, blau und gelb'), german('Nur weiß'), german('Schwarz und grün')] },
+      { kind: 'question', prompt: german('Wie lange dauert die Hafenrundfahrt?'), options: [german('Eine Stunde'), german('Zehn Minuten'), german('Einen ganzen Tag')] },
+      { kind: 'question', prompt: german('Worüber redet Simon so gern?'), options: [german('Über Fenster und Gebäude'), german('Über Fußball'), german('Über Fisch')] }
+    ]
   }
 ];
