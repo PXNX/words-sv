@@ -914,5 +914,48 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was beweist schließlich, dass {name} die Wahrheit sagt?'), options: [german('Das Video der Kamera über dem Eingang der Bäckerei'), german('Ein Foto des Rollerfahrers'), german('Die Aussage des Lieferwagenfahrers')] },
       { kind: 'question', prompt: german('Wie erklärt Sabine ihr strenges Verhalten?'), options: [german('Bei widersprüchlichen Aussagen muss sie prüfen, ob jemand lügt.'), german('Sie hatte einen schlechten Tag.'), german('Sie kennt {name} schon von früher.')] }
     ]
+  },
+  {
+    id: 'b1-fuse',
+    level: 'b1',
+    scene: 'flat',
+    cast: ['mia', 'kumar', 'robert'],
+    languages: ['de'],
+    title: german('Die Sicherung ist raus'),
+    beats: [
+      { kind: 'narration', text: german('Dienstagabend, 19:45 Uhr. Kumar kocht in der WG-Küche ein Curry. Der Wasserkocher läuft, die Mikrowelle taut Reis auf, und im Bad wäscht die Waschmaschine gerade bei 60 Grad. Mia föhnt sich im Flur die Haare.') },
+      { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('In zehn Minuten ist das Essen fertig! Heute nicht so scharf, versprochen.') },
+      { kind: 'narration', sfx: 'fuse', lights: 'off', text: german('Plötzlich knallt es leise im Flur. Mit einem Schlag ist alles still: kein Licht, kein Föhn, keine Waschmaschine. Die ganze Wohnung ist dunkel.') },
+      { kind: 'line', speaker: 'mia', mood: 'surprised', text: german('Hey! Was ist denn jetzt passiert? Ich sehe gar nichts mehr!') },
+      { kind: 'line', speaker: 'kumar', mood: 'worried', text: german('Ich war das nicht! Ich habe nur den Wasserkocher angemacht … und die Mikrowelle … Ist das ein Stromausfall in der ganzen Stadt?') },
+      { kind: 'line', speaker: 'mia', text: german('Nein, bei den Nachbarn gegenüber brennt Licht. Ich glaube, die Sicherung ist rausgeflogen. Mach mal die Taschenlampe an deinem Handy an. Der Sicherungskasten ist im Flur neben der Tür.') },
+      { kind: 'narration', text: german('Im grauen Sicherungskasten sind zwölf kleine schwarze Schalter. Einer zeigt nach unten, alle anderen nach oben. Darauf steht in kleiner Schrift: Küche.') },
+      { kind: 'line', speaker: 'mia', mood: 'curious', text: german('{name}, du kennst dich doch ein bisschen aus. Was sollen wir zuerst machen?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Zuerst ein paar Geräte ausschalten und dann den Schalter wieder nach oben drücken.'),
+        german('Wir sollten den Sicherungskasten mit Wasser putzen.'),
+        german('Am besten machen wir alle Geräte gleichzeitig noch einmal an.')
+      ] },
+      { kind: 'narration', lights: 'on', text: german('Kumar schaltet nur den Föhn aus und drückt den Schalter nach oben. Das Licht geht wieder an.') },
+      { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Ja! Ich bin ein Elektriker! Dann mache ich schnell den Wasserkocher wieder an …') },
+      { kind: 'narration', sfx: 'fuse', lights: 'off', text: german('Klick. Nach drei Sekunden ist es wieder dunkel.') },
+      { kind: 'line', speaker: 'mia', mood: 'angry', text: german('Kumar! Okay, jetzt reicht es. Ich rufe den Handwerker an. Robert hat letztes Jahr auch unsere Heizung repariert.') },
+      { kind: 'line', speaker: 'mia', text: german('Hallo Robert, hier ist Mia. Entschuldige die späte Störung. Bei uns fliegt in der Küche immer wieder die Sicherung raus. Kannst du heute noch vorbeikommen?') },
+      { kind: 'narration', text: german('Robert sagt, er kann um halb neun da sein. Der Notdienst am Abend kostet 60 Euro Anfahrt und 45 Euro pro Stunde. Mia seufzt und sagt ja.') },
+      { kind: 'narration', sfx: 'knock', enters: ['robert'], text: german('Um 20:35 Uhr klopft es. Robert steht mit seiner Werkzeugtasche und einer großen Stirnlampe vor der Tür.') },
+      { kind: 'line', speaker: 'robert', text: german('’n Abend. Wo ist der Kasten? … Aha. Was lief alles, als es geknallt hat?') },
+      { kind: 'line', speaker: 'kumar', mood: 'sad', text: german('Der Wasserkocher, die Mikrowelle, die Waschmaschine und der Föhn. Leider alles gleichzeitig.') },
+      { kind: 'line', speaker: 'robert', text: german('Na also. Alles auf einem Stromkreis. Eine Sicherung hat 16 Ampere, das sind höchstens 3.600 Watt. Wasserkocher 2.000, Waschmaschine beim Heizen auch 2.000, Mikrowelle 900. Zu viel. Die Sicherung macht genau, was sie soll: Sie schützt die Kabel, damit nichts brennt.') },
+      { kind: 'narration', lights: 'on', text: german('Robert zieht den Stecker der Waschmaschine, drückt den Schalter nach oben, und das Licht bleibt an. Er schreibt eine Rechnung über 82,50 Euro.') },
+      { kind: 'line', speaker: 'robert', text: german('Waschmaschine nur, wenn in der Küche nichts Großes läuft. Oder ich lege euch einen eigenen Stromkreis fürs Bad. Kostet aber. Überlegt’s euch.') },
+      { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Danke, Robert! Möchtest du ein bisschen Curry? Es ist jetzt kalt, aber die Mikrowelle … ach nein, lieber nicht.') },
+      { kind: 'question', prompt: german('Welche Geräte liefen, als die Sicherung rausflog?'), options: [german('Wasserkocher, Mikrowelle, Waschmaschine und Föhn'), german('Nur der Fernseher und der Computer'), german('Der Kühlschrank und der Herd')] },
+      { kind: 'question', prompt: german('Woran erkennt Mia, dass es kein Stromausfall in der ganzen Stadt ist?'), options: [german('Bei den Nachbarn gegenüber brennt Licht.'), german('Das Radio meldet es nicht.'), german('Ihr Handy funktioniert noch.')] },
+      { kind: 'question', prompt: german('Welche Farbe haben die Schalter im Sicherungskasten?'), options: [german('Schwarz'), german('Rot'), german('Grau')] },
+      { kind: 'question', prompt: german('Warum fliegt die Sicherung beim zweiten Mal wieder raus?'), options: [german('Weil Kumar den Wasserkocher wieder anmacht'), german('Weil Mia den Föhn anmacht'), german('Weil Robert am Kasten arbeitet')] },
+      { kind: 'question', prompt: german('Wie viel Watt hält eine Sicherung mit 16 Ampere laut Robert höchstens aus?'), options: [german('3.600 Watt'), german('900 Watt'), german('16.000 Watt')] },
+      { kind: 'question', prompt: german('Wozu ist die Sicherung laut Robert da?'), options: [german('Sie schützt die Kabel, damit nichts brennt.'), german('Sie spart Strom in der Nacht.'), german('Sie macht das Licht heller.')] },
+      { kind: 'question', prompt: german('Wann kommt Robert an?'), options: [german('Um 20:35 Uhr'), german('Um 19:45 Uhr'), german('Um 22:00 Uhr')] }
+    ]
   }
 ];
