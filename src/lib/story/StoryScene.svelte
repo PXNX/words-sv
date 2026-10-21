@@ -29,7 +29,8 @@
     alps: { back: '#cfe6f2', floor: '#7fae57' },
     castle: { back: '#cfe6f2', floor: '#8fae6a' },
     lindau: { back: '#cfe6f2', floor: '#b8aa98' },
-    mainau: { back: '#cfe6f2', floor: '#8fc27a' }
+    mainau: { back: '#cfe6f2', floor: '#8fc27a' },
+    cliffs: { back: '#cfe6f2', floor: '#d8d2c4' }
   };
   const palette = $derived(palettes[scene]);
 
@@ -58,7 +59,8 @@
     alps: { x: 0, y: 0, w: 400, h: 172 },
     castle: { x: 0, y: 0, w: 400, h: 172 },
     lindau: { x: 0, y: 0, w: 400, h: 172 },
-    mainau: { x: 0, y: 0, w: 400, h: 172 }
+    mainau: { x: 0, y: 0, w: 400, h: 172 },
+    cliffs: { x: 0, y: 0, w: 400, h: 172 }
   };
   const sky = $derived(skies[scene]);
   const outdoor = $derived(sky.w === 400);
@@ -243,6 +245,19 @@
     <path d="M356 172q-6-50 2-84" fill="none" stroke="#8c5b3d" stroke-width="6" /><g fill="#55a66a"><path d="M358 88q-30-6-44 10 22-8 44-10Z" /><path d="M358 88q28-12 46 0-24-4-46 0Z" /><path d="M358 88q-12-24-34-26 20 10 34 26Z" /><path d="M358 88q12-24 34-24-20 8-34 24Z" /></g>
     <path d="M0 172q100-22 200-14t200-4v18Z" fill="#55a66a" />
     <g>{#each Array.from({ length: 15 }, (_, i) => i) as i (i)}<circle cx={12 + i * 27} cy={166 - (i % 2) * 6} r="5.5" fill={['#d64b45', '#e8843a', '#8a62b6', '#df8eb1', '#e6b52e'][i % 5]} /><circle cx={25 + i * 27} cy={168 - (i % 3) * 3} r="3.5" fill={['#8a62b6', '#d64b45', '#e6b52e', '#e8843a', '#df8eb1'][i % 5]} />{/each}</g>
+  {:else if scene === 'cliffs'}
+    <!-- Rügen: white chalk cliffs topped with beech forest above the turquoise Baltic, and a Fischbrötchen kiosk on the beach -->
+    <rect y="116" width="400" height="56" fill="#4fb3b9" />
+    <g fill="none" stroke="#a6e0e0" stroke-width="2" stroke-linecap="round"><path d="M180 132q8-4 16 0M226 150q8-4 16 0M262 128q8-4 16 0M200 162q8-4 16 0" /></g>
+    <path d="M250 118l18-26 28-6 18 32Z" fill="#f4f1e8" opacity=".85" /><g fill="#4d8f5c" opacity=".85"><circle cx="270" cy="90" r="8" /><circle cx="286" cy="86" r="9" /></g>
+    <path d="M0 40l60 4 20 26 20-12 30 52 20 10 10 52H0Z" fill="#f4f1e8" stroke="#cfc8b8" stroke-width="2" />
+    <path d="M28 60l6 44M66 76l-4 50M106 96l5 40M136 128l3 30" fill="none" stroke="#ddd6c4" stroke-width="2" />
+    <g fill="#4d8f5c"><circle cx="8" cy="34" r="15" /><circle cx="32" cy="32" r="17" /><circle cx="58" cy="38" r="13" /><circle cx="80" cy="62" r="10" /><circle cx="98" cy="54" r="9" /></g>
+    {#if weather === 'snowy'}<g fill="#ffffff"><path d="M-6 30q14-14 28-4 12-12 28-2 10-4 16 6-36-6-72 0Z" /></g>{/if}
+    <g stroke="#172a45" stroke-width="2"><rect x="300" y="112" width="84" height="60" fill="#4b78c2" /><rect x="306" y="124" width="72" height="24" fill="#cfe6f2" /><rect x="300" y="148" width="84" height="6" fill="#a87850" /></g>
+    <g stroke="#172a45" stroke-width="1.5">{#each [0, 1, 2, 3, 4, 5] as i (i)}<path d="M{294 + i * 16} 112l2-14h16l-2 14Z" fill={i % 2 ? '#fffdf7' : '#d64b45'} />{/each}</g>
+    <rect x="304" y="82" width="76" height="14" rx="3" fill="#fffdf7" stroke="#172a45" stroke-width="1.5" /><text x="342" y="92.5" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8.5" font-weight="900" fill="#172a45">FISCHBRÖTCHEN</text>
+    <g fill="#e8c27a" stroke="#a87850" stroke-width="1"><ellipse cx="322" cy="146" rx="8" ry="3" /><ellipse cx="342" cy="146" rx="8" ry="3" /><ellipse cx="362" cy="146" rx="8" ry="3" /></g>
   {/if}
   <rect y="172" width="400" height="48" fill={palette.floor} />
   <rect y="172" width="400" height="4" fill="rgba(23,42,69,.14)" />

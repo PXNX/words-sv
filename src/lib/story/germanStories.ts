@@ -1152,5 +1152,41 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Wie alt ist das Schloss ungefähr?'), options: [german('Fast dreihundert Jahre'), german('Dreißig Jahre'), german('Tausend Jahre')] },
       { kind: 'question', prompt: german('Wann fährt das Schiff zurück nach Lindau?'), options: [german('Um halb fünf'), german('Um ein Uhr'), german('Um Mitternacht')] }
     ]
+  },
+  {
+    id: 'b1-ruegen',
+    level: 'b1',
+    scene: 'cliffs',
+    cast: ['mia', 'tobias', 'seagull'],
+    languages: ['de'],
+    weathers: ['sunny', 'cloudy'],
+    title: german('Kreidefelsen und Fischbrötchen'),
+    beats: [
+      { kind: 'narration', sfx: 'waves', text: german('Mia macht mit dir Urlaub auf Rügen, der größten Insel Deutschlands. Vom Königsstuhl aus schaut ihr auf die weißen Kreidefelsen und das türkisblaue Meer.') },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Der Königsstuhl ist hundertachtzehn Meter hoch. Caspar David Friedrich hat diese Felsen schon vor über zweihundert Jahren gemalt.') },
+      { kind: 'narration', enters: ['tobias'], text: german('Unten am Strand winkt euch ein Rettungsschwimmer zu. Es ist Tobias, der hier den ganzen Sommer über arbeitet.') },
+      { kind: 'line', speaker: 'tobias', mood: 'happy', text: german('Moin, ihr zwei! Seid ihr die ganzen Stufen runtergekommen? Über vierhundert Stück – starkes Beintraining! Und wer Treppen läuft, braucht Protein. Das beste Protein gibt es da vorne am Kiosk.') },
+      { kind: 'line', speaker: 'mia', mood: 'laughing', text: german('Haha, du meinst Fischbrötchen?') },
+      { kind: 'line', speaker: 'tobias', text: german('Genau! Mit Bismarckhering, Zwiebeln und Gurke. Ein gutes Fischbrötchen hat mehr Protein als mancher Shake, und schmecken tut es auch noch.') },
+      { kind: 'line', speaker: 'tobias', mood: 'curious', text: german('{name}, welches nimmst du?') },
+      { kind: 'reply', to: 'tobias', options: [
+        german('Eins mit Matjes, bitte – aber ohne Zwiebeln.'),
+        german('Eins mit Schokolade und Sahne, bitte.'),
+        german('Ich nehme lieber ein Stück vom Kreidefelsen.')
+      ] },
+      { kind: 'narration', enters: ['seagull'], faces: { seagull: 'curious' }, text: german('Ihr setzt euch auf einen großen Stein. Gerade als Mia abbeißen will, landet eine große Möwe direkt neben ihr.') },
+      { kind: 'line', speaker: 'seagull', mood: 'curious', text: german('Kiau! Kiau!') },
+      { kind: 'line', speaker: 'tobias', mood: 'worried', text: german('Vorsicht, Mia! Die Möwen hier sind echte Profis. Halt dein Brötchen gut fest!') },
+      { kind: 'narration', exits: ['seagull'], text: german('Zu spät: Mit einem schnellen Sprung schnappt sich die Möwe die Hälfte von Mias Fischbrötchen und fliegt damit über die Klippen davon.') },
+      { kind: 'line', speaker: 'mia', mood: 'surprised', text: german('Hey! Das war mein Hering!') },
+      { kind: 'line', speaker: 'tobias', mood: 'laughing', text: german('Haha, die hat bessere Reflexe als ich. Komm, ich lade dich auf ein neues ein. Aber diesmal essen wir hinter dem Kiosk, wo die Möwen uns nicht sehen.') },
+      { kind: 'question', prompt: german('Was ist Rügen?'), options: [german('Die größte Insel Deutschlands'), german('Ein Berg in den Alpen'), german('Ein See in Bayern')] },
+      { kind: 'question', prompt: german('Wie hoch ist der Königsstuhl?'), options: [german('Hundertachtzehn Meter'), german('Achtzehn Meter'), german('Elfhundert Meter')] },
+      { kind: 'question', prompt: german('Welche Farbe haben die Felsen?'), options: [german('Weiß'), german('Rot'), german('Schwarz')] },
+      { kind: 'question', prompt: german('Wer hat die Felsen vor über zweihundert Jahren gemalt?'), options: [german('Caspar David Friedrich'), german('Tobias'), german('Albrecht Dürer')] },
+      { kind: 'question', prompt: german('Warum empfiehlt Tobias Fischbrötchen?'), options: [german('Wegen des vielen Proteins'), german('Weil sie sehr billig sind'), german('Weil er im Kiosk arbeitet')] },
+      { kind: 'question', prompt: german('Was macht die Möwe?'), options: [german('Sie klaut ein halbes Fischbrötchen.'), german('Sie singt ein Lied.'), german('Sie setzt sich auf Tobias’ Kopf.')] },
+      { kind: 'question', prompt: german('Wo wollen sie das nächste Fischbrötchen essen?'), options: [german('Hinter dem Kiosk'), german('Oben auf dem Felsen'), german('Im Wasser')] }
+    ]
   }
 ];
