@@ -60,5 +60,25 @@ export function sentences(text: string): string[] {
   return text.match(/.+?(?:[.!?…]+["“”»«„'’)]*(?=\s|$)|$)/gsu)?.map((sentence) => sentence.trim()).filter(Boolean) ?? [];
 }
 
+// German letter names, so "ICE" is read "Ih Zeh Eh" and not with the English "I C E" the voices
+// fall back to. Abbreviations spoken as a word go in `germanWords`, as does Berlin dialect that the
+// voices would otherwise spell out letter by letter ("Ick" → "I C K").
+const germanLetters: Record<string, string> = {
+  A: 'Ah', B: 'Beh', C: 'Zeh', D: 'Deh', E: 'Eh', F: 'Eff', G: 'Geh', H: 'Hah', I: 'Ih', J: 'Jott', K: 'Kah', L: 'Ell', M: 'Emm',
+  N: 'Enn', O: 'Oh', P: 'Peh', Q: 'Kuh', R: 'Err', S: 'Ess', T: 'Teh', U: 'Uh', V: 'Fau', W: 'Weh', X: 'Ix', Y: 'Üpsilon', Z: 'Zett',
+  Ä: 'Äh', Ö: 'Öh', Ü: 'Üh'
+};
+const germanWords: Record<string, string> = { WLAN: 'Weh-Lahn', Ick: 'Ik', ick: 'ik' };
+
+// The text as the voice should say it; what is shown on screen stays as written.
+export function pronounceable(sentence: string, language: Language): string {
+  if (language !== 'de') return sentence;
+  return sentence.replace(/(?<!\p{L})\p{L}+(?!\p{L})/gu, (word) => {
+    if (germanWords[word]) return germanWords[word];
+    if (/^[A-ZÄÖÜ]{2,}$/u.test(word)) return [...word].map((letter) => germanLetters[letter]).join(' ');
+    return word;
+  });
+}
+
 // The breath after a sentence: an exclamation or question lingers a moment, a trailing "…" longest.
 export const pauseAfter: Record<Intonation, number> = { statement: 420, question: 520, exclamation: 480, trailing: 650 };

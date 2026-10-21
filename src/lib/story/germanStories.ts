@@ -47,7 +47,7 @@ export const germanStories: Story[] = [
       { kind: 'narration', text: german('Die Kuh Berta steht auf der Wiese. Sie frisst Gras.') },
       { kind: 'line', speaker: 'cow', mood: 'happy', text: german('Muh!') },
       { kind: 'line', speaker: 'mia', text: german('Guten Morgen, Berta! Du gibst uns jeden Tag Milch. Danke!') },
-      { kind: 'narration', text: german('Neben dem Stall wartet das Pferd Blitz. Es ist braun und sehr schnell.') },
+      { kind: 'narration', enters: ['horse'], text: german('Neben dem Stall wartet das Pferd Blitz. Es ist braun und sehr schnell.') },
       { kind: 'line', speaker: 'horse', mood: 'happy', text: german('Wieher!') },
       { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Möchtest du Blitz eine Karotte geben?') },
       { kind: 'reply', to: 'mia', options: [
@@ -55,7 +55,7 @@ export const germanStories: Story[] = [
         german('Ich bin eine Karotte.'),
         german('Gute Nacht, Blitz!')
       ] },
-      { kind: 'narration', text: german('Auf dem Dach sitzt ein kleiner Vogel. Er heißt Pieps.') },
+      { kind: 'narration', enters: ['bird'], text: german('Auf dem Dach sitzt ein kleiner Vogel. Er heißt Pieps.') },
       { kind: 'line', speaker: 'bird', mood: 'happy', text: german('Piep, piep!') },
       { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Pieps singt jeden Morgen. Er ist unser Wecker!') },
       { kind: 'question', prompt: german('Was gibt die Kuh Berta?'), options: [german('Milch'), german('Eier'), german('Wasser')] },
@@ -105,7 +105,7 @@ export const germanStories: Story[] = [
       { kind: 'line', speaker: 'leo', mood: 'happy', text: german('Schau mal, {name}! Das ist Gisela. Sie ist über fünf Meter groß.') },
       { kind: 'line', speaker: 'giraffe', mood: 'curious', text: german('Brummm …') },
       { kind: 'line', speaker: 'leo', text: german('Giraffen sind meistens still. Aber nachts summen sie ganz leise.') },
-      { kind: 'narration', text: german('Neben dem Giraffengehege steht der Elefant Benno. Er spritzt mit seinem Rüssel Wasser in die Luft.') },
+      { kind: 'narration', enters: ['elephant'], text: german('Neben dem Giraffengehege steht der Elefant Benno. Er spritzt mit seinem Rüssel Wasser in die Luft.') },
       { kind: 'line', speaker: 'elephant', mood: 'happy', text: german('Törööö!') },
       { kind: 'line', speaker: 'leo', mood: 'curious', text: german('Vorsicht, {name}, sonst wirst du nass! Hast du schon einmal einen Elefanten gesehen?') },
       { kind: 'reply', to: 'leo', options: [
@@ -113,7 +113,7 @@ export const germanStories: Story[] = [
         german('Ja, er wohnt in meinem Kühlschrank.'),
         german('Nein, ich bin ein Elefant.')
       ] },
-      { kind: 'narration', text: german('Zum Schluss geht ihr ins Reptilienhaus. Hinter dem Glas liegt eine lange grüne Schlange.') },
+      { kind: 'narration', enters: ['snake'], exits: ['giraffe', 'elephant'], text: german('Zum Schluss geht ihr ins Reptilienhaus. Hinter dem Glas liegt eine lange grüne Schlange.') },
       { kind: 'line', speaker: 'snake', text: german('Ssssss!') },
       { kind: 'line', speaker: 'leo', text: german('Keine Angst. Zischi ist harmlos – sie zischt nur, wenn sie Hunger hat.') },
       { kind: 'question', prompt: german('Wie groß ist die Giraffe?'), options: [german('Über fünf Meter'), german('Zwei Meter'), german('Zehn Zentimeter')] },
@@ -219,7 +219,7 @@ export const germanStories: Story[] = [
       { kind: 'narration', sfx: 'waves', text: german('Mia und Leo machen Urlaub an der Ostsee. Am Abend treffen sie sich am Strand, um den Sonnenuntergang anzuschauen.') },
       { kind: 'line', speaker: 'leo', text: german('Schau mal, wie die Sonne langsam im Meer versinkt. Der Himmel ist ganz orange und rosa.') },
       { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Wunderschön! Jetzt fehlt eigentlich nur noch ein kühles Getränk.') },
-      { kind: 'narration', text: german('In diesem Moment stapft Hans mit einer Kühltasche über den Sand.') },
+      { kind: 'narration', enters: ['hans'], text: german('In diesem Moment stapft Hans mit einer Kühltasche über den Sand.') },
       { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Servus, ihr zwoa! I hab mir dacht, a Sonnenuntergang ohne Bier is wia a Brezn ohne Salz. Wer mag a Helles?') },
       { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Du bist ein Schatz, Hans! {name}, magst du auch eins?') },
       { kind: 'reply', to: 'mia', options: [
@@ -252,7 +252,7 @@ export const germanStories: Story[] = [
       { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Wie bitte? Bei dem Lärm verstehe ich kein Wort! Was ist mit deinem Koffer?') },
       { kind: 'line', speaker: 'oma', text: german('Mein grüner Koffer ist noch in Lissabon! Ich habe schon eine Verlustmeldung ausgefüllt.') },
       { kind: 'question', prompt: german('Was ist mit Omas Koffer passiert?'), options: [german('Er ist vermutlich noch in Lissabon.'), german('Er wurde gestohlen.'), german('Er ist ins Meer gefallen.')] },
-      { kind: 'narration', text: german('Eine Bundespolizistin kommt auf die beiden zu. Es ist Sabine, die heute am Flughafen Dienst hat.') },
+      { kind: 'narration', enters: ['sabine'], text: german('Eine Bundespolizistin kommt auf die beiden zu. Es ist Sabine, die heute am Flughafen Dienst hat.') },
       { kind: 'line', speaker: 'sabine', noisy: true, sfx: 'airplane', text: german('Entschuldigung, gehört Ihnen der Rollkoffer dort drüben neben der Säule? Unbeaufsichtigtes Gepäck müssen wir aus Sicherheitsgründen sofort entfernen.') },
       { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Verzeihung, könnten Sie das bitte wiederholen? Das Flugzeug war so laut.') },
       { kind: 'line', speaker: 'sabine', text: german('Natürlich. Gehört Ihnen der Koffer neben der Säule? Unbeaufsichtigtes Gepäck dürfen wir nicht stehen lassen.') },
@@ -278,7 +278,7 @@ export const germanStories: Story[] = [
     title: german('Der Prototyp'),
     beats: [
       { kind: 'narration', text: german('In einem Ingenieurbüro in Stuttgart soll morgen ein neuer Lieferroboter vorgeführt werden. Doch beim letzten Test bleibt der Prototyp nach drei Metern einfach stehen.') },
-      { kind: 'line', speaker: 'albert', mood: 'surprised', text: german('Das ist inakzeptabel. Die Mechanik habe ich dreimal überprüft – jede Schraube sitzt exakt nach Zeichnung.') },
+      { kind: 'line', speaker: 'albert', mood: 'angry', text: german('Das ist inakzeptabel. Die Mechanik habe ich dreimal überprüft – jede Schraube sitzt exakt nach Zeichnung.') },
       { kind: 'line', speaker: 'jana', text: german('Die Mechanik ist auch nicht das Problem. Laut Protokoll verliert die Steuerung die Verbindung zum Sensor, sobald der Motor mehr Strom zieht.') },
       { kind: 'line', speaker: 'kim', mood: 'curious', text: german('Sie meinen also, es handelt sich um eine Störung in der Stromversorgung und nicht um einen Softwarefehler?') },
       { kind: 'line', speaker: 'jana', text: german('Vermutlich um beides: Die Spannung bricht kurz ein, und die Software ist nicht darauf ausgelegt, die Verbindung danach wiederherzustellen.') },

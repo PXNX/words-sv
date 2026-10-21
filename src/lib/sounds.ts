@@ -49,7 +49,7 @@ export function playErrorSound(enabled: boolean, kind: ErrorSound) {
  * Story sound effects, synthesized with Web Audio so they need no asset downloads and work offline.
  * Kept deliberately soft: they colour a scene for learners, they should never startle.
  */
-export type SoundEffect = 'purr' | 'meow' | 'glass' | 'brakes' | 'doorbell' | 'knock' | 'rain' | 'bark' | 'tweet' | 'moo' | 'neigh' | 'trumpet' | 'hiss' | 'hum' | 'airplane' | 'waves';
+export type SoundEffect = 'purr' | 'meow' | 'glass' | 'brakes' | 'doorbell' | 'knock' | 'rain' | 'bark' | 'tweet' | 'moo' | 'neigh' | 'trumpet' | 'hiss' | 'hum' | 'airplane' | 'waves' | 'gong';
 
 let effectContext: AudioContext | null = null;
 
@@ -340,6 +340,11 @@ function bark(context: AudioContext, start: number) {
   });
 }
 
+// The station gong before an announcement: three soft bell tones stepping down.
+function gong(context: AudioContext, start: number) {
+  [659.25, 523.25, 392].forEach((frequency, index) => bell(context, start + index * 0.42, frequency));
+}
+
 const effects: Record<SoundEffect, (context: AudioContext, start: number) => void> = {
   purr,
   meow,
@@ -348,11 +353,12 @@ const effects: Record<SoundEffect, (context: AudioContext, start: number) => voi
   doorbell: (context, start) => { bell(context, start, 659.25); bell(context, start + 0.45, 523.25); },
   knock,
   rain,
-  bark
+  bark,
+  gong
 };
 
 // Roughly how long each effect stands out, so story speech can pause while one plays.
-export const soundEffectSeconds: Record<SoundEffect, number> = { purr: 2.2, meow: 0.8, glass: 0.8, brakes: 1.3, doorbell: 1.4, knock: 0.6, rain: 1.2, bark: 0.6 };
+export const soundEffectSeconds: Record<SoundEffect, number> = { purr: 2.2, meow: 0.8, glass: 0.8, brakes: 1.3, doorbell: 1.4, knock: 0.6, rain: 1.2, bark: 0.6, gong: 1.7 };
 
 export function playSoundEffect(enabled: boolean, effect: SoundEffect) {
   if (!enabled) return;
@@ -368,4 +374,47 @@ export function stopSoundEffects() {
   const context = effectContext;
   effectContext = null;
   if (context) void context.close().catch(() => {});
+}
+
+// The hiss and crackle of a station loudspeaker, kept up while an announcement is read out:
+// band-limited static with random pops and a faint mains hum. Returns a function that fades it out.
+export function startCrackle(enabled: boolean): () => void {
+  if (!enabled) return () => {};
+  try {
+    const context = audioContext();
+    if (!context) return () => {};
+    const start = context.currentTime + 0.02;
+    const buffer = context.createBuffer(1, context.sampleRate * 2, context.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let index = 0; index < data.length; index += 1) {
+      const pop = Math.random() < 0.0009 ? (Math.random() * 2 - 1) * 6 : 0;
+      data[index] = (Math.random() * 2 - 1) * 0.35 + pop;
+    }
+    const hiss = context.createBufferSource();
+    hiss.buffer = buffer;
+    hiss.loop = true;
+    const hum = context.createOscillator();
+    hum.frequency.value = 100;
+    const humGain = context.createGain();
+    humGain.gain.value = 0.12;
+    const level = context.createGain();
+    level.gain.setValueAtTime(0.0001, start);
+    level.gain.exponentialRampToValueAtTime(0.08, start + 0.08);
+    hiss.connect(filter(context, 'bandpass', 2200, 0.9)).connect(level).connect(context.destination);
+    hum.connect(humGain).connect(level);
+    hiss.start(start);
+    hum.start(start);
+    return () => {
+      try {
+        const end = context.currentTime;
+        level.gain.cancelScheduledValues(end);
+        level.gain.setValueAtTime(Math.max(level.gain.value, 0.0001), end);
+        level.gain.exponentialRampToValueAtTime(0.0001, end + 0.25);
+        hiss.stop(end + 0.3);
+        hum.stop(end + 0.3);
+      } catch { /* The context is already closed. */ }
+    };
+  } catch {
+    return () => {};
+  }
 }

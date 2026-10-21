@@ -14,11 +14,13 @@ import { intonationOf, type Intonation } from './speech';
 type VoiceGender = 'female' | 'male';
 // `accent` lists regional locales the speaker prefers among the voices of the language, best first.
 type VoiceProfile = { gender: VoiceGender; pitch: number; rate: number; volume: number; accent?: string[] };
-export type Speaker = CharacterId | 'narrator';
+export type Speaker = CharacterId | 'narrator' | 'announcer';
 
 const profiles: Record<Speaker, VoiceProfile> = {
   // The storyteller reads the narration in a deep, calm, unhurried male voice.
   narrator: { gender: 'male', pitch: 0.8, rate: 0.9, volume: 0.95 },
+  // Station announcements: a brisk, even, slightly flat female voice, as over a loudspeaker.
+  announcer: { gender: 'female', pitch: 0.92, rate: 1.04, volume: 0.8 },
   mia: { gender: 'female', pitch: 1.08, rate: 1, volume: 1 },
   kim: { gender: 'female', pitch: 1.2, rate: 1.08, volume: 1 },
   oma: { gender: 'female', pitch: 0.86, rate: 0.84, volume: 1 },
@@ -61,7 +63,7 @@ const profiles: Record<Speaker, VoiceProfile> = {
 
 // Who picks first when voices are scarce: the narrator talks most, then the main characters.
 // A speaker whose regional voice is installed jumps the queue, so nobody else takes it.
-const priority: Speaker[] = ['narrator', 'mia', 'tom', 'lilith', 'oma', 'paul', 'kim', 'leo', 'hans', 'albert', 'sabine', 'enzo', 'jana', 'becker', 'ali', 'robert', 'fritz', 'tobias', 'selma', 'kumar', 'simon', 'bello', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
+const priority: Speaker[] = ['narrator', 'announcer', 'mia', 'tom', 'lilith', 'oma', 'paul', 'kim', 'leo', 'hans', 'albert', 'sabine', 'enzo', 'jana', 'becker', 'ali', 'robert', 'fritz', 'tobias', 'selma', 'kumar', 'simon', 'bello', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
 const animals: Speaker[] = ['bello', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
 
 function accentRank(speaker: Speaker, voice: SpeechSynthesisVoice) {
@@ -76,7 +78,11 @@ const moodShape: Record<Mood, { pitch: number; rate: number; volume: number }> =
   happy: { pitch: 1.08, rate: 1.05, volume: 1 },
   sad: { pitch: 0.9, rate: 0.88, volume: 0.85 },
   surprised: { pitch: 1.14, rate: 1.08, volume: 1 },
-  curious: { pitch: 1.05, rate: 0.97, volume: 1 }
+  curious: { pitch: 1.05, rate: 0.97, volume: 1 },
+  angry: { pitch: 0.94, rate: 1.08, volume: 1 },
+  worried: { pitch: 1.05, rate: 1.04, volume: 0.9 },
+  laughing: { pitch: 1.12, rate: 1.06, volume: 1 },
+  sleepy: { pitch: 0.88, rate: 0.82, volume: 0.8 }
 };
 
 // Speech engines take one pitch per utterance, so lines are spoken sentence by sentence and each
@@ -140,6 +146,12 @@ function castVoices(cast: Speaker[], language: string, locale: string): Casting 
       ?? null;
     if (voice) uses.set(voice, (uses.get(voice) ?? 0) + 1);
     picks.set(speaker, voice);
+  }
+  // Oma and Leo trade the voices they would get, which suit each of them better.
+  if (picks.has('oma') && picks.has('leo')) {
+    const oma = picks.get('oma') ?? null;
+    picks.set('oma', picks.get('leo') ?? null);
+    picks.set('leo', oma);
   }
   const casting: Casting = new Map([...picks].map(([speaker, voice]) => [speaker, { voice, shared: !voice || (uses.get(voice) ?? 0) > 1 }]));
   cached = { key, casting };

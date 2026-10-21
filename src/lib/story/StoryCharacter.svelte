@@ -1,8 +1,12 @@
 <script lang="ts">
-  import type { CharacterId, Mood } from './stories';
+  import type { CharacterId, HeldItem, Mood } from './stories';
 
   // `mouth` (0–1) is driven by the lip sync while this character's line is read aloud; null otherwise.
-  let { id, talking = false, label = '', mood = 'neutral', mouth = null }: { id: CharacterId; talking?: boolean; label?: string; mood?: Mood; mouth?: number | null } = $props();
+  // `holding` puts an item in their hand (or, for Lilith, in a bowl at her paws); `still` stops the
+  // blinking and wagging, for the small faces in the transcript.
+  let { id, talking = false, label = '', mood: feeling = 'neutral', mouth = null, holding = null, still = false }: { id: CharacterId; talking?: boolean; label?: string; mood?: Mood; mouth?: number | null; holding?: HeldItem | null; still?: boolean } = $props();
+  // The animals know the five basic moods; the finer ones map onto the closest of those.
+  const animalMoods: Record<Mood, Mood> = { neutral: 'neutral', happy: 'happy', sad: 'sad', surprised: 'surprised', curious: 'curious', angry: 'sad', worried: 'sad', laughing: 'happy', sleepy: 'neutral' };
   const lipSynced = $derived(mouth !== null);
   // A sliver of mouth stays visible between syllables, so the lips never vanish mid-sentence.
   const mouthScale = $derived(mouth === null ? undefined : `scaleY(${Math.max(0.12, mouth).toFixed(3)})`);
@@ -53,19 +57,28 @@
   };
   const look = $derived(animals.includes(id) ? null : looks[id as Exclude<CharacterId, Animal>]);
   const wide = $derived(look?.build === 'wide');
+  const mood = $derived(look ? feeling : animalMoods[feeling]);
 
-  // Eyebrows carry most of a face's mood; mouths and eyes follow below.
+  // Eyebrows carry most of a face's mood; mouths and eyes follow below. A question lifts one brow
+  // high (curious); anger pulls both down to the nose, worry pushes their inner ends up.
   const brows: Record<Mood, string> = {
     neutral: 'M44 51q5-3 10 0M66 51q5-3 10 0',
     happy: 'M44 49q5-4 10 0M66 49q5-4 10 0',
-    surprised: 'M44 45.5q5-4.5 10 0M66 45.5q5-4.5 10 0',
+    surprised: 'M44 44.5q5-5 10 0M66 44.5q5-5 10 0',
     sad: 'M44 52q5-1 10-4.5M76 52q-5-1-10-4.5',
-    curious: 'M44 47q5-4.5 10 0M66 52q5-2 10 0'
+    curious: 'M43 45q5-7 11-1.5M66 52.5q5-1.5 10 0',
+    angry: 'M43 47.5q6 1 11 6M77 47.5q-6 1-11 6',
+    worried: 'M44 50q5-1 10-6M76 50q-5-1-10-6',
+    laughing: 'M44 47.5q5-5 10 0M66 47.5q5-5 10 0',
+    sleepy: 'M44 53.5q5-2 10 0M66 53.5q5-2 10 0'
   };
-  const humanMouths: Record<Exclude<Mood, 'happy' | 'surprised'>, string> = {
+  const humanMouths: Record<Exclude<Mood, 'happy' | 'surprised' | 'laughing'>, string> = {
     neutral: 'M52 76q8 6 16 0',
     sad: 'M52 79.5q8-6 16 0',
-    curious: 'M54 77.5q6 1.5 12-1.5'
+    curious: 'M54 77.5q6 1.5 12-2.5',
+    angry: 'M50 80q1-4 5-4h10q4 0 5 4',
+    worried: 'M51 78q3-2.5 6 0t6 0t6 0',
+    sleepy: 'M56 77.5q4 2 8 0'
   };
   // Lilith tilts her head like in her portrait, a little more when curious.
   const lilithTilt = $derived(mood === 'curious' ? -14 : mood === 'sad' ? -3 : -7);
@@ -79,7 +92,7 @@
   }
 </script>
 
-<svg class="story-character" class:talking class:lip-synced={lipSynced} viewBox="0 0 120 150" role="img" aria-label={label}>
+<svg class="story-character" class:talking class:lip-synced={lipSynced} class:still viewBox="0 0 120 150" role="img" aria-label={label}>
   <!-- Bello-style eyes and brows shared by the farm and zoo animals. -->
   {#snippet animalEyes(lx: number, rx: number, y: number, r: number, browColor: string)}
     {@const brow = animalBrows(lx, rx, y)}
@@ -194,15 +207,18 @@
     {/if}
     {#if look.headphones}<path d="M27 58q0-36 33-36t33 36" fill="none" stroke="#172a45" stroke-width="4" /><rect x="21" y="51" width="11" height="17" rx="4.5" fill="#d64b45" /><rect x="88" y="51" width="11" height="17" rx="4.5" fill="#d64b45" />{/if}
     <!-- face -->
-    <g fill="#f19a8a" opacity={mood === 'happy' ? 0.62 : 0.38}><circle cx="43" cy="70" r="4.5" /><circle cx="77" cy="70" r="4.5" /></g>
-    {#if mood === 'happy'}
-      <path class="story-eyes" d="M45 61.5q4-4.5 8 0M67 61.5q4-4.5 8 0" fill="none" stroke="#172a45" stroke-width="2.6" stroke-linecap="round" />
+    <g fill={mood === 'angry' ? '#e0645a' : '#f19a8a'} opacity={mood === 'happy' || mood === 'laughing' || mood === 'angry' ? 0.65 : 0.38}><circle cx="43" cy="70" r="4.5" /><circle cx="77" cy="70" r="4.5" /></g>
+    {#if mood === 'happy' || mood === 'laughing'}
+      <path class="story-eyes" d={mood === 'laughing' ? 'M44.5 62q4.5-6 9 0M66.5 62q4.5-6 9 0' : 'M45 61.5q4-4.5 8 0M67 61.5q4-4.5 8 0'} fill="none" stroke="#172a45" stroke-width="2.6" stroke-linecap="round" />
+    {:else if mood === 'sleepy'}
+      <!-- heavy lids: the eyes are nearly shut -->
+      <path class="story-eyes" d="M45 60.5q4 3.5 8 0M67 60.5q4 3.5 8 0" fill="none" stroke="#172a45" stroke-width="2.4" stroke-linecap="round" />
     {:else if mood === 'surprised'}
       <g class="story-eyes"><circle cx="49" cy="60" r="4.3" fill="#172a45" /><circle cx="71" cy="60" r="4.3" fill="#172a45" /><circle cx="50.3" cy="58.6" r="1.3" fill="#fffdf7" /><circle cx="72.3" cy="58.6" r="1.3" fill="#fffdf7" /></g>
     {:else}
-      <g class="story-eyes" fill="#172a45"><circle cx={mood === 'curious' ? 50 : 49} cy={mood === 'sad' ? 61 : mood === 'curious' ? 59 : 60} r="3.3" /><circle cx={mood === 'curious' ? 72 : 71} cy={mood === 'sad' ? 61 : mood === 'curious' ? 59 : 60} r="3.3" /></g>
+      <g class="story-eyes" fill="#172a45"><circle cx={mood === 'curious' ? 50 : 49} cy={mood === 'sad' || mood === 'angry' ? 61 : mood === 'curious' ? 59 : 60} r={mood === 'worried' ? 3.6 : 3.3} /><circle cx={mood === 'curious' ? 72 : 71} cy={mood === 'sad' || mood === 'angry' ? 61 : mood === 'curious' ? 59.5 : 60} r={mood === 'worried' ? 3.6 : 3.3} /></g>
     {/if}
-    <path class="story-brows" d={brows[mood]} fill="none" stroke={look.hairStyle === 'bald' || id === 'oma' ? '#8a857d' : look.hair} stroke-width="2.2" stroke-linecap="round" />
+    <path class="story-brows" d={brows[mood]} fill="none" stroke={look.hairStyle === 'bald' || id === 'oma' ? '#8a857d' : look.hair} stroke-width="2.8" stroke-linecap="round" />
     {#if look.glasses}<g fill="none" stroke="#172a45" stroke-width="1.8"><circle cx="49" cy="60" r="7.5" /><circle cx="71" cy="60" r="7.5" /><path d="M56.5 60h7" /></g>{/if}
     {#if look.monocle}<circle cx="71" cy="60" r="7.5" fill="rgba(255,253,247,.18)" stroke="#c9a227" stroke-width="1.8" /><path d="M78.5 61q6 16 0 36" fill="none" stroke="#c9a227" stroke-width="1" />{/if}
     <path d="M60 62q-3 5 0 7" fill="none" stroke="rgba(23,42,69,.4)" stroke-width="1.8" stroke-linecap="round" />
@@ -210,12 +226,21 @@
     {:else if look.moustache}<path d="M47 73q6-6 13-2 7-4 13 2-13 3-26 0Z" fill={look.hair} />{/if}
     {#if mood === 'happy'}
       <path class="story-mouth-closed" d="M50 74.5q10 12 20 0q-10 3-20 0Z" fill="#7a2e2a" />
+    {:else if mood === 'laughing'}
+      <g class="story-mouth-closed"><path d="M48 73.5h24q-2 15-12 15t-12-15Z" fill="#7a2e2a" /><path d="M54 84q6-4 12 0-2 4.5-6 4.5t-6-4.5Z" fill="#e58fa0" /><path d="M50 74h20v2.5H50Z" fill="#fffdf7" /></g>
     {:else if mood === 'surprised'}
       <ellipse class="story-mouth-closed" cx="60" cy="78" rx="3.6" ry="4.4" fill="#7a2e2a" />
     {:else}
       <path class="story-mouth-closed" d={humanMouths[mood]} fill="none" stroke="#7a2e2a" stroke-width="2.4" stroke-linecap="round" />
     {/if}
     <ellipse class="story-mouth-open" style:transform={mouthScale} cx="60" cy="78" rx="6" ry="4.5" fill="#7a2e2a" />
+    {#if holding === 'cake'}
+      <!-- a slice of cream cake with a cherry on a small plate, held up in one hand -->
+      <circle cx="88" cy="127" r="6" fill={look.skin} stroke="rgba(23,42,69,.2)" stroke-width="1" />
+      <ellipse cx="88" cy="121.5" rx="15" ry="3.6" fill="#fffdf7" stroke="rgba(23,42,69,.3)" stroke-width="1.2" />
+      <path d="M77 120v-8l21-4v12Z" fill="#f2d49b" /><path d="M77 116.2l21-4v2.4l-21 4Z" fill="#fffdf7" /><path d="M77 112l21-4v-2.6l-21 4Z" fill="#f4a9bf" />
+      <circle cx="93" cy="104" r="2.6" fill="#d64b45" /><path d="M93 101.5q1-3 3.5-4" fill="none" stroke="#34824d" stroke-width="1" />
+    {/if}
   {:else if id === 'lilith'}
     <!-- Lilith, Mia and Tom's Siamese-Persian cat: fluffy cream coat shading to fawn, seal-brown mask,
          ears, legs and tail, big round blue eyes, a soft white ruff, head tilted to one side. -->
@@ -235,6 +260,11 @@
     <g fill="#3e2b20"><ellipse cx="51" cy="145.5" rx="8" ry="4.5" /><ellipse cx="69" cy="145.5" rx="8" ry="4.5" /></g>
     <!-- the bushy tail curls round the front paws -->
     <path class="story-tail story-tail-cat" d="M93 146c-15 7-60 8-78 0-9-4-8-16 2-15 4 1 6 4 10 5 18 5 43 5 63 2 6 0 8 6 3 8Z" fill="url(#{uid}-tail)" />
+    {#if holding === 'fish'}
+      <!-- her dinner: a fish in a red bowl at her paws -->
+      <path d="M-14 136q8-6 14-1l6-4v10l-6-4q-6 5-14-1Z" fill="#8ab4d9" stroke="#4b78c2" stroke-width="1" /><circle cx="-9" cy="135.5" r="1.1" fill="#172a45" />
+      <path d="M-20 138h30q-2 11-15 11t-15-11Z" fill="#d64b45" /><path d="M-20 138h30" stroke="#9c2a25" stroke-width="1.6" />
+    {/if}
     <!-- the head sits a little smaller than life, like the round fluffy face in her portrait -->
     <g transform="rotate({lilithTilt} 60 64) translate(60 66) scale(.86) translate(-60 -62)">
       <!-- ears, drooping when she is sad -->
@@ -308,5 +338,6 @@
   @keyframes story-blink { 0%,94%,100% { transform:scaleY(1); } 97% { transform:scaleY(.1); } }
   @keyframes story-talk { from { transform:scaleY(.35); } to { transform:scaleY(1); } }
   @keyframes story-wag { from { transform:rotate(-6deg); } to { transform:rotate(7deg); } }
+  .still .story-eyes,.still .story-mouth-open,.still .story-tail { animation:none; }
   @media (prefers-reduced-motion:reduce) { .story-eyes,.talking .story-mouth-open,.talking .story-tail,.lip-synced .story-tail { animation:none; } }
 </style>
