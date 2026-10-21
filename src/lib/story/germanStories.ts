@@ -43,8 +43,8 @@ export const germanStories: Story[] = [
     weathers: ['sunny', 'cloudy'],
     title: german('Auf dem Bauernhof'),
     beats: [
-      { kind: 'narration', text: german('Mia ist auf dem Bauernhof von ihrer Tante. Es ist Morgen.') },
-      { kind: 'narration', text: german('Die Kuh Berta steht auf der Wiese. Sie frisst Gras.') },
+      { kind: 'narration', text: german('Mia ist auf dem Bauernhof von ihrer Tante. Es ist sechs Uhr morgens.') },
+      { kind: 'narration', text: german('Die Kuh Berta ist schwarz und weiß. Sie steht auf der Wiese und frisst Gras.') },
       { kind: 'line', speaker: 'cow', mood: 'happy', text: german('Muh!') },
       { kind: 'line', speaker: 'mia', text: german('Guten Morgen, Berta! Du gibst uns jeden Tag Milch. Danke!') },
       { kind: 'narration', enters: ['horse'], text: german('Neben dem Stall wartet das Pferd Blitz. Es ist braun und sehr schnell.') },
@@ -55,14 +55,17 @@ export const germanStories: Story[] = [
         german('Ich bin eine Karotte.'),
         german('Gute Nacht, Blitz!')
       ] },
-      { kind: 'narration', enters: ['bird'], text: german('Auf dem Dach sitzt ein kleiner Vogel. Er heißt Pieps.') },
+      { kind: 'narration', enters: ['bird'], text: german('Auf dem Dach sitzt ein kleiner gelber Vogel. Er heißt Pieps.') },
       { kind: 'line', speaker: 'bird', mood: 'happy', text: german('Piep, piep!') },
       { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Pieps singt jeden Morgen. Er ist unser Wecker!') },
       { kind: 'question', prompt: german('Was gibt die Kuh Berta?'), options: [german('Milch'), german('Eier'), german('Wasser')] },
       { kind: 'question', prompt: german('Was frisst die Kuh?'), options: [german('Gras'), german('Fisch'), german('Kuchen')] },
       { kind: 'question', prompt: german('Welche Farbe hat das Pferd?'), options: [german('Braun'), german('Weiß'), german('Schwarz')] },
       { kind: 'question', prompt: german('Wo sitzt der Vogel?'), options: [german('Auf dem Dach'), german('Im Stall'), german('Auf der Kuh')] },
-      { kind: 'question', prompt: german('Was macht Pieps jeden Morgen?'), options: [german('Er singt.'), german('Er schläft.'), german('Er frisst Gras.')] }
+      { kind: 'question', prompt: german('Was macht Pieps jeden Morgen?'), options: [german('Er singt.'), german('Er schläft.'), german('Er frisst Gras.')] },
+      { kind: 'question', prompt: german('Wie spät ist es, als Mia auf dem Bauernhof ist?'), options: [german('Sechs Uhr morgens'), german('Zwölf Uhr mittags'), german('Neun Uhr abends')] },
+      { kind: 'question', prompt: german('Welche Farbe hat die Kuh?'), options: [german('Schwarz und weiß'), german('Braun'), german('Gelb')] },
+      { kind: 'question', prompt: german('Welche Farbe hat der Vogel?'), options: [german('Gelb'), german('Rot'), german('Schwarz')] }
     ]
   },
   {
