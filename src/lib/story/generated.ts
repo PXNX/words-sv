@@ -2,7 +2,7 @@ import { playableLanguages, vocabularyLevels, wordDefinitions, wordMetadata, wor
 import type { SoundEffect } from '#lib/sounds.js';
 import { MASTERY_THRESHOLD, VOCABULARY_REVIEW_STORAGE_PREFIX, normalizeReviewProgress, prioritizeLearningWords, type ReviewProgress } from '#lib/vocab/spacedRepetition.js';
 import { readMissedWords } from './missedWords';
-import type { Story, StoryBeat, StoryProp, Text } from './stories';
+import type { CharacterId, HeldItem, Mood, Story, StoryBeat, StoryProp, Text } from './stories';
 
 /*
  * Stories built on the fly around the learner's own words: first the words they recently got wrong
@@ -16,10 +16,26 @@ import type { Story, StoryBeat, StoryProp, Text } from './stories';
  *
  * Who says what is fixed where a language marks the speaker's gender: Mia greets and explains,
  * Tom asks about a word he read and says goodbye; confirmations and listening tasks suit either.
+ *
+ * In German, what happens around the house changes the evening: everyone reacts, the learner calls
+ * Lilith back or answers her, a crash or the doorbell makes Tom lose the word just practised so the
+ * learner has to say it again, the neighbour's cake gets eaten at the end, and before saying
+ * goodbye Mia asks what happened that evening. The guest asks one of the words, too.
  */
 // A `wool` cue sends Lilith dashing off after the ball of wool; she is back for the next beat.
 type Cue = { text: string; sfx?: SoundEffect; prop?: StoryProp };
 type Guest = 'hans' | 'albert';
+type Speaker = 'mia' | 'tom' | 'lilith';
+// One step of an event: someone says something (handing out an item or walking back on stage), the
+// learner answers someone, or the speaker has lost the word practised just before and asks for it.
+type Step =
+  | { speaker: Speaker; text: string; mood?: Mood; holds?: Partial<Record<CharacterId, HeldItem>>; enters?: true }
+  | { replyTo: Speaker; options: string[] }
+  | { retry: 'mia' | 'tom'; text: string };
+// Something that happens around the house. A cue that `exits` sends Lilith off (one of the steps
+// brings her back); `recap` is asked at the end of the evening and `later` comes up just before
+// the goodbye.
+type Event = { cue: Cue & { exits?: true }; steps?: Step[]; recap?: { prompt: string; options: string[] }; later?: Step[] };
 type Templates = {
   titles: string[];
   openings: Cue[];
@@ -33,7 +49,10 @@ type Templates = {
   hearAsks: string[];
   hearQuestion: string;
   lilithLines: string[];
-  interludes: Cue[];
+  events: Event[];
+  // Needed once an event has a `retry` step or a `recap`.
+  retryQuestion?: string;
+  recapIntro?: string;
   closings: string[];
   guests?: Record<Guest, { arrivals: Cue[]; greetings: string[]; remarks: string[] }>;
   closingNarrations: string[];
@@ -65,14 +84,16 @@ const templates: Record<Language, Templates> = {
     hearAsks: ['Hör mal, {name}: „{word}“. Kannst du dir das Wort merken?', 'Pass gut auf, {name}. Ich sage ein Wort: „{word}“.'],
     hearQuestion: 'Welches Wort hast du gehört?',
     lilithLines: ['Miau! Ich mag Wörter fast so gern wie Fisch.', 'Miau! Darf ich auch mitspielen?', 'Miau … Ich bin müde. Weckt mich, wenn es Fisch gibt.', 'Miau! Das hast du toll gemacht.'],
-    interludes: [
-      { text: 'Klirr! Tom hat eine Tasse fallen lassen. Lilith schaut ihn streng an.', sfx: 'glass' },
-      { text: 'Draußen bremst ein Auto. Lilith springt erschrocken vom Sofa.', sfx: 'brakes' },
-      { text: 'Es klingelt an der Tür. Es ist nur der Nachbar mit einem Paket.', sfx: 'doorbell' },
-      { text: 'Lilith kommt zu dir und schnurrt ganz leise.', sfx: 'purr' },
-      { text: 'Klopf, klopf! Die Nachbarin bringt einen Kuchen vorbei.', sfx: 'knock' },
-      { text: 'Lilith jagt ein Wollknäuel quer durchs Zimmer.', sfx: 'meow', prop: 'wool' }
+    events: [
+      { cue: { text: 'Klirr! Tom hat seine rote Tasse fallen lassen. Lilith schaut ihn streng an.', sfx: 'glass' }, steps: [{ retry: 'tom', text: 'Oh nein, meine Lieblingstasse! Und vor Schreck habe ich das Wort von eben vergessen.' }], recap: { prompt: 'Was hat Tom fallen lassen?', options: ['Seine rote Tasse', 'Einen weißen Teller', 'Das Wörterbuch'] }, later: [{ speaker: 'mia', text: 'Und morgen kaufen wir Tom eine neue rote Tasse.' }] },
+      { cue: { text: 'Draußen bremst ein Auto. Lilith erschrickt und versteckt sich unter dem Sofa.', sfx: 'brakes', exits: true }, steps: [{ speaker: 'mia', mood: 'worried', text: 'Arme Lilith! {name}, ruf sie doch mal. Dich mag sie am liebsten.' }, { replyTo: 'mia', options: ['Lilith, komm her! Alles ist gut.', 'Lilith, fahr bitte das Auto weg!', 'Gute Nacht, Sofa!'] }, { speaker: 'lilith', mood: 'happy', enters: true, text: 'Miau … Danke, {name}. Jetzt habe ich keine Angst mehr.' }], recap: { prompt: 'Warum hat sich Lilith versteckt?', options: ['Weil draußen ein Auto gebremst hat', 'Weil Tom gesungen hat', 'Weil sie baden sollte'] } },
+      { cue: { text: 'Ding-dong! Um acht Uhr bringt der Nachbar noch ein großes blaues Paket vorbei.', sfx: 'doorbell' }, steps: [{ retry: 'tom', text: 'Oh, unser neues Wörterbuch ist da! Aber wo waren wir stehen geblieben?' }], recap: { prompt: 'Was war in dem Paket?', options: ['Ein neues Wörterbuch', 'Ein Spielzeug für Lilith', 'Ein Paar Schuhe'] }, later: [{ speaker: 'tom', text: 'Morgen lernen wir mit dem neuen Wörterbuch weiter.' }] },
+      { cue: { text: 'Lilith kommt zu dir und schnurrt ganz leise.', sfx: 'purr' }, steps: [{ speaker: 'lilith', mood: 'curious', text: 'Miau! {name}, ich mag es, wenn du da bist. Hast du vielleicht Fisch für mich?' }, { replyTo: 'lilith', options: ['Ich nicht, aber Mia hat bestimmt Fisch für dich.', 'Nein, ich bin der Fisch.', 'Ja, ich trinke Fisch.'] }, { speaker: 'mia', mood: 'laughing', holds: { lilith: 'fish' }, text: 'Haha, na gut. Ein kleines Stück Fisch für Lilith – aber nur eins!' }], recap: { prompt: 'Was bekommt Lilith?', options: ['Ein Stück Fisch', 'Einen Keks', 'Eine Tasse Milch'] } },
+      { cue: { text: 'Klopf, klopf! Frau Schulz aus Wohnung Nummer 3 bringt einen Apfelkuchen vorbei.', sfx: 'knock' }, steps: [{ speaker: 'mia', mood: 'happy', holds: { mia: 'cake' }, text: 'Danke! Den essen wir, wenn wir mit den Wörtern fertig sind. Tom, nicht naschen!' }, { speaker: 'tom', mood: 'sad', text: 'Schade. Dann lernen wir eben schneller!' }], recap: { prompt: 'Was bringt Frau Schulz vorbei?', options: ['Einen Apfelkuchen', 'Ein Paket', 'Eine Katze'] }, later: [{ speaker: 'tom', mood: 'happy', text: 'Geschafft! Jetzt gibt es endlich Kuchen. {name}, möchtest du ein Stück?' }, { replyTo: 'tom', options: ['Ja, gern! Danke.', 'Nein danke, ich esse lieber das Wörterbuch.', 'Ich bin ein Apfelkuchen.'] }] },
+      { cue: { text: 'Lilith jagt ein gelbes Wollknäuel quer durchs Zimmer.', sfx: 'meow', prop: 'wool', exits: true }, steps: [{ retry: 'tom', text: 'Haha, Lilith! Jetzt ist nicht nur mein Wollknäuel weg, sondern auch das Wort von eben.' }, { speaker: 'lilith', mood: 'happy', enters: true, text: 'Miau! Ich habe das Wollknäuel gefangen!' }], recap: { prompt: 'Womit spielt Lilith?', options: ['Mit einem gelben Wollknäuel', 'Mit einem roten Ball', 'Mit Toms Schuh'] } }
     ],
+    retryQuestion: 'Welches Wort haben wir gerade geübt?',
+    recapIntro: 'Was für ein Abend! {name}, weißt du noch, was alles passiert ist?',
     closings: ['Super gemacht, {name}! Lilith ist stolz auf dich.', 'Toll, {name}! Diese Wörter vergisst du nicht so schnell.', 'Das war ein schöner Abend, {name}. Bis bald!'],
     guests: {
       hans: {
@@ -111,13 +132,13 @@ const templates: Record<Language, Templates> = {
     hearAsks: ['Listen, {name}: “{word}”. Can you remember that word?', 'Listen carefully, {name}. I’ll say a word: “{word}”.'],
     hearQuestion: 'Which word did you hear?',
     lilithLines: ['Meow! I like words almost as much as fish.', 'Meow! Can I play too?', 'Meow… I’m sleepy. Wake me up when there’s fish.', 'Meow! You did that really well.'],
-    interludes: [
-      { text: 'Crash! Tom dropped a cup. Lilith gives him a stern look.', sfx: 'glass' },
-      { text: 'Outside, a car brakes. Lilith jumps off the sofa in fright.', sfx: 'brakes' },
-      { text: 'The doorbell rings. It’s only the neighbour with a parcel.', sfx: 'doorbell' },
-      { text: 'Lilith comes over to you and purrs very softly.', sfx: 'purr' },
-      { text: 'Knock, knock! The neighbour brings round a cake.', sfx: 'knock' },
-      { text: 'Lilith chases a ball of wool right across the room.', sfx: 'meow', prop: 'wool' }
+    events: [
+      { cue: { text: 'Crash! Tom dropped a cup. Lilith gives him a stern look.', sfx: 'glass' } },
+      { cue: { text: 'Outside, a car brakes. Lilith jumps off the sofa in fright.', sfx: 'brakes' } },
+      { cue: { text: 'The doorbell rings. It’s only the neighbour with a parcel.', sfx: 'doorbell' } },
+      { cue: { text: 'Lilith comes over to you and purrs very softly.', sfx: 'purr' } },
+      { cue: { text: 'Knock, knock! The neighbour brings round a cake.', sfx: 'knock' } },
+      { cue: { text: 'Lilith chases a ball of wool right across the room.', sfx: 'meow', prop: 'wool' } }
     ],
     closings: ['Well done, {name}! Lilith is proud of you.', 'Brilliant, {name}! You won’t forget these words so quickly.', 'That was a lovely evening, {name}. See you soon!'],
     closingNarrations: ['Lilith curls up in your lap and purrs.', 'Mia makes one more cup of tea, and Lilith falls asleep on the sofa.', 'Lilith yawns, stretches and purrs happily.']
@@ -144,13 +165,13 @@ const templates: Record<Language, Templates> = {
     hearAsks: ['Écoute, {name} : « {word} ». Tu peux retenir ce mot ?', 'Écoute bien, {name}. Je dis un mot : « {word} ».'],
     hearQuestion: 'Quel mot as-tu entendu ?',
     lilithLines: ['Miaou ! J’aime les mots presque autant que le poisson.', 'Miaou ! Je peux jouer aussi ?', 'Miaou… J’ai sommeil. Réveillez-moi quand il y a du poisson.', 'Miaou ! Quelle belle réponse !'],
-    interludes: [
-      { text: 'Crac ! Tom a fait tomber une tasse. Lilith le regarde d’un air sévère.', sfx: 'glass' },
-      { text: 'Dehors, une voiture freine. Lilith saute du canapé, effrayée.', sfx: 'brakes' },
-      { text: 'On sonne à la porte. C’est juste le voisin avec un colis.', sfx: 'doorbell' },
-      { text: 'Lilith vient vers toi et ronronne tout doucement.', sfx: 'purr' },
-      { text: 'Toc, toc ! La voisine apporte un gâteau.', sfx: 'knock' },
-      { text: 'Lilith court après une pelote de laine à travers toute la pièce.', sfx: 'meow', prop: 'wool' }
+    events: [
+      { cue: { text: 'Crac ! Tom a fait tomber une tasse. Lilith le regarde d’un air sévère.', sfx: 'glass' } },
+      { cue: { text: 'Dehors, une voiture freine. Lilith saute du canapé, effrayée.', sfx: 'brakes' } },
+      { cue: { text: 'On sonne à la porte. C’est juste le voisin avec un colis.', sfx: 'doorbell' } },
+      { cue: { text: 'Lilith vient vers toi et ronronne tout doucement.', sfx: 'purr' } },
+      { cue: { text: 'Toc, toc ! La voisine apporte un gâteau.', sfx: 'knock' } },
+      { cue: { text: 'Lilith court après une pelote de laine à travers toute la pièce.', sfx: 'meow', prop: 'wool' } }
     ],
     closings: ['Bravo, {name} ! Lilith est fière de toi.', 'Génial, {name} ! Tu n’oublieras pas ces mots de sitôt.', 'C’était une belle soirée, {name}. À bientôt !'],
     closingNarrations: ['Lilith se roule en boule sur tes genoux et ronronne.', 'Mia prépare encore un thé, et Lilith s’endort sur le canapé.', 'Lilith bâille, s’étire et ronronne, contente.']
@@ -177,13 +198,13 @@ const templates: Record<Language, Templates> = {
     hearAsks: ['Ascolta, {name}: «{word}». Riesci a ricordare questa parola?', 'Ascolta bene, {name}. Dico una parola: «{word}».'],
     hearQuestion: 'Quale parola hai sentito?',
     lilithLines: ['Miao! Mi piacciono le parole quasi quanto il pesce.', 'Miao! Posso giocare anch’io?', 'Miao… Ho sonno. Svegliatemi quando c’è il pesce.', 'Miao! Che bella risposta!'],
-    interludes: [
-      { text: 'Crash! A Tom è caduta una tazza. Lilith lo guarda severa.', sfx: 'glass' },
-      { text: 'Fuori una macchina frena. Lilith salta giù dal divano, spaventata.', sfx: 'brakes' },
-      { text: 'Suonano alla porta. È solo il vicino con un pacco.', sfx: 'doorbell' },
-      { text: 'Lilith viene da te e fa le fusa piano piano.', sfx: 'purr' },
-      { text: 'Toc toc! La vicina porta una torta.', sfx: 'knock' },
-      { text: 'Lilith rincorre un gomitolo di lana per tutta la stanza.', sfx: 'meow', prop: 'wool' }
+    events: [
+      { cue: { text: 'Crash! A Tom è caduta una tazza. Lilith lo guarda severa.', sfx: 'glass' } },
+      { cue: { text: 'Fuori una macchina frena. Lilith salta giù dal divano, spaventata.', sfx: 'brakes' } },
+      { cue: { text: 'Suonano alla porta. È solo il vicino con un pacco.', sfx: 'doorbell' } },
+      { cue: { text: 'Lilith viene da te e fa le fusa piano piano.', sfx: 'purr' } },
+      { cue: { text: 'Toc toc! La vicina porta una torta.', sfx: 'knock' } },
+      { cue: { text: 'Lilith rincorre un gomitolo di lana per tutta la stanza.', sfx: 'meow', prop: 'wool' } }
     ],
     closings: ['Ottimo lavoro, {name}! Lilith è fiera di te.', 'Fantastico, {name}! Queste parole non le dimentichi più.', 'È stata una bella serata, {name}. A presto!'],
     closingNarrations: ['Lilith si acciambella sulle tue ginocchia e fa le fusa.', 'Mia prepara ancora un tè e Lilith si addormenta sul divano.', 'Lilith sbadiglia, si stiracchia e fa le fusa contenta.']
@@ -210,13 +231,13 @@ const templates: Record<Language, Templates> = {
     hearAsks: ['Escucha, {name}: «{word}». ¿Puedes recordar esta palabra?', 'Escucha bien, {name}. Digo una palabra: «{word}».'],
     hearQuestion: '¿Qué palabra has oído?',
     lilithLines: ['¡Miau! Me gustan las palabras casi tanto como el pescado.', '¡Miau! ¿Puedo jugar yo también?', 'Miau… Tengo sueño. Despertadme cuando haya pescado.', '¡Miau! ¡Qué bien lo has hecho!'],
-    interludes: [
-      { text: '¡Crac! A Tom se le ha caído una taza. Lilith lo mira muy seria.', sfx: 'glass' },
-      { text: 'Fuera, un coche frena. Lilith salta del sofá asustada.', sfx: 'brakes' },
-      { text: 'Llaman a la puerta. Es solo el vecino con un paquete.', sfx: 'doorbell' },
-      { text: 'Lilith se acerca a ti y ronronea muy bajito.', sfx: 'purr' },
-      { text: '¡Toc, toc! La vecina trae un pastel.', sfx: 'knock' },
-      { text: 'Lilith persigue un ovillo de lana por toda la habitación.', sfx: 'meow', prop: 'wool' }
+    events: [
+      { cue: { text: '¡Crac! A Tom se le ha caído una taza. Lilith lo mira muy seria.', sfx: 'glass' } },
+      { cue: { text: 'Fuera, un coche frena. Lilith salta del sofá asustada.', sfx: 'brakes' } },
+      { cue: { text: 'Llaman a la puerta. Es solo el vecino con un paquete.', sfx: 'doorbell' } },
+      { cue: { text: 'Lilith se acerca a ti y ronronea muy bajito.', sfx: 'purr' } },
+      { cue: { text: '¡Toc, toc! La vecina trae un pastel.', sfx: 'knock' } },
+      { cue: { text: 'Lilith persigue un ovillo de lana por toda la habitación.', sfx: 'meow', prop: 'wool' } }
     ],
     closings: ['¡Muy bien, {name}! Lilith está orgullosa de ti.', '¡Genial, {name}! Estas palabras no las vas a olvidar tan pronto.', 'Ha sido una noche muy bonita, {name}. ¡Hasta pronto!'],
     closingNarrations: ['Lilith se acurruca en tu regazo y ronronea.', 'Mia prepara otro té y Lilith se duerme en el sofá.', 'Lilith bosteza, se estira y ronronea contenta.']
@@ -243,13 +264,13 @@ const templates: Record<Language, Templates> = {
     hearAsks: ['Escuta, {name}: “{word}”. Você consegue lembrar essa palavra?', 'Presta atenção, {name}. Vou dizer uma palavra: “{word}”.'],
     hearQuestion: 'Qual palavra você ouviu?',
     lilithLines: ['Miau! Eu gosto de palavras quase tanto quanto de peixe.', 'Miau! Posso brincar também?', 'Miau… Estou com sono. Me acordem quando tiver peixe.', 'Miau! Que resposta bonita!'],
-    interludes: [
-      { text: 'Crash! O Tom deixou uma xícara cair. A Lilith olha para ele bem séria.', sfx: 'glass' },
-      { text: 'Lá fora, um carro freia. A Lilith pula do sofá assustada.', sfx: 'brakes' },
-      { text: 'A campainha toca. É só o vizinho com um pacote.', sfx: 'doorbell' },
-      { text: 'A Lilith vem até você e ronrona bem baixinho.', sfx: 'purr' },
-      { text: 'Toc, toc! A vizinha traz um bolo.', sfx: 'knock' },
-      { text: 'A Lilith corre atrás de um novelo de lã pela sala inteira.', sfx: 'meow', prop: 'wool' }
+    events: [
+      { cue: { text: 'Crash! O Tom deixou uma xícara cair. A Lilith olha para ele bem séria.', sfx: 'glass' } },
+      { cue: { text: 'Lá fora, um carro freia. A Lilith pula do sofá assustada.', sfx: 'brakes' } },
+      { cue: { text: 'A campainha toca. É só o vizinho com um pacote.', sfx: 'doorbell' } },
+      { cue: { text: 'A Lilith vem até você e ronrona bem baixinho.', sfx: 'purr' } },
+      { cue: { text: 'Toc, toc! A vizinha traz um bolo.', sfx: 'knock' } },
+      { cue: { text: 'A Lilith corre atrás de um novelo de lã pela sala inteira.', sfx: 'meow', prop: 'wool' } }
     ],
     closings: ['Muito bem, {name}! A Lilith está orgulhosa de você.', 'Demais, {name}! Você não vai esquecer essas palavras tão cedo.', 'Foi uma noite muito boa, {name}. Até logo!'],
     closingNarrations: ['A Lilith se enrola no seu colo e ronrona.', 'A Mia faz mais um chá, e a Lilith adormece no sofá.', 'A Lilith boceja, se espreguiça e ronrona contente.']
@@ -276,13 +297,13 @@ const templates: Record<Language, Templates> = {
     hearAsks: ['Послухай, {name}: «{word}». Запам’ятаєш це слово?', 'Слухай уважно, {name}. Я скажу слово: «{word}».'],
     hearQuestion: 'Яке слово прозвучало?',
     lilithLines: ['Няв! Я люблю слова майже так само, як рибку.', 'Няв! Можна мені теж погратися?', 'Няв… Я хочу спати. Розбудіть мене, коли буде рибка.', 'Няв! Чудова відповідь!'],
-    interludes: [
-      { text: 'Дзень! Том упустив чашку. Ліліт суворо на нього дивиться.', sfx: 'glass' },
-      { text: 'Надворі гальмує машина. Ліліт злякано зістрибує з дивана.', sfx: 'brakes' },
-      { text: 'Дзвонять у двері. Це лише сусід із посилкою.', sfx: 'doorbell' },
-      { text: 'Ліліт підходить до тебе й тихенько муркоче.', sfx: 'purr' },
-      { text: 'Тук-тук! Сусідка приносить пиріг.', sfx: 'knock' },
-      { text: 'Ліліт ганяється за клубком вовни по всій кімнаті.', sfx: 'meow', prop: 'wool' }
+    events: [
+      { cue: { text: 'Дзень! Том упустив чашку. Ліліт суворо на нього дивиться.', sfx: 'glass' } },
+      { cue: { text: 'Надворі гальмує машина. Ліліт злякано зістрибує з дивана.', sfx: 'brakes' } },
+      { cue: { text: 'Дзвонять у двері. Це лише сусід із посилкою.', sfx: 'doorbell' } },
+      { cue: { text: 'Ліліт підходить до тебе й тихенько муркоче.', sfx: 'purr' } },
+      { cue: { text: 'Тук-тук! Сусідка приносить пиріг.', sfx: 'knock' } },
+      { cue: { text: 'Ліліт ганяється за клубком вовни по всій кімнаті.', sfx: 'meow', prop: 'wool' } }
     ],
     closings: ['Чудова робота, {name}! Ліліт пишається тобою.', 'Супер, {name}! Ці слова ти так швидко не забудеш.', 'Це був чудовий вечір, {name}. До зустрічі!'],
     closingNarrations: ['Ліліт згортається клубочком у тебе на колінах і муркоче.', 'Мія робить ще один чай, а Ліліт засинає на дивані.', 'Ліліт позіхає, потягується й задоволено муркоче.']
@@ -355,15 +376,17 @@ function distractors(language: Language, level: VocabularyLevel, word: string, n
 
 
 // Each exercise brings the word up in a line and asks about it. Whoever asks pronounces the word
-// when the learner gets it right (see `asker` and `word` on StoryBeat).
-function exerciseFor(language: Language, level: VocabularyLevel, word: string, text: Templates, speaker: 'mia' | 'tom'): StoryBeat[] {
+// when the learner gets it right (see `asker` and `word` on StoryBeat). A guest only asks for a word
+// or reads one out; explaining and the article question belong to Mia and Tom.
+function exerciseFor(language: Language, level: VocabularyLevel, word: string, text: Templates, speaker: 'mia' | 'tom' | Guest): StoryBeat[] {
   const metadata = wordMetadata[language][word];
   const spelling = metadata.spelling;
   const definition = wordDefinitions[language]?.[word];
   const article = metadata.type === 'noun' && metadata.article && ARTICLES.includes(metadata.article) ? metadata.article : null;
+  const host = speaker === 'mia' || speaker === 'tom';
   const kinds: ('definition' | 'word' | 'article' | 'hear')[] = [];
-  if (definition && distractors(language, level, word, true).length === 2) kinds.push('definition', 'word');
-  if (text.articleAsk && article) kinds.push('article');
+  if (definition && distractors(language, level, word, true).length === 2) kinds.push(...(host ? ['definition', 'word'] as const : ['word'] as const));
+  if (host && text.articleAsk && article) kinds.push('article');
   const kind = kinds.length ? pick(kinds) : 'hear';
 
   if (kind === 'definition') {
@@ -396,6 +419,22 @@ function exerciseFor(language: Language, level: VocabularyLevel, word: string, t
   ];
 }
 
+// The word practised just before an event, asked for again among two other words of the evening.
+function recallFor(language: Language, level: VocabularyLevel, word: string, words: string[], text: Templates, asker: 'mia' | 'tom'): StoryBeat {
+  const spelling = wordMetadata[language][word].spelling;
+  const evening = words.filter((other) => other !== word);
+  const others = evening.length >= 2 ? shuffled(evening).slice(0, 2) : distractors(language, level, word, false);
+  return { kind: 'question', focus: word, asker, word: spelling, prompt: same(text.retryQuestion!), options: [spelling, ...others.map((other) => wordMetadata[language][other].spelling)].map(same) };
+}
+
+function stepBeats(steps: Step[], recall?: (asker: 'mia' | 'tom') => StoryBeat): StoryBeat[] {
+  return steps.flatMap((step): StoryBeat[] => {
+    if ('replyTo' in step) return [{ kind: 'reply', to: step.replyTo, options: step.options.map(same) }];
+    if ('retry' in step) return [{ kind: 'line', speaker: step.retry, text: same(step.text) }, ...(recall ? [recall(step.retry)] : [])];
+    return [{ kind: 'line', speaker: step.speaker, mood: step.mood, holds: step.holds, enters: step.enters ? [step.speaker] : undefined, text: same(step.text) }];
+  });
+}
+
 export function hasMissedWords(language: Language) {
   const known = wordMetadata[language] ?? {};
   return readMissedWords(language).some((entry) => known[entry.word]);
@@ -418,23 +457,36 @@ export function generateStory(language: Language, level: VocabularyLevel, includ
     // The guest only walks on stage once they have knocked or rung.
     beats.push({ kind: 'narration', text: same(arrival.text), sfx: arrival.sfx, enters: [guest] }, { kind: 'line', speaker: guest, text: same(pick(visit.greetings)) });
   }
-  // Lilith and the guest each speak up after one word and something happens around the house after
-  // one to three others, each at a random point of the evening.
+  // Lilith speaks up after one word, the guest asks one word and comments on it, and something
+  // happens around the house after one to three others, each at a random point of the evening.
   const lilithAfter = Math.floor(Math.random() * words.length);
   const guestAfter = Math.floor(Math.random() * words.length);
-  const interludes = shuffled(text.interludes).slice(0, Math.min(3, Math.ceil(words.length / 2)));
-  const interludeAfter = shuffled(words.map((_, index) => index)).slice(0, interludes.length);
+  const events = shuffled(text.events).slice(0, Math.min(3, Math.ceil(words.length / 2)));
+  const eventAfter = shuffled(words.map((_, index) => index)).slice(0, events.length);
+  // Where Lilith runs off and no step brings her back, she strolls back in with the next line or narration.
+  const returns: number[] = [];
   words.forEach((word, index) => {
-    beats.push(...exerciseFor(language, level, word, text, pick<'mia' | 'tom'>(['mia', 'tom'])));
+    const asker = guest && index === guestAfter ? guest : pick<'mia' | 'tom'>(['mia', 'tom']);
+    beats.push(...exerciseFor(language, level, word, text, asker));
     if (index === lilithAfter) beats.push({ kind: 'line', speaker: 'lilith', text: same(pick(text.lilithLines)), sfx: 'meow' });
     if (guest && visit && index === guestAfter) beats.push({ kind: 'line', speaker: guest, text: same(pick(visit.remarks)) });
-    const interlude = interludes[interludeAfter.indexOf(index)];
-    if (interlude) beats.push({ kind: 'narration', text: same(interlude.text), sfx: interlude.sfx, prop: interlude.prop, exits: interlude.prop === 'wool' ? ['lilith'] : undefined });
+    const event = events[eventAfter.indexOf(index)];
+    if (!event) return;
+    const exits = event.cue.exits || event.cue.prop === 'wool';
+    beats.push({ kind: 'narration', text: same(event.cue.text), sfx: event.cue.sfx, prop: event.cue.prop, exits: exits ? ['lilith'] : undefined });
+    if (exits && !event.steps?.some((step) => 'enters' in step && step.enters)) returns.push(beats.length);
+    beats.push(...stepBeats(event.steps ?? [], (who) => recallFor(language, level, word, words, text, who)));
   });
+  // Before saying goodbye, Mia asks about what happened, then the evening's loose ends come up.
+  const recaps = events.flatMap((event) => (event.recap ? [event.recap] : []));
+  if (recaps.length && text.recapIntro) {
+    beats.push({ kind: 'line', speaker: 'mia', text: same(text.recapIntro) }, ...recaps.map((recap): StoryBeat => ({ kind: 'question', asker: 'mia', prompt: same(recap.prompt), options: recap.options.map(same) })));
+  }
+  beats.push(...events.flatMap((event) => stepBeats(event.later ?? [])));
   beats.push({ kind: 'line', speaker: 'tom', text: same(pick(text.closings)) }, { kind: 'narration', text: same(pick(text.closingNarrations)), sfx: 'purr' });
-  // After chasing the wool, Lilith strolls back in with the next line or narration.
-  const chase = beats.findIndex((beat) => beat.kind === 'narration' && beat.exits?.includes('lilith'));
-  const back = beats.findIndex((beat, index) => chase !== -1 && index > chase && (beat.kind === 'narration' || beat.kind === 'line'));
-  if (back !== -1) beats[back] = { ...beats[back], enters: ['lilith'] } as StoryBeat;
+  for (const from of returns) {
+    const back = beats.findIndex((beat, index) => index >= from && (beat.kind === 'narration' || beat.kind === 'line'));
+    if (back !== -1) beats[back] = { ...beats[back], enters: ['lilith'] } as StoryBeat;
+  }
   return { id: `generated-${Date.now()}`, level, scene: 'home', cast: guest ? ['mia', 'tom', 'lilith', guest] : ['mia', 'tom', 'lilith'], title: same(pick(text.titles)), beats, generated: true };
 }
