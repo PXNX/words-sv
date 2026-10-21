@@ -18,8 +18,8 @@
   // overalls; `checked` lays a check pattern over the top.
   type Look = { skin: string; hair: string; hairStyle: 'bun' | 'short' | 'curly' | 'bob' | 'bald' | 'messy'; top: string; glasses?: boolean; monocle?: boolean; beard?: boolean; stubble?: boolean; moustache?: boolean | 'kaiser'; hat?: 'tyrolean' | 'crown' | 'police' | 'toque' | 'straw'; headphones?: boolean; shades?: boolean; pencil?: boolean; build?: 'wide' | 'muscular'; accent?: string; checked?: boolean; outfit: 'plain' | 'hoodie' | 'cardigan' | 'apron' | 'blazer' | 'tie' | 'tracht' | 'waistcoat' | 'police' | 'chef' | 'overalls' | 'tanktop' | 'scrubs' | 'tshirt' | 'shirt' };
   // Animals are hand-drawn branches below rather than entries in `looks`.
-  type Animal = 'bello' | 'seagull' | 'deer' | 'fox' | 'lilith' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake';
-  const animals: readonly CharacterId[] = ['bello', 'seagull', 'deer', 'fox', 'lilith', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
+  type Animal = 'bello' | 'crow' | 'seagull' | 'deer' | 'fox' | 'lilith' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake';
+  const animals: readonly CharacterId[] = ['bello', 'crow', 'seagull', 'deer', 'fox', 'lilith', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
   const looks: Record<Exclude<CharacterId, Animal>, Look> = {
     // König Ludwig, the Neuschwanstein guide in costume: dark curls, a moustache, a gold crown and a dark blue coat.
     ludwig: { skin: '#f0d0b4', hair: '#2a1d17', hairStyle: 'curly', top: '#1f3a6b', moustache: true, hat: 'crown', outfit: 'blazer' },
@@ -360,6 +360,17 @@
     <g class="story-mouth-closed"><path d="M52 77h16l-3 15h-10Z" fill="#f2c23a" stroke="#c99a2a" stroke-width="1" /><circle cx="60" cy="88" r="2" fill="#d64b45" /></g>
     <g class="story-mouth-open" style:transform={mouthScale}><path d="M52 77h16l-3 8h-10Z" fill="#f2c23a" /><path d="M55 86h10l-2 8h-6Z" fill="#e0a92a" /><circle cx="60" cy="91" r="1.8" fill="#d64b45" /></g>
     <path d="M52 140v8M68 140v8M48 148h9M64 148h9" stroke="#e8a59a" stroke-width="2.4" stroke-linecap="round" />
+  {:else if id === 'crow'}
+    <!-- the crow: glossy black feathers with a blue sheen, a strong grey beak and bright, clever eyes -->
+    <path class="story-tail" d="M50 132l-10 16h20l4-14Z" fill="#1d1f26" />
+    <ellipse cx="60" cy="112" rx="26" ry="30" fill="#26272b" /><path d="M38 98q-8 28 8 38 4-20 2-36Z" fill="#1d1f26" /><path d="M82 98q8 28-8 38-4-20-2-36Z" fill="#1d1f26" />
+    <path d="M44 100q16-8 32 0M46 112q14-6 28 0" fill="none" stroke="#4b5a8a" stroke-width="2.5" opacity=".55" />
+    <circle cx="60" cy="72" r="23" fill="#26272b" /><path d="M44 60q8-10 18-8" fill="none" stroke="#4b5a8a" stroke-width="2.5" opacity=".6" />
+    <circle cx="50" cy="69" r="5.2" fill="#fffdf7" /><circle cx="70" cy="69" r="5.2" fill="#fffdf7" />
+    {@render wildEyes(50, 70, 69, 2.8, '#172a45')}
+    <path class="story-mouth-closed" d="M51 77h18l-9 15Z" fill="#7d8794" stroke="#4a525c" stroke-width="1" />
+    <g class="story-mouth-open" style:transform={mouthScale}><path d="M51 77h18l-9 8Z" fill="#7d8794" /><path d="M52 85h16l-8 9Z" fill="#4a525c" /></g>
+    <path d="M52 140v8M68 140v8M48 148h9M64 148h9" stroke="#4a525c" stroke-width="2.4" stroke-linecap="round" />
   {:else}
     <!-- Bello the dog -->
     <path d="M90 118q18-14 14-30" fill="none" stroke="#b07a4a" stroke-width="7" stroke-linecap="round" class="story-tail" />

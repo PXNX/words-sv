@@ -33,7 +33,8 @@
     cliffs: { back: '#cfe6f2', floor: '#d8d2c4' },
     berlin: { back: '#cfe6f2', floor: '#b8aa98' },
     hamburg: { back: '#cfe6f2', floor: '#9aa3ad' },
-    munich: { back: '#cfe6f2', floor: '#b8aa98' }
+    munich: { back: '#cfe6f2', floor: '#b8aa98' },
+    cologne: { back: '#cfe6f2', floor: '#b8aa98' }
   };
   const palette = $derived(palettes[scene]);
 
@@ -66,7 +67,8 @@
     cliffs: { x: 0, y: 0, w: 400, h: 172 },
     berlin: { x: 0, y: 0, w: 400, h: 172 },
     hamburg: { x: 0, y: 0, w: 400, h: 172 },
-    munich: { x: 0, y: 0, w: 400, h: 172 }
+    munich: { x: 0, y: 0, w: 400, h: 172 },
+    cologne: { x: 0, y: 0, w: 400, h: 172 }
   };
   const sky = $derived(skies[scene]);
   const outdoor = $derived(sky.w === 400);
@@ -305,6 +307,18 @@
     <circle cx="315" cy="48" r="8" fill="#fffdf7" stroke="#172a45" stroke-width="1.5" /><path d="M315 48v-5M315 48l3 2" stroke="#172a45" stroke-width="1.2" />
     <rect x="301" y="68" width="28" height="22" fill="#e6b52e" stroke="#596477" stroke-width="1.2" /><g fill="#d64b45"><circle cx="308" cy="78" r="3" /><circle cx="322" cy="78" r="3" /></g><g fill="#4b78c2"><rect x="305" y="81" width="6" height="7" /><rect x="319" y="81" width="6" height="7" /></g>
     <rect x="301" y="104" width="28" height="22" fill="#e6b52e" stroke="#596477" stroke-width="1.2" /><g fill="#fffdf7"><circle cx="308" cy="113" r="3" /><circle cx="322" cy="113" r="3" /></g><g fill="#d64b45"><rect x="305" y="116" width="6" height="8" /><rect x="319" y="116" width="6" height="8" /></g>
+  {:else if scene === 'cologne'}
+    <!-- Cologne: the arches of the Hohenzollern Bridge hung with love locks over the Rhine, and the cathedral's two dark spires -->
+    <rect y="130" width="400" height="42" fill="#6d8fa8" />
+    <g fill="none" stroke="#9cb8cc" stroke-width="2" stroke-linecap="round"><path d="M40 150q8-4 16 0M120 160q8-4 16 0M200 146q8-4 16 0" /></g>
+    <g fill="none" stroke="#4f6a5a" stroke-width="3"><path d="M0 126q35-44 70 0q35-44 70 0q35-44 70 0" /><path d="M0 126h210" /><path d="M17 105v21M35 92v34M53 105v21M87 105v21M105 92v34M123 105v21M157 105v21M175 92v34M193 105v21" stroke-width="1.5" /></g>
+    <g fill="#8a7a68"><rect x="66" y="126" width="8" height="22" /><rect x="136" y="126" width="8" height="22" /><rect x="206" y="126" width="8" height="22" /></g>
+    <g>{#each Array.from({ length: 13 }, (_, i) => i) as i (i)}<circle cx={8 + i * 16} cy="123" r="2.2" fill={['#d64b45', '#e6b52e', '#4b78c2', '#df8eb1'][i % 4]} />{/each}</g>
+    <g fill="#5a5650" stroke="#2e2b28" stroke-width="1.5"><rect x="292" y="90" width="54" height="82" /><path d="M262 172V62l16-54 16 54v110Z" /><path d="M344 172V62l16-54 16 54v110Z" /></g>
+    <g fill="#8ab4d9" opacity=".55"><path d="M306 160v-44q6-12 12-12t12 12v44Z" /><path d="M270 150v-40q8-10 16 0v40Z" /><path d="M352 150v-40q8-10 16 0v40Z" /></g>
+    <g fill="none" stroke="#2e2b28" stroke-width="1.5"><path d="M266 70h24M348 70h24M266 100h24M348 100h24" /><circle cx="319" cy="104" r="9" /></g>
+    <path d="M278 8V0M360 8V0M274 3h8M356 3h8" stroke="#2e2b28" stroke-width="2" />
+    {#if weather === 'snowy'}<g fill="#ffffff"><path d="M262 62l16-54 16 54-3 1-13-46-13 46Z" /><path d="M344 62l16-54 16 54-3 1-13-46-13 46Z" /></g>{/if}
   {/if}
   <rect y="172" width="400" height="48" fill={palette.floor} />
   <rect y="172" width="400" height="4" fill="rgba(23,42,69,.14)" />

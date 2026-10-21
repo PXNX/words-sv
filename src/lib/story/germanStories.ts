@@ -1300,5 +1300,42 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was machen die Leute am Eisbach?'), options: [german('Sie surfen.'), german('Sie fahren Ski.'), german('Sie spielen Fußball.')] },
       { kind: 'question', prompt: german('Wie viel Bier ist eine Maß?'), options: [german('Ein Liter'), german('Ein halber Liter'), german('Zwei Liter')] }
     ]
+  },
+  {
+    id: 'b1-cologne',
+    level: 'b1',
+    scene: 'cologne',
+    cast: ['leo', 'mia', 'crow'],
+    languages: ['de'],
+    title: german('Ein Tag in Köln'),
+    beats: [
+      { kind: 'narration', text: german('Leo und Mia zeigen dir Köln. Schon wenn ihr aus dem Hauptbahnhof kommt, steht ihr direkt vor dem Dom – zwei riesige dunkle Türme, die bis in die Wolken zu reichen scheinen.') },
+      { kind: 'line', speaker: 'leo', mood: 'happy', text: german('Der Kölner Dom ist hundertsiebenundfünfzig Meter hoch. Gebaut hat man über sechshundert Jahre lang, von 1248 bis 1880.') },
+      { kind: 'line', speaker: 'mia', text: german('Wer will, kann auf den Südturm steigen. Es sind genau fünfhundertdreiunddreißig Stufen – und es gibt keinen Aufzug.') },
+      { kind: 'line', speaker: 'leo', mood: 'curious', text: german('{name}, schaffst du das?') },
+      { kind: 'reply', to: 'leo', options: [
+        german('Klar, aber oben brauche ich erst mal eine Pause.'),
+        german('Nein, ich fahre lieber mit dem Fahrrad die Treppe hoch.'),
+        german('Ich schwimme lieber durch den Rhein nach oben.')
+      ] },
+      { kind: 'narration', enters: ['crow'], faces: { crow: 'curious' }, text: german('Oben auf der Plattform weht ein kräftiger Wind. Auf dem Geländer sitzt eine große schwarze Krähe und schaut euch neugierig an.') },
+      { kind: 'line', speaker: 'crow', mood: 'curious', text: german('Krah!') },
+      { kind: 'line', speaker: 'mia', mood: 'laughing', text: german('Haha, sie sieht aus, als würde sie hier arbeiten. Bestimmt ist sie die Domführerin.') },
+      { kind: 'line', speaker: 'leo', text: german('Krähen sind übrigens unglaublich klug. Sie erkennen Gesichter und merken sich, wer ihnen etwas zu essen gibt.') },
+      { kind: 'line', speaker: 'crow', mood: 'happy', text: german('Krah! Krah!') },
+      { kind: 'narration', exits: ['crow'], text: german('Dann breitet die Krähe ihre Flügel aus und segelt hinunter Richtung Rhein.') },
+      { kind: 'narration', text: german('Am Nachmittag geht ihr über die Hohenzollernbrücke. Am Geländer hängen Hunderttausende bunte Liebesschlösser.') },
+      { kind: 'line', speaker: 'leo', text: german('Paare schreiben ihre Namen auf ein Schloss, hängen es hier auf und werfen den Schlüssel in den Rhein. Inzwischen wiegen die Schlösser viele Tonnen.') },
+      { kind: 'narration', text: german('Am Abend sitzt ihr in einem alten Brauhaus. Der Kellner – in Köln heißt er „Köbes“ – stellt euch ungefragt kleine Gläser Kölsch hin. In jedes passen nur 0,2 Liter.') },
+      { kind: 'line', speaker: 'mia', text: german('Wichtig: Wenn du kein Kölsch mehr willst, legst du deinen Bierdeckel auf das Glas. Sonst bringt der Köbes einfach immer weiter neue.') },
+      { kind: 'line', speaker: 'leo', mood: 'laughing', text: german('Das wusste ich bei meinem ersten Besuch nicht. Nach acht Gläsern habe ich es dann verstanden.') },
+      { kind: 'question', prompt: german('Wie hoch ist der Kölner Dom?'), options: [german('Hundertsiebenundfünfzig Meter'), german('Siebenundfünfzig Meter'), german('Fünfhundertdreiunddreißig Meter')] },
+      { kind: 'question', prompt: german('Wie lange hat man am Dom gebaut?'), options: [german('Über sechshundert Jahre'), german('Zehn Jahre'), german('Fünfzig Jahre')] },
+      { kind: 'question', prompt: german('Wie viele Stufen hat der Südturm?'), options: [german('Fünfhundertdreiunddreißig'), german('Hundertsiebenundfünfzig'), german('Achtundvierzig')] },
+      { kind: 'question', prompt: german('Wen trefft ihr oben auf dem Turm?'), options: [german('Eine Krähe'), german('Einen Domführer'), german('Eine Möwe')] },
+      { kind: 'question', prompt: german('Was erzählt Leo über Krähen?'), options: [german('Sie erkennen Gesichter und merken sich, wer sie füttert.'), german('Sie können sprechen wie Menschen.'), german('Sie schlafen den ganzen Winter.')] },
+      { kind: 'question', prompt: german('Was hängt an der Hohenzollernbrücke?'), options: [german('Bunte Liebesschlösser'), german('Fahrräder'), german('Weihnachtssterne')] },
+      { kind: 'question', prompt: german('Wie zeigt man dem Köbes, dass man kein Kölsch mehr möchte?'), options: [german('Man legt den Bierdeckel auf das Glas.'), german('Man ruft laut „Stopp!“'), german('Man dreht das Glas um.')] }
+    ]
   }
 ];
