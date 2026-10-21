@@ -15,7 +15,6 @@
   let answer = $state<string | null>(null);
   let numberReverse = $state(false);
   const current = $derived(items[index]);
-  const colorValues: Record<string, string> = { rot: '#d64b45', blau: '#4b78c2', gelb: '#e6b52e', grün: '#55a66a', orange: '#e27a35', violett: '#8a62b6', rosa: '#df8eb1', braun: '#8c5b3d', schwarz: '#222832', weiß: '#fffdf7' };
   const colorEmoji: Record<string, string> = { rot: '🔴', blau: '🔵', gelb: '🟡', grün: '🟢', orange: '🟠', violett: '🟣', rosa: '🩷', braun: '🟤', schwarz: '⚫', weiß: '⚪' };
   const numberEmoji: Record<string, string> = { '7': '7️⃣' };
   const prepositionEmoji: Record<string, string> = { an: '📍', auf: '⬆️', aus: '🚪', bei: '📍', durch: '➡️', für: '🎁', gegen: '⚔️', mit: '🤝', nach: '🧭', ohne: '🚫', über: '⬆️', unter: '⬇️' };
@@ -27,9 +26,10 @@
       numberReverse = Math.random() < 0.5;
       const expected = numberReverse ? current.word : current.meaning;
       const distractors = numberReverse ? ['1', '2', '3', '4', '5', '6', '8', '9', '10'] : ['eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'acht', 'neun', 'zehn'];
-      choices = shuffle([expected, ...distractors]).slice(0, 4);
+      choices = shuffle([expected, ...shuffle(distractors).slice(0, 3)]);
       return;
     }
+    numberReverse = false;
     const distractors = shuffle(items.filter((item) => item.category === current.category && item.word !== current.word)).slice(0, 2);
     choices = shuffle([current.meaning, ...distractors.map((item) => item.meaning)]);
   }
@@ -40,7 +40,7 @@
 
 <section class="flex-1 min-h-0 grid content-center justify-items-center gap-4 p-[clamp(1rem,4vw,2rem)] overflow-y-auto bg-[color:#ede4d5] dark:bg-[color:#213a5d]" aria-label="Emoji vocabulary">
   <header class="text-center"><span class="text-accent text-[.58rem] font-extrabold tracking-[.14em] uppercase">Emoji · {current.category}</span><h1 class="my-[.16rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,7vw,2.65rem)] font-normal leading-none">Everyday German</h1><p class="m-0 text-base-content/60 text-[.65rem] font-extrabold">Präpositionen, Zahlen und Farben.</p></header>
-  <article class="w-[min(100%,28rem)] grid justify-items-center gap-4 p-[clamp(1.4rem,7vw,2.2rem)] panel-play">{#if current.category === 'Farben'}<span class="text-[1.8rem]" aria-hidden="true">{currentEmoji}</span><span class="w-[5.2rem] h-[5.2rem] rounded-full border-4 border-base-content/20 shadow-inner" style={`background:${colorValues[current.word] ?? '#ccc'}`} aria-label="Color sample"></span><p class="m-0 text-accent text-[.62rem] font-extrabold">What is this color called?</p>{:else if current.category === 'Zahlen'}<span class="text-[1.8rem]" aria-hidden="true">{currentEmoji}</span><p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(2rem,10vw,3.3rem)] tracking-[.05em]">{numberReverse ? current.meaning : current.word}</p><p class="m-0 text-accent text-[.62rem] font-extrabold">{numberReverse ? 'Which number is this?' : 'How is this number spelled?'}</p>{:else}<span class="text-[1.8rem]" aria-hidden="true">{currentEmoji}</span><p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(2rem,10vw,3.3rem)] tracking-[.05em]">{current.word}</p><p class="m-0 text-accent text-[.62rem] font-extrabold">Choose the meaning.</p>{/if}</article>
+  <article class="w-[min(100%,28rem)] grid justify-items-center gap-4 p-[clamp(1.4rem,7vw,2.2rem)] panel-play">{#if current.category === 'Farben'}<span class="text-[clamp(4rem,18vw,5.5rem)] leading-none" aria-hidden="true">{currentEmoji}</span><p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(2rem,10vw,3.3rem)] tracking-[.05em]">{current.word}</p><p class="m-0 text-accent text-[.62rem] font-extrabold">Choose the meaning.</p>{:else if current.category === 'Zahlen'}<span class="text-[1.8rem]" aria-hidden="true">{currentEmoji}</span><p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(2rem,10vw,3.3rem)] tracking-[.05em]">{numberReverse ? current.meaning : current.word}</p><p class="m-0 text-accent text-[.62rem] font-extrabold">{numberReverse ? 'Which number is this?' : 'How is this number spelled?'}</p>{:else}<span class="text-[1.8rem]" aria-hidden="true">{currentEmoji}</span><p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(2rem,10vw,3.3rem)] tracking-[.05em]">{current.word}</p><p class="m-0 text-accent text-[.62rem] font-extrabold">Choose the meaning.</p>{/if}</article>
   <div class="w-[min(100%,28rem)] grid gap-[.45rem]">{#each choices as choice}<button type="button" value={choice} onclick={() => choose(choice)} disabled={answer !== null} class="btn-play btn-play-choice w-full gap-[.4rem] disabled:opacity-100 {answer !== null && choice === (numberReverse ? current.word : current.meaning) ? 'bg-success text-[#fffdf7]' : answer === choice ? 'border-error bg-[#fff2e8] text-error shadow-none' : ''}">{choice}{#if answer !== null && choice === (numberReverse ? current.word : current.meaning)}<IconCheck class="w-[1.15rem] h-[1.15rem]" aria-hidden="true" />{:else if answer === choice}<IconClose class="w-[1.15rem] h-[1.15rem] text-error" aria-hidden="true" />{/if}</button>{/each}</div>
   {#if answer}<button class="btn-play btn-play-ink" onclick={next}>Continue</button>{/if}
 </section>
