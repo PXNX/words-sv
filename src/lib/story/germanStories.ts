@@ -3,12 +3,16 @@ import type { Story, Text } from './stories';
 
 /*
  * Stories written for German learners only (see `languages` on Story): everyday errands, a day at the
- * farm and the zoo, an engineering office, the beach at sunset and a noisy airport. The animals
- * speak in sounds ("Muh!", "Törööö!"), which play in place of the word when the story is read aloud.
+ * farm and the zoo, an engineering office, the beach at sunset and a noisy airport; Lilith's birthday,
+ * Christmas, New Year's resolutions, fitness goals and saying goodbye to Opa. From B1 on, characters
+ * also discuss and argue (beer, pets, music, food, wine, the Ausländerbehörde, social media, project
+ * management, a court hearing, a language app), with deeper reasons and more statistics the higher
+ * the level. The animals speak in sounds ("Muh!", "Törööö!"), which play in place of the word when
+ * the story is read aloud.
  */
 
 /*
- * German-only characters who are drawn and voiced (only Kumar has a story so far, "Kumar lernt Deutsch"):
+ * German-only characters, drawn and voiced:
  * - Ali runs the döner shop on the corner. Warm, quick-witted and always busy; knows everyone in the
  *   street, calls regulars "Chef" or "mein Freund" and never forgets how they take their sauce.
  * - Robert is a handyman (Handwerker). Gruff, practical, few words; pencil behind his ear, a folding
