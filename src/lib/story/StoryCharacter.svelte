@@ -10,7 +10,9 @@
   // Gradient ids must be unique per instance: the same character can be on screen several times.
   const uid = $props.id();
 
-  type Look = { skin: string; hair: string; hairStyle: 'bun' | 'short' | 'curly' | 'bob' | 'bald'; top: string; glasses?: boolean; monocle?: boolean; beard?: boolean; moustache?: boolean | 'kaiser'; hat?: 'tyrolean' | 'police' | 'toque'; headphones?: boolean; outfit: 'plain' | 'hoodie' | 'cardigan' | 'apron' | 'blazer' | 'tie' | 'tracht' | 'waistcoat' | 'police' | 'chef' };
+  // `build` widens the body (and, for 'wide', the face); `accent` colours an apron or a pair of
+  // overalls; `checked` lays a check pattern over the top.
+  type Look = { skin: string; hair: string; hairStyle: 'bun' | 'short' | 'curly' | 'bob' | 'bald' | 'messy'; top: string; glasses?: boolean; monocle?: boolean; beard?: boolean; stubble?: boolean; moustache?: boolean | 'kaiser'; hat?: 'tyrolean' | 'police' | 'toque' | 'straw'; headphones?: boolean; shades?: boolean; pencil?: boolean; build?: 'wide' | 'muscular'; accent?: string; checked?: boolean; outfit: 'plain' | 'hoodie' | 'cardigan' | 'apron' | 'blazer' | 'tie' | 'tracht' | 'waistcoat' | 'police' | 'chef' | 'overalls' | 'tanktop' | 'scrubs' | 'tshirt' | 'shirt' };
   // Animals are hand-drawn branches below rather than entries in `looks`.
   type Animal = 'bello' | 'lilith' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake';
   const animals: readonly CharacterId[] = ['bello', 'lilith', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
@@ -32,9 +34,25 @@
     oma: { skin: '#f0cfb5', hair: '#d8d4cc', hairStyle: 'bun', top: '#8a62b6', glasses: true, outfit: 'cardigan' },
     tom: { skin: '#8d5a3b', hair: '#1f1a17', hairStyle: 'curly', top: '#fffdf7', outfit: 'apron' },
     kim: { skin: '#f1d2b0', hair: '#1c1f26', hairStyle: 'bob', top: '#172a45', outfit: 'blazer' },
-    paul: { skin: '#e8b994', hair: '#a7a49e', hairStyle: 'bald', top: '#8c5b3d', moustache: true, outfit: 'tie' }
+    paul: { skin: '#e8b994', hair: '#a7a49e', hairStyle: 'bald', top: '#8c5b3d', moustache: true, outfit: 'tie' },
+    // The German-only cast below has no stories yet; see the cast notes in germanStories.ts.
+    // Ali, who runs the döner shop on the corner: thick black moustache, stubble, white T-shirt and a red apron.
+    ali: { skin: '#c99068', hair: '#1a1512', hairStyle: 'short', top: '#fffdf7', moustache: true, stubble: true, accent: '#c0392b', outfit: 'apron' },
+    // Robert the handyman: stubble, a pencil behind his ear, blue work overalls with a folding rule in the pocket.
+    robert: { skin: '#e2b08c', hair: '#6b4a2e', hairStyle: 'short', top: '#8a939e', stubble: true, pencil: true, accent: '#2f5a8f', outfit: 'overalls' },
+    // Bauer Fritz: big and round, bald under a straw hat, bushy moustache, checked shirt and green overalls.
+    fritz: { skin: '#f0b392', hair: '#8a7a68', hairStyle: 'bald', top: '#c0392b', checked: true, moustache: true, hat: 'straw', build: 'wide', accent: '#3c7350', outfit: 'overalls' },
+    // Tobias, lifeguard and gym bro: tanned, blond, sunglasses pushed up, huge shoulders, red tank top and a whistle.
+    tobias: { skin: '#d99a6c', hair: '#e2c25a', hairStyle: 'short', top: '#d64b45', shades: true, build: 'muscular', outfit: 'tanktop' },
+    // Selma the nurse: dark hair in a bun, teal scrubs, a stethoscope round her neck and a name badge.
+    selma: { skin: '#d7a17c', hair: '#3b2a20', hairStyle: 'bun', top: '#3f9a9c', outfit: 'scrubs' },
+    // Kumar, the new flatmate from India: wild uncombed hair, stubble and a stained, slept-in yellow T-shirt.
+    kumar: { skin: '#9a6440', hair: '#15110e', hairStyle: 'messy', top: '#e0b13e', stubble: true, outfit: 'tshirt' },
+    // Simon the engineer: tidy short hair, glasses, light blue shirt with a row of pens in the breast pocket.
+    simon: { skin: '#f0c9a8', hair: '#8a5a2b', hairStyle: 'short', top: '#a9c8e8', glasses: true, outfit: 'shirt' }
   };
   const look = $derived(animals.includes(id) ? null : looks[id as Exclude<CharacterId, Animal>]);
+  const wide = $derived(look?.build === 'wide');
 
   // Eyebrows carry most of a face's mood; mouths and eyes follow below.
   const brows: Record<Mood, string> = {
@@ -76,11 +94,19 @@
     <!-- hair behind the head -->
     {#if look.hairStyle === 'bun'}<circle cx="60" cy="54" r="33" fill={look.hair} /><circle cx="60" cy="19" r={id === 'oma' ? 10 : 13} fill={look.hair} />{/if}
     {#if look.hairStyle === 'bob'}<path d="M26 58C26 32 42 21 60 21s34 11 34 37v30q-34 7-68 0Z" fill={look.hair} />{/if}
-    <!-- body -->
-    <path d="M14 150c0-30 20-48 46-48s46 18 46 48Z" fill={look.top} stroke="rgba(23,42,69,.18)" stroke-width="1.5" />
+    <!-- body: a muscular build shows bare shoulders and arms, the tank top goes over them -->
+    {#if look.checked}<defs><pattern id="{uid}-check" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" fill={look.top} /><path d="M0 4.5h9M4.5 0v9" stroke="rgba(255,253,247,.4)" stroke-width="2.4" /></pattern></defs>{/if}
+    {#if look.build === 'wide'}
+      <path d="M2 150c0-34 24-52 58-52s58 18 58 52Z" fill={look.checked ? `url(#${uid}-check)` : look.top} stroke="rgba(23,42,69,.18)" stroke-width="1.5" />
+    {:else if look.build === 'muscular'}
+      <path d="M2 150c0-24 6-38 22-43q18-6 36-6t36 6c16 5 22 19 22 43Z" fill={look.outfit === 'tanktop' ? look.skin : look.top} stroke="rgba(23,42,69,.18)" stroke-width="1.5" />
+      <path d="M8 138q4-16 16-18M112 138q-4-16-16-18M30 106q8 4 14-2M90 106q-8 4-14-2" fill="none" stroke="rgba(23,42,69,.2)" stroke-width="2" stroke-linecap="round" />
+    {:else}
+      <path d="M14 150c0-30 20-48 46-48s46 18 46 48Z" fill={look.checked ? `url(#${uid}-check)` : look.top} stroke="rgba(23,42,69,.18)" stroke-width="1.5" />
+    {/if}
     {#if look.outfit === 'hoodie'}<path d="M40 106q20 14 40 0" fill="none" stroke="rgba(23,42,69,.35)" stroke-width="3" stroke-linecap="round" /><path d="M52 112v14M68 112v14" stroke="#fffdf7" stroke-width="2" stroke-linecap="round" />{/if}
     {#if look.outfit === 'cardigan'}<path d="M60 104v46" stroke="rgba(23,42,69,.3)" stroke-width="2" /><g fill="#fffdf7"><circle cx="48" cy="108" r="2.4" /><circle cx="54" cy="112" r="2.4" /><circle cx="60" cy="113.5" r="2.4" /><circle cx="66" cy="112" r="2.4" /><circle cx="72" cy="108" r="2.4" /></g>{/if}
-    {#if look.outfit === 'apron'}<path d="M38 150v-34h44v34Z" fill="#34824d" /><path d="M42 116 50 103M78 116l-8-13" stroke="#34824d" stroke-width="3.5" /><rect x="52" y="124" width="16" height="10" rx="2" fill="rgba(255,253,247,.3)" />{/if}
+    {#if look.outfit === 'apron'}<path d="M38 150v-34h44v34Z" fill={look.accent ?? '#34824d'} /><path d="M42 116 50 103M78 116l-8-13" stroke={look.accent ?? '#34824d'} stroke-width="3.5" /><rect x="52" y="124" width="16" height="10" rx="2" fill="rgba(255,253,247,.3)" />{/if}
     {#if look.outfit === 'blazer'}<path d="m48 103 12 24 12-24Z" fill="#fffdf7" /><path d="m48 103 12 24-7 6M72 103l-12 24 7 6" fill="none" stroke="rgba(255,253,247,.4)" stroke-width="1.6" />{/if}
     {#if look.outfit === 'tie'}<path d="m49 103 11 20 11-20Z" fill="#fffdf7" /><path d="m57 106h6l2 22-5 6-5-6Z" fill="#d64b45" />{/if}
     {#if look.outfit === 'plain'}<path d="M47 104q13 12 26 0" fill="none" stroke="#fffdf7" stroke-width="3" stroke-linecap="round" />{/if}
@@ -88,10 +114,49 @@
     {#if look.outfit === 'chef'}<path d="M60 112v38" stroke="rgba(23,42,69,.15)" stroke-width="1.5" /><g fill="rgba(23,42,69,.35)"><circle cx="52" cy="122" r="2" /><circle cx="52" cy="134" r="2" /><circle cx="68" cy="122" r="2" /><circle cx="68" cy="134" r="2" /></g><path d="m48 102 12 12 12-12-12 4Z" fill="#d64b45" />{/if}
     {#if look.outfit === 'tracht'}<path d="M47 104q13 10 26 0" fill="none" stroke="#4b78c2" stroke-width="3" stroke-dasharray="3 2" /><path d="M41 106 49 150M79 106l-8 44" stroke="#6b4426" stroke-width="6" /><path d="M44 127h32" stroke="#6b4426" stroke-width="5" /><circle cx="60" cy="127" r="3.2" fill="#fffdf7" stroke="#34824d" stroke-width="1.5" />{/if}
     {#if look.outfit === 'waistcoat'}<path d="m49 103 11 20 11-20Z" fill="#fffdf7" /><path d="M42 106 60 126l18-20 -2 44H44Z" fill="#596477" /><path d="m55 104 5 5 5-5-5 3Z" fill="#172a45" /><g fill="#e6b52e"><circle cx="60" cy="133" r="1.8" /><circle cx="60" cy="142" r="1.8" /></g><path d="M48 135q6 6 12 0" fill="none" stroke="#e6b52e" stroke-width="1.4" />{/if}
-    <!-- neck, ears, head -->
-    <rect x="51" y="82" width="18" height="22" rx="6" fill={look.skin} />
-    <circle cx="30" cy="60" r="6" fill={look.skin} /><circle cx="90" cy="60" r="6" fill={look.skin} />
-    <circle cx="60" cy="58" r="30" fill={look.skin} />
+    {#if look.outfit === 'overalls'}
+      <!-- bib overalls with straps and brass buttons; Robert keeps a folding rule in the bib pocket -->
+      {@const bib = wide ? 26 : 20}
+      <path d="M{60 - bib} 150v-36q{bib} 4 {bib * 2} 0v36Z" fill={look.accent} stroke="rgba(23,42,69,.25)" stroke-width="1.2" />
+      <path d="M{62 - bib} 116 {66 - bib} 102M{58 + bib} 116l-4-14" stroke={look.accent} stroke-width="5" stroke-linecap="round" />
+      <g fill="#e6b52e"><circle cx={62 - bib} cy="117" r="2.2" /><circle cx={58 + bib} cy="117" r="2.2" /></g>
+      {#if id === 'robert'}<rect x="63" y="114" width="5" height="16" rx="1" fill="#e6b52e" /><path d="M63 117h2.5M63 120h2.5M63 123h2.5" stroke="#172a45" stroke-width=".8" />{/if}
+      <rect x="51" y="124" width="18" height="12" rx="2" fill="rgba(23,42,69,.18)" />
+    {/if}
+    {#if look.outfit === 'tanktop'}
+      <!-- red lifeguard tank top over the bare shoulders, a whistle on a yellow cord -->
+      <path d="M34 150v-38q0-7 6-9 8 12 20 12t20-12q6 2 6 9v38Z" fill={look.top} stroke="rgba(23,42,69,.2)" stroke-width="1.2" />
+      <path d="M48 128q12 5 24 0" fill="none" stroke="rgba(23,42,69,.22)" stroke-width="1.8" stroke-linecap="round" />
+      <path d="M46 103q14 26 28 0" fill="none" stroke="#e6b52e" stroke-width="1.8" />
+      <rect x="55" y="119" width="10" height="6" rx="2.5" fill="#b8c0c8" stroke="#596477" stroke-width="1" />
+    {/if}
+    {#if look.outfit === 'scrubs'}
+      <!-- V-neck scrubs, a name badge and a stethoscope hung round the neck -->
+      <path d="m49 103 11 15 11-15" fill="none" stroke="rgba(23,42,69,.35)" stroke-width="2.4" stroke-linejoin="round" />
+      <rect x="35" y="120" width="13" height="8" rx="1.5" fill="#fffdf7" /><path d="M38 124h7" stroke={look.top} stroke-width="1.4" />
+      <path d="M45 102q-5 22 6 30M75 102q5 16-4 26" fill="none" stroke="#596477" stroke-width="2.4" stroke-linecap="round" />
+      <circle cx="51" cy="133" r="4" fill="#d4dae0" stroke="#596477" stroke-width="1.6" />
+    {/if}
+    {#if look.outfit === 'tshirt'}
+      <!-- a stretched collar, a coffee stain, a splash of curry and slept-in creases -->
+      <path d="M46 104q14 13 28-1" fill="none" stroke="rgba(23,42,69,.35)" stroke-width="2.6" stroke-linecap="round" />
+      <path d="M68 124q5-3 9 1 4 1 2 6-2 5-7 3-6 1-6-4t2-6Z" fill="#8c5b3d" opacity=".55" />
+      <g fill="#c86b1e" opacity=".7"><circle cx="46" cy="137" r="2.6" /><circle cx="50" cy="141" r="1.4" /><circle cx="43" cy="132" r="1.1" /></g>
+      <path d="M30 128q4 8 2 22M90 128q-4 8-2 22" fill="none" stroke="rgba(23,42,69,.18)" stroke-width="1.6" stroke-linecap="round" />
+    {/if}
+    {#if look.outfit === 'shirt'}
+      <!-- collared shirt, a button placket and a breast pocket full of pens -->
+      <path d="m48 102 6 11 6-6 6 6 6-11" fill="#d5e5f4" stroke="rgba(23,42,69,.3)" stroke-width="1.4" stroke-linejoin="round" />
+      <path d="M60 108v42" stroke="rgba(23,42,69,.25)" stroke-width="1.4" /><g fill="#fffdf7"><circle cx="60" cy="122" r="1.4" /><circle cx="60" cy="134" r="1.4" /><circle cx="60" cy="146" r="1.4" /></g>
+      <g stroke-width="2.2" stroke-linecap="round"><path d="M68.5 118v-6" stroke="#172a45" /><path d="M72 118v-7" stroke="#d64b45" /><path d="M75.5 118v-5" stroke="#4b78c2" /></g>
+      <rect x="66" y="117" width="13" height="12" rx="1.5" fill={look.top} stroke="rgba(23,42,69,.3)" stroke-width="1.2" />
+    {/if}
+    <!-- neck, ears, head; a wide build gets a fuller face and a double chin -->
+    <rect x={wide ? 49 : 51} y="82" width={wide ? 22 : 18} height="22" rx="6" fill={look.skin} />
+    <circle cx={wide ? 27 : 30} cy="60" r="6" fill={look.skin} /><circle cx={wide ? 93 : 90} cy="60" r="6" fill={look.skin} />
+    <ellipse cx="60" cy={wide ? 59 : 58} rx={wide ? 33 : 30} ry={wide ? 31 : 30} fill={look.skin} />
+    {#if wide}<path d="M47 87q13 6 26 0" fill="none" stroke="rgba(23,42,69,.2)" stroke-width="1.8" stroke-linecap="round" />{/if}
+    {#if look.stubble}<path d="M32 64c2 18 14 27 28 27s26-9 28-27c-5 10-14 14-28 14s-23-4-28-14Z" fill={look.hair} opacity=".22" />{/if}
     {#if look.beard}<path d="M31 62c1 22 14 32 29 32s28-10 29-32c-5 12-15 17-29 17s-24-5-29-17Z" fill={look.hair} />{/if}
     <!-- hair in front -->
     {#if look.hairStyle === 'bun'}<path d="M28 58c0-24 15-34 32-34s32 10 32 34c-7-12-20-18-34-17-13 1-24 7-30 17Z" fill={look.hair} />{/if}
@@ -99,6 +164,9 @@
     {#if look.hairStyle === 'curly'}<g fill={look.hair}><circle cx="37" cy="44" r="10" /><circle cx="46" cy="33" r="11" /><circle cx="60" cy="29" r="12" /><circle cx="74" cy="33" r="11" /><circle cx="83" cy="44" r="10" /></g>{/if}
     {#if look.hairStyle === 'bob'}<path d="M30 52c0-19 13-29 30-29s30 10 30 29q-30-9-60 0Z" fill={look.hair} />{/if}
     {#if look.hairStyle === 'bald'}<g fill={look.hair}><ellipse cx="32" cy="52" rx="5" ry="10" /><ellipse cx="88" cy="52" rx="5" ry="10" /></g>{/if}
+    {#if look.hairStyle === 'messy'}<path d="M30 55c-3-12 1-22 8-27l-3-10 9 6 2-12 8 9 6-11 4 11 9-8-1 11 10-4-4 10c6 6 7 15 5 25-3-7-7-11-12-12l2 7-8-8-1 8-6-9-4 8-4-8-4 7-2-6c-6 2-11 7-12 13Z" fill={look.hair} />{/if}
+    {#if look.pencil}<path d="M84 50 99 41" stroke="#e6b52e" stroke-width="3.4" stroke-linecap="round" /><path d="m99 41 3.5-2" stroke="#4a3326" stroke-width="2" stroke-linecap="round" />{/if}
+    {#if look.shades}<g fill="#172a45"><rect x="40" y="31" width="17" height="8" rx="3.5" /><rect x="63" y="31" width="17" height="8" rx="3.5" /></g><path d="M57 34h6" stroke="#172a45" stroke-width="1.8" /><path d="M43 33h6M66 33h6" stroke="rgba(255,253,247,.5)" stroke-width="1.4" stroke-linecap="round" />{/if}
     {#if look.hat === 'tyrolean'}
       <!-- green felt hat with a leather band, an edelweiss and a tuft of chamois hair -->
       <path d="M78 30q6-14 15-19-2 11-11 20Z" fill="#596477" />
@@ -112,6 +180,13 @@
       <path d="M28 30q32 8 64 0v5q-32 8-64 0Z" fill="#fffdf7" />
       <path d="M34 37q26 8 52 0l3 5q-29 9-58 0Z" fill="#111a2b" />
       <circle cx="60" cy="24" r="3.4" fill="#e6b52e" />
+    {:else if look.hat === 'straw'}
+      <!-- battered straw hat with a red band and a wide, frayed brim -->
+      <path d="M39 34q0-21 21-21t21 21q-21 5-42 0Z" fill="#e3c06a" />
+      <path d="M39.5 28.5q20.5 5 41 0v5.5q-20.5 5-41 0Z" fill="#c0392b" />
+      <path d="M48 18q5 6 4 10M62 15v12M72 18q-4 5-3 10" fill="none" stroke="#b8933f" stroke-width="1.2" />
+      <path d="M14 38q46-14 92 0-46 9-92 0Z" fill="#e9c86f" stroke="#b8933f" stroke-width="1.2" />
+      <path d="M18 39l-3 3M102 39l3 3M30 42l-1 3" stroke="#b8933f" stroke-width="1.2" stroke-linecap="round" />
     {:else if look.hat === 'toque'}
       <!-- tall white chef's hat -->
       <g fill="#fffdf7" stroke="rgba(23,42,69,.25)" stroke-width="1.2"><circle cx="45" cy="16" r="10" /><circle cx="60" cy="9" r="12" /><circle cx="75" cy="16" r="10" /></g>

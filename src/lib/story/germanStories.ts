@@ -7,6 +7,27 @@ import type { Story, Text } from './stories';
  * speak in sounds ("Muh!", "Törööö!"), which play in place of the word when the story is read aloud.
  */
 
+/*
+ * German-only characters who are drawn and voiced but have no stories yet:
+ * - Ali runs the döner shop on the corner. Warm, quick-witted and always busy; knows everyone in the
+ *   street, calls regulars "Chef" or "mein Freund" and never forgets how they take their sauce.
+ * - Robert is a handyman (Handwerker). Gruff, practical, few words; pencil behind his ear, a folding
+ *   rule in his overalls. Fixes anything, sighs at how it was installed and always needs one more part.
+ * - Bauer Fritz is a big, round farmer with a straw hat and a checked shirt. Slow, jovial and deeply
+ *   rooted; loves a hearty meal, talks to his animals (Berta, Blitz) like to old friends, and knows
+ *   the weather better than any app.
+ * - Tobias is a lifeguard at the lake and the beach and a hardcore gym bro: huge shoulders, protein
+ *   shakes, counts reps and calories and turns everything into a workout. Loud but kind-hearted and
+ *   the first one in the water when someone needs help.
+ * - Selma is a nurse. Calm, caring and unflappable after years of night shifts; explains things
+ *   patiently, takes no nonsense about medicine and always has a plaster and good advice.
+ * - Kumar from India is Mia and Tom's new flatmate. Cheerful, chaotic and messy: dishes pile up,
+ *   socks turn up everywhere and his curry smells through the whole flat. Learning German with lots
+ *   of enthusiasm and the occasional mix-up; Lilith adores him because he drops food.
+ * - Simon is an engineer. Precise, a little nerdy, pens in his shirt pocket; plans everything, explains
+ *   how things work in far too much detail and gets excited about well-built machines and bridges.
+ */
+
 // The same text in every language slot, for stories limited to German learners.
 export function german(text: string): Text {
   return Object.fromEntries(playableLanguages.map(({ code }) => [code, text])) as Text;

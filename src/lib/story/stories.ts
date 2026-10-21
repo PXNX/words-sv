@@ -3,7 +3,7 @@ import { playableLanguages, vocabularyLevels } from '#lib/data/vocabulary.js';
 import type { SoundEffect } from '#lib/sounds.js';
 
 export type Text = Record<Language, string>;
-export type CharacterId = 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello' | 'lilith' | 'hans' | 'albert' | 'sabine' | 'enzo' | 'jana' | 'becker' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake';
+export type CharacterId = 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello' | 'lilith' | 'hans' | 'albert' | 'sabine' | 'enzo' | 'jana' | 'becker' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake' | 'ali' | 'robert' | 'fritz' | 'tobias' | 'selma' | 'kumar' | 'simon';
 export type Mood = 'neutral' | 'happy' | 'sad' | 'surprised' | 'curious';
 export type SceneId = 'cafe' | 'park' | 'station' | 'home' | 'office' | 'flat' | 'square' | 'attic' | 'beergarden' | 'farm' | 'zoo' | 'butcher' | 'bakery' | 'boutique' | 'perfumery' | 'workshop' | 'beach' | 'airport';
 export type Weather = 'sunny' | 'cloudy' | 'rainy' | 'snowy';
@@ -49,7 +49,15 @@ export const characterNames: Record<CharacterId, Text> = {
   horse: { de: 'Blitz', en: 'Blitz', fr: 'Blitz', it: 'Blitz', es: 'Blitz', pt: 'Blitz', uk: 'Бліц' },
   giraffe: { de: 'Gisela', en: 'Gisela', fr: 'Gisela', it: 'Gisela', es: 'Gisela', pt: 'Gisela', uk: 'Гізела' },
   elephant: { de: 'Benno', en: 'Benno', fr: 'Benno', it: 'Benno', es: 'Benno', pt: 'Benno', uk: 'Бенно' },
-  snake: { de: 'Zischi', en: 'Zischi', fr: 'Zischi', it: 'Zischi', es: 'Zischi', pt: 'Zischi', uk: 'Зіші' }
+  snake: { de: 'Zischi', en: 'Zischi', fr: 'Zischi', it: 'Zischi', es: 'Zischi', pt: 'Zischi', uk: 'Зіші' },
+  // German-only characters (see the cast notes in germanStories.ts).
+  ali: { de: 'Ali', en: 'Ali', fr: 'Ali', it: 'Ali', es: 'Ali', pt: 'Ali', uk: 'Алі' },
+  robert: { de: 'Robert', en: 'Robert', fr: 'Robert', it: 'Robert', es: 'Robert', pt: 'Robert', uk: 'Роберт' },
+  fritz: { de: 'Bauer Fritz', en: 'Farmer Fritz', fr: 'Fermier Fritz', it: 'Contadino Fritz', es: 'Granjero Fritz', pt: 'Fazendeiro Fritz', uk: 'Фермер Фріц' },
+  tobias: { de: 'Tobias', en: 'Tobias', fr: 'Tobias', it: 'Tobias', es: 'Tobias', pt: 'Tobias', uk: 'Тобіас' },
+  selma: { de: 'Selma', en: 'Selma', fr: 'Selma', it: 'Selma', es: 'Selma', pt: 'Selma', uk: 'Сельма' },
+  kumar: { de: 'Kumar', en: 'Kumar', fr: 'Kumar', it: 'Kumar', es: 'Kumar', pt: 'Kumar', uk: 'Кумар' },
+  simon: { de: 'Simon', en: 'Simon', fr: 'Simon', it: 'Simon', es: 'Simon', pt: 'Simon', uk: 'Сімон' }
 };
 
 export const stories: Story[] = [
