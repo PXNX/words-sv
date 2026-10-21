@@ -725,5 +725,69 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Wozu dient die Fiktionsbescheinigung?'), options: [german('Sein Aufenthalt gilt als fortbestehend, bis die Karte fertig ist.'), german('Sie ersetzt seinen Reisepass dauerhaft.'), german('Sie erlaubt ihm, den Arbeitgeber zu wechseln.')] },
       { kind: 'question', prompt: german('Wie hoch ist die Gebühr?'), options: [german('100 Euro'), german('52 Euro'), german('214 Euro')] }
     ]
+  },
+  {
+    id: 'c1-social-media',
+    level: 'c1',
+    scene: 'flat',
+    cast: ['becker', 'jana', 'selma'],
+    languages: ['de'],
+    title: german('Fluch oder Segen? Soziale Medien'),
+    beats: [
+      { kind: 'narration', text: german('Herr Becker hat für seine Schule eine Podiumsdiskussion zum Thema „Soziale Medien – Fluch oder Segen?“ organisiert. Zur Vorbereitung trifft er sich mit Jana, die als Entwicklerin selbst an Apps arbeitet, und Selma, die als Krankenschwester in der Kinder- und Jugendpsychiatrie gearbeitet hat.') },
+      { kind: 'line', speaker: 'becker', text: german('In meiner zehnten Klasse schauen die Schüler im Schnitt über drei Stunden täglich aufs Handy. Wer morgens müde ist, war meist bis zwei Uhr nachts auf TikTok. Ich halte das für eine Entwicklung mit gravierenden Folgen.') },
+      { kind: 'line', speaker: 'selma', text: german('Die Zahlen geben Ihnen recht. Einer Studie einer großen Krankenkasse zufolge nutzt etwa ein Viertel der Zehn- bis Siebzehnjährigen soziale Medien auf riskante Weise, ein kleiner Teil sogar krankhaft. In der Klinik habe ich Jugendliche erlebt, deren Selbstwertgefühl am Ende nur noch von Likes abhing.') },
+      { kind: 'line', speaker: 'jana', text: german('Wobei man vorsichtig sein muss: Dass Jugendliche, die viel online sind, häufiger depressiv sind, beweist noch keine Ursache. Es könnte ebenso gut sein, dass einsame oder bedrückte Jugendliche sich ins Netz zurückziehen. Korrelation ist nicht Kausalität.') },
+      { kind: 'line', speaker: 'becker', mood: 'curious', text: german('Aber Sie bestreiten doch nicht, dass die Plattformen bewusst so gebaut sind, dass man nicht aufhören kann?') },
+      { kind: 'line', speaker: 'jana', text: german('Nein, das bestreite ich nicht. Endloses Scrollen, Push-Nachrichten, variable Belohnungen wie beim Spielautomaten – das Geschäftsmodell basiert auf Aufmerksamkeit, weil sich Werbung nach Verweildauer verkauft. Und Algorithmen, die auf Interaktion optimiert sind, bevorzugen nun einmal Inhalte, die empören. Das polarisiert die ganze Gesellschaft.') },
+      { kind: 'line', speaker: 'selma', text: german('Gleichzeitig darf man die Vorteile nicht unterschlagen. Jugendliche mit seltenen Krankheiten finden online Menschen, denen es genauso geht. Queere Jugendliche auf dem Land finden dort oft zum ersten Mal Anerkennung. Und bei Hochwasser oder anderen Katastrophen verbreiten sich Warnungen in Minuten.') },
+      { kind: 'line', speaker: 'becker', text: german('Australien hat soziale Medien für unter Sechzehnjährige inzwischen verboten. Wäre das auch für Deutschland ein gangbarer Weg?') },
+      { kind: 'line', speaker: 'jana', mood: 'curious', text: german('Ein Verbot klingt entschlossen, ist aber kaum durchsetzbar, ohne alle Nutzer zur Altersverifikation zu zwingen – mit erheblichen Folgen für den Datenschutz. {name}, wie würden Sie das Problem angehen?') },
+      { kind: 'reply', to: 'jana', options: [
+        german('Ich würde eher bei den Plattformen ansetzen, etwa mit Auflagen für suchtfördernde Funktionen, und gleichzeitig Medienkompetenz in der Schule fest verankern, statt pauschal zu verbieten.'),
+        german('Ich würde das Internet einfach jeden Abend um acht Uhr für alle abschalten.'),
+        german('Das Problem löst sich von selbst, sobald alle Handys gleichzeitig herunterfallen.')
+      ] },
+      { kind: 'line', speaker: 'selma', text: german('Das sehe ich ähnlich. Wer Jugendlichen nur das Handy wegnimmt, nimmt ihnen nicht das Bedürfnis nach Zugehörigkeit. Sie müssen lernen, warum ihnen der Feed so zusetzt.') },
+      { kind: 'line', speaker: 'becker', mood: 'happy', text: german('Dann haben wir unsere These für die Diskussion: Nicht die Technik an sich ist das Problem, sondern ein Geschäftsmodell, das von unserer Aufmerksamkeit lebt. Vielen Dank – und jetzt lege ich mein Handy demonstrativ in die Schublade.') },
+      { kind: 'question', prompt: german('Wie viel Zeit verbringen Herrn Beckers Schüler im Schnitt täglich am Handy?'), options: [german('Über drei Stunden'), german('Etwa eine halbe Stunde'), german('Rund zehn Stunden')] },
+      { kind: 'question', prompt: german('Welchen Anteil der Zehn- bis Siebzehnjährigen nennt Selma als riskante Nutzer?'), options: [german('Etwa ein Viertel'), german('Etwa die Hälfte'), german('Fast alle')] },
+      { kind: 'question', prompt: german('Was meint Jana mit „Korrelation ist nicht Kausalität“?'), options: [german('Ein Zusammenhang beweist nicht, was Ursache und was Wirkung ist.'), german('Statistiken über soziale Medien sind grundsätzlich gefälscht.'), german('Depressionen haben nichts mit Jugendlichen zu tun.')] },
+      { kind: 'question', prompt: german('Warum bevorzugen Algorithmen laut Jana empörende Inhalte?'), options: [german('Weil sie auf Interaktion optimiert sind und Empörung viel Interaktion erzeugt'), german('Weil die Entwickler selbst gern empört sind'), german('Weil empörende Inhalte weniger Speicher brauchen')] },
+      { kind: 'question', prompt: german('Welchen Nachteil eines Verbots nennt Jana?'), options: [german('Es wäre nur mit einer Altersverifikation für alle durchsetzbar, was den Datenschutz gefährdet.'), german('Es würde die Schulen zu viel Geld kosten.'), german('Es würde nur für Erwachsene gelten.')] },
+      { kind: 'question', prompt: german('Welche These formuliert Herr Becker am Ende?'), options: [german('Das Problem ist ein Geschäftsmodell, das von Aufmerksamkeit lebt.'), german('Soziale Medien sollten sofort verboten werden.'), german('Die Technik selbst ist das eigentliche Übel.')] }
+    ]
+  },
+  {
+    id: 'c1-project',
+    level: 'c1',
+    scene: 'office',
+    cast: ['kim', 'simon', 'jana'],
+    languages: ['de'],
+    title: german('Das Projekt gerät ins Wanken'),
+    beats: [
+      { kind: 'narration', text: german('Montag, 9:00 Uhr, Krisensitzung. Das Team soll für einen Kunden ein Buchungssystem entwickeln, das am 1. März live gehen muss. Es ist Mitte Januar, das Projekt hängt sechs Wochen hinterher, und von den 240.000 Euro Budget sind bereits 180.000 verbraucht.') },
+      { kind: 'line', speaker: 'kim', text: german('Ich will ehrlich sein: So kann ich das dem Kunden nicht präsentieren. Wie konnte es passieren, dass wir drei Viertel des Budgets ausgegeben, aber erst die Hälfte der Funktionen fertig haben?') },
+      { kind: 'line', speaker: 'simon', text: german('Ganz einfach: Der Kunde hat seit dem Projektstart vierzehn zusätzliche Anforderungen nachgeschoben. Jede für sich war klein, aber zusammen haben sie den Umfang um ein Drittel vergrößert. Ein klassischer Fall von schleichender Ausweitung des Projektumfangs.') },
+      { kind: 'line', speaker: 'jana', text: german('Und wir haben zu allem Ja gesagt, ohne den Zeitplan anzupassen. Das Problem ist nicht der Kunde, sondern dass wir kein sauberes Änderungsmanagement hatten.') },
+      { kind: 'line', speaker: 'kim', mood: 'curious', text: german('Was ist mit zusätzlichen Entwicklern? Ich könnte zwei Leute aus einem anderen Team abziehen.') },
+      { kind: 'line', speaker: 'simon', mood: 'worried', text: german('Davor muss ich warnen. Schon in den Siebzigern hat Fred Brooks beschrieben, dass zusätzliches Personal ein verspätetes Projekt meist noch weiter verzögert: Die Neuen müssen eingearbeitet werden, und mit jeder Person wächst der Abstimmungsaufwand überproportional.') },
+      { kind: 'line', speaker: 'jana', text: german('Damit stehen wir ja nicht allein da. Einer viel zitierten Studie zufolge wird nur etwa ein Drittel aller IT-Projekte in Zeit, Budget und vollem Umfang abgeschlossen. Rund die Hälfte überzieht, und knapp ein Fünftel scheitert ganz.') },
+      { kind: 'line', speaker: 'kim', text: german('Statistik tröstet den Kunden wenig. Also: Wir können Zeit, Budget oder Umfang verändern. Den Termin hat der Kunde vertraglich festgelegt, und mehr Geld gibt es nicht. {name}, Sie haben die Unterlagen gelesen – wie würden Sie vorgehen?') },
+      { kind: 'reply', to: 'kim', options: [
+        german('Ich würde mit dem Kunden priorisieren, welche Funktionen zum 1. März unverzichtbar sind, diese als erste Version ausliefern und den Rest in einer zweiten Phase nachreichen.'),
+        german('Ich würde sechs neue Entwickler einstellen und hoffen, dass es schneller geht.'),
+        german('Ich würde den Kalender verstecken, damit niemand merkt, dass schon März ist.')
+      ] },
+      { kind: 'line', speaker: 'simon', text: german('Einverstanden. Ich erstelle bis Mittwoch eine Liste aller Funktionen mit Aufwandsschätzung, sortiert nach „muss“, „sollte“ und „kann“. Und ab sofort geht jede Änderung über eine schriftliche Freigabe mit Folgenabschätzung.') },
+      { kind: 'line', speaker: 'jana', text: german('Und wir arbeiten in Sprints von zwei Wochen, mit einer Vorführung beim Kunden am Ende jedes Sprints. Dann sieht er früh, was wir liefern, und Überraschungen gibt es nicht erst im Februar.') },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Gut. Dann telefoniere ich heute um 14 Uhr mit dem Kunden. Wer das Gespräch vorbereitet, bekommt meinen Respekt – und einen Kaffee.') },
+      { kind: 'question', prompt: german('Wie viel vom Budget ist bereits verbraucht?'), options: [german('180.000 von 240.000 Euro'), german('120.000 von 240.000 Euro'), german('240.000 von 180.000 Euro')] },
+      { kind: 'question', prompt: german('Was ist laut Simon die Hauptursache der Verzögerung?'), options: [german('Vierzehn nachträgliche Anforderungen des Kunden'), german('Krankheitsfälle im Team'), german('Ein Serverausfall im Dezember')] },
+      { kind: 'question', prompt: german('Warum rät Simon von zusätzlichen Entwicklern ab?'), options: [german('Weil Einarbeitung und Abstimmungsaufwand das Projekt weiter verzögern'), german('Weil die anderen Teams keine Zeit haben'), german('Weil der Kunde keine neuen Gesichter möchte')] },
+      { kind: 'question', prompt: german('Welcher Anteil der IT-Projekte wird laut der Studie vollständig erfolgreich abgeschlossen?'), options: [german('Etwa ein Drittel'), german('Etwa die Hälfte'), german('Knapp ein Fünftel')] },
+      { kind: 'question', prompt: german('Welche der drei Größen will das Team verändern?'), options: [german('Den Umfang'), german('Den Termin'), german('Das Budget')] },
+      { kind: 'question', prompt: german('Wie lange dauert ein Sprint nach Janas Vorschlag?'), options: [german('Zwei Wochen'), german('Zwei Monate'), german('Zwei Tage')] }
+    ]
   }
 ];
