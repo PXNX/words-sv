@@ -42,7 +42,7 @@
     snake: { slot: 'hiss', start: 'hiss' }
   };
   // Small animals stand in the smaller slot on stage.
-  const smallAnimals: CharacterId[] = ['bello', 'seagull', 'fox', 'lilith', 'bird', 'snake'];
+  const smallAnimals: CharacterId[] = ['bello', 'crow', 'seagull', 'fox', 'lilith', 'bird', 'snake'];
 
   const labels = $derived({
     title: m.story_title({}, { locale: settings.interfaceLocale }),
