@@ -6,21 +6,31 @@
  * reminder notifications.
  */
 import { self } from '$app/service-worker';
-import { assets, immutable } from '$app/manifest';
+import { assets, immutable, routes } from '$app/manifest';
 import { version } from '$app/env';
 
 const CACHE = `wordcircle-${version}`;
-// The app shell: every route renders from it, so offline navigation works for all pages.
+// The app shell: routes without a prerendered page of their own render from it.
 const SHELL = '/';
-const PRECACHE = [...immutable, ...assets].map(({ path }) => new URL(path, self.location.origin).pathname);
-const precached = new Set(PRECACHE);
+const pathnameOf = (path: string) => new URL(path, self.location.origin).pathname;
+// '/wordle/' and '/wordle/index.html' are the same page as '/wordle'.
+const pageKey = (pathname: string) => pathname.replace(/\/index\.html$/, '/').replace(/(.)\/+$/, '$1');
+// Every page without route parameters (all prerendered), so each route opens offline with its own HTML.
+// `prerendered` from $app/manifest can't be used: the worker is built before prerendering, so it is empty.
+const pages = routes
+	.filter((route) => route.page && !route.id.includes('['))
+	.map((route) => pageKey(route.id.replace(/\/\([^)]+\)/g, '') || SHELL))
+	.filter((page) => page !== SHELL);
+const precached = new Set([...immutable, ...assets].map(({ path }) => pathnameOf(path)));
 
 self.addEventListener('install', (event) => {
 	event.waitUntil(
 		(async () => {
 			const cache = await caches.open(CACHE);
-			await cache.addAll(PRECACHE);
+			await cache.addAll([...precached]);
 			await cache.add(SHELL);
+			// Not every page route has a page of its own (e.g. /stats only redirects); those fall back to the shell.
+			await Promise.all(pages.map((page) => cache.add(page).catch(() => undefined)));
 		})()
 	);
 });
@@ -48,18 +58,21 @@ self.addEventListener('fetch', (event) => {
 	event.respondWith(
 		(async () => {
 			const cache = await caches.open(CACHE);
-			// Build output and static files never change within a version: serve them from the cache.
-			if (precached.has(url.pathname)) {
+			// Pages, build output and static files never change within a version: serve them straight from the
+			// cache, so the app opens instantly and never waits on a missing or flaky connection. A new
+			// deployment arrives as a new worker with its own cache (see UpdateAppHint).
+			if (request.mode === 'navigate') {
+				const cached = (await cache.match(pageKey(url.pathname))) ?? (await cache.match(SHELL));
+				if (cached) return cached;
+			} else if (precached.has(url.pathname)) {
 				const cached = await cache.match(url.pathname);
 				if (cached) return cached;
 			}
 			try {
-				const response = await fetch(request);
-				if (response.ok && request.mode === 'navigate' && url.pathname === SHELL) await cache.put(SHELL, response.clone());
-				return response;
+				return await fetch(request);
 			} catch (error) {
-				// Offline: pages fall back to the app shell, everything else to whatever was cached.
-				const fallback = request.mode === 'navigate' ? await cache.match(SHELL) : await cache.match(request);
+				// Offline and not precached: pages fall back to the app shell, everything else to whatever was cached.
+				const fallback = await cache.match(request.mode === 'navigate' ? SHELL : request);
 				if (fallback) return fallback;
 				throw error;
 			}
