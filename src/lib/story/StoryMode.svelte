@@ -277,13 +277,16 @@
   function storyForYou() {
     return generateStory(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary);
   }
-  // Unread stories in level order first. After a written story, a story made from the learner's own
-  // words follows whenever there are words to practise; once everything is read, written stories
-  // and generated ones take turns.
+  // Unread stories in level order first, picked at random within the nearest level so the same story
+  // does not open every time. After a written story, a story made from the learner's own words
+  // follows whenever there are words to practise; once everything is read, written stories and
+  // generated ones take turns.
   function pickStory(skip?: string): Story {
     const pool = storiesFor(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary);
     const completed = readCompleted();
-    const unread = pool.find((candidate) => !completed.includes(candidate.id) && candidate.id !== skip);
+    const unreadAll = pool.filter((candidate) => !completed.includes(candidate.id) && candidate.id !== skip);
+    const nearest = unreadAll.filter((candidate) => candidate.level === unreadAll[0]?.level);
+    const unread = nearest.length ? nearest[Math.floor(Math.random() * nearest.length)] : undefined;
     if (story && !story.generated && (!unread || hasMissedWords(settings.lang))) {
       const generated = storyForYou();
       if (generated) return generated;
