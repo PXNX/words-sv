@@ -167,6 +167,8 @@
   {:else if scene === 'forest'}
     <!-- a forest in the early morning: firs and tall beech trunks, shafts of sunlight, ferns and red toadstools -->
     <g fill="#3c7350"><path d="M-14 172l40-136 40 136Z" /><path d="M326 172l38-128 38 128Z" /></g>
+    <!-- morning mist drifting between the trees, and a low veil of it over the forest floor -->
+    <g class="story-fog" fill="#ffffff" opacity=".45"><ellipse cx="60" cy="118" rx="110" ry="14" /><ellipse cx="330" cy="104" rx="120" ry="12" /><ellipse cx="200" cy="134" rx="96" ry="10" /></g>
     <g fill="#4d8f5c"><path d="M48 172l30-104 30 104Z" /><path d="M276 172l28-96 28 96Z" /></g>
     <g fill="#7a6a5a"><rect x="128" y="0" width="16" height="172" /><rect x="236" y="0" width="13" height="172" /></g>
     <g fill="#55a66a" opacity=".92"><circle cx="136" cy="-4" r="46" /><circle cx="176" cy="-10" r="30" /><circle cx="244" cy="-2" r="40" /></g>
@@ -175,6 +177,7 @@
     <g fill="#5a9a40"><path d="M14 172q4-22 20-26-8 10-10 26Z" /><path d="M30 172q8-18 22-20-10 8-12 20Z" /><path d="M352 172q-4-22-20-26 8 10 10 26Z" /><path d="M372 172q8-18 22-20-10 8-12 20Z" /></g>
     <rect x="108" y="162" width="4" height="10" fill="#fffdf7" /><path d="M102 164q8-12 16 0Z" fill="#d64b45" /><circle cx="107" cy="160" r="1.2" fill="#fffdf7" />
     <rect x="300" y="164" width="3" height="8" fill="#fffdf7" /><path d="M296 165q5-8 11 0Z" fill="#d64b45" />
+    <g class="story-fog story-fog-low" fill="#ffffff" opacity=".4"><ellipse cx="90" cy="166" rx="130" ry="9" /><ellipse cx="320" cy="164" rx="120" ry="8" /></g>
   {/if}
   <rect y="172" width="400" height="48" fill={palette.floor} />
   <rect y="172" width="400" height="4" fill="rgba(23,42,69,.14)" />
@@ -186,6 +189,11 @@
 
 <style>
   .story-scene { position:absolute;inset:0;width:100%;height:100%; }
+  /* the forest mist drifts slowly to and fro, the low veil against the bands above it */
+  .story-fog { animation:story-fog 16s ease-in-out infinite alternate; }
+  .story-fog-low { animation-duration:11s;animation-direction:alternate-reverse; }
+  @keyframes story-fog { from { translate:-24px 0; } to { translate:24px 0; } }
+  @media (prefers-reduced-motion:reduce) { .story-fog { animation:none; } }
   /* Two copies of the rain or snow, one sky-height apart, fall together so the loop has no seam */
   .story-rain { animation:story-fall .9s linear infinite; }
   .story-snow { animation:story-fall 7s linear infinite; }
