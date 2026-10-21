@@ -114,6 +114,8 @@
   const lilithHappy = $derived(Boolean(story?.cast.includes('lilith')) && castMood('lilith') === 'happy');
   const purring = $derived(current ? [beatSounds(current).start, beatSounds(current).slot].includes('purr') : false);
   const woolRolling = $derived(current?.kind === 'narration' && current.prop === 'wool');
+  // Once the eagle has been pointed out, it keeps circling high above the stage.
+  const eagleCircling = $derived(Boolean(story?.beats.slice(0, revealed).some((beat) => beat.kind === 'narration' && beat.prop === 'eagle')));
   // The announcer only gets a voice cast in stories that have announcements.
   const voiceCast = $derived<Speaker[]>(story ? [...story.cast, ...(story.beats.some((beat) => beat.kind === 'narration' && beat.announcement) ? ['announcer' as const] : [])] : []);
   // Who is on stage and what they hold so far. Everyone whose first stage cue is an entrance waits
@@ -500,6 +502,10 @@
         <!-- A ball of wool rolls across the room, with Lilith hard on its heels -->
         {#key currentIndex}<span class="story-wool" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#e0647a" /><path d="M4 9q8-4 16 2M3.5 14q9-5 17 1M7 20q4-9 12-14M6 5q2 9 10 16" fill="none" stroke="#b33a52" stroke-width="1.4" stroke-linecap="round" /></svg></span>{/key}
       {/if}
+      {#if eagleCircling}
+        <!-- A golden eagle glides in and keeps circling above the peaks, slowly beating its wings -->
+        <span class="story-eagle" aria-hidden="true"><svg viewBox="0 0 64 30"><path d="M32 13Q22 3 4 5L0 6l4 1.5L.5 9.5l4.5.5-2.5 2.5 5-.5-1 3q8-2 13 1 5 2 12-3Z" fill="#6b4226" /><path d="M32 13q10-10 28-8l4 1-4 1.5 3.5 2-4.5.5 2.5 2.5-5-.5 1 3q-8-2-13 1-5 2-12-3Z" fill="#6b4226" /><ellipse cx="32" cy="16" rx="5" ry="9" fill="#5a361e" /><circle cx="32" cy="7.5" r="3.8" fill="#c99a3e" /><path d="M30.6 9.5h2.8l-1.4 3Z" fill="#e6b52e" /><path d="M28.5 23l3.5 6 3.5-6Z" fill="#4a2c18" /></svg></span>
+      {/if}
     </div>
 
     <ol class="story-transcript" bind:this={transcript} lang={lang} aria-live="polite">
@@ -625,6 +631,12 @@
   /* Station announcements carry a loudspeaker and the station's blue */
   .story-narration.story-announcement { border-left-color:#4b78c2;background:rgba(75,120,194,.08); }
   .story-narration :global(.story-announcement-icon) { flex:none;width:1.1rem;height:1.1rem;margin-top:.05rem;color:#4b78c2; }
+  /* the eagle sails in from the left and circles to and fro high above the stage */
+  .story-eagle { position:absolute;z-index:1;top:8%;left:-14%;width:3.4rem;pointer-events:none;animation:story-eagle 18s ease-in-out infinite alternate; }
+  .story-eagle svg { display:block;width:100%;transform-origin:center 45%;animation:story-eagle-flap 2.6s ease-in-out infinite; }
+  @keyframes story-eagle { 0% { left:-14%;top:14%;rotate:-6deg; } 35% { left:40%;top:5%;rotate:4deg; } 70% { left:72%;top:11%;rotate:-3deg; } 100% { left:94%;top:4%;rotate:5deg; } }
+  @keyframes story-eagle-flap { 0%,60%,100% { transform:scaleY(1); } 75% { transform:scaleY(.7); } 88% { transform:scaleY(1.08); } }
+  @media (prefers-reduced-motion:reduce) { .story-eagle { animation:none;left:62%; } .story-eagle svg { animation:none; } }
   /* Lilith's ball of wool bounces across the floor and out of the room */
   .story-wool { position:absolute;z-index:3;left:30%;bottom:6%;width:1.3rem;height:1.3rem;pointer-events:none;animation:story-wool-x 1.4s cubic-bezier(.3,.5,.4,1) both; }
   .story-wool svg { display:block;width:100%;height:100%;animation:story-ball-spin 1.4s linear reverse both; }

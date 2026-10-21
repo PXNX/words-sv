@@ -995,5 +995,55 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Wann sieht man Füchse am ehesten?'), options: [german('Ganz früh am Morgen oder am Abend'), german('Mittags um zwölf'), german('Nur im Winter')] },
       { kind: 'question', prompt: german('Warum ist der Fuchs so schnell weg?'), options: [german('Weil Bello bellt'), german('Weil es regnet'), german('Weil Leo singt')] }
     ]
+  },
+  {
+    id: 'a2-alps',
+    level: 'a2',
+    scene: 'alps',
+    cast: ['mia', 'fritz', 'cow'],
+    languages: ['de'],
+    weathers: ['sunny', 'cloudy'],
+    title: german('Auf der Alm'),
+    beats: [
+      { kind: 'narration', text: german('Es ist ein Tag im Juni. Mia wandert mit dir in den Alpen. Um sieben Uhr morgens seid ihr losgegangen, jetzt seid ihr schon auf tausendachthundert Metern Höhe.') },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Schau mal, {name}! Da oben ist die Alm von Bauer Fritz – die braune Hütte mit den roten Blumen.') },
+      { kind: 'narration', enters: ['fritz'], text: german('Vor der Hütte sitzt Bauer Fritz auf einer Bank und schneidet Käse.') },
+      { kind: 'line', speaker: 'fritz', mood: 'happy', text: german('Grüß Gott, ihr zwei! Ihr kommt genau richtig zur Brotzeit. Im Sommer wohne ich hier oben mit meinen zwölf Kühen.') },
+      { kind: 'narration', enters: ['cow'], sfx: 'moo', text: german('Eine schwarz-weiße Kuh mit einer großen goldenen Glocke kommt langsam näher.') },
+      { kind: 'line', speaker: 'fritz', text: german('Das ist Berta, meine Lieblingskuh. Sie gibt jeden Tag zwanzig Liter Milch.') },
+      { kind: 'line', speaker: 'cow', mood: 'happy', text: german('Muh!') },
+      { kind: 'line', speaker: 'fritz', mood: 'curious', text: german('{name}, magst du ein Stück Bergkäse? Der ist aus Bertas Milch.') },
+      { kind: 'reply', to: 'fritz', options: [
+        german('Ja, gern! Er riecht sehr gut.'),
+        german('Nein danke, ich trinke lieber Käse.'),
+        german('Ich bin eine Kuh.')
+      ] },
+      { kind: 'narration', prop: 'eagle', text: german('Plötzlich zeigt Mia nach oben. Hoch über dem Gipfel kreist ein großer brauner Vogel.') },
+      { kind: 'line', speaker: 'mia', mood: 'surprised', text: german('Schau mal! Ist das ein Adler?') },
+      { kind: 'line', speaker: 'fritz', text: german('Ja, das ist ein Steinadler. Er wohnt hier schon seit Jahren. Seine Flügel sind über zwei Meter breit – von einer Spitze bis zur anderen.') },
+      { kind: 'line', speaker: 'fritz', mood: 'curious', text: german('Und was glaubst du, {name}: Wo baut der Adler sein Nest?') },
+      { kind: 'reply', to: 'fritz', options: [
+        german('Hoch oben in einer Felswand.'),
+        german('Unten im Kuhstall bei Berta.'),
+        german('Im Kühlschrank von Fritz.')
+      ] },
+      { kind: 'line', speaker: 'fritz', mood: 'happy', text: german('Genau! Das Nest heißt Horst. Es kann bis zu zwei Meter breit werden – so groß wie ein Bett.') },
+      { kind: 'line', speaker: 'cow', mood: 'worried', text: german('Muh …') },
+      { kind: 'line', speaker: 'fritz', mood: 'laughing', text: german('Haha, keine Angst, Berta. Für den Adler bist du viel zu schwer.') },
+      { kind: 'line', speaker: 'mia', mood: 'curious', text: german('Wie lange bleiben die Kühe hier oben?') },
+      { kind: 'line', speaker: 'fritz', text: german('Von Juni bis September, ungefähr hundert Tage. Im Herbst gehen wir alle zusammen ins Tal, und die Kühe tragen bunte Blumen auf dem Kopf. Das ist der Almabtrieb.') },
+      { kind: 'narration', text: german('Am Nachmittag ziehen über dem Gipfel dunkle Wolken auf.') },
+      { kind: 'line', speaker: 'fritz', mood: 'worried', text: german('Oha. Um drei Uhr kommt ein Gewitter, das spüre ich in meinem Knie. Ihr solltet um zwei wieder unten im Tal sein.') },
+      { kind: 'line', speaker: 'mia', text: german('Dann gehen wir gleich los. Danke für den Käse, Fritz – und tschüss, Berta!') },
+      { kind: 'line', speaker: 'cow', mood: 'happy', text: german('Muh!') },
+      { kind: 'question', prompt: german('Um wie viel Uhr seid ihr losgegangen?'), options: [german('Um sieben Uhr morgens'), german('Um zwölf Uhr mittags'), german('Um drei Uhr nachmittags')] },
+      { kind: 'question', prompt: german('Wie viele Kühe hat Bauer Fritz?'), options: [german('Zwölf'), german('Zwei'), german('Zwanzig')] },
+      { kind: 'question', prompt: german('Welche Farbe haben die Blumen an der Hütte?'), options: [german('Rot'), german('Blau'), german('Gelb')] },
+      { kind: 'question', prompt: german('Wie viel Milch gibt Berta jeden Tag?'), options: [german('Zwanzig Liter'), german('Zwei Liter'), german('Hundert Liter')] },
+      { kind: 'question', prompt: german('Wie breit sind die Flügel des Steinadlers?'), options: [german('Über zwei Meter'), german('Zwanzig Zentimeter'), german('Zehn Meter')] },
+      { kind: 'question', prompt: german('Wo baut der Adler sein Nest?'), options: [german('Hoch oben in einer Felswand'), german('Im Kuhstall'), german('Auf dem Dach der Hütte')] },
+      { kind: 'question', prompt: german('Wie lange bleiben die Kühe auf der Alm?'), options: [german('Von Juni bis September'), german('Das ganze Jahr'), german('Nur im Winter')] },
+      { kind: 'question', prompt: german('Um wie viel Uhr kommt laut Fritz das Gewitter?'), options: [german('Um drei Uhr'), german('Um sieben Uhr'), german('Um Mitternacht')] }
+    ]
   }
 ];
