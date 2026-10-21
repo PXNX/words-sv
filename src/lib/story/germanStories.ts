@@ -1337,5 +1337,43 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was hängt an der Hohenzollernbrücke?'), options: [german('Bunte Liebesschlösser'), german('Fahrräder'), german('Weihnachtssterne')] },
       { kind: 'question', prompt: german('Wie zeigt man dem Köbes, dass man kein Kölsch mehr möchte?'), options: [german('Man legt den Bierdeckel auf das Glas.'), german('Man ruft laut „Stopp!“'), german('Man dreht das Glas um.')] }
     ]
+  },
+  {
+    id: 'b2-frankfurt',
+    level: 'b2',
+    scene: 'frankfurt',
+    cast: ['kim', 'jana'],
+    languages: ['de'],
+    title: german('Mainhattan'),
+    beats: [
+      { kind: 'narration', text: german('Freitagabend, kurz nach sechs. Kim kommt aus dem Bankturm, in dem sie seit drei Jahren arbeitet – im zweiundvierzigsten Stock, mit Blick über die ganze Stadt. Jana ist übers Wochenende zu Besuch, und du bist mitgekommen.') },
+      { kind: 'line', speaker: 'jana', mood: 'surprised', text: german('Kim! Du siehst ja richtig seriös aus in deinem Blazer. Arbeitest du wirklich jeden Tag da oben?') },
+      { kind: 'line', speaker: 'kim', mood: 'laughing', text: german('Haha, jeden Tag – und der Aufzug braucht nur fünfundvierzig Sekunden. Wegen der vielen Hochhäuser nennt man Frankfurt übrigens auch „Mainhattan“.') },
+      { kind: 'line', speaker: 'kim', text: german('Der Commerzbank-Tower dort drüben ist mit Antenne fast dreihundert Meter hoch und war lange das höchste Bürogebäude Europas. Und ein paar Straßen weiter sitzt die Europäische Zentralbank, die über den Euro wacht.') },
+      { kind: 'line', speaker: 'jana', mood: 'curious', text: german('Und was genau machst du in deiner Bank? Ich stelle mir immer Leute vor, die den ganzen Tag Geld zählen.') },
+      { kind: 'line', speaker: 'kim', text: german('Ich prüfe Kredite für mittelständische Unternehmen. Das klingt trocken, aber man lernt unglaublich viele Firmen kennen – vom Autozulieferer bis zur Bäckereikette.') },
+      { kind: 'line', speaker: 'kim', mood: 'curious', text: german('{name}, könntest du dir vorstellen, in so einem Turm zu arbeiten?') },
+      { kind: 'reply', to: 'kim', options: [
+        german('Für eine Weile bestimmt, schon wegen der Aussicht – auf Dauer wäre mir ein kleineres Büro aber lieber.'),
+        german('Nur wenn ich abends mit dem Fallschirm nach Hause fliegen darf.'),
+        german('Ja, aber nur, wenn das Hochhaus aus Lebkuchen gebaut ist.')
+      ] },
+      { kind: 'narration', text: german('Zu Fuß geht ihr zum Römerberg. Zwischen den gläsernen Türmen stehen plötzlich bunte Fachwerkhäuser mit spitzen Giebeln.') },
+      { kind: 'line', speaker: 'kim', text: german('Der Römer ist seit über sechshundert Jahren das Rathaus der Stadt. Früher feierte man hier nach der Kaiserkrönung die großen Festbankette.') },
+      { kind: 'line', speaker: 'jana', mood: 'curious', text: german('Die Häuser gegenüber sehen aber ziemlich neu aus. Sind die wirklich so alt?') },
+      { kind: 'line', speaker: 'kim', text: german('Gut beobachtet. Im Zweiten Weltkrieg wurde die Altstadt fast vollständig zerstört. Viele Häuser wurden erst in den letzten Jahren originalgetreu rekonstruiert – die neue Altstadt wurde 2018 eröffnet.') },
+      { kind: 'narration', text: german('Am Abend fahrt ihr über den Main nach Sachsenhausen. In einer Apfelweinwirtschaft sitzen alle an langen Holztischen, und auf dem Tisch steht ein grauer Steinkrug mit blauem Muster: der Bembel.') },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Dazu gibt es Grüne Soße: sieben Kräuter, gekochte Eier und Kartoffeln. Goethe, der in Frankfurt geboren wurde, soll sie geliebt haben.') },
+      { kind: 'line', speaker: 'jana', mood: 'laughing', text: german('Hihi, der Apfelwein ist ganz schön sauer. Aber nach dem zweiten Glas gewöhnt man sich dran.') },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('So geht es allen. Am Montag sitze ich wieder im zweiundvierzigsten Stock – aber heute Abend bin ich einfach nur Frankfurterin.') },
+      { kind: 'question', prompt: german('Seit wann arbeitet Kim in der Bank?'), options: [german('Seit drei Jahren'), german('Seit drei Monaten'), german('Seit dreißig Jahren')] },
+      { kind: 'question', prompt: german('In welchem Stock arbeitet Kim?'), options: [german('Im zweiundvierzigsten'), german('Im vierten'), german('Im Erdgeschoss')] },
+      { kind: 'question', prompt: german('Warum nennt man Frankfurt „Mainhattan“?'), options: [german('Wegen der vielen Hochhäuser'), german('Weil dort viele Amerikaner wohnen'), german('Wegen des großen Hafens')] },
+      { kind: 'question', prompt: german('Was macht Kim in der Bank?'), options: [german('Sie prüft Kredite für mittelständische Unternehmen.'), german('Sie zählt den ganzen Tag Bargeld.'), german('Sie wartet die Aufzüge.')] },
+      { kind: 'question', prompt: german('Wie lange ist der Römer schon das Rathaus?'), options: [german('Seit über sechshundert Jahren'), german('Seit 2018'), german('Seit fünfzig Jahren')] },
+      { kind: 'question', prompt: german('Warum sehen viele Häuser in der Altstadt so neu aus?'), options: [german('Sie wurden nach der Zerstörung im Krieg rekonstruiert.'), german('Sie werden jedes Jahr neu gestrichen.'), german('Sie sind nur Kulissen aus Holz.')] },
+      { kind: 'question', prompt: german('Was ist ein Bembel?'), options: [german('Ein grauer Steinkrug mit blauem Muster'), german('Eine Frankfurter Wurst'), german('Ein Hochhaus am Main')] },
+      { kind: 'question', prompt: german('Wie viele Kräuter gehören in die Grüne Soße?'), options: [german('Sieben'), german('Drei'), german('Zwölf')] }
+    ]
   }
 ];

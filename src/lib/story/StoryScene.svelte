@@ -34,7 +34,8 @@
     berlin: { back: '#cfe6f2', floor: '#b8aa98' },
     hamburg: { back: '#cfe6f2', floor: '#9aa3ad' },
     munich: { back: '#cfe6f2', floor: '#b8aa98' },
-    cologne: { back: '#cfe6f2', floor: '#b8aa98' }
+    cologne: { back: '#cfe6f2', floor: '#b8aa98' },
+    frankfurt: { back: '#cfe6f2', floor: '#c4cbd3' }
   };
   const palette = $derived(palettes[scene]);
 
@@ -68,7 +69,8 @@
     berlin: { x: 0, y: 0, w: 400, h: 172 },
     hamburg: { x: 0, y: 0, w: 400, h: 172 },
     munich: { x: 0, y: 0, w: 400, h: 172 },
-    cologne: { x: 0, y: 0, w: 400, h: 172 }
+    cologne: { x: 0, y: 0, w: 400, h: 172 },
+    frankfurt: { x: 0, y: 0, w: 400, h: 172 }
   };
   const sky = $derived(skies[scene]);
   const outdoor = $derived(sky.w === 400);
@@ -319,6 +321,17 @@
     <g fill="none" stroke="#2e2b28" stroke-width="1.5"><path d="M266 70h24M348 70h24M266 100h24M348 100h24" /><circle cx="319" cy="104" r="9" /></g>
     <path d="M278 8V0M360 8V0M274 3h8M356 3h8" stroke="#2e2b28" stroke-width="2" />
     {#if weather === 'snowy'}<g fill="#ffffff"><path d="M262 62l16-54 16 54-3 1-13-46-13 46Z" /><path d="M344 62l16-54 16 54-3 1-13-46-13 46Z" /></g>{/if}
+  {:else if scene === 'frankfurt'}
+    <!-- Frankfurt: the bank towers of "Mainhattan" rising behind the stepped half-timbered gables of the Römer -->
+    <g stroke="#596477" stroke-width="1.5"><rect x="214" y="92" width="28" height="80" fill="#dfe5ea" /><rect x="248" y="42" width="30" height="130" fill="#8ab4d9" /><path d="M286 172V22l14-14 14 14v150Z" fill="#c4cbd3" /><rect x="322" y="62" width="26" height="110" fill="#6b7686" /><rect x="354" y="30" width="36" height="142" fill="#a9c8e8" /></g>
+    <path d="M300 8V-4" stroke="#596477" stroke-width="2" />
+    <g stroke="rgba(255,255,255,.5)" stroke-width="1">{#each Array.from({ length: 13 }, (_, i) => i) as i (i)}<path d="M214 {98 + i * 6}h28M248 {50 + i * 9}h30M286 {32 + i * 10}h28M322 {70 + i * 8}h26M354 {40 + i * 10}h36" />{/each}</g>
+    <g fill="#e6b52e" opacity=".8"><rect x="360" y="60" width="6" height="4" /><rect x="374" y="90" width="6" height="4" /><rect x="292" y="70" width="6" height="4" /><rect x="254" y="110" width="6" height="4" /></g>
+    <path d="M10 172V90h6v-10h6v-10h6v-10h6v10h6v10h6v10h6v82Z" fill="#e8b4a0" stroke="#7a2e2a" stroke-width="1.5" /><path d="M54 172V90h6v-10h6v-10h6v-10h6v10h6v10h6v10h6v82Z" fill="#f2dcc0" stroke="#7a2e2a" stroke-width="1.5" /><path d="M98 172V90h6v-10h6v-10h6v-10h6v10h6v10h6v10h6v82Z" fill="#d9a07a" stroke="#7a2e2a" stroke-width="1.5" />
+    <g fill="none" stroke="#7a2e2a" stroke-width="1.2">{#each [0, 1, 2] as i (i)}<path d="M{14 + i * 44} 110h34M{14 + i * 44} 134h34M{31 + i * 44} 90v82M{14 + i * 44} 110l17 24M{48 + i * 44} 110l-17 24" />{/each}</g>
+    <g fill="#5a6f8a">{#each [0, 1, 2] as i (i)}<rect x={18 + i * 44} y="94" width="8" height="12" /><rect x={36 + i * 44} y="94" width="8" height="12" /><rect x={18 + i * 44} y="140" width="8" height="12" /><rect x={36 + i * 44} y="140" width="8" height="12" />{/each}</g>
+    <path d="M10 160h132" stroke="#7a2e2a" stroke-width="1.5" />
+    {#if weather === 'snowy'}<g fill="#ffffff">{#each [0, 1, 2] as i (i)}<path d="M{28 + i * 44} 60h6v3h-6Z M{22 + i * 44} 70h18v3H{22 + i * 44}Z" />{/each}</g>{/if}
   {/if}
   <rect y="172" width="400" height="48" fill={palette.floor} />
   <rect y="172" width="400" height="4" fill="rgba(23,42,69,.14)" />
