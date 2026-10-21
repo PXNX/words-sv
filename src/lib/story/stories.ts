@@ -1,6 +1,7 @@
 import type { Language, VocabularyLevel } from '#lib/data/vocabulary.js';
-import { playableLanguages, vocabularyLevels } from '#lib/data/vocabulary.js';
+import { vocabularyLevels } from '#lib/data/vocabulary.js';
 import type { SoundEffect } from '#lib/sounds.js';
+import { german, germanStories } from './germanStories';
 
 export type Text = Record<Language, string>;
 export type CharacterId = 'crow' | 'seagull' | 'ludwig' | 'deer' | 'fox' | 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello' | 'lilith' | 'hans' | 'albert' | 'sabine' | 'enzo' | 'jana' | 'becker' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake' | 'ali' | 'robert' | 'fritz' | 'tobias' | 'selma' | 'kumar' | 'simon';
@@ -343,6 +344,21 @@ export const stories: Story[] = [
         { de: 'Sie bleibt freundlich.', en: 'She stays friendly.', fr: 'Elle reste gentille.', it: 'Resta gentile.', es: 'Sigue siendo amable.', pt: 'Ela continua simpática.', uk: 'Вона лишається привітною.' },
         { de: 'Sie wird wütend.', en: 'She gets angry.', fr: 'Elle se met en colère.', it: 'Si arrabbia.', es: 'Se enfada.', pt: 'Ela fica brava.', uk: 'Вона сердиться.' },
         { de: 'Sie geht nach Hause.', en: 'She goes home.', fr: 'Elle rentre chez elle.', it: 'Torna a casa.', es: 'Se va a casa.', pt: 'Ela vai para casa.', uk: 'Вона йде додому.' }
+      ] },
+      { kind: 'question', prompt: { de: 'Für wen ist der Kuchen?', en: 'Who is the cake for?', fr: 'Pour qui est le gâteau ?', it: 'Per chi è la torta?', es: '¿Para quién es el pastel?', pt: 'Para quem é o bolo?', uk: 'Для кого цей торт?' }, options: [
+        { de: 'Für Oma', en: 'For Grandma', fr: 'Pour Mamie', it: 'Per la nonna', es: 'Para la abuela', pt: 'Para a vovó', uk: 'Для бабусі' },
+        { de: 'Für Leo', en: 'For Leo', fr: 'Pour Léo', it: 'Per Leo', es: 'Para Leo', pt: 'Para o Léo', uk: 'Для Лео' },
+        { de: 'Für Mia', en: 'For Mia', fr: 'Pour Mia', it: 'Per Mia', es: 'Para Mia', pt: 'Para a Mia', uk: 'Для Мії' }
+      ] },
+      { kind: 'question', prompt: { de: 'Was trinkt Oma nach dem ersten Stück?', en: 'What does Grandma drink after the first piece?', fr: 'Que boit Mamie après le premier morceau ?', it: 'Che cosa beve la nonna dopo la prima fetta?', es: '¿Qué bebe la abuela después del primer trozo?', pt: 'O que a vovó bebe depois do primeiro pedaço?', uk: 'Що п’є бабуся після першого шматочка?' }, options: [
+        { de: 'Viel Wasser', en: 'A lot of water', fr: 'Beaucoup d’eau', it: 'Tanta acqua', es: 'Mucha agua', pt: 'Muita água', uk: 'Багато води' },
+        { de: 'Einen Kaffee', en: 'A coffee', fr: 'Un café', it: 'Un caffè', es: 'Un café', pt: 'Um café', uk: 'Каву' },
+        { de: 'Ein Glas Wein', en: 'A glass of wine', fr: 'Un verre de vin', it: 'Un bicchiere di vino', es: 'Una copa de vino', pt: 'Uma taça de vinho', uk: 'Келих вина' }
+      ] },
+      { kind: 'question', prompt: { de: 'Womit essen sie den Kuchen?', en: 'What will they eat the cake with?', fr: 'Avec quoi vont-ils manger le gâteau ?', it: 'Con che cosa mangiano la torta?', es: '¿Con qué se comen el pastel?', pt: 'Com o que eles vão comer o bolo?', uk: 'З чим вони їстимуть торт?' }, options: [
+        { de: 'Mit Sahne', en: 'With cream', fr: 'Avec de la crème', it: 'Con la panna', es: 'Con nata', pt: 'Com chantilly', uk: 'З вершками' },
+        { de: 'Mit Eis', en: 'With ice cream', fr: 'Avec de la glace', it: 'Con il gelato', es: 'Con helado', pt: 'Com sorvete', uk: 'З морозивом' },
+        { de: 'Mit Schokolade', en: 'With chocolate', fr: 'Avec du chocolat', it: 'Con il cioccolato', es: 'Con chocolate', pt: 'Com chocolate', uk: 'З шоколадом' }
       ] }
     ]
   },
@@ -373,6 +389,21 @@ export const stories: Story[] = [
         { de: 'Es gibt eine Besprechung mit einem Kunden.', en: 'There is a meeting with a client.', fr: 'Il y a une réunion avec un client.', it: 'C’è una riunione con un cliente.', es: 'Hay una reunión con un cliente.', pt: 'Há uma reunião com um cliente.', uk: 'Зустріч із клієнтом.' },
         { de: 'Mia bekommt ihren Laptop.', en: 'Mia gets her laptop.', fr: 'Mia reçoit son ordinateur portable.', it: 'Mia riceve il portatile.', es: 'Mia recibe su portátil.', pt: 'A Mia recebe o notebook.', uk: 'Мія отримує ноутбук.' },
         { de: 'Alle essen in der Kantine.', en: 'Everyone eats in the canteen.', fr: 'Tout le monde mange à la cantine.', it: 'Tutti mangiano in mensa.', es: 'Todos comen en el comedor.', pt: 'Todos almoçam no refeitório.', uk: 'Усі обідають в їдальні.' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wo arbeitet Mia ab heute?', en: 'Where does Mia work from today?', fr: 'Où Mia travaille-t-elle à partir d’aujourd’hui ?', it: 'Dove lavora Mia da oggi?', es: '¿Dónde trabaja Mia a partir de hoy?', pt: 'Onde a Mia trabalha a partir de hoje?', uk: 'Де Мія працює відсьогодні?' }, options: [
+        { de: 'In einem kleinen Architekturbüro', en: 'At a small architecture firm', fr: 'Dans un petit cabinet d’architectes', it: 'In un piccolo studio di architettura', es: 'En un pequeño estudio de arquitectura', pt: 'Num pequeno escritório de arquitetura', uk: 'У невеликому архітектурному бюро' },
+        { de: 'In einer großen Bank', en: 'At a big bank', fr: 'Dans une grande banque', it: 'In una grande banca', es: 'En un banco grande', pt: 'Num banco grande', uk: 'У великому банку' },
+        { de: 'In der Kantine', en: 'In the canteen', fr: 'À la cantine', it: 'In mensa', es: 'En el comedor', pt: 'No refeitório', uk: 'В їдальні' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wie war Mias Weg zur Arbeit?', en: 'How was Mia’s journey to work?', fr: 'Comment s’est passé le trajet de Mia jusqu’au travail ?', it: 'Com’è stato il tragitto di Mia fino al lavoro?', es: '¿Qué tal fue el trayecto de Mia al trabajo?', pt: 'Como foi o caminho da Mia até o trabalho?', uk: 'Як Мія добиралася на роботу?' }, options: [
+        { de: 'Der Bus war ziemlich voll.', en: 'The bus was pretty full.', fr: 'Le bus était plutôt plein.', it: 'L’autobus era piuttosto pieno.', es: 'El autobús iba bastante lleno.', pt: 'O ônibus estava bem cheio.', uk: 'Автобус був досить переповнений.' },
+        { de: 'Sie hat sich verlaufen.', en: 'She got lost.', fr: 'Elle s’est perdue.', it: 'Si è persa.', es: 'Se perdió.', pt: 'Ela se perdeu.', uk: 'Вона заблукала.' },
+        { de: 'Der Zug hatte Verspätung.', en: 'The train was late.', fr: 'Le train était en retard.', it: 'Il treno era in ritardo.', es: 'El tren llegó con retraso.', pt: 'O trem atrasou.', uk: 'Потяг запізнився.' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wie fühlt sich Mia am Ende?', en: 'How does Mia feel at the end?', fr: 'Comment Mia se sent-elle à la fin ?', it: 'Come si sente Mia alla fine?', es: '¿Cómo se siente Mia al final?', pt: 'Como a Mia se sente no final?', uk: 'Як почувається Мія наприкінці?' }, options: [
+        { de: 'Viel entspannter als vorher.', en: 'Much more relaxed than before.', fr: 'Beaucoup plus détendue qu’avant.', it: 'Molto più tranquilla di prima.', es: 'Mucho más tranquila que antes.', pt: 'Bem mais tranquila do que antes.', uk: 'Їй набагато спокійніше, ніж раніше.' },
+        { de: 'Noch nervöser als am Morgen.', en: 'Even more nervous than in the morning.', fr: 'Encore plus nerveuse que le matin.', it: 'Ancora più nervosa di stamattina.', es: 'Todavía más nerviosa que por la mañana.', pt: 'Ainda mais nervosa do que de manhã.', uk: 'Вона хвилюється ще більше, ніж уранці.' },
+        { de: 'Enttäuscht von ihrer neuen Stelle.', en: 'Disappointed with her new job.', fr: 'Déçue par son nouveau travail.', it: 'Delusa dal suo nuovo lavoro.', es: 'Decepcionada con su nuevo trabajo.', pt: 'Decepcionada com o novo emprego.', uk: 'Вона розчарована новою роботою.' }
       ] }
     ]
   },
@@ -403,6 +434,21 @@ export const stories: Story[] = [
         { de: 'Wenn der Hund die Nachbarn nicht stört.', en: 'If the dog doesn’t disturb the neighbours.', fr: 'Si le chien ne dérange pas les voisins.', it: 'Se il cane non disturba i vicini.', es: 'Si el perro no molesta a los vecinos.', pt: 'Se o cachorro não incomodar os vizinhos.', uk: 'Якщо собака не заважатиме сусідам.' },
         { de: 'Wenn er mehr Miete zahlt.', en: 'If he pays more rent.', fr: 'S’il paie un loyer plus élevé.', it: 'Se paga un affitto più alto.', es: 'Si paga más alquiler.', pt: 'Se ele pagar um aluguel mais alto.', uk: 'Якщо він платитиме більшу оренду.' },
         { de: 'Wenn der Hund sehr klein ist.', en: 'If the dog is very small.', fr: 'Si le chien est très petit.', it: 'Se il cane è molto piccolo.', es: 'Si el perro es muy pequeño.', pt: 'Se o cachorro for bem pequeno.', uk: 'Якщо собака дуже маленький.' }
+      ] },
+      { kind: 'question', prompt: { de: 'Warum ist es keineswegs sicher, dass Leo die Wohnung bekommt?', en: 'Why is it far from certain that Leo will get the flat?', fr: 'Pourquoi n’est-il pas du tout certain que Léo obtienne l’appartement ?', it: 'Perché non è affatto detto che Leo ottenga l’appartamento?', es: '¿Por qué no es nada seguro que Leo consiga el piso?', pt: 'Por que não é nada certo que o Léo vá conseguir o apartamento?', uk: 'Чому зовсім не певно, що Лео отримає квартиру?' }, options: [
+        { de: 'Fünfzehn andere Interessenten wollen sie ebenfalls.', en: 'Fifteen other applicants want it too.', fr: 'Quinze autres candidats la veulent aussi.', it: 'Ci sono altri quindici interessati.', es: 'Hay otros quince interesados.', pt: 'Há outros quinze interessados.', uk: 'Її хочуть ще п’ятнадцять інших охочих.' },
+        { de: 'Der Vermieter lehnt Haustiere grundsätzlich ab.', en: 'The landlord refuses pets on principle.', fr: 'Le propriétaire refuse les animaux par principe.', it: 'Il proprietario non accetta animali per principio.', es: 'El casero no admite mascotas por principio.', pt: 'O proprietário não aceita animais por princípio.', uk: 'Власник принципово не дозволяє тварин.' },
+        { de: 'Die Wohnung muss erst noch renoviert werden.', en: 'The flat still has to be renovated.', fr: 'L’appartement doit encore être rénové.', it: 'L’appartamento deve ancora essere ristrutturato.', es: 'El piso todavía tiene que reformarse.', pt: 'O apartamento ainda precisa ser reformado.', uk: 'Квартиру ще треба відремонтувати.' }
+      ] },
+      { kind: 'question', prompt: { de: 'Was möchte Herr Paul vorher von Leo sehen?', en: 'What does Mr Paul want to see from Leo first?', fr: 'Que M. Paul veut-il d’abord voir de la part de Léo ?', it: 'Che cosa vuole vedere prima il Sig. Paul da Leo?', es: '¿Qué quiere ver antes el Sr. Paul de Leo?', pt: 'O que o Sr. Paul quer ver do Léo antes?', uk: 'Що пан Пауль хоче спершу побачити від Лео?' }, options: [
+        { de: 'Seine Gehaltsnachweise', en: 'His proof of income', fr: 'Ses justificatifs de revenus', it: 'Le sue buste paga', es: 'Sus nóminas', pt: 'Os comprovantes de renda dele', uk: 'Його довідки про доходи' },
+        { de: 'Ein Foto des Hundes', en: 'A photo of the dog', fr: 'Une photo du chien', it: 'Una foto del cane', es: 'Una foto del perro', pt: 'Uma foto do cachorro', uk: 'Фото собаки' },
+        { de: 'Ein Empfehlungsschreiben des früheren Vermieters', en: 'A reference from his previous landlord', fr: 'Une lettre de recommandation de son ancien propriétaire', it: 'Una lettera di referenze del precedente proprietario', es: 'Una carta de recomendación de su anterior casero', pt: 'Uma carta de referência do antigo proprietário', uk: 'Рекомендаційний лист від попереднього орендодавця' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wie hoch wäre die Kaution ungefähr?', en: 'Roughly how much would the deposit be?', fr: 'À combien s’élèverait la caution, à peu près ?', it: 'A quanto ammonterebbe più o meno la cauzione?', es: '¿De cuánto sería más o menos la fianza?', pt: 'De quanto seria mais ou menos o depósito caução?', uk: 'Приблизно скільки становила б застава?' }, options: [
+        { de: '2.700 Euro', en: '2,700 euros', fr: '2 700 euros', it: '2.700 euro', es: '2700 euros', pt: '2.700 euros', uk: '2700 євро' },
+        { de: '900 Euro', en: '900 euros', fr: '900 euros', it: '900 euro', es: '900 euros', pt: '900 euros', uk: '900 євро' },
+        { de: '1.800 Euro', en: '1,800 euros', fr: '1 800 euros', it: '1.800 euro', es: '1800 euros', pt: '1.800 euros', uk: '1800 євро' }
       ] }
     ]
   },
@@ -433,6 +479,21 @@ export const stories: Story[] = [
         { de: 'Auf Studien aus anderen Städten', en: 'Studies from other cities', fr: 'Sur des études menées dans d’autres villes', it: 'Su studi condotti in altre città', es: 'En estudios de otras ciudades', pt: 'Em estudos de outras cidades', uk: 'На дослідження з інших міст' },
         { de: 'Auf eine Umfrage unter Geschäftsleuten', en: 'A survey of shop owners', fr: 'Sur un sondage auprès des commerçants', it: 'Su un sondaggio tra i commercianti', es: 'En una encuesta a comerciantes', pt: 'Em uma pesquisa com comerciantes', uk: 'На опитування підприємців' },
         { de: 'Auf ihre Erfahrung als Autofahrerin', en: 'Her experience as a driver', fr: 'Sur son expérience de conductrice', it: 'Sulla sua esperienza di automobilista', es: 'En su experiencia como conductora', pt: 'Em sua experiência como motorista', uk: 'На власний досвід водійки' }
+      ] },
+      { kind: 'question', prompt: { de: 'Was meint Mia, wenn sie die autofreie Altstadt für „längst überfällig“ hält?', en: 'What does Mia mean when she calls a car-free old town “long overdue”?', fr: 'Que veut dire Mia quand elle affirme que cette mesure « se fait attendre depuis longtemps » ?', it: 'Che cosa intende Mia quando dice che è una misura «attesa da tempo»?', es: '¿Qué quiere decir Mia con «ya iba siendo hora»?', pt: 'O que a Mia quer dizer quando afirma que isso “já devia ter acontecido há muito tempo”?', uk: 'Що має на увазі Мія, коли каже, що це «давно назріло»?' }, options: [
+        { de: 'Die Maßnahme hätte schon viel früher kommen sollen.', en: 'The measure should have come much sooner.', fr: 'La mesure aurait dû être prise bien plus tôt.', it: 'Il provvedimento sarebbe dovuto arrivare molto prima.', es: 'La medida debería haber llegado mucho antes.', pt: 'A medida deveria ter vindo muito antes.', uk: 'Цей захід слід було запровадити набагато раніше.' },
+        { de: 'Die Entscheidung kommt zu früh und ist übereilt.', en: 'The decision comes too early and is rushed.', fr: 'La décision arrive trop tôt et elle est précipitée.', it: 'La decisione arriva troppo presto ed è affrettata.', es: 'La decisión llega demasiado pronto y es precipitada.', pt: 'A decisão chega cedo demais e é precipitada.', uk: 'Рішення передчасне й поспішне.' },
+        { de: 'Der Stadtrat hat eine Frist versäumt.', en: 'The city council has missed a deadline.', fr: 'Le conseil municipal a laissé passer un délai.', it: 'Il consiglio comunale ha mancato una scadenza.', es: 'El ayuntamiento ha dejado pasar un plazo.', pt: 'A câmara municipal perdeu um prazo.', uk: 'Міська рада пропустила кінцевий термін.' }
+      ] },
+      { kind: 'question', prompt: { de: 'Welche Vorteile verspricht sich Mia von einer autofreien Altstadt?', en: 'What benefits does Mia expect from a car-free old town?', fr: 'Quels avantages Mia attend-elle d’une vieille ville sans voitures ?', it: 'Quali vantaggi si aspetta Mia da un centro storico senza auto?', es: '¿Qué ventajas espera Mia de un casco antiguo sin coches?', pt: 'Que vantagens a Mia espera de um centro histórico sem carros?', uk: 'Яких переваг Мія очікує від старого міста без авто?' }, options: [
+        { de: 'Weniger Lärm und bessere Luft', en: 'Less noise and cleaner air', fr: 'Moins de bruit et un air plus pur', it: 'Meno rumore e aria più pulita', es: 'Menos ruido y aire más limpio', pt: 'Menos barulho e ar mais limpo', uk: 'Менше шуму й чистіше повітря' },
+        { de: 'Mehr Parkplätze und kürzere Wege', en: 'More parking spaces and shorter journeys', fr: 'Plus de places de stationnement et des trajets plus courts', it: 'Più parcheggi e tragitti più brevi', es: 'Más aparcamiento y trayectos más cortos', pt: 'Mais vagas de estacionamento e trajetos mais curtos', uk: 'Більше паркувальних місць і коротші маршрути' },
+        { de: 'Niedrigere Mieten für die Geschäfte', en: 'Lower rents for the shops', fr: 'Des loyers plus bas pour les commerces', it: 'Affitti più bassi per i negozi', es: 'Alquileres más bajos para las tiendas', pt: 'Aluguéis mais baixos para as lojas', uk: 'Нижчу орендну плату для крамниць' }
+      ] },
+      { kind: 'question', prompt: { de: 'Unter welchem Vorbehalt könnte sich Mia mit dem Kompromiss anfreunden?', en: 'On what condition could Mia come to terms with the compromise?', fr: 'À quelle condition Mia pourrait-elle s’accommoder du compromis ?', it: 'A quale condizione Mia potrebbe accettare il compromesso?', es: '¿Con qué condición podría Mia aceptar el término medio?', pt: 'Com qual condição a Mia poderia aceitar o meio-termo?', uk: 'За якої умови Мія могла б погодитися на компроміс?' }, options: [
+        { de: 'Dass es nicht bei leeren Versprechungen bleibt.', en: 'That it doesn’t end up as empty promises.', fr: 'Que ça ne reste pas des promesses en l’air.', it: 'Che non restino promesse vuote.', es: 'Que no se quede en promesas vacías.', pt: 'Que não fique só em promessas vazias.', uk: 'Щоб усе не обмежилося порожніми обіцянками.' },
+        { de: 'Dass auch der Lieferverkehr vollständig verbannt wird.', en: 'That deliveries are banned completely as well.', fr: 'Que les livraisons soient elles aussi totalement interdites.', it: 'Che vengano vietate del tutto anche le consegne.', es: 'Que también se prohíba por completo el reparto.', pt: 'Que as entregas também sejam totalmente proibidas.', uk: 'Щоб доставку теж повністю заборонили.' },
+        { de: 'Dass Kim öffentlich zugibt, im Unrecht zu sein.', en: 'That Kim publicly admits she was wrong.', fr: 'Que Kim reconnaisse publiquement qu’elle avait tort.', it: 'Che Kim ammetta pubblicamente di avere torto.', es: 'Que Kim admita públicamente que se equivocaba.', pt: 'Que a Kim admita publicamente que estava errada.', uk: 'Щоб Кім публічно визнала, що помилялася.' }
       ] }
     ]
   },
@@ -464,6 +525,21 @@ export const stories: Story[] = [
         { de: '„Ende“', en: '“The End”', fr: '« Fin »', it: '«Fine»', es: '«Fin»', pt: '“Fim”', uk: '«Кінець»' },
         { de: 'Eine Widmung für Oma', en: 'A dedication to Grandma', fr: 'Une dédicace pour Mamie', it: 'Una dedica alla nonna', es: 'Una dedicatoria a la abuela', pt: 'Uma dedicatória para a vovó', uk: 'Присвята бабусі' },
         { de: 'Der Name eines Verlags', en: 'The name of a publisher', fr: 'Le nom d’un éditeur', it: 'Il nome di un editore', es: 'El nombre de una editorial', pt: 'O nome de uma editora', uk: 'Назва видавництва' }
+      ] },
+      { kind: 'question', prompt: { de: 'In welchem Zustand befindet sich das Manuskript?', en: 'What state is the manuscript in?', fr: 'Dans quel état se trouve le manuscrit ?', it: 'In che stato si trova il manoscritto?', es: '¿En qué estado se encuentra el manuscrito?', pt: 'Em que estado se encontra o manuscrito?', uk: 'У якому стані рукопис?' }, options: [
+        { de: 'Es ist vergilbt, und die Handschrift ist kaum zu entziffern.', en: 'It has yellowed, and the handwriting is barely legible.', fr: 'Il est jauni et l’écriture est presque indéchiffrable.', it: 'È ingiallito e la calligrafia è quasi indecifrabile.', es: 'Está amarillento y la letra es casi indescifrable.', pt: 'Está amarelado e a letra é quase indecifrável.', uk: 'Він пожовклий, а почерк ледве можна розібрати.' },
+        { de: 'Es ist sauber abgetippt und gebunden.', en: 'It has been neatly typed up and bound.', fr: 'Il a été soigneusement dactylographié et relié.', it: 'È stato battuto a macchina con cura e rilegato.', es: 'Está pulcramente mecanografiado y encuadernado.', pt: 'Está datilografado com capricho e encadernado.', uk: 'Його охайно передруковано й переплетено.' },
+        { de: 'Die letzten Kapitel sind herausgerissen.', en: 'The last chapters have been torn out.', fr: 'Les derniers chapitres ont été arrachés.', it: 'Gli ultimi capitoli sono stati strappati.', es: 'Los últimos capítulos están arrancados.', pt: 'Os últimos capítulos foram arrancados.', uk: 'Останні розділи вирвано.' }
+      ] },
+      { kind: 'question', prompt: { de: 'Worauf spielt Oma an, wenn sie sagt, Perfektionismus liege gewissermaßen in der Familie?', en: 'What is Grandma hinting at when she says perfectionism ran in the family?', fr: 'À quoi Mamie fait-elle allusion en disant que le perfectionnisme est une affaire de famille ?', it: 'A che cosa allude la nonna quando dice che il perfezionismo «ce l’abbiamo nel sangue»?', es: '¿A qué alude la abuela cuando dice que el perfeccionismo les viene de familia?', pt: 'A que a vovó está aludindo quando diz que o perfeccionismo é de família?', uk: 'На що натякає бабуся, кажучи, що перфекціонізм — родинна риса?' }, options: [
+        { de: 'Dass auch andere in der Familie mit ihrer Arbeit nie ganz zufrieden sind.', en: 'That others in the family are never quite satisfied with their work either.', fr: 'Que d’autres membres de la famille ne sont jamais tout à fait satisfaits de leur travail non plus.', it: 'Che anche altri in famiglia non sono mai del tutto soddisfatti del proprio lavoro.', es: 'Que tampoco otros miembros de la familia están nunca del todo satisfechos con su trabajo.', pt: 'Que outras pessoas da família também nunca ficam totalmente satisfeitas com o próprio trabalho.', uk: 'Що й інші в родині ніколи не бувають цілком задоволені своєю роботою.' },
+        { de: 'Dass in der Familie schon mehrere Romane veröffentlicht wurden.', en: 'That several novels have already been published in the family.', fr: 'Que plusieurs romans ont déjà été publiés dans la famille.', it: 'Che in famiglia sono già stati pubblicati diversi romanzi.', es: 'Que en la familia ya se han publicado varias novelas.', pt: 'Que a família já publicou vários romances.', uk: 'Що в родині вже видали кілька романів.' },
+        { de: 'Dass sie dem Urgroßvater Nachlässigkeit vorwirft.', en: 'That she accuses the great-grandfather of carelessness.', fr: 'Qu’elle reproche à l’arrière-grand-père sa négligence.', it: 'Che rimprovera al bisnonno la sua trascuratezza.', es: 'Que le reprocha al bisabuelo su descuido.', pt: 'Que ela acusa o bisavô de desleixo.', uk: 'Що вона дорікає прадідові недбалістю.' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wozu rät Oma, bevor eine Entscheidung fällt?', en: 'What does Grandma advise before any decision is made?', fr: 'Que conseille Mamie avant de prendre une décision ?', it: 'Che cosa consiglia la nonna prima di prendere una decisione?', es: '¿Qué aconseja la abuela antes de tomar una decisión?', pt: 'O que a vovó aconselha antes de qualquer decisão?', uk: 'Що радить бабуся, перш ніж ухвалювати рішення?' }, options: [
+        { de: 'Das Manuskript zunächst gemeinsam zu lesen', en: 'Reading the manuscript together first', fr: 'Lire d’abord le manuscrit ensemble', it: 'Leggere prima il manoscritto insieme', es: 'Leer primero el manuscrito juntos', pt: 'Ler o manuscrito juntos primeiro', uk: 'Спершу разом прочитати рукопис' },
+        { de: 'Es umgehend einem Verlag zu schicken', en: 'Sending it to a publisher straight away', fr: 'L’envoyer sans tarder à un éditeur', it: 'Mandarlo subito a un editore', es: 'Enviarlo de inmediato a una editorial', pt: 'Enviá-lo imediatamente a uma editora', uk: 'Негайно надіслати його до видавництва' },
+        { de: 'Es wieder auf dem Dachboden zu verstauen', en: 'Putting it back in the attic', fr: 'Le ranger de nouveau au grenier', it: 'Rimetterlo in soffitta', es: 'Volver a guardarlo en el desván', pt: 'Guardá-lo de novo no sótão', uk: 'Знову сховати його на горищі' }
       ] }
     ]
   },
@@ -636,13 +712,9 @@ export const stories: Story[] = [
         german('Keine Pizza im Zug zu essen')
       ] }
     ]
-  }
+  },
+  ...germanStories
 ];
-
-// The same text in every language slot, for stories limited to German learners (see `languages`).
-function german(text: string): Text {
-  return Object.fromEntries(playableLanguages.map(({ code }) => [code, text])) as Text;
-}
 
 /**
  * Stories at the learner's level come first; when lower vocabulary is included, easier stories

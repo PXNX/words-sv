@@ -94,6 +94,25 @@
   }
 </script>
 
+<!-- Eyes and mouth shared by the newer animals: they follow the mood, blink and lip-sync like the rest -->
+{#snippet animalEyes(left: number, right: number, y: number, r: number)}
+  {#if mood === 'happy'}
+    <path class="story-eyes" d="M{left - r} {y + 1}q{r} {-r * 1.4} {r * 2} 0M{right - r} {y + 1}q{r} {-r * 1.4} {r * 2} 0" fill="none" stroke="#172a45" stroke-width="2.4" stroke-linecap="round" />
+  {:else}
+    <g class="story-eyes"><circle cx={left} cy={y} r={mood === 'surprised' ? r * 1.3 : r} fill="#172a45" /><circle cx={right} cy={y} r={mood === 'surprised' ? r * 1.3 : r} fill="#172a45" /><circle cx={left + r * 0.35} cy={y - r * 0.4} r={r * 0.35} fill="#fffdf7" /><circle cx={right + r * 0.35} cy={y - r * 0.4} r={r * 0.35} fill="#fffdf7" /></g>
+  {/if}
+  {#if mood === 'sad'}<path d="M{left - r * 1.6} {y - r * 2.2}q{r * 1.6} 0 {r * 2.8} {-r * 1.1}M{right + r * 1.6} {y - r * 2.2}q{-r * 1.6} 0 {-r * 2.8} {-r * 1.1}" fill="none" stroke="#172a45" stroke-width="1.8" stroke-linecap="round" opacity=".7" />{/if}
+  {#if mood === 'surprised' || mood === 'curious'}<path d="M{left - r * 1.4} {y - r * 2.4}q{r * 1.4} {-r * 1.2} {r * 2.8} 0M{right - r * 1.4} {y - r * (mood === 'curious' ? 1.9 : 2.4)}q{r * 1.4} {-r * (mood === 'curious' ? 0.6 : 1.2)} {r * 2.8} 0" fill="none" stroke="#172a45" stroke-width="1.8" stroke-linecap="round" opacity=".7" />{/if}
+{/snippet}
+{#snippet animalMouth(x: number, y: number, w: number)}
+  {#if mood === 'surprised'}
+    <ellipse class="story-mouth-closed" cx={x} cy={y} rx={w * 0.5} ry={w * 0.65} fill="#5a1f28" />
+  {:else}
+    <path class="story-mouth-closed" d={mood === 'sad' ? `M${x - w} ${y + w * 0.4}q${w} ${-w} ${w * 2} 0` : `M${x - w} ${y}q${w} ${mood === 'happy' ? w : w * 0.45} ${w * 2} 0`} fill="none" stroke="#5a1f28" stroke-width="2" stroke-linecap="round" />
+  {/if}
+  <ellipse class="story-mouth-open" style:transform={mouthScale} cx={x} cy={y} rx={w * 0.9} ry={w * 0.7} fill="#5a1f28" />
+{/snippet}
+
 <!-- Eyes and mouth for the wild animals; `ink` colours the eyes and brows -->
 {#snippet wildEyes(left: number, right: number, y: number, r: number, ink: string)}
   {#if mood === 'happy'}
@@ -328,6 +347,69 @@
       <g class="story-mouth-open" style:transform={mouthScale}><ellipse cx="60" cy="84.5" rx="5.4" ry="5" fill="#5a1f28" /><ellipse cx="60" cy="87.4" rx="3.4" ry="2.1" fill="#e58fa0" /></g>
       <path d="M44 78 18 73M44 81l-26 2M76 78l26-5M76 81l26 2" stroke="rgba(255,250,240,.85)" stroke-width="1" stroke-linecap="round" />
     </g>
+  {:else if id === 'bird'}
+    <!-- Pieps the budgie: green body, yellow head, a little orange beak and a long tail -->
+    <path class="story-tail" d="M52 132l-6 16h10l4-14Z" fill="#4b78c2" />
+    <ellipse cx="60" cy="114" rx="28" ry="30" fill="#7cc35a" /><ellipse cx="60" cy="122" rx="17" ry="20" fill="#d9f0a3" />
+    <path d="M34 104q-8 24 8 34 6-18 2-36Z" fill="#5a9a40" /><path d="M86 104q8 24-8 34-6-18-2-36Z" fill="#5a9a40" />
+    <circle cx="60" cy="76" r="24" fill="#f2d34f" /><g fill="#172a45" opacity=".5"><circle cx="46" cy="86" r="2" /><circle cx="74" cy="86" r="2" /></g>
+    {@render animalEyes(51, 69, 72, 3.2)}
+    <path class="story-mouth-closed" d="M54 80h12l-6 9Z" fill="#e6a527" stroke="#a45e38" stroke-width="1" />
+    <g class="story-mouth-open" style:transform={mouthScale}><path d="M54 80h12l-6 6Z" fill="#e6a527" /><path d="M55 86h10l-5 7Z" fill="#a45e38" /></g>
+    <path d="M52 144v5M68 144v5M48 149h9M64 149h9" stroke="#e6a527" stroke-width="2.4" stroke-linecap="round" />
+  {:else if id === 'cow'}
+    <!-- Berta the cow: black and white patches, short horns, a pink muzzle and a cowbell -->
+    <path d="M10 150c0-34 22-50 50-50s50 16 50 50Z" fill="#fffdf7" stroke="rgba(23,42,69,.25)" stroke-width="1.5" /><path d="M20 150q4-26 24-34 10 14 2 34Z" fill="#26272b" />
+    <path d="M44 104h32" stroke="#a45e38" stroke-width="5" stroke-linecap="round" /><path d="M54 106h12l2 12H52Z" fill="#e6b52e" stroke="#a8862f" stroke-width="1.5" />
+    <g transform={mood === 'sad' ? 'rotate(18 28 52)' : undefined}><ellipse cx="22" cy="52" rx="14" ry="7" fill="#26272b" /></g>
+    <g transform={mood === 'sad' ? 'rotate(-18 98 52)' : undefined}><ellipse cx="98" cy="52" rx="14" ry="7" fill="#fffdf7" stroke="rgba(23,42,69,.3)" stroke-width="1.2" /></g>
+    <path d="M38 40q-6-14 2-20 0 10 6 16ZM82 40q6-14-2-20 0 10-6 16Z" fill="#f0e2c4" stroke="#a8862f" stroke-width="1" />
+    <ellipse cx="60" cy="68" rx="30" ry="32" fill="#fffdf7" stroke="rgba(23,42,69,.25)" stroke-width="1.5" /><path d="M38 46q14-10 22 2-4 14-20 12Z" fill="#26272b" />
+    {@render animalEyes(47, 73, 64, 3.6)}
+    <ellipse cx="60" cy="92" rx="22" ry="14" fill="#f2b3b8" /><g fill="#a45e5e"><ellipse cx="52" cy="89" rx="3" ry="2.2" /><ellipse cx="68" cy="89" rx="3" ry="2.2" /></g>
+    {@render animalMouth(60, 99, 6)}
+  {:else if id === 'horse'}
+    <!-- Blitz the horse: chestnut coat, dark mane and forelock, a white blaze down the nose -->
+    <path d="M12 150c0-32 22-48 48-48s48 16 48 48Z" fill="#9a5f35" /><path d="M76 104q14 10 20 46h-12q-4-30-14-42Z" fill="#3b2416" />
+    <g transform={mood === 'sad' ? 'rotate(-20 42 34)' : undefined}><path d="M40 38 34 14l16 14Z" fill="#9a5f35" stroke="#6d3f22" stroke-width="1.5" /></g>
+    <g transform={mood === 'sad' ? 'rotate(20 78 34)' : undefined}><path d="M80 38l6-24-16 14Z" fill="#9a5f35" stroke="#6d3f22" stroke-width="1.5" /></g>
+    <path d="M38 52q0-28 22-28t22 28l-4 48q-2 16-18 16t-18-16Z" fill="#9a5f35" />
+    <path d="M57 42h6l3 46h-12Z" fill="#fffdf7" opacity=".9" /><path d="M46 30q14-14 28 0-6 10-14 20-8-10-14-20Z" fill="#3b2416" />
+    {@render animalEyes(46, 74, 58, 3.4)}
+    <ellipse cx="60" cy="104" rx="17" ry="12" fill="#c98a5a" /><g fill="#5a3320"><ellipse cx="53" cy="101" rx="2.6" ry="3.4" /><ellipse cx="67" cy="101" rx="2.6" ry="3.4" /></g>
+    {@render animalMouth(60, 110, 5)}
+  {:else if id === 'giraffe'}
+    <!-- Gisela the giraffe: a long spotted neck reaching up to a small head with ossicones -->
+    <path d="M14 150c0-24 20-36 46-36s46 12 46 36Z" fill="#e8b04a" /><g fill="#a8642c"><path d="M28 132l10-6 8 6-4 10h-10Z" /><path d="M76 128l10 2 2 10-8 4-6-8Z" /></g>
+    <path d="M49 54h22l4 66H45Z" fill="#e8b04a" /><path d="M71 56q6 30 4 64" fill="none" stroke="#a8642c" stroke-width="4" stroke-dasharray="6 3" />
+    <g fill="#a8642c"><path d="M52 70l8-3 6 5-4 7-8-1Z" /><path d="M50 92l8-2 4 6-5 6-7-3Z" /><path d="M62 104l8-1 2 8-7 4-4-6Z" /></g>
+    <path d="M52 24v-10M68 24v-10" stroke="#a8642c" stroke-width="3" /><g fill="#6d3f22"><circle cx="52" cy="13" r="3.2" /><circle cx="68" cy="13" r="3.2" /></g>
+    <g transform={mood === 'sad' ? 'rotate(16 40 30) translate(0 3)' : undefined}><ellipse cx="38" cy="30" rx="9" ry="4.5" fill="#e8b04a" stroke="#a8642c" stroke-width="1" /></g>
+    <g transform={mood === 'sad' ? 'rotate(-16 80 30) translate(0 3)' : undefined}><ellipse cx="82" cy="30" rx="9" ry="4.5" fill="#e8b04a" stroke="#a8642c" stroke-width="1" /></g>
+    <ellipse cx="60" cy="38" rx="17" ry="16" fill="#e8b04a" /><ellipse cx="60" cy="54" rx="13" ry="10" fill="#f2cf86" />
+    {@render animalEyes(52, 68, 36, 2.8)}
+    <g fill="#8c5b3d"><circle cx="56" cy="52" r="1.4" /><circle cx="64" cy="52" r="1.4" /></g>
+    {@render animalMouth(60, 59, 4)}
+  {:else if id === 'elephant'}
+    <!-- Benno the elephant: huge flapping ears, small tusks and a trunk that curls up when happy -->
+    <path d="M8 150c0-34 24-52 52-52s52 18 52 52Z" fill="#9aa3ad" />
+    <g transform={mood === 'sad' ? 'rotate(10 30 66)' : undefined}><ellipse cx="26" cy="68" rx="24" ry="32" fill="#8a939e" /><ellipse cx="28" cy="68" rx="14" ry="22" fill="#d9b2b6" opacity=".6" /></g>
+    <g transform={mood === 'sad' ? 'rotate(-10 90 66)' : undefined}><ellipse cx="94" cy="68" rx="24" ry="32" fill="#8a939e" /><ellipse cx="92" cy="68" rx="14" ry="22" fill="#d9b2b6" opacity=".6" /></g>
+    <circle cx="60" cy="64" r="30" fill="#9aa3ad" />
+    {@render animalEyes(48, 72, 58, 3)}
+    <path d="M44 88q-6 8-2 14M76 88q6 8 2 14" fill="none" stroke="#fffdf7" stroke-width="4" stroke-linecap="round" />
+    {@render animalMouth(70, 93, 4)}
+    <path d={mood === 'happy' || mood === 'surprised' ? 'M52 76q-2 18-12 26-10 6-14-4 8 2 12-6 6-10 4-18Z' : 'M52 76q-2 30 4 50 4 10 12 6-6-16-4-56Z'} fill="#9aa3ad" stroke="#7a838e" stroke-width="1.5" />
+  {:else if id === 'snake'}
+    <!-- Zischi the snake: green coils with a diamond pattern, a raised head and a forked tongue -->
+    <path class="story-tail" d="M96 138q14-2 16-12" fill="none" stroke="#3f8a54" stroke-width="7" stroke-linecap="round" />
+    <ellipse cx="60" cy="136" rx="40" ry="12" fill="#55a66a" stroke="#2f6b40" stroke-width="1.5" /><ellipse cx="60" cy="120" rx="32" ry="11" fill="#5fb474" stroke="#2f6b40" stroke-width="1.5" /><ellipse cx="60" cy="105" rx="24" ry="10" fill="#55a66a" stroke="#2f6b40" stroke-width="1.5" />
+    <g fill="#e6b52e" opacity=".8">{#each [-24, -8, 8, 24] as x (x)}<path d="M{60 + x} 132l4 4-4 4-4-4Z" />{/each}{#each [-16, 0, 16] as x (x)}<path d="M{60 + x} 116l4 4-4 4-4-4Z" />{/each}</g>
+    <path d="M60 100q-16-16 0-32" fill="none" stroke="#55a66a" stroke-width="14" stroke-linecap="round" />
+    <ellipse cx="60" cy="60" rx="18" ry="13" fill="#5fb474" stroke="#2f6b40" stroke-width="1.5" />
+    {@render animalEyes(52, 68, 56, 2.8)}
+    <path class="story-mouth-closed" d="M50 66q10 5 20 0" fill="none" stroke="#2f6b40" stroke-width="1.8" stroke-linecap="round" />
+    <g class="story-mouth-open" style:transform={mouthScale}><ellipse cx="60" cy="68" rx="5" ry="3" fill="#5a1f28" /><path d="M60 70v10l-3 4M60 80l3 4" fill="none" stroke="#d64b45" stroke-width="1.6" stroke-linecap="round" /></g>
   {:else if id === 'deer'}
     <!-- the roe deer: a slender reddish-brown head with big ears, small antlers, a black nose and a white throat -->
     <path d="M28 150q4-42 32-48 28 6 32 48Z" fill="#a8642c" /><path d="M50 104q10 6 20 0l-2 16H52Z" fill="#fffdf7" opacity=".9" />

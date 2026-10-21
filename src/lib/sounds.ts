@@ -111,7 +111,7 @@ function purr(context: AudioContext, start: number) {
 // to vowel, then through a "mouth" lowpass that opens and closes. Every call varies a little, so
 // repeated meows and barks never sound copy-pasted.
 type Keyframes = [seconds: number, value: number][];
-type VoiceShape = { length: number; pitch: Keyframes; formants: [Keyframes, Keyframes, Keyframes]; mouth: Keyframes; loudness: Keyframes; breath: number; vibrato?: number; growl?: number };
+type VoiceShape = { length: number; pitch: Keyframes; formants: [Keyframes, Keyframes, Keyframes]; mouth: Keyframes; loudness: Keyframes; breath: number; vibrato?: number; vibratoRate?: number; growl?: number };
 
 function glide(param: AudioParam, start: number, frames: Keyframes, scale = 1) {
   param.setValueAtTime(frames[0][1] * scale, start + frames[0][0]);
@@ -135,7 +135,7 @@ function animalVoice(context: AudioContext, start: number, shape: VoiceShape) {
     glide(oscillator.frequency, start, shape.pitch, pitchScale);
     if (shape.vibrato) {
       const lfo = context.createOscillator();
-      lfo.frequency.value = 5.5 * vary(0.15);
+      lfo.frequency.value = (shape.vibratoRate ?? 5.5) * vary(0.15);
       const depth = context.createGain();
       depth.gain.value = shape.vibrato;
       lfo.connect(depth).connect(oscillator.frequency);
@@ -340,6 +340,140 @@ function bark(context: AudioContext, start: number) {
   });
 }
 
+// Filtered noise that swells and fades along `loudness`, with the filter following `cutoff`: the
+// basis for hissing, waves and engines.
+function noiseSwell(context: AudioContext, start: number, length: number, type: BiquadFilterType, cutoff: Keyframes, loudness: Keyframes, q = 0.7) {
+  const source = noise(context, length);
+  const shape = filter(context, type, cutoff[0][1], q);
+  glide(shape.frequency, start, cutoff);
+  const gain = context.createGain();
+  glide(gain.gain, start, loudness);
+  source.connect(shape).connect(gain).connect(context.destination);
+  source.start(start);
+}
+
+// A budgie's chirps: two or three quick whistled sweeps with a fluttering trill.
+function tweet(context: AudioContext, start: number) {
+  const chirps = Math.random() < 0.5 ? 2 : 3;
+  for (let index = 0; index < chirps; index += 1) {
+    const at = start + index * 0.16 * vary(0.2);
+    const top = 3800 * vary(0.1);
+    const whistle = context.createOscillator();
+    whistle.frequency.setValueAtTime(2600, at);
+    whistle.frequency.linearRampToValueAtTime(top, at + 0.05);
+    whistle.frequency.linearRampToValueAtTime(top * 0.78, at + 0.11);
+    const trill = context.createOscillator();
+    trill.frequency.value = 32;
+    const depth = context.createGain();
+    depth.gain.value = 260;
+    trill.connect(depth).connect(whistle.frequency);
+    const gain = context.createGain();
+    gain.gain.setValueAtTime(0.0001, at);
+    gain.gain.exponentialRampToValueAtTime(0.09, at + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, at + 0.12);
+    whistle.connect(gain).connect(context.destination);
+    whistle.start(at);
+    trill.start(at);
+    whistle.stop(at + 0.13);
+    trill.stop(at + 0.13);
+  }
+}
+
+// A long, low "mmm-ooo" that opens from a hum and closes again.
+function moo(context: AudioContext, start: number) {
+  const length = 1.2 * vary(0.1);
+  const at = (share: number) => share * length;
+  animalVoice(context, start, {
+    length,
+    pitch: [[0, 118], [at(0.25), 140], [at(0.75), 126], [at(1), 92]],
+    formants: [[[0, 260], [at(0.25), 520], [at(1), 360]], [[0, 900], [at(0.25), 980], [at(1), 700]], [[0, 2300], [at(1), 2200]]],
+    mouth: [[0, 420], [at(0.25), 1900], [at(0.8), 1300], [at(1), 500]],
+    loudness: [[0, 0.0001], [at(0.15), 0.42], [at(0.75), 0.36], [at(1), 0.0001]],
+    breath: 0.08,
+    vibrato: 3
+  });
+}
+
+// A whinny: a high, fast-wobbling call that slides down, ending in a snort.
+function neigh(context: AudioContext, start: number) {
+  const length = 1 * vary(0.1);
+  const at = (share: number) => share * length;
+  animalVoice(context, start, {
+    length,
+    pitch: [[0, 620], [at(0.12), 1100], [at(0.5), 920], [at(0.8), 700], [at(1), 420]],
+    formants: [[[0, 520], [at(1), 620]], [[0, 2000], [at(1), 1550]], [[0, 3000], [at(1), 2700]]],
+    mouth: [[0, 2600], [at(1), 1400]],
+    loudness: [[0, 0.0001], [at(0.06), 0.28], [at(0.6), 0.24], [at(1), 0.0001]],
+    breath: 0.22,
+    vibrato: 70,
+    vibratoRate: 12
+  });
+  const snort = start + length + 0.06;
+  noiseSwell(context, snort, 0.2, 'bandpass', [[0, 900], [0.18, 600]], [[0, 0.0001], [0.02, 0.22], [0.18, 0.0001]], 1.2);
+}
+
+// An elephant's trumpet: a bright, brassy, rough blast that rises and holds.
+function trumpet(context: AudioContext, start: number) {
+  const length = 0.9 * vary(0.1);
+  const at = (share: number) => share * length;
+  animalVoice(context, start, {
+    length,
+    pitch: [[0, 340], [at(0.15), 520], [at(0.75), 570], [at(1), 410]],
+    formants: [[[0, 700], [at(1), 820]], [[0, 1400], [at(1), 1650]], [[0, 2800], [at(1), 3000]]],
+    mouth: [[0, 2800], [at(0.3), 5200], [at(1), 2400]],
+    loudness: [[0, 0.0001], [at(0.08), 0.32], [at(0.75), 0.28], [at(1), 0.0001]],
+    breath: 0.25,
+    growl: 0.5,
+    vibrato: 14
+  });
+}
+
+// A snake's "ssss": bright noise swelling and fading.
+function hiss(context: AudioContext, start: number) {
+  const length = 1.1 * vary(0.1);
+  noiseSwell(context, start, length, 'highpass', [[0, 3800], [length, 4600]], [[0, 0.0001], [length * 0.25, 0.1], [length * 0.75, 0.09], [length, 0.0001]]);
+}
+
+// A giraffe's soft, low night-time hum with the mouth closed.
+function hum(context: AudioContext, start: number) {
+  const length = 1.1 * vary(0.1);
+  animalVoice(context, start, {
+    length,
+    pitch: [[0, 92], [length * 0.5, 100], [length, 88]],
+    formants: [[[0, 240], [length, 260]], [[0, 800], [length, 760]], [[0, 2200], [length, 2200]]],
+    mouth: [[0, 420], [length, 380]],
+    loudness: [[0, 0.0001], [length * 0.3, 0.3], [length * 0.7, 0.28], [length, 0.0001]],
+    breath: 0.02,
+    vibrato: 2
+  });
+}
+
+// A jet taking off overhead: a swelling roar that brightens as it passes, a deep rumble beneath and
+// a rising turbine whine. Loud enough to drown out speech, never painful.
+function airplane(context: AudioContext, start: number) {
+  const length = 4.5;
+  noiseSwell(context, start, length, 'lowpass', [[0, 320], [2, 1800], [length, 600]], [[0, 0.0001], [2, 0.34], [3.4, 0.24], [length, 0.0001]]);
+  noiseSwell(context, start, length, 'lowpass', [[0, 120], [length, 120]], [[0, 0.0001], [1.8, 0.3], [3.6, 0.2], [length, 0.0001]], 1);
+  const whine = context.createOscillator();
+  whine.type = 'sawtooth';
+  whine.frequency.setValueAtTime(1700, start);
+  whine.frequency.linearRampToValueAtTime(3100, start + 2.4);
+  whine.frequency.linearRampToValueAtTime(2500, start + length);
+  const whineGain = context.createGain();
+  glide(whineGain.gain, start, [[0, 0.0001], [2, 0.018], [length, 0.0001]]);
+  whine.connect(filter(context, 'bandpass', 2600, 3)).connect(whineGain).connect(context.destination);
+  whine.start(start);
+  whine.stop(start + length);
+}
+
+// Gentle sea waves: two swells of soft noise rolling in and washing out.
+function waves(context: AudioContext, start: number) {
+  [0, 1.5 * vary(0.1)].forEach((offset) => {
+    const at = start + offset;
+    noiseSwell(context, at, 1.7, 'lowpass', [[0, 450], [0.8, 1300], [1.7, 380]], [[0, 0.0001], [0.8, 0.17], [1.7, 0.0001]]);
+  });
+}
+
 // The station gong before an announcement: three soft bell tones stepping down.
 function gong(context: AudioContext, start: number) {
   [659.25, 523.25, 392].forEach((frequency, index) => bell(context, start + index * 0.42, frequency));
@@ -379,12 +513,20 @@ const effects: Record<SoundEffect, (context: AudioContext, start: number) => voi
   knock,
   rain,
   bark,
+  tweet,
+  moo,
+  neigh,
+  trumpet,
+  hiss,
+  hum,
+  airplane,
+  waves,
   gong,
   fuse
 };
 
 // Roughly how long each effect stands out, so story speech can pause while one plays.
-export const soundEffectSeconds: Record<SoundEffect, number> = { purr: 2.2, meow: 0.8, glass: 0.8, brakes: 1.3, doorbell: 1.4, knock: 0.6, rain: 1.2, bark: 0.6, gong: 1.7, fuse: 1.2 };
+export const soundEffectSeconds: Record<SoundEffect, number> = { purr: 2.2, meow: 0.8, glass: 0.8, brakes: 1.3, doorbell: 1.4, knock: 0.6, rain: 1.2, bark: 0.6, tweet: 0.5, moo: 1.3, neigh: 1.3, trumpet: 1, hiss: 1.1, hum: 1.1, airplane: 4.5, waves: 3.2, gong: 1.7, fuse: 1.2 };
 
 export function playSoundEffect(enabled: boolean, effect: SoundEffect) {
   if (!enabled) return;
