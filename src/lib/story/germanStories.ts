@@ -524,5 +524,105 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Wann ist die Beerdigung?'), options: [german('Am Freitag um elf Uhr'), german('Am Montag um zehn Uhr'), german('Am Sonntag um drei Uhr')] },
       { kind: 'question', prompt: german('Worum bittet die Familie statt Blumen?'), options: [german('Um Spenden für den Pflegedienst'), german('Um Briefe'), german('Um Kerzen')] }
     ]
+  },
+  {
+    id: 'b1-beer',
+    level: 'b1',
+    scene: 'beergarden',
+    cast: ['hans', 'albert', 'leo'],
+    languages: ['de'],
+    weathers: ['sunny', 'cloudy'],
+    title: german('Welches Bier ist das beste?'),
+    beats: [
+      { kind: 'narration', text: german('Ein Sommerabend im Biergarten. Leo sitzt mit Hans aus Bayern und Albert aus Berlin am Tisch. Schon nach fünf Minuten streiten die beiden über Bier.') },
+      { kind: 'line', speaker: 'hans', mood: 'happy', text: german('A Helles, des is des einzig Wahre! Mild, a bissl malzig, goldgelb. Do kannst a ganze Maß trinken, ohne dass dir fad wird.') },
+      { kind: 'line', speaker: 'albert', text: german('Ein ganzer Liter? Unzivilisiert. Ein ordentliches Pils ist herber, weil mehr Hopfen drin ist. Das erfrischt und regt den Appetit an.') },
+      { kind: 'line', speaker: 'leo', mood: 'curious', text: german('Und was ist mit Weißbier? Das trinkt man doch auch in Bayern, oder?') },
+      { kind: 'line', speaker: 'hans', text: german('Freilich! Weißbier wird mit Weizenmalz gebraut. Durch die besondere Hefe schmeckt’s a bissl nach Banane und Nelke. Am besten zur Weißwurst, und zwar vor zwölf Uhr mittags.') },
+      { kind: 'line', speaker: 'albert', text: german('In Berlin haben wir die Berliner Weiße: leicht, sauer und wenig Alkohol. Man trinkt sie mit Schuss – rot mit Himbeersirup oder grün mit Waldmeister.') },
+      { kind: 'line', speaker: 'hans', mood: 'laughing', text: german('A grünes Bier mit Strohhalm! Haha, des is ka Bier, des is a Limo!') },
+      { kind: 'line', speaker: 'leo', text: german('In Köln trinkt man Kölsch aus kleinen Gläsern mit nur 0,2 Litern, und in Düsseldorf dunkles Altbier. Die beiden Städte streiten darüber genauso wie ihr.') },
+      { kind: 'line', speaker: 'albert', text: german('Immerhin halten sich alle an das Reinheitsgebot von 1516: nur Wasser, Malz und Hopfen – die Hefe kam erst später dazu. Deutschland hat übrigens rund 1.500 Brauereien.') },
+      { kind: 'line', speaker: 'leo', mood: 'curious', text: german('{name}, du bist unser Schiedsrichter. Welches Bier würdest du an einem heißen Tag wählen und warum?') },
+      { kind: 'reply', to: 'leo', options: [
+        german('Ich würde ein Pils nehmen, weil es herb und erfrischend ist – oder ein alkoholfreies Weißbier.'),
+        german('Ich würde ein Bier aus Wasser, Zucker und Ketchup brauen.'),
+        german('Ich trinke Bier nur aus Schuhen.')
+      ] },
+      { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Passt scho. Hauptsach, mir trinken zamm. Prost!') },
+      { kind: 'question', prompt: german('Warum schmeckt Pils laut Albert herber?'), options: [german('Weil mehr Hopfen drin ist'), german('Weil es länger gelagert wird'), german('Weil es aus Weizen gebraut wird')] },
+      { kind: 'question', prompt: german('Wonach schmeckt Weißbier ein bisschen?'), options: [german('Nach Banane und Nelke'), german('Nach Himbeere und Waldmeister'), german('Nach Kaffee und Schokolade')] },
+      { kind: 'question', prompt: german('Welche Farbe hat die Berliner Weiße mit Waldmeister?'), options: [german('Grün'), german('Rot'), german('Goldgelb')] },
+      { kind: 'question', prompt: german('Wie viel passt in ein Kölschglas?'), options: [german('0,2 Liter'), german('Ein Liter'), german('0,5 Liter')] },
+      { kind: 'question', prompt: german('Aus welchem Jahr ist das Reinheitsgebot?'), options: [german('1516'), german('1871'), german('1989')] },
+      { kind: 'question', prompt: german('Wie viele Brauereien gibt es ungefähr in Deutschland?'), options: [german('Rund 1.500'), german('Rund 150'), german('Rund 15.000')] }
+    ]
+  },
+  {
+    id: 'b1-pets',
+    level: 'b1',
+    scene: 'park',
+    cast: ['kumar', 'fritz', 'bello'],
+    languages: ['de'],
+    weathers: ['sunny', 'cloudy'],
+    title: german('Welches Haustier passt zu mir?'),
+    beats: [
+      { kind: 'narration', text: german('Kumar möchte ein eigenes Haustier, denn Lilith gehört ja Mia und Tom. Im Park trifft er Bauer Fritz, der mit dem Hund Bello spazieren geht.') },
+      { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Herr Fritz, Sie kennen sich doch mit Tieren aus! Ich will einen Hund. So einen wie Bello!') },
+      { kind: 'line', speaker: 'bello', sfx: 'bark', mood: 'happy', text: german('Wuff!') },
+      { kind: 'line', speaker: 'fritz', text: german('Langsam, junger Mann. Ein Hund ist wunderbar, aber er braucht viel Zeit. Zwei- bis dreimal am Tag Gassi gehen, bei jedem Wetter, auch um sechs Uhr morgens im Januar.') },
+      { kind: 'line', speaker: 'kumar', mood: 'worried', text: german('Um sechs Uhr? Oh nein, da schlafe ich noch. Und ich arbeite oft zehn Stunden am Tag.') },
+      { kind: 'line', speaker: 'fritz', text: german('Siehst du. Dann wäre eine Katze vielleicht besser. Katzen sind unabhängiger und können ein paar Stunden allein bleiben. Nicht ohne Grund sind sie das beliebteste Haustier in Deutschland: Es gibt rund fünfzehn Millionen Katzen und etwa zehn Millionen Hunde.') },
+      { kind: 'line', speaker: 'kumar', mood: 'curious', text: german('Und Kaninchen? Die sind klein und süß.') },
+      { kind: 'line', speaker: 'fritz', text: german('Viele denken, Kaninchen sind einfach. Aber sie brauchen viel Platz und mindestens einen Partner, denn allein werden sie krank vor Einsamkeit. Ein Kaninchen allein im kleinen Käfig ist Tierquälerei.') },
+      { kind: 'line', speaker: 'kumar', text: german('Und Fische? Die machen keinen Lärm und keinen Dreck.') },
+      { kind: 'line', speaker: 'fritz', mood: 'laughing', text: german('Haha, keinen Dreck! Ein Aquarium muss jede Woche geputzt werden. Und bei dir zu Hause stapelt sich ja schon das Geschirr, hab ich gehört.') },
+      { kind: 'line', speaker: 'fritz', mood: 'curious', text: german('{name}, was meinst du: Welches Tier passt zu jemandem, der viel arbeitet und in einer kleinen Wohnung lebt?') },
+      { kind: 'reply', to: 'fritz', options: [
+        german('Vielleicht zwei Katzen, weil sie gut allein bleiben können und sich gegenseitig Gesellschaft leisten.'),
+        german('Ein Pferd, weil es gut in die Badewanne passt.'),
+        german('Gar keins, weil Tiere im Winter nicht schlafen.')
+      ] },
+      { kind: 'line', speaker: 'fritz', text: german('Genau. Und frag vorher deinen Vermieter und denk an die Kosten: Futter, Tierarzt, Versicherung. Ein Tier ist kein Spielzeug, sondern ein Familienmitglied – oft für fünfzehn Jahre.') },
+      { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Zwei Katzen! Aber zuerst spüle ich mein Geschirr. Versprochen.') },
+      { kind: 'question', prompt: german('Warum passt ein Hund nicht gut zu Kumar?'), options: [german('Weil er viel arbeitet und morgens lange schläft'), german('Weil er Angst vor Hunden hat'), german('Weil Hunde in seiner Stadt verboten sind')] },
+      { kind: 'question', prompt: german('Welches Haustier ist in Deutschland am beliebtesten?'), options: [german('Die Katze'), german('Der Hund'), german('Das Kaninchen')] },
+      { kind: 'question', prompt: german('Wie viele Hunde gibt es ungefähr in Deutschland?'), options: [german('Etwa zehn Millionen'), german('Etwa eine Million'), german('Etwa fünfzig Millionen')] },
+      { kind: 'question', prompt: german('Was brauchen Kaninchen unbedingt?'), options: [german('Viel Platz und mindestens einen Partner'), german('Einen warmen Käfig für sich allein'), german('Jeden Tag einen langen Spaziergang')] },
+      { kind: 'question', prompt: german('Was muss man bei einem Aquarium jede Woche machen?'), options: [german('Es putzen'), german('Die Fische baden'), german('Das Wasser wärmen')] },
+      { kind: 'question', prompt: german('Wen soll Kumar vorher fragen?'), options: [german('Seinen Vermieter'), german('Seine Eltern'), german('Seinen Chef')] }
+    ]
+  },
+  {
+    id: 'b1-music',
+    level: 'b1',
+    scene: 'home',
+    cast: ['jana', 'leo', 'oma'],
+    languages: ['de'],
+    title: german('Dubstep, Metal oder Schlager?'),
+    beats: [
+      { kind: 'narration', text: german('Sonntagnachmittag bei Oma. Leo und Jana sind zum Kaffee da. Oma will Musik auflegen, und schon beginnt eine Diskussion.') },
+      { kind: 'line', speaker: 'oma', mood: 'happy', text: german('Ich mache uns ein bisschen Schlager an. Da kann man mitsingen, und die Texte versteht man sofort. Liebe, Sonne, Sommer – das macht gute Laune!') },
+      { kind: 'line', speaker: 'leo', mood: 'laughing', text: german('Haha, Oma, Schlager ist doch immer dasselbe: vier Akkorde und ein Herz aus Gold. Ich höre lieber Metal. Schnelle Gitarren, Doublebass am Schlagzeug, ehrliche Wut.') },
+      { kind: 'line', speaker: 'oma', mood: 'surprised', text: german('Ach, Junge, das ist doch nur Lärm! Da schreit einer, als hätte er Zahnschmerzen.') },
+      { kind: 'line', speaker: 'leo', text: german('Das klingt nur aggressiv. Eine Studie aus Australien hat gezeigt, dass Metal-Fans nach dem Hören ruhiger und entspannter sind. Die Musik hilft, Stress und Ärger zu verarbeiten. Und Metal-Fans sind sehr friedlich – in Wacken feiern jedes Jahr ungefähr 85.000 Leute zusammen.') },
+      { kind: 'line', speaker: 'jana', text: german('Ihr seid beide altmodisch. Dubstep ist die Zukunft! 140 Schläge pro Minute, und dann kommt der Drop – dieser tiefe, wackelnde Bass. Den spürt man im ganzen Körper.') },
+      { kind: 'line', speaker: 'oma', mood: 'curious', text: german('Ein Bass, der wackelt? Kind, und wo ist da die Melodie?') },
+      { kind: 'line', speaker: 'jana', text: german('Die Melodie ist nicht das Wichtigste. Beim Dubstep geht es um den Klang selbst. Ich programmiere die Sounds übrigens am Computer – das ist ein bisschen wie Code schreiben.') },
+      { kind: 'line', speaker: 'leo', mood: 'curious', text: german('{name}, sag du mal: Welche Musik ist die beste?') },
+      { kind: 'reply', to: 'leo', options: [
+        german('Ich finde, jede Musik hat ihre Berechtigung. Es kommt auf die Stimmung und den Moment an.'),
+        german('Die beste Musik ist eine Waschmaschine im Schleudergang.'),
+        german('Ich höre Musik nur mit den Füßen.')
+      ] },
+      { kind: 'line', speaker: 'oma', mood: 'happy', text: german('Sehr diplomatisch! Also gut: jeder ein Lied. Erst mein Schlager, dann Leos Metal und zum Schluss Janas Wackelbass.') },
+      { kind: 'narration', text: german('Eine Stunde später tanzt Oma zu Janas Dubstep, Leo summt den Schlager mit, und Jana gibt zu, dass das Gitarrensolo gar nicht so schlecht war.') },
+      { kind: 'question', prompt: german('Warum mag Oma Schlager?'), options: [german('Weil man mitsingen kann und die Texte sofort versteht'), german('Weil die Musik besonders laut ist'), german('Weil Schlager sehr kompliziert ist')] },
+      { kind: 'question', prompt: german('Was hat eine Studie über Metal-Fans gezeigt?'), options: [german('Dass sie nach dem Hören ruhiger sind'), german('Dass sie öfter streiten'), german('Dass sie schlechter schlafen')] },
+      { kind: 'question', prompt: german('Wie viele Leute feiern ungefähr jedes Jahr in Wacken?'), options: [german('Etwa 85.000'), german('Etwa 8.500'), german('Etwa 850.000')] },
+      { kind: 'question', prompt: german('Wie schnell ist Dubstep laut Jana?'), options: [german('140 Schläge pro Minute'), german('40 Schläge pro Minute'), german('400 Schläge pro Minute')] },
+      { kind: 'question', prompt: german('Womit vergleicht Jana das Produzieren von Dubstep?'), options: [german('Mit Code schreiben'), german('Mit Kochen'), german('Mit Autofahren')] },
+      { kind: 'question', prompt: german('Wie endet der Nachmittag?'), options: [german('Oma tanzt zu Dubstep, und alle sind zufrieden.'), german('Alle gehen wütend nach Hause.'), german('Oma verbietet jede Musik.')] }
+    ]
   }
 ];
