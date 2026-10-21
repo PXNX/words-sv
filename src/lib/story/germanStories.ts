@@ -1267,5 +1267,38 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Wie lange dauert die Hafenrundfahrt?'), options: [german('Eine Stunde'), german('Zehn Minuten'), german('Einen ganzen Tag')] },
       { kind: 'question', prompt: german('Worüber redet Simon so gern?'), options: [german('Über Fenster und Gebäude'), german('Über Fußball'), german('Über Fisch')] }
     ]
+  },
+  {
+    id: 'a2-munich',
+    level: 'a2',
+    scene: 'munich',
+    cast: ['hans', 'kim'],
+    languages: ['de'],
+    title: german('München mit Hans'),
+    beats: [
+      { kind: 'narration', text: german('Kim ist für ein Wochenende in München. Hans zeigt ihr und dir seine Stadt. Um Viertel vor elf steht ihr zu dritt auf dem Marienplatz.') },
+      { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Servus, {name}! Gleich is elf, dann fangt des Glockenspiel o. Schaut’s nach oben, zum Rathausturm!') },
+      { kind: 'narration', text: german('Pünktlich um elf Uhr beginnt die Musik. Im Turm tanzen bunte Figuren – rote, blaue und goldene. Das Spiel dauert ungefähr fünfzehn Minuten.') },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Wie schön! Und was sind die zwei Türme mit den grünen Kuppeln dort hinten?') },
+      { kind: 'line', speaker: 'hans', text: german('Des is die Frauenkirche. Die Türm san neunundneunzig Meter hoch. In der Innenstadt soll koa Haus höher sein als die Frauenkirch.') },
+      { kind: 'narration', text: german('Dann geht ihr zum Viktualienmarkt. Dort gibt es Obst, Käse, Blumen und an jeder Ecke Weißwürste.') },
+      { kind: 'line', speaker: 'hans', mood: 'curious', text: german('Weißwürst gibt’s nur bis zwölf Uhr mittags, des is a Regel! {name}, magst a Weißwurst mit süßem Senf und a Brezn?') },
+      { kind: 'reply', to: 'hans', options: [
+        german('Ja, gern! Aber schnell, es ist schon Viertel vor zwölf.'),
+        german('Nein, ich esse Weißwürste nur um Mitternacht.'),
+        german('Ich hätte gern eine Weißwurst mit Schokolade.')
+      ] },
+      { kind: 'narration', text: german('Am Nachmittag geht ihr in den Englischen Garten. Am Eisbach stehen Surfer in schwarzen Anzügen und reiten auf einer Welle, mitten in der Stadt.') },
+      { kind: 'line', speaker: 'kim', mood: 'surprised', text: german('Surfen in München? Das ist ja verrückt!') },
+      { kind: 'line', speaker: 'hans', mood: 'laughing', text: german('Haha, freilich! Und danach gemma in an Biergarten. Mit oana Maß – des is a ganzer Liter Bier.') },
+      { kind: 'line', speaker: 'kim', mood: 'laughing', text: german('Ein ganzer Liter? Für mich bitte eine kleine Apfelschorle, Hans.') },
+      { kind: 'question', prompt: german('Um wie viel Uhr beginnt das Glockenspiel?'), options: [german('Um elf Uhr'), german('Um neun Uhr'), german('Um drei Uhr')] },
+      { kind: 'question', prompt: german('Wie lange dauert das Glockenspiel?'), options: [german('Ungefähr fünfzehn Minuten'), german('Eine Stunde'), german('Zwei Minuten')] },
+      { kind: 'question', prompt: german('Welche Farbe haben die Kuppeln der Frauenkirche?'), options: [german('Grün'), german('Rot'), german('Gelb')] },
+      { kind: 'question', prompt: german('Wie hoch sind die Türme der Frauenkirche?'), options: [german('Neunundneunzig Meter'), german('Neunzehn Meter'), german('Neunhundert Meter')] },
+      { kind: 'question', prompt: german('Bis wann isst man Weißwürste?'), options: [german('Bis zwölf Uhr mittags'), german('Bis Mitternacht'), german('Nur am Abend')] },
+      { kind: 'question', prompt: german('Was machen die Leute am Eisbach?'), options: [german('Sie surfen.'), german('Sie fahren Ski.'), german('Sie spielen Fußball.')] },
+      { kind: 'question', prompt: german('Wie viel Bier ist eine Maß?'), options: [german('Ein Liter'), german('Ein halber Liter'), german('Zwei Liter')] }
+    ]
   }
 ];
