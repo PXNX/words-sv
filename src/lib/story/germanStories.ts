@@ -859,5 +859,60 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was fordert die Datenschutz-Grundverordnung laut Jana unter anderem?'), options: [german('Eine Rechtsgrundlage und Datensparsamkeit'), german('Dass alle Daten öffentlich sind'), german('Dass Apps nur offline funktionieren dürfen')] },
       { kind: 'question', prompt: german('Wie soll die erste Version getestet werden?'), options: [german('In acht Wochen mit fünfzig Nutzern'), german('In fünfzig Wochen mit acht Nutzern'), german('Sofort mit allen Kunden')] }
     ]
+  },
+  {
+    id: 'b2-police',
+    level: 'b2',
+    scene: 'office',
+    cast: ['sabine', 'tom'],
+    languages: ['de'],
+    title: german('Auf dem Polizeirevier'),
+    beats: [
+      { kind: 'narration', text: german('Heute Morgen um 7:40 Uhr ist an der Kreuzung Goethestraße und Bahnhofstraße etwas passiert, das man kaum beschreiben kann: {name} fuhr mit dem Fahrrad zur Arbeit, als ein weißer Lieferwagen ohne zu blinken rechts abbog. {name} machte eine Vollbremsung. Ein E-Roller-Fahrer, der dicht dahinter fuhr, wich aus, streifte ein parkendes rotes Auto und riss dabei den Außenspiegel ab. Berührt hat {name} niemanden.') },
+      { kind: 'narration', text: german('Zwei Stunden später sitzt {name} auf dem Polizeirevier. Polizeiobermeisterin Sabine nimmt die Aussage auf.') },
+      { kind: 'line', speaker: 'sabine', text: german('Guten Tag. Sie sind hier, weil Sie an einem Unfall beteiligt waren. Noch wirft Ihnen niemand etwas vor. Erzählen Sie mir bitte in Ruhe, was an der Kreuzung passiert ist.') },
+      { kind: 'reply', to: 'sabine', options: [
+        german('Also … ein Lieferwagen ist abgebogen, ohne zu blinken, und ich musste sehr stark bremsen. Hinter mir ist dann ein Roller gegen ein Auto gefahren.'),
+        german('Ich bin mit dem Auto gegen einen Lieferwagen gefahren.'),
+        german('Ich war heute Morgen gar nicht an der Kreuzung.')
+      ] },
+      { kind: 'line', speaker: 'sabine', mood: 'curious', text: german('Hm. Und welche Farbe hatte Ihre Ampel, als Sie in die Kreuzung gefahren sind?') },
+      { kind: 'reply', to: 'sabine', options: [
+        german('Sie war grün.'),
+        german('Sie war rot, aber nur ein bisschen.'),
+        german('Daran erinnere ich mich nicht, ich habe auf mein Handy geschaut.')
+      ] },
+      { kind: 'line', speaker: 'sabine', mood: 'neutral', text: german('Seltsam. Der Fahrer des E-Rollers sagt etwas ganz anderes. Er behauptet, Sie seien bei Rot gefahren und hätten dann ohne Grund mitten auf der Kreuzung gebremst.') },
+      { kind: 'narration', lights: 'lamp', sfx: 'hum', faces: { sabine: 'angry' }, text: german('Sabine steht auf und lässt die Jalousien herunter. Das Deckenlicht geht aus, nur die Lampe über dem Tisch brennt noch. Sie setzt sich wieder, legt einen dicken Ordner auf den Tisch und schaut {name} lange schweigend an.') },
+      { kind: 'line', speaker: 'sabine', mood: 'angry', text: german('Ich frage Sie jetzt noch einmal, und ich rate Ihnen, genau zu überlegen. Eine falsche Aussage ist kein Kavaliersdelikt. Um wie viel Uhr waren Sie an der Kreuzung?') },
+      { kind: 'reply', to: 'sabine', options: [
+        german('Um 7:40 Uhr, wie ich gesagt habe. Ich war auf dem Weg zur Arbeit.'),
+        german('Ungefähr um zehn Uhr abends, glaube ich.'),
+        german('Das sage ich nur, wenn Sie das Licht wieder anmachen.')
+      ] },
+      { kind: 'line', speaker: 'sabine', mood: 'angry', text: german('Der Mann auf dem Roller hat ein gebrochenes Handgelenk. Der Spiegel an dem roten Auto kostet 600 Euro. Wenn Sie bei Rot gefahren sind, ist das Ihr Problem. Also: Warum haben Sie gebremst?') },
+      { kind: 'reply', to: 'sabine', options: [
+        german('Weil der Lieferwagen plötzlich vor mir abgebogen ist. Sonst wäre ich direkt in ihn hineingefahren.'),
+        german('Einfach so. Ich bremse gern auf Kreuzungen.'),
+        german('Weil meine Ampel rot war, wie der Rollerfahrer sagt.')
+      ] },
+      { kind: 'line', speaker: 'sabine', mood: 'angry', text: german('Das sagen Sie. Aber einen Zeugen haben Sie nicht, oder? Wer soll Ihnen das glauben?') },
+      { kind: 'narration', sfx: 'knock', enters: ['tom'], text: german('In diesem Moment klopft es. Ein Kollege öffnet die Tür, und Tom kommt herein, noch in seiner Bäckerschürze, mit einem Handy in der Hand.') },
+      { kind: 'line', speaker: 'tom', text: german('Entschuldigung, ich bin Tom. Ich arbeite in der Bäckerei direkt an der Kreuzung und habe alles gesehen. Darf ich meine Aussage machen?') },
+      { kind: 'line', speaker: 'sabine', mood: 'surprised', text: german('Sie waren Zeuge? Bitte, setzen Sie sich.') },
+      { kind: 'line', speaker: 'tom', text: german('Ich stand um 7:40 Uhr hinter der Theke am Fenster. Die Ampel für die Bahnhofstraße war grün, für Fahrräder und für den Lieferwagen. Der Lieferwagen ist rechts abgebogen, ohne zu blinken und ohne in den Spiegel zu schauen, und hat dem Fahrrad die Vorfahrt genommen. Wer geradeaus fährt, hat dort Vorrang.') },
+      { kind: 'line', speaker: 'tom', text: german('Der E-Roller ist viel zu dicht hinter dem Fahrrad gefahren, mit höchstens einem Meter Abstand. Als vorne gebremst wurde, konnte er nicht mehr anhalten, ist nach links ausgewichen und hat das rote Auto gestreift. Den Lieferwagen hat er gar nicht gesehen, weil er auf sein Handy geschaut hat.') },
+      { kind: 'line', speaker: 'tom', mood: 'happy', text: german('Und unsere Bäckerei hat eine Kamera über dem Eingang. Mein Chef hat Ihnen das Video schon per E-Mail geschickt.') },
+      { kind: 'narration', lights: 'on', faces: { sabine: 'neutral' }, text: german('Sabine schaut auf ihren Bildschirm, dann zieht sie die Jalousien wieder hoch. Das Licht geht an, und plötzlich wirkt der Raum gar nicht mehr so bedrohlich.') },
+      { kind: 'line', speaker: 'sabine', text: german('Das Video bestätigt Ihre Aussage. Entschuldigen Sie bitte meinen Ton vorhin. Wenn zwei Aussagen sich widersprechen, muss ich prüfen, ob jemand lügt – und manchmal geht das nur mit etwas Druck. Sie können gehen. Gegen den Fahrer des Lieferwagens wird ermittelt.') },
+      { kind: 'line', speaker: 'tom', mood: 'happy', text: german('Komm, {name}. Nach so einem Morgen brauchst du erst einmal einen Kaffee und eine Brezel. Geht aufs Haus.') },
+      { kind: 'question', prompt: german('Warum musste {name} an der Kreuzung so stark bremsen?'), options: [german('Weil ein Lieferwagen ohne zu blinken rechts abgebogen ist'), german('Weil die Ampel plötzlich rot wurde'), german('Weil ein Hund auf die Straße gelaufen ist')] },
+      { kind: 'question', prompt: german('Was behauptet der Fahrer des E-Rollers?'), options: [german('Dass {name} bei Rot gefahren ist und ohne Grund gebremst hat'), german('Dass der Lieferwagen zu schnell war'), german('Dass er selbst bei Rot gefahren ist')] },
+      { kind: 'question', prompt: german('Was verändert sich, als Sabine ernster wird?'), options: [german('Sie lässt die Jalousien herunter, und nur noch die Lampe über dem Tisch brennt.'), german('Sie ruft ihren Chef an.'), german('Sie öffnet das Fenster.')] },
+      { kind: 'question', prompt: german('Warum konnte der E-Roller nicht rechtzeitig anhalten?'), options: [german('Weil er zu dicht hinter dem Fahrrad fuhr und auf sein Handy schaute'), german('Weil seine Bremsen kaputt waren'), german('Weil die Straße nass war')] },
+      { kind: 'question', prompt: german('Wie viel kostet der Außenspiegel des roten Autos?'), options: [german('600 Euro'), german('60 Euro'), german('6.000 Euro')] },
+      { kind: 'question', prompt: german('Was beweist schließlich, dass {name} die Wahrheit sagt?'), options: [german('Das Video der Kamera über dem Eingang der Bäckerei'), german('Ein Foto des Rollerfahrers'), german('Die Aussage des Lieferwagenfahrers')] },
+      { kind: 'question', prompt: german('Wie erklärt Sabine ihr strenges Verhalten?'), options: [german('Bei widersprüchlichen Aussagen muss sie prüfen, ob jemand lügt.'), german('Sie hatte einen schlechten Tag.'), german('Sie kennt {name} schon von früher.')] }
+    ]
   }
 ];
