@@ -432,5 +432,40 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Warum geben viele Leute laut Tobias nach drei Wochen auf?'), options: [german('Weil sie ihren Fortschritt nicht sehen können'), german('Weil das Wetter schlecht ist'), german('Weil Training zu teuer ist')] },
       { kind: 'question', prompt: german('Welche Farbe hat Leos Gesicht nach zwanzig Minuten?'), options: [german('Knallrot'), german('Ganz blass'), german('Grün')] }
     ]
+  },
+  {
+    id: 'b1-grandpa',
+    level: 'b1',
+    scene: 'home',
+    cast: ['oma', 'mia', 'selma'],
+    languages: ['de'],
+    weathers: ['rainy', 'cloudy'],
+    title: german('Abschied von Opa'),
+    beats: [
+      { kind: 'narration', text: german('Opa ist seit Wochen schwer krank. Er wollte nicht im Krankenhaus bleiben, sondern zu Hause sein, in seinem eigenen Bett. Jeden Tag kommt die Pflegerin Selma vorbei.') },
+      { kind: 'line', speaker: 'selma', mood: 'sad', text: german('Frau Wagner, ich muss ehrlich mit Ihnen sein. Sein Atem ist heute viel schwächer. Ich glaube, er hat nicht mehr viel Zeit.') },
+      { kind: 'line', speaker: 'oma', mood: 'sad', text: german('Ich habe es geahnt. Heute Morgen hat er nur noch geflüstert. Mia, ruf bitte deine Mutter an. Sie soll kommen.') },
+      { kind: 'line', speaker: 'mia', mood: 'worried', text: german('Hat er Schmerzen, Selma?') },
+      { kind: 'line', speaker: 'selma', text: german('Nein, die Medikamente wirken gut. Er ist ruhig. Das Wichtigste ist jetzt, dass ihr bei ihm seid. Haltet seine Hand und redet mit ihm – das Gehör bleibt oft bis zum Schluss.') },
+      { kind: 'narration', text: german('Am Abend sitzt die ganze Familie an Opas Bett. Oma erzählt, wie sie sich vor zweiundfünfzig Jahren bei einem Tanzabend kennengelernt haben. Kurz nach Mitternacht schläft Opa friedlich ein.') },
+      { kind: 'narration', text: german('Drei Tage später. Draußen regnet es. Oma und Mia sitzen am Küchentisch und schauen alte Fotos an.') },
+      { kind: 'line', speaker: 'oma', mood: 'sad', text: german('Schau, hier ist er mit dreißig, mit seinem blauen Motorrad. Er war so stolz darauf. Ich vermisse ihn so sehr.') },
+      { kind: 'line', speaker: 'mia', mood: 'sad', text: german('Ich auch, Oma. Er hat mir das Fahrradfahren beigebracht und mir immer Geschichten erzählt.') },
+      { kind: 'line', speaker: 'oma', text: german('{name}, du kanntest ihn ja auch. Was ist deine schönste Erinnerung an ihn?') },
+      { kind: 'reply', to: 'oma', options: [
+        german('Ich erinnere mich gern daran, wie er immer gelacht hat, wenn er Geschichten erzählt hat.'),
+        german('Ich erinnere mich an morgen.'),
+        german('Er war ein sehr schnelles Fahrrad.')
+      ] },
+      { kind: 'line', speaker: 'oma', mood: 'happy', text: german('Ja, sein Lachen. Das war das Schönste an ihm. Danke, dass du da bist.') },
+      { kind: 'line', speaker: 'mia', text: german('Die Beerdigung ist am Freitag um elf Uhr. Wir wollen sein Lieblingslied spielen und statt Blumen um Spenden für den Pflegedienst bitten.') },
+      { kind: 'line', speaker: 'oma', text: german('Das hätte ihm gefallen. Er hat immer gesagt: Trauert nicht zu lange, feiert lieber das Leben.') },
+      { kind: 'question', prompt: german('Warum ist Opa nicht im Krankenhaus?'), options: [german('Weil er zu Hause in seinem eigenen Bett sein wollte'), german('Weil das Krankenhaus voll war'), german('Weil er wieder gesund war')] },
+      { kind: 'question', prompt: german('Was ist laut Selma jetzt das Wichtigste?'), options: [german('Dass die Familie bei ihm ist'), german('Dass er mehr isst'), german('Dass ein Arzt kommt')] },
+      { kind: 'question', prompt: german('Wie lange kannten sich Oma und Opa?'), options: [german('Zweiundfünfzig Jahre'), german('Dreißig Jahre'), german('Zwölf Jahre')] },
+      { kind: 'question', prompt: german('Welche Farbe hatte Opas Motorrad?'), options: [german('Blau'), german('Rot'), german('Schwarz')] },
+      { kind: 'question', prompt: german('Wann ist die Beerdigung?'), options: [german('Am Freitag um elf Uhr'), german('Am Montag um zehn Uhr'), german('Am Sonntag um drei Uhr')] },
+      { kind: 'question', prompt: german('Worum bittet die Familie statt Blumen?'), options: [german('Um Spenden für den Pflegedienst'), german('Um Briefe'), german('Um Kerzen')] }
+    ]
   }
 ];
