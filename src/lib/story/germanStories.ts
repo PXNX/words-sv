@@ -1084,5 +1084,73 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was sieht man durch die Fenster des Sängersaals?'), options: [german('Den blauen Alpsee'), german('Das Meer'), german('Die Stadt München')] },
       { kind: 'question', prompt: german('Warum nennt man Ludwig den Märchenkönig?'), options: [german('Wegen seiner Schlösser und seines rätselhaften Todes'), german('Weil er Märchenbücher geschrieben hat'), german('Weil er nie gelebt hat')] }
     ]
+  },
+  {
+    id: 'a2-lindau',
+    level: 'a2',
+    scene: 'lindau',
+    cast: ['kim', 'mia'],
+    languages: ['de'],
+    weathers: ['sunny', 'cloudy'],
+    title: german('Am Hafen von Lindau'),
+    beats: [
+      { kind: 'narration', text: german('Samstagmorgen, halb zehn, in Lindau am Bodensee. Kim und Mia stehen mit dir am Hafen. Das Wasser ist hellblau, und am anderen Ufer sieht man die Berge der Schweiz und Österreichs.') },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Schau mal, {name}: Links an der Hafeneinfahrt sitzt der bayerische Löwe. Er ist sechs Meter groß und aus Stein.') },
+      { kind: 'line', speaker: 'mia', text: german('Und rechts steht der Leuchtturm. Er ist dreiunddreißig Meter hoch und hat sogar eine Uhr.') },
+      { kind: 'line', speaker: 'kim', mood: 'curious', text: german('Wusstest du, dass der Bodensee an drei Länder grenzt? An Deutschland, Österreich und die Schweiz.') },
+      { kind: 'line', speaker: 'mia', text: german('Um zehn Uhr fährt unser Schiff zur Insel Mainau. Die Fahrt dauert fast drei Stunden.') },
+      { kind: 'narration', text: german('Das weiße Schiff liegt schon am Steg. Es hat einen roten Schornstein und einen blauen Streifen.') },
+      { kind: 'line', speaker: 'kim', mood: 'curious', text: german('{name}, möchtest du lieber drinnen sitzen oder oben an Deck?') },
+      { kind: 'reply', to: 'kim', options: [
+        german('Oben an Deck, da ist die Aussicht schöner.'),
+        german('Im Wasser neben dem Schiff.'),
+        german('Oben im Leuchtturm, bitte.')
+      ] },
+      { kind: 'narration', text: german('Auf dem Deck weht ein kühler Wind. Mia kauft drei Becher heiße Schokolade für je drei Euro fünfzig.') },
+      { kind: 'line', speaker: 'mia', mood: 'laughing', text: german('Das macht zehn Euro fünfzig. Dafür ist die Aussicht gratis!') },
+      { kind: 'narration', text: german('Pünktlich um zehn Uhr legt das Schiff ab. Der Löwe und der Leuchtturm werden langsam immer kleiner.') },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Tschüss, Lindau! Hallo, Mainau!') },
+      { kind: 'question', prompt: german('Um wie viel Uhr seid ihr am Hafen?'), options: [german('Um halb zehn'), german('Um halb drei'), german('Um Mitternacht')] },
+      { kind: 'question', prompt: german('Wie groß ist der Löwe?'), options: [german('Sechs Meter'), german('Sechzig Zentimeter'), german('Sechzig Meter')] },
+      { kind: 'question', prompt: german('Wie hoch ist der Leuchtturm?'), options: [german('Dreiunddreißig Meter'), german('Dreizehn Meter'), german('Dreihundert Meter')] },
+      { kind: 'question', prompt: german('An wie viele Länder grenzt der Bodensee?'), options: [german('An drei'), german('An zwei'), german('An fünf')] },
+      { kind: 'question', prompt: german('Welche Farbe hat der Schornstein des Schiffs?'), options: [german('Rot'), german('Blau'), german('Gelb')] },
+      { kind: 'question', prompt: german('Wie viel kosten die drei heißen Schokoladen zusammen?'), options: [german('Zehn Euro fünfzig'), german('Drei Euro fünfzig'), german('Zwanzig Euro')] },
+      { kind: 'question', prompt: german('Wohin fährt das Schiff?'), options: [german('Zur Insel Mainau'), german('Nach München'), german('In die Schweizer Berge')] }
+    ]
+  },
+  {
+    id: 'a2-mainau',
+    level: 'a2',
+    scene: 'mainau',
+    cast: ['kim', 'mia'],
+    languages: ['de'],
+    weathers: ['sunny', 'cloudy'],
+    title: german('Die Blumeninsel Mainau'),
+    beats: [
+      { kind: 'narration', text: german('Kurz vor ein Uhr legt euer Schiff an der Insel Mainau an. Schon vom Steg aus riecht es nach Blumen.') },
+      { kind: 'line', speaker: 'kim', mood: 'surprised', text: german('Wow! So viele Farben habe ich noch nie auf einmal gesehen!') },
+      { kind: 'narration', text: german('Überall blühen rote Rosen, orange Dahlien und lila Lavendel. Zwischen den Beeten stehen hohe Palmen.') },
+      { kind: 'line', speaker: 'mia', text: german('Auf der Mainau wachsen über tausend verschiedene Rosensorten. Und im Frühling blühen hier über eine Million Tulpen.') },
+      { kind: 'line', speaker: 'kim', mood: 'curious', text: german('Und wem gehört die Insel?') },
+      { kind: 'line', speaker: 'mia', text: german('Seit 1932 kümmert sich die Familie Bernadotte um die Insel. Das gelbe Barockschloss mit dem dunklen Dach ist fast dreihundert Jahre alt.') },
+      { kind: 'line', speaker: 'kim', mood: 'curious', text: german('{name}, welche Blumen gefallen dir am besten?') },
+      { kind: 'reply', to: 'kim', options: [
+        german('Die orangen Dahlien – manche sind so groß wie ein Teller!'),
+        german('Die Plastikblumen aus dem Supermarkt.'),
+        german('Ich mag gar keine Farben.')
+      ] },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Mir gefallen die Rosen am besten. Ich mache gleich hundert Fotos.') },
+      { kind: 'narration', text: german('Später setzt ihr euch auf eine Bank und esst ein Eis. Mia schaut auf die Uhr.') },
+      { kind: 'line', speaker: 'mia', text: german('Um halb fünf fährt unser Schiff zurück nach Lindau. Wir haben also noch dreieinhalb Stunden Zeit.') },
+      { kind: 'line', speaker: 'kim', mood: 'laughing', text: german('Haha, dreieinhalb Stunden für eine Million Blumen? Das wird knapp!') },
+      { kind: 'question', prompt: german('Wann legt das Schiff an der Mainau an?'), options: [german('Kurz vor ein Uhr'), german('Um zehn Uhr'), german('Um halb fünf')] },
+      { kind: 'question', prompt: german('Welche Farbe haben die Dahlien?'), options: [german('Orange'), german('Blau'), german('Weiß')] },
+      { kind: 'question', prompt: german('Wie viele Rosensorten wachsen auf der Mainau?'), options: [german('Über tausend'), german('Zehn'), german('Genau hundert')] },
+      { kind: 'question', prompt: german('Wie viele Tulpen blühen dort im Frühling?'), options: [german('Über eine Million'), german('Hundert'), german('Tausend')] },
+      { kind: 'question', prompt: german('Welche Farbe hat das Schloss?'), options: [german('Gelb'), german('Weiß'), german('Grün')] },
+      { kind: 'question', prompt: german('Wie alt ist das Schloss ungefähr?'), options: [german('Fast dreihundert Jahre'), german('Dreißig Jahre'), german('Tausend Jahre')] },
+      { kind: 'question', prompt: german('Wann fährt das Schiff zurück nach Lindau?'), options: [german('Um halb fünf'), german('Um ein Uhr'), german('Um Mitternacht')] }
+    ]
   }
 ];

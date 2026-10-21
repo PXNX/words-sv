@@ -27,7 +27,9 @@
     airport: { back: '#cfe6f2', floor: '#7d8794' },
     forest: { back: '#cfe6f2', floor: '#7a6a4a' },
     alps: { back: '#cfe6f2', floor: '#7fae57' },
-    castle: { back: '#cfe6f2', floor: '#8fae6a' }
+    castle: { back: '#cfe6f2', floor: '#8fae6a' },
+    lindau: { back: '#cfe6f2', floor: '#b8aa98' },
+    mainau: { back: '#cfe6f2', floor: '#8fc27a' }
   };
   const palette = $derived(palettes[scene]);
 
@@ -54,7 +56,9 @@
     airport: { x: 0, y: 0, w: 400, h: 172 },
     forest: { x: 0, y: 0, w: 400, h: 172 },
     alps: { x: 0, y: 0, w: 400, h: 172 },
-    castle: { x: 0, y: 0, w: 400, h: 172 }
+    castle: { x: 0, y: 0, w: 400, h: 172 },
+    lindau: { x: 0, y: 0, w: 400, h: 172 },
+    mainau: { x: 0, y: 0, w: 400, h: 172 }
   };
   const sky = $derived(skies[scene]);
   const outdoor = $derived(sky.w === 400);
@@ -205,6 +209,40 @@
     {#if weather === 'snowy'}<g fill="#ffffff"><path d="M262 70l35-22 35 22-4 1-31-19-31 19Z" /><path d="M327 40l11-26 11 26-3 1-8-20-8 20Z" /></g>{/if}
     <g fill="#3c7350"><path d="M210 172l12-34 12 34Z" /><path d="M376 172l12-30 12 30Z" /></g>
     <g fill="#3c7350"><path d="M10 172l16-48 16 48Z" /><path d="M38 172l14-38 14 38Z" /><path d="M64 172l12-30 12 30Z" /></g>
+  {:else if scene === 'lindau'}
+    <!-- Lindau harbour: the Alps across Lake Constance, the Bavarian lion on its pedestal, the lighthouse with its clock and a white passenger ship -->
+    <path d="M0 120l40-30 30 18 40-36 50 40 40-26 60 34 50-30 50 22 40-14v34H0Z" fill="#b9c7d6" />
+    <g fill="#fffdf7" opacity=".85"><path d="M110 72l-13 12 6-1 6 3 6-4 8 2Z" /><path d="M310 90l-13 8h6l6 2 6-3 8 1Z" /></g>
+    <rect y="122" width="400" height="50" fill="#5b9bc9" />
+    <g fill="none" stroke="#9cc6e4" stroke-width="2" stroke-linecap="round"><path d="M110 150q8-4 16 0M190 160q8-4 16 0M250 146q8-4 16 0M276 162q8-4 16 0" /></g>
+    <g transform="translate(130 116)">
+      <path d="M0 14h96l-10 12H8Z" fill="#fffdf7" stroke="#172a45" stroke-width="1.5" /><path d="M4 21h86" stroke="#4b78c2" stroke-width="3" />
+      <rect x="16" y="2" width="58" height="12" fill="#fffdf7" stroke="#172a45" stroke-width="1.5" /><rect x="30" y="-10" width="26" height="12" fill="#fffdf7" stroke="#172a45" stroke-width="1.5" />
+      <rect x="38" y="-20" width="8" height="10" fill="#d64b45" stroke="#172a45" stroke-width="1.2" />
+      <g fill="#8ab4d9">{#each [0, 1, 2, 3, 4] as i (i)}<rect x={22 + i * 10} y="5" width="6" height="5" rx="1" />{/each}</g>
+    </g>
+    <rect x="0" y="150" width="100" height="22" fill="#a89a86" /><rect x="300" y="150" width="100" height="22" fill="#a89a86" />
+    <rect x="34" y="96" width="34" height="54" fill="#d9cdb8" stroke="#8a7a68" stroke-width="2" /><rect x="30" y="92" width="42" height="6" fill="#c9bca5" stroke="#8a7a68" stroke-width="1.5" />
+    <path d="M70 86q11-3 9-17-2 4-5 4" fill="none" stroke="#8a6a2a" stroke-width="2.2" stroke-linecap="round" /><path d="M64 92q7-4 7-13 0-12-13-14H48l-6 27Z" fill="#c9a24a" stroke="#8a6a2a" stroke-width="1.5" />
+    <path d="M40 92V72h9v20Z" fill="#c9a24a" stroke="#8a6a2a" stroke-width="1.5" /><path d="M38 92h12" stroke="#8a6a2a" stroke-width="1.5" />
+    <path d="M44 46l5 3 5-1 2 5 5 2-2 5 3 4-4 3 1 5-5 1-2 5-5-2-4 3-3-4h-5v-5l-4-3 3-4-2-5 5-1 1-5 5 1Z" fill="#a8762a" stroke="#8a6a2a" stroke-width="1" />
+    <circle cx="41" cy="63" r="7.5" fill="#d4ad55" /><ellipse cx="35.5" cy="67" rx="4" ry="3.2" fill="#e8c983" /><circle cx="39" cy="61" r="1.3" fill="#172a45" /><circle cx="33" cy="66" r="1.2" fill="#5a3d25" />
+    <path d="M336 150l6-94h20l6 94Z" fill="#fffdf7" stroke="#8a939e" stroke-width="1.5" /><rect x="340" y="42" width="24" height="14" fill="#e6b52e" stroke="#8a939e" stroke-width="1.5" />
+    <path d="M337 42l15-14 15 14Z" fill="#c4473f" stroke="#8a939e" stroke-width="1" /><path d="M336 58h32" stroke="#8a939e" stroke-width="2" />
+    <circle cx="352" cy="74" r="5" fill="#fffdf7" stroke="#172a45" stroke-width="1.2" /><path d="M352 74v-3M352 74l2 1" stroke="#172a45" stroke-width="1" />
+    <g fill="#5a6f8a"><rect x="349" y="96" width="6" height="9" rx="3" /><rect x="349" y="124" width="6" height="9" rx="3" /></g>
+  {:else if scene === 'mainau'}
+    <!-- the flower island of Mainau: the yellow baroque palace above the lake, palms, and beds of roses, dahlias and lavender -->
+    <path d="M0 118l40-24 30 14 40-28 50 32 40-20 60 26 50-24 50 18 40-10v30H0Z" fill="#b9c7d6" />
+    <rect y="114" width="400" height="58" fill="#5b9bc9" />
+    <path d="M-10 172q80-62 200-58t220 30v28Z" fill="#8fc27a" />
+    <rect x="20" y="82" width="130" height="54" fill="#e8c27a" stroke="#a8862f" stroke-width="1.5" /><path d="M14 84l16-20h110l16 20Z" fill="#6b4a3a" />
+    <path d="M68 82l17-18 17 18Z" fill="#e8c27a" stroke="#a8862f" stroke-width="1.5" />
+    <g fill="#fffdf7" stroke="#a8862f" stroke-width=".8">{#each [0, 1, 2, 3, 4, 5, 6] as i (i)}<rect x={28 + i * 17} y="92" width="8" height="12" rx="2" /><rect x={28 + i * 17} y="114" width="8" height="12" rx="2" />{/each}</g>
+    {#if weather === 'snowy'}<path d="M14 84l16-20h110l16 20-3 1-14-17H31L17 85Z" fill="#ffffff" />{/if}
+    <path d="M356 172q-6-50 2-84" fill="none" stroke="#8c5b3d" stroke-width="6" /><g fill="#55a66a"><path d="M358 88q-30-6-44 10 22-8 44-10Z" /><path d="M358 88q28-12 46 0-24-4-46 0Z" /><path d="M358 88q-12-24-34-26 20 10 34 26Z" /><path d="M358 88q12-24 34-24-20 8-34 24Z" /></g>
+    <path d="M0 172q100-22 200-14t200-4v18Z" fill="#55a66a" />
+    <g>{#each Array.from({ length: 15 }, (_, i) => i) as i (i)}<circle cx={12 + i * 27} cy={166 - (i % 2) * 6} r="5.5" fill={['#d64b45', '#e8843a', '#8a62b6', '#df8eb1', '#e6b52e'][i % 5]} /><circle cx={25 + i * 27} cy={168 - (i % 3) * 3} r="3.5" fill={['#8a62b6', '#d64b45', '#e6b52e', '#e8843a', '#df8eb1'][i % 5]} />{/each}</g>
   {/if}
   <rect y="172" width="400" height="48" fill={palette.floor} />
   <rect y="172" width="400" height="4" fill="rgba(23,42,69,.14)" />
