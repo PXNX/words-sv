@@ -30,7 +30,8 @@
     castle: { back: '#cfe6f2', floor: '#8fae6a' },
     lindau: { back: '#cfe6f2', floor: '#b8aa98' },
     mainau: { back: '#cfe6f2', floor: '#8fc27a' },
-    cliffs: { back: '#cfe6f2', floor: '#d8d2c4' }
+    cliffs: { back: '#cfe6f2', floor: '#d8d2c4' },
+    berlin: { back: '#cfe6f2', floor: '#b8aa98' }
   };
   const palette = $derived(palettes[scene]);
 
@@ -60,7 +61,8 @@
     castle: { x: 0, y: 0, w: 400, h: 172 },
     lindau: { x: 0, y: 0, w: 400, h: 172 },
     mainau: { x: 0, y: 0, w: 400, h: 172 },
-    cliffs: { x: 0, y: 0, w: 400, h: 172 }
+    cliffs: { x: 0, y: 0, w: 400, h: 172 },
+    berlin: { x: 0, y: 0, w: 400, h: 172 }
   };
   const sky = $derived(skies[scene]);
   const outdoor = $derived(sky.w === 400);
@@ -258,6 +260,19 @@
     <g stroke="#172a45" stroke-width="1.5">{#each [0, 1, 2, 3, 4, 5] as i (i)}<path d="M{294 + i * 16} 112l2-14h16l-2 14Z" fill={i % 2 ? '#fffdf7' : '#d64b45'} />{/each}</g>
     <rect x="304" y="82" width="76" height="14" rx="3" fill="#fffdf7" stroke="#172a45" stroke-width="1.5" /><text x="342" y="92.5" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8.5" font-weight="900" fill="#172a45">FISCHBRÖTCHEN</text>
     <g fill="#e8c27a" stroke="#a87850" stroke-width="1"><ellipse cx="322" cy="146" rx="8" ry="3" /><ellipse cx="342" cy="146" rx="8" ry="3" /><ellipse cx="362" cy="146" rx="8" ry="3" /></g>
+  {:else if scene === 'berlin'}
+    <!-- Berlin: the Brandenburg Gate with its green copper quadriga, the city behind it and the TV tower rising above everything -->
+    <g fill="#b8c2cc"><rect x="160" y="112" width="40" height="60" /><rect x="206" y="96" width="30" height="76" /><rect x="242" y="120" width="44" height="52" /><rect x="292" y="104" width="30" height="68" /><rect x="362" y="118" width="40" height="54" /></g>
+    <g fill="#9aa3ad" opacity=".5">{#each [0, 1, 2, 3, 4] as i (i)}<rect x={212} y={104 + i * 12} width="18" height="5" /><rect x={248} y={128 + i * 8} width="32" height="3" />{/each}</g>
+    <path d="M330 172l6-110h6l6 110Z" fill="#c4cbd3" stroke="#596477" stroke-width="1.5" />
+    <circle cx="339" cy="58" r="16" fill="#c4cbd3" stroke="#596477" stroke-width="1.5" /><path d="M323 58h32" stroke="#596477" stroke-width="2" /><g fill="#596477">{#each [0, 1, 2, 3, 4] as i (i)}<circle cx={329 + i * 5} cy="53" r="1.2" />{/each}</g>
+    <path d="M339 42V12" stroke="#596477" stroke-width="2.5" /><path d="M339 12V4" stroke="#d64b45" stroke-width="2.5" /><path d="M339 22v4" stroke="#fffdf7" stroke-width="2.5" />
+    <g fill="#e6d3a8" stroke="#a8862f" stroke-width="1.5">
+      <rect x="20" y="80" width="132" height="16" /><rect x="16" y="96" width="140" height="6" /><path d="M58 80V68h56v12Z" />
+      {#each [0, 1, 2, 3, 4, 5] as i (i)}<rect x={22 + i * 24} y="102" width="8" height="70" />{/each}
+    </g>
+    <g fill="#4f8a7a"><path d="M70 68l4-10h24l4 10Z" /><path d="M76 60q-4-8 2-12l3 6 3-6q6 4 2 12ZM92 60q-4-8 2-12l3 6 3-6q6 4 2 12Z" /><circle cx="86" cy="44" r="4" /><path d="M86 40l1-12" stroke="#4f8a7a" stroke-width="1.5" /><path d="M83 30h8" stroke="#4f8a7a" stroke-width="1.5" /></g>
+    {#if weather === 'snowy'}<g fill="#ffffff"><rect x="18" y="78" width="136" height="3" /><rect x="58" y="66" width="56" height="3" /></g>{/if}
   {/if}
   <rect y="172" width="400" height="48" fill={palette.floor} />
   <rect y="172" width="400" height="4" fill="rgba(23,42,69,.14)" />

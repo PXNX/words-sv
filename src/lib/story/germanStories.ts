@@ -1188,5 +1188,41 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was macht die Möwe?'), options: [german('Sie klaut ein halbes Fischbrötchen.'), german('Sie singt ein Lied.'), german('Sie setzt sich auf Tobias’ Kopf.')] },
       { kind: 'question', prompt: german('Wo wollen sie das nächste Fischbrötchen essen?'), options: [german('Hinter dem Kiosk'), german('Oben auf dem Felsen'), german('Im Wasser')] }
     ]
+  },
+  {
+    id: 'b1-berlin',
+    level: 'b1',
+    scene: 'berlin',
+    cast: ['albert', 'kumar'],
+    languages: ['de'],
+    title: german('Berlin mit Albert'),
+    beats: [
+      { kind: 'narration', text: german('Kumar ist zum ersten Mal in Berlin. Albert, der hier geboren ist, hat ihm und dir eine Stadtführung versprochen – Treffpunkt um neun Uhr am Brandenburger Tor.') },
+      { kind: 'line', speaker: 'albert', text: german('Guten Morgen, {name}. Es ist neun Uhr und zwölf Sekunden. Und von Kumar fehlt jede Spur.') },
+      { kind: 'narration', enters: ['kumar'], text: german('Um zwölf nach neun kommt Kumar angerannt, mit einem Kaffee in der Hand und ganz außer Atem.') },
+      { kind: 'line', speaker: 'kumar', mood: 'worried', text: german('Entschuldigung! Ich bin mit der U-Bahn in die falsche Richtung gefahren. Zweimal.') },
+      { kind: 'line', speaker: 'albert', text: german('Nun gut. Willkommen in Berlin. Das Brandenburger Tor wurde 1791 fertiggestellt. Oben steht die Quadriga: eine Göttin auf einem Wagen mit vier Pferden. Fast dreißig Jahre lang stand das Tor direkt an der Mauer.') },
+      { kind: 'line', speaker: 'kumar', mood: 'curious', text: german('Die Mauer? Und wo ist sie jetzt?') },
+      { kind: 'line', speaker: 'albert', text: german('Größtenteils abgerissen, seit 1989. Das längste Stück steht noch an der Spree: die East Side Gallery, über einen Kilometer lang und ganz bunt bemalt.') },
+      { kind: 'narration', text: german('Mittags stehen die drei vor einer Currywurstbude am Alexanderplatz. Über ihnen ragt der Fernsehturm in den Himmel: dreihundertachtundsechzig Meter hoch, das höchste Bauwerk Deutschlands.') },
+      { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Currywurst! Endlich etwas mit Curry. {name}, nimmst du deine mit oder ohne Darm?') },
+      { kind: 'reply', to: 'kumar', options: [
+        german('Ohne Darm, bitte, und dazu Pommes.'),
+        german('Mit Darm, aber bitte ohne Wurst.'),
+        german('Ich nehme lieber den Fernsehturm, bitte.')
+      ] },
+      { kind: 'line', speaker: 'kumar', mood: 'laughing', text: german('Hm … lecker! Aber in Indien wäre das eine sehr milde Soße. Ist das wirklich Curry?') },
+      { kind: 'line', speaker: 'albert', text: german('Det is Berliner Curry. Darüber wird nicht diskutiert.') },
+      { kind: 'narration', text: german('Am Abend fahrt ihr auf die gläserne Kuppel des Reichstags. Von oben seht ihr die ganze Stadt im goldenen Licht, und Kumar macht ungefähr zweihundert Fotos.') },
+      { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Danke, Albert! Und morgen bin ich pünktlich. Versprochen!') },
+      { kind: 'line', speaker: 'albert', text: german('Das glaube ich, wenn ich es sehe. Treffpunkt neun Uhr. Neun Uhr null null.') },
+      { kind: 'question', prompt: german('Um wie viel Uhr ist der Treffpunkt?'), options: [german('Um neun Uhr'), german('Um zwölf Uhr'), german('Um halb zehn')] },
+      { kind: 'question', prompt: german('Warum kommt Kumar zu spät?'), options: [german('Er ist zweimal in die falsche Richtung gefahren.'), german('Er hat verschlafen.'), german('Er hat seinen Kaffee verloren.')] },
+      { kind: 'question', prompt: german('Was steht oben auf dem Brandenburger Tor?'), options: [german('Eine Göttin auf einem Wagen mit vier Pferden'), german('Ein großer Bär'), german('Eine Uhr')] },
+      { kind: 'question', prompt: german('Was ist die East Side Gallery?'), options: [german('Das längste erhaltene Stück der Mauer'), german('Ein Museum für Currywurst'), german('Ein großes Kaufhaus')] },
+      { kind: 'question', prompt: german('Wie hoch ist der Fernsehturm?'), options: [german('Dreihundertachtundsechzig Meter'), german('Achtunddreißig Meter'), german('Tausend Meter')] },
+      { kind: 'question', prompt: german('Wie findet Kumar die Currysoße?'), options: [german('Lecker, aber sehr mild'), german('Viel zu scharf'), german('Zu süß')] },
+      { kind: 'question', prompt: german('Wo sind sie am Abend?'), options: [german('Auf der Kuppel des Reichstags'), german('Auf dem Fernsehturm'), german('An der Spree beim Baden')] }
+    ]
   }
 ];
