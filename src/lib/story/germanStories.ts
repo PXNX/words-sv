@@ -397,5 +397,40 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Wohin will Tom im Sommer reisen?'), options: [german('Nach Portugal'), german('Nach Indien'), german('Nach Italien')] },
       { kind: 'question', prompt: german('Welche Farbe hat Kumars Socke?'), options: [german('Grün'), german('Rot'), german('Gelb')] }
     ]
+  },
+  {
+    id: 'b1-fitness',
+    level: 'b1',
+    scene: 'park',
+    cast: ['leo', 'tobias', 'mia'],
+    languages: ['de'],
+    weathers: ['sunny', 'cloudy'],
+    title: german('Ziele und Fitness'),
+    beats: [
+      { kind: 'narration', text: german('Anfang Januar, Samstagmorgen, halb neun. Leo hat sich vorgenommen, in diesem Jahr endlich fit zu werden. Mia hat ihm ihren Bekannten Tobias empfohlen – Rettungsschwimmer und Fitnessfan.') },
+      { kind: 'line', speaker: 'tobias', mood: 'happy', text: german('Moin, Leo! Bereit für die erste Einheit? Zuerst will ich wissen: Was genau ist dein Ziel?') },
+      { kind: 'line', speaker: 'leo', text: german('Na ja … fitter werden. Und vielleicht ein bisschen abnehmen.') },
+      { kind: 'line', speaker: 'tobias', text: german('„Fitter werden“ ist kein Ziel, sondern ein Wunsch. Ein gutes Ziel ist konkret, messbar und hat einen Termin. Zum Beispiel: Bis Ende Mai läufst du fünf Kilometer ohne Pause.') },
+      { kind: 'line', speaker: 'mia', mood: 'curious', text: german('Und warum ist das so wichtig? Hauptsache, man bewegt sich, oder?') },
+      { kind: 'line', speaker: 'tobias', text: german('Weil man sonst nach drei Wochen aufgibt. Wenn du siehst, dass du von einem auf zwei und dann auf drei Kilometer kommst, bleibst du motiviert. Fortschritt, den man messen kann, macht süchtig!') },
+      { kind: 'line', speaker: 'leo', mood: 'worried', text: german('Und wie oft muss ich trainieren? Ich arbeite ja auch noch vierzig Stunden pro Woche.') },
+      { kind: 'line', speaker: 'tobias', text: german('Die Weltgesundheitsorganisation empfiehlt mindestens 150 Minuten Bewegung pro Woche. Das sind fünfmal dreißig Minuten. Dazu zweimal Krafttraining, genug Eiweiß und sieben bis acht Stunden Schlaf. Muskeln wachsen nämlich beim Ausruhen!') },
+      { kind: 'line', speaker: 'tobias', mood: 'curious', text: german('{name}, du machst doch auch mit. Was ist dein Ziel?') },
+      { kind: 'reply', to: 'tobias', options: [
+        german('Ich möchte bis zum Sommer dreimal pro Woche joggen gehen und zehn Liegestütze am Stück schaffen.'),
+        german('Ich möchte irgendwann vielleicht mal etwas machen.'),
+        german('Mein Ziel ist es, möglichst viel auf dem Sofa zu liegen.')
+      ] },
+      { kind: 'line', speaker: 'tobias', mood: 'happy', text: german('Stark! Konkret, messbar, mit Termin. So geht das! Und jetzt: zehn Minuten locker aufwärmen, dann zwei Runden um den Teich.') },
+      { kind: 'narration', text: german('Nach zwanzig Minuten ist Leos Gesicht knallrot. Er setzt sich schwer atmend auf eine grüne Parkbank.') },
+      { kind: 'line', speaker: 'leo', mood: 'sad', text: german('Zwei Runden … ich glaube, ich sterbe.') },
+      { kind: 'line', speaker: 'tobias', mood: 'laughing', text: german('Haha, das sagen alle am ersten Tag! Schreib dir die Zeit auf. In vier Wochen lachst du darüber.') },
+      { kind: 'question', prompt: german('Warum ist „fitter werden“ laut Tobias kein gutes Ziel?'), options: [german('Weil es nicht konkret und nicht messbar ist'), german('Weil es zu schwer ist'), german('Weil Leo schon fit ist')] },
+      { kind: 'question', prompt: german('Was soll Leo bis Ende Mai schaffen?'), options: [german('Fünf Kilometer ohne Pause laufen'), german('Zehn Kilo abnehmen'), german('Einen Marathon laufen')] },
+      { kind: 'question', prompt: german('Wie viele Minuten Bewegung pro Woche empfiehlt die Weltgesundheitsorganisation mindestens?'), options: [german('150 Minuten'), german('30 Minuten'), german('500 Minuten')] },
+      { kind: 'question', prompt: german('Wann wachsen Muskeln laut Tobias?'), options: [german('Beim Ausruhen'), german('Beim Essen'), german('Beim Laufen')] },
+      { kind: 'question', prompt: german('Warum geben viele Leute laut Tobias nach drei Wochen auf?'), options: [german('Weil sie ihren Fortschritt nicht sehen können'), german('Weil das Wetter schlecht ist'), german('Weil Training zu teuer ist')] },
+      { kind: 'question', prompt: german('Welche Farbe hat Leos Gesicht nach zwanzig Minuten?'), options: [german('Knallrot'), german('Ganz blass'), german('Grün')] }
+    ]
   }
 ];
