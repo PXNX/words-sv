@@ -18,8 +18,8 @@
   // overalls; `checked` lays a check pattern over the top.
   type Look = { skin: string; hair: string; hairStyle: 'bun' | 'short' | 'curly' | 'bob' | 'bald' | 'messy'; top: string; glasses?: boolean; monocle?: boolean; beard?: boolean; stubble?: boolean; moustache?: boolean | 'kaiser'; hat?: 'tyrolean' | 'police' | 'toque' | 'straw'; headphones?: boolean; shades?: boolean; pencil?: boolean; build?: 'wide' | 'muscular'; accent?: string; checked?: boolean; outfit: 'plain' | 'hoodie' | 'cardigan' | 'apron' | 'blazer' | 'tie' | 'tracht' | 'waistcoat' | 'police' | 'chef' | 'overalls' | 'tanktop' | 'scrubs' | 'tshirt' | 'shirt' };
   // Animals are hand-drawn branches below rather than entries in `looks`.
-  type Animal = 'bello' | 'lilith' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake';
-  const animals: readonly CharacterId[] = ['bello', 'lilith', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
+  type Animal = 'bello' | 'deer' | 'fox' | 'lilith' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake';
+  const animals: readonly CharacterId[] = ['bello', 'deer', 'fox', 'lilith', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
   const looks: Record<Exclude<CharacterId, Animal>, Look> = {
     // Sabine, police officer: peaked cap and navy uniform with a star badge.
     sabine: { skin: '#f0c9a8', hair: '#c9a04a', hairStyle: 'bob', top: '#1f3a6b', hat: 'police', outfit: 'police' },
@@ -91,6 +91,28 @@
     return null;
   }
 </script>
+
+<!-- Eyes and mouth for the wild animals; `ink` colours the eyes and brows -->
+{#snippet wildEyes(left: number, right: number, y: number, r: number, ink: string)}
+  {#if mood === 'happy'}
+    <path class="story-eyes" d="M{left - r} {y + 1}q{r} {-r * 1.4} {r * 2} 0M{right - r} {y + 1}q{r} {-r * 1.4} {r * 2} 0" fill="none" stroke={ink} stroke-width="2.4" stroke-linecap="round" />
+  {:else}
+    <g class="story-eyes"><circle cx={left} cy={y} r={mood === 'surprised' ? r * 1.3 : r} fill={ink} /><circle cx={right} cy={y} r={mood === 'surprised' ? r * 1.3 : r} fill={ink} /><circle cx={left + r * 0.35} cy={y - r * 0.4} r={r * 0.35} fill="#fffdf7" /><circle cx={right + r * 0.35} cy={y - r * 0.4} r={r * 0.35} fill="#fffdf7" /></g>
+  {/if}
+  {#if mood === 'sad'}
+    <path d="M{left - r * 1.6} {y - r * 2.2}q{r * 1.6} 0 {r * 2.8} {-r * 1.1}M{right + r * 1.6} {y - r * 2.2}q{-r * 1.6} 0 {-r * 2.8} {-r * 1.1}" fill="none" stroke={ink} stroke-width="1.8" stroke-linecap="round" opacity=".7" />
+  {:else if mood === 'surprised' || mood === 'curious'}
+    <path d="M{left - r * 1.4} {y - r * 2.4}q{r * 1.4} {-r * 1.2} {r * 2.8} 0M{right - r * 1.4} {y - r * (mood === 'curious' ? 1.9 : 2.4)}q{r * 1.4} {-r * (mood === 'curious' ? 0.6 : 1.2)} {r * 2.8} 0" fill="none" stroke={ink} stroke-width="1.8" stroke-linecap="round" opacity=".7" />
+  {/if}
+{/snippet}
+{#snippet wildMouth(x: number, y: number, w: number)}
+  {#if mood === 'sad'}
+    <path class="story-mouth-closed" d="M{x - w} {y + w * 0.4}q{w} {-w} {w * 2} 0" fill="none" stroke="#5a1f28" stroke-width="2" stroke-linecap="round" />
+  {:else}
+    <path class="story-mouth-closed" d="M{x - w} {y}q{w} {mood === 'happy' ? w : w * 0.45} {w * 2} 0" fill="none" stroke="#5a1f28" stroke-width="2" stroke-linecap="round" />
+  {/if}
+  <ellipse class="story-mouth-open" style:transform={mouthScale} cx={x} cy={y} rx={w * 0.9} ry={w * 0.7} fill="#5a1f28" />
+{/snippet}
 
 <svg class="story-character" class:talking class:lip-synced={lipSynced} class:still viewBox="0 0 120 150" role="img" aria-label={label}>
   <!-- Bello-style eyes and brows shared by the farm and zoo animals. -->
@@ -298,6 +320,27 @@
       <g class="story-mouth-open" style:transform={mouthScale}><ellipse cx="60" cy="84.5" rx="5.4" ry="5" fill="#5a1f28" /><ellipse cx="60" cy="87.4" rx="3.4" ry="2.1" fill="#e58fa0" /></g>
       <path d="M44 78 18 73M44 81l-26 2M76 78l26-5M76 81l26 2" stroke="rgba(255,250,240,.85)" stroke-width="1" stroke-linecap="round" />
     </g>
+  {:else if id === 'deer'}
+    <!-- the roe deer: a slender reddish-brown head with big ears, small antlers, a black nose and a white throat -->
+    <path d="M28 150q4-42 32-48 28 6 32 48Z" fill="#a8642c" /><path d="M50 104q10 6 20 0l-2 16H52Z" fill="#fffdf7" opacity=".9" />
+    <path d="M50 36 44 14M45 22l-7-4M70 36l6-22M75 22l7-4" fill="none" stroke="#6d3f22" stroke-width="3" stroke-linecap="round" />
+    <g transform={mood === 'sad' ? 'rotate(22 44 46)' : undefined}><ellipse cx="32" cy="42" rx="15" ry="7" fill="#a8642c" transform="rotate(-24 32 42)" /><ellipse cx="33" cy="42" rx="9" ry="3.5" fill="#e8c9a8" transform="rotate(-24 33 42)" /></g>
+    <g transform={mood === 'sad' ? 'rotate(-22 76 46)' : undefined}><ellipse cx="88" cy="42" rx="15" ry="7" fill="#a8642c" transform="rotate(24 88 42)" /><ellipse cx="87" cy="42" rx="9" ry="3.5" fill="#e8c9a8" transform="rotate(24 87 42)" /></g>
+    <path d="M40 46q20-16 40 0 2 30-10 50-10 10-20 0-12-20-10-50Z" fill="#b8743a" />
+    {@render wildEyes(50, 70, 60, 3.4, '#172a45')}
+    <ellipse cx="60" cy="92" rx="10" ry="7" fill="#e8d2b8" /><ellipse cx="60" cy="88" rx="5" ry="3.5" fill="#26272b" />
+    {@render wildMouth(60, 96, 3.5)}
+  {:else if id === 'fox'}
+    <!-- the fox: orange fur, pointed black-tipped ears, white cheeks and chest, and a bushy white-tipped tail -->
+    <path class="story-tail" d="M86 146q32-4 28-40-6 12-18 16-12 6-10 24Z" fill="#d9772e" /><path d="M114 106q2 10-6 14 2-8 6-14Z" fill="#fffdf7" />
+    <path d="M22 150q2-38 38-42 36 4 38 42Z" fill="#d9772e" /><path d="M46 110q14 8 28 0-2 24-14 40-12-16-14-40Z" fill="#fffdf7" />
+    <g transform={mood === 'sad' ? 'rotate(-24 40 50)' : undefined}><path d="M30 56 32 16l24 28Z" fill="#d9772e" /><path d="M31.5 28 32 16l9 10Z" fill="#26272b" /></g>
+    <g transform={mood === 'sad' ? 'rotate(24 80 50)' : undefined}><path d="M90 56 88 16 64 44Z" fill="#d9772e" /><path d="M88.5 28 88 16l-9 10Z" fill="#26272b" /></g>
+    <path d="M26 54q34-28 68 0-4 28-34 50-30-22-34-50Z" fill="#e0843a" />
+    <path d="M28 60q16 4 24 20 4 10 8 24-16-12-32-44ZM92 60q-16 4-24 20-4 10-8 24 16-12 32-44Z" fill="#fffdf7" />
+    {@render wildEyes(48, 72, 62, 3.2, '#172a45')}
+    <ellipse cx="60" cy="96" rx="4.5" ry="3.5" fill="#26272b" />
+    {@render wildMouth(60, 101, 3)}
   {:else}
     <!-- Bello the dog -->
     <path d="M90 118q18-14 14-30" fill="none" stroke="#b07a4a" stroke-width="7" stroke-linecap="round" class="story-tail" />

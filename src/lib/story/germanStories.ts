@@ -957,5 +957,43 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Wozu ist die Sicherung laut Robert da?'), options: [german('Sie schützt die Kabel, damit nichts brennt.'), german('Sie spart Strom in der Nacht.'), german('Sie macht das Licht heller.')] },
       { kind: 'question', prompt: german('Wann kommt Robert an?'), options: [german('Um 20:35 Uhr'), german('Um 19:45 Uhr'), german('Um 22:00 Uhr')] }
     ]
+  },
+  {
+    id: 'a2-forest',
+    level: 'a2',
+    scene: 'forest',
+    cast: ['leo', 'bello', 'bird', 'deer', 'fox'],
+    languages: ['de'],
+    weathers: ['sunny', 'cloudy'],
+    title: german('Psst! Ein Morgen im Wald'),
+    beats: [
+      { kind: 'narration', text: german('Es ist halb sechs am Morgen. Leo geht mit Bello und dir in den Wald. Es ist noch kühl, und über dem Weg liegt weißer Nebel.') },
+      { kind: 'narration', enters: ['bird'], sfx: 'tweet', text: german('In den Bäumen singen schon die ersten Vögel.') },
+      { kind: 'line', speaker: 'bird', mood: 'happy', text: german('Piep, piep, piep!') },
+      { kind: 'line', speaker: 'leo', text: german('Hörst du das, {name}? Die Vögel singen jeden Morgen um diese Zeit. So sagen sie: Das ist mein Baum!') },
+      { kind: 'line', speaker: 'bello', mood: 'happy', text: german('Wuff! Wuff!') },
+      { kind: 'line', speaker: 'leo', mood: 'worried', text: german('Psst, Bello! Leise! Wenn wir laut sind, sehen wir heute kein einziges Tier.') },
+      { kind: 'narration', enters: ['deer'], faces: { deer: 'curious' }, text: german('Plötzlich steht zwischen den Bäumen ein Reh. Es ist braun und hat große, dunkle Augen.') },
+      { kind: 'line', speaker: 'leo', mood: 'curious', text: german('Psst … Ganz leise, {name}. Was machen wir jetzt?') },
+      { kind: 'reply', to: 'leo', options: [
+        german('Wir bleiben ganz still stehen und schauen nur.'),
+        german('Wir rufen laut Hallo!'),
+        german('Wir werfen Bello einen Ball zu.')
+      ] },
+      { kind: 'narration', exits: ['deer'], text: german('Ihr bleibt still stehen. Das Reh frisst ein paar grüne Blätter, dann springt es mit drei großen Sprüngen davon.') },
+      { kind: 'line', speaker: 'bello', mood: 'sad', text: german('Wuff …') },
+      { kind: 'narration', enters: ['fox'], faces: { fox: 'curious' }, text: german('Fünf Minuten später kommt ein Fuchs aus dem Gebüsch. Sein Fell ist orange, und sein Schwanz hat eine weiße Spitze.') },
+      { kind: 'line', speaker: 'leo', mood: 'surprised', text: german('Ein Fuchs! Den sieht man fast nur ganz früh am Morgen oder am Abend.') },
+      { kind: 'line', speaker: 'bello', mood: 'surprised', text: german('Wuff! Wuff! Wuff!') },
+      { kind: 'narration', exits: ['fox'], text: german('Der Fuchs schaut euch eine Sekunde lang an – und weg ist er.') },
+      { kind: 'line', speaker: 'leo', mood: 'laughing', text: german('Ach, Bello! Psst heißt leise, nicht dreimal bellen. Aber egal: zwei wilde Tiere vor sieben Uhr – was für ein Morgen!') },
+      { kind: 'question', prompt: german('Um wie viel Uhr geht ihr in den Wald?'), options: [german('Um halb sechs'), german('Um halb zehn'), german('Um sechs Uhr abends')] },
+      { kind: 'question', prompt: german('Welche Farbe hat der Nebel?'), options: [german('Weiß'), german('Grün'), german('Schwarz')] },
+      { kind: 'question', prompt: german('Warum soll Bello leise sein?'), options: [german('Sonst sehen sie keine Tiere.'), german('Sonst wachen die Nachbarn auf.'), german('Sonst wird Leo müde.')] },
+      { kind: 'question', prompt: german('Wie viele Sprünge braucht das Reh?'), options: [german('Drei'), german('Zehn'), german('Einen')] },
+      { kind: 'question', prompt: german('Woran erkennt man den Fuchs?'), options: [german('Am orangen Fell und an der weißen Schwanzspitze'), german('An den langen grauen Ohren'), german('An den schwarzen Streifen')] },
+      { kind: 'question', prompt: german('Wann sieht man Füchse am ehesten?'), options: [german('Ganz früh am Morgen oder am Abend'), german('Mittags um zwölf'), german('Nur im Winter')] },
+      { kind: 'question', prompt: german('Warum ist der Fuchs so schnell weg?'), options: [german('Weil Bello bellt'), german('Weil es regnet'), german('Weil Leo singt')] }
+    ]
   }
 ];
