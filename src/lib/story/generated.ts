@@ -2,7 +2,7 @@ import { playableLanguages, vocabularyLevels, wordDefinitions, wordMetadata, wor
 import type { SoundEffect } from '#lib/sounds.js';
 import { MASTERY_THRESHOLD, VOCABULARY_REVIEW_STORAGE_PREFIX, normalizeReviewProgress, prioritizeLearningWords, type ReviewProgress } from '#lib/vocab/spacedRepetition.js';
 import { readMissedWords } from './missedWords';
-import type { Story, StoryBeat, Text } from './stories';
+import type { Story, StoryBeat, StoryProp, Text } from './stories';
 
 /*
  * Stories built on the fly around the learner's own words: first the words they recently got wrong
@@ -17,7 +17,8 @@ import type { Story, StoryBeat, Text } from './stories';
  * Who says what is fixed where a language marks the speaker's gender: Mia greets and explains,
  * Tom asks about a word he read and says goodbye; confirmations and listening tasks suit either.
  */
-type Cue = { text: string; sfx?: SoundEffect };
+// A `wool` cue sends Lilith dashing off after the ball of wool; she is back for the next beat.
+type Cue = { text: string; sfx?: SoundEffect; prop?: StoryProp };
 type Guest = 'hans' | 'albert';
 type Templates = {
   titles: string[];
@@ -70,7 +71,7 @@ const templates: Record<Language, Templates> = {
       { text: 'Es klingelt an der Tür. Es ist nur der Nachbar mit einem Paket.', sfx: 'doorbell' },
       { text: 'Lilith kommt zu dir und schnurrt ganz leise.', sfx: 'purr' },
       { text: 'Klopf, klopf! Die Nachbarin bringt einen Kuchen vorbei.', sfx: 'knock' },
-      { text: 'Lilith jagt ein Wollknäuel quer durchs Zimmer.', sfx: 'meow' }
+      { text: 'Lilith jagt ein Wollknäuel quer durchs Zimmer.', sfx: 'meow', prop: 'wool' }
     ],
     closings: ['Super gemacht, {name}! Lilith ist stolz auf dich.', 'Toll, {name}! Diese Wörter vergisst du nicht so schnell.', 'Das war ein schöner Abend, {name}. Bis bald!'],
     guests: {
@@ -116,7 +117,7 @@ const templates: Record<Language, Templates> = {
       { text: 'The doorbell rings. It’s only the neighbour with a parcel.', sfx: 'doorbell' },
       { text: 'Lilith comes over to you and purrs very softly.', sfx: 'purr' },
       { text: 'Knock, knock! The neighbour brings round a cake.', sfx: 'knock' },
-      { text: 'Lilith chases a ball of wool right across the room.', sfx: 'meow' }
+      { text: 'Lilith chases a ball of wool right across the room.', sfx: 'meow', prop: 'wool' }
     ],
     closings: ['Well done, {name}! Lilith is proud of you.', 'Brilliant, {name}! You won’t forget these words so quickly.', 'That was a lovely evening, {name}. See you soon!'],
     closingNarrations: ['Lilith curls up in your lap and purrs.', 'Mia makes one more cup of tea, and Lilith falls asleep on the sofa.', 'Lilith yawns, stretches and purrs happily.']
@@ -149,7 +150,7 @@ const templates: Record<Language, Templates> = {
       { text: 'On sonne à la porte. C’est juste le voisin avec un colis.', sfx: 'doorbell' },
       { text: 'Lilith vient vers toi et ronronne tout doucement.', sfx: 'purr' },
       { text: 'Toc, toc ! La voisine apporte un gâteau.', sfx: 'knock' },
-      { text: 'Lilith court après une pelote de laine à travers toute la pièce.', sfx: 'meow' }
+      { text: 'Lilith court après une pelote de laine à travers toute la pièce.', sfx: 'meow', prop: 'wool' }
     ],
     closings: ['Bravo, {name} ! Lilith est fière de toi.', 'Génial, {name} ! Tu n’oublieras pas ces mots de sitôt.', 'C’était une belle soirée, {name}. À bientôt !'],
     closingNarrations: ['Lilith se roule en boule sur tes genoux et ronronne.', 'Mia prépare encore un thé, et Lilith s’endort sur le canapé.', 'Lilith bâille, s’étire et ronronne, contente.']
@@ -182,7 +183,7 @@ const templates: Record<Language, Templates> = {
       { text: 'Suonano alla porta. È solo il vicino con un pacco.', sfx: 'doorbell' },
       { text: 'Lilith viene da te e fa le fusa piano piano.', sfx: 'purr' },
       { text: 'Toc toc! La vicina porta una torta.', sfx: 'knock' },
-      { text: 'Lilith rincorre un gomitolo di lana per tutta la stanza.', sfx: 'meow' }
+      { text: 'Lilith rincorre un gomitolo di lana per tutta la stanza.', sfx: 'meow', prop: 'wool' }
     ],
     closings: ['Ottimo lavoro, {name}! Lilith è fiera di te.', 'Fantastico, {name}! Queste parole non le dimentichi più.', 'È stata una bella serata, {name}. A presto!'],
     closingNarrations: ['Lilith si acciambella sulle tue ginocchia e fa le fusa.', 'Mia prepara ancora un tè e Lilith si addormenta sul divano.', 'Lilith sbadiglia, si stiracchia e fa le fusa contenta.']
@@ -215,7 +216,7 @@ const templates: Record<Language, Templates> = {
       { text: 'Llaman a la puerta. Es solo el vecino con un paquete.', sfx: 'doorbell' },
       { text: 'Lilith se acerca a ti y ronronea muy bajito.', sfx: 'purr' },
       { text: '¡Toc, toc! La vecina trae un pastel.', sfx: 'knock' },
-      { text: 'Lilith persigue un ovillo de lana por toda la habitación.', sfx: 'meow' }
+      { text: 'Lilith persigue un ovillo de lana por toda la habitación.', sfx: 'meow', prop: 'wool' }
     ],
     closings: ['¡Muy bien, {name}! Lilith está orgullosa de ti.', '¡Genial, {name}! Estas palabras no las vas a olvidar tan pronto.', 'Ha sido una noche muy bonita, {name}. ¡Hasta pronto!'],
     closingNarrations: ['Lilith se acurruca en tu regazo y ronronea.', 'Mia prepara otro té y Lilith se duerme en el sofá.', 'Lilith bosteza, se estira y ronronea contenta.']
@@ -248,7 +249,7 @@ const templates: Record<Language, Templates> = {
       { text: 'A campainha toca. É só o vizinho com um pacote.', sfx: 'doorbell' },
       { text: 'A Lilith vem até você e ronrona bem baixinho.', sfx: 'purr' },
       { text: 'Toc, toc! A vizinha traz um bolo.', sfx: 'knock' },
-      { text: 'A Lilith corre atrás de um novelo de lã pela sala inteira.', sfx: 'meow' }
+      { text: 'A Lilith corre atrás de um novelo de lã pela sala inteira.', sfx: 'meow', prop: 'wool' }
     ],
     closings: ['Muito bem, {name}! A Lilith está orgulhosa de você.', 'Demais, {name}! Você não vai esquecer essas palavras tão cedo.', 'Foi uma noite muito boa, {name}. Até logo!'],
     closingNarrations: ['A Lilith se enrola no seu colo e ronrona.', 'A Mia faz mais um chá, e a Lilith adormece no sofá.', 'A Lilith boceja, se espreguiça e ronrona contente.']
@@ -281,7 +282,7 @@ const templates: Record<Language, Templates> = {
       { text: 'Дзвонять у двері. Це лише сусід із посилкою.', sfx: 'doorbell' },
       { text: 'Ліліт підходить до тебе й тихенько муркоче.', sfx: 'purr' },
       { text: 'Тук-тук! Сусідка приносить пиріг.', sfx: 'knock' },
-      { text: 'Ліліт ганяється за клубком вовни по всій кімнаті.', sfx: 'meow' }
+      { text: 'Ліліт ганяється за клубком вовни по всій кімнаті.', sfx: 'meow', prop: 'wool' }
     ],
     closings: ['Чудова робота, {name}! Ліліт пишається тобою.', 'Супер, {name}! Ці слова ти так швидко не забудеш.', 'Це був чудовий вечір, {name}. До зустрічі!'],
     closingNarrations: ['Ліліт згортається клубочком у тебе на колінах і муркоче.', 'Мія робить ще один чай, а Ліліт засинає на дивані.', 'Ліліт позіхає, потягується й задоволено муркоче.']
@@ -414,7 +415,8 @@ export function generateStory(language: Language, level: VocabularyLevel, includ
   const visit = guest && text.guests ? text.guests[guest] : null;
   if (guest && visit) {
     const arrival = pick(visit.arrivals);
-    beats.push({ kind: 'narration', text: same(arrival.text), sfx: arrival.sfx }, { kind: 'line', speaker: guest, text: same(pick(visit.greetings)) });
+    // The guest only walks on stage once they have knocked or rung.
+    beats.push({ kind: 'narration', text: same(arrival.text), sfx: arrival.sfx, enters: [guest] }, { kind: 'line', speaker: guest, text: same(pick(visit.greetings)) });
   }
   // Lilith and the guest each speak up after one word and something happens around the house after
   // one to three others, each at a random point of the evening.
@@ -427,8 +429,12 @@ export function generateStory(language: Language, level: VocabularyLevel, includ
     if (index === lilithAfter) beats.push({ kind: 'line', speaker: 'lilith', text: same(pick(text.lilithLines)), sfx: 'meow' });
     if (guest && visit && index === guestAfter) beats.push({ kind: 'line', speaker: guest, text: same(pick(visit.remarks)) });
     const interlude = interludes[interludeAfter.indexOf(index)];
-    if (interlude) beats.push({ kind: 'narration', text: same(interlude.text), sfx: interlude.sfx });
+    if (interlude) beats.push({ kind: 'narration', text: same(interlude.text), sfx: interlude.sfx, prop: interlude.prop, exits: interlude.prop === 'wool' ? ['lilith'] : undefined });
   });
   beats.push({ kind: 'line', speaker: 'tom', text: same(pick(text.closings)) }, { kind: 'narration', text: same(pick(text.closingNarrations)), sfx: 'purr' });
+  // After chasing the wool, Lilith strolls back in with the next line or narration.
+  const chase = beats.findIndex((beat) => beat.kind === 'narration' && beat.exits?.includes('lilith'));
+  const back = beats.findIndex((beat, index) => chase !== -1 && index > chase && (beat.kind === 'narration' || beat.kind === 'line'));
+  if (back !== -1) beats[back] = { ...beats[back], enters: ['lilith'] } as StoryBeat;
   return { id: `generated-${Date.now()}`, level, scene: 'home', cast: guest ? ['mia', 'tom', 'lilith', guest] : ['mia', 'tom', 'lilith'], title: same(pick(text.titles)), beats, generated: true };
 }

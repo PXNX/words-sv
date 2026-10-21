@@ -1,24 +1,27 @@
 <script lang="ts">
   import { onMount, tick, untrack } from 'svelte';
+  import { flip } from 'svelte/animate';
+  import { fly } from 'svelte/transition';
   import { goto } from '$app/navigation';
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { playErrorSound, playSoundEffect, playSuccessSound, soundEffectSeconds, stopSoundEffects } from '#lib/sounds.js';
-  import { characterNames, fillName, moodFor, storiesFor, withWeather, type CharacterId, type Mood, type Story, type StoryBeat } from './stories';
+  import { playErrorSound, playSoundEffect, playSuccessSound, soundEffectSeconds, startCrackle, stopSoundEffects } from '#lib/sounds.js';
+  import { characterNames, fillName, moodFor, storiesFor, withWeather, type CharacterId, type HeldItem, type Mood, type Story, type StoryBeat } from './stories';
   import type { SoundEffect } from '#lib/sounds.js';
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
   import { generateStory, hasMissedWords } from './generated';
   import { clearMissedWord, recordMissedWord } from './missedWords';
   import { applyVoice, type Speaker } from './voices';
-  import { intonationOf, pauseAfter, sentences, splitSounds } from './speech';
+  import { intonationOf, pauseAfter, pronounceable, sentences, splitSounds } from './speech';
   import { LipSync } from './lipSync.svelte';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconVolumeOff from '~icons/material-symbols/volume-off-rounded';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
   import IconQuestion from '~icons/material-symbols/question-mark-rounded';
+  import IconAnnouncement from '~icons/material-symbols/campaign-rounded';
 
   const COMPLETED_KEY = 'wordcircle-story-completed-v1';
   const AUTO_READ_KEY = 'wordcircle-story-auto-read-v1';
@@ -82,6 +85,19 @@
   let liveUtterances: SpeechSynthesisUtterance[] = [];
   // Set once the learner leaves the story, so nothing still pending starts speaking or playing sounds.
   let left = false;
+  // Without reading aloud, a line's speaker moves their mouth for about as long as the line would
+  // take to say, then stops.
+  let miming = $state<number | null>(null);
+  let mimeTimer = 0;
+  // While a question is being read out, its speaker raises an eyebrow.
+  let askingAloud = $state(false);
+  // Fades out the loudspeaker crackle of an announcement that is being read.
+  let crackle: () => void = () => {};
+  function silenceCrackle() {
+    crackle();
+    crackle = () => {};
+  }
+  let reduceMotion = $state(false);
 
   const lang = $derived(settings.lang);
   const name = $derived(settings.firstName);
@@ -97,6 +113,35 @@
   const ballThrown = $derived(Boolean(story?.beats.slice(0, revealed).some((beat) => beat.kind === 'narration' && beat.prop === 'ball')));
   const lilithHappy = $derived(Boolean(story?.cast.includes('lilith')) && castMood('lilith') === 'happy');
   const purring = $derived(current ? [beatSounds(current).start, beatSounds(current).slot].includes('purr') : false);
+  const woolRolling = $derived(current?.kind === 'narration' && current.prop === 'wool');
+  // The announcer only gets a voice cast in stories that have announcements.
+  const voiceCast = $derived<Speaker[]>(story ? [...story.cast, ...(story.beats.some((beat) => beat.kind === 'narration' && beat.announcement) ? ['announcer' as const] : [])] : []);
+  // Who is on stage and what they hold so far. Everyone whose first stage cue is an entrance waits
+  // in the wings until then; exits send them off, and their own lines bring them back.
+  const staging = $derived.by(() => {
+    const present = new Set<CharacterId>();
+    const holding: Partial<Record<CharacterId, HeldItem>> = {};
+    if (!story) return { present, holding };
+    const cues = (beat: StoryBeat, member: CharacterId) => beat.kind === 'narration' || beat.kind === 'line'
+      ? { enters: Boolean(beat.enters?.includes(member)), other: Boolean(beat.exits?.includes(member)) || (beat.kind === 'line' && beat.speaker === member) }
+      : { enters: false, other: false };
+    for (const member of story.cast) {
+      const first = story.beats.find((beat) => cues(beat, member).enters || cues(beat, member).other);
+      if (!first || !cues(first, member).enters) present.add(member);
+    }
+    for (const beat of story.beats.slice(0, revealed)) {
+      if (beat.kind !== 'narration' && beat.kind !== 'line') continue;
+      for (const member of beat.enters ?? []) present.add(member);
+      if (beat.kind === 'line') present.add(beat.speaker);
+      for (const member of beat.exits ?? []) present.delete(member);
+      for (const [member, item] of Object.entries(beat.holds ?? {}) as [CharacterId, HeldItem | null][]) {
+        if (item) holding[member] = item;
+        else delete holding[member];
+      }
+    }
+    return { present, holding };
+  });
+  const onStage = $derived(story ? story.cast.filter((member) => staging.present.has(member)) : []);
 
   // Roughly every third longer word is lost in the noise of a `noisy` line.
   function drownedWords(text: string) {
@@ -151,6 +196,7 @@
   // A beat's sound: played where the text has onomatopoeia ("klirr!", "Miau!") when read aloud,
   // otherwise as the beat appears. Lilith purrs and Bello barks whenever they talk.
   function beatSounds(beat: StoryBeat): { start: SoundEffect | null; slot: SoundEffect | null } {
+    if (beat.kind === 'narration' && beat.announcement) return { start: beat.sfx ?? 'gong', slot: beat.sfx ?? null };
     if (beat.kind === 'narration') return { start: beat.sfx ?? null, slot: beat.sfx ?? null };
     if (beat.kind !== 'line') return { start: null, slot: null };
     const pet = petSounds[beat.speaker];
@@ -172,10 +218,17 @@
     }
     playBeatSound(beat);
     if (beat.kind === 'line' && beat.word) void perform(beat.word, beat.speaker, index, moodFor(beat));
+    else if (beat.kind === 'line') mime(index, beat.text[lang]);
+  }
+  function mime(index: number, text: string) {
+    miming = index;
+    clearTimeout(mimeTimer);
+    mimeTimer = window.setTimeout(() => (miming = null), Math.min(6000, 900 + text.length * 55));
   }
   function readBeat(beat: StoryBeat, index: number) {
     const sounds = beatSounds(beat);
-    if (beat.kind === 'narration') void perform(say(beat.text[lang]), 'narrator', index, 'neutral', sounds.start, sounds.slot);
+    if (beat.kind === 'narration' && beat.announcement) void announce(say(beat.text[lang]));
+    else if (beat.kind === 'narration') void perform(say(beat.text[lang]), 'narrator', index, 'neutral', sounds.start, sounds.slot);
     else if (beat.kind === 'line') void perform(say(beat.text[lang]), beat.speaker, index, moodFor(beat), sounds.start, sounds.slot, beat.noisy);
     else if (beat.kind === 'question') void perform(say(beat.prompt[lang]), beat.asker ?? 'narrator', index, 'curious');
   }
@@ -191,8 +244,13 @@
     if (member === 'lilith' && petted) return 'happy';
     if (member === 'lilith' && current?.kind === 'narration' && current.sfx === 'purr') return 'happy';
     if (reaction && (reaction.who === 'all' || reaction.who === member)) return reaction.mood;
+    // A question being read out lifts the speaker's eyebrow, whatever the rest of the line's mood.
+    if (askingAloud && lipSync.speaker === member) return 'curious';
+    const face = current?.kind === 'narration' || current?.kind === 'line' ? current.faces?.[member] : undefined;
+    if (face) return face;
     if (current?.kind === 'narration' && current.sfx && startlingSounds.includes(current.sfx)) return 'surprised';
     if (current?.kind === 'line' && current.speaker === member) return moodFor(current);
+    if (current?.kind === 'question' && current.asker === member) return 'curious';
     if (current?.kind === 'reply' && current.to === member) return 'curious';
     return 'neutral';
   }
@@ -273,6 +331,7 @@
     if (!canSpeak()) return;
     const token = ++performing;
     window.speechSynthesis.cancel();
+    silenceCrackle();
     const parts = splitSounds(text, lang);
     if (startSound && !parts.some((part) => part.kind === 'sound')) playSoundEffect(settings.sound, startSound);
     if (speaker === 'narrator') lipSync.stop();
@@ -289,7 +348,33 @@
         await wait(250);
       }
     }
-    if (token === performing) lipSync.stop();
+    if (token === performing) {
+      lipSync.stop();
+      askingAloud = false;
+    }
+  }
+  // A station announcement: the narrator sets the scene ("Der Lautsprecher knackt:"), then the gong
+  // sounds and the quoted part comes over a crackling loudspeaker in the announcer's voice.
+  async function announce(text: string) {
+    if (!canSpeak()) return;
+    const quote = text.match(/^(.*?)[„“"«»]([^„“”"«»]+)[“”"«»]\s*$/su);
+    if (!quote) {
+      await perform(text, 'narrator', null, 'neutral', 'gong');
+      return;
+    }
+    const token = ++performing;
+    window.speechSynthesis.cancel();
+    silenceCrackle();
+    lipSync.stop();
+    const intro = quote[1].replace(/[\s:,–—-]+$/u, '');
+    if (/\p{L}/u.test(intro)) await speakSentences(intro, 'narrator', 'neutral', token, false);
+    if (token !== performing) return;
+    playSoundEffect(settings.sound, 'gong');
+    await wait(soundEffectSeconds.gong * 1000);
+    if (token !== performing) return;
+    crackle = startCrackle(settings.sound);
+    await speakSentences(quote[2], 'announcer', 'neutral', token, false);
+    silenceCrackle();
   }
   // One utterance per sentence, each with its own melody, and a short breath in between.
   async function speakSentences(text: string, speaker: Speaker, mood: Mood, token: number, noisy: boolean) {
@@ -309,12 +394,15 @@
         clearTimeout(safety);
         resolve();
       };
-      const utterance = new SpeechSynthesisUtterance(sentence);
+      const spoken = pronounceable(sentence, lang);
+      const utterance = new SpeechSynthesisUtterance(spoken);
       utterance.lang = locale;
-      applyVoice(utterance, speaker, lang, locale, story?.cast ?? [], baseRate, mood);
+      applyVoice(utterance, speaker, lang, locale, voiceCast, baseRate, mood);
       // Under a roaring plane the voice is barely carrying.
       if (noisy) utterance.volume *= 0.45;
-      if (speaker !== 'narrator') lipSync.track(utterance, sentence);
+      if (speaker !== 'narrator' && speaker !== 'announcer') lipSync.track(utterance, spoken);
+      askingAloud = intonationOf(sentence) === 'question';
+      utterance.addEventListener('end', () => (askingAloud = false));
       utterance.addEventListener('end', done);
       utterance.addEventListener('error', done);
       liveUtterances = [utterance];
@@ -327,6 +415,9 @@
     performing += 1;
     liveUtterances = [];
     lipSync.stop();
+    silenceCrackle();
+    askingAloud = false;
+    miming = null;
     if (canSpeak()) window.speechSynthesis.cancel();
   }
 
@@ -357,6 +448,7 @@
   onMount(() => {
     if (!settings.firstName) void goto('/', { replaceState: true });
     speechSupported = canSpeak();
+    reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const onPageHide = () => leave();
     const onPageShow = (event: PageTransitionEvent) => { if (event.persisted) left = false; };
     window.addEventListener('pagehide', onPageHide);
@@ -367,6 +459,7 @@
       leave();
       clearTimeout(heartsTimer);
       clearTimeout(pettedTimer);
+      clearTimeout(mimeTimer);
     };
   });
 </script>
@@ -384,10 +477,11 @@
       <!-- Like on a theatre stage, the house lights go down while someone talks -->
       <div class="story-dark" class:on={speaker !== null} aria-hidden="true"></div>
       <div class="story-cast">
-        {#each story.cast as member (member)}
-          <figure class:active={speaker === member} class:speaking={lipSync.speaker === member} class:dimmed={speaker !== null && speaker !== member} class:pet={smallAnimals.includes(member)}>
+        <!-- Characters walk on when they enter (a guest after knocking) and dash off when they leave -->
+        {#each onStage as member (member)}
+          <figure class:active={speaker === member} class:speaking={lipSync.speaker === member} class:dimmed={speaker !== null && speaker !== member} class:pet={smallAnimals.includes(member)} animate:flip={{ duration: reduceMotion ? 0 : 350 }} in:fly={{ x: -140, duration: reduceMotion ? 0 : 520 }} out:fly={{ x: 320, duration: reduceMotion ? 0 : 480 }}>
             <span class="story-beam" aria-hidden="true"></span>
-            <StoryCharacter id={member} mood={castMood(member)} talking={!lipSync.speaker && current?.kind === 'line' && current.speaker === member} mouth={lipSync.speaker === member ? lipSync.open : null} label={characterNames[member][lang]} />
+            <StoryCharacter id={member} mood={castMood(member)} holding={staging.holding[member] ?? null} talking={!lipSync.speaker && miming === currentIndex && current?.kind === 'line' && current.speaker === member} mouth={lipSync.speaker === member ? lipSync.open : null} label={characterNames[member][lang]} />
             {#if member === 'lilith'}<button type="button" class="story-pet" onclick={petLilith} aria-label={labels.petLilith}></button>{/if}
             {#if member === 'lilith' && heartsShown}
               {#key hearts}<span class="story-hearts" aria-hidden="true">{#each [0, 1, 2] as heart (heart)}<svg viewBox="0 0 24 22" style:--heart={heart}><path d="M12 21C5.2 15.4 1 11.6 1 7.1A5.6 5.6 0 0 1 12 5.2 5.6 5.6 0 0 1 23 7.1c0 4.5-4.2 8.3-11 13.9Z" /></svg>{/each}</span>{/key}
@@ -397,18 +491,23 @@
           </figure>
         {/each}
       </div>
+      {#if woolRolling}
+        <!-- A ball of wool rolls across the room, with Lilith hard on its heels -->
+        {#key currentIndex}<span class="story-wool" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#e0647a" /><path d="M4 9q8-4 16 2M3.5 14q9-5 17 1M7 20q4-9 12-14M6 5q2 9 10 16" fill="none" stroke="#b33a52" stroke-width="1.4" stroke-linecap="round" /></svg></span>{/key}
+      {/if}
     </div>
 
     <ol class="story-transcript" bind:this={transcript} lang={lang} aria-live="polite">
       {#each story.beats.slice(0, revealed) as beat, index (index)}
         {#if beat.kind === 'narration'}
-          <li class="story-narration">
+          <li class="story-narration" class:story-announcement={beat.announcement}>
+            {#if beat.announcement}<IconAnnouncement class="story-announcement-icon" aria-hidden="true" />{/if}
             <p>{say(beat.text[lang])}</p>
             {#if speechSupported}<button type="button" class="btn-play btn-play-round btn-play-sm story-listen" onclick={() => readBeat(beat, index)} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
           </li>
         {:else if beat.kind === 'line'}
           <li class="story-line" class:current={index === currentIndex} class:speaking={lipSync.beat === index}>
-            <span class="story-avatar" aria-hidden="true"><StoryCharacter id={beat.speaker} mood={moodFor(beat)} mouth={lipSync.beat === index && lipSync.speaker === beat.speaker ? lipSync.open : null} /></span>
+            <span class="story-avatar" aria-hidden="true"><StoryCharacter id={beat.speaker} mood={moodFor(beat)} still /></span>
             <div class="story-bubble">
               <b>{characterNames[beat.speaker][lang]}</b>
               {#if beat.noisy && index === currentIndex}
@@ -510,6 +609,12 @@
   .story-transcript > li { animation:story-in .28s cubic-bezier(.23,1,.32,1); }
   .story-narration { display:flex;align-items:flex-start;gap:.4rem;padding:.6rem .75rem;border-left:3px solid #e6a527;background:rgba(255,253,247,.6); }
   .story-narration p { flex:1;margin:0;color:#596477;font-size:.78rem;font-style:italic;font-weight:600;line-height:1.45; }
+  /* Station announcements carry a loudspeaker and the station's blue */
+  .story-narration.story-announcement { border-left-color:#4b78c2;background:rgba(75,120,194,.08); }
+  .story-narration :global(.story-announcement-icon) { flex:none;width:1.1rem;height:1.1rem;margin-top:.05rem;color:#4b78c2; }
+  /* Lilith's ball of wool bounces across the floor and out of the room */
+  .story-wool { position:absolute;z-index:3;left:30%;bottom:6%;width:1.3rem;height:1.3rem;pointer-events:none;animation:story-wool-x 1.4s cubic-bezier(.3,.5,.4,1) both; }
+  .story-wool svg { display:block;width:100%;height:100%;animation:story-ball-spin 1.4s linear reverse both; }
   .story-line { display:flex;align-items:flex-end;gap:.45rem;max-width:92%; }
   .story-avatar { flex:none;width:2.1rem;height:2.6rem;overflow:hidden;border:1px solid rgba(23,42,69,.2);border-radius:50%;background:#fffdf7; }
   .story-avatar :global(.story-character) { width:2.1rem;height:2.6rem;transform:scale(1.6) translateY(12%); }
@@ -561,7 +666,8 @@
   @keyframes story-ball-x { 0% { transform:translateX(13rem); } 72% { transform:translateX(0); } 86% { transform:translateX(-.45rem); } 100% { transform:translateX(-.6rem); } }
   @keyframes story-ball-y { 0% { translate:0 -3.5rem;animation-timing-function:ease-out; } 30% { translate:0 -6.2rem;animation-timing-function:ease-in; } 72% { translate:0 0;animation-timing-function:ease-out; } 82% { translate:0 -1.1rem;animation-timing-function:ease-in; } 91% { translate:0 0;animation-timing-function:ease-out; } 96% { translate:0 -.3rem;animation-timing-function:ease-in; } 100% { translate:0 0; } }
   @keyframes story-ball-spin { from { rotate:0deg; } to { rotate:-760deg; } }
-  @media (prefers-reduced-motion:reduce) { .story-transcript > li,.story-prompt--question,.story-options button.missed,.story-cast figure.speaking::before,.story-ball,.story-ball span { animation:none; } .story-hearts svg { animation:none;opacity:1; } .story-cast figure,.story-cast figure::before,.story-dark,.story-beam { transition:none; } }
+  @keyframes story-wool-x { 0% { transform:translate(0,0); } 25% { transform:translate(4rem,-1rem); } 45% { transform:translate(8rem,0); } 65% { transform:translate(11rem,-.4rem); } 100% { transform:translate(20rem,0); } }
+  @media (prefers-reduced-motion:reduce) { .story-wool { display:none; } .story-transcript > li,.story-prompt--question,.story-options button.missed,.story-cast figure.speaking::before,.story-ball,.story-ball span { animation:none; } .story-hearts svg { animation:none;opacity:1; } .story-cast figure,.story-cast figure::before,.story-dark,.story-beam { transition:none; } }
 
   :global(html.dark) .story-header h1 { color:#fffdf7; }
   :global(html.dark) .story-stage { border-color:rgba(255,253,247,.3); }

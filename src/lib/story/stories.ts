@@ -4,10 +4,12 @@ import type { SoundEffect } from '#lib/sounds.js';
 
 export type Text = Record<Language, string>;
 export type CharacterId = 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello' | 'lilith' | 'hans' | 'albert' | 'sabine' | 'enzo' | 'jana' | 'becker' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake' | 'ali' | 'robert' | 'fritz' | 'tobias' | 'selma' | 'kumar' | 'simon';
-export type Mood = 'neutral' | 'happy' | 'sad' | 'surprised' | 'curious';
+export type Mood = 'neutral' | 'happy' | 'sad' | 'surprised' | 'curious' | 'angry' | 'worried' | 'laughing' | 'sleepy';
 export type SceneId = 'cafe' | 'park' | 'station' | 'home' | 'office' | 'flat' | 'square' | 'attic' | 'beergarden' | 'farm' | 'zoo' | 'butcher' | 'bakery' | 'boutique' | 'perfumery' | 'workshop' | 'beach' | 'airport';
 export type Weather = 'sunny' | 'cloudy' | 'rainy' | 'snowy';
-export type StoryProp = 'ball';
+export type StoryProp = 'ball' | 'wool';
+// Something a character holds (or, for Lilith, has in front of her) from that beat on.
+export type HeldItem = 'cake' | 'fish';
 
 // `{name}` is replaced with the learner's first name, so characters can speak to them directly.
 // The first option of every question/reply is the correct one; the UI shuffles them.
@@ -19,9 +21,15 @@ export type StoryProp = 'ball';
 // is not being read aloud, and a question's `asker` reads its prompt. `noisy` drowns a line in noise (say,
 // a plane taking off): its `sfx` roars under the speech, the voice gets quieter and some words are
 // lost in the text, so the learner has to listen closely.
+// Staging: a character whose first appearance is in `enters` stays off stage until then (a guest
+// who knocks, someone who walks up); `exits` sends them running off, and they come back when they
+// next speak or enter. `holds` hands characters an item (null takes it away again); `faces` sets how
+// the others look while a beat plays. An `announcement` is a narration whose quoted part comes over
+// a station loudspeaker: a gong, a crackling line and a different voice.
+type Staging = { enters?: CharacterId[]; exits?: CharacterId[]; holds?: Partial<Record<CharacterId, HeldItem | null>>; faces?: Partial<Record<CharacterId, Mood>> };
 export type StoryBeat =
-  | { kind: 'narration'; text: Text; sfx?: SoundEffect; prop?: StoryProp }
-  | { kind: 'line'; speaker: CharacterId; text: Text; sfx?: SoundEffect; mood?: Mood; word?: string; noisy?: boolean }
+  | ({ kind: 'narration'; text: Text; sfx?: SoundEffect; prop?: StoryProp; announcement?: boolean } & Staging)
+  | ({ kind: 'line'; speaker: CharacterId; text: Text; sfx?: SoundEffect; mood?: Mood; word?: string; noisy?: boolean } & Staging)
   | { kind: 'question'; prompt: Text; options: Text[]; focus?: string; asker?: CharacterId; word?: string }
   | { kind: 'reply'; to: CharacterId; options: Text[]; focus?: string; word?: string };
 
@@ -129,7 +137,7 @@ export const stories: Story[] = [
         { de: 'Der Zug ist spät.', en: 'The train is late.', fr: 'Le train est en retard.', it: 'Il treno è in ritardo.', es: 'El tren llega tarde.', pt: 'O trem está atrasado.', uk: 'Потяг запізнюється.' }
       ] },
       { kind: 'line', speaker: 'mia', text: { de: 'Danke, {name}! Lilith mag Fisch.', en: 'Thanks, {name}! Lilith loves fish.', fr: 'Merci, {name} ! Lilith adore le poisson.', it: 'Grazie, {name}! Lilith adora il pesce.', es: '¡Gracias, {name}! A Lilith le encanta el pescado.', pt: 'Obrigada, {name}! A Lilith adora peixe.', uk: 'Дякую, {name}! Ліліт любить рибу.' } },
-      { kind: 'narration', sfx: 'purr', text: { de: 'Lilith frisst und schnurrt. Jetzt ist sie glücklich.', en: 'Lilith eats and purrs. Now she is happy.', fr: 'Lilith mange et ronronne. Maintenant, elle est contente.', it: 'Lilith mangia e fa le fusa. Adesso è felice.', es: 'Lilith come y ronronea. Ahora está feliz.', pt: 'A Lilith come e ronrona. Agora ela está feliz.', uk: 'Ліліт їсть і муркоче. Тепер вона щаслива.' } },
+      { kind: 'narration', sfx: 'purr', holds: { lilith: 'fish' }, text: { de: 'Lilith frisst und schnurrt. Jetzt ist sie glücklich.', en: 'Lilith eats and purrs. Now she is happy.', fr: 'Lilith mange et ronronne. Maintenant, elle est contente.', it: 'Lilith mangia e fa le fusa. Adesso è felice.', es: 'Lilith come y ronronea. Ahora está feliz.', pt: 'A Lilith come e ronrona. Agora ela está feliz.', uk: 'Ліліт їсть і муркоче. Тепер вона щаслива.' } },
       { kind: 'question', prompt: { de: 'Wo ist das Katzenfutter?', en: 'Where is the cat food?', fr: 'Où est la nourriture pour chat ?', it: 'Dov’è il cibo per gatti?', es: '¿Dónde está la comida del gato?', pt: 'Onde está a ração da gata?', uk: 'Де котячий корм?' }, options: [
         { de: 'In der Küche', en: 'In the kitchen', fr: 'Dans la cuisine', it: 'In cucina', es: 'En la cocina', pt: 'Na cozinha', uk: 'На кухні' },
         { de: 'Im Bad', en: 'In the bathroom', fr: 'Dans la salle de bain', it: 'In bagno', es: 'En el baño', pt: 'No banheiro', uk: 'У ванній' },
@@ -167,7 +175,7 @@ export const stories: Story[] = [
       { kind: 'narration', text: { de: 'Es ist Sonntag. Leo ist mit seinem Hund Bello im Park.', en: 'It is Sunday. Leo is in the park with his dog Bello.', fr: 'C’est dimanche. Léo est au parc avec son chien Bello.', it: 'È domenica. Leo è al parco con il suo cane Bello.', es: 'Es domingo. Leo está en el parque con su perro Bello.', pt: 'É domingo. O Léo está no parque com o seu cachorro Bello.', uk: 'Сьогодні неділя. Лео в парку зі своїм собакою Белло.' } },
       { kind: 'narration', prop: 'ball', text: { de: 'Bello sieht einen roten Ball. Er läuft schnell weg.', en: 'Bello sees a red ball. He runs away fast.', fr: 'Bello voit un ballon rouge. Il part en courant.', it: 'Bello vede una palla rossa. Corre via veloce.', es: 'Bello ve una pelota roja. Sale corriendo.', pt: 'O Bello vê uma bola vermelha. Ele sai correndo.', uk: 'Белло бачить червоний м’яч. Він швидко тікає.' } },
       { kind: 'line', speaker: 'bello', sfx: 'bark', mood: 'happy', text: { de: 'Wuff! Wuff!', en: 'Woof! Woof!', fr: 'Ouaf ! Ouaf !', it: 'Bau! Bau!', es: '¡Guau! ¡Guau!', pt: 'Au! Au!', uk: 'Гав! Гав!' } },
-      { kind: 'line', speaker: 'oma', text: { de: 'Oh! Ist das dein Hund?', en: 'Oh! Is that your dog?', fr: 'Oh ! C’est ton chien ?', it: 'Oh! È il tuo cane?', es: '¡Oh! ¿Es tu perro?', pt: 'Ah! Esse cachorro é seu?', uk: 'Ой! Це твій собака?' } },
+      { kind: 'line', speaker: 'oma', enters: ['oma'], text: { de: 'Oh! Ist das dein Hund?', en: 'Oh! Is that your dog?', fr: 'Oh ! C’est ton chien ?', it: 'Oh! È il tuo cane?', es: '¡Oh! ¿Es tu perro?', pt: 'Ah! Esse cachorro é seu?', uk: 'Ой! Це твій собака?' } },
       { kind: 'line', speaker: 'leo', text: { de: 'Ja, das ist Bello. Entschuldigung!', en: 'Yes, that’s Bello. Sorry!', fr: 'Oui, c’est Bello. Pardon !', it: 'Sì, è Bello. Scusi!', es: 'Sí, es Bello. ¡Perdón!', pt: 'Sim, é o Bello. Desculpa!', uk: 'Так, це Белло. Вибачте!' } },
       { kind: 'line', speaker: 'oma', text: { de: 'Kein Problem. Er ist sehr lieb. Hier ist der Ball.', en: 'No problem. He is very sweet. Here is the ball.', fr: 'Pas de problème. Il est très gentil. Voici le ballon.', it: 'Nessun problema. È molto buono. Ecco la palla.', es: 'No pasa nada. Es muy bueno. Aquí está la pelota.', pt: 'Sem problema. Ele é muito bonzinho. Aqui está a bola.', uk: 'Нічого страшного. Він дуже милий. Ось м’яч.' } },
       { kind: 'question', prompt: { de: 'Welche Farbe hat der Ball?', en: 'What colour is the ball?', fr: 'De quelle couleur est le ballon ?', it: 'Di che colore è la palla?', es: '¿De qué color es la pelota?', pt: 'De que cor é a bola?', uk: 'Якого кольору м’яч?' }, options: [
@@ -309,15 +317,15 @@ export const stories: Story[] = [
       { kind: 'narration', text: { de: 'Heute hat Oma Geburtstag. Leo hat einen Kuchen gebacken, aber er hat den Zucker vergessen.', en: 'Today is Grandma’s birthday. Leo has baked a cake, but he forgot the sugar.', fr: 'Aujourd’hui, c’est l’anniversaire de Mamie. Léo a fait un gâteau, mais il a oublié le sucre.', it: 'Oggi è il compleanno della nonna. Leo ha preparato una torta, ma ha dimenticato lo zucchero.', es: 'Hoy es el cumpleaños de la abuela. Leo ha hecho un pastel, pero ha olvidado el azúcar.', pt: 'Hoje é aniversário da vovó. O Léo fez um bolo, mas esqueceu o açúcar.', uk: 'Сьогодні в бабусі день народження. Лео спік торт, але забув покласти цукор.' } },
       { kind: 'line', speaker: 'leo', text: { de: 'Alles Gute zum Geburtstag, Oma! Der Kuchen ist für dich.', en: 'Happy birthday, Grandma! The cake is for you.', fr: 'Joyeux anniversaire, Mamie ! Le gâteau est pour toi.', it: 'Buon compleanno, nonna! La torta è per te.', es: '¡Feliz cumpleaños, abuela! El pastel es para ti.', pt: 'Feliz aniversário, vovó! O bolo é para você.', uk: 'З днем народження, бабусю! Цей торт для тебе.' } },
       { kind: 'line', speaker: 'oma', text: { de: 'Danke, mein Schatz! Er sieht wunderbar aus.', en: 'Thank you, darling! It looks wonderful.', fr: 'Merci, mon chéri ! Il a l’air délicieux.', it: 'Grazie, tesoro! Ha un aspetto meraviglioso.', es: '¡Gracias, cariño! Tiene una pinta estupenda.', pt: 'Obrigada, meu querido! Ele parece maravilhoso.', uk: 'Дякую, любий! Він виглядає чудово.' } },
-      { kind: 'narration', text: { de: 'Oma probiert ein Stück. Sie lächelt, aber dann trinkt sie schnell viel Wasser.', en: 'Grandma tries a piece. She smiles, but then she quickly drinks a lot of water.', fr: 'Mamie goûte un morceau. Elle sourit, puis elle boit vite beaucoup d’eau.', it: 'La nonna assaggia una fetta. Sorride, ma poi beve subito tanta acqua.', es: 'La abuela prueba un trozo. Sonríe, pero luego bebe mucha agua muy rápido.', pt: 'A vovó prova um pedaço. Ela sorri, mas depois bebe muita água bem rápido.', uk: 'Бабуся куштує шматочок. Вона усміхається, але потім швидко випиває багато води.' } },
-      { kind: 'line', speaker: 'oma', text: { de: 'Hmm … sehr interessant. {name}, möchtest du auch ein Stück?', en: 'Hmm… very interesting. {name}, would you like a piece too?', fr: 'Hmm… très intéressant. {name}, tu en veux un morceau aussi ?', it: 'Mmm… molto interessante. {name}, ne vuoi una fetta anche tu?', es: 'Mmm… muy interesante. {name}, ¿quieres un trozo tú también?', pt: 'Hmm… muito interessante. {name}, você também quer um pedaço?', uk: 'Хм… дуже цікаво. {name}, хочеш і ти шматочок?' } },
+      { kind: 'narration', holds: { oma: 'cake' }, faces: { oma: 'worried', leo: 'curious' }, text: { de: 'Oma probiert ein Stück. Sie lächelt, aber dann trinkt sie schnell viel Wasser.', en: 'Grandma tries a piece. She smiles, but then she quickly drinks a lot of water.', fr: 'Mamie goûte un morceau. Elle sourit, puis elle boit vite beaucoup d’eau.', it: 'La nonna assaggia una fetta. Sorride, ma poi beve subito tanta acqua.', es: 'La abuela prueba un trozo. Sonríe, pero luego bebe mucha agua muy rápido.', pt: 'A vovó prova um pedaço. Ela sorri, mas depois bebe muita água bem rápido.', uk: 'Бабуся куштує шматочок. Вона усміхається, але потім швидко випиває багато води.' } },
+      { kind: 'line', speaker: 'oma', mood: 'worried', text: { de: 'Hmm … sehr interessant. {name}, möchtest du auch ein Stück?', en: 'Hmm… very interesting. {name}, would you like a piece too?', fr: 'Hmm… très intéressant. {name}, tu en veux un morceau aussi ?', it: 'Mmm… molto interessante. {name}, ne vuoi una fetta anche tu?', es: 'Mmm… muy interesante. {name}, ¿quieres un trozo tú también?', pt: 'Hmm… muito interessante. {name}, você também quer um pedaço?', uk: 'Хм… дуже цікаво. {name}, хочеш і ти шматочок?' } },
       { kind: 'reply', to: 'oma', options: [
         { de: 'Gern! Und alles Gute zum Geburtstag!', en: 'Yes, please! And happy birthday!', fr: 'Avec plaisir ! Et joyeux anniversaire !', it: 'Volentieri! E buon compleanno!', es: '¡Sí, gracias! ¡Y feliz cumpleaños!', pt: 'Quero, sim! E feliz aniversário!', uk: 'Залюбки! І з днем народження!' },
         { de: 'Ja, heute ist mein Geburtstag!', en: 'Yes, today is my birthday!', fr: 'Oui, aujourd’hui c’est mon anniversaire !', it: 'Sì, oggi è il mio compleanno!', es: '¡Sí, hoy es mi cumpleaños!', pt: 'Sim, hoje é o meu aniversário!', uk: 'Так, сьогодні мій день народження!' },
         { de: 'Nein, ich fahre jetzt mit dem Zug.', en: 'No, I’m taking the train now.', fr: 'Non, je prends le train maintenant.', it: 'No, adesso prendo il treno.', es: 'No, ahora tomo el tren.', pt: 'Não, agora vou pegar o trem.', uk: 'Ні, я зараз їду потягом.' }
       ] },
       { kind: 'line', speaker: 'leo', text: { de: 'Oh nein … ich habe den Zucker vergessen!', en: 'Oh no… I forgot the sugar!', fr: 'Oh non… j’ai oublié le sucre !', it: 'Oh no… ho dimenticato lo zucchero!', es: '¡Oh, no… he olvidado el azúcar!', pt: 'Ah, não… eu esqueci o açúcar!', uk: 'О ні… я забув цукор!' } },
-      { kind: 'line', speaker: 'oma', text: { de: 'Das macht nichts. Wir essen ihn einfach mit Sahne.', en: 'Never mind. We’ll just eat it with cream.', fr: 'Ce n’est pas grave. On le mangera avec de la crème.', it: 'Non importa. La mangiamo con la panna.', es: 'No pasa nada. Nos lo comemos con nata.', pt: 'Não tem problema. A gente come com chantilly.', uk: 'Нічого страшного. З’їмо його з вершками.' } },
+      { kind: 'line', speaker: 'oma', mood: 'laughing', text: { de: 'Das macht nichts. Wir essen ihn einfach mit Sahne.', en: 'Never mind. We’ll just eat it with cream.', fr: 'Ce n’est pas grave. On le mangera avec de la crème.', it: 'Non importa. La mangiamo con la panna.', es: 'No pasa nada. Nos lo comemos con nata.', pt: 'Não tem problema. A gente come com chantilly.', uk: 'Нічого страшного. З’їмо його з вершками.' } },
       { kind: 'question', prompt: { de: 'Was hat Leo vergessen?', en: 'What did Leo forget?', fr: 'Qu’est-ce que Léo a oublié ?', it: 'Che cosa ha dimenticato Leo?', es: '¿Qué ha olvidado Leo?', pt: 'O que o Léo esqueceu?', uk: 'Що забув Лео?' }, options: [
         { de: 'Den Zucker', en: 'The sugar', fr: 'Le sucre', it: 'Lo zucchero', es: 'El azúcar', pt: 'O açúcar', uk: 'Цукор' },
         { de: 'Die Eier', en: 'The eggs', fr: 'Les œufs', it: 'Le uova', es: 'Los huevos', pt: 'Os ovos', uk: 'Яйця' },
@@ -517,9 +525,9 @@ export const stories: Story[] = [
     title: german('Verspätung'),
     beats: [
       { kind: 'narration', text: german('Am Münchner Hauptbahnhof leuchtet auf der Anzeigetafel ein Wort, das Albert zutiefst verabscheut: „Verspätung“. Sein ICE nach Berlin fährt voraussichtlich erst neunzig Minuten später ab.') },
-      { kind: 'narration', text: german('Aus dem Lautsprecher kommt eine Durchsage: „Grund dafür ist die verspätete Bereitstellung des Zuges. Der Zug hatte bereits auf seiner vorherigen Fahrt Verspätung.“') },
+      { kind: 'narration', announcement: true, faces: { albert: 'angry', hans: 'neutral' }, text: german('Aus dem Lautsprecher kommt eine Durchsage: „Grund dafür ist die verspätete Bereitstellung des Zuges. Der Zug hatte bereits auf seiner vorherigen Fahrt Verspätung.“') },
       { kind: 'line', speaker: 'albert', mood: 'neutral', text: german('Aha. Der Zug ist verspätet, weil der Zug verspätet ist. Eine Begründung von bestechender Logik.') },
-      { kind: 'line', speaker: 'albert', mood: 'surprised', text: german('Neunzig Minuten! Ick fass es nicht. Pünktlichkeit ist die Höflichkeit der Könige – aber davon hat die Bahn offenbar noch nie etwas gehört.') },
+      { kind: 'line', speaker: 'albert', mood: 'angry', text: german('Neunzig Minuten! Ick fass es nicht. Pünktlichkeit ist die Höflichkeit der Könige – aber davon hat die Bahn offenbar noch nie etwas gehört.') },
       { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Geh, Albert, reg di ned auf, des ändert eh nix. I hab a Brotzeit dabei: Leberkas, Brezn und an Obazdn.') },
       { kind: 'line', speaker: 'albert', mood: 'curious', text: german('Sie haben eine vollständige Mahlzeit im Rucksack? Für eine Zugfahrt von viereinhalb Stunden?') },
       { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Freilich! A Bayer verreist nia ohne Proviant. Und a Bier für d’Fahrt – rein zur Beruhigung der Nerven, verstehst?') },
@@ -536,7 +544,7 @@ export const stories: Story[] = [
       ] },
       { kind: 'line', speaker: 'albert', mood: 'neutral', text: german('Hm. Ihre Argumentation ist bestechend logisch. Na schön – den Antrag auf Fahrgastrechte reiche ich trotzdem ein. Ordnung muss sein.') },
       { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Recht hast! Und jetzt a Stückerl Leberkas, nacha schaut die Welt glei ganz anders aus.') },
-      { kind: 'narration', text: german('Neunzig Minuten später sitzen beide im Zug. Albert füllt gewissenhaft ein Formular aus, während Hans zufrieden schläft – den Kopf auf Alberts Schulter.') },
+      { kind: 'narration', faces: { hans: 'sleepy', albert: 'neutral' }, text: german('Neunzig Minuten später sitzen beide im Zug. Albert füllt gewissenhaft ein Formular aus, während Hans zufrieden schläft – den Kopf auf Alberts Schulter.') },
       { kind: 'question', prompt: german('Wie geht Albert schließlich mit der Verspätung um?'), options: [
         german('Er reicht eine Beschwerde ein, nimmt die Wartezeit aber gelassener hin.'),
         german('Er sagt die Reise ab und fliegt nach Berlin.'),
@@ -573,11 +581,11 @@ export const stories: Story[] = [
     title: german('Personen im Gleis'),
     beats: [
       { kind: 'narration', text: german('Freitagabend, Gleis 7 in Köln. Der Regionalexpress nach Bonn hätte vor zwanzig Minuten abfahren sollen. Auf dem Bahnsteig warten unter anderem eine Polizistin, ein Pizzabäcker, eine Programmiererin und ein Lehrer – und du.') },
-      { kind: 'narration', text: german('Der Lautsprecher knackt: „Information zum RE 5 nach Bonn: Wegen der Verspätung eines vorausfahrenden Zuges verzögert sich die Abfahrt um etwa fünfzehn Minuten. Wir bitten um Entschuldigung.“') },
+      { kind: 'narration', announcement: true, text: german('Der Lautsprecher knackt: „Information zum RE 5 nach Bonn: Wegen der Verspätung eines vorausfahrenden Zuges verzögert sich die Abfahrt um etwa fünfzehn Minuten. Wir bitten um Entschuldigung.“') },
       { kind: 'line', speaker: 'becker', mood: 'sad', text: german('Fünfzehn Minuten, sagen sie. Bei der Bahn heißt das erfahrungsgemäß: mindestens eine halbe Stunde. Dabei muss ich morgen früh vierzig Klassenarbeiten zurückgeben – korrigiert habe ich erst zwölf.') },
       { kind: 'line', speaker: 'jana', mood: 'happy', text: german('Dann korrigieren Sie doch einfach hier! Ich programmiere auch gerade – na ja, ich versuche es. Das WLAN am Bahnsteig ist ungefähr so zuverlässig wie der Fahrplan.') },
-      { kind: 'narration', text: german('Wieder knackt der Lautsprecher: „Achtung, eine weitere Information: Aufgrund von Personen im Gleis ist der Zugverkehr zwischen Köln und Bonn vorübergehend eingestellt.“') },
-      { kind: 'line', speaker: 'enzo', mood: 'surprised', text: german('Personen im Gleis? Mamma mia! Hoffentlich ist niemandem etwas passiert.') },
+      { kind: 'narration', announcement: true, text: german('Wieder knackt der Lautsprecher: „Achtung, eine weitere Information: Aufgrund von Personen im Gleis ist der Zugverkehr zwischen Köln und Bonn vorübergehend eingestellt.“') },
+      { kind: 'line', speaker: 'enzo', mood: 'worried', text: german('Personen im Gleis? Mamma mia! Hoffentlich ist niemandem etwas passiert.') },
       { kind: 'line', speaker: 'sabine', mood: 'neutral', text: german('Keine Sorge. Ein paar Jugendliche haben über die Gleise abgekürzt. Meine Kollegen holen sie gerade da runter – das ist nicht nur verboten, sondern lebensgefährlich.') },
       { kind: 'question', prompt: german('Warum wird der Zugverkehr eingestellt?'), options: [
         german('Weil sich Personen im Gleis befinden.'),
@@ -652,6 +660,10 @@ export function storiesFor(language: Language, level: VocabularyLevel, includeLo
 export function moodFor(beat: Extract<StoryBeat, { kind: 'line' }>): Mood {
   if (beat.mood) return beat.mood;
   const text = beat.text.de;
+  if (/haha|hihi|hehe/i.test(text)) return 'laughing';
+  if (/müde|gähn|schlafen/i.test(text)) return 'sleepy';
+  if (/inakzeptabel|unverschämt|frechheit|so ein ärger|runter vom tisch/i.test(text)) return 'angry';
+  if (/hoffentlich|nervös|vorsicht|pass auf/i.test(text)) return 'worried';
   if (/oh nein|leider|schade|vergessen|tut mir leid|entschuldigung!/i.test(text)) return 'sad';
   if (/^(oh|ach)\b|plötzlich|meine güte|wow/i.test(text)) return 'surprised';
   if (/\?\s*$/.test(text)) return 'curious';
