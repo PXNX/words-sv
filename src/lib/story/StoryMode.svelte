@@ -7,7 +7,7 @@
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { playErrorSound, playSoundEffect, playSuccessSound, soundEffectSeconds, startCrackle, stopSoundEffects } from '#lib/sounds.js';
-  import { characterNames, fillName, moodFor, storiesFor, withWeather, type CharacterId, type HeldItem, type Mood, type Story, type StoryBeat } from './stories';
+  import { characterNames, fillName, moodFor, storiesFor, withWeather, type CharacterId, type HeldItem, type Lights, type Mood, type Story, type StoryBeat } from './stories';
   import type { SoundEffect } from '#lib/sounds.js';
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
@@ -117,11 +117,13 @@
   // The announcer only gets a voice cast in stories that have announcements.
   const voiceCast = $derived<Speaker[]>(story ? [...story.cast, ...(story.beats.some((beat) => beat.kind === 'narration' && beat.announcement) ? ['announcer' as const] : [])] : []);
   // Who is on stage and what they hold so far. Everyone whose first stage cue is an entrance waits
-  // in the wings until then; exits send them off, and their own lines bring them back.
+  // in the wings until then; exits send them off, and their own lines bring them back. The room
+  // keeps the last `lights` it was given.
   const staging = $derived.by(() => {
     const present = new Set<CharacterId>();
     const holding: Partial<Record<CharacterId, HeldItem>> = {};
-    if (!story) return { present, holding };
+    let lights: Lights = 'on';
+    if (!story) return { present, holding, lights };
     const cues = (beat: StoryBeat, member: CharacterId) => beat.kind === 'narration' || beat.kind === 'line'
       ? { enters: Boolean(beat.enters?.includes(member)), other: Boolean(beat.exits?.includes(member)) || (beat.kind === 'line' && beat.speaker === member) }
       : { enters: false, other: false };
@@ -131,6 +133,7 @@
     }
     for (const beat of story.beats.slice(0, revealed)) {
       if (beat.kind !== 'narration' && beat.kind !== 'line') continue;
+      lights = beat.lights ?? lights;
       for (const member of beat.enters ?? []) present.add(member);
       if (beat.kind === 'line') present.add(beat.speaker);
       for (const member of beat.exits ?? []) present.delete(member);
@@ -139,7 +142,7 @@
         else delete holding[member];
       }
     }
-    return { present, holding };
+    return { present, holding, lights };
   });
   const onStage = $derived(story ? story.cast.filter((member) => staging.present.has(member)) : []);
 
@@ -476,7 +479,9 @@
       <StoryScene scene={story.scene} weather={story.weather} />
       <!-- Like on a theatre stage, the house lights go down while someone talks -->
       <div class="story-dark" class:on={speaker !== null} aria-hidden="true"></div>
-      <div class="story-cast">
+      <!-- The room's own light: one harsh lamp over a dark table (an interrogation) or a power cut -->
+      <div class="story-gloom" class:on={staging.lights !== 'on'} class:off={staging.lights === 'off'} aria-hidden="true">{#if staging.lights === 'lamp'}<span></span>{/if}</div>
+      <div class="story-cast" class:blackout={staging.lights === 'off'}>
         <!-- Characters walk on when they enter (a guest after knocking) and dash off when they leave -->
         {#each onStage as member (member)}
           <figure class:active={speaker === member} class:speaking={lipSync.speaker === member} class:dimmed={speaker !== null && speaker !== member} class:pet={smallAnimals.includes(member)} animate:flip={{ duration: reduceMotion ? 0 : 350 }} in:fly={{ x: -140, duration: reduceMotion ? 0 : 520 }} out:fly={{ x: 320, duration: reduceMotion ? 0 : 480 }}>
@@ -591,6 +596,14 @@
   /* Theatre lighting: the stage darkens, a beam falls on the speaker and the others stay in the dark */
   .story-dark { position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(11,22,38,.28),rgba(11,22,38,.5));opacity:0;transition:opacity .35s ease;pointer-events:none; }
   .story-dark.on { opacity:1; }
+  .story-gloom { position:absolute;inset:0;background:radial-gradient(ellipse 46% 78% at 50% 8%,rgba(255,240,196,.16),rgba(6,10,18,.72) 70%,rgba(6,10,18,.86));opacity:0;transition:opacity 1.2s ease;pointer-events:none; }
+  .story-gloom.on { opacity:1; }
+  /* Lights fail at once and plunge everyone into the dark; whoever talks is still faintly lit, as by a phone torch */
+  .story-gloom.off { background:rgba(4,7,13,.9);transition-duration:.08s; }
+  .story-stage .story-cast.blackout figure { filter:brightness(.3) saturate(.5); }
+  .story-stage .story-cast.blackout figure.active { filter:brightness(.62) saturate(.7); }
+  .story-gloom span { position:absolute;top:0;left:50%;width:2.6rem;height:1.1rem;translate:-50% 0;border-radius:0 0 1.3rem 1.3rem;background:#2a3140;box-shadow:0 .5rem 1.6rem .4rem rgba(255,236,180,.55); }
+  .story-gloom span::before { content:'';position:absolute;bottom:100%;left:50%;width:2px;height:2rem;background:#2a3140; }
   .story-beam { position:absolute;z-index:-2;bottom:4%;left:50%;width:170%;height:180%;translate:-50% 0;background:linear-gradient(to bottom,rgba(255,244,214,.62),rgba(255,244,214,.26) 65%,rgba(255,244,214,.08));clip-path:polygon(41% 0,59% 0,100% 100%,0 100%);opacity:0;transition:opacity .3s ease;pointer-events:none; }
   .story-cast figure.active .story-beam { opacity:1; }
   .story-cast figure.dimmed { filter:brightness(.48) saturate(.7); }
@@ -667,7 +680,7 @@
   @keyframes story-ball-y { 0% { translate:0 -3.5rem;animation-timing-function:ease-out; } 30% { translate:0 -6.2rem;animation-timing-function:ease-in; } 72% { translate:0 0;animation-timing-function:ease-out; } 82% { translate:0 -1.1rem;animation-timing-function:ease-in; } 91% { translate:0 0;animation-timing-function:ease-out; } 96% { translate:0 -.3rem;animation-timing-function:ease-in; } 100% { translate:0 0; } }
   @keyframes story-ball-spin { from { rotate:0deg; } to { rotate:-760deg; } }
   @keyframes story-wool-x { 0% { transform:translate(0,0); } 25% { transform:translate(4rem,-1rem); } 45% { transform:translate(8rem,0); } 65% { transform:translate(11rem,-.4rem); } 100% { transform:translate(20rem,0); } }
-  @media (prefers-reduced-motion:reduce) { .story-wool { display:none; } .story-transcript > li,.story-prompt--question,.story-options button.missed,.story-cast figure.speaking::before,.story-ball,.story-ball span { animation:none; } .story-hearts svg { animation:none;opacity:1; } .story-cast figure,.story-cast figure::before,.story-dark,.story-beam { transition:none; } }
+  @media (prefers-reduced-motion:reduce) { .story-wool { display:none; } .story-transcript > li,.story-prompt--question,.story-options button.missed,.story-cast figure.speaking::before,.story-ball,.story-ball span { animation:none; } .story-hearts svg { animation:none;opacity:1; } .story-cast figure,.story-cast figure::before,.story-dark,.story-gloom,.story-beam { transition:none; } }
 
   :global(html.dark) .story-header h1 { color:#fffdf7; }
   :global(html.dark) .story-stage { border-color:rgba(255,253,247,.3); }

@@ -24,9 +24,12 @@ export type HeldItem = 'cake' | 'fish';
 // Staging: a character whose first appearance is in `enters` stays off stage until then (a guest
 // who knocks, someone who walks up); `exits` sends them running off, and they come back when they
 // next speak or enter. `holds` hands characters an item (null takes it away again); `faces` sets how
-// the others look while a beat plays. An `announcement` is a narration whose quoted part comes over
-// a station loudspeaker: a gong, a crackling line and a different voice.
-type Staging = { enters?: CharacterId[]; exits?: CharacterId[]; holds?: Partial<Record<CharacterId, HeldItem | null>>; faces?: Partial<Record<CharacterId, Mood>> };
+// the others look while a beat plays. `lights` changes the room's light until a later beat changes it
+// again: 'lamp' leaves one harsh lamp burning in a dark room (an interrogation, say), 'off' plunges
+// it into darkness (a power cut) and 'on' brings the light back. An `announcement` is a narration
+// whose quoted part comes over a station loudspeaker: a gong, a crackling line and a different voice.
+type Staging = { enters?: CharacterId[]; exits?: CharacterId[]; holds?: Partial<Record<CharacterId, HeldItem | null>>; faces?: Partial<Record<CharacterId, Mood>>; lights?: Lights };
+export type Lights = 'on' | 'lamp' | 'off';
 export type StoryBeat =
   | ({ kind: 'narration'; text: Text; sfx?: SoundEffect; prop?: StoryProp; announcement?: boolean } & Staging)
   | ({ kind: 'line'; speaker: CharacterId; text: Text; sfx?: SoundEffect; mood?: Mood; word?: string; noisy?: boolean } & Staging)
