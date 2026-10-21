@@ -3,9 +3,9 @@ import { playableLanguages, vocabularyLevels } from '#lib/data/vocabulary.js';
 import type { SoundEffect } from '#lib/sounds.js';
 
 export type Text = Record<Language, string>;
-export type CharacterId = 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello' | 'lilith' | 'hans' | 'albert' | 'sabine' | 'enzo' | 'jana' | 'becker' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake' | 'ali' | 'robert' | 'fritz' | 'tobias' | 'selma' | 'kumar' | 'simon';
+export type CharacterId = 'deer' | 'fox' | 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello' | 'lilith' | 'hans' | 'albert' | 'sabine' | 'enzo' | 'jana' | 'becker' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake' | 'ali' | 'robert' | 'fritz' | 'tobias' | 'selma' | 'kumar' | 'simon';
 export type Mood = 'neutral' | 'happy' | 'sad' | 'surprised' | 'curious' | 'angry' | 'worried' | 'laughing' | 'sleepy';
-export type SceneId = 'cafe' | 'park' | 'station' | 'home' | 'office' | 'flat' | 'square' | 'attic' | 'beergarden' | 'farm' | 'zoo' | 'butcher' | 'bakery' | 'boutique' | 'perfumery' | 'workshop' | 'beach' | 'airport';
+export type SceneId = 'forest' | 'cafe' | 'park' | 'station' | 'home' | 'office' | 'flat' | 'square' | 'attic' | 'beergarden' | 'farm' | 'zoo' | 'butcher' | 'bakery' | 'boutique' | 'perfumery' | 'workshop' | 'beach' | 'airport';
 export type Weather = 'sunny' | 'cloudy' | 'rainy' | 'snowy';
 export type StoryProp = 'ball' | 'wool';
 // Something a character holds (or, for Lilith, has in front of her) from that beat on.
@@ -61,6 +61,8 @@ export const characterNames: Record<CharacterId, Text> = {
   giraffe: { de: 'Gisela', en: 'Gisela', fr: 'Gisela', it: 'Gisela', es: 'Gisela', pt: 'Gisela', uk: 'Гізела' },
   elephant: { de: 'Benno', en: 'Benno', fr: 'Benno', it: 'Benno', es: 'Benno', pt: 'Benno', uk: 'Бенно' },
   snake: { de: 'Zischi', en: 'Zischi', fr: 'Zischi', it: 'Zischi', es: 'Zischi', pt: 'Zischi', uk: 'Зіші' },
+  deer: { de: 'Reh', en: 'Deer', fr: 'Chevreuil', it: 'Capriolo', es: 'Corzo', pt: 'Corço', uk: 'Козуля' },
+  fox: { de: 'Fuchs', en: 'Fox', fr: 'Renard', it: 'Volpe', es: 'Zorro', pt: 'Raposa', uk: 'Лис' },
   // German-only characters (see the cast notes in germanStories.ts).
   ali: { de: 'Ali', en: 'Ali', fr: 'Ali', it: 'Ali', es: 'Ali', pt: 'Ali', uk: 'Алі' },
   robert: { de: 'Robert', en: 'Robert', fr: 'Robert', it: 'Robert', es: 'Robert', pt: 'Robert', uk: 'Роберт' },
@@ -678,7 +680,7 @@ export function fillName(text: string, name: string) {
   return text.replaceAll('{name}', name);
 }
 
-const outdoorScenes: SceneId[] = ['park', 'station', 'square', 'beergarden', 'farm', 'zoo', 'beach', 'airport'];
+const outdoorScenes: SceneId[] = ['forest', 'park', 'station', 'square', 'beergarden', 'farm', 'zoo', 'beach', 'airport'];
 const weathers: Weather[] = ['sunny', 'cloudy', 'rainy', 'snowy'];
 const weatherLines: Record<Weather, { indoor: Text; outdoor: Text }> = {
   sunny: {

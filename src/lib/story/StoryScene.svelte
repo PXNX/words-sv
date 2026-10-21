@@ -24,7 +24,8 @@
     perfumery: { back: '#f1e7f2', floor: '#cdb8c9' },
     workshop: { back: '#e7ecef', floor: '#9aa3ad' },
     beach: { back: '#f6b06a', floor: '#ecd3a0' },
-    airport: { back: '#cfe6f2', floor: '#7d8794' }
+    airport: { back: '#cfe6f2', floor: '#7d8794' },
+    forest: { back: '#cfe6f2', floor: '#7a6a4a' }
   };
   const palette = $derived(palettes[scene]);
 
@@ -48,7 +49,8 @@
     perfumery: { x: 28, y: 24, w: 80, h: 64 },
     workshop: { x: 150, y: 18, w: 100, h: 54 },
     beach: { x: 0, y: 0, w: 400, h: 172 },
-    airport: { x: 0, y: 0, w: 400, h: 172 }
+    airport: { x: 0, y: 0, w: 400, h: 172 },
+    forest: { x: 0, y: 0, w: 400, h: 172 }
   };
   const sky = $derived(skies[scene]);
   const outdoor = $derived(sky.w === 400);
@@ -162,6 +164,17 @@
     <g stroke="#172a45" stroke-width=".8">{#each Array.from({ length: 12 }, (_, i) => i) as i (i)}<path d="M{82 + i * 22} {i < 6 ? 20 + i * 0.6 : 23 - (i - 6) * 0.6}l5 10 5-10Z" fill={i % 2 ? '#4b78c2' : '#fffdf7'} />{/each}</g>
     <g fill="#a87850" stroke="#5a3d25" stroke-width="2"><rect x="96" y="140" width="100" height="8" /><rect x="104" y="148" width="7" height="26" /><rect x="180" y="148" width="7" height="26" /></g>
     <g stroke="#a45e38" stroke-width="1.5"><rect x="118" y="120" width="16" height="20" rx="2" fill="#e6b52e" /><rect x="116" y="116" width="20" height="7" rx="3.5" fill="#fffdf7" /><path d="M134 125q7 0 7 6t-7 6" fill="none" /><rect x="158" y="120" width="16" height="20" rx="2" fill="#e6b52e" /><rect x="156" y="116" width="20" height="7" rx="3.5" fill="#fffdf7" /><path d="M174 125q7 0 7 6t-7 6" fill="none" /></g>
+  {:else if scene === 'forest'}
+    <!-- a forest in the early morning: firs and tall beech trunks, shafts of sunlight, ferns and red toadstools -->
+    <g fill="#3c7350"><path d="M-14 172l40-136 40 136Z" /><path d="M326 172l38-128 38 128Z" /></g>
+    <g fill="#4d8f5c"><path d="M48 172l30-104 30 104Z" /><path d="M276 172l28-96 28 96Z" /></g>
+    <g fill="#7a6a5a"><rect x="128" y="0" width="16" height="172" /><rect x="236" y="0" width="13" height="172" /></g>
+    <g fill="#55a66a" opacity=".92"><circle cx="136" cy="-4" r="46" /><circle cx="176" cy="-10" r="30" /><circle cx="244" cy="-2" r="40" /></g>
+    <g fill="#fff6c8" opacity={weather === 'sunny' ? 0.3 : 0.12}><path d="M150 0h22l62 172h-40Z" /><path d="M196 0h12l52 172h-26Z" /></g>
+    {#if weather === 'snowy'}<g fill="#ffffff" opacity=".9"><path d="M14 64l12-28 12 28q-12-6-24 0Z" /><path d="M352 70l12-26 12 26q-12-6-24 0Z" /></g>{/if}
+    <g fill="#5a9a40"><path d="M14 172q4-22 20-26-8 10-10 26Z" /><path d="M30 172q8-18 22-20-10 8-12 20Z" /><path d="M352 172q-4-22-20-26 8 10 10 26Z" /><path d="M372 172q8-18 22-20-10 8-12 20Z" /></g>
+    <rect x="108" y="162" width="4" height="10" fill="#fffdf7" /><path d="M102 164q8-12 16 0Z" fill="#d64b45" /><circle cx="107" cy="160" r="1.2" fill="#fffdf7" />
+    <rect x="300" y="164" width="3" height="8" fill="#fffdf7" /><path d="M296 165q5-8 11 0Z" fill="#d64b45" />
   {/if}
   <rect y="172" width="400" height="48" fill={palette.floor} />
   <rect y="172" width="400" height="4" fill="rgba(23,42,69,.14)" />

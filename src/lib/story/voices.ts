@@ -53,6 +53,8 @@ const profiles: Record<Speaker, VoiceProfile> = {
   kumar: { gender: 'male', pitch: 1.1, rate: 1.14, volume: 1 },
   simon: { gender: 'male', pitch: 0.98, rate: 0.98, volume: 1 },
   // The animals mostly speak in sounds; when they do talk, their voices match their size.
+  deer: { gender: 'female', pitch: 1.28, rate: 0.94, volume: 0.85 },
+  fox: { gender: 'male', pitch: 1.16, rate: 1.1, volume: 0.95 },
   bird: { gender: 'female', pitch: 1.7, rate: 1.18, volume: 0.9 },
   cow: { gender: 'female', pitch: 0.78, rate: 0.82, volume: 1 },
   horse: { gender: 'male', pitch: 0.95, rate: 1.04, volume: 1 },
@@ -63,8 +65,8 @@ const profiles: Record<Speaker, VoiceProfile> = {
 
 // Who picks first when voices are scarce: the narrator talks most, then the main characters.
 // A speaker whose regional voice is installed jumps the queue, so nobody else takes it.
-const priority: Speaker[] = ['narrator', 'announcer', 'mia', 'tom', 'lilith', 'oma', 'paul', 'kim', 'leo', 'hans', 'albert', 'sabine', 'enzo', 'jana', 'becker', 'ali', 'robert', 'fritz', 'tobias', 'selma', 'kumar', 'simon', 'bello', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
-const animals: Speaker[] = ['bello', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
+const priority: Speaker[] = ['narrator', 'announcer', 'mia', 'tom', 'lilith', 'oma', 'paul', 'kim', 'leo', 'hans', 'albert', 'sabine', 'enzo', 'jana', 'becker', 'ali', 'robert', 'fritz', 'tobias', 'selma', 'kumar', 'simon', 'bello', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake', 'deer', 'fox'];
+const animals: Speaker[] = ['bello', 'deer', 'fox', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
 
 function accentRank(speaker: Speaker, voice: SpeechSynthesisVoice) {
   const accent = profiles[speaker].accent ?? [];
