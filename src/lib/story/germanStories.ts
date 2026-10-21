@@ -101,11 +101,11 @@ export const germanStories: Story[] = [
     weathers: ['sunny', 'cloudy'],
     title: german('Im Zoo'),
     beats: [
-      { kind: 'narration', text: german('Am Samstag besucht Leo mit dir den Zoo. Zuerst geht ihr zu den Giraffen.') },
-      { kind: 'line', speaker: 'leo', mood: 'happy', text: german('Schau mal, {name}! Das ist Gisela. Sie ist über fünf Meter groß.') },
+      { kind: 'narration', text: german('Am Samstag um zehn Uhr besucht Leo mit dir den Zoo. Der Eintritt kostet zwölf Euro. Zuerst geht ihr zu den Giraffen.') },
+      { kind: 'line', speaker: 'leo', mood: 'happy', text: german('Schau mal, {name}! Das ist Gisela. Sie ist über fünf Meter groß und hat braune Flecken.') },
       { kind: 'line', speaker: 'giraffe', mood: 'curious', text: german('Brummm …') },
       { kind: 'line', speaker: 'leo', text: german('Giraffen sind meistens still. Aber nachts summen sie ganz leise.') },
-      { kind: 'narration', enters: ['elephant'], text: german('Neben dem Giraffengehege steht der Elefant Benno. Er spritzt mit seinem Rüssel Wasser in die Luft.') },
+      { kind: 'narration', enters: ['elephant'], text: german('Neben dem Giraffengehege steht der Elefant Benno. Er ist grau, wiegt fast sechs Tonnen und spritzt mit seinem Rüssel Wasser in die Luft.') },
       { kind: 'line', speaker: 'elephant', mood: 'happy', text: german('Törööö!') },
       { kind: 'line', speaker: 'leo', mood: 'curious', text: german('Vorsicht, {name}, sonst wirst du nass! Hast du schon einmal einen Elefanten gesehen?') },
       { kind: 'reply', to: 'leo', options: [
@@ -113,14 +113,18 @@ export const germanStories: Story[] = [
         german('Ja, er wohnt in meinem Kühlschrank.'),
         german('Nein, ich bin ein Elefant.')
       ] },
-      { kind: 'narration', enters: ['snake'], exits: ['giraffe', 'elephant'], text: german('Zum Schluss geht ihr ins Reptilienhaus. Hinter dem Glas liegt eine lange grüne Schlange.') },
+      { kind: 'narration', enters: ['snake'], exits: ['giraffe', 'elephant'], text: german('Zum Schluss geht ihr ins Reptilienhaus. Hinter dem Glas liegt eine grüne Schlange. Sie ist drei Meter lang.') },
       { kind: 'line', speaker: 'snake', text: german('Ssssss!') },
-      { kind: 'line', speaker: 'leo', text: german('Keine Angst. Zischi ist harmlos – sie zischt nur, wenn sie Hunger hat.') },
+      { kind: 'line', speaker: 'leo', text: german('Keine Angst. Zischi ist harmlos – sie zischt nur, wenn sie Hunger hat. Ihr Futter bekommt sie erst um drei Uhr.') },
       { kind: 'question', prompt: german('Wie groß ist die Giraffe?'), options: [german('Über fünf Meter'), german('Zwei Meter'), german('Zehn Zentimeter')] },
       { kind: 'question', prompt: german('Wann summen Giraffen?'), options: [german('Nachts'), german('Mittags'), german('Nur im Winter')] },
       { kind: 'question', prompt: german('Was macht der Elefant mit seinem Rüssel?'), options: [german('Er spritzt Wasser in die Luft.'), german('Er isst ein Eis.'), german('Er spielt Klavier.')] },
       { kind: 'question', prompt: german('Wo liegt die Schlange?'), options: [german('Im Reptilienhaus hinter dem Glas'), german('Im Giraffengehege'), german('Im Wasser beim Elefanten')] },
-      { kind: 'question', prompt: german('Wann zischt Zischi?'), options: [german('Wenn sie Hunger hat'), german('Wenn es regnet'), german('Wenn Leo singt')] }
+      { kind: 'question', prompt: german('Wann zischt Zischi?'), options: [german('Wenn sie Hunger hat'), german('Wenn es regnet'), german('Wenn Leo singt')] },
+      { kind: 'question', prompt: german('Wie viel kostet der Eintritt?'), options: [german('Zwölf Euro'), german('Zwei Euro'), german('Zwanzig Euro')] },
+      { kind: 'question', prompt: german('Welche Farbe hat der Elefant?'), options: [german('Grau'), german('Braun'), german('Grün')] },
+      { kind: 'question', prompt: german('Wie lang ist die Schlange?'), options: [german('Drei Meter'), german('Dreißig Zentimeter'), german('Zehn Meter')] },
+      { kind: 'question', prompt: german('Um wie viel Uhr bekommt Zischi ihr Futter?'), options: [german('Um drei Uhr'), german('Um zehn Uhr'), german('Um Mitternacht')] }
     ]
   },
   {
@@ -131,10 +135,10 @@ export const germanStories: Story[] = [
     languages: ['de'],
     title: german('Beim Metzger'),
     beats: [
-      { kind: 'narration', text: german('Samstagvormittag in der Metzgerei von Herrn Paul. Vor der Theke steht eine lange Schlange – und ganz vorne steht Hans.') },
+      { kind: 'narration', text: german('Samstag, kurz nach neun Uhr, in der Metzgerei von Herrn Paul. Vor der Theke steht eine lange Schlange – und ganz vorne steht Hans.') },
       { kind: 'line', speaker: 'paul', mood: 'happy', text: german('Grüß Gott, Hans! Wie immer?') },
       { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Freilich! Sechs Weißwürste, zwei Paar Wiener und ein Pfund Leberkäs. Heut kommt mei ganze Familie.') },
-      { kind: 'line', speaker: 'paul', text: german('Gern. Der Leberkäse ist ganz frisch, gerade aus dem Ofen. Darf es sonst noch etwas sein?') },
+      { kind: 'line', speaker: 'paul', text: german('Gern. Der Leberkäse ist ganz frisch und schön braun, gerade aus dem Ofen. Darf es sonst noch etwas sein?') },
       { kind: 'line', speaker: 'hans', text: german('Ja mei, a bisserl Aufschnitt für die Kinder. Und was nimmst du, {name}?') },
       { kind: 'reply', to: 'hans', options: [
         german('Zweihundert Gramm Schinken, bitte.'),
@@ -143,12 +147,15 @@ export const germanStories: Story[] = [
       ] },
       { kind: 'line', speaker: 'paul', mood: 'curious', text: german('Kommt sofort. Möchten Sie den Schinken in dünnen Scheiben?') },
       { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Und a Wurstsemmel für glei, sonst halt i bis Mittag ned durch!') },
-      { kind: 'line', speaker: 'paul', mood: 'happy', text: german('Für dich, Hans, geht die Wurstsemmel aufs Haus.') },
+      { kind: 'line', speaker: 'paul', mood: 'happy', text: german('Für dich, Hans, geht die Wurstsemmel aufs Haus. Der Rest macht achtzehn Euro vierzig.') },
       { kind: 'question', prompt: german('Wo kauft Hans ein?'), options: [german('In der Metzgerei'), german('In der Bäckerei'), german('Im Supermarkt')] },
       { kind: 'question', prompt: german('Warum kauft Hans so viel?'), options: [german('Weil seine ganze Familie kommt'), german('Weil er eine Metzgerei eröffnet'), german('Weil er Hunger auf Kuchen hat')] },
       { kind: 'question', prompt: german('Wie viel Leberkäse kauft Hans?'), options: [german('Ein Pfund'), german('Ein Kilo'), german('Hundert Gramm')] },
       { kind: 'question', prompt: german('Wie ist der Leberkäse?'), options: [german('Ganz frisch aus dem Ofen'), german('Schon eine Woche alt'), german('Tiefgefroren')] },
-      { kind: 'question', prompt: german('Was bekommt Hans umsonst?'), options: [german('Eine Wurstsemmel'), german('Den Leberkäse'), german('Zwei Weißwürste')] }
+      { kind: 'question', prompt: german('Was bekommt Hans umsonst?'), options: [german('Eine Wurstsemmel'), german('Den Leberkäse'), german('Zwei Weißwürste')] },
+      { kind: 'question', prompt: german('Wie viele Weißwürste kauft Hans?'), options: [german('Sechs'), german('Zwei'), german('Zehn')] },
+      { kind: 'question', prompt: german('Wie viel muss Hans bezahlen?'), options: [german('Achtzehn Euro vierzig'), german('Acht Euro vierzehn'), german('Achtzig Euro')] },
+      { kind: 'question', prompt: german('Wann ist Hans in der Metzgerei?'), options: [german('Am Samstag kurz nach neun Uhr'), german('Am Sonntagabend'), german('Am Freitag um Mitternacht')] }
     ]
   },
   {
@@ -159,10 +166,10 @@ export const germanStories: Story[] = [
     languages: ['de'],
     title: german('Im Modegeschäft'),
     beats: [
-      { kind: 'narration', text: german('Leo braucht für die Hochzeit seiner Schwester einen Anzug. Im Modegeschäft hilft ihm die Verkäuferin Kim.') },
+      { kind: 'narration', text: german('In zwei Wochen heiratet Leos Schwester, und Leo braucht noch einen Anzug. Im Modegeschäft hilft ihm die Verkäuferin Kim.') },
       { kind: 'line', speaker: 'kim', text: german('Guten Tag! Kann ich Ihnen helfen?') },
       { kind: 'line', speaker: 'leo', text: german('Ja, bitte. Ich suche einen dunklen Anzug. Ich trage Größe 50.') },
-      { kind: 'line', speaker: 'kim', text: german('Hier haben wir einen in Dunkelblau. Die Umkleidekabine ist gleich da hinten.') },
+      { kind: 'line', speaker: 'kim', text: german('Hier haben wir einen in Dunkelblau für zweihundertfünfzig Euro. Die Umkleidekabine ist gleich da hinten.') },
       { kind: 'narration', text: german('Ein paar Minuten später kommt Leo aus der Kabine. Die Hose ist viel zu lang.') },
       { kind: 'line', speaker: 'leo', mood: 'curious', text: german('{name}, was meinst du? Passt mir der Anzug?') },
       { kind: 'reply', to: 'leo', options: [
@@ -170,13 +177,16 @@ export const germanStories: Story[] = [
         german('Perfekt, die Hose muss so lang sein.'),
         german('Ich glaube, das ist ein Fahrrad.')
       ] },
-      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Kein Problem, wir kürzen die Hose kostenlos. Bis Freitag ist sie fertig.') },
-      { kind: 'line', speaker: 'leo', mood: 'happy', text: german('Super! Und eine Krawatte brauche ich auch noch – vielleicht in Rot?') },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Kein Problem, wir kürzen die Hose kostenlos. Bis Freitag um zwölf Uhr ist sie fertig.') },
+      { kind: 'line', speaker: 'leo', mood: 'happy', text: german('Super! Und eine Krawatte brauche ich auch noch – vielleicht in Rot mit weißen Punkten?') },
       { kind: 'question', prompt: german('Warum braucht Leo einen Anzug?'), options: [german('Für die Hochzeit seiner Schwester'), german('Für ein Vorstellungsgespräch'), german('Für eine Party im Büro')] },
       { kind: 'question', prompt: german('Welche Farbe hat der Anzug?'), options: [german('Dunkelblau'), german('Hellgrau'), german('Grün')] },
       { kind: 'question', prompt: german('Was ist das Problem mit dem Anzug?'), options: [german('Die Hose ist zu lang.'), german('Die Jacke ist zu klein.'), german('Der Anzug ist zu teuer.')] },
-      { kind: 'question', prompt: german('Bis wann ist die Hose fertig?'), options: [german('Bis Freitag'), german('Bis morgen'), german('Bis nächsten Monat')] },
-      { kind: 'question', prompt: german('Was möchte Leo noch kaufen?'), options: [german('Eine rote Krawatte'), german('Rote Schuhe'), german('Einen roten Hut')] }
+      { kind: 'question', prompt: german('Bis wann ist die Hose fertig?'), options: [german('Bis Freitag um zwölf Uhr'), german('Bis morgen früh'), german('Bis nächsten Monat')] },
+      { kind: 'question', prompt: german('Was möchte Leo noch kaufen?'), options: [german('Eine rote Krawatte mit weißen Punkten'), german('Rote Schuhe'), german('Einen roten Hut')] },
+      { kind: 'question', prompt: german('Wann heiratet Leos Schwester?'), options: [german('In zwei Wochen'), german('Morgen'), german('Nächstes Jahr')] },
+      { kind: 'question', prompt: german('Welche Größe trägt Leo?'), options: [german('Größe 50'), german('Größe 40'), german('Größe 60')] },
+      { kind: 'question', prompt: german('Wie viel kostet der Anzug?'), options: [german('Zweihundertfünfzig Euro'), german('Fünfundzwanzig Euro'), german('Zweitausend Euro')] }
     ]
   },
   {
