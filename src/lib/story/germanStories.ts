@@ -363,5 +363,39 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was essen sie an Heiligabend?'), options: [german('Kartoffelsalat mit Würstchen'), german('Pizza mit Salami'), german('Fisch mit Reis')] },
       { kind: 'question', prompt: german('Was bekommt Oma?'), options: [german('Einen lila Schal'), german('Eine gelbe Tasse'), german('Ein Buch')] }
     ]
+  },
+  {
+    id: 'a2-new-year',
+    level: 'a2',
+    scene: 'flat',
+    cast: ['mia', 'tom', 'kumar'],
+    languages: ['de'],
+    weathers: ['snowy', 'cloudy'],
+    title: german('Gute Vorsätze an Silvester'),
+    beats: [
+      { kind: 'narration', text: german('Es ist der 31. Dezember, Silvester. Es ist schon Viertel vor zwölf. Mia, Tom und ihr Mitbewohner Kumar sitzen in der Küche und trinken Tee.') },
+      { kind: 'line', speaker: 'mia', text: german('Noch fünfzehn Minuten bis zum neuen Jahr! Was sind eure guten Vorsätze?') },
+      { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Ich habe drei Vorsätze! Erstens: Ich lerne jeden Tag zwanzig Minuten Deutsch. Zweitens: Ich spüle jeden Abend mein Geschirr.') },
+      { kind: 'line', speaker: 'tom', mood: 'laughing', text: german('Jeden Abend? Haha! Im Moment stehen sieben Teller und vier Töpfe in der Spüle.') },
+      { kind: 'line', speaker: 'kumar', mood: 'sad', text: german('Ja, leider … Und drittens: Ich suche meine grünen Socken. Seit Oktober habe ich nur noch eine!') },
+      { kind: 'line', speaker: 'mia', text: german('Mein Vorsatz: Im Juni will ich zehn Kilometer laufen. Ich trainiere dreimal pro Woche, immer um sieben Uhr morgens.') },
+      { kind: 'line', speaker: 'tom', text: german('Ich will weniger am Handy sein. Höchstens eine Stunde am Tag. Und ich will im Sommer nach Portugal reisen.') },
+      { kind: 'line', speaker: 'mia', mood: 'curious', text: german('Und du, {name}? Was ist dein Vorsatz für das neue Jahr?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Ich möchte jeden Tag ein bisschen Deutsch lernen.'),
+        german('Ich möchte gestern schwimmen.'),
+        german('Mein Vorsatz ist grün und hat vier Beine.')
+      ] },
+      { kind: 'narration', text: german('Es ist eine Minute vor zwölf. Alle stehen am Fenster und zählen laut.') },
+      { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Zehn, neun, acht, sieben, sechs, fünf, vier, drei, zwei, eins … Frohes neues Jahr!') },
+      { kind: 'narration', text: german('Draußen ist der Himmel plötzlich bunt: rotes, gelbes, grünes und blaues Feuerwerk. Kumar zeigt auf etwas Grünes auf dem Schrank.') },
+      { kind: 'line', speaker: 'kumar', mood: 'surprised', text: german('Wow! Meine grüne Socke! Ein Vorsatz ist schon fertig!') },
+      { kind: 'question', prompt: german('Wie spät ist es am Anfang der Geschichte?'), options: [german('Viertel vor zwölf'), german('Halb zwölf'), german('Zwölf Uhr')] },
+      { kind: 'question', prompt: german('Wie lange will Kumar jeden Tag Deutsch lernen?'), options: [german('Zwanzig Minuten'), german('Zwei Stunden'), german('Fünf Minuten')] },
+      { kind: 'question', prompt: german('Wie viele Teller stehen in der Spüle?'), options: [german('Sieben'), german('Vier'), german('Drei')] },
+      { kind: 'question', prompt: german('Wie oft will Mia trainieren?'), options: [german('Dreimal pro Woche'), german('Jeden Tag'), german('Einmal im Monat')] },
+      { kind: 'question', prompt: german('Wohin will Tom im Sommer reisen?'), options: [german('Nach Portugal'), german('Nach Indien'), german('Nach Italien')] },
+      { kind: 'question', prompt: german('Welche Farbe hat Kumars Socke?'), options: [german('Grün'), german('Rot'), german('Gelb')] }
+    ]
   }
 ];
