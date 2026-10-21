@@ -26,7 +26,8 @@
     beach: { back: '#f6b06a', floor: '#ecd3a0' },
     airport: { back: '#cfe6f2', floor: '#7d8794' },
     forest: { back: '#cfe6f2', floor: '#7a6a4a' },
-    alps: { back: '#cfe6f2', floor: '#7fae57' }
+    alps: { back: '#cfe6f2', floor: '#7fae57' },
+    castle: { back: '#cfe6f2', floor: '#8fae6a' }
   };
   const palette = $derived(palettes[scene]);
 
@@ -52,7 +53,8 @@
     beach: { x: 0, y: 0, w: 400, h: 172 },
     airport: { x: 0, y: 0, w: 400, h: 172 },
     forest: { x: 0, y: 0, w: 400, h: 172 },
-    alps: { x: 0, y: 0, w: 400, h: 172 }
+    alps: { x: 0, y: 0, w: 400, h: 172 },
+    castle: { x: 0, y: 0, w: 400, h: 172 }
   };
   const sky = $derived(skies[scene]);
   const outdoor = $derived(sky.w === 400);
@@ -192,6 +194,17 @@
     <rect x="312" y="134" width="18" height="14" fill="#cfe6f2" stroke="#fffdf7" stroke-width="2" /><rect x="310" y="148" width="22" height="5" fill="#a87850" />
     <g fill="#d64b45"><circle cx="314" cy="147" r="2.6" /><circle cx="321" cy="146" r="2.6" /><circle cx="328" cy="147" r="2.6" /></g>
     <rect x="348" y="140" width="16" height="32" fill="#5a3d25" /><rect x="296" y="160" width="10" height="12" fill="#a87850" />
+  {:else if scene === 'castle'}
+    <!-- Neuschwanstein: a white castle with slate-blue turrets on a wooded crag, mountains behind and the forest below -->
+    <path d="M-10 172 60 70l60 70 70-100 90 110 60-60 90 82Z" fill="#a9b7c6" />
+    <g fill="#fffdf7" opacity=".9"><path d="M60 70l-14 20 7-2 7 4 7-5 8 2Z" /><path d="M190 40l-20 28 9-3 8 5 9-6 12 3Z" /></g>
+    <path d="M224 172q18-54 86-62 68 8 86 62Z" fill="#7a8a6a" />
+    <g fill="#fffdf7" stroke="#8a939e" stroke-width="1.5"><rect x="244" y="86" width="22" height="34" /><rect x="262" y="70" width="70" height="50" /><rect x="296" y="56" width="12" height="20" /><rect x="330" y="40" width="16" height="80" /></g>
+    <g fill="#5a6f8a"><path d="M242 86l13-16 13 16Z" /><path d="M262 70l35-22 35 22Z" /><path d="M294 56l8-16 8 16Z" /><path d="M327 40l11-26 11 26Z" /></g>
+    <g fill="#5a6f8a">{#each [0, 1, 2, 3] as i (i)}<rect x={270 + i * 16} y="80" width="6" height="10" rx="3" /><rect x={270 + i * 16} y="100" width="6" height="10" rx="3" />{/each}<rect x="335" y="56" width="6" height="10" rx="3" /><rect x="251" y="96" width="6" height="10" rx="3" /></g>
+    {#if weather === 'snowy'}<g fill="#ffffff"><path d="M262 70l35-22 35 22-4 1-31-19-31 19Z" /><path d="M327 40l11-26 11 26-3 1-8-20-8 20Z" /></g>{/if}
+    <g fill="#3c7350"><path d="M210 172l12-34 12 34Z" /><path d="M376 172l12-30 12 30Z" /></g>
+    <g fill="#3c7350"><path d="M10 172l16-48 16 48Z" /><path d="M38 172l14-38 14 38Z" /><path d="M64 172l12-30 12 30Z" /></g>
   {/if}
   <rect y="172" width="400" height="48" fill={palette.floor} />
   <rect y="172" width="400" height="4" fill="rgba(23,42,69,.14)" />
