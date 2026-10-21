@@ -49,7 +49,7 @@ export function playErrorSound(enabled: boolean, kind: ErrorSound) {
  * Story sound effects, synthesized with Web Audio so they need no asset downloads and work offline.
  * Kept deliberately soft: they colour a scene for learners, they should never startle.
  */
-export type SoundEffect = 'purr' | 'meow' | 'glass' | 'brakes' | 'doorbell' | 'knock' | 'rain' | 'bark' | 'tweet' | 'moo' | 'neigh' | 'trumpet' | 'hiss' | 'hum' | 'airplane' | 'waves' | 'gong';
+export type SoundEffect = 'purr' | 'meow' | 'glass' | 'brakes' | 'doorbell' | 'knock' | 'rain' | 'bark' | 'tweet' | 'moo' | 'neigh' | 'trumpet' | 'hiss' | 'hum' | 'airplane' | 'waves' | 'gong' | 'fuse';
 
 let effectContext: AudioContext | null = null;
 
@@ -345,6 +345,31 @@ function gong(context: AudioContext, start: number) {
   [659.25, 523.25, 392].forEach((frequency, index) => bell(context, start + index * 0.42, frequency));
 }
 
+// A fuse tripping: a sharp electric snap, a short fizzing crackle, and the mains hum of the house
+// sinking away as the power dies.
+function fuse(context: AudioContext, start: number) {
+  const snap = noise(context, 0.08);
+  const snapGain = context.createGain();
+  glide(snapGain.gain, start, [[0, 0.0001], [0.004, 0.55], [0.07, 0.0001]]);
+  snap.connect(filter(context, 'highpass', 2200)).connect(snapGain).connect(context.destination);
+  snap.start(start);
+  const fizz = noise(context, 0.45);
+  const fizzShape = filter(context, 'bandpass', 3200, 4);
+  glide(fizzShape.frequency, start + 0.05, [[0, 3200], [0.4, 1700]]);
+  const fizzGain = context.createGain();
+  glide(fizzGain.gain, start + 0.05, [[0, 0.0001], [0.03, 0.14], [0.12, 0.05], [0.18, 0.11], [0.4, 0.0001]]);
+  fizz.connect(fizzShape).connect(fizzGain).connect(context.destination);
+  fizz.start(start + 0.05);
+  const hum = context.createOscillator();
+  hum.type = 'sawtooth';
+  glide(hum.frequency, start, [[0, 100], [1.1, 38]]);
+  const humGain = context.createGain();
+  glide(humGain.gain, start, [[0, 0.05], [1.1, 0.0001]]);
+  hum.connect(filter(context, 'lowpass', 420)).connect(humGain).connect(context.destination);
+  hum.start(start);
+  hum.stop(start + 1.15);
+}
+
 const effects: Record<SoundEffect, (context: AudioContext, start: number) => void> = {
   purr,
   meow,
@@ -354,11 +379,12 @@ const effects: Record<SoundEffect, (context: AudioContext, start: number) => voi
   knock,
   rain,
   bark,
-  gong
+  gong,
+  fuse
 };
 
 // Roughly how long each effect stands out, so story speech can pause while one plays.
-export const soundEffectSeconds: Record<SoundEffect, number> = { purr: 2.2, meow: 0.8, glass: 0.8, brakes: 1.3, doorbell: 1.4, knock: 0.6, rain: 1.2, bark: 0.6, gong: 1.7 };
+export const soundEffectSeconds: Record<SoundEffect, number> = { purr: 2.2, meow: 0.8, glass: 0.8, brakes: 1.3, doorbell: 1.4, knock: 0.6, rain: 1.2, bark: 0.6, gong: 1.7, fuse: 1.2 };
 
 export function playSoundEffect(enabled: boolean, effect: SoundEffect) {
   if (!enabled) return;
