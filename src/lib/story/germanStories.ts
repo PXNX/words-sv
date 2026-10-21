@@ -28,8 +28,10 @@ import type { Story, Text } from './stories';
  * - Kumar from India is Mia and Tom's new flatmate. Cheerful, chaotic and messy: dishes pile up,
  *   socks turn up everywhere and his curry smells through the whole flat. Learning German with lots
  *   of enthusiasm and the occasional mix-up; Lilith adores him because he drops food.
- * - Simon is an engineer. Precise, a little nerdy, pens in his shirt pocket; plans everything, explains
- *   how things work in far too much detail and gets excited about well-built machines and bridges.
+ * - Simon is an engineer from Hamburg. Precise, a little nerdy, pens in his shirt pocket; plans everything,
+ *   explains how things work in far too much detail and gets excited about well-built machines and bridges.
+ *   A true northerner: says Moin at any time of day, nö for nein, schnacken for reden, Schietwetter for
+ *   bad weather, and slips in the odd dat, wat, büschen and kiek mal.
  * - König Ludwig is a guide at Neuschwanstein who gives his tours in costume as Ludwig II, the Fairy-Tale
  *   King: crown, dark coat and moustache, grand gestures, a dry sense of humour and a melancholy streak.
  */
@@ -1234,6 +1236,8 @@ export const germanStories: Story[] = [
     title: german('Ein Tag in Hamburg'),
     beats: [
       { kind: 'narration', text: german('Sonntag, fünf Uhr morgens in Hamburg. Tom und Simon sind mit dir auf dem Fischmarkt. Es ist noch dunkel, aber überall rufen die Händler laut.') },
+      { kind: 'line', speaker: 'simon', mood: 'happy', text: german('Moin, {name}! Um fünf is dat hier schon proppenvoll. Wir schnacken gleich, erst mal brauch ich Kaffee.') },
+      { kind: 'line', speaker: 'tom', mood: 'laughing', text: german('Simon sagt immer Moin – morgens, mittags und abends. Das ist typisch für Hamburg und Norddeutschland.') },
       { kind: 'line', speaker: 'tom', mood: 'happy', text: german('Hier ist jeden Sonntag Markt, von fünf bis halb zehn. Hör mal, der Obsthändler ruft: „Ein ganzer Korb Bananen für zehn Euro!“') },
       { kind: 'line', speaker: 'tom', mood: 'curious', text: german('{name}, was kaufen wir zum Frühstück?') },
       { kind: 'reply', to: 'tom', options: [
@@ -1242,9 +1246,9 @@ export const germanStories: Story[] = [
         german('Ich kaufe den ganzen Hafen.')
       ] },
       { kind: 'narration', text: german('Um neun Uhr geht ihr zur Elbphilharmonie. Unten steht ein altes Haus aus roten Ziegeln, oben ein Dach aus Glas, das aussieht wie Wellen.') },
-      { kind: 'line', speaker: 'simon', mood: 'happy', text: german('Fantastisch! Das Gebäude ist hundertzehn Meter hoch, und die Glasfassade hat über tausend einzelne Fenster. Jedes ist ein bisschen anders gebogen.') },
+      { kind: 'line', speaker: 'simon', mood: 'happy', text: german('Moin, Elphi! Na, is dat nich schön? Das Gebäude ist hundertzehn Meter hoch, und die Glasfassade hat über tausend einzelne Fenster. Jedes ist ’n büschen anders gebogen.') },
       { kind: 'line', speaker: 'tom', mood: 'laughing', text: german('Haha, Simon, du redest über Fenster wie andere Leute über Fußball.') },
-      { kind: 'line', speaker: 'simon', text: german('Fenster sind spannender als Fußball. Und schaut mal da drüben: die großen roten Kräne. Hamburg hat den größten Hafen Deutschlands.') },
+      { kind: 'line', speaker: 'simon', text: german('Nö, Fenster sind spannender als Fußball. Und kiek mal da drüben: die großen roten Kräne. Hamburg hat den größten Hafen Deutschlands.') },
       { kind: 'narration', text: german('Mittags macht ihr eine Hafenrundfahrt. Das Boot fährt an roten, blauen und gelben Containern vorbei und durch die Speicherstadt mit ihren alten Backsteinhäusern. Die Fahrt dauert eine Stunde und kostet zwanzig Euro.') },
       { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Und, {name}? Wie gefällt dir Hamburg?') },
       { kind: 'reply', to: 'tom', options: [
@@ -1252,7 +1256,9 @@ export const germanStories: Story[] = [
         german('Gar nicht, hier gibt es zu viel Wasser zum Trinken.'),
         german('Ich bin ein Container.')
       ] },
-      { kind: 'line', speaker: 'simon', text: german('Das freut mich. In Hamburg sagt man übrigens: Es gibt kein schlechtes Wetter, nur falsche Kleidung.') },
+      { kind: 'line', speaker: 'simon', text: german('Dat freut mich. Und wenn’s regnet, sagen wir hier Schietwetter. Aber eigentlich gibt es kein schlechtes Wetter, nur falsche Kleidung.') },
+      { kind: 'question', prompt: german('Wann sagt man in Hamburg „Moin“?'), options: [german('Morgens, mittags und abends'), german('Nur am frühen Morgen'), german('Nur am Sonntag')] },
+      { kind: 'question', prompt: german('Was sagt man in Hamburg zu Regenwetter?'), options: [german('Schietwetter'), german('Sonnenwetter'), german('Fischwetter')] },
       { kind: 'question', prompt: german('Wann ist der Fischmarkt?'), options: [german('Jeden Sonntag von fünf bis halb zehn'), german('Jeden Montagabend'), german('Nur im Dezember')] },
       { kind: 'question', prompt: german('Wie viel kostet der Korb Bananen?'), options: [german('Zehn Euro'), german('Ein Euro'), german('Hundert Euro')] },
       { kind: 'question', prompt: german('Wie hoch ist die Elbphilharmonie?'), options: [german('Hundertzehn Meter'), german('Elf Meter'), german('Tausend Meter')] },
