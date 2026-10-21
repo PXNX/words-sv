@@ -328,5 +328,40 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Womit spielt Lilith?'), options: [german('Mit dem Papier'), german('Mit dem Ball'), german('Mit der Decke')] },
       { kind: 'question', prompt: german('Wann schläft Lilith?'), options: [german('Um acht Uhr am Abend'), german('Um acht Uhr am Morgen'), german('Um drei Uhr am Mittag')] }
     ]
+  },
+  {
+    id: 'a2-christmas',
+    level: 'a2',
+    scene: 'home',
+    cast: ['oma', 'mia', 'tom', 'leo', 'lilith'],
+    languages: ['de'],
+    weathers: ['snowy'],
+    title: german('Heiligabend bei Oma'),
+    beats: [
+      { kind: 'narration', text: german('Es ist der 24. Dezember, Heiligabend. Um vier Uhr nachmittags kommen Mia und Tom zu Oma. Im Wohnzimmer steht ein großer grüner Tannenbaum.') },
+      { kind: 'line', speaker: 'oma', mood: 'happy', text: german('Frohe Weihnachten, ihr zwei! Kommt rein, draußen ist es so kalt. Es sind minus fünf Grad!') },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Frohe Weihnachten, Oma! Der Baum ist wunderschön. Die roten Kugeln, die goldenen Sterne und oben der weiße Engel!') },
+      { kind: 'line', speaker: 'oma', text: german('Den Baum habe ich gestern geschmückt. Drei Stunden hat das gedauert! Aber wo ist denn Leo?') },
+      { kind: 'line', speaker: 'tom', text: german('Er hat geschrieben: Sein Zug hat zwanzig Minuten Verspätung. Er kommt um halb fünf.') },
+      { kind: 'narration', sfx: 'doorbell', enters: ['leo'], text: german('Um fünf nach halb fünf klingelt es an der Tür. Leo steht draußen, mit Schnee auf der Mütze und vier Geschenken im Arm.') },
+      { kind: 'line', speaker: 'leo', mood: 'happy', text: german('Frohe Weihnachten! Entschuldigung, die Bahn … Aber ich habe Geschenke für alle!') },
+      { kind: 'line', speaker: 'oma', text: german('Zuerst essen wir. Es gibt Kartoffelsalat mit Würstchen, wie jedes Jahr. Und danach singen wir zwei Lieder. {name}, du isst doch mit uns, oder?') },
+      { kind: 'reply', to: 'oma', options: [
+        german('Ja, sehr gern! Kartoffelsalat mag ich sehr.'),
+        german('Nein, ich esse nur im Sommer.'),
+        german('Ja, ich bin ein Tannenbaum.')
+      ] },
+      { kind: 'narration', text: german('Nach dem Essen packen alle die Geschenke aus. Oma bekommt einen lila Schal, Mia ein Buch und Tom eine gelbe Tasse.') },
+      { kind: 'line', speaker: 'lilith', sfx: 'meow', mood: 'happy', text: german('Miau!') },
+      { kind: 'line', speaker: 'leo', mood: 'laughing', text: german('Und das vierte Geschenk ist für Lilith: eine Maus aus Stoff. Haha, sie liebt das Geschenkpapier mehr!') },
+      { kind: 'line', speaker: 'oma', mood: 'happy', text: german('Das ist der schönste Abend im Jahr. Danke, dass ihr alle da seid.') },
+      { kind: 'question', prompt: german('An welchem Tag ist Heiligabend?'), options: [german('Am 24. Dezember'), german('Am 31. Dezember'), german('Am 1. Januar')] },
+      { kind: 'question', prompt: german('Welche Farbe haben die Kugeln am Baum?'), options: [german('Rot'), german('Blau'), german('Silber')] },
+      { kind: 'question', prompt: german('Wie lange hat Oma den Baum geschmückt?'), options: [german('Drei Stunden'), german('Eine Stunde'), german('Zwei Tage')] },
+      { kind: 'question', prompt: german('Wie kalt ist es draußen?'), options: [german('Minus fünf Grad'), german('Null Grad'), german('Plus fünf Grad')] },
+      { kind: 'question', prompt: german('Um wie viel Uhr kommt Leo wirklich an?'), options: [german('Um fünf nach halb fünf'), german('Um vier Uhr'), german('Um sechs Uhr')] },
+      { kind: 'question', prompt: german('Was essen sie an Heiligabend?'), options: [german('Kartoffelsalat mit Würstchen'), german('Pizza mit Salami'), german('Fisch mit Reis')] },
+      { kind: 'question', prompt: german('Was bekommt Oma?'), options: [german('Einen lila Schal'), german('Eine gelbe Tasse'), german('Ein Buch')] }
+    ]
   }
 ];
