@@ -25,7 +25,8 @@
     workshop: { back: '#e7ecef', floor: '#9aa3ad' },
     beach: { back: '#f6b06a', floor: '#ecd3a0' },
     airport: { back: '#cfe6f2', floor: '#7d8794' },
-    forest: { back: '#cfe6f2', floor: '#7a6a4a' }
+    forest: { back: '#cfe6f2', floor: '#7a6a4a' },
+    alps: { back: '#cfe6f2', floor: '#7fae57' }
   };
   const palette = $derived(palettes[scene]);
 
@@ -50,7 +51,8 @@
     workshop: { x: 150, y: 18, w: 100, h: 54 },
     beach: { x: 0, y: 0, w: 400, h: 172 },
     airport: { x: 0, y: 0, w: 400, h: 172 },
-    forest: { x: 0, y: 0, w: 400, h: 172 }
+    forest: { x: 0, y: 0, w: 400, h: 172 },
+    alps: { x: 0, y: 0, w: 400, h: 172 }
   };
   const sky = $derived(skies[scene]);
   const outdoor = $derived(sky.w === 400);
@@ -178,6 +180,18 @@
     <rect x="108" y="162" width="4" height="10" fill="#fffdf7" /><path d="M102 164q8-12 16 0Z" fill="#d64b45" /><circle cx="107" cy="160" r="1.2" fill="#fffdf7" />
     <rect x="300" y="164" width="3" height="8" fill="#fffdf7" /><path d="M296 165q5-8 11 0Z" fill="#d64b45" />
     <g class="story-fog story-fog-low" fill="#ffffff" opacity=".4"><ellipse cx="90" cy="166" rx="130" ry="9" /><ellipse cx="320" cy="164" rx="120" ry="8" /></g>
+  {:else if scene === 'alps'}
+    <!-- snow-capped peaks above an alpine pasture, a wooden Alm hut with red geraniums, and a few firs -->
+    <path d="M-10 172 70 60l50 60 60-90 80 100 50-50 110 152Z" fill="#8a9bb0" /><path d="M120 120l60-90 40 50-36 92Z" fill="#7a8ba0" />
+    <g fill="#fffdf7"><path d="M70 60l-18 25 8-3 7 5 7-6 11 2Z" /><path d="M180 30l-24 36 10-4 9 7 10-8 10 5 9-6Z" /><path d="M310 80l-20 20 8-3 7 5 8-5 11 3Z" /></g>
+    <path d="M-10 172q60-44 140-30t140-16 140 12v34Z" fill="#8fc27a" />
+    <g fill="#3c7350"><path d="M24 172l16-46 16 46Z" /><path d="M52 172l13-36 13 36Z" /><path d="M250 172l12-32 12 32Z" /></g>
+    <rect x="300" y="124" width="78" height="48" fill="#8c5b3d" stroke="#5a3d25" stroke-width="2" /><path d="M300 136h78M300 148h78M300 160h78" stroke="#6b4a2e" stroke-width="1" />
+    <path d="M290 128l49-28 49 28Z" fill="#6b4a2e" stroke="#5a3d25" stroke-width="2" />
+    {#if weather === 'snowy'}<path d="M290 128l49-28 49 28-4 2-45-25-45 25Z" fill="#ffffff" />{/if}
+    <rect x="312" y="134" width="18" height="14" fill="#cfe6f2" stroke="#fffdf7" stroke-width="2" /><rect x="310" y="148" width="22" height="5" fill="#a87850" />
+    <g fill="#d64b45"><circle cx="314" cy="147" r="2.6" /><circle cx="321" cy="146" r="2.6" /><circle cx="328" cy="147" r="2.6" /></g>
+    <rect x="348" y="140" width="16" height="32" fill="#5a3d25" /><rect x="296" y="160" width="10" height="12" fill="#a87850" />
   {/if}
   <rect y="172" width="400" height="48" fill={palette.floor} />
   <rect y="172" width="400" height="4" fill="rgba(23,42,69,.14)" />
