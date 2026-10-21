@@ -111,12 +111,16 @@
     <clipPath id="{uid}-sky">
       {#if sky.round}<circle cx={sky.x + sky.w / 2} cy={sky.y + sky.h / 2} r={sky.w / 2} />{:else}<rect x={sky.x} y={sky.y} width={sky.w} height={sky.h} rx={outdoor ? 0 : 6} />{/if}
     </clipPath>
+    <linearGradient id="{uid}-sunset" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5b4a8a" /><stop offset=".45" stop-color="#e5728a" /><stop offset=".8" stop-color="#f6a35c" /><stop offset="1" stop-color="#ffd08a" /></linearGradient>
   </defs>
   <rect width="400" height="220" fill={palette.back} />
   <!-- the weather, behind the window frames -->
   <g class="story-weather" clip-path="url(#{uid}-sky)" style:--fall="{sky.h}px">
-    <rect x={sky.x} y={sky.y} width={sky.w} height={sky.h} fill={skyColours[weather]} />
-    {#if weather === 'sunny'}
+    <rect x={sky.x} y={sky.y} width={sky.w} height={sky.h} fill={sunset ? `url(#${uid}-sunset)` : skyColours[weather]} />
+    {#if sunset}
+      <circle cx="270" cy="150" r="34" fill="#ffd36b" opacity=".95" /><circle cx="270" cy="150" r="48" fill="#ffd36b" opacity=".25" />
+      {@render cloud(clouds[0].x, clouds[0].y, clouds[0].s * 0.8)}
+    {:else if weather === 'sunny'}
       <circle class="story-sun" cx={outdoor ? 340 : sky.x + sky.w * 0.7} cy={outdoor ? 44 : sky.y + sky.h * 0.36} r={outdoor ? 24 : unit * 0.2} fill="#f4c84a" />
       {@render cloud(clouds[0].x, clouds[0].y, clouds[0].s * 0.8)}
     {:else}
@@ -184,6 +188,84 @@
     <g stroke="#172a45" stroke-width=".8">{#each Array.from({ length: 12 }, (_, i) => i) as i (i)}<path d="M{82 + i * 22} {i < 6 ? 20 + i * 0.6 : 23 - (i - 6) * 0.6}l5 10 5-10Z" fill={i % 2 ? '#4b78c2' : '#fffdf7'} />{/each}</g>
     <g fill="#a87850" stroke="#5a3d25" stroke-width="2"><rect x="96" y="140" width="100" height="8" /><rect x="104" y="148" width="7" height="26" /><rect x="180" y="148" width="7" height="26" /></g>
     <g stroke="#a45e38" stroke-width="1.5"><rect x="118" y="120" width="16" height="20" rx="2" fill="#e6b52e" /><rect x="116" y="116" width="20" height="7" rx="3.5" fill="#fffdf7" /><path d="M134 125q7 0 7 6t-7 6" fill="none" /><rect x="158" y="120" width="16" height="20" rx="2" fill="#e6b52e" /><rect x="156" y="116" width="20" height="7" rx="3.5" fill="#fffdf7" /><path d="M174 125q7 0 7 6t-7 6" fill="none" /></g>
+  {:else if scene === 'farm'}
+    <!-- a red barn with a hayloft, a wooden fence across the field and round hay bales -->
+    <path d="M300 172V92l40-30 40 30v80Z" fill="#c4473f" stroke="#172a45" stroke-width="2" /><path d="M300 92l40-30 40 30" fill="none" stroke="#fffdf7" stroke-width="4" />
+    <rect x="324" y="128" width="32" height="44" fill="#8c2f2a" stroke="#fffdf7" stroke-width="3" /><path d="M324 128l32 44M356 128l-32 44" stroke="#fffdf7" stroke-width="2" /><rect x="331" y="96" width="18" height="16" fill="#e6b52e" stroke="#fffdf7" stroke-width="2" />
+    {#if weather === 'snowy'}<path d="M296 94l44-34 44 34-6 3-38-29-38 29Z" fill="#ffffff" />{/if}
+    <g stroke="#8c5b3d" stroke-width="4"><path d="M0 146h120M0 160h120M14 138v34M54 138v34M94 138v34" /></g>
+    <g fill="#e6c25e" stroke="#a8862f" stroke-width="2"><circle cx="40" cy="120" r="16" /><circle cx="78" cy="126" r="12" /></g><path d="M30 116q10-5 20 0M70 124q8-4 16 0" fill="none" stroke="#a8862f" stroke-width="1.5" />
+  {:else if scene === 'zoo'}
+    <!-- an arched zoo entrance with a sign, acacia and palm trees, and the enclosure fence -->
+    <path d="M18 172V60q46-40 92 0v112h-14V68q-32-28-64 0v104Z" fill="#8c5b3d" stroke="#172a45" stroke-width="2" />
+    <rect x="30" y="32" width="68" height="20" rx="4" fill="#e6a527" stroke="#172a45" stroke-width="2" /><text x="64" y="47" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="13" font-weight="900" fill="#172a45">ZOO</text>
+    <path d="M330 172V96" stroke="#8c5b3d" stroke-width="8" /><ellipse cx="330" cy="88" rx="56" ry="16" fill="#6e9b4a" /><ellipse cx="318" cy="76" rx="34" ry="10" fill="#7fae57" />
+    <path d="M268 172q-4-50 6-86" fill="none" stroke="#a87850" stroke-width="6" /><g fill="#55a66a"><path d="M274 86q-30-6-44 10 22-8 44-10Z" /><path d="M274 86q28-12 46 0-24-4-46 0Z" /><path d="M274 86q-12-24-34-26 20 10 34 26Z" /><path d="M274 86q12-24 34-24-20 8-34 24Z" /></g>
+    <g stroke="#596477" stroke-width="2.5"><path d="M110 150h290" /><path d="M110 164h290" />{#each Array.from({ length: 15 }, (_, i) => i) as i (i)}<path d="M{118 + i * 20} 144v28" />{/each}</g>
+  {:else if scene === 'butcher'}
+    <!-- white tiles, hanging hams and sausages, and a glass counter full of cuts -->
+    <rect x="24" y="22" width="92" height="62" rx="6" fill="none" stroke="#fffdf7" stroke-width="6" /><path d="M70 22v62" stroke="#fffdf7" stroke-width="4" />
+    <g stroke="rgba(23,42,69,.08)" stroke-width="1">{#each Array.from({ length: 9 }, (_, i) => i) as i (i)}<path d="M{140 + i * 28} 0v120" /><path d="M140 {i * 14}h260" />{/each}</g>
+    <path d="M150 14h230" stroke="#596477" stroke-width="3" />
+    <g fill="#b5523f" stroke="#7a2e2a" stroke-width="1.5"><path d="M168 14v6q-12 10-8 30 6 14 16 0 4-20-8-30Z" /><path d="M352 14v6q-12 10-8 30 6 14 16 0 4-20-8-30Z" /></g>
+    <g stroke="#7a2e2a" stroke-width="1.2" fill="#c96a4e">{#each [0, 1, 2, 3] as i (i)}<path d="M{214 + i * 30} 14v4q-4 2-4 8v26q0 5 4 5t4-5V26q0-6-4-8Z" />{/each}</g>
+    <rect x="18" y="122" width="102" height="50" fill="#e7ecef" stroke="#172a45" stroke-width="2" /><rect x="22" y="104" width="94" height="18" fill="rgba(207,230,242,.6)" stroke="#172a45" stroke-width="2" />
+    <g fill="#c96a4e" stroke="#7a2e2a" stroke-width="1"><ellipse cx="38" cy="118" rx="10" ry="4" /><ellipse cx="62" cy="118" rx="10" ry="4" fill="#e8a59a" /><path d="M78 120q12-8 26 0" stroke-width="5" stroke="#b5523f" fill="none" /></g>
+    <rect x="282" y="122" width="102" height="50" fill="#e7ecef" stroke="#172a45" stroke-width="2" /><rect x="286" y="104" width="94" height="18" fill="rgba(207,230,242,.6)" stroke="#172a45" stroke-width="2" />
+    <g fill="#e8a59a" stroke="#7a2e2a" stroke-width="1"><ellipse cx="304" cy="118" rx="11" ry="4" /><ellipse cx="330" cy="118" rx="9" ry="4" fill="#c96a4e" /><ellipse cx="358" cy="118" rx="12" ry="4" /></g>
+  {:else if scene === 'bakery'}
+    <!-- wooden shelves with loaves and pretzels, and a glass counter with cakes and rolls -->
+    <rect x="296" y="22" width="84" height="62" rx="6" fill="none" stroke="#fffdf7" stroke-width="6" /><path d="M338 22v62" stroke="#fffdf7" stroke-width="4" />
+    <g fill="#a87850"><rect x="20" y="40" width="110" height="6" /><rect x="20" y="80" width="110" height="6" /><rect x="20" y="40" width="5" height="90" /><rect x="125" y="40" width="5" height="90" /><rect x="20" y="120" width="110" height="6" /></g>
+    <g fill="#c98a45" stroke="#8c5b3d" stroke-width="1.5"><ellipse cx="42" cy="32" rx="16" ry="8" /><ellipse cx="78" cy="32" rx="16" ry="8" /><ellipse cx="112" cy="33" rx="12" ry="7" fill="#9a6a3f" /><ellipse cx="44" cy="113" rx="12" ry="7" fill="#9a6a3f" /><ellipse cx="74" cy="112" rx="14" ry="8" /><ellipse cx="106" cy="113" rx="12" ry="7" /></g>
+    <g fill="none" stroke="#9a5a2a" stroke-width="4">{#each [0, 1, 2] as i (i)}<path d="M{38 + i * 32} 76q-10-14 0-16t8 8q-8 8-14 8m14-8q8 8 14 8 10-2 0-16t-8 8" />{/each}</g>
+    <rect x="270" y="118" width="114" height="54" fill="#fffdf7" stroke="#172a45" stroke-width="2" /><rect x="274" y="100" width="106" height="18" fill="rgba(207,230,242,.6)" stroke="#172a45" stroke-width="2" />
+    <g stroke="#8c5b3d" stroke-width="1"><path d="M282 116h22v-8h-22Z" fill="#f2c7a5" /><path d="M282 108h22" stroke="#df8eb1" stroke-width="3" /><path d="M314 116h22v-10h-22Z" fill="#8c5b3d" /><path d="M314 106h22" stroke="#fffdf7" stroke-width="2" /><circle cx="352" cy="111" r="5" fill="#d9a56a" /><circle cx="366" cy="111" r="5" fill="#d9a56a" /></g>
+  {:else if scene === 'boutique'}
+    <!-- a rack of shirts on hangers, a tall mirror and a mannequin in a dress -->
+    <rect x="150" y="18" width="100" height="58" rx="6" fill="none" stroke="#fffdf7" stroke-width="6" />
+    <path d="M14 34h120M20 34v138M128 34v138" stroke="#596477" stroke-width="3" />
+    {#each [0, 1, 2, 3, 4] as i (i)}
+      <path d="M{30 + i * 22} 34v4l-8 6h16l-8-6" fill="none" stroke="#596477" stroke-width="1.5" />
+      <path d="M{20 + i * 22} 44h20l4 8-5 2v40h-18v-40l-5-2Z" fill={['#e6a527', '#4b78c2', '#df8eb1', '#34824d', '#d64b45'][i]} stroke="#172a45" stroke-width="1.2" />
+    {/each}
+    <rect x="300" y="30" width="44" height="130" rx="20" fill="#cfe6f2" stroke="#a87850" stroke-width="5" /><path d="M312 46l20 30M310 64l14 20" stroke="#fffdf7" stroke-width="3" opacity=".7" />
+    <circle cx="372" cy="54" r="9" fill="#e9d6c3" /><path d="M372 63v6M358 74h28l6 60h-40Z" fill="#8a62b6" stroke="#172a45" stroke-width="1.5" /><path d="M372 134v34M362 168h20" stroke="#596477" stroke-width="3" />
+  {:else if scene === 'perfumery'}
+    <!-- glass shelves of pastel perfume bottles and a mirrored counter -->
+    <rect x="28" y="24" width="80" height="64" rx="6" fill="none" stroke="#fffdf7" stroke-width="6" />
+    <g fill="rgba(255,253,247,.7)" stroke="#b9a6c4" stroke-width="1.5"><rect x="250" y="56" width="136" height="5" /><rect x="250" y="100" width="136" height="5" /><rect x="16" y="120" width="104" height="5" /></g>
+    {#each [0, 1, 2, 3, 4] as i (i)}{@render bottle(262 + i * 28, 56, pastels[i], i % 3)}{@render bottle(266 + i * 26, 100, pastels[(i + 2) % 5], (i + 1) % 3)}{/each}
+    {#each [0, 1, 2] as i (i)}{@render bottle(34 + i * 34, 120, pastels[(i + 3) % 5], (i + 2) % 3)}{/each}
+    <rect x="270" y="128" width="116" height="44" fill="#e9dcef" stroke="#7a6a8a" stroke-width="2" /><rect x="276" y="134" width="104" height="10" fill="#fffdf7" opacity=".6" />
+    <g fill="#e6a527"><circle cx="300" cy="18" r="3" /><circle cx="330" cy="12" r="2" /><circle cx="360" cy="20" r="2.5" /></g>
+  {:else if scene === 'workshop'}
+    <!-- screens with technical drawings, gears on the wall and a robot arm on a workbench -->
+    <rect x="150" y="18" width="100" height="54" rx="6" fill="none" stroke="#fffdf7" stroke-width="6" />
+    <g stroke="#172a45" stroke-width="2"><rect x="16" y="30" width="58" height="40" rx="3" fill="#2b4a70" /><rect x="80" y="30" width="58" height="40" rx="3" fill="#2b4a70" /></g>
+    <g fill="none" stroke="#8ab4d9" stroke-width="1.2"><path d="M24 60h40M24 60V40M30 54l8-8 8 4 10-10" /><circle cx="98" cy="50" r="10" /><path d="M88 50h20M98 40v20M116 38h14v24h-14Z" /></g>
+    <path d="M44 70v10M108 70v10M30 82h92" stroke="#596477" stroke-width="3" />
+    <g fill="#9aa3ad" stroke="#596477" stroke-width="2"><circle cx="310" cy="40" r="16" /><circle cx="342" cy="58" r="11" /></g><g fill="#e7ecef"><circle cx="310" cy="40" r="6" /><circle cx="342" cy="58" r="4" /></g>
+    <g stroke="#596477" stroke-width="4" stroke-dasharray="4 5" fill="none"><circle cx="310" cy="40" r="19" /><circle cx="342" cy="58" r="13.5" /></g>
+    <rect x="274" y="128" width="116" height="10" fill="#8c5b3d" /><path d="M282 138v34M382 138v34" stroke="#8c5b3d" stroke-width="5" />
+    <rect x="300" y="116" width="26" height="12" rx="2" fill="#e6a527" stroke="#172a45" stroke-width="1.5" /><path d="M313 116l14-30 22 10" fill="none" stroke="#e6a527" stroke-width="6" stroke-linecap="round" /><circle cx="327" cy="86" r="4" fill="#172a45" /><path d="M349 96l6 6m-6-6 8-2" stroke="#172a45" stroke-width="2.5" stroke-linecap="round" />
+  {:else if scene === 'beach'}
+    <!-- the sea glowing under the setting sun, a beach bar with a parasol and two loungers -->
+    <rect y="132" width="400" height="40" fill="#3f6fa8" /><path d="M200 136h140M226 146h88M244 156h52" stroke="#ffd08a" stroke-width="3" stroke-linecap="round" opacity=".8" />
+    <path d="M0 140q20-5 40 0t40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0" fill="none" stroke="#8ab4d9" stroke-width="2" />
+    <path d="M30 172V92" stroke="#8c5b3d" stroke-width="4" /><path d="M-4 96q34-30 68 0Z" fill="#d64b45" /><path d="M-4 96q34-30 68 0" fill="none" stroke="#fffdf7" stroke-width="2" stroke-dasharray="8 8" />
+    <rect x="44" y="140" width="62" height="32" fill="#c98a45" stroke="#8c5b3d" stroke-width="2" /><path d="M44 140h62" stroke="#e6a527" stroke-width="4" />
+    <g fill="#fffdf7" stroke="#8c5b3d" stroke-width="2"><path d="M330 166l40-10 10 4-40 10Z" /><path d="M300 170l30-4" /></g>
+  {:else if scene === 'airport'}
+    <!-- the terminal's glass front, the control tower, the runway and a plane taking off -->
+    <rect x="0" y="96" width="140" height="76" fill="#dfe5ea" stroke="#596477" stroke-width="2" />
+    <g fill="#8ab4d9" stroke="#596477" stroke-width="1.5">{#each [0, 1, 2, 3, 4, 5] as i (i)}<rect x={6 + i * 22} y="104" width="18" height="40" />{/each}</g>
+    <rect x="344" y="62" width="16" height="110" fill="#dfe5ea" stroke="#596477" stroke-width="2" /><path d="M332 48h40l-6 16h-28Z" fill="#8ab4d9" stroke="#596477" stroke-width="2" /><path d="M330 46h44" stroke="#596477" stroke-width="3" />
+    <g class="story-plane" transform="translate(210 46) rotate(-12)">
+      <path d="M-44 0q0-6 8-6h70q12 0 16 6-4 6-16 6h-70q-8 0-8-6Z" fill="#fffdf7" stroke="#172a45" stroke-width="1.5" />
+      <path d="M-4 0-22 22h10L14 0ZM-4 0-18-16h8L12 0Z" fill="#4b78c2" stroke="#172a45" stroke-width="1" /><path d="M-40-4-48-18h8l8 12Z" fill="#d64b45" />
+      <g fill="#8ab4d9">{#each [0, 1, 2, 3, 4] as i (i)}<circle cx={-26 + i * 10} cy="-2" r="1.6" />{/each}</g>
+    </g>
   {:else if scene === 'forest'}
     <!-- a forest in the early morning: firs and tall beech trunks, shafts of sunlight, ferns and red toadstools -->
     <g fill="#3c7350"><path d="M-14 172l40-136 40 136Z" /><path d="M326 172l38-128 38 128Z" /></g>
@@ -338,6 +420,8 @@
   {#if outdoor && weather === 'snowy'}<path d="M0 172h400v7q-50 5-100 0t-100 0-100 0-100 0Z" fill="#ffffff" />{/if}
   {#if outdoor && weather === 'rainy'}<g fill="rgba(234,243,251,.5)"><ellipse cx="120" cy="196" rx="34" ry="4" /><ellipse cx="300" cy="206" rx="26" ry="3.5" /></g>{/if}
   {#if scene === 'station'}<path d="M0 196h400M0 210h400" stroke="#596477" stroke-width="3" /><rect y="172" width="400" height="6" fill="#e6b52e" />{/if}
+  {#if scene === 'airport'}<path d="M0 200h400" stroke="#fffdf7" stroke-width="3" stroke-dasharray="22 14" />{/if}
+  {#if scene === 'beach'}<path d="M0 172q50 6 100 0t100 0 100 0 100 0v6H0Z" fill="#fffdf7" opacity=".55" />{/if}
   {#if scene === 'square'}<g fill="rgba(23,42,69,.12)">{#each Array.from({ length: 20 }, (_, i) => i) as i}<rect x={i * 20 + (i % 2) * 6} y="186" width="14" height="8" rx="3" /><rect x={i * 20 + 10} y="202" width="14" height="8" rx="3" />{/each}</g>{/if}
 </svg>
 
@@ -355,5 +439,8 @@
   .story-cloud:nth-of-type(2n) { animation-duration:12s;animation-direction:alternate-reverse; }
   @keyframes story-fall { from { transform:translateY(0); } to { transform:translateY(var(--fall)); } }
   @keyframes story-drift { from { translate:-6px 0; } to { translate:6px 0; } }
-  @media (prefers-reduced-motion:reduce) { .story-rain,.story-snow,.story-cloud { animation:none; } }
+  /* the plane climbs slowly away and comes round again */
+  .story-plane { animation:story-climb 14s linear infinite; }
+  @keyframes story-climb { from { translate:-260px 70px; } to { translate:260px -70px; } }
+  @media (prefers-reduced-motion:reduce) { .story-rain,.story-snow,.story-cloud,.story-plane { animation:none; } }
 </style>
