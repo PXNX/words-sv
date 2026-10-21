@@ -789,5 +789,71 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Welche der drei Größen will das Team verändern?'), options: [german('Den Umfang'), german('Den Termin'), german('Das Budget')] },
       { kind: 'question', prompt: german('Wie lange dauert ein Sprint nach Janas Vorschlag?'), options: [german('Zwei Wochen'), german('Zwei Monate'), german('Zwei Tage')] }
     ]
+  },
+  {
+    id: 'c2-court',
+    level: 'c2',
+    scene: 'office',
+    cast: ['paul', 'robert', 'albert'],
+    languages: ['de'],
+    title: german('Die Verhandlung'),
+    beats: [
+      { kind: 'narration', text: german('Amtsgericht, Sitzungssaal 3, Donnerstag, 10:30 Uhr. Richter Paul verhandelt eine Zivilsache: Der Handwerker Robert verklagt Albert auf Zahlung des restlichen Werklohns von 3.800 Euro für ein neu gefliestes Badezimmer. Albert verweigert die Zahlung wegen angeblicher Mängel.') },
+      { kind: 'line', speaker: 'paul', text: german('Ich eröffne die Sitzung. Herr Robert, Sie sind der Kläger. Fassen Sie Ihren Standpunkt bitte kurz zusammen.') },
+      { kind: 'line', speaker: 'robert', text: german('Bad ist seit August fertig. Fliesen, Dusche, Armaturen – alles nach Auftrag. Herr Albert hat zwei Drittel bezahlt, den Rest nicht. Seit drei Monaten keine Reaktion auf meine Rechnungen.') },
+      { kind: 'line', speaker: 'albert', mood: 'angry', text: german('Weil die Arbeit mangelhaft ist! In der Dusche bleibt das Wasser stehen, weil das Gefälle zum Abfluss falsch berechnet wurde. Ich habe das Herrn Robert schriftlich mitgeteilt und ihm eine Frist zur Nachbesserung gesetzt. Er hat sie verstreichen lassen.') },
+      { kind: 'line', speaker: 'robert', text: german('Frist? Ich hab einen Brief bekommen, in dem stand, dass die Fugen „farblich unbefriedigend“ seien. Von der Dusche stand da nichts.') },
+      { kind: 'line', speaker: 'paul', text: german('Damit wären wir bei der entscheidenden Frage. Herr Albert, Sie nutzen das Badezimmer seit August täglich, ohne die Leistung je ausdrücklich zurückgewiesen zu haben. Das kann als Abnahme gewertet werden. Nach der Abnahme liegt die Beweislast für behauptete Mängel bei Ihnen, nicht beim Handwerker.') },
+      { kind: 'line', speaker: 'albert', mood: 'surprised', text: german('Bei mir? Das Wasser steht doch für jedermann sichtbar in der Duschwanne!') },
+      { kind: 'line', speaker: 'paul', text: german('Wir haben heute jemanden als Zeugen geladen, der Herrn Albert in der fraglichen Zeit besucht hat. {name}, Sie sind zur Wahrheit verpflichtet. Was haben Sie im Bad beobachtet?') },
+      { kind: 'reply', to: 'paul', options: [
+        german('Nach dem Duschen stand tatsächlich ein, zwei Zentimeter Wasser in der Ecke gegenüber dem Abfluss. Ob das an der Neigung oder an einem verstopften Abfluss lag, kann ich allerdings nicht beurteilen.'),
+        german('Ich habe nichts gesehen, aber ich bin mir sicher, dass Herr Robert schuld ist, weil er so grimmig schaut.'),
+        german('Im Bad stand ein Pferd, das hat das ganze Wasser getrunken.')
+      ] },
+      { kind: 'line', speaker: 'paul', text: german('Danke, das war eine sachliche Aussage, die zwischen Beobachtung und Bewertung unterscheidet. Für die Ursache bräuchten wir ein Sachverständigengutachten. Das würde etwa 2.000 Euro kosten und mehrere Monate dauern – bei einem Streitwert von 3.800 Euro ein ziemliches Missverhältnis.') },
+      { kind: 'line', speaker: 'paul', text: german('Ich schlage den Parteien deshalb einen Vergleich vor: Herr Robert prüft und behebt den Abfluss binnen vierzehn Tagen auf eigene Kosten. Herr Albert zahlt sofort 3.000 Euro und die restlichen 800 Euro nach erfolgreicher Nachbesserung. Die Kosten des Rechtsstreits werden gegeneinander aufgehoben.') },
+      { kind: 'line', speaker: 'robert', text: german('Hm. Wenn’s nur der Abfluss ist – einverstanden. Mach ich nächsten Dienstag.') },
+      { kind: 'line', speaker: 'albert', text: german('Na schön. Ich bestehe allerdings auf einer Widerrufsfrist, um das mit meinem Anwalt zu besprechen. Und auf einer Abnahme in schriftlicher Form. Ordnung muss sein.') },
+      { kind: 'question', prompt: german('Worum geht es in dem Verfahren?'), options: [german('Um den restlichen Werklohn für ein gefliestes Bad'), german('Um einen Wasserschaden in der Nachbarwohnung'), german('Um eine fristlose Kündigung')] },
+      { kind: 'question', prompt: german('Warum liegt die Beweislast laut Richter Paul bei Albert?'), options: [german('Weil er das Bad seit August nutzt, was als Abnahme gewertet werden kann'), german('Weil er der Kläger ist'), german('Weil er die Rechnung schon vollständig bezahlt hat')] },
+      { kind: 'question', prompt: german('Was stand laut Robert in Alberts Brief?'), options: [german('Dass die Fugen farblich unbefriedigend seien'), german('Dass das Wasser in der Dusche stehe'), german('Dass die Armaturen fehlten')] },
+      { kind: 'question', prompt: german('Warum hält der Richter ein Gutachten für unverhältnismäßig?'), options: [german('Weil es teuer und langwierig wäre im Verhältnis zum Streitwert'), german('Weil die Ursache schon eindeutig feststeht'), german('Weil Gutachten im Zivilprozess unzulässig sind')] },
+      { kind: 'question', prompt: german('Was sieht der Vergleich vor?'), options: [german('3.000 Euro sofort und 800 Euro nach der Nachbesserung'), german('Den vollen Betrag sofort ohne Nachbesserung'), german('Eine Halbierung des Werklohns')] },
+      { kind: 'question', prompt: german('Was bedeutet es, dass die Kosten des Rechtsstreits gegeneinander aufgehoben werden?'), options: [german('Jede Partei trägt ihre eigenen Kosten, die Gerichtskosten werden geteilt.'), german('Der Verlierer zahlt alles.'), german('Das Gericht übernimmt sämtliche Kosten.')] }
+    ]
+  },
+  {
+    id: 'c2-language-app',
+    level: 'c2',
+    scene: 'cafe',
+    cast: ['jana', 'simon', 'kumar'],
+    languages: ['de'],
+    title: german('Eine App zum Sprachenlernen'),
+    beats: [
+      { kind: 'narration', text: german('Jana und Simon wollen mit einer eigenen App Menschen beim Sprachenlernen helfen. Im Café besprechen sie das Konzept mit Kumar, der seit einem Jahr Deutsch lernt und schon ein halbes Dutzend Apps ausprobiert – und wieder gelöscht – hat.') },
+      { kind: 'line', speaker: 'kumar', text: german('Ehrlich gesagt: Alle Apps funktionieren die ersten zwei Wochen. Dann vergisst man einen Tag, die Serie ist weg, und man hat keine Lust mehr. Nach einem Monat habe ich jede wieder gelöscht.') },
+      { kind: 'line', speaker: 'jana', text: german('Damit bist du branchentypisch. Bei Lern-Apps nutzen nach dreißig Tagen oft nur noch wenige Prozent der Leute die App regelmäßig. Das Problem ist nicht der Einstieg, sondern das Durchhalten.') },
+      { kind: 'line', speaker: 'simon', text: german('Und genau da setzt die Lernpsychologie an. Ebbinghaus hat schon im 19. Jahrhundert die Vergessenskurve beschrieben: Ohne Wiederholung ist nach einem Tag deutlich mehr als die Hälfte neuer Wörter wieder weg. Wiederholt man in wachsenden Abständen – nach einem Tag, drei Tagen, einer Woche –, festigt sich das Wissen mit einem Bruchteil des Aufwands.') },
+      { kind: 'line', speaker: 'kumar', mood: 'curious', text: german('Und die Serien und Punkte? Die sollen doch motivieren.') },
+      { kind: 'line', speaker: 'jana', text: german('Spielelemente sind ein zweischneidiges Schwert. Sie erzeugen äußere Motivation, und die kann die innere geradezu verdrängen: Irgendwann lernst du nicht mehr, um Deutsch zu können, sondern um die Serie nicht zu verlieren. Wer dann einmal reißt, hat keinen Grund mehr weiterzumachen.') },
+      { kind: 'line', speaker: 'simon', text: german('Deshalb schlage ich vor, Fortschritt an dem zu messen, was man tatsächlich kann: Wie viele Wörter sitzen dauerhaft, welche Gespräche bewältigt man schon? Und eine verpasste Woche darf nicht bestraft werden, sondern sollte einen sanften Wiedereinstieg auslösen.') },
+      { kind: 'line', speaker: 'kumar', text: german('Was mir am meisten fehlt, sind Geschichten. Einzelne Wörter vergesse ich, aber wenn ich ein Wort in einer witzigen Situation gelernt habe, mit Figuren, die ich mag, bleibt es hängen.') },
+      { kind: 'line', speaker: 'jana', text: german('Technisch ist das machbar: Geschichten, in die gezielt die Wörter eingebaut werden, die jemand zuletzt falsch hatte. Allerdings speichern wir dann sehr detaillierte Lerndaten. Nach der Datenschutz-Grundverordnung brauchen wir dafür eine klare Rechtsgrundlage, Datensparsamkeit und am besten eine Verarbeitung direkt auf dem Gerät.') },
+      { kind: 'line', speaker: 'simon', mood: 'curious', text: german('{name}, Sie sind unser zweiter Testnutzer. Wenn Sie eine einzige Funktion priorisieren müssten – welche wäre das und warum?') },
+      { kind: 'reply', to: 'simon', options: [
+        german('Ich würde mit kurzen Geschichten beginnen, die gezielt meine Fehler wiederholen, weil Kontext und Wiederholung zusammen am meisten bewirken – und erst danach Spielelemente ergänzen.'),
+        german('Ich hätte am liebsten eine Funktion, die mir die Sprache über Nacht ins Gehirn lädt.'),
+        german('Das Wichtigste ist, dass die App möglichst viele Benachrichtigungen pro Stunde schickt.')
+      ] },
+      { kind: 'line', speaker: 'jana', mood: 'happy', text: german('Dann ist das unser minimal funktionsfähiges Produkt: Geschichten plus Wiederholung in Abständen. In acht Wochen testen wir eine erste Version mit fünfzig Nutzern und vergleichen, wer nach dreißig Tagen noch dabei ist.') },
+      { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Und ich will eine Katze in der App. Eine, die Fisch mag und schnurrt, wenn man etwas richtig macht.') },
+      { kind: 'question', prompt: german('Warum hat Kumar bisher jede App gelöscht?'), options: [german('Weil er nach einer verlorenen Serie die Motivation verloren hat'), german('Weil die Apps zu teuer waren'), german('Weil sein Handy keinen Speicherplatz mehr hatte')] },
+      { kind: 'question', prompt: german('Was beschreibt die Vergessenskurve von Ebbinghaus?'), options: [german('Dass man ohne Wiederholung schon nach einem Tag mehr als die Hälfte vergisst'), german('Dass man im Alter schneller lernt'), german('Dass man morgens besser lernt als abends')] },
+      { kind: 'question', prompt: german('Welche Gefahr sieht Jana bei Spielelementen?'), options: [german('Äußere Motivation kann die innere verdrängen.'), german('Sie machen die App zu langsam.'), german('Sie sind datenschutzrechtlich verboten.')] },
+      { kind: 'question', prompt: german('Wie soll die App laut Simon mit einer verpassten Woche umgehen?'), options: [german('Mit einem sanften Wiedereinstieg statt einer Strafe'), german('Mit dem Löschen des Fortschritts'), german('Mit einer Erinnerung jede Stunde')] },
+      { kind: 'question', prompt: german('Was fordert die Datenschutz-Grundverordnung laut Jana unter anderem?'), options: [german('Eine Rechtsgrundlage und Datensparsamkeit'), german('Dass alle Daten öffentlich sind'), german('Dass Apps nur offline funktionieren dürfen')] },
+      { kind: 'question', prompt: german('Wie soll die erste Version getestet werden?'), options: [german('In acht Wochen mit fünfzig Nutzern'), german('In fünfzig Wochen mit acht Nutzern'), german('Sofort mit allen Kunden')] }
+    ]
   }
 ];
