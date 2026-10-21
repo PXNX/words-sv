@@ -8,7 +8,7 @@ import type { Story, Text } from './stories';
  */
 
 /*
- * German-only characters who are drawn and voiced but have no stories yet:
+ * German-only characters who are drawn and voiced (only Kumar has a story so far, "Kumar lernt Deutsch"):
  * - Ali runs the döner shop on the corner. Warm, quick-witted and always busy; knows everyone in the
  *   street, calls regulars "Chef" or "mein Freund" and never forgets how they take their sauce.
  * - Robert is a handyman (Handwerker). Gruff, practical, few words; pencil behind his ear, a folding
@@ -177,6 +177,53 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was ist das Problem mit dem Anzug?'), options: [german('Die Hose ist zu lang.'), german('Die Jacke ist zu klein.'), german('Der Anzug ist zu teuer.')] },
       { kind: 'question', prompt: german('Bis wann ist die Hose fertig?'), options: [german('Bis Freitag'), german('Bis morgen'), german('Bis nächsten Monat')] },
       { kind: 'question', prompt: german('Was möchte Leo noch kaufen?'), options: [german('Eine rote Krawatte'), german('Rote Schuhe'), german('Einen roten Hut')] }
+    ]
+  },
+  {
+    id: 'a2-kumar',
+    level: 'a2',
+    scene: 'home',
+    cast: ['kumar', 'mia', 'lilith', 'tom'],
+    languages: ['de'],
+    title: german('Kumar lernt Deutsch'),
+    beats: [
+      { kind: 'narration', text: german('Dienstagabend, halb acht. Kumar sitzt seit zwei Stunden am Küchentisch und lernt für seinen Deutschtest am Freitag. Um ihn herum liegen drei Bücher, fünf bunte Stifte und eine Socke.') },
+      { kind: 'line', speaker: 'kumar', mood: 'sad', text: german('Der, die, das … Warum braucht ein Tisch einen Artikel? In meiner Sprache ist ein Tisch einfach ein Tisch!') },
+      { kind: 'narration', enters: ['mia'], text: german('Mia kommt in die Küche, um Tee zu kochen.') },
+      { kind: 'line', speaker: 'mia', text: german('Na, Kumar, wie läuft es mit dem Deutsch?') },
+      { kind: 'line', speaker: 'kumar', mood: 'worried', text: german('Schlecht. Heute Morgen war ich beim Bäcker. Ich wollte sagen: „Ich hätte gern zwei Brötchen.“ Aber ich habe gesagt: „Ich bin zwei Brötchen.“') },
+      { kind: 'line', speaker: 'mia', mood: 'laughing', text: german('Haha! Und was hat der Bäcker gemacht?') },
+      { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Er hat gelacht und mir drei Brötchen gegeben. Eins war gratis.') },
+      { kind: 'narration', enters: ['lilith'], sfx: 'meow', text: german('Plötzlich springt Lilith auf den Tisch und setzt sich genau auf Kumars blaues Heft.') },
+      { kind: 'line', speaker: 'kumar', mood: 'surprised', text: german('Lilith, nein! Das ist meine Hausaufgabe! … Moment. Heißt es der Katze, die Katze oder das Katze?') },
+      { kind: 'line', speaker: 'mia', mood: 'curious', text: german('{name}, hilf Kumar doch mal. Wie heißt es richtig?') },
+      { kind: 'reply', to: 'mia', options: [german('die Katze'), german('der Katze'), german('das Katze')] },
+      { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Die Katze! Danke, {name}. Also: Die Katze sitzt auf meinem Heft – und die Katze hat Hunger, glaube ich.') },
+      { kind: 'narration', enters: ['tom'], text: german('Um acht Uhr kommt Tom nach Hause. Er trägt eine rote Tüte vom Supermarkt.') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Hallo zusammen! Kumar, du siehst aber traurig aus. Was ist los?') },
+      { kind: 'line', speaker: 'kumar', mood: 'sad', text: german('Deutsch ist so schwer. Gestern war es so warm, und ich habe zu unserer Nachbarin gesagt: „Ich bin heiß.“ Sie hat mich sehr komisch angeschaut.') },
+      { kind: 'line', speaker: 'tom', mood: 'laughing', text: german('Haha, oh nein! Man sagt: „Mir ist heiß.“ Aber keine Sorge, mir ging es genauso. In London wollte ich ein Steak bestellen und habe gesagt: „I want to become a steak.“') },
+      { kind: 'line', speaker: 'kumar', mood: 'laughing', text: german('Haha! Du wolltest ein Steak werden?') },
+      { kind: 'question', prompt: german('Was wollte Tom in London eigentlich?'), options: [german('Ein Steak bestellen'), german('Ein Steak werden'), german('Koch werden')] },
+      { kind: 'line', speaker: 'kumar', mood: 'curious', text: german('{name}, du lernst doch auch Deutsch. Wie lernst du neue Wörter?') },
+      { kind: 'reply', to: 'kumar', options: [
+        german('Jeden Tag ein bisschen, zum Beispiel zehn Minuten am Morgen.'),
+        german('Nur einmal im Jahr, aber dann zehn Stunden lang.'),
+        german('Ich lege das Wörterbuch unter mein Kissen.')
+      ] },
+      { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Zehn Minuten jeden Tag – das schaffe ich! Ab morgen lerne ich jeden Morgen um sieben Uhr. Mit Tee und ohne Socke auf dem Tisch.') },
+      { kind: 'narration', sfx: 'purr', holds: { lilith: 'fish' }, text: german('Kumar holt sein Fischcurry aus dem Kühlschrank. Dabei fällt ein Stück Fisch auf den Boden – und Lilith ist sofort da.') },
+      { kind: 'line', speaker: 'lilith', mood: 'happy', text: german('Miau! Kumar ist mein Lieblingsmensch.') },
+      { kind: 'line', speaker: 'mia', mood: 'laughing', text: german('Siehst du, Kumar? Lilith versteht dich perfekt.') },
+      { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Dann übe ich ab jetzt mit Lilith. Sie lacht nie über meine Artikel.') },
+      { kind: 'question', prompt: german('Wann hat Kumar seinen Deutschtest?'), options: [german('Am Freitag'), german('Am Dienstag'), german('Morgen früh')] },
+      { kind: 'question', prompt: german('Wie lange lernt Kumar schon am Küchentisch?'), options: [german('Seit zwei Stunden'), german('Seit zehn Minuten'), german('Seit fünf Tagen')] },
+      { kind: 'question', prompt: german('Wie viele Brötchen hat Kumar beim Bäcker bekommen?'), options: [german('Drei'), german('Zwei'), german('Eins')] },
+      { kind: 'question', prompt: german('Welche Farbe hat Kumars Heft?'), options: [german('Blau'), german('Rot'), german('Gelb')] },
+      { kind: 'question', prompt: german('Um wie viel Uhr kommt Tom nach Hause?'), options: [german('Um acht Uhr'), german('Um halb acht'), german('Um sieben Uhr')] },
+      { kind: 'question', prompt: german('Was sagt man richtig, wenn es sehr warm ist?'), options: [german('Mir ist heiß.'), german('Ich bin heiß.'), german('Ich habe heiß.')] },
+      { kind: 'question', prompt: german('Wann will Kumar ab morgen lernen?'), options: [german('Jeden Morgen um sieben Uhr'), german('Jeden Abend um zehn Uhr'), german('Nur am Wochenende')] },
+      { kind: 'question', prompt: german('Warum mag Lilith Kumar so gern?'), options: [german('Weil er Essen fallen lässt'), german('Weil er mit ihr Deutsch lernt'), german('Weil er sie jeden Tag bürstet')] }
     ]
   },
   {
