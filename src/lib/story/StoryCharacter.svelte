@@ -16,11 +16,13 @@
 
   // `build` widens the body (and, for 'wide', the face); `accent` colours an apron or a pair of
   // overalls; `checked` lays a check pattern over the top.
-  type Look = { skin: string; hair: string; hairStyle: 'bun' | 'short' | 'curly' | 'bob' | 'bald' | 'messy'; top: string; glasses?: boolean; monocle?: boolean; beard?: boolean; stubble?: boolean; moustache?: boolean | 'kaiser'; hat?: 'tyrolean' | 'police' | 'toque' | 'straw'; headphones?: boolean; shades?: boolean; pencil?: boolean; build?: 'wide' | 'muscular'; accent?: string; checked?: boolean; outfit: 'plain' | 'hoodie' | 'cardigan' | 'apron' | 'blazer' | 'tie' | 'tracht' | 'waistcoat' | 'police' | 'chef' | 'overalls' | 'tanktop' | 'scrubs' | 'tshirt' | 'shirt' };
+  type Look = { skin: string; hair: string; hairStyle: 'bun' | 'short' | 'curly' | 'bob' | 'bald' | 'messy'; top: string; glasses?: boolean; monocle?: boolean; beard?: boolean; stubble?: boolean; moustache?: boolean | 'kaiser'; hat?: 'tyrolean' | 'crown' | 'police' | 'toque' | 'straw'; headphones?: boolean; shades?: boolean; pencil?: boolean; build?: 'wide' | 'muscular'; accent?: string; checked?: boolean; outfit: 'plain' | 'hoodie' | 'cardigan' | 'apron' | 'blazer' | 'tie' | 'tracht' | 'waistcoat' | 'police' | 'chef' | 'overalls' | 'tanktop' | 'scrubs' | 'tshirt' | 'shirt' };
   // Animals are hand-drawn branches below rather than entries in `looks`.
   type Animal = 'bello' | 'deer' | 'fox' | 'lilith' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake';
   const animals: readonly CharacterId[] = ['bello', 'deer', 'fox', 'lilith', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
   const looks: Record<Exclude<CharacterId, Animal>, Look> = {
+    // König Ludwig, the Neuschwanstein guide in costume: dark curls, a moustache, a gold crown and a dark blue coat.
+    ludwig: { skin: '#f0d0b4', hair: '#2a1d17', hairStyle: 'curly', top: '#1f3a6b', moustache: true, hat: 'crown', outfit: 'blazer' },
     // Sabine, police officer: peaked cap and navy uniform with a star badge.
     sabine: { skin: '#f0c9a8', hair: '#c9a04a', hairStyle: 'bob', top: '#1f3a6b', hat: 'police', outfit: 'police' },
     // Enzo, pizza baker: chef's hat, white jacket, red neckerchief and a proper moustache.
@@ -222,6 +224,12 @@
       <path d="M48 18q5 6 4 10M62 15v12M72 18q-4 5-3 10" fill="none" stroke="#b8933f" stroke-width="1.2" />
       <path d="M14 38q46-14 92 0-46 9-92 0Z" fill="#e9c86f" stroke="#b8933f" stroke-width="1.2" />
       <path d="M18 39l-3 3M102 39l3 3M30 42l-1 3" stroke="#b8933f" stroke-width="1.2" stroke-linecap="round" />
+    {:else if look.hat === 'crown'}
+      <!-- a gold crown set with red and blue stones, pearls on its points -->
+      <path d="M40 30 38 12l11 9 11-13 11 13 11-9-2 18Z" fill="#e6b52e" stroke="#a8862f" stroke-width="1.5" />
+      <rect x="39" y="27" width="42" height="7" rx="2" fill="#e6b52e" stroke="#a8862f" stroke-width="1.5" />
+      <circle cx="49" cy="30.5" r="1.9" fill="#d64b45" /><circle cx="60" cy="30.5" r="1.9" fill="#4b78c2" /><circle cx="71" cy="30.5" r="1.9" fill="#d64b45" />
+      <g fill="#fffdf7" stroke="#a8862f" stroke-width=".8"><circle cx="38" cy="12" r="2.2" /><circle cx="60" cy="8" r="2.2" /><circle cx="82" cy="12" r="2.2" /></g>
     {:else if look.hat === 'toque'}
       <!-- tall white chef's hat -->
       <g fill="#fffdf7" stroke="rgba(23,42,69,.25)" stroke-width="1.2"><circle cx="45" cy="16" r="10" /><circle cx="60" cy="9" r="12" /><circle cx="75" cy="16" r="10" /></g>

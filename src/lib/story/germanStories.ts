@@ -30,6 +30,8 @@ import type { Story, Text } from './stories';
  *   of enthusiasm and the occasional mix-up; Lilith adores him because he drops food.
  * - Simon is an engineer. Precise, a little nerdy, pens in his shirt pocket; plans everything, explains
  *   how things work in far too much detail and gets excited about well-built machines and bridges.
+ * - König Ludwig is a guide at Neuschwanstein who gives his tours in costume as Ludwig II, the Fairy-Tale
+ *   King: crown, dark coat and moustache, grand gestures, a dry sense of humour and a melancholy streak.
  */
 
 // The same text in every language slot, for stories limited to German learners.
@@ -1044,6 +1046,43 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Wo baut der Adler sein Nest?'), options: [german('Hoch oben in einer Felswand'), german('Im Kuhstall'), german('Auf dem Dach der Hütte')] },
       { kind: 'question', prompt: german('Wie lange bleiben die Kühe auf der Alm?'), options: [german('Von Juni bis September'), german('Das ganze Jahr'), german('Nur im Winter')] },
       { kind: 'question', prompt: german('Um wie viel Uhr kommt laut Fritz das Gewitter?'), options: [german('Um drei Uhr'), german('Um sieben Uhr'), german('Um Mitternacht')] }
+    ]
+  },
+  {
+    id: 'b1-neuschwanstein',
+    level: 'b1',
+    scene: 'castle',
+    cast: ['oma', 'leo', 'ludwig'],
+    languages: ['de'],
+    title: german('Beim Märchenkönig'),
+    beats: [
+      { kind: 'narration', text: german('Oma wollte schon immer einmal nach Neuschwanstein. Heute fährt Leo mit ihr und mit dir ins Allgäu. Schon vom Parkplatz aus sieht man das weiße Schloss mit seinen blauen Türmen über dem Wald.') },
+      { kind: 'line', speaker: 'oma', mood: 'happy', text: german('Wie im Märchen! Wusstet ihr, dass Walt Disney sein Dornröschenschloss nach diesem Vorbild gebaut hat?') },
+      { kind: 'line', speaker: 'leo', text: german('Unsere Führung beginnt um halb drei. Wir haben also noch eine halbe Stunde für den Weg nach oben.') },
+      { kind: 'narration', enters: ['ludwig'], text: german('Am Eingang wartet ein großer Mann mit Krone, dunkelblauem Mantel und Schnurrbart. Er verbeugt sich tief.') },
+      { kind: 'line', speaker: 'ludwig', text: german('Willkommen in meinem Schloss! Ich bin Ludwig der Zweite, König von Bayern. Na ja – eigentlich bin ich Schlossführer, aber auf meinen Führungen spiele ich den König.') },
+      { kind: 'line', speaker: 'oma', mood: 'laughing', text: german('Hihi, Majestät, Sie sehen sehr echt aus!') },
+      { kind: 'line', speaker: 'ludwig', mood: 'happy', text: german('Danke, gnädige Frau. Mit dem Bau habe ich 1869 begonnen. Fertig wurde das Schloss nie, und gewohnt habe ich hier nur 172 Tage.') },
+      { kind: 'line', speaker: 'leo', mood: 'curious', text: german('Warum hat er – also, warum haben Sie das Schloss überhaupt gebaut?') },
+      { kind: 'line', speaker: 'ludwig', text: german('Ich liebte die Opern von Richard Wagner. Ich wollte mir eine Welt aus Sagen und Rittern bauen, weit weg von der Politik in München. Meine Minister fanden das allerdings viel zu teuer.') },
+      { kind: 'line', speaker: 'ludwig', mood: 'curious', text: german('Und Sie, {name}? Was hätten Sie an meiner Stelle mit so viel Geld gemacht?') },
+      { kind: 'reply', to: 'ludwig', options: [
+        german('Ich hätte vielleicht ein kleineres Schloss gebaut und den Rest gespart.'),
+        german('Ich hätte die Alpen gekauft und sie nach Berlin gebracht.'),
+        german('Ich hätte ein Schloss aus Käse gebaut, damit man es essen kann.')
+      ] },
+      { kind: 'line', speaker: 'ludwig', mood: 'laughing', text: german('Weise gesprochen! Meine Minister hätten Sie geliebt.') },
+      { kind: 'narration', text: german('Im Sängersaal bleibt Oma lange stehen. An den Wänden hängen Bilder aus der Sage von Parzival, und durch die Fenster sieht man tief unten den blauen Alpsee.') },
+      { kind: 'line', speaker: 'oma', mood: 'curious', text: german('Und wie ist Ihre Geschichte ausgegangen, Majestät?') },
+      { kind: 'line', speaker: 'ludwig', mood: 'sad', text: german('Leider traurig. 1886 hat man mich für verrückt erklärt, und wenige Tage später fand man mich tot im Starnberger See. Was genau passiert ist, weiß bis heute niemand.') },
+      { kind: 'line', speaker: 'leo', text: german('Ein echtes Rätsel. Kein Wunder, dass ihn die Leute bis heute den Märchenkönig nennen.') },
+      { kind: 'question', prompt: german('Welches berühmte Schloss hatte Neuschwanstein als Vorbild?'), options: [german('Das Dornröschenschloss von Walt Disney'), german('Das Schloss Versailles'), german('Der Buckingham-Palast')] },
+      { kind: 'question', prompt: german('Wann beginnt die Führung?'), options: [german('Um halb drei'), german('Um zwölf Uhr'), german('Um halb neun')] },
+      { kind: 'question', prompt: german('Wer ist der Mann mit der Krone wirklich?'), options: [german('Ein Schlossführer im Kostüm'), german('Ein echter König'), german('Ein Opernsänger')] },
+      { kind: 'question', prompt: german('Wie viele Tage hat Ludwig im Schloss gewohnt?'), options: [german('172'), german('1869'), german('17')] },
+      { kind: 'question', prompt: german('Warum hat Ludwig das Schloss gebaut?'), options: [german('Er liebte Wagners Opern und alte Sagen.'), german('Er brauchte mehr Platz für seine Familie.'), german('Er wollte dort ein Hotel eröffnen.')] },
+      { kind: 'question', prompt: german('Was sieht man durch die Fenster des Sängersaals?'), options: [german('Den blauen Alpsee'), german('Das Meer'), german('Die Stadt München')] },
+      { kind: 'question', prompt: german('Warum nennt man Ludwig den Märchenkönig?'), options: [german('Wegen seiner Schlösser und seines rätselhaften Todes'), german('Weil er Märchenbücher geschrieben hat'), german('Weil er nie gelebt hat')] }
     ]
   }
 ];
