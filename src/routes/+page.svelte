@@ -4,8 +4,9 @@
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings, interfaceLocales, FIRST_NAME_MAX_LENGTH } from '#lib/state/settings.svelte.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
-  import UpdateAppHint from '#lib/UpdateAppHint.svelte';
   import InstallAppHint from '#lib/InstallAppHint.svelte';
+  import UpdateAppHint from '#lib/UpdateAppHint.svelte';
+  import SelectMenu from '#lib/settings/SelectMenu.svelte';
   import { playSoundEffect } from '#lib/sounds.js';
   import { playableLanguages, type Language } from '#lib/data/vocabulary.js';
   import IconSettings from '~icons/material-symbols/settings-rounded';
@@ -90,8 +91,8 @@
     event.preventDefault();
     settings.setFirstName(nameDraft);
   }
-  function selectOnboardingInterfaceLocale(event: Event) {
-    const value = (event.currentTarget as HTMLSelectElement).value;
+  const interfaceOptions = interfaceLocales.map((locale) => ({ value: locale.code as string, label: locale.label }));
+  function selectOnboardingInterfaceLocale(value: string) {
     if (interfaceLocales.some((locale) => locale.code === value)) settings.setInterfaceLocale(value as typeof settings.interfaceLocale);
   }
   let petting = $state(false);
@@ -126,7 +127,7 @@
       <span>{labels.onboardingIntro}</span>
       <label class="home-onboarding-field">
         <span>{labels.interfaceLanguage}</span>
-        <select value={settings.interfaceLocale} onchange={selectOnboardingInterfaceLocale} aria-label={labels.interfaceLanguage}>{#each interfaceLocales as locale}<option value={locale.code}>{locale.label}</option>{/each}</select>
+        <SelectMenu class="w-full" value={settings.interfaceLocale} options={interfaceOptions} label={labels.interfaceLanguage} onchange={selectOnboardingInterfaceLocale} />
       </label>
       <p>{labels.onboardingLearningLanguage}</p>
       <h1>{labels.onboardingTitle}</h1>
@@ -213,7 +214,7 @@
   @media (prefers-reduced-motion:reduce) { .home-lilith { animation:none; } }
   .home-games { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem; }.home-games a.card-play,.home-streak { color:inherit;text-decoration:none; }.home-card-slot { position:relative;display:grid; }.home-games .card-play { position:relative;display:grid;grid-template-rows:auto auto 1fr;justify-items:center;gap:.3rem;padding:1rem .6rem .9rem;border-top-width:5px;text-align:center;cursor:pointer; }.home-games > :nth-child(4n+1) { --tilt:-.7deg; }.home-games > :nth-child(4n+2) { --tilt:.5deg; }.home-games > :nth-child(4n+3) { --tilt:-.3deg; }.home-games > :nth-child(4n) { --tilt:.6deg; }.home-games .card-play.home-story-card { --tilt:-.35deg; }.home-games .card-play.streak-done { border-top-color:#34824d; }.home-games .card-play.streak-pending { border-top-color:#e6a527; }.home-games .card-play.streak-none { border-top-color:#172a45; }.home-icon { display:grid;place-items:center;width:2.6rem;height:2.6rem;border:2px solid #172a45;border-radius:48% 52% 46% 54% / 54% 46% 52% 48%;background:#f7e2b0;color:#a45e38;transition:rotate .25s var(--play-ease); }.home-icon :global(svg) { width:1.3rem;height:1.3rem; }.home-games h2 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:.98rem;font-weight:400;line-height:1.15; }.home-games p { margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:700;line-height:1.35; }.home-tutorial-link { position:absolute;top:.45rem;right:.45rem;box-shadow:2px 2px 0 #172a45;color:#a45e38; }
   .home-onboarding { width:min(100%,27rem);display:grid;justify-self:center;gap:.9rem;padding:clamp(1.15rem,6vw,1.8rem);border-radius:22px 14px 20px 15px / 15px 20px 14px 22px;border:2px solid #172a45;background:#fffdf7;box-shadow:4px 4px 0 #172a45;text-align:center; }.home-language-choice { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem;margin-top:.45rem; }.home-language-choice button { min-width:0;min-height:2.8rem;font-size:.72rem;letter-spacing:.04em;text-transform:none; }.home-language-choice button:first-child { background:#172a45;color:#fffdf7; }
-  .home-onboarding-field { display:grid;gap:.3rem;text-align:left; }.home-onboarding-field>span { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }.home-onboarding-field select { min-height:2.4rem;padding:0 .6rem;border-radius:.7rem;border:1px solid rgba(23,42,69,.28);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:800; }
+  .home-onboarding-field { display:grid;gap:.3rem;text-align:left; }.home-onboarding-field>span { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }
   .home-onboarding-cast { display:flex;justify-content:center;align-items:flex-end;gap:.4rem;height:5.2rem; }.home-onboarding-cast .home-lilith { width:3.7rem;height:4.6rem;margin-inline-start:-.6rem; }.home-onboarding-cast :global(.story-character) { width:4.4rem;height:100%; }
   .home-onboarding-field input { min-height:2.6rem;padding:0 .75rem;border-radius:.7rem;border:1px solid rgba(23,42,69,.28);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:800; }.home-onboarding-field input:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
   .home-name-submit { min-height:2.8rem;font-size:.72rem; }
@@ -230,7 +231,7 @@
     .home-family { height:7.2rem; }.home-family-people :global(.story-character) { width:4.6rem;height:6.3rem; }.home-lilith { width:5rem;height:6.3rem; }
     .home-streak-detail b { font-size:.74rem; }.home-streak-detail small { font-size:.66rem; }.home-streak-count small { font-size:.58rem; }
     .home-settings-link { font-size:.66rem; }
-    .home-onboarding>span { font-size:.82rem; }.home-onboarding>p,.home-onboarding-field>span { font-size:.68rem; }.home-onboarding-field select,.home-language-choice button,.home-name-submit { font-size:.8rem; }
+    .home-onboarding>span { font-size:.82rem; }.home-onboarding>p,.home-onboarding-field>span { font-size:.68rem; }.home-language-choice button,.home-name-submit { font-size:.8rem; }
   }
   @media (min-width:760px) { .home-games { grid-template-columns:repeat(4,minmax(0,1fr)); } }
   @media (min-width:700px) and (min-height:560px) { .home-view { padding:clamp(1.5rem,3.5vw,2.75rem) clamp(1.5rem,4vw,3rem); } }
@@ -242,6 +243,5 @@
   :global(html.dark) .home-tutorial-link { box-shadow:2px 2px 0 #0b1626;color:#e6a527; }
   :global(html.dark) .home-icon,:global(html.dark) .home-streak-flame { border-color:#0b1626;background:#172a45;color:#e6a527; }
   :global(html.dark) .home-language-choice button:first-child { background:#e6a527;color:#172a45; }
-  :global(html.dark) .home-onboarding-field select { border-color:rgba(255,253,247,.4);background:#213a5d;color:#fffdf7; }
   :global(html.dark) .home-streak-count strong,:global(html.dark) .home-streak-detail b { color:#fffdf7; }:global(html.dark) .home-streak-detail small { color:rgba(255,253,247,.72); }:global(html.dark) .home-streak :global(.home-streak-arrow) { color:rgba(255,253,247,.42); }:global(html.dark) .home-streak.qualified .home-streak-count strong,:global(html.dark) .home-streak.qualified .home-streak-detail b { color:#8ed8a2; }
 </style>
