@@ -49,7 +49,7 @@ export function playErrorSound(enabled: boolean, kind: ErrorSound) {
  * Story sound effects, synthesized with Web Audio so they need no asset downloads and work offline.
  * Kept deliberately soft: they colour a scene for learners, they should never startle.
  */
-export type SoundEffect = 'purr' | 'meow' | 'glass' | 'brakes' | 'doorbell' | 'knock' | 'rain' | 'bark' | 'tweet' | 'moo' | 'neigh' | 'trumpet' | 'hiss' | 'hum' | 'airplane' | 'waves' | 'gong' | 'fuse';
+export type SoundEffect = 'purr' | 'meow' | 'glass' | 'brakes' | 'doorbell' | 'knock' | 'rain' | 'bark' | 'tweet' | 'moo' | 'neigh' | 'trumpet' | 'hiss' | 'hum' | 'airplane' | 'waves' | 'gong' | 'fuse' | 'wind';
 
 let effectContext: AudioContext | null = null;
 
@@ -504,6 +504,12 @@ function fuse(context: AudioContext, start: number) {
   hum.stop(start + 1.15);
 }
 
+function wind(context: AudioContext, start: number) {
+  const length = 3.2;
+  noiseSwell(context, start, length, 'lowpass', [[0, 600], [1.2, 1400], [2.4, 900], [length, 700]], [[0, 0.0001], [0.8, 0.18], [1.8, 0.16], [length, 0.0001]]);
+  noiseSwell(context, start + 0.4, length * 0.8, 'bandpass', [[0, 900], [1, 1600], [2.2, 1100]], [[0, 0.0001], [0.6, 0.12], [1.6, 0.1], [2.6, 0.0001]], 2);
+}
+
 const effects: Record<SoundEffect, (context: AudioContext, start: number) => void> = {
   purr,
   meow,
@@ -522,11 +528,12 @@ const effects: Record<SoundEffect, (context: AudioContext, start: number) => voi
   airplane,
   waves,
   gong,
-  fuse
+  fuse,
+  wind,
 };
 
 // How long each effect rings, tail included, so story speech can wait for it to end.
-export const soundEffectSeconds: Record<SoundEffect, number> = { purr: 2.45, meow: 0.85, glass: 1.1, brakes: 1.45, doorbell: 1.85, knock: 0.6, rain: 3.65, bark: 0.65, tweet: 0.55, moo: 1.4, neigh: 1.4, trumpet: 1.05, hiss: 1.25, hum: 1.25, airplane: 4.55, waves: 3.4, gong: 2.25, fuse: 1.2 };
+export const soundEffectSeconds: Record<SoundEffect, number> = { purr: 2.45, meow: 0.85, glass: 1.1, brakes: 1.45, doorbell: 1.85, knock: 0.6, rain: 3.65, bark: 0.65, tweet: 0.55, moo: 1.4, neigh: 1.4, trumpet: 1.05, hiss: 1.25, hum: 1.25, airplane: 4.55, waves: 3.4, gong: 2.25, fuse: 1.2, wind: 3.4 };
 
 export function playSoundEffect(enabled: boolean, effect: SoundEffect) {
   if (!enabled) return;
