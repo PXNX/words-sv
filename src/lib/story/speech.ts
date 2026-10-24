@@ -76,14 +76,18 @@ const germanLetters: Record<string, string> = {
 };
 const germanWords: Record<string, string> = { WLAN: 'Weh-Lahn', Ick: 'Ik', ick: 'ik' };
 
-// The text as the voice should say it; what is shown on screen stays as written. `written` maps a
-// position in the spoken text back to the written one, so the word being spoken can be highlighted.
 export function pronounceable(sentence: string, language: Language): { text: string; written: (spoken: number) => number } {
-  if (language !== 'de') return { text: sentence, written: (spoken) => spoken };
+  let processed = sentence;
+  if (language === 'de') {
+    processed = processed.replace(/(\d)\.(\d{3})/g, '$1$2').replace(/(\d{1,3})(?:\s+)(\d{3})/g, '$1$2');
+  } else if (language === 'en') {
+    processed = processed.replace(/(\d)\.(\d{3})/g, '$1,$2');
+  }
+  if (language !== 'de') return { text: processed, written: (spoken) => spoken };
   // Every word said differently from how it is written: where it is in the spoken and the written text.
   const swaps: { spoken: number; said: number; written: number; length: number }[] = [];
   let shift = 0;
-  const text = sentence.replace(/(?<!\p{L})\p{L}+(?!\p{L})/gu, (word, at: number) => {
+  const text = processed.replace(/(?<!\p{L})\p{L}+(?!\p{L})/gu, (word, at: number) => {
     const said = germanWords[word] ?? (/^[A-ZÄÖÜ]{2,}$/u.test(word) ? [...word].map((letter) => germanLetters[letter]).join(' ') : word);
     if (said !== word) {
       swaps.push({ spoken: at + shift, said: said.length, written: at, length: word.length });
