@@ -9,6 +9,7 @@
 	import { m } from '#lib/paraglide/messages.js';
 	import { settings } from '#lib/state/settings.svelte.js';
 	import StartupLoader from '#lib/StartupLoader.svelte';
+	import { pwaInstall } from '#lib/pwaInstall.svelte.js';
 	import { pageTitle } from '#lib/seo.js';
 	import IconHome from '~icons/material-symbols/home-rounded';
 	let { children } = $props();
@@ -46,6 +47,7 @@
 	});
 
 	onMount(() => {
+		pwaInstall.init();
 		hydrated = true;
 		const blockGesture = (event: Event) => event.preventDefault();
 		const blockPinch = (event: TouchEvent) => { if (event.touches.length > 1) event.preventDefault(); };
