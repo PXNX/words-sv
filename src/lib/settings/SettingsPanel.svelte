@@ -36,7 +36,7 @@
     light: m.light({}, { locale: settings.interfaceLocale }),
     dark: m.dark({}, { locale: settings.interfaceLocale }),
     vibration: m.vibration({}, { locale: settings.interfaceLocale }),
-    sound: m.sound({}, { locale: settings.interfaceLocale }),
+    sound: 'Sound effects',
     voiceQuality: m.voice_quality({}, { locale: settings.interfaceLocale }),
     voiceStandard: m.voice_quality_standard({}, { locale: settings.interfaceLocale }),
     voiceNatural: m.voice_quality_natural({}, { locale: settings.interfaceLocale }),
@@ -142,6 +142,18 @@
   function closeExplanation() {
     explanationType = null;
   }
+  function shareApp() {
+    const url = typeof location !== 'undefined' ? location.origin + '/' : 'https://words-sv.vercel.app/';
+    const title = 'Words-SV - Learn German';
+    const text = 'Practice German vocabulary, grammar and stories with interactive exercises.';
+    if (typeof navigator !== 'undefined' && (navigator as any).share) {
+      (navigator as any).share({ title, text, url }).catch(() => {});
+      return;
+    }
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(url).catch(() => {});
+    }
+  }
 
   $effect(() => {
     if (!explanationType) return;
@@ -199,6 +211,8 @@
         </div>
       {:else if voiceNote}
         <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]" aria-live="polite">{voiceNote}</p>
+      {:else}
+        <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">Neural voices for stories and listening; larger download.</p>
       {/if}
     {/if}
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.notifications}</span><input aria-label={labels.notifications} type="checkbox" class="toggle toggle-sm toggle-primary" checked={notificationsEnabled} disabled={notificationBusy} onchange={(event) => toggleNotifications((event.currentTarget as HTMLInputElement).checked)} /></div>
@@ -206,6 +220,7 @@
   </section>
 
   {#if telegramHref}<a class="btn-play w-full mt-4 gap-[.48rem] normal-case tracking-normal text-[#237a26] dark:text-[#a9e8ab] text-[.72rem] font-bold leading-[1.45] text-center no-underline hover:bg-[#2aab2e] hover:text-[#fffdf7] focus-visible:bg-[#2aab2e] focus-visible:text-[#fffdf7] focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[3px]" href={telegramHref} target="_blank" rel="noreferrer" lang={settings.interfaceLocale} dir={interfaceDirection}><IconTelegram aria-hidden="true" class="w-[1.12rem] h-[1.12rem] flex-none" /><span>{labels.telegramShare}</span></a>{/if}
+  <button type="button" class="btn-play w-full mt-2 gap-[.48rem] normal-case tracking-normal text-[#172a45] dark:text-[#fffdf7] text-[.72rem] font-bold leading-[1.45] text-center" onclick={shareApp}>Share app</button>
   <a class="flex items-center justify-center gap-[.42rem] mt-4 text-accent text-[.66rem] font-extrabold tracking-[.05em] text-center no-underline uppercase focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[3px]" href="https://github.com/PXNX/words-sv" target="_blank" rel="noreferrer"><IconGithub aria-hidden="true" class="w-4 h-4" /><span>GitHub · PXNX/words-sv</span></a>
 </aside>
 
