@@ -6,6 +6,8 @@
   import { evaluateAttempt, ipaDiff, type CorrectionSegment } from '#lib/vocab/speechMatch.js';
   import { wiktionaryUrl } from '#lib/wiktionary.js';
   import { playSuccessSound } from '#lib/sounds.js';
+  import { pronounceable } from '#lib/story/speech.js';
+  import { naturalReady, naturalSupported, playNatural, prepareNatural, synthesizeNatural } from '#lib/story/naturalVoices.svelte.js';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
@@ -37,6 +39,7 @@
   let { words }: { words: string[] } = $props();
   let currentWord = $state('');
   let speechSupported = $state(false);
+  let naturalAvailable = $state(false);
   let micSupported = $state(false);
   let recognitionSupported = $state(false);
   let voices = $state<SpeechSynthesisVoice[]>([]);
@@ -70,7 +73,11 @@
   let consecutiveErrors = 0;
   const MAX_CONSECUTIVE_ERRORS = 3;
   let startedByTap = false;
+  // Invalidates an in-flight natural clip when the word changes or another sample starts.
+  let speechToken = 0;
+  let stopNatural: () => void = () => {};
 
+  const canPlay = $derived(speechSupported || (settings.voiceQuality === 'natural' && naturalAvailable));
   const candidates = $derived([...new Set(words.map((word) => word.toLocaleUpperCase()).filter((word) => Boolean(wordMetadata[settings.lang][word]))) ]);
   const spelling = $derived(currentWord ? wordMetadata[settings.lang][currentWord]?.spelling ?? currentWord : '');
   const definition = $derived(currentWord ? wordDefinitions[settings.lang][currentWord] ?? null : null);
@@ -84,17 +91,45 @@
     const globalWindow = window as unknown as { SpeechRecognition?: SpeechRecognitionCtor; webkitSpeechRecognition?: SpeechRecognitionCtor };
     return globalWindow.SpeechRecognition ?? globalWindow.webkitSpeechRecognition ?? null;
   }
-  function speak() {
-    if (!speechSupported || !currentWord) return;
-    window.speechSynthesis.cancel();
+  function stopAudio() {
+    speechToken += 1;
+    stopNatural();
+    stopNatural = () => {};
+    speaking = false;
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+  }
+  async function speak() {
+    if (!canPlay || !currentWord) return;
+    stopAudio();
+    const token = speechToken;
     speaking = true;
     // The recogniser would otherwise transcribe the sample itself and grade it as the learner's
     // attempt, so pause it while the sample plays and resume once it's finished.
     stopRecognition();
     const resume = () => {
+      if (token !== speechToken) return;
       speaking = false;
       if (listening && matchState !== 'correct' && !recognition) startRecognition();
     };
+    if (settings.voiceQuality === 'natural' && naturalAvailable) {
+      await prepareNatural(settings.lang);
+      if (token !== speechToken) return;
+      if (naturalReady(settings.lang)) {
+        const clip = await synthesizeNatural(pronounceable(spelling, settings.lang).text, 'narrator', 'neutral', [], settings.lang, .9).catch(() => null);
+        if (token !== speechToken) return;
+        if (clip) {
+          const playing = playNatural(clip);
+          stopNatural = playing.stop;
+          // `done` stays pending when a clip is stopped, so a timer also releases the microphone.
+          await Promise.race([playing.done, new Promise<void>((resolve) => window.setTimeout(resolve, playing.seconds * 1000 + 1200))]);
+          if (token !== speechToken) return;
+          stopNatural = () => {};
+          resume();
+          return;
+        }
+      }
+    }
+    if (!speechSupported) { resume(); return; }
     const utterance = new SpeechSynthesisUtterance(spelling);
     utterance.lang = speechLocale();
     utterance.rate = .72;
@@ -281,6 +316,7 @@
   }
   onMount(() => {
     speechSupported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+    naturalAvailable = naturalSupported();
     micSupported = Boolean(navigator.mediaDevices?.getUserMedia);
     recognitionSupported = Boolean(getRecognitionCtor());
     exclusiveMic = recognitionSupported && (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
@@ -289,12 +325,16 @@
     const refreshVoices = () => (voices = window.speechSynthesis.getVoices());
     if (speechSupported) { refreshVoices(); window.speechSynthesis.addEventListener('voiceschanged', refreshVoices); }
     nextWord();
-    return () => { window.speechSynthesis?.cancel(); speaking = false; stopListening(); window.speechSynthesis?.removeEventListener('voiceschanged', refreshVoices); };
+    return () => { stopAudio(); stopListening(); window.speechSynthesis?.removeEventListener('voiceschanged', refreshVoices); };
+  });
+  $effect(() => {
+    // A new language needs its natural voice model, if that quality is selected.
+    if (settings.voiceQuality === 'natural') void prepareNatural(settings.lang);
   });
   $effect(() => {
     // Restart listening for every new word so the learner never has to press a button.
     currentWord;
-    untrack(() => { stopListening(); if (currentWord) void startListening(); });
+    untrack(() => { stopAudio(); stopListening(); if (currentWord) void startListening(); });
   });
 </script>
 
@@ -314,7 +354,7 @@
       </div>
 
       <div class="flex items-center gap-[.6rem]">
-        <button type="button" class="btn-play btn-play-ink btn-play-round flex-none" onclick={speak} disabled={!speechSupported} aria-label={speaking ? 'Playing sample' : 'Play audio sample'}><IconVolume aria-hidden="true" /></button>
+        <button type="button" class="btn-play btn-play-ink btn-play-round flex-none" onclick={speak} disabled={!canPlay} aria-label={speaking ? 'Playing sample' : 'Play audio sample'}><IconVolume aria-hidden="true" /></button>
         <div class={`wave-panel wave-state-${waveState}`} aria-hidden="true">
           {#each waveform as level, index (index)}
             <span class="wave-bar" class:wave-active={speaking || (exclusiveMic && listening && hearingSound)} style={`--wave-delay:${index * 40}ms;--wave-height:${level}rem;`}></span>
