@@ -1,3 +1,5 @@
+import { publishReminderState } from './pwaReminders.js';
+
 export type StreakEvent = 'sync' | 'vocab_correct' | 'circle_completed' | 'wordle_completed';
 export type ClientStreak = { dateKey: string; vocabCorrect: number; circleCompleted: boolean; wordleCompleted: boolean; qualified: boolean; streakCount: number; bestStreak: number; lastQualifiedDay: string | null; vocabularyGoal: number; minutesRemaining: number };
 
@@ -42,12 +44,17 @@ export function applyLocalEvent(current: ClientStreak, event: StreakEvent, now =
 }
 export async function syncStreak(event: StreakEvent, fallback = readStreak()) {
 	const optimistic = applyLocalEvent(fallback, event);
+	void publishReminderState(optimistic);
 	// The /api functions only exist on Vercel; under `vite dev` every call would just 404.
 	if (import.meta.env?.DEV) return optimistic;
 	try {
 		const response = await fetch('/api/streak/progress', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ deviceId: deviceId(), timeZone: timeZone(), event, snapshot: optimistic }) });
 		const body = await response.json();
-		if (response.ok && body?.streak) return writeStreak(body.streak);
+		if (response.ok && body?.streak) {
+			const saved = writeStreak(body.streak);
+			void publishReminderState(saved);
+			return saved;
+		}
 	} catch { /* Offline play retains the local cache and retries with the next event. */ }
 	return optimistic;
 }

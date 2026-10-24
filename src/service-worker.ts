@@ -8,6 +8,7 @@
 import { self } from '$app/service-worker';
 import { assets, immutable, routes } from '$app/manifest';
 import { version } from '$app/env';
+import { dueReminderTypes, markReminderDelivered, readReminderState, reminderNotification, wasReminderDelivered, PERIODIC_SYNC_TAG } from './lib/pwaReminders.js';
 
 const CACHE = `wordcircle-${version}`;
 // The app shell: routes without a prerendered page of their own render from it.
@@ -38,6 +39,7 @@ self.addEventListener('install', (event) => {
 // Only the update button (UpdateAppHint) asks a waiting worker to take over, right before it reloads.
 self.addEventListener('message', (event) => {
 	if (event.data?.type === 'SKIP_WAITING') void self.skipWaiting();
+	if (event.data?.type === 'CHECK_REMINDERS') event.waitUntil(checkStreakReminders());
 });
 
 self.addEventListener('activate', (event) => {
@@ -110,4 +112,32 @@ self.addEventListener('notificationclick', (event) => {
 		if (existing) return existing.focus();
 		return self.clients.openWindow(destination);
 	})());
+});
+
+// Streak reminders without a server: the app mirrors its streak into IndexedDB, and Chromium wakes
+// the installed PWA here from time to time. The same check runs when the app asks for one after the
+// reminder toggle is switched on.
+async function checkStreakReminders() {
+	const state = await readReminderState();
+	if (!state?.enabled) return;
+	if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+	const { types, dateKey, minutesRemaining } = dueReminderTypes(state, new Date());
+	for (const type of types) {
+		if (await wasReminderDelivered(dateKey, type)) continue;
+		const text = reminderNotification(type, state.locale, minutesRemaining);
+		await self.registration.showNotification(text.title, {
+			body: text.body,
+			icon: '/icons/wordcircle-192.png',
+			badge: '/icons/wordcircle-192.png',
+			tag: `wordcircle-streak-${type}`,
+			data: { url: '/' }
+		});
+		await markReminderDelivered(dateKey, type);
+	}
+}
+
+self.addEventListener('periodicsync' as string, (event) => {
+	const periodicEvent = event as ExtendableEvent & { tag?: string };
+	if (periodicEvent.tag !== PERIODIC_SYNC_TAG) return;
+	periodicEvent.waitUntil(checkStreakReminders());
 });
