@@ -53,22 +53,38 @@ function phonemizerFiles() {
   return phonemizer;
 }
 
-// espeak-ng keeps state between runs, so every sentence gets a fresh module; the files are already in memory.
+// One espeak-ng module serves every sentence: a fresh module per sentence (18 MB of language data
+// each) piles up until the worker stalls after a hundred or so sentences.
+let phonemizeModule = null;
+let onPrint = null;
+function phonemizeRuntime() {
+  phonemizeModule ??= phonemizerFiles().then(([wasm, data]) => createPiperPhonemize({
+    wasmBinary: wasm,
+    getPreloadedPackage: () => data,
+    print: (line) => onPrint?.(line),
+    printErr: () => {}
+  }));
+  phonemizeModule.catch(() => (phonemizeModule = null));
+  return phonemizeModule;
+}
+
 async function phonemeIds(text, voice) {
-  const [wasm, data] = await phonemizerFiles();
+  const module = await phonemizeRuntime();
   return new Promise((resolve, reject) => {
-    createPiperPhonemize({
-      wasmBinary: wasm,
-      getPreloadedPackage: () => data,
-      print: (line) => {
-        try {
-          resolve(JSON.parse(line).phoneme_ids);
-        } catch (error) {
-          reject(error);
-        }
-      },
-      printErr: () => {}
-    }).then((module) => module.callMain(['-l', voice, '--input', JSON.stringify([{ text }]), '--espeak_data', '/espeak-ng-data']), reject);
+    onPrint = (line) => {
+      try {
+        resolve(JSON.parse(line).phoneme_ids);
+      } catch (error) {
+        reject(error);
+      }
+    };
+    try {
+      module.callMain(['-l', voice, '--input', JSON.stringify([{ text }]), '--espeak_data', '/espeak-ng-data']);
+    } catch (error) {
+      reject(error);
+    }
+    // The program prints its answer while it runs; no answer means it failed.
+    reject(new Error('no phonemes'));
   });
 }
 

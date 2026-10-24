@@ -1,25 +1,30 @@
 import type { Language } from '#lib/data/vocabulary.js';
 import type { Mood } from './stories';
-import { animals, moodShape, priority, profiles, type Speaker, type VoiceGender } from './voices';
+import { animals, moodShape, priority, profiles, sharedPitch, type Speaker, type VoiceGender } from './voices';
+import { germanSpeakers, GERMAN_CAST_MODEL } from './germanSpeakers';
 
 /*
  * Natural story voices: Piper neural voices generated on the learner's device (see
- * static/voices/piper-worker.js). Each language has one or two voice models, some of them with
- * several speakers; the cast of a story is spread over those speakers like the system voices are
- * (see voices.ts), and where speakers have to share one, the character's pitch tells them apart.
- * The German male voice has a speaker per emotion, so it laughs, sulks and yawns with the line's mood.
+ * static/voices/piper-worker.js). Each language has one or more voice models, some of them with
+ * several speakers, and every character gets a speaker of their own.
  *
- * Pitch is changed by playing the audio faster or slower; the model then speaks correspondingly
- * slower or faster, so the pace stays the character's own.
+ * In German the narrator is Thorsten, the clearest German voice, and the characters are drawn from
+ * a model trained on 236 audiobook readers: each character gets a different real person, the one
+ * whose natural pitch is closest to the character (deep for Bauer Fritz and Herr Paul, bright for Kim,
+ * warm and low for Oma). Their voices are never pitched up or down, which is what made them sound
+ * off. Only animals still get a cartoon pitch, and in the other languages, which have just one or
+ * two speakers per gender, characters who have to share a voice are shifted a little to tell them apart.
  */
-type NaturalVoice = { model: string; speaker?: number; moods?: Partial<Record<Mood, number>> };
-type LanguageVoices = { female: NaturalVoice[]; male: NaturalVoice[] };
+// `f0` is the speaker's typical pitch in Hz, measured once (see germanSpeakers.ts).
+type NaturalVoice = { model: string; speaker?: number; f0?: number };
+type LanguageVoices = { narrator?: NaturalVoice; female: NaturalVoice[]; male: NaturalVoice[] };
 
-const thorstenMoods: Partial<Record<Mood, number>> = { happy: 0, laughing: 0, angry: 1, sleepy: 5, surprised: 6 };
+const THORSTEN = 'de/de_DE/thorsten_emotional/medium/de_DE-thorsten_emotional-medium.onnx';
 const voices: Record<Language, LanguageVoices> = {
   de: {
-    female: [{ model: 'de/de_DE/kerstin/low/de_DE-kerstin-low.onnx' }],
-    male: [{ model: 'de/de_DE/thorsten_emotional/medium/de_DE-thorsten_emotional-medium.onnx', speaker: 4, moods: thorstenMoods }]
+    narrator: { model: THORSTEN, speaker: 4 },
+    female: germanSpeakers.female.map(([speaker, f0]) => ({ model: GERMAN_CAST_MODEL, speaker, f0 })),
+    male: germanSpeakers.male.map(([speaker, f0]) => ({ model: GERMAN_CAST_MODEL, speaker, f0 }))
   },
   en: {
     female: [{ model: 'en/en_GB/semaine/medium/en_GB-semaine-medium.onnx', speaker: 0 }, { model: 'en/en_GB/semaine/medium/en_GB-semaine-medium.onnx', speaker: 3 }],
@@ -49,7 +54,7 @@ const voices: Record<Language, LanguageVoices> = {
 };
 // Download sizes in MB, plus about 30 MB of runtime (speech engine and phonemizer) shared by all languages.
 const modelMegabytes: Record<string, number> = {
-  'de/de_DE/kerstin/low/de_DE-kerstin-low.onnx': 63,
+  'de/de_DE/mls/medium/de_DE-mls-medium.onnx': 77,
   'de/de_DE/thorsten_emotional/medium/de_DE-thorsten_emotional-medium.onnx': 77,
   'en/en_GB/semaine/medium/en_GB-semaine-medium.onnx': 77,
   'fr/fr_FR/upmc/medium/fr_FR-upmc-medium.onnx': 77,
@@ -62,7 +67,8 @@ const modelMegabytes: Record<string, number> = {
 const RUNTIME_MEGABYTES = 30;
 
 function modelsOf(language: Language) {
-  return [...new Set([...voices[language].female, ...voices[language].male].map((voice) => voice.model))];
+  const { narrator, female, male } = voices[language];
+  return [...new Set([...(narrator ? [narrator] : []), ...female, ...male].map((voice) => voice.model))];
 }
 
 export function naturalMegabytes(language: Language) {
@@ -82,7 +88,16 @@ let worker: Worker | null = null;
 let nextId = 0;
 const pending = new Map<number, (reply: Reply) => void>();
 
-function request(message: Record<string, unknown>, onProgress?: (loaded: number, total: number) => void) {
+// A worker stuck on a sentence is thrown away with everything it still had to do; the next request
+// starts a fresh one, which loads the models again from the cache.
+function restartWorker() {
+  worker?.terminate();
+  worker = null;
+  for (const answer of pending.values()) answer({ type: 'error', message: 'restarted' });
+  pending.clear();
+}
+
+function request(message: Record<string, unknown>, onProgress?: (loaded: number, total: number) => void, timeoutMs = 0) {
   worker ??= (() => {
     const created = new Worker('/voices/piper-worker.js');
     created.addEventListener('message', ({ data }: MessageEvent<Reply & { id: number }>) => pending.get(data.id)?.(data));
@@ -90,8 +105,10 @@ function request(message: Record<string, unknown>, onProgress?: (loaded: number,
   })();
   const id = ++nextId;
   return new Promise<Reply & { type: 'done' }>((resolve, reject) => {
+    const timer = timeoutMs ? window.setTimeout(restartWorker, timeoutMs) : 0;
     pending.set(id, (reply) => {
       if (reply.type === 'progress') return onProgress?.(reply.loaded, reply.total);
+      clearTimeout(timer);
       pending.delete(id);
       if (reply.type === 'error') reject(new Error(reply.message));
       else resolve(reply);
@@ -126,19 +143,32 @@ export function naturalReady(language: Language) {
 type Casting = Map<Speaker, { voice: NaturalVoice; shared: boolean; borrowed: boolean }>;
 let cached: { key: string; casting: Casting } | null = null;
 
-// Like the system voices: the narrator picks first, then the main characters, each taking an unused
-// voice of their gender, else the least used one (which then counts as shared).
+// The pitch a character's voice should have: a typical man's or woman's voice, scaled by the
+// character's profile (Bauer Fritz 0.74 is a deep bass, Kim 1.2 a bright voice).
+const typicalPitch: Record<VoiceGender, number> = { male: 118, female: 205 };
+
+// The narrator picks first, then the main characters, each taking an unused voice of their gender:
+// the one whose measured pitch is closest to theirs, else (where voices are few) the least used one,
+// which then counts as shared.
 function castNatural(cast: Speaker[], language: Language): Casting {
   const speakers = priority.filter((speaker) => speaker === 'narrator' || cast.includes(speaker));
   const key = `${language}|${speakers.join()}`;
   if (cached?.key === key) return cached.casting;
   const uses = new Map<NaturalVoice, number>();
   const casting: Casting = new Map();
+  const narrator = voices[language].narrator;
   for (const speaker of speakers) {
+    if (speaker === 'narrator' && narrator) {
+      casting.set(speaker, { voice: narrator, shared: false, borrowed: false });
+      continue;
+    }
     const own = voices[language][profiles[speaker].gender];
     const borrowed = own.length === 0;
     const pool = borrowed ? voices[language][profiles[speaker].gender === 'female' ? 'male' : 'female'] : own;
-    const voice = pool.find((candidate) => !uses.has(candidate)) ?? [...pool].sort((left, right) => (uses.get(left) ?? 0) - (uses.get(right) ?? 0))[0];
+    const target = typicalPitch[profiles[speaker].gender] * profiles[speaker].pitch;
+    const distance = (candidate: NaturalVoice) => (candidate.f0 ? Math.abs(Math.log(candidate.f0 / target)) : 0);
+    const unused = pool.filter((candidate) => !uses.has(candidate)).sort((left, right) => distance(left) - distance(right));
+    const voice = unused[0] ?? [...pool].sort((left, right) => (uses.get(left) ?? 0) - (uses.get(right) ?? 0))[0];
     uses.set(voice, (uses.get(voice) ?? 0) + 1);
     casting.set(speaker, { voice, shared: false, borrowed });
   }
@@ -157,17 +187,22 @@ function audio() {
   return context;
 }
 
-export type NaturalClip = { buffer: AudioBuffer; playbackRate: number; volume: number };
+// A sentence takes well under a second to work out; the timeout is generous because the sentences
+// of a line are queued together, and a fresh worker first has to load the models again.
+const SPEAK_TIMEOUT_MS = 20000;
+
+export type NaturalClip ={ buffer: AudioBuffer; playbackRate: number; volume: number };
 
 /** Speaks a sentence in the speaker's natural voice; resolves with audio ready to play. */
 export async function synthesizeNatural(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number): Promise<NaturalClip> {
   const profile = profiles[speaker];
   const { voice, shared, borrowed } = castNatural(cast, language).get(speaker) ?? castNatural([speaker], language).get(speaker)!;
   const shape = moodShape[mood];
-  const ownPitch = shared || borrowed || animals.includes(speaker) ? profile.pitch : 1 + (profile.pitch - 1) * 0.35;
-  const playbackRate = Math.min(1.7, Math.max(0.65, ownPitch * (borrowed ? borrowedPitch[profile.gender] : 1)));
+  // People keep their voice's own pitch unless they share it; animals sound like cartoon animals.
+  const ownPitch = animals.includes(speaker) ? Math.min(1.4, Math.max(0.75, profile.pitch)) : shared ? sharedPitch(profile.pitch) : 1;
+  const playbackRate = ownPitch * (borrowed ? borrowedPitch[profile.gender] : 1);
   const rate = baseRate * profile.rate * shape.rate;
-  const reply = await request({ type: 'speak', model: voice.model, text, speaker: voice.moods?.[mood] ?? voice.speaker ?? 0, lengthScale: playbackRate / rate });
+  const reply = await request({ type: 'speak', model: voice.model, text, speaker: voice.speaker ?? 0, lengthScale: playbackRate / rate }, undefined, SPEAK_TIMEOUT_MS);
   const pcm = reply.pcm!;
   const buffer = audio().createBuffer(1, pcm.length, reply.sampleRate!);
   buffer.copyToChannel(pcm as Float32Array<ArrayBuffer>, 0);
