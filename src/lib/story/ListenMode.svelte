@@ -385,7 +385,33 @@
     if (audio.paused) void audio.play().catch(() => (playing = false));
     else audio.pause();
   }
-  function skip(seconds: number) {
+  function onEnded() {
+    playing = false;
+    position = duration;
+    flushPosition();
+    // Play a small chime and generate next story audio
+    try {
+      const ctx = ensureAudioContext();
+      if (ctx && soundEnabled) {
+        const t = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.frequency.setValueAtTime(880, t);
+        osc.frequency.exponentialRampToValueAtTime(1320, t + 0.12);
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(0.08, t + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.25);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + 0.28);
+      }
+    } catch {}
+    setTimeout(() => {
+      if (phase === 'ready') {
+        void startSession();
+      }
+    }, 600);
+  }
     if (!audio) return;
     audio.currentTime = Math.max(0, Math.min(duration, audio.currentTime + seconds));
     position = audio.currentTime;
@@ -431,7 +457,11 @@
     const whole = Math.max(0, Math.round(seconds));
     return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, '0')}`;
   }
-  function settingsFingerprint() {
+  $effect(() => {
+    if (!audio) return;
+    // Make the animated view follow currently playing audio
+    playing = !audio.paused;
+  });
     return `${settings.lang}|${settings.vocabularyLevel}|${settings.includeLowerVocabulary}`;
   }
 
@@ -581,7 +611,7 @@
     </section>
   {/if}
 
-  <audio bind:this={audio} preload="auto" onloadedmetadata={onLoadedMetadata} ontimeupdate={updatePosition} onplay={() => (playing = true)} onpause={() => { playing = false; flushPosition(); }} onended={() => { playing = false; position = duration; flushPosition(); }}></audio>
+  <audio bind:this={audio} preload="auto" onloadedmetadata={onLoadedMetadata} ontimeupdate={updatePosition} onplay={() => (playing = true)} onpause={() => { playing = false; flushPosition(); }} onended={onEnded}></audio>
 </section>
 
 <style>
