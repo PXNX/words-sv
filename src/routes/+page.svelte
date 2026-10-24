@@ -10,7 +10,7 @@
   import { playSoundEffect } from '#lib/sounds.js';
   import { playableLanguages, type Language } from '#lib/data/vocabulary.js';
   import IconSettings from '~icons/material-symbols/settings-rounded';
-  import IconHelp from '~icons/material-symbols/help-rounded';
+  import IconHelp from '~icons/material-symbols/question-mark-rounded';
   import IconFlame from '~icons/material-symbols/local-fire-department-rounded';
   import IconChevronRight from '~icons/material-symbols/chevron-right-rounded';
   import IconCrossword from '~icons/material-symbols/crossword-rounded';

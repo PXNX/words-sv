@@ -7,8 +7,10 @@
   import { naturalMegabytes, naturalState, naturalSupported, prepareNatural } from '#lib/story/naturalVoices.svelte.js';
   import { onMount } from 'svelte';
   import SelectMenu from './SelectMenu.svelte';
+  import IconClose from '~icons/material-symbols/close-rounded';
   import IconDark from '~icons/material-symbols/dark-mode-rounded';
   import IconGithub from '~icons/fa6-brands/github';
+  import IconHelp from '~icons/material-symbols/question-mark-rounded';
   import IconLanguage from '~icons/material-symbols/language-rounded';
   import IconTelegram from '~icons/fa6-brands/telegram';
   import IconLight from '~icons/material-symbols/light-mode-rounded';
@@ -122,24 +124,42 @@
     }
   }
 
-  let showExplanation = $state(false);
-  let explanationType = $state<string | null>(null);
+  const explanations: Record<'wordleLength' | 'backwards', string> = {
+    wordleLength:
+      'Wordle length sets how many letters the target word has. Shorter words are quicker to solve, longer words give you more combinations to think through.',
+    backwards:
+      'When this is on, the game also accepts words spelled in reverse. For example, “STOP” counts the same as “POTS”.'
+  };
+  let explanationType = $state<'wordleLength' | 'backwards' | null>(null);
+  const explanationTitle = $derived(explanationType === 'wordleLength' ? labels.wordleLength : labels.backwards);
+  const explanationText = $derived(explanationType ? explanations[explanationType] : '');
+  let closeButton = $state<HTMLButtonElement | null>(null);
 
-  function showExplanationFor(type: 'wordleLength' | 'backwards') {
+  function openExplanation(type: 'wordleLength' | 'backwards') {
     explanationType = type;
-    showExplanation = true;
   }
 
-  function hideExplanation() {
-    showExplanation = false;
+  function closeExplanation() {
     explanationType = null;
   }
+
+  $effect(() => {
+    if (!explanationType) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeButton?.focus();
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  });
 
   onMount(() => {
     void pushEnabled().then((enabled) => (notificationsEnabled = enabled));
     voicesSupported = naturalSupported();
   });
 </script>
+
+<svelte:window onkeydown={(event) => { if (event.key === 'Escape') closeExplanation(); }} />
 
 <aside class="flex-1 min-h-0 m-0 px-[clamp(1rem,5vw,2rem)] pb-[clamp(1rem,5vw,2rem)] pt-[clamp(2.9rem,10vw,3.6rem)] overflow-y-auto border-0 bg-transparent animate-[drop-in_.2s_cubic-bezier(.23,1,.32,1)]" aria-label={labels.settingsHint} dir={interfaceDirection} lang={settings.interfaceLocale}>
   <div class="flex items-center justify-center gap-3 text-base-content">
@@ -156,10 +176,9 @@
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.gameLanguage}</span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={settings.lang} options={languageOptions} label={labels.gameLanguage} onchange={selectLanguage} /></div>
     <div class="flex items-start justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.vocabulary}</span><div class="seg-play">{#each vocabularyLevels as level}<button class={`min-h-[1.65rem] min-w-[1.65rem] px-[.32rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.vocabularyLevel === level ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} onclick={() => selectVocabularyLevel(level)}>{level.toUpperCase()}</button>{/each}</div></div>
     {#if settings.vocabularyLevel !== 'a1'}<div class="flex items-center justify-between gap-4 mt-[.25rem] pt-[.35rem] border-t-0 text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.includeLower}</span><input aria-label={labels.includeLower} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.includeLowerVocabulary} onchange={(event) => settings.setIncludeLowerVocabulary((event.currentTarget as HTMLInputElement).checked)} /></div>{/if}
-    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.wordleLength}</span><button class="text-base-content/60 hover:text-primary p-1 rounded-full" onclick={() => showExplanationFor('wordleLength')} aria-label="Show explanation for wordle length">?</button><SelectMenu class="w-[9.6rem] max-w-[48%]" value={String(settings.wordleLength)} options={wordleOptions} label={labels.wordleLength} onchange={selectWordleLength} /></div>
-    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.backwards}</span><button class="text-base-content/60 hover:text-primary p-1 rounded-full" onclick={() => showExplanationFor('backwards')} aria-label="Show explanation for reverse spelling">?</button><input aria-label={labels.backwards} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.allowBackwardWords} onchange={(event) => settings.setAllowBackwardWords((event.currentTarget as HTMLInputElement).checked)} /></div>
+    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.4rem]">{labels.wordleLength}<button type="button" class="btn-play btn-play-round btn-play-sm btn-play-soft flex-none" aria-label="Show explanation for wordle length" aria-haspopup="dialog" onclick={() => openExplanation('wordleLength')}><IconHelp aria-hidden="true" /></button></span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={String(settings.wordleLength)} options={wordleOptions} label={labels.wordleLength} onchange={selectWordleLength} /></div>
+    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.4rem]">{labels.backwards}<button type="button" class="btn-play btn-play-round btn-play-sm btn-play-soft flex-none" aria-label="Show explanation for reverse spelling" aria-haspopup="dialog" onclick={() => openExplanation('backwards')}><IconHelp aria-hidden="true" /></button></span><input aria-label={labels.backwards} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.allowBackwardWords} onchange={(event) => settings.setAllowBackwardWords((event.currentTarget as HTMLInputElement).checked)} /></div>
   </section>
-  {#if showExplanation}<div class="mt-4 p-4 border border-primary/50 rounded-lg bg-base-content/50 text-base-content text-sm leading-relaxed dark:border-primary/70">{explanationType === 'wordleLength' ? 'Wordle length determines the number of letters in the target word. It can be set from 3 to 7. Shorter lengths offer faster play, while longer lengths increase the complexity.' : 'When enabled, the game accepts words spelled in reverse. For example, "STOP" is treated the same as "POTS". This setting is useful for testing word patterns from both directions.'} <button class="text-primary text-sm hover:text-primary/80 mt-2" onclick={hideExplanation}>Close</button></div>{/if}
   <section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play" aria-labelledby="behavior-settings-heading">
     <h2 id="behavior-settings-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.behaviorGroup}</h2>
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.35rem]"><IconLanguage aria-hidden="true" class="w-[.9rem] h-[.9rem]" />{labels.interfaceLanguage}</span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={settings.interfaceLocale} options={interfaceOptions} label={labels.interfaceLanguage} onchange={selectInterfaceLocale} /></div>
@@ -190,7 +209,54 @@
   <a class="flex items-center justify-center gap-[.42rem] mt-4 text-accent text-[.66rem] font-extrabold tracking-[.05em] text-center no-underline uppercase focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[3px]" href="https://github.com/PXNX/words-sv" target="_blank" rel="noreferrer"><IconGithub aria-hidden="true" class="w-4 h-4" /><span>GitHub · PXNX/words-sv</span></a>
 </aside>
 
+{#if explanationType}
+  <div
+    class="fixed inset-0 z-[150] flex items-end justify-center bg-[rgba(23,42,69,.42)] dark:bg-[rgba(11,22,38,.6)]"
+    role="presentation"
+    dir={interfaceDirection}
+    lang={settings.interfaceLocale}
+    onclick={(event) => { if (event.target === event.currentTarget) closeExplanation(); }}
+    onkeydown={(event) => { if (event.key === 'Escape') closeExplanation(); }}
+  >
+    <div
+      class="sheet-in w-full max-w-[34rem] max-h-[min(80vh,34rem)] overflow-y-auto rounded-t-[1.6rem] border-2 border-b-0 border-[var(--play-line)] bg-[#fffdf7] px-[clamp(1rem,5vw,1.6rem)] pt-[.6rem] pb-[calc(1.1rem+env(safe-area-inset-bottom))] shadow-[0_-8px_28px_rgba(23,42,69,.22)] dark:bg-[#213a5d]"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="settings-explanation-title"
+      tabindex="-1"
+    >
+      <div class="mx-auto mb-[.85rem] h-[.3rem] w-[2.7rem] rounded-full bg-base-content/25" aria-hidden="true"></div>
+      <div class="flex items-start justify-between gap-3">
+        <h2 id="settings-explanation-title" class="m-0 text-[.58rem] font-black tracking-[.12em] text-accent uppercase">{explanationTitle}</h2>
+        <button
+          bind:this={closeButton}
+          type="button"
+          class="-mt-[.35rem] -mr-[.35rem] grid h-[2rem] w-[2rem] flex-none place-items-center rounded-full border-0 bg-transparent text-base-content/60 hover:bg-base-content/10 hover:text-base-content focus-visible:outline-2 focus-visible:outline-primary"
+          aria-label="Close"
+          onclick={closeExplanation}
+        >
+          <IconClose aria-hidden="true" class="h-[1.15rem] w-[1.15rem]" />
+        </button>
+      </div>
+      <p class="m-0 mt-[.55rem] text-[.88rem] font-semibold leading-[1.5] text-base-content">{explanationText}</p>
+    </div>
+  </div>
+{/if}
+
 <style>
+  @keyframes sheet-up {
+    from {
+      opacity: 0;
+      transform: translateY(26px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .sheet-in {
+    animation: sheet-up 0.28s cubic-bezier(0.23, 1, 0.32, 1);
+  }
   .voice-pulse {
     display: inline-flex;
     align-items: flex-end;

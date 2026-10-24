@@ -1,5 +1,5 @@
 <script lang="ts">
-  import IconHelp from '~icons/material-symbols/help-rounded';
+  import IconHelp from '~icons/material-symbols/question-mark-rounded';
 
   type WordleMark = 'correct' | 'present' | 'absent';
   type Entry = { word: string; marks: WordleMark[] };

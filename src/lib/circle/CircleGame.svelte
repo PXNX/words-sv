@@ -14,7 +14,7 @@
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
   import IconClose from '~icons/material-symbols/cancel-rounded';
   import IconDownload from '~icons/material-symbols/download-rounded';
-  import IconHelp from '~icons/material-symbols/help-rounded';
+  import IconHelp from '~icons/material-symbols/question-mark-rounded';
   import IconProgressActivity from '~icons/material-symbols/progress-activity';
   import { tick } from 'svelte';
 

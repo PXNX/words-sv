@@ -8,7 +8,7 @@
   import { settings } from '#lib/state/settings.svelte.js';
   import { wordDefinitions, wordMetadata } from '#lib/data/vocabulary.js';
   import { wiktionaryUrl } from '#lib/wiktionary.js';
-  import IconHelp from '~icons/material-symbols/help-rounded';
+  import IconHelp from '~icons/material-symbols/question-mark-rounded';
   import IconProgressActivity from '~icons/material-symbols/progress-activity';
   import { tick } from 'svelte';
   import { recordMissedWord } from '#lib/story/missedWords.js';
