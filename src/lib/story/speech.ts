@@ -112,5 +112,4 @@ export function wordsOf(text: string): Word[] {
   return [...text.matchAll(/[\p{L}\p{N}](?:[\p{L}\p{N}’'-]*[\p{L}\p{N}])?/gu)].map((match) => ({ start: match.index, end: match.index + match[0].length }));
 }
 
-// The breath after a sentence: an exclamation or question lingers a moment, a trailing "…" longest.
-export const pauseAfter: Record<Intonation, number> = { statement: 420, question: 520, exclamation: 480, trailing: 650 };
+export const pauseAfter: Record<Intonation, number> = { statement: 520, question: 620, exclamation: 580, trailing: 750 };
