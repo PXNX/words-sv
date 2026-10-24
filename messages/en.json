@@ -158,5 +158,6 @@
   "voice_quality_natural": "Natural",
   "voice_quality_hint": "Natural voices are generated on your device. They are downloaded once (about {size} MB for this language).",
   "voice_quality_loading": "Downloading voices … {percent} %",
+  "voice_quality_remaining": "About {time} left",
   "voice_quality_failed": "The natural voices could not be loaded, so the standard voices are used."
 }
