@@ -148,5 +148,11 @@
   "story_for_you": "Для тебя",
   "story_practice_words": "Повторить мои слова",
   "pet_lilith": "Погладить Лилит",
-  "story_auto_read": "Читать вслух автоматически"
+  "story_auto_read": "Читать вслух автоматически",
+  "voice_quality": "Голоса в историях",
+  "voice_quality_standard": "Стандартные",
+  "voice_quality_natural": "Естественные",
+  "voice_quality_hint": "Естественные голоса создаются на вашем устройстве. Они загружаются один раз (около {size} МБ для этого языка).",
+  "voice_quality_loading": "Загрузка голосов … {percent} %",
+  "voice_quality_failed": "Не удалось загрузить естественные голоса, поэтому используются стандартные."
 }

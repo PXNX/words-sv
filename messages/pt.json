@@ -148,5 +148,11 @@
   "story_for_you": "Feita para você",
   "story_practice_words": "Praticar minhas palavras",
   "pet_lilith": "Fazer carinho na Lilith",
-  "story_auto_read": "Ler em voz alta automaticamente"
+  "story_auto_read": "Ler em voz alta automaticamente",
+  "voice_quality": "Vozes das histórias",
+  "voice_quality_standard": "Padrão",
+  "voice_quality_natural": "Natural",
+  "voice_quality_hint": "As vozes naturais são geradas no seu aparelho. Elas são baixadas uma vez (cerca de {size} MB para este idioma).",
+  "voice_quality_loading": "Baixando vozes … {percent} %",
+  "voice_quality_failed": "Não foi possível carregar as vozes naturais, então as vozes padrão serão usadas."
 }

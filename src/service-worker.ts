@@ -43,7 +43,8 @@ self.addEventListener('message', (event) => {
 self.addEventListener('activate', (event) => {
 	event.waitUntil(
 		(async () => {
-			for (const key of await caches.keys()) if (key !== CACHE) await caches.delete(key);
+			// Only old builds go; the natural story voices (static/voices/piper-worker.js) keep their own cache.
+			for (const key of await caches.keys()) if (key.startsWith('wordcircle-') && key !== CACHE) await caches.delete(key);
 			await self.clients.claim();
 		})()
 	);

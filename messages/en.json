@@ -152,5 +152,11 @@
   "story_for_you": "Made for you",
   "story_practice_words": "Practise my words",
   "pet_lilith": "Pet Lilith",
-  "story_auto_read": "Read aloud automatically"
+  "story_auto_read": "Read aloud automatically",
+  "voice_quality": "Story voices",
+  "voice_quality_standard": "Standard",
+  "voice_quality_natural": "Natural",
+  "voice_quality_hint": "Natural voices are generated on your device. They are downloaded once (about {size} MB for this language).",
+  "voice_quality_loading": "Downloading voices … {percent} %",
+  "voice_quality_failed": "The natural voices could not be loaded, so the standard voices are used."
 }

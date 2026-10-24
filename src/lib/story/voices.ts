@@ -11,12 +11,12 @@ import { intonationOf, type Intonation } from './speech';
  * Each line is then shaped by the speaker's pace and the line's mood, plus a little random wobble,
  * so repeated lines never sound copy-pasted.
  */
-type VoiceGender = 'female' | 'male';
+export type VoiceGender = 'female' | 'male';
 // `accent` lists regional locales the speaker prefers among the voices of the language, best first.
-type VoiceProfile = { gender: VoiceGender; pitch: number; rate: number; volume: number; accent?: string[] };
+export type VoiceProfile = { gender: VoiceGender; pitch: number; rate: number; volume: number; accent?: string[] };
 export type Speaker = CharacterId | 'narrator' | 'announcer';
 
-const profiles: Record<Speaker, VoiceProfile> = {
+export const profiles: Record<Speaker, VoiceProfile> = {
   // The storyteller reads the narration in a deep, calm, unhurried male voice.
   narrator: { gender: 'male', pitch: 0.8, rate: 0.9, volume: 0.95 },
   // Station announcements: a brisk, even, slightly flat female voice, as over a loudspeaker.
@@ -69,8 +69,8 @@ const profiles: Record<Speaker, VoiceProfile> = {
 
 // Who picks first when voices are scarce: the narrator talks most, then the main characters.
 // A speaker whose regional voice is installed jumps the queue, so nobody else takes it.
-const priority: Speaker[] = ['narrator', 'announcer', 'mia', 'tom', 'lilith', 'oma', 'paul', 'kim', 'leo', 'hans', 'albert', 'sabine', 'enzo', 'jana', 'becker', 'ali', 'robert', 'fritz', 'tobias', 'selma', 'kumar', 'simon', 'ludwig', 'bello', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake', 'deer', 'fox', 'seagull', 'crow'];
-const animals: Speaker[] = ['bello', 'crow', 'seagull', 'deer', 'fox', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
+export const priority: Speaker[] = ['narrator', 'announcer', 'mia', 'tom', 'lilith', 'oma', 'paul', 'kim', 'leo', 'hans', 'albert', 'sabine', 'enzo', 'jana', 'becker', 'ali', 'robert', 'fritz', 'tobias', 'selma', 'kumar', 'simon', 'ludwig', 'bello', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake', 'deer', 'fox', 'seagull', 'crow'];
+export const animals: Speaker[] = ['bello', 'crow', 'seagull', 'deer', 'fox', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
 
 function accentRank(speaker: Speaker, voice: SpeechSynthesisVoice) {
   const accent = profiles[speaker].accent ?? [];
@@ -79,7 +79,7 @@ function accentRank(speaker: Speaker, voice: SpeechSynthesisVoice) {
 }
 
 // How a line's mood changes the delivery: sad lines slow down and drop, excited ones speed up.
-const moodShape: Record<Mood, { pitch: number; rate: number; volume: number }> = {
+export const moodShape: Record<Mood, { pitch: number; rate: number; volume: number }> = {
   neutral: { pitch: 1, rate: 1, volume: 1 },
   happy: { pitch: 1.08, rate: 1.05, volume: 1 },
   sad: { pitch: 0.9, rate: 0.88, volume: 0.85 },

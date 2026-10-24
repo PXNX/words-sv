@@ -148,5 +148,11 @@
   "story_for_you": "مخصوص تو",
   "story_practice_words": "تمرین واژه‌های من",
   "pet_lilith": "نوازش لیلیت",
-  "story_auto_read": "خواندن خودکار با صدای بلند"
+  "story_auto_read": "خواندن خودکار با صدای بلند",
+  "voice_quality": "صداهای داستان",
+  "voice_quality_standard": "استاندارد",
+  "voice_quality_natural": "طبیعی",
+  "voice_quality_hint": "صداهای طبیعی روی دستگاه شما ساخته می‌شوند و فقط یک بار دانلود می‌شوند (حدود {size} مگابایت برای این زبان).",
+  "voice_quality_loading": "در حال دانلود صداها … {percent}٪",
+  "voice_quality_failed": "صداهای طبیعی بارگیری نشدند؛ از صداهای استاندارد استفاده می‌شود."
 }

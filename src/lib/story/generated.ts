@@ -17,9 +17,13 @@ import type { CharacterId, HeldItem, Mood, Story, StoryBeat, StoryProp, Text } f
  * Who says what is fixed where a language marks the speaker's gender: Mia greets and explains,
  * Tom asks about a word he read and says goodbye; confirmations and listening tasks suit either.
  *
+ * The exercises are about what the words mean: in turn, the learner picks the meaning of a word and
+ * the word for a meaning, so the words are practised in both directions. Words with an explanation
+ * come first; only a word without one is just heard and picked out again.
+ *
  * In German, what happens around the house changes the evening: everyone reacts, the learner calls
  * Lilith back or answers her, a crash or the doorbell makes Tom lose the word just practised so the
- * learner has to say it again, the neighbour's cake gets eaten at the end, and before saying
+ * learner has to remember what it meant, the neighbour's cake gets eaten at the end, and before saying
  * goodbye Mia asks what happened that evening. The guest asks one of the words, too.
  */
 // A `wool` cue sends Lilith dashing off after the ball of wool; she is back for the next beat.
@@ -52,6 +56,7 @@ type Templates = {
   events: Event[];
   // Needed once an event has a `retry` step or a `recap`.
   retryQuestion?: string;
+  retryMeaningQuestion?: string;
   recapIntro?: string;
   closings: string[];
   guests?: Record<Guest, { arrivals: Cue[]; greetings: string[]; remarks: string[] }>;
@@ -93,6 +98,7 @@ const templates: Record<Language, Templates> = {
       { cue: { text: 'Lilith jagt ein gelbes Wollknäuel quer durchs Zimmer.', sfx: 'meow', prop: 'wool', exits: true }, steps: [{ retry: 'tom', text: 'Haha, Lilith! Jetzt ist nicht nur mein Wollknäuel weg, sondern auch das Wort von eben.' }, { speaker: 'lilith', mood: 'happy', enters: true, text: 'Miau! Ich habe das Wollknäuel gefangen!' }], recap: { prompt: 'Womit spielt Lilith?', options: ['Mit einem gelben Wollknäuel', 'Mit einem roten Ball', 'Mit Toms Schuh'] } }
     ],
     retryQuestion: 'Welches Wort haben wir gerade geübt?',
+    retryMeaningQuestion: 'Was bedeutet noch mal „{word}“?',
     recapIntro: 'Was für ein Abend! {name}, weißt du noch, was alles passiert ist?',
     closings: ['Super gemacht, {name}! Lilith ist stolz auf dich.', 'Toll, {name}! Diese Wörter vergisst du nicht so schnell.', 'Das war ein schöner Abend, {name}. Bis bald!'],
     guests: {
@@ -346,16 +352,20 @@ function readProgress(language: Language, level: VocabularyLevel): Record<string
   }
 }
 
-// Missed words first (most recent first), then due or unmastered words of the learner's levels.
+// Missed words first (most recent first), then due or unmastered words of the learner's levels;
+// among those, words with an explanation come first, so the evening can ask what they mean.
 function focusWords(language: Language, level: VocabularyLevel, includeLower: boolean): { words: string[]; missed: number } {
   const known = wordMetadata[language] ?? {};
+  const definitions = wordDefinitions[language] ?? {};
   const missed = readMissedWords(language).map((entry) => entry.word).filter((word) => known[word]).slice(0, WORDS_PER_STORY);
   const words = [...missed];
   if (words.length < WORDS_PER_STORY) {
     for (const candidateLevel of levelsFor(level, includeLower).reverse()) {
       const progress = readProgress(language, candidateLevel);
       const open = (wordPools[language]?.[candidateLevel] ?? []).filter((word) => known[word] && !words.includes(word) && normalizeReviewProgress(progress[word]).repetitions < MASTERY_THRESHOLD);
-      words.push(...prioritizeLearningWords(shuffled(open), progress).slice(0, WORDS_PER_STORY - words.length));
+      const explained = open.filter((word) => definitions[word]);
+      const unexplained = open.filter((word) => !definitions[word]);
+      words.push(...[...prioritizeLearningWords(shuffled(explained), progress), ...prioritizeLearningWords(shuffled(unexplained), progress)].slice(0, WORDS_PER_STORY - words.length));
       if (words.length >= WORDS_PER_STORY) break;
     }
   }
@@ -376,24 +386,26 @@ function distractors(language: Language, level: VocabularyLevel, word: string, n
 
 
 // Each exercise brings the word up in a line and asks about it. Whoever asks pronounces the word
-// when the learner gets it right (see `asker` and `word` on StoryBeat). A guest only asks for a word
-// or reads one out; explaining and the article question belong to Mia and Tom.
-function exerciseFor(language: Language, level: VocabularyLevel, word: string, text: Templates, speaker: 'mia' | 'tom' | Guest): StoryBeat[] {
+// when the learner gets it right (see `asker` and `word` on StoryBeat). `direction` says which way
+// the meaning is asked: the meaning of the word, or the word for the meaning. Now and then a host asks
+// for a noun's article instead; a word without an explanation can only be heard and picked out.
+// Explaining and the article question belong to Mia and Tom; a guest asks straight out.
+function exerciseFor(language: Language, level: VocabularyLevel, word: string, text: Templates, speaker: 'mia' | 'tom' | Guest, direction: 'definition' | 'word'): StoryBeat[] {
   const metadata = wordMetadata[language][word];
   const spelling = metadata.spelling;
   const definition = wordDefinitions[language]?.[word];
   const article = metadata.type === 'noun' && metadata.article && ARTICLES.includes(metadata.article) ? metadata.article : null;
   const host = speaker === 'mia' || speaker === 'tom';
-  const kinds: ('definition' | 'word' | 'article' | 'hear')[] = [];
-  if (definition && distractors(language, level, word, true).length === 2) kinds.push(...(host ? ['definition', 'word'] as const : ['word'] as const));
-  if (host && text.articleAsk && article) kinds.push('article');
-  const kind = kinds.length ? pick(kinds) : 'hear';
+  const canArticle = host && Boolean(text.articleAsk && article);
+  const canMean = Boolean(definition) && distractors(language, level, word, true).length === 2;
+  const kind = canMean && !(canArticle && Math.random() < 0.2) ? direction : canArticle ? 'article' : 'hear';
 
   if (kind === 'definition') {
     const others = distractors(language, level, word, true);
+    const ask: StoryBeat[] = host ? [{ kind: 'line', speaker: 'tom', word: spelling, text: same(fill(pick(text.defAsks), { word: spelling })) }] : [];
     return [
-      { kind: 'line', speaker: 'tom', word: spelling, text: same(fill(pick(text.defAsks), { word: spelling })) },
-      { kind: 'question', focus: word, asker: 'tom', word: spelling, prompt: same(fill(text.defQuestion, { word: spelling })), options: [definition!, ...others.map((other) => wordDefinitions[language][other])].map(same) },
+      ...ask,
+      { kind: 'question', focus: word, asker: host ? 'tom' : speaker, word: spelling, prompt: same(fill(text.defQuestion, { word: spelling })), options: [definition!, ...others.map((other) => wordDefinitions[language][other])].map(same) },
       { kind: 'line', speaker: 'mia', text: same(fill(pick(text.defAnswers), { word: spelling, definition: definition! })) }
     ];
   }
@@ -419,9 +431,16 @@ function exerciseFor(language: Language, level: VocabularyLevel, word: string, t
   ];
 }
 
-// The word practised just before an event, asked for again among two other words of the evening.
+// The word practised just before an event, asked for again: what it means, among the meanings of two
+// other words, or (without an explanation) the word itself among two other words of the evening.
 function recallFor(language: Language, level: VocabularyLevel, word: string, words: string[], text: Templates, asker: 'mia' | 'tom'): StoryBeat {
   const spelling = wordMetadata[language][word].spelling;
+  const definitions = wordDefinitions[language] ?? {};
+  if (definitions[word] && text.retryMeaningQuestion) {
+    const explained = words.filter((other) => other !== word && definitions[other] && definitions[other] !== definitions[word]);
+    const others = explained.length >= 2 ? shuffled(explained).slice(0, 2) : distractors(language, level, word, true);
+    if (others.length === 2) return { kind: 'question', focus: word, asker, word: spelling, prompt: same(fill(text.retryMeaningQuestion, { word: spelling })), options: [definitions[word], ...others.map((other) => definitions[other])].map(same) };
+  }
   const evening = words.filter((other) => other !== word);
   const others = evening.length >= 2 ? shuffled(evening).slice(0, 2) : distractors(language, level, word, false);
   return { kind: 'question', focus: word, asker, word: spelling, prompt: same(text.retryQuestion!), options: [spelling, ...others.map((other) => wordMetadata[language][other].spelling)].map(same) };
@@ -465,9 +484,12 @@ export function generateStory(language: Language, level: VocabularyLevel, includ
   const eventAfter = shuffled(words.map((_, index) => index)).slice(0, events.length);
   // Where Lilith runs off and no step brings her back, she strolls back in with the next line or narration.
   const returns: number[] = [];
+  // The meaning is asked one way, then the other, starting either way.
+  const firstDirection = pick<'definition' | 'word'>(['definition', 'word']);
   words.forEach((word, index) => {
     const asker = guest && index === guestAfter ? guest : pick<'mia' | 'tom'>(['mia', 'tom']);
-    beats.push(...exerciseFor(language, level, word, text, asker));
+    const direction = index % 2 === 0 ? firstDirection : firstDirection === 'definition' ? 'word' : 'definition';
+    beats.push(...exerciseFor(language, level, word, text, asker, direction));
     if (index === lilithAfter) beats.push({ kind: 'line', speaker: 'lilith', text: same(pick(text.lilithLines)), sfx: 'meow' });
     if (guest && visit && index === guestAfter) beats.push({ kind: 'line', speaker: guest, text: same(pick(visit.remarks)) });
     const event = events[eventAfter.indexOf(index)];

@@ -6,6 +6,8 @@ import type { Locale } from '#lib/paraglide/runtime.js';
 export type Theme = 'light' | 'dark';
 export type InterfaceLocale = Locale;
 export type WordleLength = 3 | 4 | 5 | 6 | 7;
+// Story voices: the browser's own ('standard') or neural voices generated on the device ('natural').
+export type VoiceQuality = 'standard' | 'natural';
 
 export const interfaceLocales = [
   { code: 'de', label: 'Deutsch' },
@@ -22,6 +24,7 @@ export const interfaceLocales = [
 const THEME_KEY = 'wordcircle-theme';
 const VIBRATION_KEY = 'wordcircle-vibration';
 const SOUND_KEY = 'wordcircle-sound';
+const VOICE_QUALITY_KEY = 'wordcircle-voice-quality-v1';
 const BACKWARD_WORDS_KEY = 'wordcircle-backward-words-v1';
 const VOCABULARY_LEVEL_KEY = 'wordcircle-vocabulary-level-v1';
 const INCLUDE_LOWER_VOCABULARY_KEY = 'wordcircle-include-lower-vocabulary-v1';
@@ -74,6 +77,7 @@ class SettingsStore {
   theme = $state<Theme>(typeof localStorage !== 'undefined' && localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light');
   vibration = $state(typeof localStorage === 'undefined' || localStorage.getItem(VIBRATION_KEY) !== 'off');
   sound = $state(typeof localStorage === 'undefined' || localStorage.getItem(SOUND_KEY) !== 'off');
+  voiceQuality = $state<VoiceQuality>(typeof localStorage !== 'undefined' && localStorage.getItem(VOICE_QUALITY_KEY) === 'natural' ? 'natural' : 'standard');
   lang = $state<Language>(readLanguage());
   interfaceLocale = $state<InterfaceLocale>(readInterfaceLocale());
   vocabularyLevel = $state<VocabularyLevel>(readVocabularyLevel());
@@ -97,6 +101,10 @@ class SettingsStore {
   setVibration(next: boolean) {
     this.vibration = next;
     localStorage.setItem(VIBRATION_KEY, next ? 'on' : 'off');
+  }
+  setVoiceQuality(next: VoiceQuality) {
+    this.voiceQuality = next;
+    localStorage.setItem(VOICE_QUALITY_KEY, next);
   }
   setSound(next: boolean) {
     this.sound = next;

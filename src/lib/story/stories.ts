@@ -37,9 +37,34 @@ export type StoryBeat =
   | { kind: 'question'; prompt: Text; options: Text[]; focus?: string; asker?: CharacterId; word?: string }
   | { kind: 'reply'; to: CharacterId; options: Text[]; focus?: string; word?: string };
 
+// A detail that changes from one playthrough to the next, like the colour of a ball or the day of the
+// week. One choice is drawn per detail: its words fill `{key}` in every text of the story, and
+// `{key#1}` and `{key#2}` take the words of two other choices, as wrong answers. A placeholder that
+// opens a text starts with a capital letter ("{day}" → "Sonntag", "Domingo"). `ball` paints the ball
+// on stage to match the text.
+export type Detail = { words: Record<string, Text>; ball?: string }[];
+
 // `weathers` limits the random weather where the text depends on it; `languages` limits a story to learners
 // of those languages (their texts then only need to be written in those languages, see `german`).
-export type Story = { id: string; level: VocabularyLevel; scene: SceneId; cast: CharacterId[]; title: Text; beats: StoryBeat[]; generated?: boolean; weathers?: Weather[]; weather?: Weather; languages?: Language[] };
+// `details` vary between playthroughs (see Detail); `ball` is the colour drawn for this playthrough.
+export type Story = { id: string; level: VocabularyLevel; scene: SceneId; cast: CharacterId[]; title: Text; beats: StoryBeat[]; generated?: boolean; weathers?: Weather[]; weather?: Weather; languages?: Language[]; details?: Detail[]; ball?: string };
+
+// The days of the week, as they appear inside a sentence ("Es ist Sonntag", "c’est dimanche").
+export const weekdays: Text[] = [
+  { de: 'Montag', en: 'Monday', fr: 'lundi', it: 'lunedì', es: 'lunes', pt: 'segunda-feira', uk: 'понеділок' },
+  { de: 'Dienstag', en: 'Tuesday', fr: 'mardi', it: 'martedì', es: 'martes', pt: 'terça-feira', uk: 'вівторок' },
+  { de: 'Mittwoch', en: 'Wednesday', fr: 'mercredi', it: 'mercoledì', es: 'miércoles', pt: 'quarta-feira', uk: 'середа' },
+  { de: 'Donnerstag', en: 'Thursday', fr: 'jeudi', it: 'giovedì', es: 'jueves', pt: 'quinta-feira', uk: 'четвер' },
+  { de: 'Freitag', en: 'Friday', fr: 'vendredi', it: 'venerdì', es: 'viernes', pt: 'sexta-feira', uk: 'п’ятниця' },
+  { de: 'Samstag', en: 'Saturday', fr: 'samedi', it: 'sabato', es: 'sábado', pt: 'sábado', uk: 'субота' },
+  { de: 'Sonntag', en: 'Sunday', fr: 'dimanche', it: 'domenica', es: 'domingo', pt: 'domingo', uk: 'неділя' }
+];
+// The same text in every language, for placeholders that the details fill in.
+function same(text: string): Text {
+  return german(text);
+}
+// The colours a ball on stage can have.
+export const ballColours = { red: '#d64b45', blue: '#3d6fd1', yellow: '#e8b923', green: '#3f9a4f' };
 
 export const characterNames: Record<CharacterId, Text> = {
   mia: { de: 'Mia', en: 'Mia', fr: 'Mia', it: 'Mia', es: 'Mia', pt: 'Mia', uk: 'Мія' },
@@ -84,8 +109,22 @@ export const stories: Story[] = [
     scene: 'cafe',
     cast: ['mia', 'tom'],
     title: { de: 'Im Café', en: 'At the café', fr: 'Au café', it: 'Al bar', es: 'En la cafetería', pt: 'No café', uk: 'У кав’ярні' },
+    details: [[
+      { words: {
+        now: { de: 'Es ist Morgen', en: 'It is morning', fr: 'C’est le matin', it: 'È mattina', es: 'Es por la mañana', pt: 'É de manhã', uk: 'Зараз ранок' },
+        when: { de: 'Am Morgen', en: 'In the morning', fr: 'Le matin', it: 'Di mattina', es: 'Por la mañana', pt: 'De manhã', uk: 'Уранці' }
+      } },
+      { words: {
+        now: { de: 'Es ist Mittag', en: 'It is noon', fr: 'Il est midi', it: 'È mezzogiorno', es: 'Es mediodía', pt: 'É meio-dia', uk: 'Зараз полудень' },
+        when: { de: 'Am Mittag', en: 'At noon', fr: 'À midi', it: 'A mezzogiorno', es: 'A mediodía', pt: 'Ao meio-dia', uk: 'Опівдні' }
+      } },
+      { words: {
+        now: { de: 'Es ist Abend', en: 'It is evening', fr: 'C’est le soir', it: 'È sera', es: 'Es por la noche', pt: 'É noite', uk: 'Зараз вечір' },
+        when: { de: 'Am Abend', en: 'In the evening', fr: 'Le soir', it: 'Di sera', es: 'Por la noche', pt: 'À noite', uk: 'Увечері' }
+      } }
+    ]],
     beats: [
-      { kind: 'narration', text: { de: 'Mia ist im Café. Es ist Morgen.', en: 'Mia is at the café. It is morning.', fr: 'Mia est au café. C’est le matin.', it: 'Mia è al bar. È mattina.', es: 'Mia está en la cafetería. Es por la mañana.', pt: 'A Mia está no café. É de manhã.', uk: 'Мія в кав’ярні. Зараз ранок.' } },
+      { kind: 'narration', text: { de: 'Mia ist im Café. {now}.', en: 'Mia is at the café. {now}.', fr: 'Mia est au café. {now}.', it: 'Mia è al bar. {now}.', es: 'Mia está en la cafetería. {now}.', pt: 'A Mia está no café. {now}.', uk: 'Мія в кав’ярні. {now}.' } },
       { kind: 'line', speaker: 'tom', text: { de: 'Hallo! Was möchtest du trinken?', en: 'Hello! What would you like to drink?', fr: 'Bonjour ! Qu’est-ce que tu veux boire ?', it: 'Ciao! Cosa vuoi bere?', es: '¡Hola! ¿Qué quieres beber?', pt: 'Oi! O que você quer beber?', uk: 'Привіт! Що ти хочеш випити?' } },
       { kind: 'line', speaker: 'mia', text: { de: 'Einen Kaffee mit Milch, bitte.', en: 'A coffee with milk, please.', fr: 'Un café au lait, s’il te plaît.', it: 'Un caffè con il latte, per favore.', es: 'Un café con leche, por favor.', pt: 'Um café com leite, por favor.', uk: 'Каву з молоком, будь ласка.' } },
       { kind: 'line', speaker: 'tom', text: { de: 'Gern. Möchtest du auch einen Kuchen?', en: 'Sure. Would you like some cake too?', fr: 'Avec plaisir. Tu veux aussi un gâteau ?', it: 'Certo. Vuoi anche una torta?', es: 'Claro. ¿Quieres también un pastel?', pt: 'Claro. Você quer um bolo também?', uk: 'Звісно. Хочеш ще тістечко?' } },
@@ -117,9 +156,7 @@ export const stories: Story[] = [
         { de: 'Am Bahnhof', en: 'At the station', fr: 'À la gare', it: 'In stazione', es: 'En la estación', pt: 'Na estação', uk: 'На вокзалі' }
       ] },
       { kind: 'question', prompt: { de: 'Wann ist Mia im Café?', en: 'When is Mia at the café?', fr: 'Quand Mia est-elle au café ?', it: 'Quando è al bar Mia?', es: '¿Cuándo está Mia en la cafetería?', pt: 'Quando a Mia está no café?', uk: 'Коли Мія в кав’ярні?' }, options: [
-        { de: 'Am Morgen', en: 'In the morning', fr: 'Le matin', it: 'Di mattina', es: 'Por la mañana', pt: 'De manhã', uk: 'Уранці' },
-        { de: 'Am Mittag', en: 'At noon', fr: 'À midi', it: 'A mezzogiorno', es: 'A mediodía', pt: 'Ao meio-dia', uk: 'Опівдні' },
-        { de: 'Am Abend', en: 'In the evening', fr: 'Le soir', it: 'Di sera', es: 'Por la noche', pt: 'À noite', uk: 'Увечері' }
+        same('{when}'), same('{when#1}'), same('{when#2}')
       ] },
       { kind: 'question', prompt: { de: 'Wer fragt Mia, was sie trinken möchte?', en: 'Who asks Mia what she would like to drink?', fr: 'Qui demande à Mia ce qu’elle veut boire ?', it: 'Chi chiede a Mia cosa vuole bere?', es: '¿Quién le pregunta a Mia qué quiere beber?', pt: 'Quem pergunta à Mia o que ela quer beber?', uk: 'Хто питає Мію, що вона хоче випити?' }, options: [
         { de: 'Tom', en: 'Tom', fr: 'Tom', it: 'Tom', es: 'Tom', pt: 'O Tom', uk: 'Том' },
@@ -180,17 +217,36 @@ export const stories: Story[] = [
     scene: 'park',
     cast: ['leo', 'bello', 'oma'],
     title: { de: 'Im Park', en: 'In the park', fr: 'Au parc', it: 'Al parco', es: 'En el parque', pt: 'No parque', uk: 'У парку' },
+    details: [
+      weekdays.map((day) => ({ words: { day } })),
+      [
+        { ball: ballColours.red, words: {
+          ball: { de: 'einen roten Ball', en: 'a red ball', fr: 'un ballon rouge', it: 'una palla rossa', es: 'una pelota roja', pt: 'uma bola vermelha', uk: 'червоний м’яч' },
+          colour: { de: 'rot', en: 'red', fr: 'rouge', it: 'rossa', es: 'roja', pt: 'vermelha', uk: 'червоний' }
+        } },
+        { ball: ballColours.blue, words: {
+          ball: { de: 'einen blauen Ball', en: 'a blue ball', fr: 'un ballon bleu', it: 'una palla blu', es: 'una pelota azul', pt: 'uma bola azul', uk: 'синій м’яч' },
+          colour: { de: 'blau', en: 'blue', fr: 'bleu', it: 'blu', es: 'azul', pt: 'azul', uk: 'синій' }
+        } },
+        { ball: ballColours.yellow, words: {
+          ball: { de: 'einen gelben Ball', en: 'a yellow ball', fr: 'un ballon jaune', it: 'una palla gialla', es: 'una pelota amarilla', pt: 'uma bola amarela', uk: 'жовтий м’яч' },
+          colour: { de: 'gelb', en: 'yellow', fr: 'jaune', it: 'gialla', es: 'amarilla', pt: 'amarela', uk: 'жовтий' }
+        } },
+        { ball: ballColours.green, words: {
+          ball: { de: 'einen grünen Ball', en: 'a green ball', fr: 'un ballon vert', it: 'una palla verde', es: 'una pelota verde', pt: 'uma bola verde', uk: 'зелений м’яч' },
+          colour: { de: 'grün', en: 'green', fr: 'vert', it: 'verde', es: 'verde', pt: 'verde', uk: 'зелений' }
+        } }
+      ]
+    ],
     beats: [
-      { kind: 'narration', text: { de: 'Es ist Sonntag. Leo ist mit seinem Hund Bello im Park.', en: 'It is Sunday. Leo is in the park with his dog Bello.', fr: 'C’est dimanche. Léo est au parc avec son chien Bello.', it: 'È domenica. Leo è al parco con il suo cane Bello.', es: 'Es domingo. Leo está en el parque con su perro Bello.', pt: 'É domingo. O Léo está no parque com o seu cachorro Bello.', uk: 'Сьогодні неділя. Лео в парку зі своїм собакою Белло.' } },
-      { kind: 'narration', prop: 'ball', text: { de: 'Bello sieht einen roten Ball. Er läuft schnell weg.', en: 'Bello sees a red ball. He runs away fast.', fr: 'Bello voit un ballon rouge. Il part en courant.', it: 'Bello vede una palla rossa. Corre via veloce.', es: 'Bello ve una pelota roja. Sale corriendo.', pt: 'O Bello vê uma bola vermelha. Ele sai correndo.', uk: 'Белло бачить червоний м’яч. Він швидко тікає.' } },
+      { kind: 'narration', text: { de: 'Es ist {day}. Leo ist mit seinem Hund Bello im Park.', en: 'It is {day}. Leo is in the park with his dog Bello.', fr: 'C’est {day}. Léo est au parc avec son chien Bello.', it: 'È {day}. Leo è al parco con il suo cane Bello.', es: 'Es {day}. Leo está en el parque con su perro Bello.', pt: 'É {day}. O Léo está no parque com o seu cachorro Bello.', uk: 'Сьогодні {day}. Лео в парку зі своїм собакою Белло.' } },
+      { kind: 'narration', prop: 'ball', text: { de: 'Bello sieht {ball}. Er läuft schnell weg.', en: 'Bello sees {ball}. He runs away fast.', fr: 'Bello voit {ball}. Il part en courant.', it: 'Bello vede {ball}. Corre via veloce.', es: 'Bello ve {ball}. Sale corriendo.', pt: 'O Bello vê {ball}. Ele sai correndo.', uk: 'Белло бачить {ball}. Він швидко тікає.' } },
       { kind: 'line', speaker: 'bello', sfx: 'bark', mood: 'happy', text: { de: 'Wuff! Wuff!', en: 'Woof! Woof!', fr: 'Ouaf ! Ouaf !', it: 'Bau! Bau!', es: '¡Guau! ¡Guau!', pt: 'Au! Au!', uk: 'Гав! Гав!' } },
       { kind: 'line', speaker: 'oma', enters: ['oma'], text: { de: 'Oh! Ist das dein Hund?', en: 'Oh! Is that your dog?', fr: 'Oh ! C’est ton chien ?', it: 'Oh! È il tuo cane?', es: '¡Oh! ¿Es tu perro?', pt: 'Ah! Esse cachorro é seu?', uk: 'Ой! Це твій собака?' } },
       { kind: 'line', speaker: 'leo', text: { de: 'Ja, das ist Bello. Entschuldigung!', en: 'Yes, that’s Bello. Sorry!', fr: 'Oui, c’est Bello. Pardon !', it: 'Sì, è Bello. Scusi!', es: 'Sí, es Bello. ¡Perdón!', pt: 'Sim, é o Bello. Desculpa!', uk: 'Так, це Белло. Вибачте!' } },
       { kind: 'line', speaker: 'oma', text: { de: 'Kein Problem. Er ist sehr lieb. Hier ist der Ball.', en: 'No problem. He is very sweet. Here is the ball.', fr: 'Pas de problème. Il est très gentil. Voici le ballon.', it: 'Nessun problema. È molto buono. Ecco la palla.', es: 'No pasa nada. Es muy bueno. Aquí está la pelota.', pt: 'Sem problema. Ele é muito bonzinho. Aqui está a bola.', uk: 'Нічого страшного. Він дуже милий. Ось м’яч.' } },
       { kind: 'question', prompt: { de: 'Welche Farbe hat der Ball?', en: 'What colour is the ball?', fr: 'De quelle couleur est le ballon ?', it: 'Di che colore è la palla?', es: '¿De qué color es la pelota?', pt: 'De que cor é a bola?', uk: 'Якого кольору м’яч?' }, options: [
-        { de: 'Rot', en: 'Red', fr: 'Rouge', it: 'Rossa', es: 'Roja', pt: 'Vermelha', uk: 'Червоний' },
-        { de: 'Blau', en: 'Blue', fr: 'Bleu', it: 'Blu', es: 'Azul', pt: 'Azul', uk: 'Синій' },
-        { de: 'Grün', en: 'Green', fr: 'Vert', it: 'Verde', es: 'Verde', pt: 'Verde', uk: 'Зелений' }
+        same('{colour}'), same('{colour#1}'), same('{colour#2}')
       ] },
       { kind: 'line', speaker: 'leo', text: { de: 'Hallo {name}! Spielst du mit uns?', en: 'Hi {name}! Will you play with us?', fr: 'Salut {name} ! Tu joues avec nous ?', it: 'Ciao {name}! Giochi con noi?', es: '¡Hola, {name}! ¿Juegas con nosotros?', pt: 'Oi, {name}! Você brinca com a gente?', uk: 'Привіт, {name}! Пограєш з нами?' } },
       { kind: 'reply', to: 'leo', options: [
@@ -204,9 +260,7 @@ export const stories: Story[] = [
         { de: 'In der Schule', en: 'At school', fr: 'À l’école', it: 'A scuola', es: 'En la escuela', pt: 'Na escola', uk: 'У школі' }
       ] },
       { kind: 'question', prompt: { de: 'Welcher Tag ist heute?', en: 'What day is it today?', fr: 'Quel jour est-ce aujourd’hui ?', it: 'Che giorno è oggi?', es: '¿Qué día es hoy?', pt: 'Que dia é hoje?', uk: 'Який сьогодні день?' }, options: [
-        { de: 'Sonntag', en: 'Sunday', fr: 'Dimanche', it: 'Domenica', es: 'Domingo', pt: 'Domingo', uk: 'Неділя' },
-        { de: 'Montag', en: 'Monday', fr: 'Lundi', it: 'Lunedì', es: 'Lunes', pt: 'Segunda-feira', uk: 'Понеділок' },
-        { de: 'Freitag', en: 'Friday', fr: 'Vendredi', it: 'Venerdì', es: 'Viernes', pt: 'Sexta-feira', uk: 'П’ятниця' }
+        same('{day}'), same('{day#1}'), same('{day#2}')
       ] },
       { kind: 'question', prompt: { de: 'Wer ist Bello?', en: 'Who is Bello?', fr: 'Qui est Bello ?', it: 'Chi è Bello?', es: '¿Quién es Bello?', pt: 'Quem é o Bello?', uk: 'Хто такий Белло?' }, options: [
         { de: 'Leos Hund', en: 'Leo’s dog', fr: 'Le chien de Léo', it: 'Il cane di Leo', es: 'El perro de Leo', pt: 'O cachorro do Léo', uk: 'Собака Лео' },
@@ -775,6 +829,47 @@ const weatherLines: Record<Weather, { indoor: Text; outdoor: Text }> = {
     outdoor: { de: 'Es schneit, und es ist kalt.', en: 'It is snowing, and it is cold.', fr: 'Il neige et il fait froid.', it: 'Nevica e fa freddo.', es: 'Está nevando y hace frío.', pt: 'Está nevando, e faz frio.', uk: 'Падає сніг, і холодно.' }
   }
 };
+
+function shuffled<T>(items: T[]): T[] {
+  const copy = [...items];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swap = Math.floor(Math.random() * (index + 1));
+    [copy[index], copy[swap]] = [copy[swap], copy[index]];
+  }
+  return copy;
+}
+
+/**
+ * Every playthrough draws its own details (see Detail): the ball is red one time and blue the next,
+ * the day a Sunday or a Tuesday, and the questions ask about whatever was drawn.
+ */
+export function withDetails(story: Story): Story {
+  if (!story.details?.length) return story;
+  const values: Record<string, Text> = {};
+  let ball: string | undefined;
+  for (const detail of story.details) {
+    const [chosen, ...others] = shuffled(detail);
+    ball = chosen.ball ?? ball;
+    for (const [key, text] of Object.entries(chosen.words)) {
+      values[key] = text;
+      others.forEach((other, index) => (values[`${key}#${index + 1}`] = other.words[key]));
+    }
+  }
+  const fill = (text: Text): Text => Object.fromEntries(Object.entries(text).map(([language, value]) => [
+    language,
+    value.replace(/\{([^{}]+)\}/g, (match, key: string, at: number) => {
+      const word = values[key]?.[language as Language];
+      if (word === undefined) return match;
+      return at === 0 ? word.charAt(0).toLocaleUpperCase(language) + word.slice(1) : word;
+    })
+  ])) as Text;
+  const beats = story.beats.map((beat): StoryBeat => {
+    if (beat.kind === 'narration' || beat.kind === 'line') return { ...beat, text: fill(beat.text) };
+    if (beat.kind === 'question') return { ...beat, prompt: fill(beat.prompt), options: beat.options.map(fill) };
+    return { ...beat, options: beat.options.map(fill) };
+  });
+  return { ...story, beats, ball };
+}
 
 /**
  * Every playthrough gets its own weather: the scene shows it and a line after the opening narration
