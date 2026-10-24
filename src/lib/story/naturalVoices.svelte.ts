@@ -121,10 +121,19 @@ function request(message: Record<string, unknown>, onProgress?: (loaded: number,
   });
 }
 
+const preparation = new Map<Language, Promise<void>>();
+
 /** Downloads (once) and loads the voice models of a language, reporting progress in `naturalState`. */
-export async function prepareNatural(language: Language) {
-  const status = naturalState.status[language];
-  if (!naturalSupported() || status === 'loading' || status === 'ready') return;
+export function prepareNatural(language: Language): Promise<void> {
+  if (!naturalSupported() || naturalState.status[language] === 'ready') return Promise.resolve();
+  const running = preparation.get(language);
+  if (running) return running;
+  const task = loadNatural(language).finally(() => preparation.delete(language));
+  preparation.set(language, task);
+  return task;
+}
+
+async function loadNatural(language: Language) {
   naturalState.status[language] = 'loading';
   naturalState.progress[language] = 0;
   naturalState.remaining[language] = null;
@@ -226,6 +235,27 @@ export async function synthesizeNatural(text: string, speaker: Speaker, mood: Mo
   const buffer = audio().createBuffer(1, pcm.length, reply.sampleRate!);
   buffer.copyToChannel(pcm as Float32Array<ArrayBuffer>, 0);
   return { buffer, playbackRate, volume: Math.min(1, profile.volume * shape.volume) };
+}
+
+/** Renders clips one after another into a single buffer, with a silence after each. */
+export async function combineNatural(clips: NaturalClip[], gaps: number[]): Promise<AudioBuffer> {
+  if (!clips.length) throw new Error('no clips');
+  const sampleRate = clips[0].buffer.sampleRate;
+  const durations = clips.map((clip) => clip.buffer.duration / clip.playbackRate);
+  const total = durations.reduce((sum, duration, index) => sum + duration + (gaps[index] ?? 0), 0);
+  const offline = new OfflineAudioContext(1, Math.max(1, Math.ceil(total * sampleRate)), sampleRate);
+  let at = 0;
+  clips.forEach((clip, index) => {
+    const source = offline.createBufferSource();
+    const gain = offline.createGain();
+    source.buffer = clip.buffer;
+    source.playbackRate.value = clip.playbackRate;
+    gain.gain.value = clip.volume;
+    source.connect(gain).connect(offline.destination);
+    source.start(at);
+    at += durations[index] + (gaps[index] ?? 0);
+  });
+  return offline.startRendering();
 }
 
 /** Plays a clip; `done` resolves when it has finished or was stopped. */

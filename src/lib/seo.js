@@ -90,11 +90,17 @@ export const pages = {
 		kicker: 'Grammatik',
 		icon: 'edit-note-rounded'
 	},
-	'/story': {
+	'/stories': {
 		title: 'Geschichten',
 		description: 'Lies eine kurze Geschichte und rede mit.',
 		kicker: 'Lesen',
 		icon: 'auto-stories-rounded'
+	},
+	'/listen': {
+		title: 'Geschichten hören',
+		description: 'Höre kurze Geschichten mit natürlichen Stimmen und steuere die Wiedergabe.',
+		kicker: 'Hören',
+		icon: 'headphones-rounded'
 	},
 	'/progress': {
 		title: 'Dein Fortschritt',

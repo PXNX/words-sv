@@ -11,6 +11,7 @@
   import type { SoundEffect } from '#lib/sounds.js';
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
+  import StoryModeSwitch from './StoryModeSwitch.svelte';
   import { generateStory, hasMissedWords } from './generated';
   import { clearMissedWord, recordMissedWord } from './missedWords';
   import { applyVoice, type Speaker } from './voices';
@@ -541,7 +542,7 @@
   }
 
   onMount(() => {
-    if (!settings.firstName) void goto('/', { replaceState: true });
+    if (!settings.firstName) void goto('/', { replace: true });
     speechSupported = canSpeak();
     reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const onPageHide = () => leave();
@@ -568,6 +569,7 @@
 {#if story}
   <section class="story-view" aria-label={labels.title}>
     {#if speechSupported}<button type="button" class="btn-play btn-play-round story-auto-read" class:btn-play-ink={autoRead} onclick={toggleAutoRead} aria-pressed={autoRead} aria-label={labels.autoRead} title={labels.autoRead}>{#if autoRead}<IconVolume aria-hidden="true" />{:else}<IconVolumeOff aria-hidden="true" />{/if}</button>{/if}
+    <StoryModeSwitch mode="read" />
     <header class="story-header" dir={interfaceDirection} lang={settings.interfaceLocale}>
       <p>{story.generated ? labels.forYou : labels.title} · {story.level.toUpperCase()}</p>
       <h1 lang={lang}>{story.title[lang]}</h1>
