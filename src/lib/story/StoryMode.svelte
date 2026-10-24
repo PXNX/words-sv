@@ -418,9 +418,10 @@
     silenceCrackle();
     if (token === performing) marks.clear();
   }
-  // The neural voice reads the whole passage in one piece: it sees the commas, questions and
+  // The neural voice reads the passage in one piece: it sees the commas, questions and
   // exclamations together, so the melody carries across the message and its tempo stays even.
-  // System voices still read sentence by sentence, each with its own melody and a short breath.
+  // A spaced dash is split off as a short thinking break (see synthesizeNatural). System voices
+  // still read sentence by sentence, each with its own melody and a short breath.
   async function speakSentences(text: string, speaker: Speaker, mood: Mood, token: number, noisy: boolean, place: Place) {
     const baseRate = levelRates[settings.vocabularyLevel] ?? 1;
     if (naturalVoices) {
