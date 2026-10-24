@@ -24,6 +24,7 @@
   import IconSort from '~icons/material-symbols/sort-rounded';
   import IconSwapHoriz from '~icons/material-symbols/swap-horiz-rounded';
   import IconStory from '~icons/material-symbols/auto-stories-rounded';
+  import IconHeadphones from '~icons/material-symbols/headphones-rounded';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
 
@@ -69,6 +70,8 @@
     streakTimeLeft: m.streak_time_left({}, { locale: settings.interfaceLocale }),
     story: m.story_title({}, { locale: settings.interfaceLocale }),
     homeStory: m.story_home({}, { locale: settings.interfaceLocale }),
+    listen: m.story_listen({}, { locale: settings.interfaceLocale }),
+    homeListen: m.story_listen_home({}, { locale: settings.interfaceLocale }),
     nameTitle: m.onboarding_name_title({}, { locale: settings.interfaceLocale }),
     nameLabel: m.onboarding_name_label({}, { locale: settings.interfaceLocale }),
     namePlaceholder: m.onboarding_name_placeholder({}, { locale: settings.interfaceLocale }),
@@ -170,7 +173,8 @@
     </div>
     <h2 class="home-group-heading">{labels.story}</h2>
     <div class="home-games">
-      <a class="card-play home-story-card {streakClass(null)}" href="/story"><span class="home-icon" aria-hidden="true"><IconStory /></span><div><h2>{labels.story}</h2><p>{labels.homeStory}</p></div><span class="home-story-cast" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="lilith" /></span></a>
+      <a class="card-play {streakClass(null)}" href="/stories"><span class="home-icon" aria-hidden="true"><IconStory /></span><h2>{labels.story}</h2><p>{labels.homeStory}</p></a>
+      <a class="card-play {streakClass(null)}" href="/listen"><span class="home-icon" aria-hidden="true"><IconHeadphones /></span><h2>{labels.listen}</h2><p>{labels.homeListen}</p></a>
     </div>
     <h2 class="home-group-heading">{labels.vocabularyGroup}</h2>
     <div class="home-games">
@@ -212,13 +216,12 @@
   .home-cast-note { justify-self:center;color:#596477;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700; }
   @keyframes lilith-breathe { 0%,100% { scale:1; } 50% { scale:1.018 1.012; } }
   @media (prefers-reduced-motion:reduce) { .home-lilith { animation:none; } }
-  .home-games { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem; }.home-games a.card-play,.home-streak { color:inherit;text-decoration:none; }.home-card-slot { position:relative;display:grid; }.home-games .card-play { position:relative;display:grid;grid-template-rows:auto auto 1fr;justify-items:center;gap:.3rem;padding:1rem .6rem .9rem;border-top-width:5px;text-align:center;cursor:pointer; }.home-games > :nth-child(4n+1) { --tilt:-.7deg; }.home-games > :nth-child(4n+2) { --tilt:.5deg; }.home-games > :nth-child(4n+3) { --tilt:-.3deg; }.home-games > :nth-child(4n) { --tilt:.6deg; }.home-games .card-play.home-story-card { --tilt:-.35deg; }.home-games .card-play.streak-done { border-top-color:#34824d; }.home-games .card-play.streak-pending { border-top-color:#e6a527; }.home-games .card-play.streak-none { border-top-color:#172a45; }.home-icon { display:grid;place-items:center;width:2.6rem;height:2.6rem;border:2px solid #172a45;border-radius:48% 52% 46% 54% / 54% 46% 52% 48%;background:#f7e2b0;color:#a45e38;transition:rotate .25s var(--play-ease); }.home-icon :global(svg) { width:1.3rem;height:1.3rem; }.home-games h2 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:.98rem;font-weight:400;line-height:1.15; }.home-games p { margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:700;line-height:1.35; }.home-tutorial-link { position:absolute;top:.45rem;right:.45rem;box-shadow:2px 2px 0 #172a45;color:#a45e38; }
+  .home-games { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem; }.home-games a.card-play,.home-streak { color:inherit;text-decoration:none; }.home-card-slot { position:relative;display:grid; }.home-games .card-play { position:relative;display:grid;grid-template-rows:auto auto 1fr;justify-items:center;gap:.3rem;padding:1rem .6rem .9rem;border-top-width:5px;text-align:center;cursor:pointer; }.home-games > :nth-child(4n+1) { --tilt:-.7deg; }.home-games > :nth-child(4n+2) { --tilt:.5deg; }.home-games > :nth-child(4n+3) { --tilt:-.3deg; }.home-games > :nth-child(4n) { --tilt:.6deg; }.home-games .card-play.streak-done { border-top-color:#34824d; }.home-games .card-play.streak-pending { border-top-color:#e6a527; }.home-games .card-play.streak-none { border-top-color:#172a45; }.home-icon { display:grid;place-items:center;width:2.6rem;height:2.6rem;border:2px solid #172a45;border-radius:48% 52% 46% 54% / 54% 46% 52% 48%;background:#f7e2b0;color:#a45e38;transition:rotate .25s var(--play-ease); }.home-icon :global(svg) { width:1.3rem;height:1.3rem; }.home-games h2 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:.98rem;font-weight:400;line-height:1.15; }.home-games p { margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:700;line-height:1.35; }.home-tutorial-link { position:absolute;top:.45rem;right:.45rem;box-shadow:2px 2px 0 #172a45;color:#a45e38; }
   .home-onboarding { width:min(100%,27rem);display:grid;justify-self:center;gap:.9rem;padding:clamp(1.15rem,6vw,1.8rem);border-radius:22px 14px 20px 15px / 15px 20px 14px 22px;border:2px solid #172a45;background:#fffdf7;box-shadow:4px 4px 0 #172a45;text-align:center; }.home-language-choice { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem;margin-top:.45rem; }.home-language-choice button { min-width:0;min-height:2.8rem;font-size:.72rem;letter-spacing:.04em;text-transform:none; }.home-language-choice button:first-child { background:#172a45;color:#fffdf7; }
   .home-onboarding-field { display:grid;gap:.3rem;text-align:left; }.home-onboarding-field>span { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }
   .home-onboarding-cast { display:flex;justify-content:center;align-items:flex-end;gap:.4rem;height:5.2rem; }.home-onboarding-cast .home-lilith { width:3.7rem;height:4.6rem;margin-inline-start:-.6rem; }.home-onboarding-cast :global(.story-character) { width:4.4rem;height:100%; }
   .home-onboarding-field input { min-height:2.6rem;padding:0 .75rem;border-radius:.7rem;border:1px solid rgba(23,42,69,.28);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:800; }.home-onboarding-field input:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
   .home-name-submit { min-height:2.8rem;font-size:.72rem; }
-  .home-games .card-play.home-story-card { grid-column:1 / -1;grid-template-columns:auto 1fr auto;grid-template-rows:none;align-items:center;justify-items:start;gap:.75rem;padding:.75rem .9rem;text-align:start; }.home-story-card div { display:grid;gap:.2rem; }.home-story-cast { display:flex;align-items:flex-end;height:3.6rem; }.home-story-cast :global(.story-character) { width:2.9rem;height:100%; }.home-story-cast :global(.story-character + .story-character) { width:2.3rem;height:75%;margin-inline-start:-.5rem; }
   @media (hover:hover) { .home-games .card-play:hover .home-icon { rotate:-8deg; } }
   @media (prefers-reduced-motion:reduce) { .home-icon { transition:none; } .home-games .card-play:hover .home-icon { rotate:none; } }
   @media (min-width:640px) {
