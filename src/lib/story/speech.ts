@@ -70,14 +70,40 @@ const germanLetters: Record<string, string> = {
 };
 const germanWords: Record<string, string> = { WLAN: 'Weh-Lahn', Ick: 'Ik', ick: 'ik' };
 
-// The text as the voice should say it; what is shown on screen stays as written.
-export function pronounceable(sentence: string, language: Language): string {
-  if (language !== 'de') return sentence;
-  return sentence.replace(/(?<!\p{L})\p{L}+(?!\p{L})/gu, (word) => {
-    if (germanWords[word]) return germanWords[word];
-    if (/^[A-ZÄÖÜ]{2,}$/u.test(word)) return [...word].map((letter) => germanLetters[letter]).join(' ');
-    return word;
+// The text as the voice should say it; what is shown on screen stays as written. `written` maps a
+// position in the spoken text back to the written one, so the word being spoken can be highlighted.
+export function pronounceable(sentence: string, language: Language): { text: string; written: (spoken: number) => number } {
+  if (language !== 'de') return { text: sentence, written: (spoken) => spoken };
+  // Every word said differently from how it is written: where it is in the spoken and the written text.
+  const swaps: { spoken: number; said: number; written: number; length: number }[] = [];
+  let shift = 0;
+  const text = sentence.replace(/(?<!\p{L})\p{L}+(?!\p{L})/gu, (word, at: number) => {
+    const said = germanWords[word] ?? (/^[A-ZÄÖÜ]{2,}$/u.test(word) ? [...word].map((letter) => germanLetters[letter]).join(' ') : word);
+    if (said !== word) {
+      swaps.push({ spoken: at + shift, said: said.length, written: at, length: word.length });
+      shift += said.length - word.length;
+    }
+    return said;
   });
+  return {
+    text,
+    written: (spoken) => {
+      let offset = 0;
+      for (const swap of swaps) {
+        if (spoken < swap.spoken) break;
+        // Anywhere inside "Ih Zeh Eh" is the written "ICE".
+        if (spoken < swap.spoken + swap.said) return swap.written;
+        offset = swap.written + swap.length - (swap.spoken + swap.said);
+      }
+      return spoken + offset;
+    }
+  };
+}
+
+export type Word = { start: number; end: number };
+// The words of a text with their positions; numbers and contractions ("geht’s") count as one word.
+export function wordsOf(text: string): Word[] {
+  return [...text.matchAll(/[\p{L}\p{N}](?:[\p{L}\p{N}’'-]*[\p{L}\p{N}])?/gu)].map((match) => ({ start: match.index, end: match.index + match[0].length }));
 }
 
 // The breath after a sentence: an exclamation or question lingers a moment, a trailing "…" longest.

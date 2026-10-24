@@ -4,6 +4,7 @@
   import { settings, interfaceLocales, FIRST_NAME_MAX_LENGTH, type WordleLength } from '#lib/state/settings.svelte.js';
   import { playableLanguages, vocabularyLevels, isLanguage, type VocabularyLevel } from '#lib/data/vocabulary.js';
   import { disablePush, enablePush, pushEnabled, pushSupported } from './pushClient';
+  import { naturalMegabytes, naturalState, naturalSupported, prepareNatural } from '#lib/story/naturalVoices.svelte.js';
   import { onMount } from 'svelte';
   import IconDark from '~icons/material-symbols/dark-mode-rounded';
   import IconGithub from '~icons/fa6-brands/github';
@@ -33,6 +34,10 @@
     dark: m.dark({}, { locale: settings.interfaceLocale }),
     vibration: m.vibration({}, { locale: settings.interfaceLocale }),
     sound: m.sound({}, { locale: settings.interfaceLocale }),
+    voiceQuality: m.voice_quality({}, { locale: settings.interfaceLocale }),
+    voiceStandard: m.voice_quality_standard({}, { locale: settings.interfaceLocale }),
+    voiceNatural: m.voice_quality_natural({}, { locale: settings.interfaceLocale }),
+    voiceFailed: m.voice_quality_failed({}, { locale: settings.interfaceLocale }),
     notifications: m.notifications({}, { locale: settings.interfaceLocale }),
     notificationsEnabled: m.notifications_enabled({}, { locale: settings.interfaceLocale }),
     notificationsDenied: m.notifications_denied({}, { locale: settings.interfaceLocale }),
@@ -41,6 +46,19 @@
     firstName: m.onboarding_name_label({}, { locale: settings.interfaceLocale })
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
+  const voiceStatus = $derived(naturalState.status[settings.lang] ?? 'idle');
+  // Under the voice choice: how big the natural voices are, how far they have downloaded, or that they failed.
+  const voiceNote = $derived(
+    settings.voiceQuality !== 'natural' ? ''
+      : voiceStatus === 'loading' ? m.voice_quality_loading({ percent: String(Math.round(naturalState.progress * 100)) }, { locale: settings.interfaceLocale })
+      : voiceStatus === 'failed' ? labels.voiceFailed
+      : m.voice_quality_hint({ size: String(naturalMegabytes(settings.lang)) }, { locale: settings.interfaceLocale })
+  );
+  let voicesSupported = $state(false);
+  function selectVoiceQuality(next: typeof settings.voiceQuality) {
+    settings.setVoiceQuality(next);
+    if (next === 'natural') void prepareNatural(settings.lang);
+  }
   const telegramHref = $derived(
     settings.interfaceLocale === 'fa' ? 'https://t.me/yasamanabedin' : settings.interfaceLocale === 'de' || settings.interfaceLocale === 'en' ? 'https://t.me/deutschstunde1' : null
   );
@@ -88,6 +106,7 @@
 
   onMount(() => {
     void pushEnabled().then((enabled) => (notificationsEnabled = enabled));
+    voicesSupported = naturalSupported();
   });
 </script>
 
@@ -116,6 +135,10 @@
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.appearance}</span><div class="seg-play"><button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.theme === 'light' ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} onclick={() => settings.setTheme('light')}><IconLight class="w-[.78rem] h-[.78rem]" />{labels.light}</button><button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.theme === 'dark' ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} onclick={() => settings.setTheme('dark')}><IconDark class="w-[.78rem] h-[.78rem]" />{labels.dark}</button></div></div>
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.35rem]"><IconVibrate class="w-[.9rem] h-[.9rem]" />{labels.vibration}</span><input aria-label={labels.vibration} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.vibration} onchange={(event) => settings.setVibration((event.currentTarget as HTMLInputElement).checked)} /></div>
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.35rem]">{#if settings.sound}<IconVolume class="w-[.9rem] h-[.9rem]" />{:else}<IconVolumeOff class="w-[.9rem] h-[.9rem]" />{/if}{labels.sound}</span><input aria-label={labels.sound} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.sound} onchange={(event) => settings.setSound((event.currentTarget as HTMLInputElement).checked)} /></div>
+    {#if voicesSupported}
+      <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.voiceQuality}</span><div class="seg-play">{#each [['standard', labels.voiceStandard], ['natural', labels.voiceNatural]] as const as [quality, label]}<button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.voiceQuality === quality ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} aria-pressed={settings.voiceQuality === quality} onclick={() => selectVoiceQuality(quality)}>{label}</button>{/each}</div></div>
+      {#if voiceNote}<p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]" aria-live="polite">{voiceNote}</p>{/if}
+    {/if}
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.notifications}</span><input aria-label={labels.notifications} type="checkbox" class="toggle toggle-sm toggle-primary" checked={notificationsEnabled} disabled={notificationBusy} onchange={(event) => toggleNotifications((event.currentTarget as HTMLInputElement).checked)} /></div>
     {#if notificationMessage}<p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{notificationMessage}</p>{/if}
   </section>

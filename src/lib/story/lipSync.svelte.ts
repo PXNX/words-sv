@@ -59,6 +59,18 @@ export class LipSync {
     utterance.addEventListener('error', close);
   }
 
+  /**
+   * Moves the mouth along with audio whose length is known but which reports no word boundaries
+   * (the natural voices): the estimated timeline is stretched to fit.
+   */
+  follow(text: string, milliseconds: number) {
+    let estimate = 0;
+    for (const word of text.match(/\S+/g) ?? []) {
+      estimate += (word.match(VOWELS) ?? [word]).length * SYLLABLE_MS + WORD_GAP_MS + (/[.,!?;:…]$/.test(word) ? PUNCTUATION_PAUSE_MS : 0);
+    }
+    this.#schedule(text, 0, Math.max(0.3, estimate / Math.max(1, milliseconds)));
+  }
+
   /** Opens and closes the mouth for a sound the speaker makes, like a meow or a bark. */
   pulse(seconds: number) {
     const now = performance.now();

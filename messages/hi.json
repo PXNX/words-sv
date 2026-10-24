@@ -148,5 +148,11 @@
   "story_for_you": "आपके लिए",
   "story_practice_words": "मेरे शब्दों का अभ्यास करें",
   "pet_lilith": "लिलिथ को सहलाएँ",
-  "story_auto_read": "अपने-आप पढ़कर सुनाएँ"
+  "story_auto_read": "अपने-आप पढ़कर सुनाएँ",
+  "voice_quality": "कहानियों की आवाज़ें",
+  "voice_quality_standard": "सामान्य",
+  "voice_quality_natural": "स्वाभाविक",
+  "voice_quality_hint": "स्वाभाविक आवाज़ें आपके डिवाइस पर ही बनती हैं। ये एक बार डाउनलोड होती हैं (इस भाषा के लिए लगभग {size} MB)।",
+  "voice_quality_loading": "आवाज़ें डाउनलोड हो रही हैं … {percent}%",
+  "voice_quality_failed": "स्वाभाविक आवाज़ें लोड नहीं हो सकीं, इसलिए सामान्य आवाज़ें इस्तेमाल हो रही हैं।"
 }

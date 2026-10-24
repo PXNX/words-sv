@@ -148,5 +148,11 @@
   "story_for_you": "مُعدّة لك",
   "story_practice_words": "تدرّب على كلماتي",
   "pet_lilith": "دلّل ليليث",
-  "story_auto_read": "القراءة بصوت عالٍ تلقائيًا"
+  "story_auto_read": "القراءة بصوت عالٍ تلقائيًا",
+  "voice_quality": "أصوات القصص",
+  "voice_quality_standard": "عادية",
+  "voice_quality_natural": "طبيعية",
+  "voice_quality_hint": "تُنشأ الأصوات الطبيعية على جهازك وتُنزَّل مرة واحدة فقط (نحو {size} ميغابايت لهذه اللغة).",
+  "voice_quality_loading": "جارٍ تنزيل الأصوات … {percent}٪",
+  "voice_quality_failed": "تعذّر تحميل الأصوات الطبيعية، لذلك تُستخدم الأصوات العادية."
 }

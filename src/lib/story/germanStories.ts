@@ -1,5 +1,5 @@
 import { playableLanguages } from '#lib/data/vocabulary.js';
-import type { Story, Text } from './stories';
+import type { Detail, Story, Text } from './stories';
 
 /*
  * Stories written for German learners only (see `languages` on Story): everyday errands, a day at the
@@ -39,6 +39,11 @@ import type { Story, Text } from './stories';
 // The same text in every language slot, for stories limited to German learners.
 export function german(text: string): Text {
   return Object.fromEntries(playableLanguages.map(({ code }) => [code, text])) as Text;
+}
+
+// One choice of a detail that varies between playthroughs (see Detail), in German.
+function choice(words: Record<string, string>, ball?: string): Detail[number] {
+  return { words: Object.fromEntries(Object.entries(words).map(([key, text]) => [key, german(text)])), ball };
 }
 
 export const germanStories: Story[] = [
@@ -207,15 +212,24 @@ export const germanStories: Story[] = [
     cast: ['kumar', 'mia', 'lilith', 'tom'],
     languages: ['de'],
     title: german('Kumar lernt Deutsch'),
+    details: [
+      [choice({ test: 'Donnerstag' }), choice({ test: 'Freitag' }), choice({ test: 'Montag' })],
+      [
+        choice({ book: 'blaues', colour: 'Blau' }),
+        choice({ book: 'grünes', colour: 'Grün' }),
+        choice({ book: 'gelbes', colour: 'Gelb' }),
+        choice({ book: 'rotes', colour: 'Rot' })
+      ]
+    ],
     beats: [
-      { kind: 'narration', text: german('Dienstagabend, halb acht. Kumar sitzt seit zwei Stunden am Küchentisch und lernt für seinen Deutschtest am Freitag. Um ihn herum liegen drei Bücher, fünf bunte Stifte und eine Socke.') },
+      { kind: 'narration', text: german('Dienstagabend, halb acht. Kumar sitzt seit zwei Stunden am Küchentisch und lernt für seinen Deutschtest am {test}. Um ihn herum liegen drei Bücher, fünf bunte Stifte und eine Socke.') },
       { kind: 'line', speaker: 'kumar', mood: 'sad', text: german('Der, die, das … Warum braucht ein Tisch einen Artikel? In meiner Sprache ist ein Tisch einfach ein Tisch!') },
       { kind: 'narration', enters: ['mia'], text: german('Mia kommt in die Küche, um Tee zu kochen.') },
       { kind: 'line', speaker: 'mia', text: german('Na, Kumar, wie läuft es mit dem Deutsch?') },
       { kind: 'line', speaker: 'kumar', mood: 'worried', text: german('Schlecht. Heute Morgen war ich beim Bäcker. Ich wollte sagen: „Ich hätte gern zwei Brötchen.“ Aber ich habe gesagt: „Ich bin zwei Brötchen.“') },
       { kind: 'line', speaker: 'mia', mood: 'laughing', text: german('Haha! Und was hat der Bäcker gemacht?') },
       { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Er hat gelacht und mir drei Brötchen gegeben. Eins war gratis.') },
-      { kind: 'narration', enters: ['lilith'], sfx: 'meow', text: german('Plötzlich springt Lilith auf den Tisch und setzt sich genau auf Kumars blaues Heft.') },
+      { kind: 'narration', enters: ['lilith'], sfx: 'meow', text: german('Plötzlich springt Lilith auf den Tisch und setzt sich genau auf Kumars {book} Heft.') },
       { kind: 'line', speaker: 'kumar', mood: 'surprised', text: german('Lilith, nein! Das ist meine Hausaufgabe! … Moment. Heißt es der Katze, die Katze oder das Katze?') },
       { kind: 'line', speaker: 'mia', mood: 'curious', text: german('{name}, hilf Kumar doch mal. Wie heißt es richtig?') },
       { kind: 'reply', to: 'mia', options: [german('die Katze'), german('der Katze'), german('das Katze')] },
@@ -237,10 +251,10 @@ export const germanStories: Story[] = [
       { kind: 'line', speaker: 'lilith', mood: 'happy', text: german('Miau! Kumar ist mein Lieblingsmensch.') },
       { kind: 'line', speaker: 'mia', mood: 'laughing', text: german('Siehst du, Kumar? Lilith versteht dich perfekt.') },
       { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Dann übe ich ab jetzt mit Lilith. Sie lacht nie über meine Artikel.') },
-      { kind: 'question', prompt: german('Wann hat Kumar seinen Deutschtest?'), options: [german('Am Freitag'), german('Am Dienstag'), german('Morgen früh')] },
+      { kind: 'question', prompt: german('Wann hat Kumar seinen Deutschtest?'), options: [german('Am {test}'), german('Am Dienstag'), german('Morgen früh')] },
       { kind: 'question', prompt: german('Wie lange lernt Kumar schon am Küchentisch?'), options: [german('Seit zwei Stunden'), german('Seit zehn Minuten'), german('Seit fünf Tagen')] },
       { kind: 'question', prompt: german('Wie viele Brötchen hat Kumar beim Bäcker bekommen?'), options: [german('Drei'), german('Zwei'), german('Eins')] },
-      { kind: 'question', prompt: german('Welche Farbe hat Kumars Heft?'), options: [german('Blau'), german('Rot'), german('Gelb')] },
+      { kind: 'question', prompt: german('Welche Farbe hat Kumars Heft?'), options: [german('{colour}'), german('{colour#1}'), german('{colour#2}')] },
       { kind: 'question', prompt: german('Um wie viel Uhr kommt Tom nach Hause?'), options: [german('Um acht Uhr'), german('Um halb acht'), german('Um sieben Uhr')] },
       { kind: 'question', prompt: german('Was sagt man richtig, wenn es sehr warm ist?'), options: [german('Mir ist heiß.'), german('Ich bin heiß.'), german('Ich habe heiß.')] },
       { kind: 'question', prompt: german('Wann will Kumar ab morgen lernen?'), options: [german('Jeden Morgen um sieben Uhr'), german('Jeden Abend um zehn Uhr'), german('Nur am Wochenende')] },
@@ -373,6 +387,13 @@ export const germanStories: Story[] = [
     cast: ['mia', 'tom', 'lilith'],
     languages: ['de'],
     title: german('Liliths Geburtstag'),
+    // The blanket stays blue, so "Blau" is always there to catch a careless reader.
+    details: [[
+      choice({ ball: 'einen roten Ball', colour: 'Rot' }),
+      choice({ ball: 'einen gelben Ball', colour: 'Gelb' }),
+      choice({ ball: 'einen grünen Ball', colour: 'Grün' }),
+      choice({ ball: 'einen orangen Ball', colour: 'Orange' })
+    ]],
     beats: [
       { kind: 'narration', text: german('Heute ist der 12. Mai. Lilith hat Geburtstag. Sie ist jetzt drei Jahre alt.') },
       { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Alles Gute zum Geburtstag, Lilith! Du bist jetzt drei!') },
@@ -386,13 +407,13 @@ export const germanStories: Story[] = [
         german('Es ist Montag.')
       ] },
       { kind: 'narration', holds: { tom: null, lilith: 'cake' }, sfx: 'purr', text: german('Tom stellt den Kuchen auf den Boden. Lilith frisst und schnurrt.') },
-      { kind: 'line', speaker: 'mia', text: german('Wir haben auch ein Geschenk: einen roten Ball und eine blaue Decke.') },
+      { kind: 'line', speaker: 'mia', text: german('Wir haben auch ein Geschenk: {ball} und eine blaue Decke.') },
       { kind: 'line', speaker: 'tom', mood: 'laughing', text: german('Aber Lilith spielt mit dem Papier. Haha, typisch Katze!') },
       { kind: 'narration', holds: { lilith: null }, text: german('Um acht Uhr am Abend schläft Lilith auf der blauen Decke. Sie ist müde und glücklich.') },
       { kind: 'question', prompt: german('Wie alt ist Lilith jetzt?'), options: [german('Drei Jahre'), german('Zwei Jahre'), german('Zehn Jahre')] },
       { kind: 'question', prompt: german('Wann hat Lilith Geburtstag?'), options: [german('Am 12. Mai'), german('Am 3. Juni'), german('Am 24. Dezember')] },
       { kind: 'question', prompt: german('Woraus ist der Kuchen?'), options: [german('Aus Fisch'), german('Aus Schokolade'), german('Aus Äpfeln')] },
-      { kind: 'question', prompt: german('Welche Farbe hat der Ball?'), options: [german('Rot'), german('Blau'), german('Grün')] },
+      { kind: 'question', prompt: german('Welche Farbe hat der Ball?'), options: [german('{colour}'), german('Blau'), german('{colour#1}')] },
       { kind: 'question', prompt: german('Womit spielt Lilith?'), options: [german('Mit dem Papier'), german('Mit dem Ball'), german('Mit der Decke')] },
       { kind: 'question', prompt: german('Wann schläft Lilith?'), options: [german('Um acht Uhr am Abend'), german('Um acht Uhr am Morgen'), german('Um drei Uhr am Mittag')] }
     ]
@@ -405,10 +426,15 @@ export const germanStories: Story[] = [
     languages: ['de'],
     weathers: ['snowy'],
     title: german('Heiligabend bei Oma'),
+    details: [[
+      choice({ baubles: 'roten', colour: 'Rot' }),
+      choice({ baubles: 'blauen', colour: 'Blau' }),
+      choice({ baubles: 'silbernen', colour: 'Silber' })
+    ]],
     beats: [
       { kind: 'narration', text: german('Es ist der 24. Dezember, Heiligabend. Um vier Uhr nachmittags kommen Mia und Tom zu Oma. Im Wohnzimmer steht ein großer grüner Tannenbaum.') },
       { kind: 'line', speaker: 'oma', mood: 'happy', text: german('Frohe Weihnachten, ihr zwei! Kommt rein, draußen ist es so kalt. Es sind minus fünf Grad!') },
-      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Frohe Weihnachten, Oma! Der Baum ist wunderschön. Die roten Kugeln, die goldenen Sterne und oben der weiße Engel!') },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Frohe Weihnachten, Oma! Der Baum ist wunderschön. Die {baubles} Kugeln, die goldenen Sterne und oben der weiße Engel!') },
       { kind: 'line', speaker: 'oma', text: german('Den Baum habe ich gestern geschmückt. Drei Stunden hat das gedauert! Aber wo ist denn Leo?') },
       { kind: 'line', speaker: 'tom', text: german('Er hat geschrieben: Sein Zug hat zwanzig Minuten Verspätung. Er kommt um halb fünf.') },
       { kind: 'narration', sfx: 'doorbell', enters: ['leo'], text: german('Um fünf nach halb fünf klingelt es an der Tür. Leo steht draußen, mit Schnee auf der Mütze und vier Geschenken im Arm.') },
@@ -424,7 +450,7 @@ export const germanStories: Story[] = [
       { kind: 'line', speaker: 'leo', mood: 'laughing', text: german('Und das vierte Geschenk ist für Lilith: eine Maus aus Stoff. Haha, sie liebt das Geschenkpapier mehr!') },
       { kind: 'line', speaker: 'oma', mood: 'happy', text: german('Das ist der schönste Abend im Jahr. Danke, dass ihr alle da seid.') },
       { kind: 'question', prompt: german('An welchem Tag ist Heiligabend?'), options: [german('Am 24. Dezember'), german('Am 31. Dezember'), german('Am 1. Januar')] },
-      { kind: 'question', prompt: german('Welche Farbe haben die Kugeln am Baum?'), options: [german('Rot'), german('Blau'), german('Silber')] },
+      { kind: 'question', prompt: german('Welche Farbe haben die Kugeln am Baum?'), options: [german('{colour}'), german('{colour#1}'), german('{colour#2}')] },
       { kind: 'question', prompt: german('Wie lange hat Oma den Baum geschmückt?'), options: [german('Drei Stunden'), german('Eine Stunde'), german('Zwei Tage')] },
       { kind: 'question', prompt: german('Wie kalt ist es draußen?'), options: [german('Minus fünf Grad'), german('Null Grad'), german('Plus fünf Grad')] },
       { kind: 'question', prompt: german('Um wie viel Uhr kommt Leo wirklich an?'), options: [german('Um fünf nach halb fünf'), german('Um vier Uhr'), german('Um sechs Uhr')] },
@@ -509,6 +535,19 @@ export const germanStories: Story[] = [
     languages: ['de'],
     weathers: ['rainy', 'cloudy'],
     title: german('Abschied von Opa'),
+    details: [
+      [
+        choice({ bike: 'blauen', colour: 'Blau' }),
+        choice({ bike: 'roten', colour: 'Rot' }),
+        choice({ bike: 'schwarzen', colour: 'Schwarz' }),
+        choice({ bike: 'grünen', colour: 'Grün' })
+      ],
+      [
+        choice({ funeral: 'am Freitag um elf Uhr' }),
+        choice({ funeral: 'am Montag um zehn Uhr' }),
+        choice({ funeral: 'am Donnerstag um vierzehn Uhr' })
+      ]
+    ],
     beats: [
       { kind: 'narration', text: german('Opa ist seit Wochen schwer krank. Er wollte nicht im Krankenhaus bleiben, sondern zu Hause sein, in seinem eigenen Bett. Jeden Tag kommt die Pflegerin Selma vorbei.') },
       { kind: 'line', speaker: 'selma', mood: 'sad', text: german('Frau Wagner, ich muss ehrlich mit Ihnen sein. Sein Atem ist heute viel schwächer. Ich glaube, er hat nicht mehr viel Zeit.') },
@@ -517,7 +556,7 @@ export const germanStories: Story[] = [
       { kind: 'line', speaker: 'selma', text: german('Nein, die Medikamente wirken gut. Er ist ruhig. Das Wichtigste ist jetzt, dass ihr bei ihm seid. Haltet seine Hand und redet mit ihm – das Gehör bleibt oft bis zum Schluss.') },
       { kind: 'narration', text: german('Am Abend sitzt die ganze Familie an Opas Bett. Oma erzählt, wie sie sich vor zweiundfünfzig Jahren bei einem Tanzabend kennengelernt haben. Kurz nach Mitternacht schläft Opa friedlich ein.') },
       { kind: 'narration', text: german('Drei Tage später. Draußen regnet es. Oma und Mia sitzen am Küchentisch und schauen alte Fotos an.') },
-      { kind: 'line', speaker: 'oma', mood: 'sad', text: german('Schau, hier ist er mit dreißig, mit seinem blauen Motorrad. Er war so stolz darauf. Ich vermisse ihn so sehr.') },
+      { kind: 'line', speaker: 'oma', mood: 'sad', text: german('Schau, hier ist er mit dreißig, mit seinem {bike} Motorrad. Er war so stolz darauf. Ich vermisse ihn so sehr.') },
       { kind: 'line', speaker: 'mia', mood: 'sad', text: german('Ich auch, Oma. Er hat mir das Fahrradfahren beigebracht und mir immer Geschichten erzählt.') },
       { kind: 'line', speaker: 'oma', text: german('{name}, du kanntest ihn ja auch. Was ist deine schönste Erinnerung an ihn?') },
       { kind: 'reply', to: 'oma', options: [
@@ -526,13 +565,13 @@ export const germanStories: Story[] = [
         german('Er war ein sehr schnelles Fahrrad.')
       ] },
       { kind: 'line', speaker: 'oma', mood: 'happy', text: german('Ja, sein Lachen. Das war das Schönste an ihm. Danke, dass du da bist.') },
-      { kind: 'line', speaker: 'mia', text: german('Die Beerdigung ist am Freitag um elf Uhr. Wir wollen sein Lieblingslied spielen und statt Blumen um Spenden für den Pflegedienst bitten.') },
+      { kind: 'line', speaker: 'mia', text: german('Die Beerdigung ist {funeral}. Wir wollen sein Lieblingslied spielen und statt Blumen um Spenden für den Pflegedienst bitten.') },
       { kind: 'line', speaker: 'oma', text: german('Das hätte ihm gefallen. Er hat immer gesagt: Trauert nicht zu lange, feiert lieber das Leben.') },
       { kind: 'question', prompt: german('Warum ist Opa nicht im Krankenhaus?'), options: [german('Weil er zu Hause in seinem eigenen Bett sein wollte'), german('Weil das Krankenhaus voll war'), german('Weil er wieder gesund war')] },
       { kind: 'question', prompt: german('Was ist laut Selma jetzt das Wichtigste?'), options: [german('Dass die Familie bei ihm ist'), german('Dass er mehr isst'), german('Dass ein Arzt kommt')] },
       { kind: 'question', prompt: german('Wie lange kannten sich Oma und Opa?'), options: [german('Zweiundfünfzig Jahre'), german('Dreißig Jahre'), german('Zwölf Jahre')] },
-      { kind: 'question', prompt: german('Welche Farbe hatte Opas Motorrad?'), options: [german('Blau'), german('Rot'), german('Schwarz')] },
-      { kind: 'question', prompt: german('Wann ist die Beerdigung?'), options: [german('Am Freitag um elf Uhr'), german('Am Montag um zehn Uhr'), german('Am Sonntag um drei Uhr')] },
+      { kind: 'question', prompt: german('Welche Farbe hatte Opas Motorrad?'), options: [german('{colour}'), german('{colour#1}'), german('{colour#2}')] },
+      { kind: 'question', prompt: german('Wann ist die Beerdigung?'), options: [german('{funeral}'), german('{funeral#1}'), german('{funeral#2}')] },
       { kind: 'question', prompt: german('Worum bittet die Familie statt Blumen?'), options: [german('Um Spenden für den Pflegedienst'), german('Um Briefe'), german('Um Kerzen')] }
     ]
   },
