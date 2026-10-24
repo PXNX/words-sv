@@ -48,10 +48,26 @@
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   const voiceStatus = $derived(naturalState.status[settings.lang] ?? 'idle');
+  const voicePercent = $derived(Math.round((naturalState.progress[settings.lang] ?? 0) * 100));
+  function formatRemaining(seconds: number) {
+    const value = seconds < 60 ? Math.max(5, Math.ceil(seconds / 5) * 5) : Math.ceil(seconds / 60);
+    const unit = seconds < 60 ? 'second' : 'minute';
+    try {
+      return new Intl.NumberFormat(settings.interfaceLocale, { style: 'unit', unit, unitDisplay: 'short' }).format(value);
+    } catch {
+      return `${value} ${unit}`;
+    }
+  }
+  const voiceEta = $derived.by(() => {
+    const remaining = naturalState.remaining[settings.lang];
+    return typeof remaining === 'number' && remaining > 0
+      ? m.voice_quality_remaining({ time: formatRemaining(remaining) }, { locale: settings.interfaceLocale })
+      : '';
+  });
   // Under the voice choice: how big the natural voices are, how far they have downloaded, or that they failed.
   const voiceNote = $derived(
     settings.voiceQuality !== 'natural' ? ''
-      : voiceStatus === 'loading' ? `${m.voice_quality_loading({ percent: String(Math.round(naturalState.progress * 100)) }, { locale: settings.interfaceLocale })}`
+      : voiceStatus === 'loading' ? `${m.voice_quality_loading({ percent: String(voicePercent) }, { locale: settings.interfaceLocale })}${voiceEta ? ` · ${voiceEta}` : ''}`
       : voiceStatus === 'failed' ? labels.voiceFailed
       : m.voice_quality_hint({ size: String(naturalMegabytes(settings.lang)) }, { locale: settings.interfaceLocale })
   );
@@ -152,7 +168,19 @@
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.35rem]">{#if settings.sound}<IconVolume class="w-[.9rem] h-[.9rem]" />{:else}<IconVolumeOff class="w-[.9rem] h-[.9rem]" />{/if}{labels.sound}</span><input aria-label={labels.sound} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.sound} onchange={(event) => settings.setSound((event.currentTarget as HTMLInputElement).checked)} /></div>
     {#if voicesSupported}
       <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.voiceQuality}</span><div class="seg-play">{#each [['standard', labels.voiceStandard], ['natural', labels.voiceNatural]] as const as [quality, label]}<button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.voiceQuality === quality ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} aria-pressed={settings.voiceQuality === quality} onclick={() => selectVoiceQuality(quality)}>{label}</button>{/each}</div></div>
-      {#if voiceNote}<p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]" aria-live="polite">{voiceNote}</p>{/if}
+      {#if settings.voiceQuality === 'natural' && voiceStatus === 'loading'}
+        <div class="mt-[.55rem]" aria-live="polite">
+          <div class="flex items-center gap-[.45rem] text-base-content/70 text-[.58rem] font-bold leading-[1.35]">
+            <span class="voice-pulse" aria-hidden="true">{#each [0, 1, 2, 3] as bar}<i style={`--i: ${bar}`}></i>{/each}</span>
+            <span>{voiceNote}</span>
+          </div>
+          <div class="voice-track mt-[.35rem]" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={voicePercent} aria-label={voiceNote}>
+            <span class="voice-fill" style={`width: ${Math.max(voicePercent, 4)}%`}></span>
+          </div>
+        </div>
+      {:else if voiceNote}
+        <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]" aria-live="polite">{voiceNote}</p>
+      {/if}
     {/if}
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.notifications}</span><input aria-label={labels.notifications} type="checkbox" class="toggle toggle-sm toggle-primary" checked={notificationsEnabled} disabled={notificationBusy} onchange={(event) => toggleNotifications((event.currentTarget as HTMLInputElement).checked)} /></div>
     {#if notificationMessage}<p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{notificationMessage}</p>{/if}
@@ -161,3 +189,70 @@
   {#if telegramHref}<a class="btn-play w-full mt-4 gap-[.48rem] normal-case tracking-normal text-[#237a26] dark:text-[#a9e8ab] text-[.72rem] font-bold leading-[1.45] text-center no-underline hover:bg-[#2aab2e] hover:text-[#fffdf7] focus-visible:bg-[#2aab2e] focus-visible:text-[#fffdf7] focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[3px]" href={telegramHref} target="_blank" rel="noreferrer" lang={settings.interfaceLocale} dir={interfaceDirection}><IconTelegram aria-hidden="true" class="w-[1.12rem] h-[1.12rem] flex-none" /><span>{labels.telegramShare}</span></a>{/if}
   <a class="flex items-center justify-center gap-[.42rem] mt-4 text-accent text-[.66rem] font-extrabold tracking-[.05em] text-center no-underline uppercase focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[3px]" href="https://github.com/PXNX/words-sv" target="_blank" rel="noreferrer"><IconGithub aria-hidden="true" class="w-4 h-4" /><span>GitHub · PXNX/words-sv</span></a>
 </aside>
+
+<style>
+  .voice-pulse {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: .75rem;
+    flex: none;
+    color: #e6a527;
+  }
+  .voice-pulse i {
+    width: 2px;
+    height: 100%;
+    border-radius: 999px;
+    background: currentColor;
+    transform-origin: bottom;
+    animation: voice-bounce 0.9s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -0.15s);
+  }
+  .voice-track {
+    height: .45rem;
+    overflow: hidden;
+    border: 2px solid rgba(23, 42, 69, 0.35);
+    border-radius: 999px;
+    background: rgba(23, 42, 69, 0.08);
+  }
+  .voice-fill {
+    position: relative;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #e6a527, #34824d);
+    transition: width 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .voice-fill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.55) 45%, transparent 70%);
+    transform: translateX(-100%);
+    animation: voice-shine 1.4s ease-in-out infinite;
+  }
+  :global(html.dark) .voice-pulse {
+    color: #e6a527;
+  }
+  :global(html.dark) .voice-track {
+    border-color: rgba(255, 253, 247, 0.3);
+    background: rgba(255, 253, 247, 0.12);
+  }
+  @keyframes voice-bounce {
+    0%, 100% { transform: scaleY(0.3); }
+    50% { transform: scaleY(1); }
+  }
+  @keyframes voice-shine {
+    to { transform: translateX(100%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .voice-pulse i,
+    .voice-fill::after {
+      animation: none;
+    }
+    .voice-fill {
+      transition: none;
+    }
+  }
+</style>

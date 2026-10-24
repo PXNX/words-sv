@@ -154,5 +154,6 @@
   "voice_quality_natural": "طبیعی",
   "voice_quality_hint": "صداهای طبیعی روی دستگاه شما ساخته می‌شوند و فقط یک بار دانلود می‌شوند (حدود {size} مگابایت برای این زبان).",
   "voice_quality_loading": "در حال دانلود صداها … {percent}٪",
+  "voice_quality_remaining": "حدود {time} باقی مانده",
   "voice_quality_failed": "صداهای طبیعی بارگیری نشدند؛ از صداهای استاندارد استفاده می‌شود."
 }
