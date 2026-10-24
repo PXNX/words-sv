@@ -240,12 +240,14 @@
     clearTimeout(mimeTimer);
     mimeTimer = window.setTimeout(() => (miming = null), Math.min(6000, 900 + text.length * 55));
   }
-  function readBeat(beat: StoryBeat, index: number) {
+  // `replay` is the learner asking to hear a beat again: then its words light up as they are spoken.
+  // The first reading leaves the text alone, so the learner listens before reading along.
+  function readBeat(beat: StoryBeat, index: number, replay = false) {
     const sounds = beatSounds(beat);
-    if (beat.kind === 'narration' && beat.announcement) void announce(say(beat.text[lang]), index);
-    else if (beat.kind === 'narration') void perform(say(beat.text[lang]), 'narrator', index, 'neutral', sounds.start, sounds.slot, false, true);
-    else if (beat.kind === 'line') void perform(say(beat.text[lang]), beat.speaker, index, moodFor(beat), sounds.start, sounds.slot, beat.noisy, true);
-    else if (beat.kind === 'question') void perform(say(beat.prompt[lang]), beat.asker ?? 'narrator', index, 'curious', null, null, false, true);
+    if (beat.kind === 'narration' && beat.announcement) void announce(say(beat.text[lang]), index, replay);
+    else if (beat.kind === 'narration') void perform(say(beat.text[lang]), 'narrator', index, 'neutral', sounds.start, sounds.slot, false, replay);
+    else if (beat.kind === 'line') void perform(say(beat.text[lang]), beat.speaker, index, moodFor(beat), sounds.start, sounds.slot, beat.noisy, replay);
+    else if (beat.kind === 'question') void perform(say(beat.prompt[lang]), beat.asker ?? 'narrator', index, 'curious', null, null, false, replay);
   }
   function toggleAutoRead() {
     autoRead = !autoRead;
@@ -378,11 +380,11 @@
   }
   // A station announcement: the narrator sets the scene ("Der Lautsprecher knackt:"), then the gong
   // sounds and the quoted part comes over a crackling loudspeaker in the announcer's voice.
-  async function announce(text: string, beat: number) {
+  async function announce(text: string, beat: number, shown: boolean) {
     if (!canSpeak()) return;
     const quote = text.match(/^(.*?)[„“"«»]([^„“”"«»]+)[“”"«»]\s*$/su);
     if (!quote) {
-      await perform(text, 'narrator', beat, 'neutral', 'gong', null, false, true);
+      await perform(text, 'narrator', beat, 'neutral', 'gong', null, false, shown);
       return;
     }
     const token = ++performing;
@@ -390,14 +392,14 @@
     silenceCrackle();
     lipSync.stop();
     const intro = quote[1].replace(/[\s:,–—-]+$/u, '');
-    if (/\p{L}/u.test(intro)) await speakSentences(intro, 'narrator', 'neutral', token, false, { beat, at: 0 });
+    if (/\p{L}/u.test(intro)) await speakSentences(intro, 'narrator', 'neutral', token, false, shown ? { beat, at: 0 } : null);
     if (token !== performing) return;
     marks.clear();
     playSoundEffect(settings.sound, 'gong');
     await wait(soundEffectSeconds.gong * 1000);
     if (token !== performing) return;
     crackle = startCrackle(settings.sound);
-    await speakSentences(quote[2], 'announcer', 'neutral', token, false, { beat, at: text.indexOf(quote[2], quote[1].length) });
+    await speakSentences(quote[2], 'announcer', 'neutral', token, false, shown ? { beat, at: text.indexOf(quote[2], quote[1].length) } : null);
     silenceCrackle();
     if (token === performing) marks.clear();
   }
@@ -587,7 +589,7 @@
           <li class="story-narration" class:story-announcement={beat.announcement}>
             {#if beat.announcement}<IconAnnouncement class="story-announcement-icon" aria-hidden="true" />{/if}
             <p>{@render marked(say(beat.text[lang]), index)}</p>
-            {#if speechSupported}<button type="button" class="btn-play btn-play-round btn-play-sm story-listen" onclick={() => readBeat(beat, index)} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
+            {#if speechSupported}<button type="button" class="btn-play btn-play-round btn-play-sm story-listen" onclick={() => readBeat(beat, index, true)} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
           </li>
         {:else if beat.kind === 'line'}
           <li class="story-line" class:current={index === currentIndex} class:speaking={lipSync.beat === index}>
@@ -601,7 +603,7 @@
                 <p>{@render marked(say(beat.text[lang]), index)}</p>
               {/if}
             </div>
-            {#if speechSupported}<button type="button" class="btn-play btn-play-round btn-play-sm story-listen" onclick={() => readBeat(beat, index)} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
+            {#if speechSupported}<button type="button" class="btn-play btn-play-round btn-play-sm story-listen" onclick={() => readBeat(beat, index, true)} aria-label={labels.listen}><IconVolume aria-hidden="true" /></button>{/if}
           </li>
         {:else if beat.kind === 'question' && solved[index]}
           <!-- An open question is asked above the answers; once solved it joins the transcript -->
