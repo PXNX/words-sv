@@ -87,6 +87,7 @@
     if (!soundEnabled || !sfx) return;
     try { playSoundEffect(true, sfx); } catch {}
   }
+  function say(text: string) {
     return fillName(text, settings.firstName);
   }
   function wordCount(story: Story) {
