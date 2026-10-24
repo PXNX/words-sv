@@ -32,6 +32,9 @@
   // Reading pace grows a little with the learner's level: unhurried for beginners, close to natural
   // speed at the top.
   const levelRates: Record<string, number> = { a1: 0.9, a2: 0.95, b1: 1.03, b2: 1.07, c1: 1.11, c2: 1.15 };
+  // The neural voices have a livelier base tempo than the system voices; beginners get some of that
+  // back, so the natural voice stays clearly slower at A1 and A2.
+  const naturalLevelPace: Record<string, number> = { a1: 0.9, a2: 0.95, b1: 1, b2: 1, c1: 1, c2: 1 };
   // The sound a pet makes in place of a spoken "Miau!" or "Wuff!", and while it talks otherwise.
   const petSounds: Partial<Record<CharacterId, { slot: SoundEffect; start: SoundEffect }>> = {
     lilith: { slot: 'meow', start: 'purr' },
@@ -217,23 +220,26 @@
     const pet = petSounds[beat.speaker];
     return { start: beat.sfx ?? pet?.start ?? null, slot: beat.sfx ?? pet?.slot ?? null };
   }
-  function playBeatSound(beat: StoryBeat) {
-    if (left || (beat.kind !== 'narration' && beat.kind !== 'line')) return;
+  function beatSound(beat: StoryBeat): SoundEffect | null {
+    if (left || (beat.kind !== 'narration' && beat.kind !== 'line')) return null;
     const sounds = beatSounds(beat);
-    const sound = splitSounds(beat.text[lang], lang).some((part) => part.kind === 'sound') ? sounds.slot : sounds.start;
-    if (sound) playSoundEffect(settings.sound, sound);
+    return splitSounds(beat.text[lang], lang).some((part) => part.kind === 'sound') ? sounds.slot : sounds.start;
   }
   // With auto-read the beat is read aloud (sounds included); without it, its sound plays and a
-  // practice word in the line is still pronounced by whoever says it.
+  // practice word in the line is still pronounced by whoever says it, after the sound has ended.
   function presentBeat(beat: StoryBeat | undefined, index: number) {
     if (!beat) return;
     if (autoRead && canSpeak()) {
       readBeat(beat, index);
       return;
     }
-    playBeatSound(beat);
-    if (beat.kind === 'line' && beat.word) void perform(beat.word, beat.speaker, index, moodFor(beat));
-    else if (beat.kind === 'line') mime(index, beat.text[lang]);
+    const sound = beatSound(beat);
+    if (beat.kind === 'line' && beat.word && canSpeak()) {
+      void perform(beat.word, beat.speaker, index, moodFor(beat), sound);
+      return;
+    }
+    if (sound) playSoundEffect(settings.sound, sound);
+    if (beat.kind === 'line') mime(index, beat.text[lang]);
   }
   function mime(index: number, text: string) {
     miming = index;
@@ -351,10 +357,17 @@
   async function perform(text: string, speaker: Speaker, beat: number | null, mood: Mood, startSound: SoundEffect | null = null, slotSound: SoundEffect | null = null, noisy = false, shown = false) {
     if (!canSpeak()) return;
     const token = ++performing;
+    // Only a replay highlights words; a normal read must not inherit an old replay's mark.
+    marks.clear();
     silenceVoices();
     silenceCrackle();
     const parts = splitSounds(text, lang);
-    if (startSound && !parts.some((part) => part.kind === 'sound')) playSoundEffect(settings.sound, startSound);
+    if (startSound && !parts.some((part) => part.kind === 'sound')) {
+      playSoundEffect(settings.sound, startSound);
+      // The cue gets the stage to itself: the voice starts only once the effect has rung out.
+      if (settings.sound) await wait(soundEffectSeconds[startSound] * 1000);
+      if (token !== performing) return;
+    }
     if (speaker === 'narrator') lipSync.stop();
     else lipSync.start(speaker, beat);
     let cursor = 0;
@@ -379,7 +392,7 @@
     }
   }
   // A station announcement: the narrator sets the scene ("Der Lautsprecher knackt:"), then the gong
-  // sounds and the quoted part comes over a crackling loudspeaker in the announcer's voice.
+  // sounds and the quoted part comes over a crackling loudspeaker, still in the narrator's voice.
   async function announce(text: string, beat: number, shown: boolean) {
     if (!canSpeak()) return;
     const quote = text.match(/^(.*?)[„“"«»]([^„“”"«»]+)[“”"«»]\s*$/su);
@@ -388,6 +401,7 @@
       return;
     }
     const token = ++performing;
+    marks.clear();
     silenceVoices();
     silenceCrackle();
     lipSync.stop();
@@ -396,29 +410,35 @@
     if (token !== performing) return;
     marks.clear();
     playSoundEffect(settings.sound, 'gong');
-    await wait(soundEffectSeconds.gong * 1000);
+    if (settings.sound) await wait(soundEffectSeconds.gong * 1000);
     if (token !== performing) return;
     crackle = startCrackle(settings.sound);
-    await speakSentences(quote[2], 'announcer', 'neutral', token, false, shown ? { beat, at: text.indexOf(quote[2], quote[1].length) } : null);
+    await speakSentences(quote[2], 'narrator', 'neutral', token, false, shown ? { beat, at: text.indexOf(quote[2], quote[1].length) } : null);
     silenceCrackle();
     if (token === performing) marks.clear();
   }
-  // One utterance per sentence, each with its own melody, and a short breath in between. Natural
-  // voices work out the next sentences while the first one is still playing.
+  // The neural voice reads the whole passage in one piece: it sees the commas, questions and
+  // exclamations together, so the melody carries across the message and its tempo stays even.
+  // System voices still read sentence by sentence, each with its own melody and a short breath.
   async function speakSentences(text: string, speaker: Speaker, mood: Mood, token: number, noisy: boolean, place: Place) {
-    const parts = sentences(text);
     const baseRate = levelRates[settings.vocabularyLevel] ?? 1;
-    const clips = naturalVoices ? parts.map((sentence) => synthesizeNatural(pronounceable(sentence, lang).text, speaker, mood, voiceCast, lang, baseRate).catch(() => null)) : [];
+    if (naturalVoices) {
+      const naturalRate = baseRate * (naturalLevelPace[settings.vocabularyLevel] ?? 1);
+      const clip = await synthesizeNatural(pronounceable(text, lang).text, speaker, mood, voiceCast, lang, naturalRate).catch(() => null);
+      if (token !== performing) return;
+      if (clip) {
+        await playSentence(clip, text, speaker, noisy, place, token);
+        return;
+      }
+    }
+    const parts = sentences(text);
     let cursor = 0;
     for (const [index, sentence] of parts.entries()) {
       if (token !== performing) return;
       const at = text.indexOf(sentence, cursor);
       cursor = at + sentence.length;
       const where = place && { beat: place.beat, at: place.at + at };
-      const clip = await clips[index];
-      if (token !== performing) return;
-      if (clip) await playSentence(clip, sentence, speaker, noisy, where, token);
-      else await speakSentence(sentence, speaker, mood, noisy, where, token);
+      await speakSentence(sentence, speaker, mood, noisy, where, token);
       if (index < parts.length - 1 && token === performing) await wait(pauseAfter[intonationOf(sentence)]);
     }
   }
@@ -466,8 +486,9 @@
     stopNatural = playing.stop;
     const milliseconds = playing.seconds * 1000;
     if (speaker !== 'narrator' && speaker !== 'announcer') lipSync.follow(sentence, milliseconds);
-    if (place) marks.pace(place.beat, place.at, sentence, milliseconds);
-    askingAloud = intonationOf(sentence) === 'question';
+    // The natural clip knows its real position, so the highlight follows the audio clock.
+    if (place) marks.follow(place.beat, place.at, sentence, playing.seconds, playing.position);
+    askingAloud = /\?/u.test(sentence);
     await Promise.race([playing.done, wait(milliseconds + 1500)]);
     if (token === performing) askingAloud = false;
   }

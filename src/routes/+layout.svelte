@@ -10,10 +10,12 @@
 	import { settings } from '#lib/state/settings.svelte.js';
 	import StartupLoader from '#lib/StartupLoader.svelte';
 	import { pwaInstall } from '#lib/pwaInstall.svelte.js';
+	import { prepareNatural } from '#lib/story/naturalVoices.svelte.js';
 	import { pageTitle } from '#lib/seo.js';
 	import IconHome from '~icons/material-symbols/home-rounded';
 	let { children } = $props();
 	let hydrated = $state(false);
+	let previousLanguage = settings.lang;
 
 	const routePath = $derived(page.url.pathname.replace(/\/+$/, '') || '/');
 	const isHome = $derived(routePath === '/');
@@ -29,6 +31,14 @@
 		document.documentElement.lang = settings.interfaceLocale;
 		document.documentElement.dir = getTextDirection(settings.interfaceLocale);
 		void setLocale(settings.interfaceLocale, { reload: false });
+	});
+	// Switching the learning language while natural voices are on fetches that language's model,
+	// unless it is already loaded or cached.
+	$effect(() => {
+		const language = settings.lang;
+		if (language === previousLanguage) return;
+		previousLanguage = language;
+		if (settings.voiceQuality === 'natural') void prepareNatural(language);
 	});
 
 	onNavigate((navigation) => {

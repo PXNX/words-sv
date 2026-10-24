@@ -14,6 +14,7 @@ export class WordMarks {
   current = $state<{ beat: number; start: number; end: number } | null>(null);
 
   #timers: number[] = [];
+  #frame = 0;
 
   /** Highlights the word at (or right after) `at` in the sentence. */
   mark(beat: number, offset: number, sentence: string, at: number) {
@@ -26,7 +27,7 @@ export class WordMarks {
   pace(beat: number, offset: number, sentence: string, milliseconds: number) {
     this.#cancel();
     const words = wordsOf(sentence);
-    const weights = words.map((word, index) => word.end - word.start + 1 + (/[.,!?;:…–—]/u.test(sentence.slice(word.end, words[index + 1]?.start ?? sentence.length)) ? PAUSE_WEIGHT : 0));
+    const weights = this.#weights(words, sentence);
     const total = weights.reduce((sum, weight) => sum + weight, 0) || 1;
     let elapsed = 0;
     for (const [index, word] of words.entries()) {
@@ -35,9 +36,49 @@ export class WordMarks {
     }
   }
 
+  /**
+   * Follows audio whose real playback position is known, so the highlight uses the audio clock
+   * instead of drifting timers. The word lengths only decide where inside the clip each word starts.
+   */
+  follow(beat: number, offset: number, sentence: string, seconds: number, position: () => number) {
+    this.#cancel();
+    const words = wordsOf(sentence);
+    if (!words.length) return;
+    if (!Number.isFinite(seconds) || seconds <= 0) {
+      this.pace(beat, offset, sentence, words.length * 260);
+      return;
+    }
+    const weights = this.#weights(words, sentence);
+    const total = weights.reduce((sum, weight) => sum + weight, 0) || 1;
+    const ends: number[] = [];
+    let cumulative = 0;
+    for (const weight of weights) {
+      cumulative += weight;
+      ends.push(cumulative / total);
+    }
+    let shown = -1;
+    const tick = () => {
+      const elapsed = Math.max(0, Math.min(seconds, position()));
+      const progress = elapsed / seconds;
+      const end = ends.findIndex((candidate) => progress < candidate);
+      const index = end === -1 ? words.length - 1 : end;
+      if (index !== shown) {
+        shown = index;
+        this.#show(beat, offset, words[index]);
+      }
+      if (elapsed < seconds) this.#frame = requestAnimationFrame(tick);
+    };
+    if (typeof requestAnimationFrame === 'undefined') tick();
+    else this.#frame = requestAnimationFrame(tick);
+  }
+
   clear() {
     this.#cancel();
     this.current = null;
+  }
+
+  #weights(words: Word[], sentence: string) {
+    return words.map((word, index) => word.end - word.start + 1 + (/[.,!?;:…–—]/u.test(sentence.slice(word.end, words[index + 1]?.start ?? sentence.length)) ? PAUSE_WEIGHT : 0));
   }
 
   #show(beat: number, offset: number, word: Word) {
@@ -47,5 +88,7 @@ export class WordMarks {
   #cancel() {
     for (const timer of this.#timers) clearTimeout(timer);
     this.#timers = [];
+    if (this.#frame && typeof cancelAnimationFrame !== 'undefined') cancelAnimationFrame(this.#frame);
+    this.#frame = 0;
   }
 }

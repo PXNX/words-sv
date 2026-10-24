@@ -18,7 +18,10 @@ export type VoiceGender = 'female' | 'male';
 // voices have one (Scottish for the Bavarians, Irish for the mountain farmer, London for Berlin,
 // northern English for Hamburg).
 export type Dialect = 'bavarian' | 'alpine' | 'berlin' | 'northern';
-export type VoiceProfile = { gender: VoiceGender; pitch: number; rate: number; volume: number; dialect?: Dialect };
+// Natural voices usually keep their own pitch; an older character can ask for a small, deliberate
+// lowering and slowdown on top of the selected speaker.
+export type VoiceAge = { pitch?: number; rate?: number };
+export type VoiceProfile = { gender: VoiceGender; pitch: number; rate: number; volume: number; dialect?: Dialect; natural?: VoiceAge };
 // The regional locales a dialect prefers among the system voices of the language, best first.
 // Berlin and the north need nothing special: voices from Germany come first anyway.
 const dialectLocales: Record<Dialect, string[]> = { bavarian: ['de-at', 'de-ch'], alpine: ['de-ch', 'de-at'], berlin: [], northern: [] };
@@ -31,7 +34,9 @@ export const profiles: Record<Speaker, VoiceProfile> = {
   announcer: { gender: 'female', pitch: 0.92, rate: 1.04, volume: 0.8 },
   mia: { gender: 'female', pitch: 1.08, rate: 1, volume: 1 },
   kim: { gender: 'female', pitch: 1.2, rate: 1.08, volume: 1 },
-  oma: { gender: 'female', pitch: 0.86, rate: 0.84, volume: 1 },
+  // Oma is deliberately older: a little lower, slower and softer than the other women, even when
+  // the natural model gives her a younger reader's voice.
+  oma: { gender: 'female', pitch: 0.84, rate: 0.8, volume: 0.95, natural: { pitch: 0.94, rate: 0.8 } },
   // Lilith speaks slowly, softly and a little low: calm, soothing, never shrill.
   lilith: { gender: 'female', pitch: 0.94, rate: 0.82, volume: 0.85 },
   tom: { gender: 'male', pitch: 1, rate: 1, volume: 1 },
@@ -143,7 +148,13 @@ function castVoices(cast: Speaker[], language: string, locale: string): Casting 
   const voices = voicesFor(language, locale, window.speechSynthesis.getVoices());
   const hasAccentVoice = (speaker: Speaker) => voices.some((voice) => accentRank(speaker, voice) < (profiles[speaker].dialect ? dialectLocales[profiles[speaker].dialect!].length : 0));
   const speakers = priority.filter((speaker) => speaker === 'narrator' || cast.includes(speaker))
-    .sort((left, right) => Number(!hasAccentVoice(left)) - Number(!hasAccentVoice(right)));
+    // The narrator always casts first, so the storyteller keeps the same male voice across stories;
+    // characters with a regional voice only choose after them.
+    .sort((left, right) => {
+      if (left === 'narrator') return -1;
+      if (right === 'narrator') return 1;
+      return Number(!hasAccentVoice(left)) - Number(!hasAccentVoice(right));
+    });
   const key = `${language}|${locale}|${speakers.join()}|${voices.map((voice) => voice.voiceURI).join()}`;
   if (cached?.key === key) return cached.casting;
 

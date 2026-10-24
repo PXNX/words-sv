@@ -145,7 +145,7 @@ export const germanStories: Story[] = [
   },
   {
     id: 'a2-butcher',
-    level: 'a2',
+    level: 'b1',
     scene: 'butcher',
     cast: ['paul', 'hans'],
     languages: ['de'],
@@ -1041,7 +1041,7 @@ export const germanStories: Story[] = [
   },
   {
     id: 'a2-alps',
-    level: 'a2',
+    level: 'b1',
     scene: 'alps',
     cast: ['mia', 'fritz', 'cow'],
     languages: ['de'],
@@ -1309,7 +1309,7 @@ export const germanStories: Story[] = [
   },
   {
     id: 'a2-munich',
-    level: 'a2',
+    level: 'b1',
     scene: 'munich',
     cast: ['hans', 'kim'],
     languages: ['de'],
