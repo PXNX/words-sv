@@ -5,6 +5,7 @@
   import { settings, interfaceLocales, FIRST_NAME_MAX_LENGTH } from '#lib/state/settings.svelte.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import UpdateAppHint from '#lib/UpdateAppHint.svelte';
+  import InstallAppHint from '#lib/InstallAppHint.svelte';
   import { playSoundEffect } from '#lib/sounds.js';
   import { playableLanguages, type Language } from '#lib/data/vocabulary.js';
   import IconSettings from '~icons/material-symbols/settings-rounded';
@@ -146,6 +147,7 @@
     </form>
   {:else}
     <UpdateAppHint />
+    <InstallAppHint />
     <header class="home-header">
       <div class="home-family"><span class="home-family-people" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="tom" /></span><button type="button" class="home-lilith-pet" class:petting onclick={petLilith} onanimationend={() => (petting = false)} aria-label={labels.petLilith}><span class="home-lilith"><StoryCharacter id="lilith" mood={petting ? 'happy' : 'neutral'} /></span></button></div>
       <h1>{labels.homeTitle}</h1><span class="home-cast-note">{labels.homeCast}</span>

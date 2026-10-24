@@ -1,6 +1,7 @@
 <script lang="ts">
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
+  import { pwaInstall } from '#lib/pwaInstall.svelte.js';
   import { playSuccessSound } from '#lib/sounds.js';
   import { hintableBaseWords, wordDefinitions, wordMetadata, wordPools, type Language } from '#lib/data/vocabulary.js';
   import { wiktionaryUrl } from '#lib/wiktionary.js';
@@ -16,8 +17,6 @@
   import IconHelp from '~icons/material-symbols/help-rounded';
   import IconProgressActivity from '~icons/material-symbols/progress-activity';
   import { tick } from 'svelte';
-
-  type InstallPromptEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }> };
 
   const CIRCLE_TUTORIAL_STATE_KEY = 'wordcircle-tutorial-state-v1';
 
@@ -143,7 +142,6 @@
   let celebration = $state(!isPractice && initialGame ? initialGame.solvedWords.length === initialGame.words.length : false);
   let startedAt = $state(initialGame?.startedAt ?? Date.now());
   let completedDuration = $state<number | null>(initialGame?.completedDuration ?? null);
-  let installPrompt = $state<InstallPromptEvent | null>(null);
   let tutorialPractice = $state(isPractice);
   let idleHintReady = $state(false);
   let revealedHintWord = $state<string | null>(null);
@@ -166,6 +164,7 @@
     idleHint: m.idle_hint({}, { locale: settings.interfaceLocale })
   });
 
+  const installable = $derived(pwaInstall.canInstall);
   const grid = $derived(currentRound.grid);
   const circleLetters = $derived(currentRound.letters);
   const solvedSet = $derived(new Set(solvedWords));
@@ -228,20 +227,6 @@
     scheduleIdleHint();
     return () => clearIdleHintTimer();
   });
-  $effect(() => {
-    const captureInstallPrompt = (event: Event) => {
-      event.preventDefault();
-      installPrompt = event as InstallPromptEvent;
-    };
-    const clearInstallPrompt = () => (installPrompt = null);
-    window.addEventListener('beforeinstallprompt', captureInstallPrompt);
-    window.addEventListener('appinstalled', clearInstallPrompt);
-    return () => {
-      window.removeEventListener('beforeinstallprompt', captureInstallPrompt);
-      window.removeEventListener('appinstalled', clearInstallPrompt);
-    };
-  });
-
   function clearIdleHintTimer() {
     if (idleHintTimer !== null) window.clearTimeout(idleHintTimer);
     idleHintTimer = null;
@@ -441,7 +426,7 @@
   function selectionAreaClasses() {
     if (celebration) return 'relative z-[55] flex items-center justify-center h-[70px] min-h-[70px] p-0 bg-[#fffdf7] dark:bg-[#172a45] max-[579px]:h-[54px] max-[579px]:min-h-[54px]';
     const base = 'relative z-[1] flex-none pt-[.75rem] pb-[.35rem] text-center bg-[#fffdf7] bg-[image:linear-gradient(90deg,transparent,rgba(23,42,69,.025)_22%,rgba(23,42,69,.025)_78%,transparent)] dark:bg-[#172a45] dark:bg-[image:linear-gradient(90deg,transparent,rgba(255,253,247,.04)_22%,rgba(255,253,247,.04)_78%,transparent)] max-[579px]:pt-[.45rem] max-[579px]:pb-[.1rem]';
-    const heights = installPrompt && !previewWord ? 'min-h-[96px] max-[579px]:min-h-[70px]' : 'min-h-[70px] max-[579px]:min-h-[54px]';
+    const heights = installable && !previewWord ? 'min-h-[96px] max-[579px]:min-h-[70px]' : 'min-h-[70px] max-[579px]:min-h-[54px]';
     return `${base} ${heights}`;
   }
   function inRange(row: number, col: number) {
@@ -452,13 +437,6 @@
   }
   function isWordEnd(row: number, col: number, orientation: 'across' | 'down') {
     return grid.placements.some((entry) => entry.orientation === orientation && row === entry.row + (orientation === 'down' ? entry.word.length - 1 : 0) && col === entry.col + (orientation === 'across' ? entry.word.length - 1 : 0));
-  }
-  async function installApp() {
-    const prompt = installPrompt;
-    if (!prompt) return;
-    await prompt.prompt();
-    await prompt.userChoice;
-    installPrompt = null;
   }
 </script>
 
@@ -541,8 +519,8 @@
       {/if}
     </div>
     {#if tutorialPractice}<p class="flex items-center justify-center gap-[.5rem] mt-[.2rem] text-accent font-['DM_Sans'] text-[.54rem] font-extrabold tracking-[.07em] uppercase"><span>{labels.tutorial}</span><b class="text-base-content text-[.58rem] tracking-[.11em]">{tutorialHint}</b></p>{/if}
-    {#if installPrompt && !previewWord}
-      <button class="btn-play btn-play-ink btn-play-sm absolute z-[5] bottom-[.25rem] left-1/2 -translate-x-1/2 gap-[.42rem] min-h-[1.75rem] py-[.22rem] px-[.62rem] normal-case tracking-normal text-left" onclick={installApp}>
+    {#if installable && !previewWord}
+      <button class="btn-play btn-play-ink btn-play-sm absolute z-[5] bottom-[.25rem] left-1/2 -translate-x-1/2 gap-[.42rem] min-h-[1.75rem] py-[.22rem] px-[.62rem] normal-case tracking-normal text-left" onclick={() => void pwaInstall.install()}>
         <IconDownload class="w-[1rem] h-[1rem] text-primary" aria-hidden="true" />
         <span class="grid gap-[.02rem] leading-none whitespace-nowrap"><strong class="text-[.57rem] font-extrabold tracking-[.07em] uppercase">{labels.install}</strong><small class="text-[rgba(255,253,247,.72)] text-[.5rem] font-bold tracking-[.03em]">{labels.installHint}</small></span>
       </button>
