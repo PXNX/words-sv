@@ -9,6 +9,8 @@
   import { naturalReady, naturalState, naturalSupported, prepareNatural, synthesizeNatural, combineNatural, type NaturalClip } from './naturalVoices.svelte';
   import type { Speaker } from './voices';
   import { listAudioSessions, loadAudioBlob, saveAudioSession, updateAudioSessionPosition, type SavedAudio, type SavedStoryStart } from './audioLibrary';
+  import { splitSounds } from './speech';
+  import { playSoundEffect } from '#lib/sounds.js';
   import StoryCharacter from './StoryCharacter.svelte';
   import IconHeadphones from '~icons/material-symbols/headphones-rounded';
   import IconPlay from '~icons/material-symbols/play-arrow-rounded';
@@ -17,7 +19,7 @@
   import IconForward from '~icons/material-symbols/fast-forward-rounded';
   import IconReplay from '~icons/material-symbols/replay-rounded';
 
-  const TARGET_WORDS = 275;
+  const TARGET_WORDS = 375;
   const BEAT_GAP = 0.32;
   const STORY_GAP = 1.1;
   const levelRates: Record<string, number> = { a1: 0.9, a2: 0.95, b1: 1.03, b2: 1.07, c1: 1.11, c2: 1.15 };
@@ -36,7 +38,6 @@
   let currentId = $state('');
   let history = $state<SavedAudio[]>([]);
   let audio: HTMLAudioElement | null = null;
-  let audioUrl = '';
   let duration = $state(0);
   let position = $state(0);
   let playing = $state(false);
@@ -67,8 +68,25 @@
   const currentStory = $derived(storyStarts.filter((entry) => entry.at <= position + 0.05).at(-1)?.title ?? storyStarts[0]?.title ?? labels.listen);
   const resumeSession = $derived(history.find((session) => session.position > 0.5 && session.position < session.duration - 1) ?? null);
   const dateFormat = $derived(new Intl.DateTimeFormat(settings.interfaceLocale, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }));
+  const soundEnabled = $derived(settings.sound);
 
-  function say(text: string) {
+  let audioContextRef: AudioContext | null = null;
+
+  function ensureAudioContext() {
+    if (typeof window === 'undefined') return null;
+    if (!audioContextRef) {
+      const legacy = window as typeof window & { webkitAudioContext?: typeof AudioContext };
+      const Ctor = window.AudioContext ?? legacy.webkitAudioContext;
+      if (!Ctor) return null;
+      audioContextRef = new Ctor();
+    }
+    if (audioContextRef.state === 'suspended') void audioContextRef.resume();
+    return audioContextRef;
+  }
+  function playSfx(sfx: any) {
+    if (!soundEnabled || !sfx) return;
+    try { playSoundEffect(true, sfx); } catch {}
+  }
     return fillName(text, settings.firstName);
   }
   function wordCount(story: Story) {
@@ -86,7 +104,7 @@
     }
     return copy;
   }
-  // Picks stories around a two-minute listening session: the best single match first, then shorter
+  // Picks stories around a 1.5-2 minute listening session: the best single match first, then shorter
   // stories only when the level has nothing long enough.
   function pickStories(): Story[] {
     const pool = [...new Map(storiesFor(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary).map((story) => [story.id, story])).values()];
@@ -97,14 +115,35 @@
     const picked = [first];
     let words = wordCount(first);
     for (const story of order) {
-      if (picked.includes(story) || words >= TARGET_WORDS * 0.8) continue;
-      if (words + wordCount(story) > TARGET_WORDS * 1.35) continue;
+      if (picked.includes(story) || words >= TARGET_WORDS * 0.85) continue;
+      if (words + wordCount(story) > TARGET_WORDS * 1.6) continue;
       picked.push(story);
       words += wordCount(story);
     }
+    if (picked.length === 1 && wordCount(picked[0]) < 220) {
+      for (const story of order) {
+        if (picked.includes(story)) continue;
+        if (wordCount(picked[0]) + wordCount(story) > TARGET_WORDS * 1.8) continue;
+        picked.push(story);
+        break;
+      }
+    }
     return picked;
   }
-  function segmentsFor(picked: Story[]): Segment[] {
+  function beatSounds(beat: any): { start: any; slot: any } {
+    if (beat.kind === 'narration' && beat.announcement) return { start: beat.sfx ?? 'gong', slot: beat.sfx ?? null };
+    if (beat.kind === 'narration') return { start: beat.sfx ?? null, slot: beat.sfx ?? null };
+    if (beat.kind !== 'line') return { start: null, slot: null };
+    const petSounds: any = { lilith: { slot: 'meow', start: 'purr' }, bello: { slot: 'bark', start: 'bark' }, bird: { slot: 'tweet', start: 'tweet' }, cow: { slot: 'moo', start: 'moo' }, horse: { slot: 'neigh', start: 'neigh' }, giraffe: { slot: 'hum', start: 'hum' }, elephant: { slot: 'trumpet', start: 'trumpet' }, snake: { slot: 'hiss', start: 'hiss' } };
+    const pet = petSounds[beat.speaker];
+    return { start: beat.sfx ?? pet?.start ?? null, slot: beat.sfx ?? pet?.slot ?? null };
+  }
+  function beatSound(beat: any): any {
+    if (beat.kind !== 'narration' && beat.kind !== 'line') return null;
+    const sounds = beatSounds(beat);
+    if (splitSounds(beat.text[settings.lang], settings.lang).some((part: any) => part.kind === 'sound')) return sounds.slot;
+    return sounds.start;
+  }
     const levelLabel = m.vocabulary({}, { locale: settings.interfaceLocale });
     const segments: Segment[] = [];
     picked.forEach((raw, index) => {
@@ -353,13 +392,32 @@
     lastSavedAt = 0;
     flushPosition();
   }
-  function replay() {
-    if (!audio) return;
+  function prevTrack() {
+    if (!audio || !duration) return;
+    // If within first 2 seconds of current audio, go to previous track beginning
+    if (position <= 2 && storyStarts.length > 1) {
+      const current = storyStarts.filter((entry) => entry.at <= position + 0.05).at(-1);
+      const idx = storyStarts.findIndex((s) => s.at === current?.at);
+      if (idx > 0) {
+        const target = storyStarts[idx - 1].at;
+        audio.currentTime = target;
+        position = target;
+        lastSavedAt = 0;
+        flushPosition();
+        return;
+      }
+    }
+    if (position <= 2) {
+      audio.currentTime = 0;
+      position = 0;
+      lastSavedAt = 0;
+      flushPosition();
+      return;
+    }
     audio.currentTime = 0;
     position = 0;
     lastSavedAt = 0;
     flushPosition();
-    void audio.play().catch(() => (playing = false));
   }
   function seek(event: Event) {
     if (!audio) return;
@@ -484,10 +542,9 @@
         <input class="listen-seek" type="range" min="0" max={duration} step="0.1" value={position} oninput={seek} aria-label={labels.listen} />
         <div class="listen-time"><span>{formatTime(position)}</span><span>{formatTime(duration)}</span></div>
         <div class="listen-controls">
-          <button type="button" class="listen-control" onclick={() => skip(-15)} aria-label="Rewind 15 seconds" title="Rewind 15 seconds"><IconRewind aria-hidden="true" /></button>
+          <button type="button" class="listen-control" onclick={prevTrack} aria-label="Previous" title="Previous"><IconRewind aria-hidden="true" /></button>
           <button type="button" class="listen-control listen-control-main" onclick={togglePlay} aria-label={playing ? 'Pause' : labels.play} title={playing ? 'Pause' : labels.play}>{#if playing}<IconPause aria-hidden="true" />{:else}<IconPlay aria-hidden="true" />{/if}</button>
           <button type="button" class="listen-control" onclick={() => skip(15)} aria-label="Forward 15 seconds" title="Forward 15 seconds"><IconForward aria-hidden="true" /></button>
-          <button type="button" class="listen-control" onclick={replay} aria-label={labels.again} title={labels.again}><IconReplay aria-hidden="true" /></button>
         </div>
       </div>
     {/if}
