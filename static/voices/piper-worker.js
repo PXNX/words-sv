@@ -53,11 +53,20 @@ function phonemizerFiles() {
   return phonemizer;
 }
 
-// One espeak-ng module serves every sentence: a fresh module per sentence (18 MB of language data
-// each) piles up until the worker stalls after a hundred or so sentences.
+// One espeak-ng module serves many sentences: a fresh module per sentence (18 MB of language data
+// each) piles up until the worker stalls after a hundred or so sentences, while a single module
+// leaks a little with every run and aborts after about 150. So a module is replaced every
+// RECYCLE_AFTER sentences, and right away if it fails.
+const RECYCLE_AFTER = 40;
 let phonemizeModule = null;
+let phonemizeRuns = 0;
 let onPrint = null;
 function phonemizeRuntime() {
+  if (phonemizeRuns >= RECYCLE_AFTER) {
+    phonemizeModule = null;
+    phonemizeRuns = 0;
+  }
+  phonemizeRuns += 1;
   phonemizeModule ??= phonemizerFiles().then(([wasm, data]) => createPiperPhonemize({
     wasmBinary: wasm,
     getPreloadedPackage: () => data,
@@ -68,7 +77,18 @@ function phonemizeRuntime() {
   return phonemizeModule;
 }
 
-async function phonemeIds(text, voice) {
+async function phonemeIds(text, voice, retry = true) {
+  try {
+    return await phonemizeOnce(text, voice);
+  } catch (error) {
+    phonemizeModule = null;
+    phonemizeRuns = 0;
+    if (retry) return phonemeIds(text, voice, false);
+    throw error;
+  }
+}
+
+async function phonemizeOnce(text, voice) {
   const module = await phonemizeRuntime();
   return new Promise((resolve, reject) => {
     onPrint = (line) => {
