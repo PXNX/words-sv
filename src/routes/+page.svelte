@@ -1,4 +1,16 @@
-<script lang="ts">
+<svelte:head>
+  <title>Words-SV - Learn German</title>
+  <meta name="description" content="Practice German vocabulary, grammar and stories with interactive exercises." />
+  <meta property="og:title" content="Words-SV - Learn German" />
+  <meta property="og:description" content="Practice German vocabulary, grammar and stories with interactive exercises." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://words-sv.vercel.app/" />
+  <meta property="og:image" content="https://words-sv.vercel.app/pwa-512x512.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Words-SV - Learn German" />
+  <meta name="twitter:description" content="Practice German vocabulary, grammar and stories with interactive exercises." />
+  <meta name="twitter:image" content="https://words-sv.vercel.app/pwa-512x512.png" />
+</svelte:head>
   import { onMount } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
