@@ -77,13 +77,13 @@ function phonemizeRuntime() {
   return phonemizeModule;
 }
 
-async function phonemeIds(text, voice, retry = true) {
+async function phonemeSymbols(text, voice, retry = true) {
   try {
     return await phonemizeOnce(text, voice);
   } catch (error) {
     phonemizeModule = null;
     phonemizeRuns = 0;
-    if (retry) return phonemeIds(text, voice, false);
+    if (retry) return phonemeSymbols(text, voice, false);
     throw error;
   }
 }
@@ -93,7 +93,7 @@ async function phonemizeOnce(text, voice) {
   return new Promise((resolve, reject) => {
     onPrint = (line) => {
       try {
-        resolve(JSON.parse(line).phoneme_ids);
+        resolve(JSON.parse(line).phonemes);
       } catch (error) {
         reject(error);
       }
@@ -106,6 +106,31 @@ async function phonemizeOnce(text, voice) {
     // The program prints its answer while it runs; no answer means it failed.
     reject(new Error('no phonemes'));
   });
+}
+
+// espeak hands back one symbol per code point: "ç" arrives as "c" plus a combining cedilla.
+// Voice models do not all use the same spelling, so try the composed symbol first, then the
+// decomposed one, then its parts against the model's own phoneme map. This keeps older German
+// voices (which only know the composed "ç") and newer ones (which know the combining mark) working.
+function idsFor(symbols, idMap) {
+  const merged = [];
+  for (const symbol of symbols) {
+    if (/^\p{M}/u.test(symbol) && merged.length) merged[merged.length - 1] += symbol;
+    else merged.push(symbol);
+  }
+  const ids = [1];
+  for (const symbol of merged) {
+    const composed = symbol.normalize('NFC');
+    let mapped = idMap[composed] ?? idMap[symbol];
+    if (!mapped) {
+      const parts = [...symbol];
+      if (parts.length > 1 && parts.every((part) => idMap[part])) mapped = parts.flatMap((part) => idMap[part]);
+    }
+    if (!mapped) continue;
+    ids.push(0, ...mapped);
+  }
+  ids.push(0, 2);
+  return ids;
 }
 
 const models = new Map();
@@ -124,14 +149,17 @@ function loadModel(model, onProgress) {
   return models.get(model);
 }
 
-async function speak({ model, text, speaker, lengthScale }) {
+async function speak({ model, text, speaker, lengthScale, noiseScale, noiseW }) {
   const { config, session } = await loadModel(model);
-  const ids = await phonemeIds(text, config.espeak.voice);
-  const { noise_scale: noiseScale, length_scale: baseLength, noise_w: noiseW } = config.inference;
+  const ids = idsFor(await phonemeSymbols(text, config.espeak.voice), config.phoneme_id_map);
+  const { noise_scale: defaultNoise, length_scale: baseLength, noise_w: defaultNoiseW } = config.inference;
+  // Piper draws a little duration jitter per sentence; too much of it makes one sentence race and
+  // the next drag. Keep the rhythm steady so the message keeps one pace from start to end.
+  const steadyNoiseW = Math.min(noiseW ?? defaultNoiseW, 0.6);
   const feeds = {
     input: new ort.Tensor('int64', BigInt64Array.from(ids, BigInt), [1, ids.length]),
     input_lengths: new ort.Tensor('int64', BigInt64Array.from([BigInt(ids.length)])),
-    scales: new ort.Tensor('float32', Float32Array.from([noiseScale, baseLength * lengthScale, noiseW]))
+    scales: new ort.Tensor('float32', Float32Array.from([noiseScale ?? defaultNoise, baseLength * lengthScale, steadyNoiseW]))
   };
   if (config.num_speakers > 1) feeds.sid = new ort.Tensor('int64', BigInt64Array.from([BigInt(speaker ?? 0)]));
   const { output } = await session.run(feeds);
