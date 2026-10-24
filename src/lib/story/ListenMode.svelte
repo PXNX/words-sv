@@ -145,7 +145,7 @@
     if (splitSounds(beat.text[settings.lang], settings.lang).some((part: any) => part.kind === 'sound')) return sounds.slot;
     return sounds.start;
   }
-    const levelLabel = m.vocabulary({}, { locale: settings.interfaceLocale });
+  function segmentsFor(picked: Story[]): Segment[] {
     const segments: Segment[] = [];
     picked.forEach((raw, index) => {
       const story = withWeather(withDetails(raw));
