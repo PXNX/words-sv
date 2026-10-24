@@ -60,6 +60,12 @@ export function sentences(text: string): string[] {
   return text.match(/.+?(?:[.!?…]+["“”»«„'’)]*(?=\s|$)|$)/gsu)?.map((sentence) => sentence.trim()).filter(Boolean) ?? [];
 }
 
+// A spaced dash is a thinking break, not a sentence end: both sides are spoken as their own phrase,
+// with a short silence between them.
+export function speechChunks(text: string): string[] {
+  return text.split(/\s+[—–]\s+/u).map(tidy).filter((chunk) => /\p{L}/u.test(chunk));
+}
+
 // German letter names, so "ICE" is read "Ih Zeh Eh" and not with the English "I C E" the voices
 // fall back to. Abbreviations spoken as a word go in `germanWords`, as does Berlin dialect that the
 // voices would otherwise spell out letter by letter ("Ick" → "I C K").

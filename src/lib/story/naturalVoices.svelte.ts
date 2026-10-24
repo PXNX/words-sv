@@ -2,6 +2,7 @@ import type { Language } from '#lib/data/vocabulary.js';
 import type { Mood } from './stories';
 import { animals, moodShape, priority, profiles, sharedPitch, type Speaker, type VoiceGender } from './voices';
 import { germanSpeakers, GERMAN_CAST_MODEL } from './germanSpeakers';
+import { speechChunks } from './speech';
 
 /*
  * Natural story voices: Piper neural voices generated on the learner's device (see
@@ -216,11 +217,24 @@ function audio() {
 // A whole line takes only a few seconds to work out; the timeout is generous because a fresh worker
 // first has to load the models again.
 const SPEAK_TIMEOUT_MS = 30000;
+// A dash gets a little thinking break; the two sides are rendered separately so the silence is
+// exact rather than left to the voice's punctuation handling.
+const THINKING_BREAK = 0.35;
 
 export type NaturalClip ={ buffer: AudioBuffer; playbackRate: number; volume: number };
 
 /** Speaks a sentence in the speaker's natural voice; resolves with audio ready to play. */
 export async function synthesizeNatural(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number): Promise<NaturalClip> {
+  const chunks = speechChunks(text);
+  if (chunks.length < 2) return synthesizeChunk(text, speaker, mood, cast, language, baseRate);
+  const clips: NaturalClip[] = [];
+  for (const chunk of chunks) clips.push(await synthesizeChunk(chunk, speaker, mood, cast, language, baseRate));
+  const gaps = clips.map((_, index) => (index === clips.length - 1 ? 0 : THINKING_BREAK));
+  const buffer = await combineNatural(clips, gaps);
+  return { buffer, playbackRate: 1, volume: 1 };
+}
+
+async function synthesizeChunk(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number): Promise<NaturalClip> {
   const profile = profiles[speaker];
   const { voice, shared, borrowed } = castNatural(cast, language).get(speaker) ?? castNatural([speaker], language).get(speaker)!;
   const shape = moodShape[mood];
