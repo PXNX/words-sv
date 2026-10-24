@@ -81,7 +81,11 @@ export function naturalSupported() {
 
 type Status = 'idle' | 'loading' | 'ready' | 'failed';
 /** How far each language's natural voices are: the settings show it, and stories use them once ready. */
-export const naturalState = $state<{ status: Partial<Record<Language, Status>>; progress: number }>({ status: {}, progress: 0 });
+export const naturalState = $state<{
+  status: Partial<Record<Language, Status>>;
+  progress: Partial<Record<Language, number>>;
+  remaining: Partial<Record<Language, number | null>>;
+}>({ status: {}, progress: {}, remaining: {} });
 
 type Reply = { type: 'progress'; loaded: number; total: number } | { type: 'done'; pcm?: Float32Array; sampleRate?: number } | { type: 'error'; message: string };
 let worker: Worker | null = null;
@@ -122,16 +126,29 @@ export async function prepareNatural(language: Language) {
   const status = naturalState.status[language];
   if (!naturalSupported() || status === 'loading' || status === 'ready') return;
   naturalState.status[language] = 'loading';
-  naturalState.progress = 0;
+  naturalState.progress[language] = 0;
+  naturalState.remaining[language] = null;
+  const startedAt = performance.now();
   const models = modelsOf(language);
+  const update = (fraction: number) => {
+    const now = performance.now();
+    naturalState.progress[language] = fraction;
+    const elapsed = (now - startedAt) / 1000;
+    // Too little data at the very beginning gives wild estimates; wait for a real sample.
+    if (fraction >= 0.02 && elapsed >= 0.8) naturalState.remaining[language] = Math.max(0, elapsed / fraction - elapsed);
+  };
   try {
     for (const [index, model] of models.entries()) {
       await request({ type: 'load', model }, (loaded, total) => {
-        if (total) naturalState.progress = (index + loaded / total) / models.length;
+        if (total) update((index + loaded / total) / models.length);
       });
+      // Cached models report no download progress; this still marks each finished model at once.
+      update((index + 1) / models.length);
     }
+    naturalState.remaining[language] = 0;
     naturalState.status[language] = 'ready';
   } catch {
+    naturalState.remaining[language] = null;
     naturalState.status[language] = 'failed';
   }
 }
@@ -187,9 +204,9 @@ function audio() {
   return context;
 }
 
-// A sentence takes well under a second to work out; the timeout is generous because the sentences
-// of a line are queued together, and a fresh worker first has to load the models again.
-const SPEAK_TIMEOUT_MS = 20000;
+// A whole line takes only a few seconds to work out; the timeout is generous because a fresh worker
+// first has to load the models again.
+const SPEAK_TIMEOUT_MS = 30000;
 
 export type NaturalClip ={ buffer: AudioBuffer; playbackRate: number; volume: number };
 
@@ -199,9 +216,11 @@ export async function synthesizeNatural(text: string, speaker: Speaker, mood: Mo
   const { voice, shared, borrowed } = castNatural(cast, language).get(speaker) ?? castNatural([speaker], language).get(speaker)!;
   const shape = moodShape[mood];
   // People keep their voice's own pitch unless they share it; animals sound like cartoon animals.
-  const ownPitch = animals.includes(speaker) ? Math.min(1.4, Math.max(0.75, profile.pitch)) : shared ? sharedPitch(profile.pitch) : 1;
+  // A character with an age treatment (Oma) also shifts the selected speaker slightly.
+  const agePitch = profile.natural?.pitch ?? 1;
+  const ownPitch = animals.includes(speaker) ? Math.min(1.4, Math.max(0.75, profile.pitch)) : (shared ? sharedPitch(profile.pitch) : 1) * agePitch;
   const playbackRate = ownPitch * (borrowed ? borrowedPitch[profile.gender] : 1);
-  const rate = baseRate * profile.rate * shape.rate;
+  const rate = baseRate * (profile.natural?.rate ?? profile.rate) * shape.rate;
   const reply = await request({ type: 'speak', model: voice.model, text, speaker: voice.speaker ?? 0, lengthScale: playbackRate / rate }, undefined, SPEAK_TIMEOUT_MS);
   const pcm = reply.pcm!;
   const buffer = audio().createBuffer(1, pcm.length, reply.sampleRate!);
@@ -219,6 +238,13 @@ export function playNatural(clip: NaturalClip, volume = 1) {
   gain.gain.value = clip.volume * volume;
   source.connect(gain).connect(output.destination);
   const done = new Promise<void>((resolve) => source.addEventListener('ended', () => resolve()));
+  const seconds = clip.buffer.duration / clip.playbackRate;
+  const startedAt = output.currentTime;
   source.start();
-  return { done, seconds: clip.buffer.duration / clip.playbackRate, stop: () => { try { source.stop(); } catch { /* already over */ } } };
+  return {
+    done,
+    seconds,
+    position: () => Math.max(0, Math.min(seconds, output.currentTime - startedAt)),
+    stop: () => { try { source.stop(); } catch { /* already over */ } }
+  };
 }

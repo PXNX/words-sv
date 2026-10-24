@@ -525,8 +525,8 @@ const effects: Record<SoundEffect, (context: AudioContext, start: number) => voi
   fuse
 };
 
-// Roughly how long each effect stands out, so story speech can pause while one plays.
-export const soundEffectSeconds: Record<SoundEffect, number> = { purr: 2.2, meow: 0.8, glass: 0.8, brakes: 1.3, doorbell: 1.4, knock: 0.6, rain: 1.2, bark: 0.6, tweet: 0.5, moo: 1.3, neigh: 1.3, trumpet: 1, hiss: 1.1, hum: 1.1, airplane: 4.5, waves: 3.2, gong: 1.7, fuse: 1.2 };
+// How long each effect rings, tail included, so story speech can wait for it to end.
+export const soundEffectSeconds: Record<SoundEffect, number> = { purr: 2.45, meow: 0.85, glass: 1.1, brakes: 1.45, doorbell: 1.85, knock: 0.6, rain: 3.65, bark: 0.65, tweet: 0.55, moo: 1.4, neigh: 1.4, trumpet: 1.05, hiss: 1.25, hum: 1.25, airplane: 4.55, waves: 3.4, gong: 2.25, fuse: 1.2 };
 
 export function playSoundEffect(enabled: boolean, effect: SoundEffect) {
   if (!enabled) return;
