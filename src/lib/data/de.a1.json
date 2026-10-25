@@ -1,12 +1,15 @@
 {
   "ab": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Von einem Ort oder Zeitpunkt weg; bezeichnet den Ausgangspunkt."
   },
   "aber": {
-    "type": "conjunction"
+    "type": "conjunction",
+    "definition": "Drückt einen Gegensatz aus; jedoch."
   },
   "abfahren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit einem Fahrzeug von einem Ort losfahren."
   },
   "Abfahrt": {
     "type": "noun",
@@ -15,7 +18,8 @@
     "definition": "Der Moment, in dem ein Fahrzeug losfährt."
   },
   "abfliegen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit einem Flugzeug von einem Ort starten."
   },
   "Abflug": {
     "type": "noun",
@@ -24,10 +28,12 @@
     "definition": "Der Start eines Flugzeugs."
   },
   "abgeben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem etwas geben, das er behalten oder benutzen soll."
   },
   "abholen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Zu einem Ort gehen und jemanden oder etwas mitnehmen."
   },
   "Absender": {
     "type": "noun",
@@ -36,7 +42,8 @@
     "definition": "Die Person, von der ein Brief oder Paket kommt."
   },
   "acht": {
-    "type": "numeral"
+    "type": "numeral",
+    "definition": "Die Zahl zwischen sieben und neun; 8."
   },
   "Achtung": {
     "type": "noun",
@@ -51,16 +58,20 @@
     "definition": "Straße, Hausnummer und Ort, wo jemand wohnt."
   },
   "allein": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ohne andere Personen; ohne Hilfe."
   },
   "also": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Leitet eine Schlussfolgerung ein; folglich."
   },
   "alt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Seit langer Zeit vorhanden; nicht jung."
   },
   "alte": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Gebeugte Form von „alt“ bei weiblichen Wörtern; zum Beispiel „die alte Frau“."
   },
   "Alter": {
     "type": "noun",
@@ -69,13 +80,16 @@
     "definition": "Die Anzahl der Lebensjahre einer Person."
   },
   "am": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Kurzform von „an dem“; zum Beispiel „am Montag“."
   },
   "an": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Bezeichnet eine Berührung oder eine Richtung zu etwas hin."
   },
   "anbieten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sagen, dass jemand etwas bekommen oder tun kann."
   },
   "Anfang": {
     "type": "noun",
@@ -84,7 +98,8 @@
     "definition": "Der erste Moment von etwas."
   },
   "anfangen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit etwas beginnen; etwas starten."
   },
   "Angebot": {
     "type": "noun",
@@ -93,13 +108,16 @@
     "definition": "Eine Ware oder Leistung zu einem besonderen Preis."
   },
   "anklicken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit der Maus auf etwas drücken und es auswählen."
   },
   "ankommen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Ziel erreichen; an einen Ort kommen."
   },
   "ankreuzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Kreuz in ein Kästchen setzen, um etwas auszuwählen."
   },
   "Ankunft": {
     "type": "noun",
@@ -108,10 +126,12 @@
     "definition": "Der Moment, in dem jemand oder etwas ankommt."
   },
   "anmachen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Gerät einschalten; zum Beispiel das Licht anmachen."
   },
   "anmelden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich für etwas eintragen lassen; zum Beispiel für einen Kurs."
   },
   "Anmeldung": {
     "type": "noun",
@@ -138,7 +158,8 @@
     "definition": "Ein Gerät, das Telefonnachrichten aufnimmt."
   },
   "anrufen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden mit dem Telefon kontaktieren."
   },
   "Ansage": {
     "type": "noun",
@@ -159,7 +180,8 @@
     "definition": "Eine Reaktion auf eine Frage."
   },
   "antworten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Auf eine Frage reagieren; eine Antwort geben."
   },
   "Anzeige": {
     "type": "noun",
@@ -168,7 +190,8 @@
     "definition": "Ein Text, der etwas öffentlich bekannt macht, zum Beispiel in der Zeitung."
   },
   "anziehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Kleidung an den Körper ziehen; sich anziehen."
   },
   "Apartment": {
     "type": "noun",
@@ -199,7 +222,8 @@
     "type": "verb"
   },
   "arbeitslos": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ohne Arbeit und ohne Einkommen."
   },
   "Arbeitsplatz": {
     "type": "noun",
@@ -220,10 +244,12 @@
     "definition": "Eine Person, die Kranke behandelt."
   },
   "auch": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Zusätzlich; drückt aus, dass etwas ebenso gilt."
   },
   "auf": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Bezeichnet die Lage oben auf etwas oder eine Richtung nach oben."
   },
   "Aufgabe": {
     "type": "noun",
@@ -232,10 +258,12 @@
     "definition": "Etwas, das erledigt werden muss."
   },
   "aufhören": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit etwas nicht weitermachen; zu Ende kommen."
   },
   "aufstehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Aus dem Bett kommen; sich erheben."
   },
   "Aufzug": {
     "type": "noun",
@@ -250,7 +278,8 @@
     "definition": "Das Körperteil, mit dem man sieht."
   },
   "aus": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Bezeichnet die Herkunft oder das Verlassen eines Ortes."
   },
   "Ausflug": {
     "type": "noun",
@@ -259,7 +288,8 @@
     "definition": "Eine kurze Reise zur Erholung."
   },
   "ausfüllen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Formular vollständig bearbeiten."
   },
   "Ausgang": {
     "type": "noun",
@@ -286,10 +316,12 @@
     "definition": "Eine Person aus einem anderen Land."
   },
   "ausländisch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Aus einem anderen Land kommend; das Ausland betreffend."
   },
   "ausmachen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Gerät ausschalten; zum Beispiel das Licht ausmachen."
   },
   "Aussage": {
     "type": "noun",
@@ -298,10 +330,12 @@
     "definition": "Ein Satz, der etwas Bestimmtes behauptet."
   },
   "aussehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen bestimmten Eindruck machen; zum Beispiel gut aussehen."
   },
   "aussteigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Fahrzeug verlassen."
   },
   "Ausweis": {
     "type": "noun",
@@ -310,7 +344,8 @@
     "definition": "Ein Dokument, das die Identität einer Person zeigt."
   },
   "ausziehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Kleidung vom Körper nehmen; sich ausziehen."
   },
   "Auto": {
     "type": "noun",
@@ -331,7 +366,8 @@
     "definition": "Eine Maschine, die ohne Personal Waren oder Tickets verkauft."
   },
   "automatisch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ohne menschliches Eingreifen ablaufend; von selbst."
   },
   "Baby": {
     "type": "noun",
@@ -352,7 +388,8 @@
     "definition": "Ein Raum mit Badewanne oder Dusche."
   },
   "baden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich in Wasser waschen oder im Wasser schwimmen."
   },
   "Bahn": {
     "type": "noun",
@@ -373,7 +410,8 @@
     "definition": "Der Bereich am Bahnhof, wo man in den Zug einsteigt."
   },
   "bald": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "In kurzer Zeit; nicht lange danach."
   },
   "Balkon": {
     "type": "noun",
@@ -418,16 +456,20 @@
     "definition": "Eine Person, die im öffentlichen Dienst arbeitet."
   },
   "bedeuten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine bestimmte Bedeutung haben; etwas heißen."
   },
   "beginnen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit etwas anfangen; starten."
   },
   "bei": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Bezeichnet die Nähe zu einer Person oder einem Ort."
   },
   "beide": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Die zwei genannten Personen oder Dinge zusammen."
   },
   "Bein": {
     "type": "noun",
@@ -442,13 +484,16 @@
     "definition": "Etwas, das eine allgemeine Aussage veranschaulicht."
   },
   "bekannt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Von vielen Menschen gekannt."
   },
   "bekommen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas erhalten; in den Besitz von etwas kommen."
   },
   "benutzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas für einen Zweck verwenden."
   },
   "Beruf": {
     "type": "noun",
@@ -457,16 +502,20 @@
     "definition": "Die Tätigkeit, mit der jemand Geld verdient."
   },
   "besetzt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht frei; von jemandem belegt oder in Benutzung."
   },
   "besichtigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas genau ansehen, um es kennenzulernen."
   },
   "besser": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Steigerungsform von „gut“; von höherer Qualität."
   },
-  "bestbestellen": {
-    "type": "verb"
+  "bestellen": {
+    "type": "verb",
+    "definition": "Etwas ordern; zum Beispiel Essen im Restaurant bestellen."
   },
   "besuchen": {
     "definition": "Zu einer Person, einem Ort oder einer Veranstaltung gehen.",
@@ -479,7 +528,8 @@
     "definition": "Ein Möbelstück zum Schlafen."
   },
   "bezahlen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Rechnung oder einen Preis mit Geld begleichen."
   },
   "Bier": {
     "type": "noun",
@@ -494,7 +544,8 @@
     "definition": "Eine gemalte oder fotografierte Darstellung."
   },
   "billig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Wenig Geld kostend; günstig im Preis."
   },
   "Birne": {
     "type": "noun",
@@ -503,10 +554,12 @@
     "definition": "Eine süße Frucht mit runder Form."
   },
   "bis": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Bezeichnet den Endpunkt in der Zeit oder im Raum."
   },
   "bisschen": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Eine kleine Menge; ein wenig."
   },
   "Bitte": {
     "type": "noun",
@@ -515,13 +568,16 @@
     "definition": "Eine höfliche Aufforderung, etwas zu tun oder zu bekommen."
   },
   "bitten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden höflich um etwas fragen."
   },
   "bitter": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit einem herben, oft unangenehmen Geschmack."
   },
   "bleiben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "An einem Ort nicht weggehen."
   },
   "Bleistift": {
     "type": "noun",
@@ -548,13 +604,16 @@
     "definition": "Ein Blatt Papier oder eine gebogene Form."
   },
   "böse": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Schlecht oder gemein; voller Ärger."
   },
   "brauchen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas nötig haben."
   },
   "breit": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Von einer Seite zur anderen ausgedehnt; nicht schmal."
   },
   "Brief": {
     "type": "noun",
@@ -569,7 +628,8 @@
     "definition": "Ein kleines Papierstück, das man auf einen Brief klebt."
   },
   "bringen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas zu einem Ort oder zu einer Person bringen."
   },
   "Brot": {
     "type": "noun",
@@ -602,7 +662,8 @@
     "definition": "Ein Zeichen des Alphabets."
   },
   "buchstabieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Die Buchstaben eines Wortes nacheinander sagen."
   },
   "Bus": {
     "type": "noun",
@@ -635,7 +696,8 @@
     "definition": "Die Person, die eine Firma oder Abteilung leitet."
   },
   "circa": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Ungefähr; nicht genau."
   },
   "Computer": {
     "type": "noun",
@@ -644,7 +706,8 @@
     "definition": "Ein elektronisches Gerät zum Rechnen und Arbeiten."
   },
   "da": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "An dieser Stelle; dort."
   },
   "Dame": {
     "type": "noun",
@@ -653,7 +716,8 @@
     "definition": "Eine höfliche Bezeichnung für eine Frau."
   },
   "daneben": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Neben etwas; an der Seite von etwas."
   },
   "Dank": {
     "type": "noun",
@@ -662,16 +726,20 @@
     "definition": "Das Gefühl der Dankbarkeit."
   },
   "danke": {
-    "type": "interjection"
+    "type": "interjection",
+    "definition": "Höfliches Wort, mit dem man sich für etwas bedankt."
   },
   "danken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem danke sagen; Dank ausdrücken."
   },
   "dann": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Danach; zu einem späteren Zeitpunkt."
   },
   "das": {
-    "type": "article"
+    "type": "article",
+    "definition": "Bestimmter Artikel für sächliche Wörter; zum Beispiel „das Haus“."
   },
   "Datum": {
     "type": "noun",
@@ -680,25 +748,32 @@
     "definition": "Ein bestimmter Tag im Kalender."
   },
   "dauern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine bestimmte Zeit brauchen; andauern."
   },
   "deine": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Besitzanzeigendes Wort für Dinge, die zu „du“ gehören; zum Beispiel „deine Tasche“."
   },
   "deinen": {
-    "type": "verb"
+    "type": "pronoun",
+    "definition": "Form von „dein“ für männliche Wörter im Akkusativ; zum Beispiel „deinen Vater“."
   },
   "denn": {
-    "type": "conjunction"
+    "type": "conjunction",
+    "definition": "Leitet einen Grund ein; zum Beispiel „Ich bleibe, denn es regnet“."
   },
   "der": {
-    "type": "article"
+    "type": "article",
+    "definition": "Bestimmter Artikel für männliche Wörter; zum Beispiel „der Tisch“."
   },
   "dich": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Form von „du“ im Akkusativ; zum Beispiel „Ich sehe dich“."
   },
   "diesen": {
-    "type": "verb"
+    "type": "pronoun",
+    "definition": "Form von „dieser“ für männliche Wörter im Akkusativ; zum Beispiel „diesen Tag“."
   },
   "Disco": {
     "type": "noun",
@@ -725,16 +800,20 @@
     "definition": "Eine kleine Ansiedlung auf dem Land."
   },
   "draußen": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Außerhalb eines Gebäudes oder Raums."
   },
   "drei": {
-    "type": "numeral"
+    "type": "numeral",
+    "definition": "Die Zahl zwischen zwei und vier; 3."
   },
   "drucken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas auf Papier bringen; mit einem Drucker ausgeben."
   },
   "drücken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Kraft auf etwas ausüben; gegen etwas pressen."
   },
   "Drucker": {
     "type": "noun",
@@ -743,10 +822,12 @@
     "definition": "Ein Gerät, das Texte oder Bilder auf Papier druckt."
   },
   "du": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Anrede für eine einzelne Person, mit der man vertraut ist."
   },
   "durch": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Von einer Seite zur anderen; mitten hindurch."
   },
   "Durchsage": {
     "type": "noun",
@@ -755,7 +836,8 @@
     "definition": "Eine gesprochene Mitteilung über Lautsprecher."
   },
   "dürfen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Die Erlaubnis haben, etwas zu tun."
   },
   "Durst": {
     "type": "noun",
@@ -770,7 +852,8 @@
     "definition": "Eine Vorrichtung zum Waschen des Körpers mit Wasser."
   },
   "duschen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich mit Wasser aus einer Brause waschen."
   },
   "E-Mail": {
     "type": "noun",
@@ -803,16 +886,20 @@
     "definition": "Ein rundliches Nahrungsmittel von Vögeln."
   },
   "eilig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Schnell nötig; ohne Zeit zu verlieren."
   },
   "ein": {
-    "type": "article"
+    "type": "article",
+    "definition": "Unbestimmter Artikel; die Zahl 1."
   },
   "einen": {
-    "type": "verb"
+    "type": "article",
+    "definition": "Form von „ein“ für männliche Wörter im Akkusativ; zum Beispiel „einen Apfel“."
   },
   "einfach": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht schwierig; leicht zu verstehen oder zu tun."
   },
   "Eingang": {
     "type": "noun",
@@ -821,7 +908,8 @@
     "definition": "Die Tür, durch die man einen Ort betritt."
   },
   "einkaufen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Waren in einem Geschäft kaufen."
   },
   "einladen": {
     "type": "verb",
@@ -834,10 +922,12 @@
     "definition": "Eine Bitte, zu einem Ereignis zu kommen."
   },
   "einmal": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Ein einziges Mal; nicht wiederholt."
   },
   "einsteigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "In ein Fahrzeug steigen, um mitzufahren."
   },
   "Eintritt": {
     "type": "noun",
@@ -864,7 +954,8 @@
     "definition": "Die Person, die etwas bekommt."
   },
   "empfehlen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem sagen, dass etwas gut oder passend ist."
   },
   "Ende": {
     "type": "noun",
@@ -873,10 +964,12 @@
     "definition": "Der letzte Teil von etwas."
   },
   "enden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Aufhören; zu Ende gehen."
   },
   "entschuldigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Um Verzeihung bitten; sagen, dass etwas leidtut."
   },
   "Entschuldigung": {
     "type": "noun",
@@ -885,7 +978,8 @@
     "definition": "Ein Ausdruck des Bedauerns."
   },
   "er": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Pronomen für eine männliche Person oder Sache, über die man spricht."
   },
   "Ergebnis": {
     "type": "noun",
@@ -894,13 +988,16 @@
     "definition": "Das, was am Ende eines Vorgangs herauskommt."
   },
   "erklären": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas verständlich machen; jemandem etwas beschreiben."
   },
   "erlauben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem die Erlaubnis geben, etwas zu tun."
   },
   "erst": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Als Erstes; vor allen anderen."
   },
   "Erwachsene": {
     "type": "noun",
@@ -909,19 +1006,24 @@
     "definition": "Eine Person, die kein Kind mehr ist."
   },
   "erzählen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas mit Worten berichten; eine Geschichte erzählen."
   },
   "es": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Pronomen für eine sächliche Sache, über die man spricht."
   },
   "essen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Nahrung zu sich nehmen."
   },
   "euer": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Besitzanzeigendes Wort für Dinge, die zu „ihr“ gehören; zum Beispiel „euer Haus“."
   },
   "fahren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich mit einem Fahrzeug fortbewegen."
   },
   "Fahrer": {
     "type": "noun",
@@ -942,7 +1044,8 @@
     "definition": "Ein Fahrzeug mit zwei Rädern, das man mit den Beinen antreibt."
   },
   "falsch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht richtig; nicht der Wahrheit entsprechend."
   },
   "Familie": {
     "type": "noun",
@@ -975,7 +1078,8 @@
     "definition": "Eine Methode, Dokumente über die Telefonleitung zu senden."
   },
   "fehlen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Nicht da sein; nicht vorhanden sein."
   },
   "Fehler": {
     "type": "noun",
@@ -984,15 +1088,18 @@
     "definition": "Etwas, das falsch gemacht wurde."
   },
   "feiern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Fest begehen; gemeinsam etwas feiern."
   },
   "Fernsehen": {
-    "type": "verb",
+    "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Das Fernsehprogramm; das Ansehen von Sendungen im Fernsehen."
   },
   "fertig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Zu Ende; vollständig erledigt."
   },
   "Feuer": {
     "type": "noun",
@@ -1013,7 +1120,8 @@
     "definition": "Ein bewegtes Bildwerk, das man im Kino oder Fernsehen sieht."
   },
   "finden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas entdecken, das man gesucht hat; auf etwas stoßen."
   },
   "Firma": {
     "type": "noun",
@@ -1040,7 +1148,8 @@
     "definition": "Nahrung von Tieren."
   },
   "fliegen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich in der Luft fortbewegen; mit einem Flugzeug reisen."
   },
   "Flughafen": {
     "type": "noun",
@@ -1055,7 +1164,8 @@
     "definition": "Ein Fahrzeug, das durch die Luft fliegt."
   },
   "folgen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Hinter jemandem oder etwas hergehen."
   },
   "Formular": {
     "type": "noun",
@@ -1076,7 +1186,8 @@
     "definition": "Ein Satz, mit dem man etwas wissen möchte."
   },
   "fragen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Auskunft erbitten; eine Frage stellen."
   },
   "Frau": {
     "type": "noun",
@@ -1085,7 +1196,8 @@
     "definition": "Eine erwachsene Person weiblichen Geschlechts."
   },
   "frei": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht gefangen und nicht besetzt; unabhängig."
   },
   "Freizeit": {
     "type": "noun",
@@ -1094,10 +1206,12 @@
     "definition": "Die Zeit ohne Arbeit oder Pflichten."
   },
   "fremd": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht bekannt; aus einem anderen Land oder von anderen Leuten."
   },
   "freuen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Freude über etwas empfinden."
   },
   "Freund": {
     "type": "noun",
@@ -1112,7 +1226,8 @@
     "article": "die"
   },
   "früher": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Vor einem bestimmten Zeitpunkt; in der Vergangenheit."
   },
   "Frühstück": {
     "type": "noun",
@@ -1121,7 +1236,8 @@
     "definition": "Die erste Mahlzeit des Tages."
   },
   "frühstücken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Am Morgen das Frühstück essen."
   },
   "Führung": {
     "type": "noun",
@@ -1130,13 +1246,16 @@
     "definition": "Ein geführter Rundgang, zum Beispiel durch ein Museum."
   },
   "fünf": {
-    "type": "numeral"
+    "type": "numeral",
+    "definition": "Die Zahl zwischen vier und sechs; 5."
   },
   "fünfzig": {
-    "type": "numeral"
+    "type": "numeral",
+    "definition": "Die Zahl 50; fünfmal zehn."
   },
   "für": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Bezeichnet den Empfänger, den Zweck oder den Nutzen."
   },
   "Fuß": {
     "type": "noun",
@@ -1151,7 +1270,8 @@
     "definition": "Ein Mannschaftssport mit einem runden Ball."
   },
   "ganz": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Vollständig; in vollem Umfang."
   },
   "Garten": {
     "definition": "Ein Stück Land bei einem Haus, auf dem Pflanzen wachsen.",
@@ -1170,7 +1290,8 @@
     "type": "verb"
   },
   "geboren": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Auf die Welt gekommen; zum Beispiel „Ich bin 1990 geboren“."
   },
   "Geburtsjahr": {
     "type": "noun",
@@ -1191,19 +1312,24 @@
     "definition": "Der Tag, an dem jemand geboren wurde und jedes Jahr feiert."
   },
   "geehrte": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Form von „geehrt“ in der Anrede; zum Beispiel „Sehr geehrte Frau …“."
   },
   "gefallen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem angenehm sein; Freude machen."
   },
   "gegen": {
-    "type": "verb"
+    "type": "preposition",
+    "definition": "In Richtung auf etwas zu; auch: im Widerstand zu etwas."
   },
   "gehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich zu Fuß fortbewegen."
   },
   "gehören": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eigentum von jemandem sein."
   },
   "Geld": {
     "type": "noun",
@@ -1218,7 +1344,8 @@
     "definition": "Pflanzliche Nahrungsmittel wie Karotten oder Tomaten."
   },
   "geöffnet": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht geschlossen; zugänglich oder in Betrieb."
   },
   "Gepäck": {
     "type": "noun",
@@ -1227,10 +1354,12 @@
     "definition": "Koffer und Taschen, die man auf Reisen mitnimmt."
   },
   "gerade": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "In diesem Moment; soeben."
   },
   "gern": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Mit Freude; etwas gern tun."
   },
   "Geschäft": {
     "type": "noun",
@@ -1245,7 +1374,8 @@
     "definition": "Etwas, das man jemandem schenkt."
   },
   "geschlossen": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Nicht geöffnet; zu."
   },
   "Geschwister": {
     "type": "noun",
@@ -1260,10 +1390,12 @@
     "definition": "Ein Austausch von Worten zwischen Personen."
   },
   "gestern": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Am Tag vor heute."
   },
   "gestorben": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Nicht mehr am Leben; tot."
   },
   "Getränk": {
     "type": "noun",
@@ -1278,7 +1410,8 @@
     "definition": "Wie schwer etwas ist."
   },
   "gewinnen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "In einem Wettkampf oder Spiel siegen."
   },
   "Glas": {
     "type": "noun",
@@ -1291,7 +1424,8 @@
     "definition": "Etwas für wahr halten oder Vertrauen haben."
   },
   "gleich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Von derselben Art; auch: in kurzer Zeit."
   },
   "Gleis": {
     "type": "noun",
@@ -1306,7 +1440,8 @@
     "definition": "Ein Zustand der Zufriedenheit oder ein positiver Zufall."
   },
   "glücklich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Freude und Zufriedenheit empfindend."
   },
   "Glückwunsch": {
     "type": "noun",
@@ -1315,13 +1450,16 @@
     "definition": "Ein Wunsch, den man zu einem freudigen Anlass äußert."
   },
   "gratulieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem zu einem Erfolg oder Fest Glück wünschen."
   },
   "grillen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Essen bei großer Hitze auf einem Grill garen."
   },
   "groß": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Von beträchtlicher Größe; nicht klein."
   },
   "Größe": {
     "type": "noun",
@@ -1348,7 +1486,8 @@
     "definition": "Der Vater eines Elternteils."
   },
   "grün": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Die Farbe von Gras und Blättern."
   },
   "Gruppe": {
     "type": "noun",
@@ -1363,13 +1502,16 @@
     "definition": "Ein freundliches Wort beim Treffen oder Abschied."
   },
   "gültig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Noch erlaubt und anerkannt; zum Beispiel ein gültiger Ausweis."
   },
   "günstig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht teuer; zu einem guten Preis."
   },
   "gut": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Von hoher Qualität; so, wie man es möchte."
   },
   "Haar": {
     "type": "noun",
@@ -1400,10 +1542,12 @@
     "definition": "Ein großer, überdachter Raum."
   },
   "hallo": {
-    "type": "interjection"
+    "type": "interjection",
+    "definition": "Wort zur Begrüßung."
   },
   "halten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas mit der Hand greifen und nicht loslassen."
   },
   "Haltestelle": {
     "type": "noun",
@@ -1458,13 +1602,16 @@
     "definition": "Mit einer Person eine Ehe schließen."
   },
   "heißen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen bestimmten Namen haben."
   },
   "helfen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem bei etwas unterstützen."
   },
   "hell": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit viel Licht; nicht dunkel."
   },
   "Herd": {
     "type": "noun",
@@ -1479,13 +1626,16 @@
     "definition": "Eine höfliche Bezeichnung für einen Mann."
   },
   "herzlich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Freundlich und warm; von Herzen kommend."
   },
   "heute": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "An dem Tag, an dem gerade gesprochen wird."
   },
   "hier": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "An diesem Ort; an der Stelle des Sprechers."
   },
   "Hilfe": {
     "type": "noun",
@@ -1494,7 +1644,8 @@
     "definition": "Unterstützung für jemanden."
   },
   "hinten": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Auf der Rückseite; am Ende."
   },
   "Hobby": {
     "type": "noun",
@@ -1503,7 +1654,8 @@
     "definition": "Eine Freizeitbeschäftigung, die man gerne macht."
   },
   "hoch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Weit oben; von großer Höhe."
   },
   "Hochzeit": {
     "type": "noun",
@@ -1512,10 +1664,12 @@
     "definition": "Die Feier, bei der zwei Menschen heiraten."
   },
   "holen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Zu einem Ort gehen, um jemanden oder etwas zu bekommen."
   },
   "hören": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit den Ohren wahrnehmen."
   },
   "Hotel": {
     "type": "noun",
@@ -1536,16 +1690,20 @@
     "definition": "Das Bedürfnis, etwas zu essen."
   },
   "ich": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Das Wort, mit dem man sich selbst bezeichnet."
   },
   "im": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Kurzform von „in dem“; zum Beispiel „im Haus“."
   },
   "immer": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Zu jeder Zeit; jedes Mal."
   },
   "in": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Bezeichnet die Lage innerhalb von etwas."
   },
   "Information": {
     "type": "noun",
@@ -1554,10 +1712,12 @@
     "definition": "Eine Auskunft oder ein Wissen über etwas."
   },
   "ins": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Kurzform von „in das“; zum Beispiel „ins Haus“."
   },
   "international": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Zwischen mehreren Ländern; über Länder hinweg."
   },
   "Internet": {
     "type": "noun",
@@ -1566,7 +1726,8 @@
     "definition": "Ein weltweites Computernetzwerk."
   },
   "ja": {
-    "type": "particle"
+    "type": "particle",
+    "definition": "Wort, das Zustimmung oder Einverständnis ausdrückt."
   },
   "Jacke": {
     "type": "noun",
@@ -1581,10 +1742,12 @@
     "definition": "Eine Hose aus festem Baumwollstoff."
   },
   "jeden": {
-    "type": "verb"
+    "type": "pronoun",
+    "definition": "Form von „jeder“ für männliche Wörter im Akkusativ; zum Beispiel „jeden Tag“."
   },
   "jetzt": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "In diesem Moment; gerade eben."
   },
   "Job": {
     "type": "noun",
@@ -1599,7 +1762,8 @@
     "definition": "Eine junge Person zwischen Kindheit und Erwachsenenalter."
   },
   "jung": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Erst wenig Jahre alt; nicht alt."
   },
   "Junge": {
     "type": "noun",
@@ -1614,7 +1778,8 @@
     "definition": "Ein bekanntes, koffeinhaltiges Heißgetränk."
   },
   "kaputt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Defekt; nicht mehr in Ordnung."
   },
   "Karte": {
     "type": "noun",
@@ -1635,16 +1800,20 @@
     "definition": "Der Ort, an dem man bezahlt."
   },
   "kaufen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas gegen Geld erwerben."
   },
   "kein": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Verneinung von „ein“; nicht ein einziger."
   },
   "kennen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit jemandem oder etwas vertraut sein."
   },
   "kennenlernen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Person zum ersten Mal treffen."
   },
   "Kind": {
     "type": "noun",
@@ -1671,7 +1840,8 @@
     "definition": "Ein kleiner Laden, oft für Zeitungen und Getränke."
   },
   "klar": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Leicht zu verstehen; ohne Zweifel."
   },
   "Klasse": {
     "type": "noun",
@@ -1686,10 +1856,12 @@
     "definition": "Alles, was man am Körper trägt, um sich zu bedecken."
   },
   "klein": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Von geringer Größe; nicht groß."
   },
   "kochen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Speisen mit Hitze zubereiten."
   },
   "Koffer": {
     "type": "noun",
@@ -1704,10 +1876,12 @@
     "definition": "Eine Person, mit der man zusammenarbeitet."
   },
   "kommen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich auf einen Ort zu bewegen; ankommen."
   },
   "können": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Zu etwas fähig sein; die Möglichkeit haben."
   },
   "Konto": {
     "type": "noun",
@@ -1722,13 +1896,16 @@
     "definition": "Der oberste Teil des Körpers mit Gesicht und Gehirn."
   },
   "kosten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen bestimmten Preis haben."
   },
   "krank": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht gesund; an einer Krankheit leidend."
   },
   "kriegen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas bekommen; erhalten."
   },
   "Küche": {
     "type": "noun",
@@ -1755,10 +1932,12 @@
     "definition": "Ein Gerät, das Lebensmittel kühl hält."
   },
   "kulturell": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Die Kultur betreffend."
   },
   "kümmern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich um jemanden oder etwas sorgen."
   },
   "Kunde": {
     "type": "noun",
@@ -1773,10 +1952,12 @@
     "definition": "Ein Unterricht in einem bestimmten Thema."
   },
   "kurz": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Von geringer Länge oder Dauer; nicht lang."
   },
   "lachen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit Lauten Freude ausdrücken; wegen etwas Lustigem."
   },
   "Laden": {
     "type": "noun",
@@ -1791,22 +1972,28 @@
     "definition": "Ein Staat oder ländliche Gegend."
   },
   "lang": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Von großer Länge oder Dauer; nicht kurz."
   },
   "lange": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Über einen großen Zeitraum; viel Zeit."
   },
   "langsam": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit geringer Geschwindigkeit; nicht schnell."
   },
   "lassen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas nicht verändern; so lassen, wie es ist."
   },
   "laufen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich zu Fuß fortbewegen; auch: schnell gehen."
   },
   "laut": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Gut hörbar; mit starker Stimme."
   },
   "leben": {
     "definition": "Existieren und seinen Alltag führen.",
@@ -1819,10 +2006,12 @@
     "definition": "Nahrungsmittel zum Essen und Trinken."
   },
   "ledig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht verheiratet."
   },
   "legen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas in eine waagerechte Lage bringen."
   },
   "Lehrer": {
     "type": "noun",
@@ -1831,26 +2020,32 @@
     "definition": "Eine Person, die unterrichtet."
   },
   "leicht": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Von geringem Gewicht; nicht schwer."
   },
   "leid": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Drückt Bedauern aus; zum Beispiel „Es tut mir leid“."
   },
   "leider": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Es ist schade; drückt Bedauern aus."
   },
   "leise": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Kaum hörbar; mit wenig Lärm."
   },
   "lernen": {
     "type": "verb",
     "definition": "Wissen oder Fähigkeiten erwerben."
   },
   "lesen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Geschriebene Wörter und Texte mit den Augen wahrnehmen."
   },
   "letzt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Am Ende einer Reihe; nach allen anderen."
   },
   "Licht": {
     "type": "noun",
@@ -1859,7 +2054,8 @@
     "definition": "Die Helligkeit, die man sieht."
   },
   "lieb": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nett und sympathisch; jemandem zugetan."
   },
   "Liebe": {
     "type": "noun",
@@ -1868,16 +2064,20 @@
     "definition": "Ein starkes Gefühl der Zuneigung."
   },
   "lieben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Für jemanden oder etwas starke Zuneigung empfinden."
   },
   "lieber": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Steigerungsform von „gern“; mehr mögen."
   },
   "liegen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich in waagerechter Lage befinden."
   },
   "links": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Auf der Seite, die der rechten Hand gegenüberliegt."
   },
   "Lkw": {
     "type": "noun",
@@ -1898,10 +2098,12 @@
     "definition": "Die Antwort auf ein Problem oder eine Aufgabe."
   },
   "lustig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Zum Lachen; voller Humor."
   },
   "machen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas tun oder herstellen."
   },
   "Mädchen": {
     "type": "noun",
@@ -1922,7 +2124,8 @@
     "definition": "Ein einzelner Zeitpunkt in einer Reihe von Wiederholungen."
   },
   "man": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Unbestimmtes Pronomen; irgendeine Person, nicht genau genannt."
   },
   "Mann": {
     "type": "noun",
@@ -1931,7 +2134,8 @@
     "definition": "Eine erwachsene Person männlichen Geschlechts."
   },
   "männlich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Zum Mann gehörend; das männliche Geschlecht betreffend."
   },
   "Maschine": {
     "type": "noun",
@@ -1946,16 +2150,20 @@
     "definition": "Eine große Wassermasse mit Salzwasser."
   },
   "mehr": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Eine größere Menge oder Anzahl."
   },
   "mein": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Besitzanzeigendes Wort für Dinge, die zu mir gehören."
   },
   "meinem": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Form von „mein“ für männliche oder sächliche Wörter im Dativ; zum Beispiel „mit meinem Bruder“."
   },
   "meinen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Meinung vertreten; etwas sagen wollen."
   },
   "Miete": {
     "type": "noun",
@@ -1964,7 +2172,8 @@
     "definition": "Das Geld, das man für eine Wohnung bezahlt."
   },
   "mieten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas gegen Geld für eine Zeit benutzen dürfen."
   },
   "Milch": {
     "type": "noun",
@@ -1973,22 +2182,28 @@
     "definition": "Ein weißes Getränk von Kühen."
   },
   "mir": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Form von „ich“ im Dativ; zum Beispiel „Gib mir das Buch“."
   },
   "mit": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Zusammen mit jemandem oder etwas."
   },
   "mitbringen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas zu jemandem bringen, wenn man zu ihm kommt."
   },
   "mitkommen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit jemandem zusammen an einen Ort gehen."
   },
   "mitmachen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Bei etwas dabei sein und mitwirken."
   },
   "mitnehmen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden oder etwas mit an einen Ort nehmen."
   },
   "Mitte": {
     "type": "noun",
@@ -2003,13 +2218,16 @@
     "definition": "Gegenstände zur Einrichtung eines Raumes, wie Tisch oder Schrank."
   },
   "möchten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Höflicher Wunsch; etwas haben oder tun wollen."
   },
   "mögen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas gern haben; etwas positiv finden."
   },
   "möglich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "So, dass es geschehen kann; machbar."
   },
   "Moment": {
     "type": "noun",
@@ -2024,10 +2242,12 @@
     "definition": "Ein Zeitabschnitt von etwa vier Wochen."
   },
   "morgen": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Am Tag nach heute."
   },
   "müde": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Schlaf brauchend; ohne Energie."
   },
   "Mund": {
     "type": "noun",
@@ -2036,7 +2256,8 @@
     "definition": "Der Körperteil, mit dem man isst und spricht."
   },
   "müssen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas tun müssen; keine andere Wahl haben."
   },
   "Mutter": {
     "type": "noun",
@@ -2045,10 +2266,12 @@
     "definition": "Eine erwachsene Person weiblichen Geschlechts, die ein Kind hat."
   },
   "nach": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Bezeichnet die Richtung auf ein Ziel; auch: später als etwas."
   },
   "nächsten": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Form von „nah“ im Superlativ; der folgende; zum Beispiel „nächsten Montag“."
   },
   "Name": {
     "type": "noun",
@@ -2057,34 +2280,44 @@
     "definition": "Die Bezeichnung einer Person oder Sache."
   },
   "nehmen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas in die Hand nehmen; zu sich nehmen."
   },
   "nein": {
-    "type": "particle"
+    "type": "particle",
+    "definition": "Wort, das Ablehnung oder Verneinung ausdrückt."
   },
   "neu": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Erst vor kurzer Zeit entstanden; noch nicht gebraucht."
   },
   "neuen": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Gebeugte Form von „neu“; zum Beispiel „die neuen Schuhe“."
   },
   "neues": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Gebeugte Form von „neu“ bei sächlichen Wörtern; zum Beispiel „ein neues Haus“."
   },
   "nicht": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Drückt Verneinung aus; kein, nicht so."
   },
   "nichts": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Keine Sache; überhaupt kein Ding."
   },
   "nie": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Zu keiner Zeit; niemals."
   },
   "noch": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Bis jetzt; weiterhin."
   },
   "normal": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "So, wie es üblich ist; nicht besonders."
   },
   "Nummer": {
     "type": "noun",
@@ -2093,10 +2326,12 @@
     "definition": "Eine Zahl, die etwas identifiziert."
   },
   "nur": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Nicht mehr als; ausschließlich."
   },
   "oben": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "An einer hohen Stelle; nicht unten."
   },
   "Obst": {
     "type": "noun",
@@ -2105,16 +2340,20 @@
     "definition": "Süße Früchte, die man isst."
   },
   "oder": {
-    "type": "conjunction"
+    "type": "conjunction",
+    "definition": "Verbindet zwei Möglichkeiten; zum Beispiel „Tee oder Kaffee“."
   },
   "öffnen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas aufmachen; zugänglich machen."
   },
   "oft": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Viele Male; häufig."
   },
   "ohne": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Nicht zusammen mit; nicht mit etwas."
   },
   "Öl": {
     "type": "noun",
@@ -2279,7 +2518,8 @@
     "definition": "Ein Test, der Wissen oder Können überprüft."
   },
   "pünktlich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Genau zur vereinbarten Zeit."
   },
   "Rat": {
     "type": "noun",
@@ -2288,7 +2528,8 @@
     "definition": "Ein Vorschlag, was jemand tun sollte."
   },
   "rauchen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Tabak oder Ähnliches anzünden und den Rauch einatmen."
   },
   "Raum": {
     "type": "noun",
@@ -2303,7 +2544,8 @@
     "definition": "Ein Dokument, das den zu zahlenden Betrag zeigt."
   },
   "rechts": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Auf der Seite, die der linken Hand gegenüberliegt."
   },
   "Regen": {
     "type": "noun",
@@ -2312,7 +2554,8 @@
     "definition": "Wasser, das aus den Wolken fällt."
   },
   "regnen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Wenn Wasser aus Wolken auf die Erde fällt."
   },
   "Reis": {
     "type": "noun",
@@ -2339,7 +2582,8 @@
     "definition": "Ein Buch oder eine Person, die Reisende informiert."
   },
   "reisen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Reise machen; an einen anderen Ort fahren."
   },
   "Reparatur": {
     "type": "noun",
@@ -2348,7 +2592,8 @@
     "definition": "Das Wiederherstellen von etwas Kaputtem."
   },
   "reparieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas Kaputtes wieder in Ordnung bringen."
   },
   "Restaurant": {
     "type": "noun",
@@ -2363,10 +2608,12 @@
     "definition": "Der Empfangsbereich eines Hotels."
   },
   "richtig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Der Wahrheit entsprechend; nicht falsch."
   },
   "riechen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen Geruch mit der Nase wahrnehmen."
   },
   "Ruf": {
     "type": "noun",
@@ -2375,7 +2622,8 @@
     "definition": "Der Klang einer lauten Stimme oder ein Ansehen."
   },
   "ruhig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ohne Lärm; ohne Bewegung oder Aufregung."
   },
   "S-Bahn": {
     "type": "noun",
@@ -2390,7 +2638,8 @@
     "definition": "Ein Getränk aus gepressten Früchten."
   },
   "sagen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas mit Worten äußern."
   },
   "Salat": {
     "type": "noun",
@@ -2411,10 +2660,12 @@
     "definition": "Ein Ort, an dem man bedient wird, oder ein Gerät zum Ein- und Ausschalten."
   },
   "scheinen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Helles Licht ausstrahlen; auch: den Eindruck machen."
   },
   "schicken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas oder jemanden an einen Ort senden."
   },
   "Schild": {
     "type": "noun",
@@ -2429,13 +2680,16 @@
     "definition": "Geräuchertes oder gepökeltes Fleisch vom Schwein."
   },
   "schlafen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich im Zustand der Ruhe befinden, in dem man nichts wahrnimmt."
   },
   "schlecht": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht gut; von geringer Qualität."
   },
   "schließen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas zumachen; zum Beispiel eine Tür."
   },
   "Schluss": {
     "type": "noun",
@@ -2450,16 +2704,20 @@
     "definition": "Ein Gegenstand, mit dem man ein Schloss öffnet."
   },
   "schmecken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen Geschmack mit dem Mund wahrnehmen."
   },
   "schnell": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit großer Geschwindigkeit; nicht langsam."
   },
   "schon": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Bereits; früher als erwartet."
   },
   "schön": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Gut aussehend oder angenehm; ästhetisch."
   },
   "Schrank": {
     "type": "noun",
@@ -2468,7 +2726,8 @@
     "definition": "Ein Möbelstück zum Aufbewahren von Dingen."
   },
   "schreiben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Wörter oder Zeichen mit einem Stift oder am Computer festhalten."
   },
   "Schuh": {
     "type": "noun",
@@ -2495,10 +2754,12 @@
     "definition": "Eine Person, die eine Schule besucht."
   },
   "schwer": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Von großem Gewicht oder großer Schwierigkeit."
   },
   "schwere": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Gebeugte Form von „schwer“; zum Beispiel „eine schwere Tasche“."
   },
   "Schwester": {
     "type": "noun",
@@ -2513,7 +2774,8 @@
     "definition": "Ein Ort mit Becken zum Schwimmen."
   },
   "schwimmen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich im Wasser aus eigener Kraft fortbewegen."
   },
   "See": {
     "type": "noun",
@@ -2522,7 +2784,8 @@
     "definition": "Ein großes stehendes Gewässer."
   },
   "sehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit den Augen wahrnehmen."
   },
   "Sehenswürdigkeit": {
     "type": "noun",
@@ -2531,31 +2794,40 @@
     "definition": "Ein Ort oder Bauwerk, das Touristen besuchen."
   },
   "sehr": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "In hohem Maße; besonders."
   },
   "sein": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Existieren; sich in einem Zustand befinden."
   },
   "seinem": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Form von „sein“ für männliche oder sächliche Wörter im Dativ; zum Beispiel „mit seinem Vater“."
   },
   "seit": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Von einem Zeitpunkt in der Vergangenheit bis jetzt."
   },
   "selbstständig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Allein arbeitend oder handelnd; ohne Hilfe anderer."
   },
   "sich": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Reflexivpronomen; bezieht sich auf das Subjekt zurück."
   },
   "sie": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Pronomen für eine weibliche Person; auch für mehrere Personen."
   },
   "sitzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit dem Gesäß auf einer Fläche sein."
   },
   "so": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "In dieser Art; auf diese Weise."
   },
   "Sofa": {
     "type": "noun",
@@ -2564,7 +2836,8 @@
     "definition": "Ein bequemes Sitzmöbel für mehrere Personen."
   },
   "sofort": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Ohne Verzögerung; gleich jetzt."
   },
   "Sohn": {
     "type": "noun",
@@ -2573,7 +2846,8 @@
     "definition": "Ein männliches Kind in Bezug auf die Eltern."
   },
   "sollen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Drückt eine Aufgabe oder Erwartung aus; es ist vorgesehen."
   },
   "Sommer": {
     "type": "noun",
@@ -2588,10 +2862,12 @@
     "definition": "Der Stern, der die Erde mit Licht und Wärme versorgt."
   },
   "spät": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nahe am Ende der Zeit; nicht früh."
   },
   "später": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Nach einem bestimmten Zeitpunkt; in der Zukunft."
   },
   "Speisekarte": {
     "type": "noun",
@@ -2606,7 +2882,8 @@
     "definition": "Eine Tätigkeit zur Unterhaltung mit Regeln."
   },
   "spielen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich zum Vergnügen mit etwas beschäftigen; ein Spiel machen."
   },
   "Sport": {
     "type": "noun",
@@ -2621,7 +2898,8 @@
     "definition": "Ein System aus Wörtern und Regeln zur Verständigung."
   },
   "sprechen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Wörter und Sätze mit der Stimme äußern."
   },
   "Stadt": {
     "type": "noun",
@@ -2630,7 +2908,8 @@
     "definition": "Eine größere Siedlung mit vielen Einwohnern."
   },
   "stehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich aufrecht auf den Füßen befinden."
   },
   "Stelle": {
     "type": "noun",
@@ -2639,7 +2918,8 @@
     "definition": "Ein bestimmter Ort oder eine Arbeitsposition."
   },
   "stellen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas an eine Stelle bringen; aufrecht hinstellen."
   },
   "Stock": {
     "type": "noun",
@@ -2672,7 +2952,8 @@
     "definition": "Eine Person, die an einer Hochschule studiert."
   },
   "studieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "An einer Hochschule lernen."
   },
   "Studium": {
     "type": "noun",
@@ -2687,7 +2968,8 @@
     "definition": "Ein Zeitabschnitt von sechzig Minuten."
   },
   "suchen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich bemühen, etwas zu finden."
   },
   "Tag": {
     "type": "noun",
@@ -2696,10 +2978,12 @@
     "definition": "Ein Zeitabschnitt von vierundzwanzig Stunden."
   },
   "tagen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Versammlung oder Sitzung abhalten."
   },
   "tanzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich rhythmisch zur Musik bewegen."
   },
   "Tasche": {
     "type": "noun",
@@ -2732,7 +3016,8 @@
     "definition": "Ein Gerät, mit dem man Gespräche führt."
   },
   "telefonieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit jemandem am Telefon sprechen."
   },
   "Termin": {
     "type": "noun",
@@ -2747,7 +3032,8 @@
     "definition": "Eine Prüfung von Wissen oder Fähigkeiten."
   },
   "teuer": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Viel Geld kostend; mit hohem Preis."
   },
   "Text": {
     "type": "noun",
@@ -2792,10 +3078,12 @@
     "definition": "Eine rote, runde Frucht, die als Gemüse verwendet wird."
   },
   "tot": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht mehr lebend."
   },
   "treffen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden an einem Ort sehen und mit ihm sprechen."
   },
   "Treppe": {
     "type": "noun",
@@ -2804,22 +3092,28 @@
     "definition": "Stufen, die zu einer anderen Ebene führen."
   },
   "trinken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Flüssigkeit zu sich nehmen."
   },
   "tschüss": {
-    "type": "interjection"
+    "type": "interjection",
+    "definition": "Informeller Abschiedsgruß."
   },
   "tun": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas ausführen; eine Handlung machen."
   },
   "über": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Oberhalb von etwas; höher als etwas."
   },
   "übernachten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Die Nacht an einem anderen Ort schlafen."
   },
   "überweisen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Geld von einem Konto auf ein anderes Konto schicken."
   },
   "Uhr": {
     "type": "noun",
@@ -2828,28 +3122,36 @@
     "definition": "Ein Gerät, das die Zeit anzeigt."
   },
   "um": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Bezeichnet die genaue Uhrzeit; auch: rings um etwas herum."
   },
   "umziehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "In eine andere Wohnung ziehen."
   },
   "und": {
-    "type": "conjunction"
+    "type": "conjunction",
+    "definition": "Verbindet Wörter, Satzteile oder Sätze; auch: plus."
   },
   "uns": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Form von „wir“ im Dativ und Akkusativ."
   },
   "unsere": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Besitzanzeigendes Wort für Dinge, die zu „wir“ gehören; zum Beispiel „unsere Schule“."
   },
-  "unserunten": {
-    "type": "verb"
+  "unser": {
+    "type": "pronoun",
+    "definition": "Besitzanzeigendes Wort für Dinge, die zu „wir“ gehören; zum Beispiel „unser Haus“."
   },
   "unten": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "An einer niedrigen Stelle; nicht oben."
   },
   "unter": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Tiefer als etwas; an einer Stelle unterhalb."
   },
   "Unterricht": {
     "type": "noun",
@@ -2858,7 +3160,8 @@
     "definition": "Das Lehren und Lernen in der Schule."
   },
   "unterschreiben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Seinen Namen unter ein Dokument schreiben."
   },
   "Unterschrift": {
     "type": "noun",
@@ -2879,10 +3182,12 @@
     "definition": "Eine erwachsene Person männlichen Geschlechts, die ein Kind hat."
   },
   "verboten": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Nicht erlaubt."
   },
   "verdienen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Geld für eine Arbeit erhalten."
   },
   "Verein": {
     "type": "noun",
@@ -2891,10 +3196,12 @@
     "definition": "Eine organisierte Gruppe mit gemeinsamem Ziel."
   },
   "verheiratet": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Im Zustand der Ehe; mit einem Ehepartner."
   },
   "verkaufen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas gegen Geld an jemanden abgeben."
   },
   "Verkäufer": {
     "type": "noun",
@@ -2903,7 +3210,8 @@
     "definition": "Eine Person, die in einem Geschäft Waren verkauft."
   },
   "vermieten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas gegen Geld für eine Zeit überlassen."
   },
   "Vermieter": {
     "type": "noun",
@@ -2912,7 +3220,8 @@
     "definition": "Eine Person, die eine Wohnung vermietet."
   },
   "verstehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Den Sinn von etwas erfassen; hören und begreifen."
   },
   "Verwandte": {
     "type": "noun",
@@ -2921,16 +3230,20 @@
     "definition": "Eine Person aus der gleichen Familie."
   },
   "viel": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Eine große Menge oder Anzahl."
   },
   "vielleicht": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Möglicherweise; es kann sein."
   },
   "von": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Bezeichnet die Herkunft oder den Ausgangspunkt."
   },
   "vor": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Räumlich oder zeitlich vor etwas; früher als etwas."
   },
   "Vorname": {
     "type": "noun",
@@ -2945,7 +3258,8 @@
     "definition": "Ein Ausruf, der zur Achtsamkeit auffordert."
   },
   "vorstellen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich oder jemanden bekannt machen; auch: etwas präsentieren."
   },
   "Vorwahl": {
     "type": "noun",
@@ -2954,22 +3268,28 @@
     "definition": "Die Ziffernfolge vor einer Telefonnummer."
   },
   "wandern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Weite Strecken zu Fuß in der Natur gehen."
   },
   "wann": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Fragt nach dem Zeitpunkt."
   },
   "warten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Bis zu einem Zeitpunkt bleiben, an dem etwas geschieht."
   },
   "warum": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Fragt nach dem Grund."
   },
   "was": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Fragt nach einer Sache oder einem Sachverhalt."
   },
   "waschen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit Wasser und meist Seife reinigen."
   },
   "Wasser": {
     "type": "noun",
@@ -2984,10 +3304,12 @@
     "definition": "Eine Strecke oder Route von einem Ort zum anderen."
   },
   "weh": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Schmerzend; von Schmerz begleitet."
   },
   "weiblich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Zum weiblichen Geschlecht gehörend."
   },
   "Wein": {
     "type": "noun",
@@ -2996,19 +3318,24 @@
     "definition": "Ein alkoholisches Getränk aus Weintrauben."
   },
   "weit": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Von großer Entfernung oder Ausdehnung; nicht nah."
   },
   "weiter": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Noch mehr; über den bisherigen Punkt hinaus."
   },
   "wenig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Eine kleine Menge oder Anzahl."
   },
   "wer": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Fragt nach einer Person."
   },
   "werden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich verändern; in einen neuen Zustand kommen."
   },
   "Wetter": {
     "type": "noun",
@@ -3017,13 +3344,16 @@
     "definition": "Der Zustand der Atmosphäre, zum Beispiel Regen oder Sonne."
   },
   "wichtig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Von großer Bedeutung; nicht unwichtig."
   },
   "wie": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Fragt nach der Art und Weise; auch: zum Vergleich."
   },
   "wiederholen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas noch einmal sagen oder tun."
   },
   "Wiederhören": {
     "type": "noun",
@@ -3038,7 +3368,8 @@
     "definition": "Ein Grußwort beim Abschied."
   },
   "willkommen": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Gern gesehen; freundlich aufgenommen."
   },
   "Wind": {
     "type": "noun",
@@ -3047,13 +3378,16 @@
     "definition": "Bewegte Luft."
   },
   "wir": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Pronomen für die sprechende Person und mindestens eine weitere Person."
   },
   "wissen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Kenntnis von etwas haben; sich über etwas sicher sein."
   },
   "wo": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Fragt nach einem Ort."
   },
   "Woche": {
     "type": "noun",
@@ -3062,13 +3396,16 @@
     "definition": "Ein Zeitabschnitt von sieben Tagen."
   },
   "woher": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Fragt nach der Herkunft oder dem Ausgangsort."
   },
   "wohin": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Fragt nach dem Ziel oder der Richtung."
   },
   "wohnen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "An einem Ort leben und dort zu Hause sein."
   },
   "Wohnung": {
     "type": "noun",
@@ -3077,7 +3414,8 @@
     "definition": "Ein Raum oder mehrere Räume zum Wohnen."
   },
   "wollen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas tun möchten; einen festen Wunsch haben."
   },
   "Wort": {
     "type": "noun",
@@ -3086,13 +3424,16 @@
     "definition": "Eine einzelne sprachliche Einheit."
   },
   "wunderbar": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Sehr schön; so gut, dass es wie ein Wunder wirkt."
   },
   "zahlen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Geld für etwas geben."
   },
   "zeigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem etwas sehen lassen."
   },
   "Zeit": {
     "type": "noun",
@@ -3125,10 +3466,12 @@
     "definition": "Die Abgabe beim Grenzübertritt oder die Behörde dafür."
   },
   "zu": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "In Richtung auf etwas; zum Beispiel „zu dir gehen“."
   },
   "zufrieden": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Mit etwas einverstanden; ohne Grund zur Klage."
   },
   "Zug": {
     "type": "noun",
@@ -3137,18 +3480,23 @@
     "definition": "Ein Fahrzeug auf Schienen für viele Fahrgäste."
   },
   "zum": {
-    "type": "preposition"
+    "type": "preposition",
+    "definition": "Kurzform von „zu dem“; zum Beispiel „zum Bahnhof“."
   },
   "zurück": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Wieder an den Ausgangspunkt."
   },
   "zurzeit": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Im Moment; aktuell."
   },
   "zusammen": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Gemeinsam; mit anderen zusammen."
   },
   "zwischen": {
-    "type": "verb"
+    "type": "preposition",
+    "definition": "In der Mitte von zwei Dingen oder Personen."
   }
 }
