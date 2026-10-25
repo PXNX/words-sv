@@ -4,22 +4,90 @@ import { normalizeReviewProgress, prioritizeLearningWords, updateReviewProgress 
 import { lookupReadingWord, tokenizeReadingText } from '../src/lib/story/readingWords.ts';
 
 describe('reading words', () => {
-	it('splits text into words and keeps every character', () => {
+	/**
+	 * @param {string} text
+	 * @param {string} word
+	 */
+	function contextFor(text, word) {
+		const token = tokenizeReadingText(text).find((entry) => entry.text === word);
+		if (!token) throw new Error(`missing token ${word}`);
+		return { text, start: token.start, end: token.end };
+	}
+
+	it('splits text into words and keeps every character and offset', () => {
 		const text = 'Anna kauft Brot, Käse und Milch.';
 		const tokens = tokenizeReadingText(text);
 		expect(tokens.filter((token) => token.word).map((token) => token.text)).toEqual(['Anna', 'kauft', 'Brot', 'Käse', 'und', 'Milch']);
 		expect(tokens.map((token) => token.text).join('')).toBe(text);
+		for (const token of tokens) expect(text.slice(token.start, token.end)).toBe(token.text);
 	});
 
-	it('finds a noun with its article and the three case forms', () => {
-		const info = lookupReadingWord('de', 'Wohnungen');
-		expect(info).toMatchObject({ word: 'WOHNUNG', spelling: 'Wohnung', article: 'die', gender: 'feminine', type: 'noun' });
+	it('finds a noun with its article and all four case forms', () => {
+		const info = lookupReadingWord('de', 'Wohnung');
+		expect(info).toMatchObject({ word: 'WOHNUNG', spelling: 'Wohnung', article: 'die', gender: 'feminine', type: 'noun', number: 'singular' });
 		expect(info?.definition).toContain('Räume');
 		expect(info?.cases.map((entry) => `${entry.grammarCase}:${entry.article} ${entry.form}`)).toEqual([
 			'nominative:die Wohnung',
-			'accusative:die Wohnung',
-			'dative:der Wohnung'
+			'genitive:der Wohnung',
+			'dative:der Wohnung',
+			'accusative:die Wohnung'
 		]);
+	});
+
+	it('adds the genitive singular for masculine and neuter nouns', () => {
+		const info = lookupReadingWord('de', 'Haus');
+		expect(info?.cases.map((entry) => `${entry.grammarCase}:${entry.article} ${entry.form}`)).toEqual([
+			'nominative:das Haus',
+			'genitive:des Hauses',
+			'dative:dem Haus',
+			'accusative:das Haus'
+		]);
+	});
+
+	it('keeps the plural of the tapped token instead of showing the singular', () => {
+		const info = lookupReadingWord('de', 'Wohnungen');
+		expect(info).toMatchObject({ word: 'WOHNUNG', spelling: 'Wohnung', article: 'die', number: 'plural', plural: 'Wohnungen' });
+		expect(info?.display).toBe('die Wohnungen');
+		expect(info?.cases.map((entry) => `${entry.grammarCase}:${entry.article} ${entry.form}`)).toEqual([
+			'nominative:die Wohnungen',
+			'genitive:der Wohnungen',
+			'dative:den Wohnungen',
+			'accusative:die Wohnungen'
+		]);
+	});
+
+	it('rebuilds an umlaut plural from a dative plural token', () => {
+		const text = 'Sie spielt mit den Kindern.';
+		const info = lookupReadingWord('de', 'Kindern', contextFor(text, 'Kindern'));
+		expect(info).toMatchObject({ word: 'KIND', number: 'plural', plural: 'Kinder', currentCase: 'dative' });
+		expect(info?.cases.map((entry) => `${entry.grammarCase}:${entry.article} ${entry.form}`)).toContain('dative:den Kindern');
+	});
+
+	it('uses the determinant to tell an -s genitive from an -s plural', () => {
+		const pluralText = 'Ich sehe Autos.';
+		expect(lookupReadingWord('de', 'Autos', contextFor(pluralText, 'Autos'))).toMatchObject({ number: 'plural', plural: 'Autos' });
+
+		const genitiveText = 'Das ist das Rad des Autos.';
+		expect(lookupReadingWord('de', 'Autos', contextFor(genitiveText, 'Autos'))).toMatchObject({ number: 'singular', currentCase: 'genitive' });
+	});
+
+	it('highlights the case the word has in its sentence', () => {
+		const text = 'Die Kinder spielen im Garten.';
+		const info = lookupReadingWord('de', 'Kinder', contextFor(text, 'Kinder'));
+		expect(info).toMatchObject({ number: 'plural', currentCase: 'nominative' });
+	});
+
+	it('treats weak nouns as singular after a singular article', () => {
+		const text = 'Das ist das Haus des Kollegen.';
+		const info = lookupReadingWord('de', 'Kollegen', contextFor(text, 'Kollegen'));
+		expect(info).toMatchObject({ word: 'KOLLEGE', number: 'singular', currentCase: 'genitive' });
+		expect(info?.cases.map((entry) => `${entry.grammarCase}:${entry.article} ${entry.form}`)).toContain('genitive:des Kollegen');
+	});
+
+	it('shows plural-only nouns in the plural', () => {
+		const info = lookupReadingWord('de', 'Eltern');
+		expect(info).toMatchObject({ word: 'ELTERN', number: 'plural', display: 'die Eltern' });
+		expect(info?.cases.map((entry) => `${entry.grammarCase}:${entry.article} ${entry.form}`)).toContain('dative:den Eltern');
 	});
 
 	it('resolves conjugated, past and participle verb forms', () => {

@@ -53,8 +53,12 @@
     close: m.reading_word_close({}, { locale: settings.interfaceLocale }),
     explain: m.explain({}, { locale: settings.interfaceLocale }),
     nominative: m.reading_word_case_nominative({}, { locale: settings.interfaceLocale }),
+    genitive: m.reading_word_case_genitive({}, { locale: settings.interfaceLocale }),
     accusative: m.reading_word_case_accusative({}, { locale: settings.interfaceLocale }),
-    dative: m.reading_word_case_dative({}, { locale: settings.interfaceLocale })
+    dative: m.reading_word_case_dative({}, { locale: settings.interfaceLocale }),
+    singular: m.reading_word_singular({}, { locale: settings.interfaceLocale }),
+    plural: m.reading_word_plural({}, { locale: settings.interfaceLocale }),
+    currentCase: m.reading_word_current_case({}, { locale: settings.interfaceLocale })
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   const name = $derived(settings.firstName);
@@ -112,6 +116,7 @@
 
   function caseLabel(grammarCase: ReadingWordInfo['cases'][number]['grammarCase']) {
     if (grammarCase === 'nominative') return labels.nominative;
+    if (grammarCase === 'genitive') return labels.genitive;
     if (grammarCase === 'accusative') return labels.accusative;
     return labels.dative;
   }
@@ -209,7 +214,7 @@
 <svelte:window onkeydown={handleKeydown} />
 
 {#snippet readingWords(text: string)}
-  {#each tokenizeReadingText(text) as token, index (index)}{@const info = token.word ? lookupReadingWord(settings.lang, token.text) : null}{#if info}<button type="button" class="reading-word" class:marked={markedWords.has(info.word)} onclick={(event) => void openWord(info, event.currentTarget)}>{token.text}</button>{:else}{token.text}{/if}{/each}
+  {#each tokenizeReadingText(text) as token, index (index)}{@const info = token.word ? lookupReadingWord(settings.lang, token.text, { text, start: token.start, end: token.end }) : null}{#if info}<button type="button" class="reading-word" class:marked={markedWords.has(info.word)} onclick={(event) => void openWord(info, event.currentTarget)}>{token.text}</button>{:else}{token.text}{/if}{/each}
 {/snippet}
 
 <svelte:head>
@@ -306,8 +311,8 @@
     <div class="word-sheet" role="dialog" aria-modal="true" aria-labelledby="word-sheet-title">
       <header>
         <div class="word-sheet-heading">
-          <p>{typeLabel(selected.type)}{#if genderLabel(selected.gender)} · {genderLabel(selected.gender)}{/if}</p>
-          <h2 id="word-sheet-title" lang={settings.lang}>{selected.article ? `${selected.article} ${selected.spelling}` : selected.spelling}</h2>
+          <p>{typeLabel(selected.type)}{#if genderLabel(selected.gender)} · {genderLabel(selected.gender)}{/if}{#if selected.type === 'noun'} · {selected.number === 'plural' ? labels.plural : labels.singular}{/if}</p>
+          <h2 id="word-sheet-title" lang={settings.lang}>{selected.display}</h2>
         </div>
         <button type="button" class="word-sheet-close" bind:this={closeButton} aria-label={labels.close} onclick={closeWord}><IconClose aria-hidden="true" /></button>
       </header>
@@ -322,8 +327,11 @@
           <h3>{labels.cases}</h3>
           <dl class="word-sheet-cases">
             {#each selected.cases as entry (entry.grammarCase)}
-              <div>
-                <dt>{caseLabel(entry.grammarCase)}</dt>
+              <div class:current={selected.currentCase === entry.grammarCase}>
+                <dt>
+                  {caseLabel(entry.grammarCase)}
+                  {#if selected.currentCase === entry.grammarCase}<small>{labels.currentCase}</small>{/if}
+                </dt>
                 <dd lang={settings.lang}>{entry.article} {entry.form}</dd>
               </div>
             {/each}
@@ -408,7 +416,10 @@
   .word-sheet-block p { margin:0;color:#243449;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;line-height:1.6; }
   .word-sheet-cases { display:grid;gap:.28rem;margin:0; }
   .word-sheet-cases div { display:flex;align-items:baseline;justify-content:space-between;gap:.6rem;padding:.34rem .55rem;border:1px solid rgba(23,42,69,.13);border-radius:.5rem;background:#fbf7ee; }
-  .word-sheet-cases dt { color:#596477;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:800; }
+  .word-sheet-cases div.current { border-color:#e6a527;background:#f7e2b0; }
+  .word-sheet-cases dt { display:flex;align-items:center;gap:.35rem;color:#596477;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:800; }
+  .word-sheet-cases div.current dt { color:#172a45;font-weight:900; }
+  .word-sheet-cases dt small { padding:.12rem .34rem;border-radius:999px;background:#e6a527;color:#172a45;font-size:.5rem;font-weight:900;letter-spacing:.01em; }
   .word-sheet-cases dd { margin:0;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:900; }
   .word-sheet-actions { display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;padding-top:.15rem; }
   .word-sheet-mark { flex:1 1 12rem;min-height:2.4rem;font-size:.66rem; }
@@ -453,4 +464,7 @@
   :global(html.dark) .word-sheet-block p { color:rgba(255,253,247,.9); }
   :global(html.dark) .word-sheet-close { border-color:rgba(255,253,247,.24);background:rgba(255,253,247,.08);color:#fffdf7; }
   :global(html.dark) .word-sheet-cases div { border-color:rgba(255,253,247,.14);background:rgba(255,253,247,.06); }
+  :global(html.dark) .word-sheet-cases div.current { border-color:#e6a527;background:rgba(230,165,39,.18); }
+  :global(html.dark) .word-sheet-cases div.current dt { color:#fffdf7; }
+  :global(html.dark) .word-sheet-cases dt small { background:#e6a527;color:#152b47; }
 </style>
