@@ -3,13 +3,14 @@
 	import type { Path } from '$app/types';
 	import { resolve } from '$app/paths';
 	import { goto, onNavigate } from '$app/navigation';
-	import { page } from '$app/state';
+	import { page, updated } from '$app/state';
 	import { onMount } from 'svelte';
 	import { getTextDirection, locales, localizeHref, setLocale } from '#lib/paraglide/runtime.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { settings } from '#lib/state/settings.svelte.js';
 	import StartupLoader from '#lib/StartupLoader.svelte';
 	import { pwaInstall } from '#lib/pwaInstall.svelte.js';
+	import { autoUpdateOnStart } from '#lib/pwaUpdate.js';
 	import { prepareNatural } from '#lib/story/naturalVoices.svelte.js';
 	import { pageTitle } from '#lib/seo.js';
 	import IconHome from '~icons/material-symbols/home-rounded';
@@ -57,6 +58,8 @@
 	});
 
 	onMount(() => {
+		void autoUpdateOnStart();
+		void updated.check();
 		pwaInstall.init();
 		hydrated = true;
 		const blockGesture = (event: Event) => event.preventDefault();

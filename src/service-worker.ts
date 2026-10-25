@@ -3,7 +3,8 @@
  * WordCircle service worker, built and registered by SvelteKit (served as /service-worker.js).
  * It caches this build's files so the app opens offline, keeps the previous build's cache until the
  * new version takes over (so an open tab never loses code it still needs), and shows streak
- * reminder notifications.
+ * reminder notifications. Navigations go to the network first, so a refresh never gets stuck on an
+ * older build's cached HTML.
  */
 import { self } from '$app/service-worker';
 import { assets, immutable, routes } from '$app/manifest';
@@ -61,24 +62,32 @@ self.addEventListener('fetch', (event) => {
 	event.respondWith(
 		(async () => {
 			const cache = await caches.open(CACHE);
-			// Pages, build output and static files never change within a version: serve them straight from the
+			// Build output and static files never change within a version: serve them straight from the
 			// cache, so the app opens instantly and never waits on a missing or flaky connection. A new
 			// deployment arrives as a new worker with its own cache (see UpdateAppHint).
-			// A navigation that is not in this build's cache belongs to a newer build (for example a route
-			// added after this worker was installed). Fetch it instead of falling back to the app shell;
-			// otherwise an old worker keeps showing the home page for the new route.
+			//
+			// Navigations are different: they must show the latest deployment even while the previous
+			// worker is still active. The HTML is therefore fetched from the network first and only falls
+			// back to this build's cached page (or the app shell) when offline. Newer HTML references
+			// hashed assets that are not in this build's cache, so those are fetched normally as well.
 			if (request.mode === 'navigate') {
-				const cached = await cache.match(pageKey(url.pathname));
-				if (cached) return cached;
-			} else if (precached.has(url.pathname)) {
+				try {
+					return await fetch(request);
+				} catch (error) {
+					const fallback = await cache.match(pageKey(url.pathname)) ?? await cache.match(SHELL);
+					if (fallback) return fallback;
+					throw error;
+				}
+			}
+			if (precached.has(url.pathname)) {
 				const cached = await cache.match(url.pathname);
 				if (cached) return cached;
 			}
 			try {
 				return await fetch(request);
 			} catch (error) {
-				// Offline and not precached: pages fall back to the app shell, everything else to whatever was cached.
-				const fallback = await cache.match(request.mode === 'navigate' ? SHELL : request);
+				// Offline and not precached: serve whatever this build has cached.
+				const fallback = await cache.match(request);
 				if (fallback) return fallback;
 				throw error;
 			}

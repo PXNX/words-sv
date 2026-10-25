@@ -1,13 +1,14 @@
 <!--
-  A small dismissible nudge to reload when a new version has been deployed. An installed app can stay
-  open (or be resumed) for days and would otherwise keep running the old build. SvelteKit flags a new
-  deployment when the app regains focus and on a poll interval (see vite.config.ts). Only shown on the
-  home screen, because reloading mid-game would lose the round.
+  A small dismissible nudge to reload when a new version has been deployed. Startup checks for and
+  installs a waiting build before play begins; this hint covers updates that arrive while the app is
+  already open. SvelteKit flags a new deployment when the app regains focus and on a poll interval
+  (see vite.config.ts). Only shown on the home screen, because reloading mid-game would lose the round.
 -->
 <script lang="ts">
   import { updated } from '$app/state';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
+  import { takeOverUpdate } from '#lib/pwaUpdate.js';
   import IconRefresh from '~icons/material-symbols/refresh-rounded';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
 
@@ -20,28 +21,9 @@
     later: m.update_app_dismiss({}, { locale: settings.interfaceLocale })
   });
 
-  // Let the new service worker finish caching the new build, then hand it control and reload, so the
-  // reload is served the new version. The worker never takes over on its own: an open tab keeps the
-  // old build's files until the learner chooses to update.
   async function update() {
     updating = true;
-    const registration = await navigator.serviceWorker?.getRegistration().catch(() => undefined);
-    if (registration) {
-      await registration.update().catch(() => {});
-      const incoming = registration.installing;
-      if (incoming) await new Promise<void>((resolve) => {
-        incoming.addEventListener('statechange', () => { if (incoming.state !== 'installing') resolve(); });
-        window.setTimeout(resolve, 8000);
-      });
-      if (registration.waiting) {
-        await new Promise<void>((resolve) => {
-          navigator.serviceWorker.addEventListener('controllerchange', () => resolve(), { once: true });
-          registration.waiting?.postMessage({ type: 'SKIP_WAITING' });
-          window.setTimeout(resolve, 4000);
-        });
-      }
-    }
-    location.reload();
+    await takeOverUpdate();
   }
 </script>
 
