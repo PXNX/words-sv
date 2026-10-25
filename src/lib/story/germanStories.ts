@@ -1747,5 +1747,31 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Wie viel kostet der Friseurbesuch?'), options: [german('Achtundvierzig Euro'), german('Acht Euro'), german('Vierzig Euro')] },
       { kind: 'question', prompt: german('Wie lange dauert der Haarschnitt?'), options: [german('Eine halbe Stunde'), german('Eine Stunde'), german('Zwei Stunden')] }
     ]
+  },
+  {
+    id: 'a2-library',
+    level: 'a2',
+    scene: 'home',
+    cast: ['mia', 'leo'],
+    languages: ['de'],
+    title: german('In der Bibliothek'),
+    beats: [
+      { kind: 'narration', text: german('Leo und Mia sind in der Bibliothek. Sie suchen Bücher für die Schule.') },
+      { kind: 'line', speaker: 'leo', text: german('Guten Tag! Wir suchen ein Buch über Geschichte. Können Sie uns helfen?') },
+      { kind: 'line', speaker: 'mia', text: german('Und ich brauche ein Wörterbuch für Deutsch.') },
+      { kind: 'line', speaker: 'leo', text: german('Hallo {name}! Weißt du, wo die Geschichtsbücher stehen?') },
+      { kind: 'reply', to: 'leo', options: [
+        german('Ja, in der dritten Regalreihe links.'),
+        german('Die Bücher fliegen im Kreis.'),
+        german('Ich lese nur Comics im Bett.')
+      ] },
+      { kind: 'narration', text: german('Mia leiht sich ein Buch aus und leiht einen Ausweis vor.') },
+      { kind: 'line', speaker: 'mia', text: german('Ich kann das Buch vier Wochen behalten. Dann muss ich es zurückgeben.') },
+      { kind: 'line', speaker: 'leo', text: german('Und ich nehme noch einen Roman mit. Lesen macht Spaß!') },
+      { kind: 'question', prompt: german('Wo sind Leo und Mia?'), options: [german('In der Bibliothek'), german('Im Kino'), german('Im Schwimmbad')] },
+      { kind: 'question', prompt: german('Was sucht Mia?'), options: [german('Ein Wörterbuch für Deutsch'), german('Ein Kochbuch'), german('Ein Bilderbuch')] },
+      { kind: 'question', prompt: german('Wie lange kann Mia das Buch behalten?'), options: [german('Vier Wochen'), german('Ein Tag'), german('Ein Jahr')] },
+      { kind: 'question', prompt: german('Wo stehen die Geschichtsbücher?'), options: [german('In der dritten Regalreihe links'), german('Im Keller'), german('Auf dem Dach')] }
+    ]
   }
 ];
