@@ -29,7 +29,6 @@
 
   const COMPLETED_KEY = 'wordcircle-story-completed-v1';
   const AUTO_READ_KEY = 'wordcircle-story-auto-read-v1';
-  const READING_KEY = 'wordcircle-story-reading-v1';
   const PROGRESS_KEY = 'wordcircle-story-progress-v2';
   type SavedProgress = {
     fingerprint: string;
@@ -39,7 +38,6 @@
     wrong: Record<number, number[]>;
     solved: Record<number, true>;
     orders: number[][];
-    reading: boolean;
     audioDone: number;
     savedAt: number;
   };
@@ -67,7 +65,6 @@
         wrong: parsed.wrong ?? {},
         solved: parsed.solved ?? {},
         orders,
-        reading: Boolean(parsed.reading),
         // Older saves have no audio progress; the story then prepares from the beginning.
         audioDone: Math.max(0, Math.min(story.beats.length, Number(parsed.audioDone) || 0)),
         savedAt: Number(parsed.savedAt) || 0
@@ -91,7 +88,6 @@
         wrong,
         solved,
         orders,
-        reading,
         audioDone,
         savedAt: Date.now()
       };
@@ -142,9 +138,7 @@
     forYou: m.story_for_you({}, { locale: settings.interfaceLocale }),
     practiceWords: m.story_practice_words({}, { locale: settings.interfaceLocale }),
     petLilith: m.pet_lilith({}, { locale: settings.interfaceLocale }),
-    autoRead: m.story_auto_read({}, { locale: settings.interfaceLocale }),
-    readingMode: m.story_reading_mode({}, { locale: settings.interfaceLocale }),
-    readingHint: m.story_reading_mode_hint({}, { locale: settings.interfaceLocale })
+    autoRead: m.story_auto_read({}, { locale: settings.interfaceLocale })
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
 
@@ -171,8 +165,6 @@
   let stopNatural: () => void = () => {};
   // Stories are read aloud unless the learner has switched it off.
   let autoRead = $state(typeof localStorage === 'undefined' || localStorage.getItem(AUTO_READ_KEY) !== 'off');
-  // Reading mode shows the whole story at once, with every question in place, and reads nothing aloud.
-  let reading = $state(typeof localStorage !== 'undefined' && localStorage.getItem(READING_KEY) === 'on');
   let reaction = $state<{ who: CharacterId | 'all'; mood: Mood } | null>(null);
   let petted = $state(false);
   let hearts = $state(0);
@@ -215,10 +207,6 @@
   const speaker = $derived(lipSync.speaker ?? lineSpeaker);
   const interactiveIndices = $derived(story ? story.beats.flatMap((beat, index) => (isInteractive(beat) ? [index] : [])) : []);
   const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.length).length);
-  const answered = $derived(interactiveIndices.filter((index) => solved[index]).length);
-  // In reading mode the story is complete once every question has been answered; there is no Continue.
-  const readingFinished = $derived(reading && Boolean(story) && interactiveIndices.every((index) => solved[index]));
-  const readingProgress = $derived(m.story_reading_progress({ answered: String(answered), total: String(interactiveIndices.length) }, { locale: settings.interfaceLocale }));
   const ballThrown = $derived(Boolean(story?.beats.slice(0, revealed).some((beat) => beat.kind === 'narration' && beat.prop === 'ball')));
   const lilithHappy = $derived(Boolean(story?.cast.includes('lilith')) && castMood('lilith') === 'happy');
   const purring = $derived(current ? [beatSounds(current).start, beatSounds(current).slot].includes('purr') : false);
@@ -318,17 +306,13 @@
     written = next;
     const playthrough = withWeather(withDetails(next));
     story = playthrough;
-    revealed = reading ? playthrough.beats.length : 1;
+    revealed = 1;
     wrong = {};
     solved = {};
     orders = playthrough.beats.map((beat) => (isInteractive(beat) ? shuffledOrder(beat.options.length) : []));
     reaction = null;
     audioDone = 0;
     audioTotal = playthrough.beats.length;
-    if (reading) {
-      audioReady = true;
-      return;
-    }
     if (settings.voiceQuality === 'natural' && naturalSupported()) {
       audioReady = false;
       void prepareAndPresent(playthrough, castFor(playthrough), settings.lang, preparation, thisRun);
@@ -345,8 +329,7 @@
     const thisRun = ++run;
     written = progress.written;
     story = progress.story;
-    reading = progress.reading;
-    revealed = progress.reading ? progress.story.beats.length : progress.revealed;
+    revealed = progress.revealed;
     wrong = progress.wrong;
     solved = progress.solved;
     orders = progress.orders;
@@ -354,7 +337,7 @@
     const total = progress.story.beats.length;
     audioTotal = total;
     audioDone = Math.min(progress.audioDone, total);
-    const resume = !progress.reading && settings.voiceQuality === 'natural' && naturalSupported() && audioDone < total;
+    const resume = settings.voiceQuality === 'natural' && naturalSupported() && audioDone < total;
     audioReady = !resume;
     if (resume) {
       const preparation = ++audioPreparation;
@@ -411,11 +394,6 @@
     if (autoRead && current) readBeat(current, currentIndex);
     else if (!autoRead) cancelSpeech();
   }
-  function toggleReading() {
-    reading = !reading;
-    localStorage.setItem(READING_KEY, reading ? 'on' : 'off');
-    start(written ?? pickStory());
-  }
   // Faces in the scene: whoever is talking shows the line's mood, a loud sound startles everyone,
   // and answering makes the character you talk to (or the whole cast) react.
   function castMood(member: CharacterId): Mood {
@@ -471,7 +449,7 @@
     return candidates[Math.floor(Math.random() * candidates.length)];
   }
   function advance() {
-    if (reading || !story || awaitingAnswer || revealed >= story.beats.length) return;
+    if (!story || awaitingAnswer || revealed >= story.beats.length) return;
     revealed += 1;
     reaction = null;
     presentBeat(story.beats[revealed - 1], revealed - 1);
@@ -481,8 +459,7 @@
     if (!story) return;
     const beat = story.beats[index];
     if (!isInteractive(beat)) return;
-    if (!reading && !awaitingAnswer) return;
-    if (reading && solved[index]) return;
+    if (!awaitingAnswer) return;
     const who = beat.kind === 'reply' ? beat.to : 'all';
     reaction = { who, mood: option === 0 ? 'happy' : 'curious' };
     if (option === 0) {
@@ -490,9 +467,7 @@
       solved = { ...solved, [index]: true };
       if (settings.sound) cancelSpeech();
       playSuccessSound(settings.sound, 'vocab');
-      const allAnswered = interactiveIndices.every((candidate) => candidate === index || solved[candidate]);
-      if ((reading ? allAnswered : revealed === story.beats.length) && !story.generated) markCompleted(story.id);
-      if (reading) return;
+      if (revealed === story.beats.length && !story.generated) markCompleted(story.id);
       void continueAfter(beat);
       return;
     }
@@ -774,7 +749,6 @@
     wrong;
     solved;
     orders;
-    reading;
     if (!story) return;
     untrack(saveProgress);
   });
@@ -837,11 +811,10 @@
 
 {#if story && audioReady}
   <section class="story-view" aria-label={labels.title}>
-    {#if speechSupported && !reading}<button type="button" class="btn-play btn-play-round story-auto-read" class:btn-play-ink={autoRead} onclick={toggleAutoRead} aria-pressed={autoRead} aria-label={labels.autoRead} title={labels.autoRead}>{#if autoRead}<IconVolume aria-hidden="true" />{:else}<IconVolumeOff aria-hidden="true" />{/if}</button>{/if}
+    {#if speechSupported}<button type="button" class="btn-play btn-play-round story-auto-read" class:btn-play-ink={autoRead} onclick={toggleAutoRead} aria-pressed={autoRead} aria-label={labels.autoRead} title={labels.autoRead}>{#if autoRead}<IconVolume aria-hidden="true" />{:else}<IconVolumeOff aria-hidden="true" />{/if}</button>{/if}
     <header class="story-header" dir={interfaceDirection} lang={settings.interfaceLocale}>
       <p>{story.generated ? labels.forYou : labels.title} · {story.level.toUpperCase()}</p>
       <h1 lang={lang}>{story.title[lang]}</h1>
-      <button type="button" class="story-reading-toggle" class:active={reading} onclick={toggleReading} aria-pressed={reading} aria-label={labels.readingHint} title={labels.readingHint} dir={interfaceDirection} lang={settings.interfaceLocale}>{labels.readingMode}</button>
     </header>
 
     <div class="story-stage">
@@ -875,60 +848,6 @@
       {/if}
     </div>
 
-    {#if reading}
-      <ol class="story-transcript story-transcript--reading" lang={lang}>
-        {#each story.beats as beat, index (index)}
-          {#if beat.kind === 'narration'}
-            <li class="story-narration" class:story-announcement={beat.announcement}>
-              {#if beat.announcement}<IconAnnouncement class="story-announcement-icon" aria-hidden="true" />{/if}
-              <p>{say(beat.text[lang])}</p>
-            </li>
-          {:else if beat.kind === 'line'}
-            <li class="story-line">
-              <span class="story-avatar" aria-hidden="true"><StoryCharacter id={beat.speaker} mood={moodFor(beat)} still /></span>
-              <div class="story-bubble">
-                <b>{characterNames[beat.speaker][lang]}</b>
-                <p>{say(beat.text[lang])}</p>
-              </div>
-            </li>
-          {:else if beat.kind === 'question'}
-            <li class="story-question story-question--reading" class:solved={solved[index]}>
-              <span class="story-question-badge" aria-hidden="true"><IconQuestion /></span>
-              <div>
-                <p>{say(beat.prompt[lang])}</p>
-                {#if solved[index]}
-                  <span class="story-answer"><IconCheck aria-hidden="true" />{say(beat.options[0][lang])}</span>
-                {:else}
-                  <div class="story-options story-options--reading">
-                    {#each orders[index] ?? [] as option (option)}
-                      {@const missed = wrong[index]?.includes(option)}
-                      <button type="button" class="btn-play btn-play-choice" class:missed disabled={missed} onclick={() => choose(option, index)}>{say(beat.options[option][lang])}{#if missed}<IconClose aria-hidden="true" />{/if}</button>
-                    {/each}
-                  </div>
-                {/if}
-              </div>
-            </li>
-          {:else if beat.kind === 'reply'}
-            <li class="story-line story-line--you story-reply--reading">
-              <div class="story-bubble">
-                <b>{name}</b>
-                {#if solved[index]}
-                  <p>{say(beat.options[0][lang])}</p>
-                {:else}
-                  <p class="story-reply-question" dir={interfaceDirection} lang={settings.interfaceLocale}>{labels.reply}</p>
-                  <div class="story-options story-options--reading">
-                    {#each orders[index] ?? [] as option (option)}
-                      {@const missed = wrong[index]?.includes(option)}
-                      <button type="button" class="btn-play btn-play-choice" class:missed disabled={missed} onclick={() => choose(option, index)}>{say(beat.options[option][lang])}{#if missed}<IconClose aria-hidden="true" />{/if}</button>
-                    {/each}
-                  </div>
-                {/if}
-              </div>
-            </li>
-          {/if}
-        {/each}
-      </ol>
-    {:else}
     <ol class="story-transcript" bind:this={transcript} lang={lang} aria-live="polite">
       {#each story.beats.slice(0, revealed) as beat, index (index)}
         {#if beat.kind === 'narration'}
@@ -970,24 +889,9 @@
         {/if}
       {/each}
     </ol>
-    {/if}
 
     <footer class="story-footer">
-      {#if reading}
-        {#if readingFinished}
-          <div class="story-finished" dir={interfaceDirection} lang={settings.interfaceLocale}>
-            <strong>{labels.finished}</strong>
-            {#if interactiveIndices.length}<span>{m.story_score({ correct: String(firstTry), total: String(interactiveIndices.length) }, { locale: settings.interfaceLocale })}</span>{/if}
-            <div>
-              <button type="button" class="btn-play story-secondary" onclick={() => written && start(written)}>{labels.again}</button>
-              <button type="button" class="btn-play btn-play-ink story-primary" onclick={() => start(pickStory(story?.id))}>{labels.next}</button>
-              {#if !story.generated}<button type="button" class="btn-play btn-play-sun" onclick={() => { const generated = storyForYou(); if (generated) start(generated); }}>{labels.practiceWords}</button>{/if}
-            </div>
-          </div>
-        {:else}
-          <p class="story-reading-progress" dir={interfaceDirection} lang={settings.interfaceLocale}>{readingProgress}</p>
-        {/if}
-      {:else if awaitingAnswer && isInteractive(current)}
+      {#if awaitingAnswer && isInteractive(current)}
         <p class="story-prompt" class:story-prompt--question={current.kind === 'question'}>
           {#if current.kind === 'question'}<span class="story-question-badge" aria-hidden="true"><IconQuestion /></span><span class="story-prompt-text" lang={lang}>{@render marked(say(current.prompt[lang]), currentIndex)}</span>{:else}<span dir={interfaceDirection} lang={settings.interfaceLocale}>{labels.reply}</span>{/if}
           {#if wrong[currentIndex]?.length}<span class="story-try-again" dir={interfaceDirection} lang={settings.interfaceLocale}>{labels.tryAgain}</span>{/if}
@@ -1022,15 +926,6 @@
   .story-auto-read { position:absolute;z-index:105;top:.62rem;right:.62rem; }.story-auto-read :global(svg) { width:1rem;height:1rem; }
   .story-header p { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase; }
   .story-header h1 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.55rem,7vw,2.2rem);font-weight:400;letter-spacing:-.03em;line-height:1; }
-  .story-reading-toggle { justify-self:center;margin-top:.4rem;padding:.25rem .7rem;border:1px solid rgba(23,42,69,.25);border-radius:999px;background:transparent;color:#596477;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background .15s ease,color .15s ease,box-shadow .15s ease; }
-  .story-reading-toggle.active { border-color:#172a45;background:#172a45;color:#fffdf7;box-shadow:2px 2px 0 #e6a527; }
-  .story-reading-toggle:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
-  .story-transcript--reading { gap:.75rem;padding-bottom:.8rem; }
-  .story-transcript--reading .story-question { padding:.7rem .8rem; }
-  .story-options--reading { display:flex;flex-wrap:wrap;gap:.38rem;margin-top:.4rem; }
-  .story-options--reading button { flex:1 1 10rem; }
-  .story-reply-question { margin:0 0 .15rem !important;color:#596477 !important;font-size:.6rem !important;font-weight:900 !important;letter-spacing:.05em;text-transform:uppercase; }
-  .story-reading-progress { margin:0;padding:.35rem 0;text-align:center;color:#596477;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:800; }
 
   .story-stage { position:relative;flex:none;height:clamp(9.5rem,30svh,13rem);overflow:hidden;border:1px solid rgba(23,42,69,.22);border-radius:1.15rem;box-shadow:0 8px 20px rgba(23,42,69,.08); }
   .story-cast { position:absolute;inset:auto 0 0;display:flex;align-items:flex-end;justify-content:center;gap:clamp(.4rem,4vw,1.4rem);height:88%;padding:0 .6rem; }
