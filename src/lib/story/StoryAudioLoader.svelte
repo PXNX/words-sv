@@ -1,9 +1,10 @@
 <script lang="ts">
   import type { Story } from './stories';
+  import type { VocabularyLevel } from '#lib/data/vocabulary.js';
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
 
-  let { story, label, progress }: { story: Story; label: string; progress: number } = $props();
+  let { story, title, level, label, progress }: { story: Story; title: string; level: VocabularyLevel; label: string; progress: number } = $props();
   const cast = $derived(story.cast.slice(0, 6));
   const percent = $derived(Math.round(Math.min(1, Math.max(0, progress)) * 100));
 </script>
@@ -13,10 +14,13 @@
   <span class="story-loader-wash" aria-hidden="true"></span>
   <div class="story-loader-copy">
     <span class="story-loader-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
-    <p dir="auto">{label}</p>
+    <p class="story-loader-title" dir="auto">{title}</p>
+    <p class="story-loader-level">Level {level.toUpperCase()}</p>
+    <p class="story-loader-label" dir="auto">{label}</p>
     <span class="story-loader-track" role="progressbar" aria-label={label} aria-valuemin="0" aria-valuemax="100" aria-valuenow={percent}>
       <span style:width={`${percent}%`}></span>
     </span>
+    <p class="story-loader-percent">{percent}%</p>
   </div>
   <div class="story-loader-cast" aria-hidden="true">
     {#each cast as member, index (member)}
@@ -32,6 +36,10 @@
   .story-loader-wash { position:absolute;z-index:1;inset:0;background:linear-gradient(180deg,rgba(237,228,213,.95) 0%,rgba(237,228,213,.55) 28%,rgba(237,228,213,.08) 55%,rgba(237,228,213,0) 72%,rgba(23,42,69,.14) 100%);pointer-events:none; }
   .story-loader-copy { position:relative;z-index:3;align-self:flex-start;display:grid;justify-items:center;gap:.65rem;width:min(82%,19rem);margin-top:clamp(3.8rem,13vh,6rem);padding:.95rem 1.1rem 1.05rem;border:1px solid rgba(23,42,69,.18);border-radius:1.15rem;background:rgba(255,253,247,.9);box-shadow:0 14px 38px rgba(23,42,69,.14);text-align:center;backdrop-filter:blur(7px);animation:story-loader-in .35s cubic-bezier(.23,1,.32,1); }
   .story-loader-copy p { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.15rem,5vw,1.45rem);line-height:1.15; }
+  .story-loader-title { font-size:clamp(1rem,4.4vw,1.25rem) !important; font-weight:700; }
+  .story-loader-level { font-size:clamp(.65rem,2.8vw,.78rem) !important; color:#a45e38 !important; font-family:'DM Sans',sans-serif !important; font-weight:900 !important; letter-spacing:.12em !important; text-transform:uppercase; }
+  .story-loader-label { font-size:clamp(.72rem,3.2vw,.85rem) !important; color:#596477 !important; font-style:italic !important; font-weight:600 !important; }
+  .story-loader-percent { font-size:clamp(.72rem,3.2vw,.85rem) !important; color:#a45e38 !important; font-family:'DM Sans',sans-serif !important; font-weight:900 !important; }
   .story-loader-eq { display:flex;align-items:flex-end;gap:.18rem;height:1.45rem; }
   .story-loader-eq i { width:.22rem;height:100%;border-radius:999px;background:#e6a527;transform-origin:bottom;animation:story-loader-eq .9s ease-in-out infinite alternate; }
   .story-loader-eq i:nth-child(2) { animation-delay:-.65s;animation-duration:1.05s; }

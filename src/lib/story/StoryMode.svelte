@@ -676,8 +676,8 @@
 {/snippet}
 
 {#if story && !audioReady}
-  <StoryAudioLoader {story} label={audioLoadingLabel} progress={audioLoadingPercent / 100} />
-{/if}
+    <StoryAudioLoader {story} title={story.title[lang]} level={story.level} label={audioLoadingLabel} progress={audioLoadingPercent / 100} />
+  {/if}
 
 {#if story && audioReady}
   <section class="story-view" aria-label={labels.title}>
