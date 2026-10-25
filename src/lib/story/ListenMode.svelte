@@ -701,6 +701,9 @@
     if (token !== generation || !audio) return;
     audio.src = audioUrl;
     audio.load();
+    await tick();
+    if (token !== generation || !audio) return;
+    void audio.play().catch(() => (playing = false));
   }
   function sessionTitle(session: SavedAudio) {
     return session.stories[0]?.title ?? labels.listen;
