@@ -1,7 +1,6 @@
 import type { Language } from '#lib/data/vocabulary.js';
 import type { Mood } from './stories';
-import { animals, moodShape, priority, profiles, sharedPitch, type Speaker, type VoiceGender } from './voices';
-import { germanSpeakers, GERMAN_CAST_MODEL } from './germanSpeakers';
+import { accentShape, animals, moodShape, priority, profiles, sharedPitch, type Speaker, type VoiceGender } from './voices';
 import { speechChunks } from './speech';
 import { settings, type NaturalModel } from '#lib/state/settings.svelte.js';
 
@@ -10,19 +9,22 @@ import { settings, type NaturalModel } from '#lib/state/settings.svelte.js';
  * static/voices/piper-worker.js). Each language has one or more voice models, some of them with
  * several speakers, and every character gets a speaker of their own.
  *
- * In German the narrator is Thorsten, the clearest German voice, and the characters are drawn from
- * a model trained on 236 audiobook readers: each character gets a different real person, the one
- * whose natural pitch is closest to the character (deep for Bauer Fritz and Herr Paul, bright for Kim,
- * warm and low for Oma). Their voices are never pitched up or down, which is what made them sound
- * off. Only animals still get a cartoon pitch, and in the other languages, which have just one or
- * two speakers per gender, characters who have to share a voice are shifted a little to tell them apart.
+ * German uses a small set of clear, single-speaker models instead of the huge audiobook model:
+ * Thorsten reads the narration, and the cast is drawn from Thorsten, Karlsson (deep male), Kerstin
+ * (warm female) and Eva (bright female). The old 236-speaker model had wonderful variety but also
+ * speakers that were hard to understand; learners need every word. Characters who have to share a
+ * voice move only a few percent away from it, which keeps them clear. Only animals still get a
+ * cartoon pitch. Enzo's Italian accent is a small melodic lift, applied when dialects are on.
  */
-// `f0` is the speaker's typical pitch in Hz, measured once (see germanSpeakers.ts).
+// `f0` is the voice's typical pitch in Hz; it decides which character gets which voice.
 type NaturalVoice = { model: string; speaker?: number; f0?: number };
 type LanguageVoices = { narrator?: NaturalVoice; female: NaturalVoice[]; male: NaturalVoice[] };
 
 const THORSTEN_HIGH = 'de/de_DE/thorsten/high/de_DE-thorsten-high.onnx';
-const THORSTEN_STANDARD = 'de/de_DE/thorsten_emotional/medium/de_DE-thorsten_emotional-medium.onnx';
+const THORSTEN = 'de/de_DE/thorsten/medium/de_DE-thorsten-medium.onnx';
+const KARLSSON = 'de/de_DE/karlsson/low/de_DE-karlsson-low.onnx';
+const KERSTIN = 'de/de_DE/kerstin/low/de_DE-kerstin-low.onnx';
+const EVA = 'de/de_DE/eva_k/x_low/de_DE-eva_k-x_low.onnx';
 const CORI = 'en/en_GB/cori/high/en_GB-cori-high.onnx';
 const SERENA = 'it/it_IT/serena/high/it_IT-serena-high.onnx';
 const TETIANA = 'uk/uk_UA/tetiana/high/uk_UA-tetiana-high.onnx';
@@ -34,8 +36,14 @@ const SHARVARD = 'es/es_ES/sharvard/medium/es_ES-sharvard-medium.onnx';
 const FABER = 'pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx';
 const UKRAINIAN = 'uk/uk_UA/ukrainian_tts/medium/uk_UA-ukrainian_tts-medium.onnx';
 
-const germanFemale = germanSpeakers.female.map(([speaker, f0]) => ({ model: GERMAN_CAST_MODEL, speaker, f0 }));
-const germanMale = germanSpeakers.male.map(([speaker, f0]) => ({ model: GERMAN_CAST_MODEL, speaker, f0 }));
+const germanFemale = [
+  { model: KERSTIN, speaker: 0, f0: 186 },
+  { model: EVA, speaker: 0, f0: 212 }
+];
+const germanMale = [
+  { model: THORSTEN, speaker: 0, f0: 106 },
+  { model: KARLSSON, speaker: 0, f0: 92 }
+];
 const semanaFemale = [{ model: SEMANA, speaker: 0 }, { model: SEMANA, speaker: 3 }];
 const semanaMale = [{ model: SEMANA, speaker: 1 }, { model: SEMANA, speaker: 2 }];
 const ukrainianFemale = [{ model: UKRAINIAN, speaker: 0 }, { model: UKRAINIAN, speaker: 2 }];
@@ -79,7 +87,7 @@ const voices: Record<NaturalModel, Record<Language, LanguageVoices>> = {
   },
   standard: {
     de: {
-      narrator: { model: THORSTEN_STANDARD, speaker: 4 },
+      narrator: { model: THORSTEN, speaker: 0 },
       female: germanFemale,
       male: germanMale
     },
@@ -114,9 +122,11 @@ const voices: Record<NaturalModel, Record<Language, LanguageVoices>> = {
 };
 // Download sizes in MB, plus about 30 MB of runtime (speech engine and phonemizer) shared by all languages.
 const modelMegabytes: Record<string, number> = {
-  [GERMAN_CAST_MODEL]: 77,
-  [THORSTEN_HIGH]: 109,
-  [THORSTEN_STANDARD]: 77,
+  [THORSTEN_HIGH]: 114,
+  [THORSTEN]: 63,
+  [KARLSSON]: 63,
+  [KERSTIN]: 63,
+  [EVA]: 21,
   [CORI]: 109,
   [SEMANA]: 77,
   [UPMC]: 77,
@@ -264,10 +274,12 @@ function castNatural(cast: Speaker[], language: Language): Casting {
   for (const speaker of speakers) {
     if (speaker === 'narrator' && narrator) {
       casting.set(speaker, { voice: narrator, shared: false, borrowed: false });
+      uses.set(narrator, (uses.get(narrator) ?? 0) + 1);
       continue;
     }
     if (speaker === 'wirt' && narrator) {
       casting.set(speaker, { voice: narrator, shared: true, borrowed: false });
+      uses.set(narrator, (uses.get(narrator) ?? 0) + 1);
       continue;
     }
     const own = voices[model][language][profiles[speaker].gender];
@@ -341,12 +353,14 @@ async function synthesizeChunk(text: string, speaker: Speaker, mood: Mood, cast:
   const { voice, shared, borrowed } = castNatural(cast, language).get(speaker) ?? castNatural([speaker], language).get(speaker)!;
   const shape = moodShape[mood];
   // People keep their voice's own pitch unless they share it; animals sound like cartoon animals.
-  // A character with an age treatment (Oma) also shifts the selected speaker slightly.
+  // A character with an age treatment (Oma) also shifts the selected speaker slightly, and Enzo's
+  // Italian accent adds a light melodic lift while dialects are on.
   const agePitch = profile.natural?.pitch ?? 1;
-  const ownPitch = animals.includes(speaker) ? Math.min(1.4, Math.max(0.75, profile.pitch)) : (shared ? sharedPitch(profile.pitch) : 1) * agePitch;
-  const playbackRate = ownPitch * (borrowed ? borrowedPitch[profile.gender] : 1);
-  const rate = baseRate * (profile.natural?.rate ?? profile.rate) * shape.rate;
-  const reply = await request({ type: 'speak', model: voice.model, text, speaker: voice.speaker ?? 0, lengthScale: playbackRate / rate }, undefined, SPEAK_TIMEOUT_MS);
+  const accent = accentShape(profile.dialect, settings.dialects);
+  const ownPitch = animals.includes(speaker) ? Math.min(1.4, Math.max(0.75, profile.pitch)) : (shared ? sharedPitch(profile.pitch) : 1) * agePitch * accent.pitch;
+  const playbackRate = ownPitch * (borrowed ? Math.min(1.08, Math.max(0.95, 1 + (borrowedPitch[profile.gender] - 1) * 0.3)) : 1);
+  const rate = Math.max(0.85, Math.min(1.15, baseRate * (profile.natural?.rate ?? profile.rate) * shape.rate * accent.rate));
+  const reply = await request({ type: 'speak', model: voice.model, text, speaker: voice.speaker ?? 0, lengthScale: Math.max(0.85, Math.min(1.15, playbackRate / rate)) }, undefined, SPEAK_TIMEOUT_MS);
   const pcm = reply.pcm!;
   const buffer = audio().createBuffer(1, pcm.length, reply.sampleRate!);
   buffer.copyToChannel(pcm as Float32Array<ArrayBuffer>, 0);

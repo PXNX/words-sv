@@ -17,14 +17,15 @@ export type VoiceGender = 'female' | 'male';
 // from Germany for Berlin and the north, and a matching regional accent where the natural English
 // voices have one (Scottish for the Bavarians, Irish for the mountain farmer, London for Berlin,
 // northern English for Hamburg).
-export type Dialect = 'bavarian' | 'alpine' | 'berlin' | 'northern' | 'hessian';
+export type Dialect = 'bavarian' | 'alpine' | 'berlin' | 'northern' | 'hessian' | 'italian';
 // Natural voices usually keep their own pitch; an older character can ask for a small, deliberate
 // lowering and slowdown on top of the selected speaker.
 export type VoiceAge = { pitch?: number; rate?: number };
 export type VoiceProfile = { gender: VoiceGender; pitch: number; rate: number; volume: number; dialect?: Dialect; natural?: VoiceAge };
 // The regional locales a dialect prefers among the system voices of the language, best first.
-// Berlin and the north need nothing special: voices from Germany come first anyway.
-const dialectLocales: Record<Dialect, string[]> = { bavarian: ['de-at', 'de-ch'], alpine: ['de-ch', 'de-at'], berlin: [], northern: [], hessian: [] };
+// Berlin, the north, Hesse and Enzo's Italian have no German voice of their own: they are shaped by
+// the profile instead (Enzo gets a light melodic accent when dialects are on).
+const dialectLocales: Record<Dialect, string[]> = { bavarian: ['de-at', 'de-ch'], alpine: ['de-ch', 'de-at'], berlin: [], northern: [], hessian: [], italian: [] };
 export type Speaker = CharacterId | 'narrator' | 'announcer';
 
 export const profiles: Record<Speaker, VoiceProfile> = {
@@ -49,7 +50,7 @@ export const profiles: Record<Speaker, VoiceProfile> = {
   albert: { gender: 'male', pitch: 0.95, rate: 1.06, volume: 1, dialect: 'berlin' },
   sabine: { gender: 'female', pitch: 1, rate: 1.02, volume: 1 },
   // Enzo the pizza baker talks fast and lively; Jana rattles off her sentences like code.
-  enzo: { gender: 'male', pitch: 1.06, rate: 1.08, volume: 1 },
+  enzo: { gender: 'male', pitch: 1.06, rate: 1.08, volume: 1, dialect: 'italian' },
   jana: { gender: 'female', pitch: 1.12, rate: 1.1, volume: 1 },
   // Herr Becker speaks like a teacher: measured and clear.
   becker: { gender: 'male', pitch: 0.92, rate: 0.94, volume: 1 },
@@ -187,9 +188,17 @@ function castVoices(cast: Speaker[], language: string, locale: string, dialects:
   return casting;
 }
 
-// A human sharing a voice moves at most about a semitone and a half away from it.
+// A human sharing a voice moves at most a little away from it: enough to tell two speakers apart,
+// little enough that the voice keeps its natural, clear sound.
 export function sharedPitch(pitch: number) {
-  return Math.min(1.1, Math.max(0.9, 1 + (pitch - 1) * 0.5));
+  return Math.min(1.07, Math.max(0.93, 1 + (pitch - 1) * 0.35));
+}
+
+// Enzo comes from Naples and keeps a light Italian melody in his German. There is no Italian voice
+// for German text, so the accent is a small, deliberate lift and a touch of pace rather than a
+// different phonemizer — subtle enough to stay clear for learners.
+export function accentShape(dialect: Dialect | undefined, dialects = true) {
+  return dialects && dialect === 'italian' ? { pitch: 1.025, rate: 1.04 } : { pitch: 1, rate: 1 };
 }
 
 function wobble(amount: number) {
@@ -204,9 +213,10 @@ export function applyVoice(utterance: SpeechSynthesisUtterance, speaker: Speaker
   // enough to tell the speakers apart. Animals keep their full profile either way.
   const ownPitch = animals.includes(speaker) ? profile.pitch : shared ? sharedPitch(profile.pitch) : 1;
   const tone = intonationShape[intonationOf(utterance.text)];
+  const accent = accentShape(profile.dialect, dialects);
   utterance.voice = voice;
   if (voice) utterance.lang = voice.lang;
-  utterance.pitch = Math.min(2, Math.max(0.1, ownPitch * shape.pitch * tone.pitch * wobble(0.015)));
-  utterance.rate = Math.min(10, Math.max(0.1, baseRate * profile.rate * shape.rate * tone.rate * wobble(0.04)));
+  utterance.pitch = Math.min(2, Math.max(0.1, ownPitch * shape.pitch * tone.pitch * accent.pitch * wobble(0.012)));
+  utterance.rate = Math.min(10, Math.max(0.1, baseRate * profile.rate * shape.rate * tone.rate * accent.rate * wobble(0.03)));
   utterance.volume = Math.min(1, profile.volume * shape.volume * tone.volume);
 }
