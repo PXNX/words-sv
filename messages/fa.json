@@ -201,6 +201,7 @@
   "reading_word_gender_feminine": "مؤنث",
   "reading_word_gender_neuter": "خنثی",
   "reading_word_mark": "علامت‌گذاری به‌عنوان ناشناس",
+  "reading_word_mark_hint": "واژه‌های علامت‌گذاری‌شده بیشتر در مرورها تکرار می‌شوند.",
   "reading_word_unmark": "حذف علامت",
   "reading_word_no_definition": "هنوز معنایی برای این واژه ذخیره نشده است.",
   "reading_word_close": "بستن",

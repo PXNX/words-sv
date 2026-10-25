@@ -201,6 +201,7 @@
   "reading_word_gender_feminine": "स्त्रीलिंग",
   "reading_word_gender_neuter": "नपुंसकलिंग",
   "reading_word_mark": "अज्ञात के रूप में चिह्नित करें",
+  "reading_word_mark_hint": "चिह्नित शब्द समीक्षा में अधिक बार आते हैं।",
   "reading_word_unmark": "चिह्न हटाएँ",
   "reading_word_no_definition": "इस शब्द के लिए अभी कोई अर्थ नहीं है।",
   "reading_word_close": "बंद करें",

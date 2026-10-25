@@ -201,6 +201,7 @@
   "reading_word_gender_feminine": "женский",
   "reading_word_gender_neuter": "средний",
   "reading_word_mark": "Отметить как незнакомое",
+  "reading_word_mark_hint": "Отмеченные слова чаще повторяются при повторении.",
   "reading_word_unmark": "Снять отметку",
   "reading_word_no_definition": "Для этого слова пока нет значения.",
   "reading_word_close": "Закрыть",
