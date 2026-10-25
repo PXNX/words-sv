@@ -40,6 +40,7 @@
     voiceQuality: m.voice_quality({}, { locale: settings.interfaceLocale }),
     voiceStandard: m.voice_quality_standard({}, { locale: settings.interfaceLocale }),
     voiceNatural: m.voice_quality_natural({}, { locale: settings.interfaceLocale }),
+    voiceStandardHint: m.voice_quality_standard_hint({}, { locale: settings.interfaceLocale }),
     voiceFailed: m.voice_quality_failed({}, { locale: settings.interfaceLocale }),
     dialects: m.dialects({}, { locale: settings.interfaceLocale }),
     dialectsHint: m.dialects_hint({}, { locale: settings.interfaceLocale }),
@@ -70,10 +71,10 @@
   });
   // Under the voice choice: how big the natural voices are, how far they have downloaded, or that they failed.
   const voiceNote = $derived(
-    settings.voiceQuality !== 'natural' ? ''
+    settings.voiceQuality !== 'natural' ? labels.voiceStandardHint
       : voiceStatus === 'loading' ? `${m.voice_quality_loading({ percent: String(voicePercent) }, { locale: settings.interfaceLocale })}${voiceEta ? ` · ${voiceEta}` : ''}`
       : voiceStatus === 'failed' ? labels.voiceFailed
-      : m.voice_quality_hint({ size: String(naturalMegabytes(settings.lang)) }, { locale: settings.interfaceLocale })
+      : m.voice_quality_natural_hint({ size: String(naturalMegabytes(settings.lang)) }, { locale: settings.interfaceLocale })
   );
   let voicesSupported = $state(false);
   function selectVoiceQuality(next: typeof settings.voiceQuality) {
@@ -211,10 +212,8 @@
             <span class="voice-fill" style={`width: ${Math.max(voicePercent, 4)}%`}></span>
           </div>
         </div>
-      {:else if voiceNote}
-        <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]" aria-live="polite">{voiceNote}</p>
       {:else}
-        <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">Neural voices for stories and listening; larger download.</p>
+        <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]" aria-live="polite">{voiceNote}</p>
       {/if}
     {/if}
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.dialects}</span><input aria-label={labels.dialects} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.dialects} onchange={(event) => settings.setDialects((event.currentTarget as HTMLInputElement).checked)} /></div>
