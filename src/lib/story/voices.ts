@@ -64,6 +64,8 @@ export const profiles: Record<Speaker, VoiceProfile> = {
   // Kumar chatters fast and cheerfully; Simon the engineer is precise and even.
   kumar: { gender: 'male', pitch: 1.1, rate: 1.14, volume: 1 },
   simon: { gender: 'male', pitch: 0.98, rate: 0.98, volume: 1, dialect: 'northern' },
+  // Herr Bäuerle speaks calmly and a little slowly, with the friendly certainty of a bank adviser.
+  banker: { gender: 'male', pitch: 0.9, rate: 0.92, volume: 1 },
   // König Ludwig speaks slowly and grandly, as befits a king on a stage.
   ludwig: { gender: 'male', pitch: 0.9, rate: 0.88, volume: 1, dialect: 'bavarian' },
   // The animals mostly speak in sounds; when they do talk, their voices match their size.
@@ -81,7 +83,7 @@ export const profiles: Record<Speaker, VoiceProfile> = {
 
 // Who picks first when voices are scarce: the narrator talks most, then the main characters.
 // A speaker whose regional voice is installed jumps the queue, so nobody else takes it.
-export const priority: Speaker[] = ['narrator', 'announcer', 'mia', 'tom', 'lilith', 'oma', 'paul', 'kim', 'leo', 'hans', 'albert', 'sabine', 'enzo', 'jana', 'becker', 'ali', 'robert', 'fritz', 'tobias', 'selma', 'kumar', 'simon', 'ludwig', 'bello', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake', 'deer', 'fox', 'seagull', 'crow'];
+export const priority: Speaker[] = ['narrator', 'announcer', 'mia', 'tom', 'lilith', 'oma', 'paul', 'kim', 'leo', 'hans', 'albert', 'sabine', 'enzo', 'jana', 'becker', 'ali', 'robert', 'fritz', 'tobias', 'selma', 'kumar', 'simon', 'banker', 'ludwig', 'bello', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake', 'deer', 'fox', 'seagull', 'crow'];
 export const animals: Speaker[] = ['bello', 'crow', 'seagull', 'deer', 'fox', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
 
 function accentRank(speaker: Speaker, voice: SpeechSynthesisVoice) {
