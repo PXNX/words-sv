@@ -7,7 +7,17 @@
   import { playErrorSound, playSuccessSound } from '#lib/sounds.js';
   import { readingCatalog } from './readingCatalog';
   import { isCorrectAnswer, readingParagraphs } from './prose';
-  import { lookupReadingWord, tokenizeReadingText, type ReadingWordInfo } from './readingWords';
+  import {
+    isReadingArticle,
+    lookupReadingWord,
+    matchReadingCharacter,
+    readingArticleNoun,
+    tokenizeReadingText,
+    type ReadingToken,
+    type ReadingWordInfo
+  } from './readingWords';
+  import { characterNames, type CharacterId } from './stories';
+  import StoryCharacter from './StoryCharacter.svelte';
   import { clearMissedWord, readMissedWords, recordMissedWord } from './missedWords';
   import { clearWordRepeat, markWordForRepeat } from '#lib/vocab/spacedRepetition.js';
   import { wiktionaryUrl } from '#lib/wiktionary.js';
@@ -58,19 +68,26 @@
     dative: m.reading_word_case_dative({}, { locale: settings.interfaceLocale }),
     singular: m.reading_word_singular({}, { locale: settings.interfaceLocale }),
     plural: m.reading_word_plural({}, { locale: settings.interfaceLocale }),
-    currentCase: m.reading_word_current_case({}, { locale: settings.interfaceLocale })
+    currentCase: m.reading_word_current_case({}, { locale: settings.interfaceLocale }),
+    character: m.reading_character({}, { locale: settings.interfaceLocale })
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   const name = $derived(settings.firstName);
   const fingerprint = $derived(`${settings.lang}|${settings.vocabularyLevel}|${settings.includeLowerVocabulary}`);
   const catalog = $derived(readingCatalog(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary, name));
 
+  type Sheet =
+    | { kind: 'word'; info: ReadingWordInfo }
+    | { kind: 'character'; id: CharacterId; name: string };
+  type Highlight = { paragraph: number; start: number; end: number };
+
   let currentId = $state<string | null>(null);
   let solved = $state<Record<string, Record<number, true>>>({});
   let wrong = $state<Record<string, Record<number, string[]>>>({});
   let ready = $state(false);
   let paper = $state<HTMLElement | null>(null);
-  let selected = $state<ReadingWordInfo | null>(null);
+  let sheet = $state<Sheet | null>(null);
+  let highlighted = $state<Highlight | null>(null);
   let markedWords = $state<Set<string>>(new Set());
   let closeButton = $state<HTMLButtonElement | null>(null);
   let wordTrigger: HTMLButtonElement | null = null;
@@ -121,26 +138,51 @@
     return labels.dative;
   }
 
-  async function openWord(info: ReadingWordInfo, trigger: HTMLButtonElement) {
+  async function focusSheet(trigger: HTMLButtonElement) {
     wordTrigger = trigger;
-    selected = info;
     await tick();
     closeButton?.focus();
   }
 
-  function closeWord() {
-    selected = null;
+  async function openWord(info: ReadingWordInfo, trigger: HTMLButtonElement) {
+    sheet = { kind: 'word', info };
+    highlighted = null;
+    await focusSheet(trigger);
+  }
+
+  // An article opens the noun it belongs to and keeps that noun highlighted in the text, so the
+  // reader can see both the grammar and where it sits in the sentence.
+  async function openArticle(info: ReadingWordInfo, highlight: Highlight, trigger: HTMLButtonElement) {
+    sheet = { kind: 'word', info };
+    highlighted = highlight;
+    await focusSheet(trigger);
+  }
+
+  async function openCharacter(id: CharacterId, trigger: HTMLButtonElement) {
+    const language = current?.language ?? settings.lang;
+    sheet = { kind: 'character', id, name: characterNames[id][language] };
+    highlighted = null;
+    await focusSheet(trigger);
+  }
+
+  function closeSheet() {
+    sheet = null;
+    highlighted = null;
     const trigger = wordTrigger;
     wordTrigger = null;
     // Return the reader to the word they tapped, not to the top of the page.
     if (trigger?.isConnected) trigger.focus();
   }
 
+  function isHighlighted(paragraph: number, token: ReadingToken) {
+    return highlighted?.paragraph === paragraph && highlighted.start === token.start && highlighted.end === token.end;
+  }
+
   // Marking a word does two things: it lands on the missed-word list (so stories and the
   // progress page see it) and its review progress takes a lapse, which floats it to the front
   // of the next vocabulary session until it is answered right.
   function toggleMark() {
-    const info = selected;
+    const info = sheet?.kind === 'word' ? sheet.info : null;
     if (!info) return;
     if (markedWords.has(info.word)) {
       clearWordRepeat(settings.lang, info.word);
@@ -153,7 +195,7 @@
   }
 
   function handleKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape' && selected) closeWord();
+    if (event.key === 'Escape' && sheet) closeSheet();
   }
 
   function choose(option: string, index: number) {
@@ -213,8 +255,30 @@
 
 <svelte:window onkeydown={handleKeydown} />
 
-{#snippet readingWords(text: string)}
-  {#each tokenizeReadingText(text) as token, index (index)}{@const info = token.word ? lookupReadingWord(settings.lang, token.text, { text, start: token.start, end: token.end }) : null}{#if info}<button type="button" class="reading-word" class:marked={markedWords.has(info.word)} onclick={(event) => void openWord(info, event.currentTarget)}>{token.text}</button>{:else}{token.text}{/if}{/each}
+{#snippet readingWords(text: string, paragraph: number)}
+  {#each tokenizeReadingText(text) as token, index (index)}
+    {@const info = token.word ? lookupReadingWord(settings.lang, token.text, { text, start: token.start, end: token.end }) : null}
+    {@const character = token.word ? matchReadingCharacter(settings.lang, current?.cast ?? [], token.text) : null}
+    {#if character}
+      <button type="button" class="reading-word reading-character" class:highlighted={isHighlighted(paragraph, token)} onclick={(event) => void openCharacter(character, event.currentTarget)}>{token.text}</button>
+    {:else if token.word && isReadingArticle(token.text)}
+      {@const noun = readingArticleNoun(settings.lang, text, token.start, token.end)}
+      {#if noun}
+        {@const nounInfo = lookupReadingWord(settings.lang, noun.text, { text, start: noun.start, end: noun.end })}
+        {#if nounInfo}
+          <button type="button" class="reading-word reading-article" onclick={(event) => void openArticle(nounInfo, { paragraph, start: noun.start, end: noun.end }, event.currentTarget)}>{token.text}</button>
+        {:else}
+          {token.text}
+        {/if}
+      {:else}
+        {token.text}
+      {/if}
+    {:else if info}
+      <button type="button" class="reading-word" class:marked={markedWords.has(info.word)} class:highlighted={isHighlighted(paragraph, token)} onclick={(event) => void openWord(info, event.currentTarget)}>{token.text}</button>
+    {:else}
+      {token.text}
+    {/if}
+  {/each}
 {/snippet}
 
 <svelte:head>
@@ -250,7 +314,7 @@
 
     <article class="reading-paper" bind:this={paper} lang={current.language}>
       {#each paragraphs as paragraph, index (index)}
-        <p class="reading-paragraph">{@render readingWords(paragraph)}</p>
+        <p class="reading-paragraph">{@render readingWords(paragraph, index)}</p>
       {/each}
     </article>
 
@@ -305,46 +369,57 @@
   {/if}
 </section>
 
-{#if selected}
+{#if sheet}
   <div class="word-sheet-layer">
-    <button type="button" class="word-sheet-backdrop" aria-label={labels.close} onclick={closeWord}></button>
+    <button type="button" class="word-sheet-backdrop" aria-label={labels.close} onclick={closeSheet}></button>
     <div class="word-sheet" role="dialog" aria-modal="true" aria-labelledby="word-sheet-title">
       <header>
         <div class="word-sheet-heading">
-          <p>{typeLabel(selected.type)}{#if genderLabel(selected.gender)} · {genderLabel(selected.gender)}{/if}{#if selected.type === 'noun'} · {selected.number === 'plural' ? labels.plural : labels.singular}{/if}</p>
-          <h2 id="word-sheet-title" lang={settings.lang}>{selected.display}</h2>
+          {#if sheet.kind === 'character'}
+            <p>{labels.character}</p>
+            <h2 id="word-sheet-title" lang={current?.language}>{sheet.name}</h2>
+          {:else}
+            <p>{typeLabel(sheet.info.type)}{#if genderLabel(sheet.info.gender)} · {genderLabel(sheet.info.gender)}{/if}{#if sheet.info.type === 'noun'} · {sheet.info.number === 'plural' ? labels.plural : labels.singular}{/if}</p>
+            <h2 id="word-sheet-title" lang={settings.lang}>{sheet.info.display}</h2>
+          {/if}
         </div>
-        <button type="button" class="word-sheet-close" bind:this={closeButton} aria-label={labels.close} onclick={closeWord}><IconClose aria-hidden="true" /></button>
+        <button type="button" class="word-sheet-close" bind:this={closeButton} aria-label={labels.close} onclick={closeSheet}><IconClose aria-hidden="true" /></button>
       </header>
 
-      <section class="word-sheet-block">
-        <h3>{labels.meaning}</h3>
-        <p>{selected.definition || labels.noDefinition}</p>
-      </section>
-
-      {#if selected.cases.length}
+      {#if sheet.kind === 'character'}
+        <div class="character-portrait" aria-hidden="true">
+          <StoryCharacter id={sheet.id} still />
+        </div>
+      {:else}
         <section class="word-sheet-block">
-          <h3>{labels.cases}</h3>
-          <dl class="word-sheet-cases">
-            {#each selected.cases as entry (entry.grammarCase)}
-              <div class:current={selected.currentCase === entry.grammarCase}>
-                <dt>
-                  {caseLabel(entry.grammarCase)}
-                  {#if selected.currentCase === entry.grammarCase}<small>{labels.currentCase}</small>{/if}
-                </dt>
-                <dd lang={settings.lang}>{entry.article} {entry.form}</dd>
-              </div>
-            {/each}
-          </dl>
+          <h3>{labels.meaning}</h3>
+          <p>{sheet.info.definition || labels.noDefinition}</p>
         </section>
-      {/if}
 
-      <div class="word-sheet-actions">
-        <button type="button" class="btn-play btn-play-soft word-sheet-mark" class:active={markedWords.has(selected.word)} onclick={toggleMark}>
-          {markedWords.has(selected.word) ? labels.unmark : labels.mark}
-        </button>
-        <a class="word-sheet-link" href={wiktionaryUrl(settings.lang, selected.spelling)} target="_blank" rel="noreferrer">{labels.explain}</a>
-      </div>
+        {#if sheet.info.cases.length}
+          <section class="word-sheet-block">
+            <h3>{labels.cases}</h3>
+            <dl class="word-sheet-cases">
+              {#each sheet.info.cases as entry (entry.grammarCase)}
+                <div class:current={sheet.info.currentCase === entry.grammarCase}>
+                  <dt>
+                    {caseLabel(entry.grammarCase)}
+                    {#if sheet.info.currentCase === entry.grammarCase}<small>{labels.currentCase}</small>{/if}
+                  </dt>
+                  <dd lang={settings.lang}>{entry.article} {entry.form}</dd>
+                </div>
+              {/each}
+            </dl>
+          </section>
+        {/if}
+
+        <div class="word-sheet-actions">
+          <button type="button" class="btn-play btn-play-soft word-sheet-mark" class:active={markedWords.has(sheet.info.word)} onclick={toggleMark}>
+            {markedWords.has(sheet.info.word) ? labels.unmark : labels.mark}
+          </button>
+          <a class="word-sheet-link" href={wiktionaryUrl(settings.lang, sheet.info.spelling)} target="_blank" rel="noreferrer">{labels.explain}</a>
+        </div>
+      {/if}
     </div>
   </div>
 {/if}
@@ -378,6 +453,10 @@
   .reading-word:focus-visible { outline:2px solid #e6a527;outline-offset:1px; }
   .reading-word.marked { background:rgba(217,123,108,.2);text-decoration-color:#c9604e; }
   .reading-word.marked:hover { background:rgba(217,123,108,.3); }
+  .reading-word.highlighted { background:#f7e2b0;text-decoration-color:#c9862b; }
+  .reading-character { text-decoration-color:rgba(164,94,56,.45);text-decoration-style:solid; }
+  .reading-character:hover { background:rgba(164,94,56,.14);text-decoration-color:#a45e38; }
+  .reading-article { text-decoration-color:rgba(164,94,56,.32); }
   .reading-words { width:min(100%,44rem);margin:0 auto;border:1px dashed rgba(23,42,69,.24);border-radius:.9rem;background:rgba(255,253,247,.7); }
   .reading-words summary { padding:.55rem .8rem;cursor:pointer;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:900;list-style:none; }
   .reading-words summary::-webkit-details-marker { display:none; }
@@ -411,6 +490,8 @@
   .word-sheet-close:hover { background:#f7e2b0; }
   .word-sheet-close:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
   .word-sheet-close :global(svg) { width:1.1rem;height:1.1rem; }
+  .character-portrait { display:grid;place-items:center;width:min(11.5rem,48vw);aspect-ratio:120/150;margin:.15rem auto .35rem;padding:.5rem;border:1px solid rgba(23,42,69,.14);border-radius:.9rem;background:radial-gradient(circle at 50% 34%,#f7e2b0 0%,#fffdf7 72%); }
+  .character-portrait :global(svg) { width:100%;height:100%; }
   .word-sheet-block { display:grid;gap:.25rem; }
   .word-sheet-block h3 { margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:900;letter-spacing:.13em;text-transform:uppercase; }
   .word-sheet-block p { margin:0;color:#243449;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;line-height:1.6; }
@@ -456,6 +537,8 @@
   :global(html.dark) .reading-kicker { color:#e9b07d; }
   :global(html.dark) .reading-word:hover { background:rgba(230,165,39,.2); }
   :global(html.dark) .reading-word.marked { background:rgba(217,123,108,.28); }
+  :global(html.dark) .reading-word.highlighted { background:rgba(230,165,39,.34);text-decoration-color:#e9b07d; }
+  :global(html.dark) .reading-character:hover { background:rgba(233,176,125,.2); }
   :global(html.dark) .word-sheet { border-color:rgba(255,253,247,.24);background:#152b47;box-shadow:0 -12px 34px rgba(0,0,0,.45); }
   :global(html.dark) .word-sheet-heading h2,
   :global(html.dark) .word-sheet-cases dd { color:#fffdf7; }
@@ -467,4 +550,5 @@
   :global(html.dark) .word-sheet-cases div.current { border-color:#e6a527;background:rgba(230,165,39,.18); }
   :global(html.dark) .word-sheet-cases div.current dt { color:#fffdf7; }
   :global(html.dark) .word-sheet-cases dt small { background:#e6a527;color:#152b47; }
+  :global(html.dark) .character-portrait { border-color:rgba(255,253,247,.2);background:radial-gradient(circle at 50% 34%,#2b4a73 0%,#152b47 72%); }
 </style>

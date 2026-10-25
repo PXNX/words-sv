@@ -211,6 +211,7 @@
   "reading_word_singular": "Singular",
   "reading_word_plural": "Plural",
   "reading_word_current_case": "nesta frase",
+  "reading_character": "Personagem",
   "story_reading_mode": "Modo de leitura",
   "story_reading_mode_hint": "Leia a história inteira de uma vez e responda às perguntas diretamente no texto.",
   "story_reading_progress": "{answered} de {total} perguntas respondidas",

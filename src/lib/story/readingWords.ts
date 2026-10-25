@@ -1,6 +1,7 @@
 import { wordDefinitions, wordMetadata, type Language, type VocabularyGender } from '#lib/data/vocabulary.js';
 import { verbConjugations } from '#lib/grammar/verbs.js';
 import { definiteArticlesByCase } from '#lib/grammar/cases.js';
+import { characterNames, type CharacterId } from './stories';
 
 // A word as the reading mode needs it: dictionary spelling, meaning, number and the grammar that
 // helps a learner understand the sentence. `word` stays the uppercased singular dictionary form
@@ -143,6 +144,14 @@ const DETERMINER_WORDS = new Set([
   ...ACCUSATIVE_DETERMINERS,
   ...AMBIGUOUS_NOM_ACC,
   'der'
+]);
+
+// Only the words that genuinely introduce a noun phrase. Demonstratives and quantity words are
+// left out on purpose: they are also vocabulary entries a reader may want explained themselves.
+const ARTICLE_WORDS = new Set([
+  'der', 'die', 'das', 'den', 'dem', 'des',
+  'ein', 'eine', 'einen', 'einem', 'einer', 'eines',
+  'kein', 'keine', 'keinen', 'keinem', 'keiner', 'keines'
 ]);
 
 const FIXED_PREPOSITION_CASES: Record<string, ReadingGrammarCase> = {
@@ -653,6 +662,63 @@ export function lookupReadingWord(
     }
 
     return info;
+  }
+  return null;
+}
+
+/**
+ * Matches a tapped token against the cast of the current text. A multi-word name is recognised by
+ * its distinctive last word ("Herr Paul" -> "Paul", "König Ludwig" -> "Ludwig"), and a genitive
+ * -s ("Mias", "Toms") still points at the character it belongs to.
+ */
+export function matchReadingCharacter(
+  language: Language,
+  cast: readonly CharacterId[],
+  value: string
+): CharacterId | null {
+  const lower = value.toLocaleLowerCase();
+  for (const id of cast) {
+    const full = characterNames[id]?.[language];
+    if (!full) continue;
+    const last = full.split(/[\s'’]+/u).filter(Boolean).at(-1)?.toLocaleLowerCase();
+    if (!last) continue;
+    if (lower === last || lower === `${last}s`) return id;
+  }
+  return null;
+}
+
+/** True for the definite, indefinite, negative and contracted articles that can open a noun. */
+export function isReadingArticle(value: string): boolean {
+  const lower = value.toLocaleLowerCase();
+  return ARTICLE_WORDS.has(lower) || Object.hasOwn(CONTRACTIONS, lower);
+}
+
+/**
+ * Finds the noun an article introduces: the first word ahead that resolves to a noun, skipping
+ * adjectives. The search stops at the end of the sentence, so an article without a noun in its
+ * own clause stays plain text.
+ */
+export function readingArticleNoun(
+  language: Language,
+  text: string,
+  start: number,
+  end: number
+): ReadingToken | null {
+  if (language !== 'de') return null;
+  const tokens = tokenizeReadingText(text);
+  const index = tokens.findIndex((token) => token.start === start && token.end === end);
+  if (index < 0) return null;
+
+  let words = 0;
+  for (let cursor = index + 1; cursor < tokens.length && words < 5; cursor += 1) {
+    const token = tokens[cursor];
+    if (!token.word) {
+      if (/[.!?;:]/u.test(token.text)) break;
+      continue;
+    }
+    words += 1;
+    const info = lookupReadingWord(language, token.text, { text, start: token.start, end: token.end });
+    if (info?.type === 'noun') return token;
   }
   return null;
 }

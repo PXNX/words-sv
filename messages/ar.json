@@ -211,6 +211,7 @@
   "reading_word_singular": "مفرد",
   "reading_word_plural": "جمع",
   "reading_word_current_case": "في هذه الجملة",
+  "reading_character": "شخصية",
   "story_reading_mode": "وضع القراءة",
   "story_reading_mode_hint": "اقرأ القصة كاملة دفعة واحدة وأجب عن الأسئلة مباشرة في النص.",
   "story_reading_progress": "تمت الإجابة على {answered} من {total} سؤالاً",

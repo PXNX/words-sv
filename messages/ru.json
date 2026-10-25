@@ -211,6 +211,7 @@
   "reading_word_singular": "Единственное число",
   "reading_word_plural": "Множественное число",
   "reading_word_current_case": "в этом предложении",
+  "reading_character": "Персонаж",
   "story_reading_mode": "Режим чтения",
   "story_reading_mode_hint": "Прочитайте всю историю сразу и отвечайте на вопросы прямо в тексте.",
   "story_reading_progress": "Отвечено на {answered} из {total} вопросов",

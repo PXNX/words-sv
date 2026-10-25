@@ -211,6 +211,7 @@
   "reading_word_singular": "مفرد",
   "reading_word_plural": "جمع",
   "reading_word_current_case": "در این جمله",
+  "reading_character": "شخصیت",
   "story_reading_mode": "حالت مطالعه",
   "story_reading_mode_hint": "کل داستان را یک‌جا بخوانید و به پرسش‌ها مستقیم در متن پاسخ دهید.",
   "story_reading_progress": "{answered} از {total} پرسش پاسخ داده شد",

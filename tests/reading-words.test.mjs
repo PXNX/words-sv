@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { pickReviewSection } from '../src/lib/vocab/learning.ts';
 import { normalizeReviewProgress, prioritizeLearningWords, updateReviewProgress } from '../src/lib/vocab/spacedRepetition.ts';
-import { lookupReadingWord, tokenizeReadingText } from '../src/lib/story/readingWords.ts';
+import { isReadingArticle, lookupReadingWord, matchReadingCharacter, readingArticleNoun, tokenizeReadingText } from '../src/lib/story/readingWords.ts';
 
 describe('reading words', () => {
 	/**
@@ -109,6 +109,73 @@ describe('reading words', () => {
 
 	it('leaves words outside the vocabulary alone', () => {
 		expect(lookupReadingWord('de', 'quakz')).toBeNull();
+	});
+});
+
+describe('reading characters and articles', () => {
+	/**
+	 * @param {string} text
+	 * @param {string} word
+	 */
+	function tokenFor(text, word) {
+		const token = tokenizeReadingText(text).find((entry) => entry.text.toLocaleLowerCase() === word.toLocaleLowerCase());
+		if (!token) throw new Error(`missing token ${word}`);
+		return token;
+	}
+
+	it('matches cast names, including multi-word and genitive forms', () => {
+		expect(matchReadingCharacter('de', ['mia', 'tom', 'paul', 'ludwig'], 'Mia')).toBe('mia');
+		expect(matchReadingCharacter('de', ['mia', 'tom'], 'Mias')).toBe('mia');
+		expect(matchReadingCharacter('de', ['mia', 'tom'], 'Toms')).toBe('tom');
+		expect(matchReadingCharacter('de', ['paul'], 'Paul')).toBe('paul');
+		expect(matchReadingCharacter('de', ['paul'], 'Herr')).toBeNull();
+		expect(matchReadingCharacter('de', ['ludwig'], 'Ludwig')).toBe('ludwig');
+		expect(matchReadingCharacter('de', ['ludwig'], 'König')).toBeNull();
+		expect(matchReadingCharacter('de', ['mia'], 'Tom')).toBeNull();
+	});
+
+	it('matches localised names and ignores characters outside the cast', () => {
+		expect(matchReadingCharacter('en', ['wirt'], 'innkeeper')).toBe('wirt');
+		expect(matchReadingCharacter('en', ['wirt'], 'Mr Paul')).toBeNull();
+	});
+
+	it('treats only true articles and contractions as article taps', () => {
+		expect(isReadingArticle('die')).toBe(true);
+		expect(isReadingArticle('einem')).toBe(true);
+		expect(isReadingArticle('im')).toBe(true);
+		expect(isReadingArticle('viele')).toBe(false);
+		expect(isReadingArticle('Haus')).toBe(false);
+	});
+
+	it('finds the noun an article belongs to and skips adjectives', () => {
+		const text = 'Die alte Frau liest ein Buch.';
+		const article = tokenFor(text, 'Die');
+		expect(readingArticleNoun('de', text, article.start, article.end)?.text).toBe('Frau');
+
+		const second = tokenizeReadingText(text).filter((token) => token.text === 'ein').at(-1);
+		if (!second) throw new Error('missing second article');
+		expect(readingArticleNoun('de', text, second.start, second.end)?.text).toBe('Buch');
+	});
+
+	it('resolves the noun after a contraction', () => {
+		const text = 'Er sitzt im Garten.';
+		const article = tokenFor(text, 'im');
+		expect(readingArticleNoun('de', text, article.start, article.end)?.text).toBe('Garten');
+	});
+
+	it('shows the case the noun has in the sentence', () => {
+		const text = 'Er hilft dem alten Mann.';
+		const article = tokenFor(text, 'dem');
+		const noun = readingArticleNoun('de', text, article.start, article.end);
+		if (!noun) throw new Error('missing noun');
+		expect(noun.text).toBe('Mann');
+		expect(lookupReadingWord('de', noun.text, { text, start: noun.start, end: noun.end })?.currentCase).toBe('dative');
+	});
+
+	it('leaves an article without a following noun alone', () => {
+		const text = 'Die zzz.';
+		const article = tokenFor(text, 'Die');
+		expect(readingArticleNoun('de', text, article.start, article.end)).toBeNull();
 	});
 });
 

@@ -211,6 +211,7 @@
   "reading_word_singular": "ഏകവചനം",
   "reading_word_plural": "ബഹുവചനം",
   "reading_word_current_case": "ഈ വാക്യത്തിൽ",
+  "reading_character": "കഥാപാത്രം",
   "story_reading_mode": "വായന മോഡ്",
   "story_reading_mode_hint": "മുഴുവൻ കഥയും ഒരുമിച്ച് വായിച്ച് ചോദ്യങ്ങൾക്ക് നേരിട്ട് പാഠത്തിൽ ഉത്തരം നൽകുക.",
   "story_reading_progress": "{total}-ൽ {answered} ചോദ്യങ്ങൾക്ക് ഉത്തരം നൽകി",
