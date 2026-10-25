@@ -74,27 +74,73 @@ const germanLetters: Record<string, string> = {
   N: 'Enn', O: 'Oh', P: 'Peh', Q: 'Kuh', R: 'Err', S: 'Ess', T: 'Teh', U: 'Uh', V: 'Fau', W: 'Weh', X: 'Ix', Y: 'Üpsilon', Z: 'Zett',
   Ä: 'Äh', Ö: 'Öh', Ü: 'Üh'
 };
-const germanWords: Record<string, string> = { WLAN: 'Weh-Lahn', Ick: 'Ik', ick: 'ik' };
+const germanWords: Record<string, string> = {
+  WLAN: 'Weh-Lahn', Ick: 'Ik', ick: 'ik',
+  // "Röschen" is the diminutive of "Rose": Rös-chen, not Rö-schen. The hyphen keeps the s and ch
+  // apart, so the voice does not turn them into the "sch" sound.
+  Röschen: 'Rös-chen', Dornröschen: 'Dornrös-chen', Dornröschenschloss: 'Dornrös-chenschloss'
+};
+
+const germanUnits = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn', 'elf', 'zwölf', 'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn', 'neunzehn'];
+const germanStems = ['', 'ein', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun'];
+const germanTens = ['', '', 'zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig', 'neunzig'];
+
+function germanBelowHundred(value: number): string {
+  if (value < 20) return germanUnits[value];
+  const unit = value % 10;
+  const ten = germanTens[Math.floor(value / 10)];
+  return unit ? `${germanStems[unit]}und${ten}` : ten;
+}
+function germanBelowThousand(value: number): string {
+  if (value < 100) return germanBelowHundred(value);
+  const hundred = Math.floor(value / 100);
+  const rest = value % 100;
+  return `${germanStems[hundred]}hundert${rest ? germanBelowHundred(rest) : ''}`;
+}
+function germanBelowMillion(value: number): string {
+  if (value < 1000) return germanBelowThousand(value);
+  const thousand = Math.floor(value / 1000);
+  const rest = value % 1000;
+  return `${germanBelowThousand(thousand)}tausend${rest ? germanBelowThousand(rest) : ''}`;
+}
+function germanNumber(value: number): string {
+  if (value < 1_000_000) return germanBelowMillion(value);
+  const million = Math.floor(value / 1_000_000);
+  const rest = value % 1_000_000;
+  const words = million === 1 ? 'eine Million' : `${germanBelowThousand(million)} Millionen`;
+  return rest ? `${words} ${germanBelowMillion(rest)}` : words;
+}
 
 export function pronounceable(sentence: string, language: Language): { text: string; written: (spoken: number) => number } {
-  let processed = sentence;
-  if (language === 'de') {
-    processed = processed.replace(/(\d)\.(\d{3})/g, '$1$2').replace(/(\d{1,3})(?:\s+)(\d{3})/g, '$1$2');
-  } else if (language === 'en') {
-    processed = processed.replace(/(\d)\.(\d{3})/g, '$1,$2');
+  if (language === 'en') {
+    return { text: sentence.replace(/(\d)\.(\d{3})/g, '$1,$2'), written: (spoken) => spoken };
   }
-  if (language !== 'de') return { text: processed, written: (spoken) => spoken };
-  // Every word said differently from how it is written: where it is in the spoken and the written text.
+  if (language !== 'de') return { text: sentence, written: (spoken) => spoken };
+  // Words and numbers that are said differently from how they are written. Grouped German numbers
+  // ("3 800", "240.000") become words, so no voice can read the separator as "Punkt" or split them.
+  const tokenPattern = /(?<!\p{L})(?:\d{1,3}(?:[.\s\u00A0\u202F]\d{3})+(?!\d)|\d{4,}|\p{L}+)(?!\p{L})/gu;
   const swaps: { spoken: number; said: number; written: number; length: number }[] = [];
-  let shift = 0;
-  const text = processed.replace(/(?<!\p{L})\p{L}+(?!\p{L})/gu, (word, at: number) => {
-    const said = germanWords[word] ?? (/^[A-ZÄÖÜ]{2,}$/u.test(word) ? [...word].map((letter) => germanLetters[letter]).join(' ') : word);
-    if (said !== word) {
-      swaps.push({ spoken: at + shift, said: said.length, written: at, length: word.length });
-      shift += said.length - word.length;
+  let text = '';
+  let last = 0;
+  for (const match of sentence.matchAll(tokenPattern)) {
+    const original = match[0];
+    const at = match.index ?? 0;
+    text += sentence.slice(last, at);
+    let said = original;
+    if (/^\d/.test(original)) {
+      const digits = original.replace(/[.\s\u00A0\u202F]/g, '');
+      const value = Number(digits);
+      if (Number.isSafeInteger(value) && value >= 1000) said = germanNumber(value);
+    } else {
+      said = germanWords[original] ?? (/^[A-ZÄÖÜ]{2,}$/u.test(original) ? [...original].map((letter) => germanLetters[letter]).join(' ') : original);
     }
-    return said;
-  });
+    if (said !== original) {
+      swaps.push({ spoken: text.length, said: said.length, written: at, length: original.length });
+    }
+    text += said;
+    last = at + original.length;
+  }
+  text += sentence.slice(last);
   return {
     text,
     written: (spoken) => {

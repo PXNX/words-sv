@@ -592,7 +592,7 @@ export const germanStories: Story[] = [
       { kind: 'line', speaker: 'albert', text: german('In Berlin haben wir die Berliner Weiße: leicht, sauer und wenig Alkohol. Man trinkt sie mit Schuss – rot mit Himbeersirup oder grün mit Waldmeister.') },
       { kind: 'line', speaker: 'hans', mood: 'laughing', text: german('A grünes Bier mit Strohhalm! Haha, des is ka Bier, des is a Limo!') },
       { kind: 'line', speaker: 'leo', text: german('In Köln trinkt man Kölsch aus kleinen Gläsern mit nur 0,2 Litern, und in Düsseldorf dunkles Altbier. Die beiden Städte streiten darüber genauso wie ihr.') },
-      { kind: 'line', speaker: 'albert', text: german('Immerhin halten sich alle an das Reinheitsgebot von 1516: nur Wasser, Malz und Hopfen – die Hefe kam erst später dazu. Deutschland hat übrigens rund 1.500 Brauereien.') },
+      { kind: 'line', speaker: 'albert', text: german('Immerhin halten sich alle an das Reinheitsgebot von 1516: nur Wasser, Malz und Hopfen – die Hefe kam erst später dazu. Deutschland hat übrigens rund 1 500 Brauereien.') },
       { kind: 'line', speaker: 'leo', mood: 'curious', text: german('{name}, du bist unser Schiedsrichter. Welches Bier würdest du an einem heißen Tag wählen und warum?') },
       { kind: 'reply', to: 'leo', options: [
         german('Ich würde ein Pils nehmen, weil es herb und erfrischend ist – oder ein alkoholfreies Weißbier.'),
@@ -605,7 +605,7 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Welche Farbe hat die Berliner Weiße mit Waldmeister?'), options: [german('Grün'), german('Rot'), german('Goldgelb')] },
       { kind: 'question', prompt: german('Wie viel passt in ein Kölschglas?'), options: [german('0,2 Liter'), german('Ein Liter'), german('0,5 Liter')] },
       { kind: 'question', prompt: german('Aus welchem Jahr ist das Reinheitsgebot?'), options: [german('1516'), german('1871'), german('1989')] },
-      { kind: 'question', prompt: german('Wie viele Brauereien gibt es ungefähr in Deutschland?'), options: [german('Rund 1.500'), german('Rund 150'), german('Rund 15.000')] }
+      { kind: 'question', prompt: german('Wie viele Brauereien gibt es ungefähr in Deutschland?'), options: [german('Rund 1 500'), german('Rund 150'), german('Rund 15 000')] }
     ]
   },
   {
@@ -655,7 +655,7 @@ export const germanStories: Story[] = [
       { kind: 'line', speaker: 'oma', mood: 'happy', text: german('Ich mache uns ein bisschen Schlager an. Da kann man mitsingen, und die Texte versteht man sofort. Liebe, Sonne, Sommer – das macht gute Laune!') },
       { kind: 'line', speaker: 'leo', mood: 'laughing', text: german('Haha, Oma, Schlager ist doch immer dasselbe: vier Akkorde und ein Herz aus Gold. Ich höre lieber Metal. Schnelle Gitarren, Doublebass am Schlagzeug, ehrliche Wut.') },
       { kind: 'line', speaker: 'oma', mood: 'surprised', text: german('Ach, Junge, das ist doch nur Lärm! Da schreit einer, als hätte er Zahnschmerzen.') },
-      { kind: 'line', speaker: 'leo', text: german('Das klingt nur aggressiv. Eine Studie aus Australien hat gezeigt, dass Metal-Fans nach dem Hören ruhiger und entspannter sind. Die Musik hilft, Stress und Ärger zu verarbeiten. Und Metal-Fans sind sehr friedlich – in Wacken feiern jedes Jahr ungefähr 85.000 Leute zusammen.') },
+      { kind: 'line', speaker: 'leo', text: german('Das klingt nur aggressiv. Eine Studie aus Australien hat gezeigt, dass Metal-Fans nach dem Hören ruhiger und entspannter sind. Die Musik hilft, Stress und Ärger zu verarbeiten. Und Metal-Fans sind sehr friedlich – in Wacken feiern jedes Jahr ungefähr 85 000 Leute zusammen.') },
       { kind: 'line', speaker: 'jana', text: german('Ihr seid beide altmodisch. Dubstep ist die Zukunft! 140 Schläge pro Minute, und dann kommt der Drop – dieser tiefe, wackelnde Bass. Den spürt man im ganzen Körper.') },
       { kind: 'line', speaker: 'oma', mood: 'curious', text: german('Ein Bass, der wackelt? Kind, und wo ist da die Melodie?') },
       { kind: 'line', speaker: 'jana', text: german('Die Melodie ist nicht das Wichtigste. Beim Dubstep geht es um den Klang selbst. Ich programmiere die Sounds übrigens am Computer – das ist ein bisschen wie Code schreiben.') },
@@ -669,7 +669,7 @@ export const germanStories: Story[] = [
       { kind: 'narration', text: german('Eine Stunde später tanzt Oma zu Janas Dubstep, Leo summt den Schlager mit, und Jana gibt zu, dass das Gitarrensolo gar nicht so schlecht war.') },
       { kind: 'question', prompt: german('Warum mag Oma Schlager?'), options: [german('Weil man mitsingen kann und die Texte sofort versteht'), german('Weil die Musik besonders laut ist'), german('Weil Schlager sehr kompliziert ist')] },
       { kind: 'question', prompt: german('Was hat eine Studie über Metal-Fans gezeigt?'), options: [german('Dass sie nach dem Hören ruhiger sind'), german('Dass sie öfter streiten'), german('Dass sie schlechter schlafen')] },
-      { kind: 'question', prompt: german('Wie viele Leute feiern ungefähr jedes Jahr in Wacken?'), options: [german('Etwa 85.000'), german('Etwa 8.500'), german('Etwa 850.000')] },
+      { kind: 'question', prompt: german('Wie viele Leute feiern ungefähr jedes Jahr in Wacken?'), options: [german('Etwa 85 000'), german('Etwa 8 500'), german('Etwa 850 000')] },
       { kind: 'question', prompt: german('Wie schnell ist Dubstep laut Jana?'), options: [german('140 Schläge pro Minute'), german('40 Schläge pro Minute'), german('400 Schläge pro Minute')] },
       { kind: 'question', prompt: german('Womit vergleicht Jana das Produzieren von Dubstep?'), options: [german('Mit Code schreiben'), german('Mit Kochen'), german('Mit Autofahren')] },
       { kind: 'question', prompt: german('Wie endet der Nachmittag?'), options: [german('Oma tanzt zu Dubstep, und alle sind zufrieden.'), german('Alle gehen wütend nach Hause.'), german('Oma verbietet jede Musik.')] }
@@ -685,7 +685,7 @@ export const germanStories: Story[] = [
     title: german('Das Lieblingsessen der Deutschen'),
     beats: [
       { kind: 'narration', text: german('Mittagspause auf dem Marktplatz. Mia schreibt für ihre Lokalzeitung einen Artikel über das Lieblingsessen der Deutschen und befragt zwei Experten: Ali vom Dönerladen an der Ecke und Bauer Fritz, der am Marktstand Kartoffeln verkauft.') },
-      { kind: 'line', speaker: 'ali', mood: 'happy', text: german('Ganz klar: der Döner! Mein Freund, schau dir die Schlange vor meinem Laden an. Schätzungen zufolge gibt es in Deutschland über 16.000 Dönerläden – mehr als Filialen aller großen Burgerketten zusammen.') },
+      { kind: 'line', speaker: 'ali', mood: 'happy', text: german('Ganz klar: der Döner! Mein Freund, schau dir die Schlange vor meinem Laden an. Schätzungen zufolge gibt es in Deutschland über 16 000 Dönerläden – mehr als Filialen aller großen Burgerketten zusammen.') },
       { kind: 'line', speaker: 'fritz', text: german('Ach was. Das Lieblingsessen der Deutschen ist und bleibt der Schweinebraten mit Knödeln. Oder ein ordentliches Schnitzel. Das hat schon mein Großvater gegessen.') },
       { kind: 'line', speaker: 'mia', text: german('Interessanterweise sagen die Umfragen etwas anderes. Bei der Frage nach dem Lieblingsgericht landen seit Jahren Spaghetti Bolognese auf Platz eins, knapp vor Schnitzel und Rouladen. Und in Kantinen ist die Currywurst seit Jahrzehnten ganz vorne dabei.') },
       { kind: 'line', speaker: 'fritz', mood: 'surprised', text: german('Spaghetti? Ein italienisches Gericht? Meine Güte, wo soll das noch hinführen.') },
@@ -700,7 +700,7 @@ export const germanStories: Story[] = [
         german('In Deutschland isst man grundsätzlich nur dienstags.')
       ] },
       { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Perfekt, das wird mein Schlusssatz. Und jetzt habe ich Hunger. Ali, einmal mit allem – und Fritz, ein Kilo Kartoffeln für heute Abend.') },
-      { kind: 'question', prompt: german('Wie viele Dönerläden gibt es Schätzungen zufolge in Deutschland?'), options: [german('Über 16.000'), german('Rund 1.600'), german('Über 160.000')] },
+      { kind: 'question', prompt: german('Wie viele Dönerläden gibt es Schätzungen zufolge in Deutschland?'), options: [german('Über 16 000'), german('Rund 1 600'), german('Über 160 000')] },
       { kind: 'question', prompt: german('Welches Gericht landet laut Umfragen auf Platz eins?'), options: [german('Spaghetti Bolognese'), german('Schweinebraten mit Knödeln'), german('Currywurst')] },
       { kind: 'question', prompt: german('Wo und wann wurde der Döner im Brot erfunden?'), options: [german('In den Siebzigerjahren in Berlin'), german('In den Fünfzigerjahren in Istanbul'), german('In den Neunzigerjahren in München')] },
       { kind: 'question', prompt: german('Warum ist der Dönerpreis laut Ali gestiegen?'), options: [german('Weil Fleisch, Energie und Miete teurer geworden sind'), german('Weil die Portionen doppelt so groß sind'), german('Weil weniger Leute Döner essen')] },
@@ -752,7 +752,7 @@ export const germanStories: Story[] = [
       { kind: 'line', speaker: 'kumar', mood: 'worried', text: german('Ich bin so nervös, Mia. Was ist, wenn ein Dokument fehlt? Dann muss ich wieder vier Monate warten!') },
       { kind: 'line', speaker: 'mia', text: german('Wir haben gestern Abend alles zweimal kontrolliert. Reisepass, biometrisches Foto, Arbeitsvertrag, Mietvertrag, Meldebescheinigung, Nachweis der Krankenversicherung. Das passt.') },
       { kind: 'narration', text: german('Um 8:40 Uhr wird Kumars Wartenummer aufgerufen: 147. Frau Kim, die Sachbearbeiterin, blättert in seiner Akte.') },
-      { kind: 'line', speaker: 'kim', text: german('Guten Morgen. Sie beantragen eine Blaue Karte EU. Ihr Bruttojahresgehalt liegt laut Arbeitsvertrag bei 52.000 Euro – damit erfüllen Sie die Gehaltsgrenze für IT-Fachkräfte. Haben Sie einen Nachweis über Ihren Hochschulabschluss?') },
+      { kind: 'line', speaker: 'kim', text: german('Guten Morgen. Sie beantragen eine Blaue Karte EU. Ihr Bruttojahresgehalt liegt laut Arbeitsvertrag bei 52 000 Euro – damit erfüllen Sie die Gehaltsgrenze für IT-Fachkräfte. Haben Sie einen Nachweis über Ihren Hochschulabschluss?') },
       { kind: 'line', speaker: 'kumar', mood: 'surprised', text: german('Oh nein. Mein Bachelorzeugnis aus Bangalore … das liegt zu Hause im blauen Ordner.') },
       { kind: 'line', speaker: 'kim', text: german('Das ist kein Problem, solange Ihr Abschluss bereits als gleichwertig anerkannt ist. Sie können das Zeugnis innerhalb von zwei Wochen per E-Mail nachreichen.') },
       { kind: 'line', speaker: 'mia', mood: 'curious', text: german('Und was passiert, wenn das Visum abläuft, bevor die Karte fertig ist? Die Produktion dauert ja oft mehrere Wochen.') },
@@ -813,7 +813,7 @@ export const germanStories: Story[] = [
     languages: ['de'],
     title: german('Das Projekt gerät ins Wanken'),
     beats: [
-      { kind: 'narration', text: german('Montag, 9:00 Uhr, Krisensitzung. Das Team soll für einen Kunden ein Buchungssystem entwickeln, das am 1. März live gehen muss. Es ist Mitte Januar, das Projekt hängt sechs Wochen hinterher, und von den 240.000 Euro Budget sind bereits 180.000 verbraucht.') },
+      { kind: 'narration', text: german('Montag, 9:00 Uhr, Krisensitzung. Das Team soll für einen Kunden ein Buchungssystem entwickeln, das am 1. März live gehen muss. Es ist Mitte Januar, das Projekt hängt sechs Wochen hinterher, und von den 240 000 Euro Budget sind bereits 180 000 verbraucht.') },
       { kind: 'line', speaker: 'kim', text: german('Ich will ehrlich sein: So kann ich das dem Kunden nicht präsentieren. Wie konnte es passieren, dass wir drei Viertel des Budgets ausgegeben, aber erst die Hälfte der Funktionen fertig haben?') },
       { kind: 'line', speaker: 'simon', text: german('Ganz einfach: Der Kunde hat seit dem Projektstart vierzehn zusätzliche Anforderungen nachgeschoben. Jede für sich war klein, aber zusammen haben sie den Umfang um ein Drittel vergrößert. Ein klassischer Fall von schleichender Ausweitung des Projektumfangs.') },
       { kind: 'line', speaker: 'jana', text: german('Und wir haben zu allem Ja gesagt, ohne den Zeitplan anzupassen. Das Problem ist nicht der Kunde, sondern dass wir kein sauberes Änderungsmanagement hatten.') },
@@ -829,7 +829,7 @@ export const germanStories: Story[] = [
       { kind: 'line', speaker: 'simon', text: german('Einverstanden. Ich erstelle bis Mittwoch eine Liste aller Funktionen mit Aufwandsschätzung, sortiert nach „muss“, „sollte“ und „kann“. Und ab sofort geht jede Änderung über eine schriftliche Freigabe mit Folgenabschätzung.') },
       { kind: 'line', speaker: 'jana', text: german('Und wir arbeiten in Sprints von zwei Wochen, mit einer Vorführung beim Kunden am Ende jedes Sprints. Dann sieht er früh, was wir liefern, und Überraschungen gibt es nicht erst im Februar.') },
       { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Gut. Dann telefoniere ich heute um 14 Uhr mit dem Kunden. Wer das Gespräch vorbereitet, bekommt meinen Respekt – und einen Kaffee.') },
-      { kind: 'question', prompt: german('Wie viel vom Budget ist bereits verbraucht?'), options: [german('180.000 von 240.000 Euro'), german('120.000 von 240.000 Euro'), german('240.000 von 180.000 Euro')] },
+      { kind: 'question', prompt: german('Wie viel vom Budget ist bereits verbraucht?'), options: [german('180 000 von 240 000 Euro'), german('120 000 von 240 000 Euro'), german('240 000 von 180 000 Euro')] },
       { kind: 'question', prompt: german('Was ist laut Simon die Hauptursache der Verzögerung?'), options: [german('Vierzehn nachträgliche Anforderungen des Kunden'), german('Krankheitsfälle im Team'), german('Ein Serverausfall im Dezember')] },
       { kind: 'question', prompt: german('Warum rät Simon von zusätzlichen Entwicklern ab?'), options: [german('Weil Einarbeitung und Abstimmungsaufwand das Projekt weiter verzögern'), german('Weil die anderen Teams keine Zeit haben'), german('Weil der Kunde keine neuen Gesichter möchte')] },
       { kind: 'question', prompt: german('Welcher Anteil der IT-Projekte wird laut der Studie vollständig erfolgreich abgeschlossen?'), options: [german('Etwa ein Drittel'), german('Etwa die Hälfte'), german('Knapp ein Fünftel')] },
@@ -845,7 +845,7 @@ export const germanStories: Story[] = [
     languages: ['de'],
     title: german('Die Verhandlung'),
     beats: [
-      { kind: 'narration', text: german('Amtsgericht, Sitzungssaal 3, Donnerstag, 10:30 Uhr. Richter Paul verhandelt eine Zivilsache: Der Handwerker Robert verklagt Albert auf Zahlung des restlichen Werklohns von 3.800 Euro für ein neu gefliestes Badezimmer. Albert verweigert die Zahlung wegen angeblicher Mängel.') },
+      { kind: 'narration', text: german('Amtsgericht, Sitzungssaal 3, Donnerstag, 10:30 Uhr. Richter Paul verhandelt eine Zivilsache: Der Handwerker Robert verklagt Albert auf Zahlung des restlichen Werklohns von 3 800 Euro für ein neu gefliestes Badezimmer. Albert verweigert die Zahlung wegen angeblicher Mängel.') },
       { kind: 'line', speaker: 'paul', text: german('Ich eröffne die Sitzung. Herr Robert, Sie sind der Kläger. Fassen Sie Ihren Standpunkt bitte kurz zusammen.') },
       { kind: 'line', speaker: 'robert', text: german('Bad ist seit August fertig. Fliesen, Dusche, Armaturen – alles nach Auftrag. Herr Albert hat zwei Drittel bezahlt, den Rest nicht. Seit drei Monaten keine Reaktion auf meine Rechnungen.') },
       { kind: 'line', speaker: 'albert', mood: 'angry', text: german('Weil die Arbeit mangelhaft ist! In der Dusche bleibt das Wasser stehen, weil das Gefälle zum Abfluss falsch berechnet wurde. Ich habe das Herrn Robert schriftlich mitgeteilt und ihm eine Frist zur Nachbesserung gesetzt. Er hat sie verstreichen lassen.') },
@@ -858,15 +858,15 @@ export const germanStories: Story[] = [
         german('Ich habe nichts gesehen, aber ich bin mir sicher, dass Herr Robert schuld ist, weil er so grimmig schaut.'),
         german('Im Bad stand ein Pferd, das hat das ganze Wasser getrunken.')
       ] },
-      { kind: 'line', speaker: 'paul', text: german('Danke, das war eine sachliche Aussage, die zwischen Beobachtung und Bewertung unterscheidet. Für die Ursache bräuchten wir ein Sachverständigengutachten. Das würde etwa 2.000 Euro kosten und mehrere Monate dauern – bei einem Streitwert von 3.800 Euro ein ziemliches Missverhältnis.') },
-      { kind: 'line', speaker: 'paul', text: german('Ich schlage den Parteien deshalb einen Vergleich vor: Herr Robert prüft und behebt den Abfluss binnen vierzehn Tagen auf eigene Kosten. Herr Albert zahlt sofort 3.000 Euro und die restlichen 800 Euro nach erfolgreicher Nachbesserung. Die Kosten des Rechtsstreits werden gegeneinander aufgehoben.') },
+      { kind: 'line', speaker: 'paul', text: german('Danke, das war eine sachliche Aussage, die zwischen Beobachtung und Bewertung unterscheidet. Für die Ursache bräuchten wir ein Sachverständigengutachten. Das würde etwa 2 000 Euro kosten und mehrere Monate dauern – bei einem Streitwert von 3 800 Euro ein ziemliches Missverhältnis.') },
+      { kind: 'line', speaker: 'paul', text: german('Ich schlage den Parteien deshalb einen Vergleich vor: Herr Robert prüft und behebt den Abfluss binnen vierzehn Tagen auf eigene Kosten. Herr Albert zahlt sofort 3 000 Euro und die restlichen 800 Euro nach erfolgreicher Nachbesserung. Die Kosten des Rechtsstreits werden gegeneinander aufgehoben.') },
       { kind: 'line', speaker: 'robert', text: german('Hm. Wenn’s nur der Abfluss ist – einverstanden. Mach ich nächsten Dienstag.') },
       { kind: 'line', speaker: 'albert', text: german('Na schön. Ich bestehe allerdings auf einer Widerrufsfrist, um das mit meinem Anwalt zu besprechen. Und auf einer Abnahme in schriftlicher Form. Ordnung muss sein.') },
       { kind: 'question', prompt: german('Worum geht es in dem Verfahren?'), options: [german('Um den restlichen Werklohn für ein gefliestes Bad'), german('Um einen Wasserschaden in der Nachbarwohnung'), german('Um eine fristlose Kündigung')] },
       { kind: 'question', prompt: german('Warum liegt die Beweislast laut Richter Paul bei Albert?'), options: [german('Weil er das Bad seit August nutzt, was als Abnahme gewertet werden kann'), german('Weil er der Kläger ist'), german('Weil er die Rechnung schon vollständig bezahlt hat')] },
       { kind: 'question', prompt: german('Was stand laut Robert in Alberts Brief?'), options: [german('Dass die Fugen farblich unbefriedigend seien'), german('Dass das Wasser in der Dusche stehe'), german('Dass die Armaturen fehlten')] },
       { kind: 'question', prompt: german('Warum hält der Richter ein Gutachten für unverhältnismäßig?'), options: [german('Weil es teuer und langwierig wäre im Verhältnis zum Streitwert'), german('Weil die Ursache schon eindeutig feststeht'), german('Weil Gutachten im Zivilprozess unzulässig sind')] },
-      { kind: 'question', prompt: german('Was sieht der Vergleich vor?'), options: [german('3.000 Euro sofort und 800 Euro nach der Nachbesserung'), german('Den vollen Betrag sofort ohne Nachbesserung'), german('Eine Halbierung des Werklohns')] },
+      { kind: 'question', prompt: german('Was sieht der Vergleich vor?'), options: [german('3 000 Euro sofort und 800 Euro nach der Nachbesserung'), german('Den vollen Betrag sofort ohne Nachbesserung'), german('Eine Halbierung des Werklohns')] },
       { kind: 'question', prompt: german('Was bedeutet es, dass die Kosten des Rechtsstreits gegeneinander aufgehoben werden?'), options: [german('Jede Partei trägt ihre eigenen Kosten, die Gerichtskosten werden geteilt.'), german('Der Verlierer zahlt alles.'), german('Das Gericht übernimmt sämtliche Kosten.')] }
     ]
   },
@@ -953,7 +953,7 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was behauptet der Fahrer des E-Rollers?'), options: [german('Dass {name} bei Rot gefahren ist und ohne Grund gebremst hat'), german('Dass der Lieferwagen zu schnell war'), german('Dass er selbst bei Rot gefahren ist')] },
       { kind: 'question', prompt: german('Was verändert sich, als Sabine ernster wird?'), options: [german('Sie lässt die Jalousien herunter, und nur noch die Lampe über dem Tisch brennt.'), german('Sie ruft ihren Chef an.'), german('Sie öffnet das Fenster.')] },
       { kind: 'question', prompt: german('Warum konnte der E-Roller nicht rechtzeitig anhalten?'), options: [german('Weil er zu dicht hinter dem Fahrrad fuhr und auf sein Handy schaute'), german('Weil seine Bremsen kaputt waren'), german('Weil die Straße nass war')] },
-      { kind: 'question', prompt: german('Wie viel kostet der Außenspiegel des roten Autos?'), options: [german('600 Euro'), german('60 Euro'), german('6.000 Euro')] },
+      { kind: 'question', prompt: german('Wie viel kostet der Außenspiegel des roten Autos?'), options: [german('600 Euro'), german('60 Euro'), german('6 000 Euro')] },
       { kind: 'question', prompt: german('Was beweist schließlich, dass {name} die Wahrheit sagt?'), options: [german('Das Video der Kamera über dem Eingang der Bäckerei'), german('Ein Foto des Rollerfahrers'), german('Die Aussage des Lieferwagenfahrers')] },
       { kind: 'question', prompt: german('Wie erklärt Sabine ihr strenges Verhalten?'), options: [german('Bei widersprüchlichen Aussagen muss sie prüfen, ob jemand lügt.'), german('Sie hatte einen schlechten Tag.'), german('Sie kennt {name} schon von früher.')] }
     ]
@@ -988,7 +988,7 @@ export const germanStories: Story[] = [
       { kind: 'narration', sfx: 'knock', enters: ['robert'], text: german('Um 20:35 Uhr klopft es. Robert steht mit seiner Werkzeugtasche und einer großen Stirnlampe vor der Tür.') },
       { kind: 'line', speaker: 'robert', text: german('’n Abend. Wo ist der Kasten? … Aha. Was lief alles, als es geknallt hat?') },
       { kind: 'line', speaker: 'kumar', mood: 'sad', text: german('Der Wasserkocher, die Mikrowelle, die Waschmaschine und der Föhn. Leider alles gleichzeitig.') },
-      { kind: 'line', speaker: 'robert', text: german('Na also. Alles auf einem Stromkreis. Eine Sicherung hat 16 Ampere, das sind höchstens 3.600 Watt. Wasserkocher 2.000, Waschmaschine beim Heizen auch 2.000, Mikrowelle 900. Zu viel. Die Sicherung macht genau, was sie soll: Sie schützt die Kabel, damit nichts brennt.') },
+      { kind: 'line', speaker: 'robert', text: german('Na also. Alles auf einem Stromkreis. Eine Sicherung hat 16 Ampere, das sind höchstens 3 600 Watt. Wasserkocher 2 000, Waschmaschine beim Heizen auch 2 000, Mikrowelle 900. Zu viel. Die Sicherung macht genau, was sie soll: Sie schützt die Kabel, damit nichts brennt.') },
       { kind: 'narration', lights: 'on', text: german('Robert zieht den Stecker der Waschmaschine, drückt den Schalter nach oben, und das Licht bleibt an. Er schreibt eine Rechnung über 82,50 Euro.') },
       { kind: 'line', speaker: 'robert', text: german('Waschmaschine nur, wenn in der Küche nichts Großes läuft. Oder ich lege euch einen eigenen Stromkreis fürs Bad. Kostet aber. Überlegt’s euch.') },
       { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Danke, Robert! Möchtest du ein bisschen Curry? Es ist jetzt kalt, aber die Mikrowelle … ach nein, lieber nicht.') },
@@ -996,7 +996,7 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Woran erkennt Mia, dass es kein Stromausfall in der ganzen Stadt ist?'), options: [german('Bei den Nachbarn gegenüber brennt Licht.'), german('Das Radio meldet es nicht.'), german('Ihr Handy funktioniert noch.')] },
       { kind: 'question', prompt: german('Welche Farbe haben die Schalter im Sicherungskasten?'), options: [german('Schwarz'), german('Rot'), german('Grau')] },
       { kind: 'question', prompt: german('Warum fliegt die Sicherung beim zweiten Mal wieder raus?'), options: [german('Weil Kumar den Wasserkocher wieder anmacht'), german('Weil Mia den Föhn anmacht'), german('Weil Robert am Kasten arbeitet')] },
-      { kind: 'question', prompt: german('Wie viel Watt hält eine Sicherung mit 16 Ampere laut Robert höchstens aus?'), options: [german('3.600 Watt'), german('900 Watt'), german('16.000 Watt')] },
+      { kind: 'question', prompt: german('Wie viel Watt hält eine Sicherung mit 16 Ampere laut Robert höchstens aus?'), options: [german('3 600 Watt'), german('900 Watt'), german('16 000 Watt')] },
       { kind: 'question', prompt: german('Wozu ist die Sicherung laut Robert da?'), options: [german('Sie schützt die Kabel, damit nichts brennt.'), german('Sie spart Strom in der Nacht.'), german('Sie macht das Licht heller.')] },
       { kind: 'question', prompt: german('Wann kommt Robert an?'), options: [german('Um 20:35 Uhr'), german('Um 19:45 Uhr'), german('Um 22:00 Uhr')] }
     ]
