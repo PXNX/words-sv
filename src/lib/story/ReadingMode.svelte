@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
+import { page } from '$app/state';
   import { goto } from '$app/navigation';
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
@@ -233,6 +234,9 @@
       wrong = saved.wrong;
       if (catalog.some((item) => item.id === saved.id)) currentId = saved.id;
     }
+    // A "continue" link from the home screen opens one specific text.
+    const requested = page.url.searchParams.get('text');
+    if (requested && catalog.some((item) => item.id === requested)) currentId = requested;
     ready = true;
   });
 

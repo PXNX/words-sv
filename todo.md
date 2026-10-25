@@ -19,15 +19,15 @@ tests/build, a focused commit and a push to `main`.
 
 ## 2. Turn the home screen into a “Today” coach (M)
 
-- [ ] Add one card above the mode grid that computes the next best action from local state:
-  - [ ] “N words are due, about M minutes” → `/vocab`
-  - [ ] “You left <text> at question N” → `/reading`
-  - [ ] “Your streak needs N more correct words” → `/vocab`
-  - [ ] “You marked N words in reading — repeat them” → review session
-- [ ] Aggregate existing data only: `readVocabularyProgressByLanguage`, reading/story progress,
+- [x] Add one card above the mode grid that computes the next best action from local state:
+  - [x] “N words are due, about M minutes” → `/vocab`
+  - [x] “You left <text> at question N” → `/reading`
+  - [x] “Your streak needs N more correct words” → `/vocab`
+  - [x] “You marked N words in reading — repeat them” → review session
+- [x] Aggregate existing data only: `readVocabularyProgressByLanguage`, reading/story progress,
   `readMissedWords`, streak.
-- [ ] Support deep links into the selected reading text and unfinished story.
-- [ ] Remove “menu paralysis”: the Today card is visually the primary action.
+- [x] Support deep links into the selected reading text and unfinished story.
+- [x] Remove “menu paralysis”: the Today card is visually the primary action.
 
 ## 3. Give every session a real ending and a next step (S–M)
 

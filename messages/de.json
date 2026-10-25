@@ -231,5 +231,12 @@
   "streak_mode_done": "Heute geschafft",
   "streak_grammar_progress": "Grammatik: {done}/{goal}",
   "streak_pronunciation_progress": "Aussprache: {done}/{goal}",
-  "streak_goal_choose": "Tagesziel wählen"
+  "streak_goal_choose": "Tagesziel wählen",
+  "today_kicker": "Dein nächster Schritt",
+  "today_due": "{count} Wörter sind fällig — etwa {minutes} Minuten",
+  "today_reading": "Weiter mit „{title}“ — Frage {number} wartet",
+  "today_streak": "Deiner Serie fehlen noch {count} richtige Wörter",
+  "today_marked": "Du hast {count} Wörter markiert — wiederhole sie",
+  "today_done": "Für heute ist alles geschafft.",
+  "today_start": "Los geht’s"
 }

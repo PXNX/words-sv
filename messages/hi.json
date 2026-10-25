@@ -227,5 +227,12 @@
   "streak_mode_done": "आज पूरा हुआ",
   "streak_grammar_progress": "व्याकरण: {done}/{goal}",
   "streak_pronunciation_progress": "उच्चारण: {done}/{goal}",
-  "streak_goal_choose": "दैनिक लक्ष्य चुनें"
+  "streak_goal_choose": "दैनिक लक्ष्य चुनें",
+  "today_kicker": "आपका अगला कदम",
+  "today_due": "{count} शब्द दोहराने बाकी हैं — लगभग {minutes} मिनट",
+  "today_reading": "«{title}» जारी रखें — सवाल {number} इंतज़ार कर रहा है",
+  "today_streak": "आपकी स्ट्रीक के लिए {count} और सही शब्द चाहिए",
+  "today_marked": "आपने {count} शब्द चिह्नित किए — उन्हें दोहराएँ",
+  "today_done": "आज के लिए सब पूरा हुआ।",
+  "today_start": "शुरू करें"
 }

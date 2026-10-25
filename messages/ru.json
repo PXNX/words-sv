@@ -227,5 +227,12 @@
   "streak_mode_done": "Сегодня выполнено",
   "streak_grammar_progress": "Грамматика: {done}/{goal}",
   "streak_pronunciation_progress": "Произношение: {done}/{goal}",
-  "streak_goal_choose": "Выбрать дневную цель"
+  "streak_goal_choose": "Выбрать дневную цель",
+  "today_kicker": "Твой следующий шаг",
+  "today_due": "{count} слов к повторению — около {minutes} минут",
+  "today_reading": "Продолжи «{title}» — вопрос {number} ждёт",
+  "today_streak": "Для серии нужно ещё {count} правильных ответов",
+  "today_marked": "Ты отметил {count} слов — повтори их",
+  "today_done": "На сегодня всё сделано.",
+  "today_start": "Начать"
 }

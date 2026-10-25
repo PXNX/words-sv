@@ -227,5 +227,12 @@
   "streak_mode_done": "Сьогодні виконано",
   "streak_grammar_progress": "Граматика: {done}/{goal}",
   "streak_pronunciation_progress": "Вимова: {done}/{goal}",
-  "streak_goal_choose": "Обрати денну мету"
+  "streak_goal_choose": "Обрати денну мету",
+  "today_kicker": "Твій наступний крок",
+  "today_due": "{count} слів до повторення — близько {minutes} хвилин",
+  "today_reading": "Продовж «{title}» — запитання {number} чекає",
+  "today_streak": "Для серії потрібно ще {count} правильних відповідей",
+  "today_marked": "Ти позначив {count} слів — повтори їх",
+  "today_done": "На сьогодні все зроблено.",
+  "today_start": "Почати"
 }
