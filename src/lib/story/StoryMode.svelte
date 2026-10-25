@@ -74,7 +74,8 @@
     }
   }
   // A story that was open when the learner left is restored in place instead of drawing a new one.
-  const restoredProgress = readProgress();
+  // This is read when the page mounts, not once per module, because a client-side return to the page
+  // reuses the module but must still see the progress saved just before leaving.
   let progressTimer = 0;
   function writeProgress() {
     if (typeof localStorage === 'undefined' || !story) return;
@@ -762,14 +763,12 @@
 
   // A new level (or the "include lower levels" toggle) means a different story pool. A saved
   // playthrough keeps its turn; only after it has been put back does a drawn story take over.
-  let restored = restoredProgress;
   $effect(() => {
     settings.vocabularyLevel;
     settings.includeLowerVocabulary;
     untrack(() => {
-      if (restored) {
-        const progress = restored;
-        restored = null;
+      const progress = readProgress();
+      if (progress) {
         restore(progress);
         return;
       }
