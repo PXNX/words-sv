@@ -204,7 +204,10 @@
     if (!item || currentSolved[index]) return;
     const question = item.questions[index];
     if (isCorrectAnswer(question, option)) {
-      solved = { ...solved, [item.id]: { ...currentSolved, [index]: true } };
+      const nextSolved: Record<number, true> = { ...currentSolved, [index]: true };
+      solved = { ...solved, [item.id]: nextSolved };
+      // Every question answered ends the text, which is one of the ways to qualify the day.
+      if (item.questions.length > 0 && item.questions.every((_, questionIndex) => nextSolved[questionIndex])) void settings.recordStreak('reading_completed');
       if (settings.sound) playSuccessSound(settings.sound, 'vocab');
     } else {
       wrong = { ...wrong, [item.id]: { ...currentWrong, [index]: [...(currentWrong[index] ?? []), option] } };

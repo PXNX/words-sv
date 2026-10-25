@@ -194,6 +194,7 @@
     heardIpa = heard ? transcribeToIpa(heard, settings.lang) : '';
     matchState = attempt.matched ? 'correct' : 'incorrect';
     correction = attempt.matched || !heardIpa ? null : ipaDiff(heardIpa, ipa);
+    if (heard) void settings.recordStreak('pronunciation_practised');
     if (attempt.matched) {
       playSuccessSound(settings.sound, 'pronunciation');
       stopListening();

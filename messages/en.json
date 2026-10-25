@@ -224,5 +224,12 @@
   "story_loader_questions": "{count} questions",
   "story_loader_cast": "With {names}",
   "story_loader_voice": "Voice: {voice}",
-  "story_loader_voices": "Loading voices ?"
+  "story_loader_voices": "Loading voices ?",
+  "streak_goal_hint": "Choose how many words make a learning day.",
+  "streak_goal_words": "{count} words",
+  "streak_counts_today": "Counts today",
+  "streak_mode_done": "Done today",
+  "streak_grammar_progress": "Grammar: {done}/{goal}",
+  "streak_pronunciation_progress": "Pronunciation: {done}/{goal}",
+  "streak_goal_choose": "Choose daily goal"
 }

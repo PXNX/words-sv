@@ -220,5 +220,12 @@
   "story_loader_questions": "{count} perguntas",
   "story_loader_cast": "Com {names}",
   "story_loader_voice": "Voz: {voice}",
-  "story_loader_voices": "A carregar as vozes ?"
+  "story_loader_voices": "A carregar as vozes ?",
+  "streak_goal_hint": "Escolhe quantas palavras fazem um dia de estudo.",
+  "streak_goal_words": "{count} palavras",
+  "streak_counts_today": "Conta para hoje",
+  "streak_mode_done": "Feito hoje",
+  "streak_grammar_progress": "Gramática: {done}/{goal}",
+  "streak_pronunciation_progress": "Pronúncia: {done}/{goal}",
+  "streak_goal_choose": "Escolher meta diária"
 }

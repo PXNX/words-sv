@@ -22,6 +22,8 @@
   import SelectMenu from '#lib/settings/SelectMenu.svelte';
   import { playSoundEffect } from '#lib/sounds.js';
   import { playableLanguages, type Language } from '#lib/data/vocabulary.js';
+  import { VOCABULARY_GOALS, modeDone, type StreakMode } from '#lib/clientStreak.js';
+  import TodayBadge from '#lib/streak/TodayBadge.svelte';
   import IconSettings from '~icons/material-symbols/settings-rounded';
   import IconHelp from '~icons/material-symbols/question-mark-rounded';
   import IconFlame from '~icons/material-symbols/local-fire-department-rounded';
@@ -82,6 +84,11 @@
     streakDone: m.streak_done({}, { locale: settings.interfaceLocale }),
     streakProgress: m.streak_progress({}, { locale: settings.interfaceLocale }),
     streakTimeLeft: m.streak_time_left({}, { locale: settings.interfaceLocale }),
+    streakGoalHint: m.streak_goal_hint({}, { locale: settings.interfaceLocale }),
+    streakGoalChoose: m.streak_goal_choose({}, { locale: settings.interfaceLocale }),
+    streakGoalWords: (count: number) => m.streak_goal_words({ count }, { locale: settings.interfaceLocale }),
+    streakCountsToday: m.streak_counts_today({}, { locale: settings.interfaceLocale }),
+    streakModeDone: m.streak_mode_done({}, { locale: settings.interfaceLocale }),
     story: m.story_title({}, { locale: settings.interfaceLocale }),
     homeStory: m.story_home({}, { locale: settings.interfaceLocale }),
     reading: m.reading_title({}, { locale: settings.interfaceLocale }),
@@ -120,14 +127,14 @@
     petting = false;
     requestAnimationFrame(() => (petting = true));
   }
-  // Only Circle, Kreuzwort (same completion signal as Circle), Wordle and Word Quiz count
-  // toward the daily streak — color those by today's status and leave every other mode neutral.
-  function streakClass(kind: 'circle' | 'wordle' | 'vocab' | null): string {
-    if (kind === 'circle') return settings.streak.circleCompleted ? 'streak-done' : 'streak-pending';
-    if (kind === 'wordle') return settings.streak.wordleCompleted ? 'streak-done' : 'streak-pending';
-    if (kind === 'vocab') return settings.streak.vocabCorrect >= settings.streak.vocabularyGoal ? 'streak-done' : 'streak-pending';
-    return 'streak-none';
+  // Every mode that can qualify the day gets the same green/amber marker; the rest stay neutral.
+  function streakClass(kind: StreakMode | null): string {
+    if (!kind) return 'streak-none';
+    return modeDone(settings.streak, kind) ? 'streak-done' : 'streak-pending';
   }
+  const dailyGoal = $derived(settings.dailyGoal());
+  // The ring shows how far today's vocabulary goal is met, or a full ring once any mode qualified.
+  const goalProgress = $derived(settings.streak.qualified ? 1 : Math.min(1, settings.streak.vocabCorrect / Math.max(1, settings.streak.vocabularyGoal)));
 
   onMount(() => {
     if (!settings.hasStoredInterfaceLocale()) settings.applyPreferredInterfaceLocale();
@@ -172,39 +179,55 @@
       <div class="home-family"><span class="home-family-people" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="tom" /></span><button type="button" class="home-lilith-pet" class:petting onclick={petLilith} onanimationend={() => (petting = false)} aria-label={labels.petLilith}><span class="home-lilith"><StoryCharacter id="lilith" mood={petting ? 'happy' : 'neutral'} /></span></button></div>
       <h1>{labels.homeTitle}</h1><span class="home-cast-note">{labels.homeCast}</span>
     </header>
-    <a class:qualified={settings.streak.qualified} class="card-play home-streak" href="/progress" aria-label={`${labels.streak}: ${settings.streak.streakCount}`}>
-      <span class="home-streak-flame" aria-hidden="true"><IconFlame /></span>
-      <span class="home-streak-count"><strong>{settings.streak.streakCount}</strong><small>{labels.streak}</small></span>
-      <span class="home-streak-detail">
-        {#if settings.streak.qualified}<b>{labels.streakDone}</b>{:else}<b>{labels.streakProgress}: {settings.streak.vocabCorrect}/{settings.streak.vocabularyGoal}</b><small>{labels.streakTimeLeft}: {formatMinutes(settings.streak.minutesRemaining)}</small>{/if}
-      </span>
-      <IconChevronRight class="home-streak-arrow" aria-hidden="true" />
-    </a>
+    <div class="home-streak-block">
+      <a class:qualified={settings.streak.qualified} class="card-play home-streak" href="/progress" aria-label={`${labels.streak}: ${settings.streak.streakCount}`}>
+        <span class="home-streak-flame" aria-hidden="true">
+          <svg class="home-streak-ring" viewBox="0 0 36 36">
+            <circle class="home-streak-ring-track" cx="18" cy="18" r="16" pathLength="100" />
+            <circle class="home-streak-ring-value" cx="18" cy="18" r="16" pathLength="100" stroke-dasharray="100" stroke-dashoffset={100 - goalProgress * 100} />
+          </svg>
+          <IconFlame />
+        </span>
+        <span class="home-streak-count"><strong>{settings.streak.streakCount}</strong><small>{labels.streak}</small></span>
+        <span class="home-streak-detail">
+          {#if settings.streak.qualified}<b>{labels.streakDone}</b>{:else}<b>{labels.streakProgress}: {settings.streak.vocabCorrect}/{settings.streak.vocabularyGoal}</b><small>{labels.streakTimeLeft}: {formatMinutes(settings.streak.minutesRemaining)}</small>{/if}
+        </span>
+        <IconChevronRight class="home-streak-arrow" aria-hidden="true" />
+      </a>
+      <div class="home-goal" role="group" aria-label={labels.streakGoalChoose}>
+        <span class="home-goal-hint">{labels.streakGoalHint}</span>
+        <div class="home-goal-options">
+          {#each VOCABULARY_GOALS as goal (goal)}
+            <button type="button" class="home-goal-option" class:active={goal === dailyGoal} aria-pressed={goal === dailyGoal} onclick={() => void settings.setDailyGoal(goal)}>{labels.streakGoalWords(goal)}</button>
+          {/each}
+        </div>
+      </div>
+    </div>
     <h2 class="home-group-heading">{labels.gamesGroup}</h2>
     <div class="home-games home-games--games">
-      <div class="home-card-slot"><a class="card-play {streakClass('circle')}" href="/circle"><span class="home-icon" aria-hidden="true"><IconCrossword /></span><h2>{labels.modeCrossword}</h2><p>{labels.homeCircle}</p></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/circle/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
-      <a class="card-play {streakClass('circle')}" href="/circle/definitions"><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>Kreuzwort</h2><p>Same crossword, but tap any square for that word's definition.</p></a>
-      <div class="home-card-slot"><a class="card-play {streakClass('wordle')}" href="/wordle"><span class="home-icon" aria-hidden="true"><IconSpellcheck /></span><h2>{labels.modeWordle}</h2><p>{labels.homeWordle}</p></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/wordle/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
+      <div class="home-card-slot"><a class="card-play {streakClass('circle')}" href="/circle"><span class="home-icon" aria-hidden="true"><IconCrossword /></span><h2>{labels.modeCrossword}</h2><p>{labels.homeCircle}</p><TodayBadge done={modeDone(settings.streak, 'circle')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/circle/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
+      <a class="card-play {streakClass(null)}" href="/circle/definitions"><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>Kreuzwort</h2><p>Same crossword, but tap any square for that word's definition.</p></a>
+      <div class="home-card-slot"><a class="card-play {streakClass('wordle')}" href="/wordle"><span class="home-icon" aria-hidden="true"><IconSpellcheck /></span><h2>{labels.modeWordle}</h2><p>{labels.homeWordle}</p><TodayBadge done={modeDone(settings.streak, 'wordle')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/wordle/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
       <div class="home-card-slot"><a class="card-play {streakClass(null)}" href="/hangman"><span class="home-icon" aria-hidden="true"><IconHangman /></span><h2>{labels.modeHangman}</h2><p>Guess the hidden word one letter at a time.</p></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/hangman/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
     </div>
     <h2 class="home-group-heading">{labels.story}</h2>
     <div class="home-games">
-      <a class="card-play {streakClass(null)}" href="/stories"><span class="home-icon" aria-hidden="true"><IconStory /></span><h2>{labels.story}</h2><p>{labels.homeStory}</p></a>
-      <a class="card-play {streakClass(null)}" href="/reading"><span class="home-icon" aria-hidden="true"><IconMenuBook /></span><h2>{labels.reading}</h2><p>{labels.homeReading}</p></a>
-      <a class="card-play {streakClass(null)}" href="/listen"><span class="home-icon" aria-hidden="true"><IconHeadphones /></span><h2>{labels.listen}</h2><p>{labels.homeListen}</p></a>
+      <a class="card-play {streakClass('story')}" href="/stories"><span class="home-icon" aria-hidden="true"><IconStory /></span><h2>{labels.story}</h2><p>{labels.homeStory}</p><TodayBadge done={modeDone(settings.streak, 'story')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
+      <a class="card-play {streakClass('reading')}" href="/reading"><span class="home-icon" aria-hidden="true"><IconMenuBook /></span><h2>{labels.reading}</h2><p>{labels.homeReading}</p><TodayBadge done={modeDone(settings.streak, 'reading')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
+      <a class="card-play {streakClass('listen')}" href="/listen"><span class="home-icon" aria-hidden="true"><IconHeadphones /></span><h2>{labels.listen}</h2><p>{labels.homeListen}</p><TodayBadge done={modeDone(settings.streak, 'listen')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
     </div>
     <h2 class="home-group-heading">{labels.vocabularyGroup}</h2>
     <div class="home-games">
-      <a class="card-play {streakClass('vocab')}" href="/vocab"><span class="home-icon" aria-hidden="true"><IconQuiz /></span><h2>{labels.wordQuiz}</h2><p>{labels.homeVocab}</p></a>
-      <a class="card-play {streakClass(null)}" href="/pronunciation"><span class="home-icon" aria-hidden="true"><IconMic /></span><h2>{labels.pronunciation}</h2><p>Listen to audio samples and practise speaking.</p></a>
+      <a class="card-play {streakClass('vocab')}" href="/vocab"><span class="home-icon" aria-hidden="true"><IconQuiz /></span><h2>{labels.wordQuiz}</h2><p>{labels.homeVocab}</p><TodayBadge done={modeDone(settings.streak, 'vocab')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
+      <a class="card-play {streakClass('pronunciation')}" href="/pronunciation"><span class="home-icon" aria-hidden="true"><IconMic /></span><h2>{labels.pronunciation}</h2><p>Listen to audio samples and practise speaking.</p><TodayBadge done={modeDone(settings.streak, 'pronunciation')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
       <a class="card-play {streakClass(null)}" href="/alltag"><span class="home-icon" aria-hidden="true"><IconEmoji /></span><h2>{labels.alltag}</h2><p>Präpositionen, Zahlen und Farben für den Alltag.</p></a>
-      <a class="card-play {streakClass(null)}" href="/grammar?mode=falsefriends"><span class="home-icon" aria-hidden="true"><IconSwapHoriz /></span><h2>{labels.grammarFalseFriends}</h2><p>Wörter, die täuschend ähnlich aussehen, aber etwas anderes bedeuten.</p></a>
+      <a class="card-play {streakClass('grammar')}" href="/grammar?mode=falsefriends"><span class="home-icon" aria-hidden="true"><IconSwapHoriz /></span><h2>{labels.grammarFalseFriends}</h2><p>Wörter, die täuschend ähnlich aussehen, aber etwas anderes bedeuten.</p><TodayBadge done={modeDone(settings.streak, 'grammar')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
     </div>
     <h2 class="home-group-heading">{labels.grammarGroup}</h2>
     <div class="home-games">
-      <a class="card-play {streakClass(null)}" href="/grammar?mode=fill"><span class="home-icon" aria-hidden="true"><IconEditNote /></span><h2>{labels.grammarFill}</h2><p>{labels.homeGrammar}</p></a>
-      <a class="card-play {streakClass(null)}" href="/grammar?mode=determine"><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>{labels.grammarDetermine}</h2><p>Kasus, Genus, Numerus, Person und Tempus bestimmen.</p></a>
-      <a class="card-play {streakClass(null)}" href="/grammar?mode=order"><span class="home-icon" aria-hidden="true"><IconSort /></span><h2>{labels.grammarOrder}</h2><p>Ordne Wörter und bilde einen korrekten Satz.</p></a>
+      <a class="card-play {streakClass('grammar')}" href="/grammar?mode=fill"><span class="home-icon" aria-hidden="true"><IconEditNote /></span><h2>{labels.grammarFill}</h2><p>{labels.homeGrammar}</p><TodayBadge done={modeDone(settings.streak, 'grammar')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
+      <a class="card-play {streakClass('grammar')}" href="/grammar?mode=determine"><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>{labels.grammarDetermine}</h2><p>Kasus, Genus, Numerus, Person und Tempus bestimmen.</p><TodayBadge done={modeDone(settings.streak, 'grammar')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
+      <a class="card-play {streakClass('grammar')}" href="/grammar?mode=order"><span class="home-icon" aria-hidden="true"><IconSort /></span><h2>{labels.grammarOrder}</h2><p>Ordne Wörter und bilde einen korrekten Satz.</p><TodayBadge done={modeDone(settings.streak, 'grammar')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
     </div>
     <a class="btn-play btn-play-soft btn-play-sm home-settings-link" href="/settings"><IconSettings aria-hidden="true" /><span>{labels.settings}</span></a>
   {/if}
@@ -214,8 +237,20 @@
   .home-view { flex:1 1 auto;min-height:0;display:grid;align-content:safe center;gap:clamp(1rem,4vw,1.8rem);padding:clamp(.6rem,3vw,1.1rem) clamp(.7rem,3.4vw,1.25rem);overflow-x:hidden;overflow-y:auto; }
   .home-header { display:grid;gap:.35rem;text-align:center; }.home-group-heading { margin:0 -.1rem -.35rem;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase; }.home-header p,.home-onboarding>p { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }.home-header h1,.home-onboarding h1 { margin:0;color:#172a45 !important;text-shadow:0 1px 0 rgba(255,253,247,.72);font-family:'DM Serif Display',serif;font-size:clamp(2.1rem,10vw,3.35rem);font-weight:400;letter-spacing:-.05em;line-height:.9; }.home-onboarding>span { color:#596477;font-family:'DM Sans',sans-serif;font-size:.73rem;font-weight:700;line-height:1.4; }
   .home-settings-link { justify-self:center; }
-  .home-streak { display:grid;grid-template-columns:auto auto 1fr auto;gap:.7rem;align-items:center;justify-self:center;width:min(100%,27rem);padding:.75rem .9rem;--tilt:-.4deg;text-align:left;cursor:pointer; }
-  .home-streak-flame { display:grid;place-items:center;width:2.15rem;height:2.15rem;flex:none;border:2px solid #172a45;border-radius:48% 52% 50% 50% / 52% 48% 52% 48%;background:#f7e2b0;color:#c9832f; }.home-streak-flame :global(svg) { width:1.2rem;height:1.2rem; }
+  .home-streak-block { display:grid;justify-items:center;gap:.35rem;justify-self:center;width:min(100%,27rem); }
+  .home-streak { display:grid;grid-template-columns:auto auto 1fr auto;gap:.7rem;align-items:center;width:100%;padding:.75rem .9rem;--tilt:-.4deg;text-align:left;cursor:pointer; }
+  .home-streak-flame { position:relative;display:grid;place-items:center;width:2.15rem;height:2.15rem;flex:none;border:2px solid #172a45;border-radius:48% 52% 50% 50% / 52% 48% 52% 48%;background:#f7e2b0;color:#c9832f; }
+  .home-streak-flame :global(svg:not(.home-streak-ring)) { width:1.2rem;height:1.2rem; }
+  .home-streak-ring { position:absolute;inset:-.32rem;width:calc(100% + .64rem);height:calc(100% + .64rem);rotate:-90deg;overflow:visible; }
+  .home-streak-ring-track { fill:none;stroke:rgba(23,42,69,.16);stroke-width:2.4; }
+  .home-streak-ring-value { fill:none;stroke:#e6a527;stroke-width:2.4;stroke-linecap:round;transition:stroke-dashoffset .45s var(--play-ease); }
+  .home-streak.qualified .home-streak-ring-value { stroke:#34824d; }
+  .home-goal { display:flex;align-items:center;justify-content:center;gap:.45rem;flex-wrap:wrap; }
+  .home-goal-hint { color:#596477;font-family:'DM Sans',sans-serif;font-size:.53rem;font-weight:800; }
+  .home-goal-options { display:flex;gap:.25rem; }
+  .home-goal-option { min-height:1.5rem;padding:.1rem .5rem;border:1.5px solid rgba(23,42,69,.3);border-radius:999px;background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.53rem;font-weight:900;cursor:pointer; }
+  .home-goal-option.active { border-color:#172a45;background:#172a45;color:#fffdf7; }
+  .home-goal-option:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
   .home-streak-count { display:grid;gap:0;justify-items:start;min-width:2.6rem; }.home-streak-count strong { color:#172a45;font-family:'DM Serif Display',serif;font-size:1.65rem;font-weight:400;line-height:.85; }.home-streak-count small { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.5rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }
   .home-streak-detail { display:grid;gap:.15rem;justify-items:start; }.home-streak-detail b { color:#172a45;font-family:'DM Sans',sans-serif;font-size:.63rem;font-weight:800;line-height:1.3; }.home-streak-detail small { color:#596477;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:800; }
   .home-streak :global(.home-streak-arrow) { width:1.2rem;height:1.2rem;flex:none;color:rgba(23,42,69,.4); }
@@ -264,4 +299,8 @@
   :global(html.dark) .home-icon,:global(html.dark) .home-streak-flame { border-color:#0b1626;background:#172a45;color:#e6a527; }
   :global(html.dark) .home-language-choice button:first-child { background:#e6a527;color:#172a45; }
   :global(html.dark) .home-streak-count strong,:global(html.dark) .home-streak-detail b { color:#fffdf7; }:global(html.dark) .home-streak-detail small { color:rgba(255,253,247,.72); }:global(html.dark) .home-streak :global(.home-streak-arrow) { color:rgba(255,253,247,.42); }:global(html.dark) .home-streak.qualified .home-streak-count strong,:global(html.dark) .home-streak.qualified .home-streak-detail b { color:#8ed8a2; }
+  :global(html.dark) .home-streak-ring-track { stroke:rgba(255,253,247,.2); }
+  :global(html.dark) .home-goal-hint { color:rgba(255,253,247,.72); }
+  :global(html.dark) .home-goal-option { border-color:rgba(255,253,247,.32);background:#213a5d;color:#fffdf7; }
+  :global(html.dark) .home-goal-option.active { border-color:#e6a527;background:#e6a527;color:#172a45; }
 </style>
