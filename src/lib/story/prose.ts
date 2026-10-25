@@ -1,5 +1,5 @@
 import type { Language } from '#lib/data/vocabulary.js';
-import { characterNames, fillName, type CharacterId, type Story, type StoryBeat } from './stories';
+import { characterNames, fillName, withDetails, type CharacterId, type Story, type StoryBeat } from './stories';
 import type { ReadingBlock, ReadingQuestion, SpeechStyle } from './readingTexts';
 
 export type ReadingQuestionView = ReadingQuestion & { answer: string };
@@ -74,15 +74,29 @@ function pushParagraph(blocks: ReadingBlock[], text: string) {
   blocks.push({ kind: 'paragraph', text });
 }
 
+// The reading catalog shows the same text on every visit, so its details come from a seed rather
+// than Math.random: the prose and its saved answers keep matching each other.
+function seededRandom(seed: string): () => number {
+  let state = 0;
+  for (let index = 0; index < seed.length; index += 1) state = (state * 31 + seed.charCodeAt(index)) % 2147483647;
+  return () => {
+    state = (state * 1103515245 + 12345) % 2147483647;
+    return state / 2147483647;
+  };
+}
+
 /**
  * Turns a story into a continuous text: narration becomes paragraphs, dialogue becomes quoted
  * prose with a speech attribution, and comprehension questions move to the end instead of sitting
  * between the lines. The correct reply is woven in as the reader's own line.
  */
 export function storyProse(story: Story, language: Language, name: string, seed = story.id): StoryProse {
+  // Details are drawn first: they fill `{now}`, `{when#2}` and the other story variants, so no
+  // placeholder can reach the prose or the answer options.
+  const resolved = withDetails(story, seededRandom(seed));
   const blocks: ReadingBlock[] = [];
   const questions: ReadingQuestionView[] = [];
-  for (const beat of story.beats) {
+  for (const beat of resolved.beats) {
     if (beat.kind === 'narration') {
       pushParagraph(blocks, fillName(beat.text[language], name));
       continue;
@@ -112,6 +126,47 @@ export function storyProse(story: Story, language: Language, name: string, seed 
 /** The speaker's display name, with the reader's own name for their replies. */
 export function speakerName(speaker: CharacterId | 'you', language: Language, name: string): string {
   return speaker === 'you' ? name : characterNames[speaker][language];
+}
+
+const quoteMarks: Record<Language, { open: string; close: string }> = {
+  de: { open: '„', close: '“' },
+  en: { open: '“', close: '”' },
+  fr: { open: '« ', close: ' »' },
+  it: { open: '« ', close: ' »' },
+  es: { open: '« ', close: ' »' },
+  pt: { open: '« ', close: ' »' },
+  uk: { open: '« ', close: ' »' }
+};
+
+/**
+ * Renders blocks as one continuous flow of plain paragraphs: section headings disappear and a
+ * spoken line is folded into the paragraph it follows, quoted and attributed like a novel.
+ */
+export function readingParagraphs(blocks: ReadingBlock[], language: Language, name: string): string[] {
+  const marks = quoteMarks[language];
+  const reader = name || (language === 'de' ? 'du' : 'you');
+  const paragraphs: string[] = [];
+
+  for (const block of blocks) {
+    if (block.kind === 'heading') continue;
+    if (block.kind === 'paragraph') {
+      const text = block.text.trim();
+      if (text) paragraphs.push(text);
+      continue;
+    }
+
+    const spoken = block.text.trim();
+    const strong = /[?!…]$|\.\.\.$/.test(spoken);
+    // The closing period belongs to the attribution, but an ellipsis stays inside the quote.
+    const body = strong ? spoken : spoken.replace(/\.$/, '');
+    const speaker = speakerName(block.speaker, language, reader);
+    const verb = attribution(speaker, block.speech ?? 'say', language);
+    const quote = `${marks.open}${body}${marks.close}${strong ? '' : ','} ${verb}.`;
+    if (paragraphs.length) paragraphs[paragraphs.length - 1] += ` ${quote}`;
+    else paragraphs.push(quote);
+  }
+
+  return paragraphs;
 }
 
 /** Scores a multiple-choice question against its stored answer. */
