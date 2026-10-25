@@ -37,6 +37,7 @@
   import IconSort from '~icons/material-symbols/sort-rounded';
   import IconSwapHoriz from '~icons/material-symbols/swap-horiz-rounded';
   import IconStory from '~icons/material-symbols/auto-stories-rounded';
+  import IconMenuBook from '~icons/material-symbols/menu-book-rounded';
   import IconHeadphones from '~icons/material-symbols/headphones-rounded';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
@@ -83,6 +84,8 @@
     streakTimeLeft: m.streak_time_left({}, { locale: settings.interfaceLocale }),
     story: m.story_title({}, { locale: settings.interfaceLocale }),
     homeStory: m.story_home({}, { locale: settings.interfaceLocale }),
+    reading: m.reading_title({}, { locale: settings.interfaceLocale }),
+    homeReading: m.reading_home({}, { locale: settings.interfaceLocale }),
     listen: m.story_listen({}, { locale: settings.interfaceLocale }),
     homeListen: m.story_listen_home({}, { locale: settings.interfaceLocale }),
     nameTitle: m.onboarding_name_title({}, { locale: settings.interfaceLocale }),
@@ -187,6 +190,7 @@
     <h2 class="home-group-heading">{labels.story}</h2>
     <div class="home-games">
       <a class="card-play {streakClass(null)}" href="/stories"><span class="home-icon" aria-hidden="true"><IconStory /></span><h2>{labels.story}</h2><p>{labels.homeStory}</p></a>
+      <a class="card-play {streakClass(null)}" href="/reading"><span class="home-icon" aria-hidden="true"><IconMenuBook /></span><h2>{labels.reading}</h2><p>{labels.homeReading}</p></a>
       <a class="card-play {streakClass(null)}" href="/listen"><span class="home-icon" aria-hidden="true"><IconHeadphones /></span><h2>{labels.listen}</h2><p>{labels.homeListen}</p></a>
     </div>
     <h2 class="home-group-heading">{labels.vocabularyGroup}</h2>

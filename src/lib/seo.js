@@ -96,6 +96,12 @@ export const pages = {
 		kicker: 'Lesen',
 		icon: 'auto-stories-rounded'
 	},
+	'/reading': {
+		title: 'Lesen',
+		description: 'Lies Geschichten und Lesetexte als zusammenhängenden Text.',
+		kicker: 'Lesen',
+		icon: 'menu-book-rounded'
+	},
 	'/listen': {
 		title: 'Geschichten hören',
 		description: 'Höre kurze Geschichten mit natürlichen Stimmen und steuere die Wiedergabe.',
