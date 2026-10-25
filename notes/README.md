@@ -26,3 +26,5 @@ Die App wird als statische SvelteKit-Seite gebaut. `vercel.json` legt Bun 1.4, d
 ## PWA und Offline-Nutzung
 
 WordCircle erzeugt beim Build ein Web-App-Manifest und einen Service Worker. Nach dem ersten erfolgreichen Aufruf kann die veröffentlichte Seite über die Browserfunktion **App installieren** zum Startbildschirm hinzugefügt werden; die Spieloberfläche und ihre lokalen Ressourcen bleiben anschließend offline verfügbar.
+
+Beim Start prüft die installierte App sofort, ob ein neuer Service Worker bereitsteht, übernimmt ihn vor dem Spielen und lädt neu. Ein Neuladen liefert damit den aktuellen Build. Läuft die App bereits, wird bewusst nicht mitten im Spiel neu geladen; stattdessen erscheint der Update-Hinweis auf der Startseite. Die Prüfung erfolgt beim Fokuswechsel und alle fünf Minuten. In einem bereits geöffneten Fenster kann es daher bis zum Erscheinen dieses Hinweises dauern; erst nach dem Bestätigen wird der neue Build geladen. Für die einmalige Umstellung von der bisherigen Cache-Strategie kann in einer schon installierten App noch der bisherige Update-Hinweis nötig sein.
