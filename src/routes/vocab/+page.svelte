@@ -4,10 +4,10 @@
   import { settings } from '#lib/state/settings.svelte.js';
   import { wordPools, wordDefinitions, wordMetadata } from '#lib/data/vocabulary.js';
   import { m } from '#lib/paraglide/messages.js';
-  import { definitionChoiceWords, insertLearningRepeat, pickLearningSection } from '#lib/vocab/learning.js';
+  import { definitionChoiceWords, insertLearningRepeat, pickReviewSection } from '#lib/vocab/learning.js';
   import { recordMissedWord } from '#lib/story/missedWords.js';
   import Companion from '#lib/story/Companion.svelte';
-  import { VOCABULARY_REVIEW_STORAGE_PREFIX, prioritizeLearningWords, updateReviewProgress } from '#lib/vocab/spacedRepetition.js';
+  import { VOCABULARY_REVIEW_STORAGE_PREFIX, updateReviewProgress } from '#lib/vocab/spacedRepetition.js';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
@@ -85,8 +85,7 @@
   function startSection() {
     cancelSpeech();
     reviewProgress = loadProgress();
-    const prioritized = prioritizeLearningWords(definitionWords, reviewProgress);
-    section = pickLearningSection(prioritized, random, 6);
+    section = pickReviewSection(definitionWords, reviewProgress, random, 6);
     queue = [...section, ...section].sort(() => random() - .5);
     position = 0;
   }

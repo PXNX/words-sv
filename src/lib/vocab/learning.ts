@@ -1,4 +1,5 @@
 import { isLetterWord, normalizePlayableWord } from '#lib/wordle/wordleWords.js';
+import { normalizeReviewProgress, prioritizeLearningWords, type ReviewProgress } from './spacedRepetition';
 
 export function pickLearningSection(words: string[], random: () => number, size = 6): string[] {
 	const normalized = [...new Set(words.map(normalizePlayableWord).filter((word) => isLetterWord(word, 3, 18)))];
@@ -17,6 +18,20 @@ function shuffled<T>(values: T[], random: () => number): T[] {
     [result[index], result[swap]] = [result[swap], result[index]];
   }
   return result;
+}
+
+/**
+ * Picks the next practice section. Up to `focusSize` words marked as hard (or answered wrong
+ * before) are guaranteed a slot, so they keep coming back until answered right; the remaining
+ * slots stay random so a session does not repeat the same handful of words forever.
+ */
+export function pickReviewSection(words: string[], progressByWord: Record<string, ReviewProgress>, random: () => number, size = 6, focusSize = 3): string[] {
+  const prioritized = prioritizeLearningWords(words, progressByWord);
+  const focus = prioritized
+    .filter((word) => (normalizeReviewProgress(progressByWord[word]).lapses ?? 0) > 0)
+    .slice(0, Math.min(focusSize, size));
+  const others = prioritized.filter((word) => !focus.includes(word));
+  return [...focus, ...pickLearningSection(others, random, size - focus.length)];
 }
 
 export function definitionChoiceWords(currentWord: string, candidates: string[], definitions: Record<string, string>, random: () => number, size = 3): string[] {
