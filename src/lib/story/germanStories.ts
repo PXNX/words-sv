@@ -1910,5 +1910,161 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was sollte Kumar im Anschreiben betonen?'), options: [german('Seine Erfahrung mit Python und erfolgreiche Universitätsprojekte'), german('Dass er dringend Geld braucht'), german('Den Namen der Firma')] },
       { kind: 'question', prompt: german('Welche Erfahrung hebt Kumar hervor?'), options: [german('Er hat ein Team von fünf Entwicklern geleitet'), german('Er hat allein an einem Projekt gearbeitet'), german('Er hat keine Berufserfahrung')] }
     ]
+  },
+  {
+    id: 'a1-einkaufen',
+    level: 'a1',
+    scene: 'square',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Auf dem Markt'),
+    beats: [
+      { kind: 'narration', text: german('Samstagmorgen. Mia und Tom sind auf dem Markt. Es gibt Obst und Gemüse.') },
+      { kind: 'line', speaker: 'mia', text: german('Ich möchte Äpfel und Bananen kaufen.') },
+      { kind: 'line', speaker: 'tom', text: german('Und ich nehme Brot und Käse.') },
+      { kind: 'line', speaker: 'mia', mood: 'curious', text: german('Hallo {name}! Was kaufst du gern?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Ich kaufe Tomaten und Milch.'),
+        german('Ich kaufe ein Auto.'),
+        german('Ich trinke den Korb.')
+      ] },
+      { kind: 'line', speaker: 'tom', text: german('Das macht zwölf Euro vierzig. Wir bezahlen zusammen.') },
+      { kind: 'line', speaker: 'mia', text: german('Hier, bitte. Einen schönen Tag noch!') },
+      { kind: 'question', prompt: german('Wo sind Mia und Tom?'), options: [german('Auf dem Markt'), german('Im Kino'), german('Im Schwimmbad')] },
+      { kind: 'question', prompt: german('Was kauft Mia?'), options: [german('Äpfel und Bananen'), german('Ein Auto'), german('Einen Korb')] },
+      { kind: 'question', prompt: german('Was kauft Tom?'), options: [german('Brot und Käse'), german('Obst und Gemüse'), german('Milch und Eier')] },
+      { kind: 'question', prompt: german('Was kosten die Sachen zusammen?'), options: [german('Zwölf Euro vierzig'), german('Zwanzig Euro'), german('Fünf Euro')] }
+    ]
+  },
+  {
+    id: 'a2-bibliothek',
+    level: 'a2',
+    scene: 'library',
+    cast: ['mia', 'leo'],
+    languages: ['de'],
+    title: german('In der Bibliothek'),
+    beats: [
+      { kind: 'narration', text: german('Leo und Mia sind in der Bibliothek. Sie suchen Bücher für die Schule.') },
+      { kind: 'line', speaker: 'leo', text: german('Guten Tag! Wir suchen ein Buch über Geschichte. Können Sie uns helfen?') },
+      { kind: 'line', speaker: 'mia', text: german('Und ich brauche ein Wörterbuch für Deutsch.') },
+      { kind: 'line', speaker: 'leo', text: german('Hallo {name}! Weißt du, wo die Geschichtsbücher stehen?') },
+      { kind: 'reply', to: 'leo', options: [
+        german('Ja, in der dritten Regalreihe links.'),
+        german('Die Bücher fliegen im Kreis.'),
+        german('Ich lese nur Comics im Bett.')
+      ] },
+      { kind: 'narration', text: german('Mia leiht sich ein Buch aus und zeigt ihren Ausweis vor.') },
+      { kind: 'line', speaker: 'mia', text: german('Ich kann das Buch vier Wochen behalten. Dann muss ich es zurückgeben.') },
+      { kind: 'line', speaker: 'leo', text: german('Und ich nehme noch einen Roman mit. Lesen macht Spaß!') },
+      { kind: 'question', prompt: german('Wo sind Leo und Mia?'), options: [german('In der Bibliothek'), german('Im Kino'), german('Im Schwimmbad')] },
+      { kind: 'question', prompt: german('Was sucht Mia?'), options: [german('Ein Wörterbuch für Deutsch'), german('Ein Kochbuch'), german('Ein Bilderbuch')] },
+      { kind: 'question', prompt: german('Wie lange kann Mia das Buch behalten?'), options: [german('Vier Wochen'), german('Ein Tag'), german('Ein Jahr')] },
+      { kind: 'question', prompt: german('Wo stehen die Geschichtsbücher?'), options: [german('In der dritten Regalreihe links'), german('Im Keller'), german('Auf dem Dach')] }
+    ]
+  },
+  {
+    id: 'b1-umzug',
+    level: 'b1',
+    scene: 'flat',
+    cast: ['mia', 'selma'],
+    languages: ['de'],
+    title: german('Eine neue Wohnung'),
+    beats: [
+      { kind: 'narration', text: german('Mia sucht eine neue Wohnung in Stuttgart. Sie hat eine Besichtigung mit Selma, die schon lange in der Stadt wohnt.') },
+      { kind: 'line', speaker: 'mia', mood: 'curious', text: german('Selma, worauf sollte ich bei einer Mietwohnung achten?') },
+      { kind: 'line', speaker: 'selma', text: german('Wichtig sind die Kaltmiete, die Nebenkosten und die Kaution. Achte auch darauf, ob die Wohnung möbliert oder unmöbliert ist.') },
+      { kind: 'line', speaker: 'mia', text: german('Und was ist mit dem Mietvertrag?') },
+      { kind: 'line', speaker: 'selma', text: german('Prüfe die Kündigungsfrist und ob die Miete ortsüblich ist. Manche Vermieter verlangen auch eine Provision.') },
+      { kind: 'line', speaker: 'mia', mood: 'worried', text: german('Hallo {name}! Was denkst du: Soll ich die Wohnung nehmen?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Ja, wenn die Miete und die Nebenkosten zu deinem Budget passen.'),
+        german('Nein, ich kaufe lieber ein Schloss.'),
+        german('Ich wohne im Kühlschrank.')
+      ] },
+      { kind: 'line', speaker: 'selma', text: german('Und vergiss nicht: Eine Mietwohnung braucht oft eine Kaution von zwei oder drei Monatsmieten.') },
+      { kind: 'line', speaker: 'mia', text: german('Das ist viel Geld, aber ich habe etwas gespart.') },
+      { kind: 'question', prompt: german('Worauf sollte Mia laut Selma achten?'), options: [german('Kaltmiete, Nebenkosten und Kaution'), german('Nur die Farbe der Wände'), german('Nur den Aufzug')] },
+      { kind: 'question', prompt: german('Was ist wichtig im Mietvertrag?'), options: [german('Die Kündigungsfrist'), german('Die Lieblingsfarbe des Vermieters'), german('Die Anzahl der Fenster')] },
+      { kind: 'question', prompt: german('Was ist eine Kaution?'), options: [german('Eine Sicherheit, oft zwei bis drei Monatsmieten'), german('Ein Geschenk für den Vermieter'), german('Eine Strafe')] },
+      { kind: 'question', prompt: german('Was bedeutet ortsüblich?'), options: [german('Der Mietpreis ist typisch für die Gegend'), german('Die Wohnung ist sehr teuer'), german('Die Wohnung ist sehr billig')] }
+    ]
+  },
+  {
+    id: 'b2-umwelt',
+    level: 'b2',
+    scene: 'park',
+    cast: ['mia', 'jana'],
+    languages: ['de'],
+    title: german('Umweltschutz im Alltag'),
+    beats: [
+      { kind: 'narration', text: german('Mia und Jana spazieren durch den Park und reden über Umweltschutz und nachhaltiges Leben.') },
+      { kind: 'line', speaker: 'jana', text: german('Ich versuche, weniger Plastik zu kaufen und mehr regionale Produkte zu essen.') },
+      { kind: 'line', speaker: 'mia', text: german('Das ist gut. Ich fahre seit kurzem mit dem Rad zur Arbeit statt mit dem Auto.') },
+      { kind: 'line', speaker: 'jana', mood: 'curious', text: german('{name}, was tust du für die Umwelt?') },
+      { kind: 'reply', to: 'jana', options: [
+        german('Ich trenne Müll und kaufe unverpackte Lebensmittel ein.'),
+        german('Ich werfe alles in den gleichen Container.'),
+        german('Ich kaufe jeden Tag neue Plastikflaschen.')
+      ] },
+      { kind: 'line', speaker: 'mia', text: german('Erneuerbare Energien wie Solar- und Windkraft sind wichtig, um den Klimawandel zu bremsen.') },
+      { kind: 'line', speaker: 'jana', text: german('Ja, und wir sollten den CO2-Fußabdruck verringern, indem wir weniger Fleisch essen und mehr recyceln.') },
+      { kind: 'line', speaker: 'mia', text: german('Nachhaltigkeit bedeutet für mich, dass wir so leben, dass auch kommende Generationen eine gute Welt vorfinden.') },
+      { kind: 'question', prompt: german('Was versucht Jana zu tun?'), options: [german('Weniger Plastik kaufen und regionale Produkte essen'), german('Jeden Tag neue Plastikflaschen kaufen'), german('Alles in denselben Container werfen')] },
+      { kind: 'question', prompt: german('Was macht Mia seit kurzem?'), options: [german('Sie fährt mit dem Rad zur Arbeit'), german('Sie fährt jeden Tag Auto'), german('Sie fliegt in den Urlaub')] },
+      { kind: 'question', prompt: german('Was hilft laut Jana, den CO2-Fußabdruck zu verringern?'), options: [german('Weniger Fleisch essen und mehr recyceln'), german('Viel Auto fahren'), german('Viel Plastik kaufen')] },
+      { kind: 'question', prompt: german('Was bedeutet Nachhaltigkeit für Mia?'), options: [german('So leben, dass auch zukünftige Generationen eine gute Welt haben'), german('Viel konsumieren und wegwerfen'), german('Nur neue Dinge kaufen')] }
+    ]
+  },
+  {
+    id: 'c1-wissenschaft',
+    level: 'c1',
+    scene: 'workshop',
+    cast: ['simon', 'jana'],
+    languages: ['de'],
+    title: german('Die Forschungsmethode'),
+    beats: [
+      { kind: 'narration', text: german('Simon und Jana besprechen das Design einer neuen Studie. Sie wollen prüfen, ob eine neue Lernmethode das Gedächtnis verbessert.') },
+      { kind: 'line', speaker: 'simon', text: german('Wir brauchen eine Kontrollgruppe und eine Versuchsgruppe, damit wir die Wirkung der Methode isolieren können.') },
+      { kind: 'line', speaker: 'jana', text: german('Und die Studie sollte doppelblind verlaufen, damit weder die Teilnehmer noch die Forscher wissen, wer die echte Methode bekommt.') },
+      { kind: 'line', speaker: 'simon', mood: 'curious', text: german('{name}, wie groß sollte die Stichprobe sein, damit das Ergebnis signifikant ist?') },
+      { kind: 'reply', to: 'simon', options: [
+        german('Groß genug, um Zufallsergebnisse auszuschließen, und vorher durch eine Power-Analyse bestimmt.'),
+        german('Nur zwei Personen, das reicht völlig.'),
+        german('Ich wähle meine Freunde aus.')
+      ] },
+      { kind: 'line', speaker: 'jana', text: german('Außerdem müssen wir Validität und Reliabilität sicherstellen, damit die Ergebnisse wirklich aussagekräftig sind.') },
+      { kind: 'line', speaker: 'simon', text: german('Nach der Datenerhebung analysieren wir die Varianz und prüfen den p-Wert.') },
+      { kind: 'line', speaker: 'jana', text: german('Wenn alles stimmt, veröffentlichen wir die Ergebnisse in einem Fachjournal mit Peer-Review.') },
+      { kind: 'question', prompt: german('Warum brauchen sie eine Kontrollgruppe?'), options: [german('Um die Wirkung der Methode zu isolieren'), german('Um mehr Teilnehmer zu haben'), german('Um Geld zu sparen')] },
+      { kind: 'question', prompt: german('Was bedeutet doppelblind?'), options: [german('Weder Teilnehmer noch Forscher wissen, wer die echte Methode bekommt'), german('Beide wissen es genau'), german('Nur der Forscher weiß es')] },
+      { kind: 'question', prompt: german('Wie sollte die Stichprobe bestimmt werden?'), options: [german('Durch eine Power-Analyse, um Zufall auszuschließen'), german('Nach Sympathie'), german('Nach dem Geburtsmonat')] },
+      { kind: 'question', prompt: german('Was prüfen sie nach der Datenerhebung?'), options: [german('Die Varianz und den p-Wert'), german('Die Lieblingsfarbe der Teilnehmer'), german('Die Schuhgröße')] }
+    ]
+  },
+  {
+    id: 'c2-ethik',
+    level: 'c2',
+    scene: 'flat',
+    cast: ['becker', 'selma'],
+    languages: ['de'],
+    title: german('Ethik und künstliche Intelligenz'),
+    beats: [
+      { kind: 'narration', text: german('Herr Becker und Selma diskutieren die ethischen Fragen rund um künstliche Intelligenz und automatisierte Entscheidungen.') },
+      { kind: 'line', speaker: 'becker', text: german('KI-Systeme treffen heute schon Entscheidungen über Kredite, Bewerbungen und sogar medizinische Diagnosen.') },
+      { kind: 'line', speaker: 'selma', text: german('Das Problem ist: Algorithmen können Vorurteile in den Daten übernehmen und diese verstärken. Wir brauchen Transparenz und Verantwortlichkeit.') },
+      { kind: 'line', speaker: 'becker', mood: 'curious', text: german('{name}, welche Prinzipien sollten laut Ihnen bei der Entwicklung von KI gelten?') },
+      { kind: 'reply', to: 'becker', options: [
+        german('Menschenwürde, Autonomie, Gerechtigkeit und Nachvollziehbarkeit der Entscheidungen.'),
+        german('Die KI soll alles entscheiden, damit der Mensch sich ausruhen kann.'),
+        german('Ich vertraue der KI mehr als jedem Menschen.')
+      ] },
+      { kind: 'line', speaker: 'selma', text: german('Ein ethischer Rahmen muss den Schutz der Privatsphäre und die Vermeidung von Diskriminierung garantieren.') },
+      { kind: 'line', speaker: 'becker', text: german('Und wir brauchen eine klare Rechtsgrundlage, damit keine Entscheidungen ohne menschliche Kontrolle getroffen werden.') },
+      { kind: 'line', speaker: 'selma', text: german('Letztlich geht es darum, dass Technik dem Menschen dient – und nicht umgekehrt.') },
+      { kind: 'question', prompt: german('Was ist laut Selma ein Problem bei Algorithmen?'), options: [german('Sie können Vorurteile in den Daten übernehmen und verstärken'), german('Sie sind zu langsam'), german('Sie kosten zu viel')] },
+      { kind: 'question', prompt: german('Welche Prinzipien schlägt die richtige Antwort vor?'), options: [german('Menschenwürde, Autonomie, Gerechtigkeit und Nachvollziehbarkeit'), german('Die KI soll alles entscheiden'), german('Keine Regeln')] },
+      { kind: 'question', prompt: german('Was muss ein ethischer Rahmen laut Selma garantieren?'), options: [german('Den Schutz der Privatsphäre und die Vermeidung von Diskriminierung'), german('Nur den Profit der Firmen'), german('Die vollständige Automatisierung')] },
+      { kind: 'question', prompt: german('Was braucht es laut Herrn Becker zusätzlich?'), options: [german('Eine klare Rechtsgrundlage und menschliche Kontrolle'), german('Mehr KI ohne Regeln'), german('Weniger Datenschutz')] }
+    ]
   }
 ];
