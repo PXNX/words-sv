@@ -4,13 +4,15 @@
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { characterNames, fillName, moodFor, storiesFor, withDetails, withWeather, type CharacterId, type Mood, type Story, type StoryBeat } from './stories';
+  import { characterNames, fillName, moodFor, storiesFor, withDetails, withWeather, type CharacterId, type Mood, type SceneId, type Story, type StoryBeat } from './stories';
+  import type { Language, VocabularyLevel } from '#lib/data/vocabulary.js';
   import { intonationOf, pronounceable, splitSounds, wordsOf } from './speech';
   import { naturalReady, naturalState, naturalSupported, prepareNatural, synthesizeNatural, combineNatural, type NaturalClip } from './naturalVoices.svelte';
   import { applyVoice, profiles, type Dialect, type Speaker } from './voices';
   import { listAudioSessions, loadAudioBlob, saveAudioSession, updateAudioSessionPosition, type SavedAudio, type SavedSound, type SavedStoryStart } from './audioLibrary';
   import { playSoundEffect, soundEffectSeconds, type SoundEffect } from '#lib/sounds.js';
   import StoryCharacter from './StoryCharacter.svelte';
+  import StoryScene from './StoryScene.svelte';
   import IconHeadphones from '~icons/material-symbols/headphones-rounded';
   import IconPlay from '~icons/material-symbols/play-arrow-rounded';
   import IconPause from '~icons/material-symbols/pause-rounded';
@@ -512,6 +514,8 @@
         position: 0,
         storyCount: 1,
         stories: savedStarts,
+        scene: story.scene,
+        weather: story.weather,
         sounds: timedSounds
       };
       try {
@@ -584,6 +588,14 @@
   function sessionTitle(session: SavedAudio) {
     return session.stories[0]?.title ?? labels.listen;
   }
+  function sessionScene(session: SavedAudio): SceneId | undefined {
+    if (session.scene) return session.scene;
+    const title = sessionTitle(session);
+    return storiesFor(session.language as Language, session.level as VocabularyLevel, true).find((story) => story.title[session.language as Language] === title)?.scene;
+  }
+  const currentSession = $derived(currentId ? history.find((session) => session.id === currentId) ?? null : null);
+  const currentScene = $derived(liveSession?.story.scene ?? (currentSession ? sessionScene(currentSession) : undefined));
+  const currentWeather = $derived(liveSession?.story.weather ?? currentSession?.weather);
   function onLoadedMetadata() {
     if (!audio) return;
     if (Number.isFinite(audio.duration) && audio.duration > 0) duration = audio.duration;
@@ -761,7 +773,10 @@
       </div>
     {:else if phase === 'ready'}
       <div class="listen-player">
-        <span class="listen-art" class:playing aria-hidden="true">
+        <span class="listen-art" class:has-scene={currentScene} class:playing aria-hidden="true">
+          {#if currentScene}
+            <span class="listen-art-bg"><StoryScene scene={currentScene} weather={currentWeather} /></span>
+          {/if}
           <span class="listen-wave">{#each [0, 1, 2, 3, 4] as bar (bar)}<span style={`--bar:${bar}`}></span>{/each}</span>
         </span>
         <div class="listen-now">
@@ -792,12 +807,16 @@
       </div>
       <ul>
         {#each history as session (session.id)}
+          {@const scene = sessionScene(session)}
           <li class:current={session.id === currentId}>
             <button type="button" class="listen-history-item" onclick={() => void openSession(session)}>
-              <span class="listen-history-art" aria-hidden="true">
+              <span class="listen-history-art" class:has-scene={scene} aria-hidden="true">
+                {#if scene}
+                  <span class="listen-history-bg"><StoryScene {scene} weather={session.weather} /></span>
+                {/if}
                 {#if session.id === currentId && playing}
                   <span class="listen-mini-wave">{#each [0, 1, 2] as bar (bar)}<span style={`--bar:${bar}`}></span>{/each}</span>
-                {:else}
+                {:else if !scene}
                   <IconHeadphones />
                 {/if}
               </span>
@@ -826,6 +845,12 @@
   .listen-state p,.listen-now p { margin:0;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:800;line-height:1.4; }
   .listen-state small,.listen-now small { color:#596477;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:800; }
   .listen-pulse,.listen-art { display:grid;place-items:center;width:4.4rem;height:4.4rem;border:2px solid #172a45;border-radius:48% 52% 46% 54% / 54% 46% 52% 48%;background:#f7e2b0;color:#a45e38; }
+  .listen-art { position:relative;overflow:hidden; }
+  .listen-art.has-scene { background:#cfe6f2; }
+  .listen-art-bg { position:absolute;inset:0; }
+  .listen-art-bg :global(.story-scene) { position:absolute;inset:0;width:100%;height:100%; }
+  .listen-art-bg :global(.story-scene *) { animation-play-state:paused; }
+  .listen-art.playing .listen-art-bg :global(.story-scene *) { animation-play-state:running; }
   .listen-pulse { animation:listen-pulse 1.8s ease-in-out infinite; }
   .listen-pulse :global(svg) { width:2rem;height:2rem; }
   .listen-bar { width:min(100%,16rem);height:.42rem;overflow:hidden;border-radius:999px;background:rgba(23,42,69,.12); }
@@ -838,7 +863,7 @@
   .listen-player { gap:.55rem; }
   .listen-now { display:grid;gap:.15rem;justify-items:center; }
   .listen-now p { font-family:'DM Serif Display',serif;font-size:1.25rem;font-weight:400; }
-  .listen-wave { display:flex;align-items:flex-end;justify-content:center;gap:.18rem;width:2.25rem;height:1.9rem; }
+  .listen-wave { position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:center;gap:.18rem;width:2.25rem;height:1.9rem;padding:.4rem .45rem;border-radius:999px;background:rgba(255,253,247,.86); }
   .listen-wave span { width:.24rem;height:100%;border-radius:999px;background:#a45e38;transform:scaleY(.32);transform-origin:bottom;animation:listen-level 1s ease-in-out infinite alternate;animation-delay:calc(var(--bar) * -.17s);animation-play-state:paused; }
   .listen-wave span:nth-child(2) { height:74%; }
   .listen-wave span:nth-child(3) { height:92%; }
@@ -862,13 +887,17 @@
   .listen-history-item:active { transform:scale(.995); }
   .listen-history-item:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
   .listen-history li.current .listen-history-item { border-color:#e6a527;box-shadow:2px 2px 0 rgba(230,165,39,.35); }
-  .listen-history-art { display:grid;place-items:center;flex:none;width:2rem;height:2rem;border-radius:50%;background:#f7e2b0;color:#a45e38; }
-  .listen-history-art :global(svg) { width:1rem;height:1rem; }
+  .listen-history-art { position:relative;display:grid;place-items:center;flex:none;width:2rem;height:2rem;overflow:hidden;border-radius:50%;background:#f7e2b0;color:#a45e38; }
+  .listen-history-art.has-scene { border:1px solid rgba(23,42,69,.2);background:#cfe6f2; }
+  .listen-history-bg { position:absolute;inset:0; }
+  .listen-history-bg :global(.story-scene) { position:absolute;inset:0;width:100%;height:100%; }
+  .listen-history-bg :global(.story-scene *) { animation-play-state:paused; }
+  .listen-history-art > :global(svg) { width:1rem;height:1rem; }
   .listen-history-text { display:grid;gap:.1rem;min-width:0;flex:1; }
   .listen-history-text strong { overflow:hidden;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.74rem;font-weight:800;line-height:1.2;text-overflow:ellipsis;white-space:nowrap; }
   .listen-history-text small { overflow:hidden;color:#596477;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:700;text-overflow:ellipsis;white-space:nowrap; }
   .listen-history-at { flex:none;color:#596477;font-family:'DM Sans',sans-serif;font-size:.55rem;font-weight:800;font-variant-numeric:tabular-nums; }
-  .listen-mini-wave { display:flex;align-items:flex-end;justify-content:center;gap:.1rem;height:.9rem; }
+  .listen-mini-wave { position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:center;gap:.1rem;height:.9rem;padding:.25rem .35rem;border-radius:999px;background:rgba(255,253,247,.86); }
   .listen-mini-wave span { width:.15rem;height:100%;border-radius:999px;background:#a45e38;transform:scaleY(.35);transform-origin:bottom;animation:listen-level .9s ease-in-out infinite alternate;animation-delay:calc(var(--bar) * -.2s); }
   @keyframes listen-pulse { 0%,100% { transform:scale(1);box-shadow:0 0 0 0 rgba(230,165,39,.32); } 50% { transform:scale(1.035);box-shadow:0 0 0 .55rem rgba(230,165,39,0); } }
   @keyframes listen-walk { 0%,8% { left:4%;transform:scaleX(1); } 46% { left:calc(100% - 4rem);transform:scaleX(1); } 50%,58% { left:calc(100% - 4rem);transform:scaleX(-1); } 96%,100% { left:4%;transform:scaleX(-1); } }
@@ -880,6 +909,7 @@
   :global(html.dark) .listen-state p,:global(html.dark) .listen-now p { color:#fffdf7; }
   :global(html.dark) .listen-state small,:global(html.dark) .listen-time { color:rgba(255,253,247,.72); }
   :global(html.dark) .listen-art { border-color:#e6a527;background:#2b4a70;color:#e6a527; }
+  :global(html.dark) .listen-wave { background:rgba(23,42,69,.86); }
   :global(html.dark) .listen-wave span,:global(html.dark) .listen-mini-wave span { background:#e6a527; }
   :global(html.dark) .listen-bar { background:rgba(255,253,247,.16); }
   :global(html.dark) .listen-control { border-color:rgba(255,253,247,.32);color:#e6a527; }
@@ -887,6 +917,7 @@
   :global(html.dark) .listen-history-item { border-color:rgba(255,253,247,.26);background:#213a5d; }
   :global(html.dark) .listen-history li.current .listen-history-item { border-color:#e6a527;box-shadow:2px 2px 0 rgba(230,165,39,.25); }
   :global(html.dark) .listen-history-art { background:#2b4a70;color:#e6a527; }
+  :global(html.dark) .listen-mini-wave { background:rgba(23,42,69,.86); }
   :global(html.dark) .listen-history-text strong { color:#fffdf7; }
   :global(html.dark) .listen-history-text small,:global(html.dark) .listen-history-at { color:rgba(255,253,247,.72); }
 </style>

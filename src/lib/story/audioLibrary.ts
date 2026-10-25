@@ -1,4 +1,5 @@
 import type { SoundEffect } from '#lib/sounds.js';
+import type { SceneId, Weather } from './stories.js';
 
 export type SavedStoryStart = { at: number; title: string };
 export type SavedSound = { at: number; effect: SoundEffect };
@@ -13,6 +14,8 @@ export type SavedAudio = {
   position: number;
   storyCount: number;
   stories: SavedStoryStart[];
+  scene?: SceneId;
+  weather?: Weather;
   sounds?: SavedSound[];
 };
 
