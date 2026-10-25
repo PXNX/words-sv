@@ -1,4 +1,7 @@
+import type { SoundEffect } from '#lib/sounds.js';
+
 export type SavedStoryStart = { at: number; title: string };
+export type SavedSound = { at: number; effect: SoundEffect };
 
 export type SavedAudio = {
   id: string;
@@ -10,6 +13,7 @@ export type SavedAudio = {
   position: number;
   storyCount: number;
   stories: SavedStoryStart[];
+  sounds?: SavedSound[];
 };
 
 const DB_NAME = 'wordcircle-audio-v1';

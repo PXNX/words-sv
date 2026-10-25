@@ -4,30 +4,32 @@
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { fillName, moodFor, storiesFor, withDetails, withWeather, type Mood, type Story } from './stories';
-  import { intonationOf, pronounceable, wordsOf } from './speech';
+  import { fillName, moodFor, storiesFor, withDetails, withWeather, type Mood, type Story, type StoryBeat } from './stories';
+  import { intonationOf, pronounceable, splitSounds, wordsOf } from './speech';
   import { naturalReady, naturalState, naturalSupported, prepareNatural, synthesizeNatural, combineNatural, type NaturalClip } from './naturalVoices.svelte';
-  import type { Speaker } from './voices';
-  import { listAudioSessions, loadAudioBlob, saveAudioSession, updateAudioSessionPosition, type SavedAudio, type SavedStoryStart } from './audioLibrary';
-  import { splitSounds } from './speech';
-  import { playSoundEffect } from '#lib/sounds.js';
+  import { applyVoice, type Speaker } from './voices';
+  import { listAudioSessions, loadAudioBlob, saveAudioSession, updateAudioSessionPosition, type SavedAudio, type SavedSound, type SavedStoryStart } from './audioLibrary';
+  import { playSoundEffect, soundEffectSeconds, type SoundEffect } from '#lib/sounds.js';
   import StoryCharacter from './StoryCharacter.svelte';
   import IconHeadphones from '~icons/material-symbols/headphones-rounded';
   import IconPlay from '~icons/material-symbols/play-arrow-rounded';
   import IconPause from '~icons/material-symbols/pause-rounded';
   import IconRewind from '~icons/material-symbols/fast-rewind-rounded';
   import IconForward from '~icons/material-symbols/fast-forward-rounded';
-  import IconReplay from '~icons/material-symbols/replay-rounded';
 
-  const TARGET_WORDS = 375;
-  const BEAT_GAP = 0.32;
-  const SINGLE_WORD_QUESTION_GAP = 1.25;
-  const STORY_GAP = 1.1;
+  const STORY_TARGETS: Record<string, number> = { a1: 200, a2: 250, b1: 320, b2: 380, c1: 420, c2: 480 };
+  const BEAT_GAP = 0.6;
+  const SINGLE_WORD_QUESTION_GAP = 1.4;
+  const STORY_GAP = 1.4;
+  const QUESTION_WORD_LIMIT = 170;
+  const QUESTION_COUNT = 5;
+  const SOUND_LEAD_MAX = 1.2;
   const levelRates: Record<string, number> = { a1: 0.9, a2: 0.95, b1: 1.03, b2: 1.07, c1: 1.11, c2: 1.15 };
   const naturalLevelPace: Record<string, number> = { a1: 0.9, a2: 0.95, b1: 1, b2: 1, c1: 1, c2: 1 };
-
+  const speechLocales: Record<string, string> = { de: 'de-DE', en: 'en-GB', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', pt: 'pt-BR', uk: 'uk-UA' };
   type Phase = 'idle' | 'preparing' | 'generating' | 'loading' | 'ready' | 'error';
-  type Segment = { text: string; speaker: Speaker; mood: Mood; gap: number; story: number };
+  type Segment = { text: string; speaker: Speaker; mood: Mood; gap: number; story: number; sound: SoundEffect | null; soundLead: number };
+  type LiveSession = { story: Story; segments: Segment[]; starts: number[]; sounds: SavedSound[]; duration: number };
 
   let phase = $state<Phase>('idle');
   let progress = $state(0);
@@ -49,7 +51,12 @@
   let eta = $state<number | null>(null);
   let settingsReady = $state(false);
   let settingsKey = '';
+  let liveSession = $state<LiveSession | null>(null);
+  let sounds = $state<SavedSound[]>([]);
+  let lastSoundAt = -1;
+  let liveToken = 0;
 
+  const standardMode = $derived(settings.voiceQuality !== 'natural');
   const download = $derived(Math.round((naturalState.progress[settings.lang] ?? 0) * 100));
   const downloadRemaining = $derived(naturalState.remaining[settings.lang] ?? null);
   const labels = $derived({
@@ -60,15 +67,13 @@
     loading: m.story_listen_loading({}, { locale: settings.interfaceLocale }),
     newAudio: m.story_listen_new({}, { locale: settings.interfaceLocale }),
     history: m.story_listen_history({}, { locale: settings.interfaceLocale }),
-    resume: m.story_listen_continue({}, { locale: settings.interfaceLocale }),
     play: m.home_play({}, { locale: settings.interfaceLocale }),
     again: m.learning_again({}, { locale: settings.interfaceLocale }),
-    continue: m.continue({}, { locale: settings.interfaceLocale }),
     unsupported: m.learning_speech_unavailable({}, { locale: settings.interfaceLocale })
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   const currentStory = $derived(storyStarts.filter((entry) => entry.at <= position + 0.05).at(-1)?.title ?? storyStarts[0]?.title ?? labels.listen);
-  const resumeSession = $derived(history.find((session) => session.position > 0.5 && session.position < session.duration - 1) ?? null);
+
   const dateFormat = $derived(new Intl.DateTimeFormat(settings.interfaceLocale, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }));
   const soundEnabled = $derived(settings.sound);
 
@@ -89,6 +94,135 @@
     if (!soundEnabled || !sfx) return;
     try { playSoundEffect(true, sfx); } catch {}
   }
+  function canSpeak() {
+    return typeof window !== 'undefined' && 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+  }
+  function wait(ms: number) {
+    return new Promise<void>((resolve) => setTimeout(resolve, ms));
+  }
+  function cancelStandardSpeech() {
+    liveToken += 1;
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+  }
+  function playChime() {
+    try {
+      const ctx = ensureAudioContext();
+      if (!ctx || !soundEnabled) return;
+      const t = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.frequency.setValueAtTime(880, t);
+      osc.frequency.exponentialRampToValueAtTime(1320, t + 0.12);
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.exponentialRampToValueAtTime(0.08, t + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.25);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.28);
+    } catch {}
+  }
+  function segmentIndexAt(session: LiveSession, at: number) {
+    let index = 0;
+    for (const [positionIndex, start] of session.starts.entries()) {
+      if (start <= at + 0.01) index = positionIndex;
+      else break;
+    }
+    return index;
+  }
+  function speakStandardSegment(segment: Segment, token: number): Promise<boolean> {
+    return new Promise((resolve) => {
+      if (token !== liveToken || !canSpeak()) {
+        resolve(false);
+        return;
+      }
+      const synth = window.speechSynthesis;
+      let spoken = '';
+      for (const part of splitSounds(segment.text, settings.lang)) {
+        if (part.kind === 'say') spoken += `${part.text} `;
+      }
+      const text = pronounceable(spoken.trim() || segment.text, settings.lang).text;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = speechLocales[settings.lang] ?? settings.lang;
+      const baseRate = levelRates[settings.vocabularyLevel] ?? 1;
+      applyVoice(utterance, segment.speaker, settings.lang, utterance.lang, liveSession?.story.cast ?? [], baseRate, segment.mood);
+      const startPosition = position;
+      const startedAt = performance.now();
+      const estimated = estimateSpeech(text, utterance.rate || baseRate);
+      const ticker = window.setInterval(() => {
+        if (token !== liveToken) return;
+        position = Math.min(startPosition + estimated, startPosition + (performance.now() - startedAt) / 1000);
+      }, 200);
+      let done = false;
+      let safety = 0;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        clearInterval(ticker);
+        clearTimeout(safety);
+        if (token === liveToken) {
+          const elapsed = (performance.now() - startedAt) / 1000;
+          position = Math.max(position, startPosition + Math.min(estimated, elapsed));
+        }
+        resolve(token === liveToken);
+      };
+      safety = window.setTimeout(finish, estimated * 2500 + 5000);
+      utterance.onend = finish;
+      utterance.onerror = finish;
+      synth.speak(utterance);
+    });
+  }
+  async function runStandard(token: number, startIndex: number, startAt: number) {
+    const session = liveSession;
+    if (!session) return;
+    for (let index = startIndex; index < session.segments.length; index += 1) {
+      if (token !== liveToken) return;
+      const segment = session.segments[index];
+      const segmentStart = session.starts[index];
+      const begin = index === startIndex ? Math.max(startAt, segmentStart) : segmentStart;
+      position = begin;
+      if (segment.sound) {
+        if (index !== startIndex || begin <= segmentStart + 0.15) playSfx(segment.sound);
+        if (segment.soundLead > 0) {
+          await wait(segment.soundLead * 1000);
+          if (token !== liveToken) return;
+          position = Math.max(begin, segmentStart + segment.soundLead);
+        }
+      }
+      const spoken = await speakStandardSegment(segment, token);
+      if (!spoken || token !== liveToken) return;
+      const rate = levelRates[settings.vocabularyLevel] ?? 1;
+      position = Math.max(position, segmentStart + segment.soundLead + estimateSpeech(segment.text, rate));
+      if (segment.gap > 0) await wait(segment.gap * 1000);
+    }
+    if (token !== liveToken) return;
+    playing = false;
+    finishSession();
+  }
+  function startStandardPlayback(from: number) {
+    const session = liveSession;
+    if (!session) return;
+    const token = ++liveToken;
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+    const startAt = Math.max(0, Math.min(session.duration, from));
+    playing = true;
+    position = startAt;
+    lastSoundAt = startAt - 0.05;
+    void runStandard(token, segmentIndexAt(session, startAt), startAt);
+  }
+  function pauseStandard() {
+    cancelStandardSpeech();
+    playing = false;
+  }
+  function finishSession() {
+    const token = generation;
+    position = duration;
+    lastSoundAt = duration;
+    flushPosition();
+    playChime();
+    setTimeout(() => {
+      if (phase === 'ready' && token === generation) void startSession();
+    }, 600);
+  }
   function say(text: string) {
     return fillName(text, settings.firstName);
   }
@@ -107,31 +241,19 @@
     }
     return copy;
   }
-  // Picks stories around a 1.5-2 minute listening session: the best single match first, then shorter
-  // stories only when the level has nothing long enough.
-  function pickStories(): Story[] {
+  // One story should carry the whole session. Short stories get their questions read after the plot,
+  // so even the briefest A1 story reaches a comfortable 1.5-2 minute listening length.
+  function storyLength(story: Story) {
+    const words = wordCount(story);
+    return words < QUESTION_WORD_LIMIT ? words + 110 : words;
+  }
+  function pickStory(): Story | null {
     const pool = [...new Map(storiesFor(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary).map((story) => [story.id, story])).values()];
-    if (!pool.length) return [];
-    const order = shuffled(pool);
-    const [first] = [...order].sort((left, right) => Math.abs(wordCount(left) - TARGET_WORDS) - Math.abs(wordCount(right) - TARGET_WORDS));
-    if (!first) return [];
-    const picked = [first];
-    let words = wordCount(first);
-    for (const story of order) {
-      if (picked.includes(story) || words >= TARGET_WORDS * 0.85) continue;
-      if (words + wordCount(story) > TARGET_WORDS * 1.6) continue;
-      picked.push(story);
-      words += wordCount(story);
-    }
-    if (picked.length === 1 && wordCount(picked[0]) < 220) {
-      for (const story of order) {
-        if (picked.includes(story)) continue;
-        if (wordCount(picked[0]) + wordCount(story) > TARGET_WORDS * 1.8) continue;
-        picked.push(story);
-        break;
-      }
-    }
-    return picked;
+    if (!pool.length) return null;
+    const target = STORY_TARGETS[settings.vocabularyLevel] ?? 320;
+    const ranked = [...pool].sort((left, right) => Math.abs(storyLength(left) - target) - Math.abs(storyLength(right) - target));
+    const top = shuffled(ranked.slice(0, Math.min(3, ranked.length)));
+    return top[0] ?? ranked[0] ?? null;
   }
   function beatSounds(beat: any): { start: any; slot: any } {
     if (beat.kind === 'narration' && beat.announcement) return { start: beat.sfx ?? 'gong', slot: beat.sfx ?? null };
@@ -141,35 +263,77 @@
     const pet = petSounds[beat.speaker];
     return { start: beat.sfx ?? pet?.start ?? null, slot: beat.sfx ?? pet?.slot ?? null };
   }
-  function beatSound(beat: any): any {
+  function beatSound(beat: any): SoundEffect | null {
     if (beat.kind !== 'narration' && beat.kind !== 'line') return null;
     const sounds = beatSounds(beat);
-    if (splitSounds(beat.text[settings.lang], settings.lang).some((part: any) => part.kind === 'sound')) return sounds.slot;
-    return sounds.start;
+    if (splitSounds(beat.text[settings.lang], settings.lang).some((part: any) => part.kind === 'sound')) return sounds.slot ?? sounds.start;
+    return sounds.start ?? sounds.slot;
   }
   function beatGap(text: string) {
     return intonationOf(text) === 'question' && wordsOf(text).length === 1 ? SINGLE_WORD_QUESTION_GAP : BEAT_GAP;
   }
-  function segmentsFor(picked: Story[]): Segment[] {
+  function segmentsForStory(story: Story): Segment[] {
     const segments: Segment[] = [];
-    picked.forEach((raw, index) => {
-      const story = withWeather(withDetails(raw));
-      const title = `${say(story.title[settings.lang])}.`;
-      segments.push({
-        text: index === 0 ? `${title} ${labels.level} ${story.level.toUpperCase()}.` : title,
-        speaker: 'narrator',
-        mood: 'neutral',
-        gap: 0.55,
-        story: index
-      });
-      for (const beat of story.beats) {
-        if (beat.kind === 'narration') segments.push({ text: say(beat.text[settings.lang]), speaker: 'narrator', mood: 'neutral', gap: beatGap(say(beat.text[settings.lang])), story: index });
-        else if (beat.kind === 'line') segments.push({ text: say(beat.text[settings.lang]), speaker: beat.speaker, mood: moodFor(beat), gap: beatGap(say(beat.text[settings.lang])), story: index });
-      }
-      const last = segments.at(-1);
-      if (last?.story === index) last.gap = STORY_GAP;
+    const title = `${say(story.title[settings.lang])}.`;
+    segments.push({
+      text: `${title} ${labels.level} ${story.level.toUpperCase()}.`,
+      speaker: 'narrator',
+      mood: 'neutral',
+      gap: 0.7,
+      story: 0,
+      sound: null,
+      soundLead: 0
     });
+    for (const beat of story.beats) {
+      if (beat.kind !== 'narration' && beat.kind !== 'line') continue;
+      const text = say(beat.text[settings.lang]);
+      const sound = beatSound(beat);
+      segments.push({
+        text,
+        speaker: beat.kind === 'line' ? beat.speaker : 'narrator',
+        mood: beat.kind === 'line' ? moodFor(beat) : 'neutral',
+        gap: beatGap(text),
+        story: 0,
+        sound,
+        soundLead: sound ? Math.min(SOUND_LEAD_MAX, soundEffectSeconds[sound]) : 0
+      });
+    }
+    const last = segments.at(-1);
+    if (last) last.gap = STORY_GAP;
     return segments.filter((segment) => /\p{L}/u.test(segment.text));
+  }
+  function questionSegments(story: Story): Segment[] {
+    const questions = story.beats.filter((beat): beat is Extract<StoryBeat, { kind: 'question' }> => beat.kind === 'question').slice(0, QUESTION_COUNT);
+    const segments: Segment[] = [];
+    for (const question of questions) {
+      const prompt = say(question.prompt[settings.lang]).trim();
+      const speaker = question.asker ?? 'narrator';
+      if (prompt) segments.push({ text: prompt, speaker, mood: 'curious', gap: 1.8, story: 0, sound: null, soundLead: 0 });
+      const options = question.options.map((option) => say(option[settings.lang]).trim()).filter(Boolean);
+      if (options.length) segments.push({ text: options.join(' … '), speaker, mood: 'neutral', gap: 2.4, story: 0, sound: null, soundLead: 0 });
+    }
+    return segments;
+  }
+  function estimateSpeech(text: string, rate: number) {
+    const rateValue = Math.max(0.5, rate);
+    return Math.max(0.9, (Math.max(1, wordsOf(text).length) / 2.6 + 0.5) / rateValue);
+  }
+  function buildStandardSession(): LiveSession | null {
+    const raw = pickStory();
+    if (!raw) return null;
+    const story = withWeather(withDetails(raw));
+    const segments = segmentsForStory(story);
+    if (wordCount(raw) < QUESTION_WORD_LIMIT) segments.push(...questionSegments(story));
+    const starts: number[] = [];
+    const timedSounds: SavedSound[] = [];
+    let at = 0;
+    const rate = levelRates[settings.vocabularyLevel] ?? 1;
+    for (const segment of segments) {
+      starts.push(at);
+      if (segment.sound) timedSounds.push({ at, effect: segment.sound });
+      at += segment.soundLead + estimateSpeech(segment.text, rate) + segment.gap;
+    }
+    return { story, segments, starts, sounds: timedSounds, duration: at };
   }
   function wavBlob(buffer: AudioBuffer) {
     const samples = buffer.getChannelData(0);
@@ -204,10 +368,14 @@
     history = [saved, ...history.filter((entry) => entry.id !== saved.id)].sort((left, right) => right.updatedAt - left.updatedAt);
   }
   function clearAudio() {
+    cancelStandardSpeech();
     currentId = '';
     const current = audio;
     current?.pause();
     playing = false;
+    liveSession = null;
+    sounds = [];
+    lastSoundAt = -1;
     position = 0;
     duration = 0;
     storyStarts = [];
@@ -251,30 +419,43 @@
     done = 0;
     total = 0;
     if (!settings.firstName) { void goto('/', { replace: true }); return; }
+    if (standardMode) {
+      if (!canSpeak()) { phase = 'error'; error = labels.unsupported; return; }
+      const session = buildStandardSession();
+      if (token !== generation) return;
+      if (!session) { phase = 'error'; error = 'No stories are available for this level yet.'; return; }
+      liveSession = session;
+      sounds = session.sounds;
+      storyStarts = [{ at: 0, title: session.story.title[settings.lang] }];
+      storyCount = 1;
+      duration = session.duration;
+      position = 0;
+      lastSoundAt = -1;
+      phase = 'ready';
+      return;
+    }
     if (!naturalSupported()) { phase = 'error'; error = labels.unsupported; return; }
-    const picked = pickStories();
-    if (!picked.length) { phase = 'error'; error = 'No stories are available for this level yet.'; return; }
+    const raw = pickStory();
+    if (!raw) { phase = 'error'; error = 'No stories are available for this level yet.'; return; }
     await prepareNatural(settings.lang);
     if (token !== generation) return;
     if (!naturalReady(settings.lang)) { phase = 'error'; error = labels.unsupported; return; }
     phase = 'generating';
-    const segments = segmentsFor(picked);
+    const story = withWeather(withDetails(raw));
+    const segments = segmentsForStory(story);
+    if (wordCount(raw) < QUESTION_WORD_LIMIT) segments.push(...questionSegments(story));
     total = segments.length;
     const clips: NaturalClip[] = [];
     const gaps: number[] = [];
-    const starts: { at: number; story: Story }[] = [];
+    const timedSounds: SavedSound[] = [];
     const rate = (levelRates[settings.vocabularyLevel] ?? 1) * (naturalLevelPace[settings.vocabularyLevel] ?? 1);
     const startedAt = performance.now();
     let at = 0;
-    let previousStory = -1;
     try {
       for (const [index, segment] of segments.entries()) {
         if (token !== generation) return;
-        if (segment.story !== previousStory) {
-          starts.push({ at, story: picked[segment.story] });
-          previousStory = segment.story;
-        }
-        const clip = await synthesizeNatural(pronounceable(segment.text, settings.lang).text, segment.speaker, segment.mood, picked[segment.story].cast, settings.lang, rate);
+        if (segment.sound) timedSounds.push({ at, effect: segment.sound });
+        const clip = await synthesizeNatural(pronounceable(segment.text, settings.lang).text, segment.speaker, segment.mood, story.cast, settings.lang, rate);
         if (token !== generation) return;
         clips.push(clip);
         gaps.push(segment.gap);
@@ -288,7 +469,7 @@
       if (token !== generation) return;
       eta = 0;
       const blob = wavBlob(buffer);
-      const savedStarts = starts.map(({ at: start, story }) => ({ at: start, title: story.title[settings.lang] }));
+      const savedStarts: SavedStoryStart[] = [{ at: 0, title: story.title[settings.lang] }];
       const now = Date.now();
       const saved: SavedAudio = {
         id: newSessionId(),
@@ -298,8 +479,9 @@
         level: settings.vocabularyLevel,
         duration: buffer.duration,
         position: 0,
-        storyCount: picked.length,
-        stories: savedStarts
+        storyCount: 1,
+        stories: savedStarts,
+        sounds: timedSounds
       };
       try {
         await saveAudioSession(saved, blob);
@@ -313,7 +495,9 @@
       if (token !== generation) return;
       currentId = saved.id;
       storyStarts = savedStarts;
-      storyCount = picked.length;
+      storyCount = 1;
+      sounds = timedSounds;
+      lastSoundAt = 0;
       audioUrl = URL.createObjectURL(blob);
       duration = buffer.duration;
       progress = 1;
@@ -354,6 +538,8 @@
     currentId = session.id;
     storyStarts = session.stories;
     storyCount = session.storyCount;
+    sounds = session.sounds ?? [];
+    lastSoundAt = startAt;
     duration = session.duration;
     position = startAt;
     pendingSeek = startAt;
@@ -363,9 +549,6 @@
     if (token !== generation || !audio) return;
     audio.src = audioUrl;
     audio.load();
-  }
-  function resumeLast() {
-    if (resumeSession) void openSession(resumeSession);
   }
   function sessionTitle(session: SavedAudio) {
     return session.stories[0]?.title ?? labels.listen;
@@ -379,98 +562,87 @@
       audio.currentTime = target;
     } catch {}
     position = target;
+    lastSoundAt = target;
     pendingSeek = null;
+  }
+  function onPlay() {
+    playing = true;
+    lastSoundAt = Math.max(-0.05, position - 0.05);
   }
   function updatePosition() {
     if (!audio || !Number.isFinite(audio.currentTime)) return;
+    const previous = lastSoundAt;
     position = audio.currentTime;
+    if (previous >= 0) {
+      for (const event of sounds) {
+        if (event.at > previous && event.at <= position + 0.06) playSfx(event.effect);
+      }
+    }
+    lastSoundAt = position;
     scheduleSave();
   }
   function togglePlay() {
+    if (liveSession) {
+      if (playing) pauseStandard();
+      else startStandardPlayback(position);
+      return;
+    }
     if (!audio) return;
     if (audio.paused) void audio.play().catch(() => (playing = false));
     else audio.pause();
   }
   function onEnded() {
     playing = false;
-    position = duration;
-    flushPosition();
-    // Play a small chime and generate next story audio
-    try {
-      const ctx = ensureAudioContext();
-      if (ctx && soundEnabled) {
-        const t = ctx.currentTime;
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.frequency.setValueAtTime(880, t);
-        osc.frequency.exponentialRampToValueAtTime(1320, t + 0.12);
-        gain.gain.setValueAtTime(0.0001, t);
-        gain.gain.exponentialRampToValueAtTime(0.08, t + 0.01);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.25);
-        osc.connect(gain).connect(ctx.destination);
-        osc.start(t);
-        osc.stop(t + 0.28);
-      }
-    } catch {}
-    setTimeout(() => {
-      if (phase === 'ready') {
-        void startSession();
-      }
-    }, 600);
+    finishSession();
   }
-  function skip(seconds: number) {
+  function seekTo(value: number) {
+    const target = Math.max(0, Math.min(duration, value));
+    if (liveSession) {
+      const wasPlaying = playing;
+      cancelStandardSpeech();
+      position = target;
+      lastSoundAt = target;
+      if (wasPlaying) startStandardPlayback(target);
+      return;
+    }
     if (!audio) return;
-    audio.currentTime = Math.max(0, Math.min(duration, audio.currentTime + seconds));
-    position = audio.currentTime;
+    audio.currentTime = target;
+    position = target;
+    lastSoundAt = target;
     lastSavedAt = 0;
     flushPosition();
   }
+  function skip(seconds: number) {
+    if (!duration) return;
+    seekTo(position + seconds);
+  }
   function prevTrack() {
-    if (!audio || !duration) return;
-    // If within first 2 seconds of current audio, go to previous track beginning
-    if (position <= 2 && storyStarts.length > 1) {
-      const current = storyStarts.filter((entry) => entry.at <= position + 0.05).at(-1);
-      const idx = storyStarts.findIndex((s) => s.at === current?.at);
-      if (idx > 0) {
-        const target = storyStarts[idx - 1].at;
-        audio.currentTime = target;
-        position = target;
-        lastSavedAt = 0;
-        flushPosition();
+    if (!duration) return;
+    if (position <= 2) {
+      const index = currentId ? history.findIndex((session) => session.id === currentId) : -1;
+      const previous = index >= 0 ? history[index + 1] : history[0];
+      if (previous) {
+        void openSession(previous);
         return;
       }
     }
-    if (position <= 2) {
-      audio.currentTime = 0;
-      position = 0;
-      lastSavedAt = 0;
-      flushPosition();
-      return;
-    }
-    audio.currentTime = 0;
-    position = 0;
-    lastSavedAt = 0;
-    flushPosition();
+    seekTo(0);
   }
   function seek(event: Event) {
-    if (!audio) return;
     const value = Number((event.currentTarget as HTMLInputElement).value);
-    audio.currentTime = value;
-    position = value;
-    lastSavedAt = 0;
-    flushPosition();
+    seekTo(value);
   }
   function formatTime(seconds: number) {
     const whole = Math.max(0, Math.round(seconds));
     return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, '0')}`;
   }
   $effect(() => {
-    if (!audio) return;
+    if (!audio || liveSession) return;
     // Make the animated view follow currently playing audio
     playing = !audio.paused;
   });
   function settingsFingerprint() {
-    return `${settings.lang}|${settings.vocabularyLevel}|${settings.includeLowerVocabulary}`;
+    return `${settings.lang}|${settings.vocabularyLevel}|${settings.includeLowerVocabulary}|${settings.voiceQuality}`;
   }
 
   $effect(() => {
@@ -495,7 +667,8 @@
       history = saved;
       settingsKey = settingsFingerprint();
       settingsReady = true;
-      if (saved.length) phase = 'idle';
+      const latest = saved[0];
+      if (latest && !standardMode) await openSession(latest);
       else await startSession();
     };
     void loadLibrary();
@@ -511,6 +684,7 @@
       document.removeEventListener('visibilitychange', onVisibility);
       flushPosition();
       generation += 1;
+      cancelStandardSpeech();
       audio?.pause();
       if (audioUrl) URL.revokeObjectURL(audioUrl);
     };
@@ -524,21 +698,7 @@
   </header>
 
   <div class="listen-card">
-    {#if phase === 'idle'}
-      <div class="listen-resume" aria-live="polite">
-        {#if resumeSession}
-          <span class="listen-pulse" aria-hidden="true"><IconHeadphones /></span>
-          <p>{labels.resume}</p>
-          <strong lang={resumeSession.language}>{sessionTitle(resumeSession)}</strong>
-          <small>{formatTime(resumeSession.position)} / {formatTime(resumeSession.duration)}</small>
-          <button type="button" class="btn-play btn-play-ink btn-play-sm" onclick={resumeLast}>{labels.continue}</button>
-        {:else}
-          <span class="listen-pulse" aria-hidden="true"><IconHeadphones /></span>
-          <p>{labels.listen}</p>
-          <button type="button" class="btn-play btn-play-ink btn-play-sm" onclick={startSession}>{labels.newAudio}</button>
-        {/if}
-      </div>
-    {:else if phase === 'preparing'}
+    {#if phase === 'preparing'}
       <div class="listen-state" aria-live="polite">
         <span class="listen-pulse" aria-hidden="true"><IconHeadphones /></span>
         <p>{labels.download}</p>
@@ -568,14 +728,14 @@
         <p>{error}</p>
         <button type="button" class="btn-play btn-play-ink btn-play-sm" onclick={startSession}>{labels.again}</button>
       </div>
-    {:else}
+    {:else if phase === 'ready'}
       <div class="listen-player">
         <span class="listen-art" class:playing aria-hidden="true">
           <span class="listen-wave">{#each [0, 1, 2, 3, 4] as bar (bar)}<span style={`--bar:${bar}`}></span>{/each}</span>
         </span>
         <div class="listen-now">
           <p lang={settings.lang}>{currentStory}</p>
-          <small>{storyCount} · {formatTime(duration)}</small>
+          <small>{#if storyCount > 1}{storyCount} · {/if}{formatTime(duration)}</small>
         </div>
         <input class="listen-seek" type="range" min="0" max={duration} step="0.1" value={position} oninput={seek} aria-label={labels.listen} />
         <div class="listen-time"><span>{formatTime(position)}</span><span>{formatTime(duration)}</span></div>
@@ -584,6 +744,12 @@
           <button type="button" class="listen-control listen-control-main" onclick={togglePlay} aria-label={playing ? 'Pause' : labels.play} title={playing ? 'Pause' : labels.play}>{#if playing}<IconPause aria-hidden="true" />{:else}<IconPlay aria-hidden="true" />{/if}</button>
           <button type="button" class="listen-control" onclick={() => skip(15)} aria-label="Forward 15 seconds" title="Forward 15 seconds"><IconForward aria-hidden="true" /></button>
         </div>
+        <button type="button" class="btn-play btn-play-sm listen-new" onclick={startSession}>{labels.newAudio}</button>
+      </div>
+    {:else}
+      <div class="listen-state" aria-live="polite">
+        <span class="listen-pulse" aria-hidden="true"><IconHeadphones /></span>
+        <p>{labels.loading}</p>
       </div>
     {/if}
   </div>
@@ -592,9 +758,6 @@
     <section class="listen-history" dir={interfaceDirection} lang={settings.interfaceLocale}>
       <div class="listen-history-head">
         <h2>{labels.history}</h2>
-        {#if phase !== 'preparing' && phase !== 'generating' && phase !== 'loading'}
-          <button type="button" class="btn-play btn-play-sm listen-new" onclick={startSession}>{labels.newAudio}</button>
-        {/if}
       </div>
       <ul>
         {#each history as session (session.id)}
@@ -619,7 +782,7 @@
     </section>
   {/if}
 
-  <audio bind:this={audio} preload="auto" onloadedmetadata={onLoadedMetadata} ontimeupdate={updatePosition} onplay={() => (playing = true)} onpause={() => { playing = false; flushPosition(); }} onended={onEnded}></audio>
+  <audio bind:this={audio} preload="auto" onloadedmetadata={onLoadedMetadata} ontimeupdate={updatePosition} onplay={onPlay} onpause={() => { playing = false; flushPosition(); }} onended={onEnded}></audio>
 </section>
 
 <style>
@@ -628,11 +791,9 @@
   .listen-header p { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase; }
   .listen-header h1 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.55rem,7vw,2.2rem);font-weight:400;letter-spacing:-.03em;line-height:1; }
   .listen-card { flex:none;display:grid;place-items:center;padding:.4rem 0; }
-  .listen-state,.listen-player,.listen-resume { width:min(100%,26rem);display:grid;justify-items:center;gap:.65rem;padding:clamp(1.25rem,6vw,2rem);border:1px solid rgba(23,42,69,.22);border-radius:1.15rem;background:#fffdf7;box-shadow:0 8px 20px rgba(23,42,69,.08);text-align:center; }
+  .listen-state,.listen-player { width:min(100%,26rem);display:grid;justify-items:center;gap:.65rem;padding:clamp(1.25rem,6vw,2rem);border:1px solid rgba(23,42,69,.22);border-radius:1.15rem;background:#fffdf7;box-shadow:0 8px 20px rgba(23,42,69,.08);text-align:center; }
   .listen-state p,.listen-now p { margin:0;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:800;line-height:1.4; }
-  .listen-state small,.listen-now small,.listen-resume small { color:#596477;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:800; }
-  .listen-resume { gap:.45rem; }
-  .listen-resume strong { color:#172a45;font-family:'DM Serif Display',serif;font-size:1.25rem;font-weight:400;line-height:1.1; }
+  .listen-state small,.listen-now small { color:#596477;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:800; }
   .listen-pulse,.listen-art { display:grid;place-items:center;width:4.4rem;height:4.4rem;border:2px solid #172a45;border-radius:48% 52% 46% 54% / 54% 46% 52% 48%;background:#f7e2b0;color:#a45e38; }
   .listen-pulse { animation:listen-pulse 1.8s ease-in-out infinite; }
   .listen-pulse :global(svg) { width:2rem;height:2rem; }
@@ -684,9 +845,9 @@
   @keyframes listen-level { from { transform:scaleY(.28); } to { transform:scaleY(1); } }
   @media (prefers-reduced-motion:reduce) { .listen-pulse,.listen-wave span,.listen-mini-wave span { animation:none; } .listen-walker { animation:none;left:38%; } .listen-walker :global(.story-character) { animation:none; } .listen-control,.listen-bar span,.listen-history-item { transition:none; } }
   :global(html.dark) .listen-header h1,:global(html.dark) .listen-history h2 { color:#fffdf7; }
-  :global(html.dark) .listen-state,:global(html.dark) .listen-player,:global(html.dark) .listen-resume { border-color:rgba(255,253,247,.36);background:#213a5d; }
-  :global(html.dark) .listen-state p,:global(html.dark) .listen-now p,:global(html.dark) .listen-resume strong { color:#fffdf7; }
-  :global(html.dark) .listen-state small,:global(html.dark) .listen-time,:global(html.dark) .listen-resume small { color:rgba(255,253,247,.72); }
+  :global(html.dark) .listen-state,:global(html.dark) .listen-player { border-color:rgba(255,253,247,.36);background:#213a5d; }
+  :global(html.dark) .listen-state p,:global(html.dark) .listen-now p { color:#fffdf7; }
+  :global(html.dark) .listen-state small,:global(html.dark) .listen-time { color:rgba(255,253,247,.72); }
   :global(html.dark) .listen-art { border-color:#e6a527;background:#2b4a70;color:#e6a527; }
   :global(html.dark) .listen-wave span,:global(html.dark) .listen-mini-wave span { background:#e6a527; }
   :global(html.dark) .listen-bar { background:rgba(255,253,247,.16); }
