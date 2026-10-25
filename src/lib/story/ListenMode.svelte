@@ -911,7 +911,6 @@
             </span>
             <div class="listen-now">
               <p lang={settings.lang}>{currentStory}</p>
-              <small class="listen-audio-dot">{#if storyCount > 1}{storyCount} · {/if}Audio 1 of 1 · 100%</small>
             </div>
           </div>
           <input class="listen-seek" type="range" min="0" max={duration} step="0.1" value={position} oninput={seek} aria-label={labels.listen} />
