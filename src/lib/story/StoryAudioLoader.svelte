@@ -1,12 +1,39 @@
 <script lang="ts">
-  import type { Story } from './stories';
+  import type { Language } from '#lib/data/vocabulary.js';
+  import { m } from '#lib/paraglide/messages.js';
+  import { settings } from '#lib/state/settings.svelte.js';
+  import { characterNames, type Story } from './stories';
   import type { VocabularyLevel } from '#lib/data/vocabulary.js';
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
 
-  let { story, title, level, label, progress }: { story: Story; title: string; level: VocabularyLevel; label: string; progress: number } = $props();
+  let { story, title, level, label, progress, lang, part, total, voice, eta }: {
+    story: Story;
+    title: string;
+    level: VocabularyLevel;
+    label: string;
+    progress: number;
+    lang: Language;
+    part: number;
+    total: number;
+    voice: string;
+    eta: string;
+  } = $props();
   const cast = $derived(story.cast.slice(0, 6));
   const percent = $derived(Math.round(Math.min(1, Math.max(0, progress)) * 100));
+  const questions = $derived(story.beats.filter((beat) => beat.kind === 'question' || beat.kind === 'reply').length);
+  const castNames = $derived.by(() => {
+    const names = story.cast.map((member) => characterNames[member][lang]);
+    try {
+      return new Intl.ListFormat(settings.interfaceLocale, { style: 'long', type: 'conjunction' }).format(names);
+    } catch {
+      return names.join(', ');
+    }
+  });
+  const partLabel = $derived(part > 0 && total > 0 ? m.story_loader_parts({ done: String(part), total: String(total) }, { locale: settings.interfaceLocale }) : '');
+  const questionLabel = $derived(questions ? m.story_loader_questions({ count: String(questions) }, { locale: settings.interfaceLocale }) : '');
+  const castLabel = $derived(castNames ? m.story_loader_cast({ names: castNames }, { locale: settings.interfaceLocale }) : '');
+  const voiceLabel = $derived(voice ? m.story_loader_voice({ voice }, { locale: settings.interfaceLocale }) : '');
 </script>
 
 <section class="story-audio-loader" aria-label={label} aria-busy="true">
@@ -21,6 +48,19 @@
       <span style:width={`${percent}%`}></span>
     </span>
     <p class="story-loader-percent">{percent}%</p>
+    {#if partLabel || questionLabel || castLabel}
+      <ul class="story-loader-facts" dir="auto">
+        {#if partLabel}<li>{partLabel}</li>{/if}
+        {#if questionLabel}<li>{questionLabel}</li>{/if}
+        {#if castLabel}<li>{castLabel}</li>{/if}
+      </ul>
+    {/if}
+    {#if voiceLabel || eta}
+      <p class="story-loader-meta" dir="auto">
+        {#if voiceLabel}<span>{voiceLabel}</span>{/if}
+        {#if eta}<span>{eta}</span>{/if}
+      </p>
+    {/if}
   </div>
   <div class="story-loader-cast" aria-hidden="true">
     {#each cast as member, index (member)}
@@ -34,7 +74,7 @@
 <style>
   .story-audio-loader { position:relative;isolation:isolate;flex:1 1 auto;min-height:0;width:100%;display:flex;justify-content:center;overflow:hidden; }
   .story-loader-wash { position:absolute;z-index:1;inset:0;background:linear-gradient(180deg,rgba(237,228,213,.95) 0%,rgba(237,228,213,.55) 28%,rgba(237,228,213,.08) 55%,rgba(237,228,213,0) 72%,rgba(23,42,69,.14) 100%);pointer-events:none; }
-  .story-loader-copy { position:relative;z-index:3;align-self:flex-start;display:grid;justify-items:center;gap:.65rem;width:min(82%,19rem);margin-top:clamp(3.8rem,13vh,6rem);padding:.95rem 1.1rem 1.05rem;border:1px solid rgba(23,42,69,.18);border-radius:1.15rem;background:rgba(255,253,247,.9);box-shadow:0 14px 38px rgba(23,42,69,.14);text-align:center;backdrop-filter:blur(7px);animation:story-loader-in .35s cubic-bezier(.23,1,.32,1); }
+  .story-loader-copy { position:relative;z-index:3;align-self:flex-start;display:grid;justify-items:center;gap:.5rem;width:min(86%,20.5rem);margin-top:clamp(3rem,11vh,5.4rem);padding:.95rem 1.1rem 1.05rem;border:1px solid rgba(23,42,69,.18);border-radius:1.15rem;background:rgba(255,253,247,.9);box-shadow:0 14px 38px rgba(23,42,69,.14);text-align:center;backdrop-filter:blur(7px);animation:story-loader-in .35s cubic-bezier(.23,1,.32,1); }
   .story-loader-copy p { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.15rem,5vw,1.45rem);line-height:1.15; }
   .story-loader-title { font-size:clamp(1rem,4.4vw,1.25rem) !important; font-weight:700; }
   .story-loader-level { font-size:clamp(.65rem,2.8vw,.78rem) !important; color:#a45e38 !important; font-family:'DM Sans',sans-serif !important; font-weight:900 !important; letter-spacing:.12em !important; text-transform:uppercase; }
@@ -48,6 +88,10 @@
   .story-loader-eq i:nth-child(5) { animation-delay:-.45s;animation-duration:1.15s; }
   .story-loader-track { display:block;width:min(100%,11rem);height:.38rem;overflow:hidden;border-radius:999px;background:rgba(23,42,69,.14); }
   .story-loader-track > span { display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#d8941c,#e6a527,#f5ce6b);transition:width .25s ease; }
+  .story-loader-facts { display:flex;flex-wrap:wrap;justify-content:center;gap:.22rem .55rem;margin:.1rem 0 0;padding:0;list-style:none;font-family:'DM Sans',sans-serif;font-size:clamp(.6rem,2.6vw,.7rem);font-weight:700;line-height:1.3;color:#596477; }
+  .story-loader-facts li { display:flex;align-items:center;gap:.32rem;min-width:0; }
+  .story-loader-facts li + li::before { content:'';flex:none;width:.22rem;height:.22rem;border-radius:50%;background:#e6a527; }
+  .story-loader-meta { display:flex;flex-wrap:wrap;justify-content:center;gap:.15rem .6rem;font-family:'DM Sans',sans-serif !important;font-size:clamp(.6rem,2.5vw,.68rem) !important;font-weight:700 !important;line-height:1.3 !important;color:#7a6a58 !important; }
   .story-loader-cast { position:absolute;z-index:2;inset:auto 0 8%;height:46%;pointer-events:none; }
   .story-loader-walker { position:absolute;left:-24%;bottom:0;width:clamp(3rem,16vw,4.8rem);animation:story-loader-walk 14s linear infinite;animation-delay:calc(var(--i) * -3.1s); }
   .story-loader-walker:nth-child(2) { bottom:15%;width:clamp(3.3rem,18vw,5.2rem); }
@@ -75,4 +119,6 @@
   :global(html.dark) .story-loader-copy { border-color:rgba(255,253,247,.3);background:rgba(15,30,50,.9);box-shadow:0 14px 38px rgba(0,0,0,.35); }
   :global(html.dark) .story-loader-copy p { color:#fffdf7; }
   :global(html.dark) .story-loader-track { background:rgba(255,253,247,.18); }
+  :global(html.dark) .story-loader-facts { color:rgba(255,253,247,.72); }
+  :global(html.dark) .story-loader-meta { color:rgba(255,253,247,.6) !important; }
 </style>

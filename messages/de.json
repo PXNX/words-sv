@@ -185,5 +185,9 @@
   "stories_group_hint": "Stimmen, Tempo und Dialekte für Geschichten und Hörübungen.",
   "story_reading_mode": "Lesemodus",
   "story_reading_mode_hint": "Die ganze Geschichte auf einmal lesen und die Fragen direkt im Text beantworten.",
-  "story_reading_progress": "{answered} von {total} Fragen beantwortet"
+  "story_reading_progress": "{answered} von {total} Fragen beantwortet",
+  "story_loader_parts": "{done} von {total} Abschnitten",
+  "story_loader_questions": "{count} Fragen",
+  "story_loader_cast": "Mit {names}",
+  "story_loader_voice": "Stimme: {voice}"
 }

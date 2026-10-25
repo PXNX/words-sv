@@ -181,5 +181,9 @@
   "stories_group_hint": "Голоси, темп і діалекти для історій та аудіювання.",
   "story_reading_mode": "Режим читання",
   "story_reading_mode_hint": "Прочитайте всю історію одразу й відповідайте на запитання прямо в тексті.",
-  "story_reading_progress": "Відповідно на {answered} з {total} запитань"
+  "story_reading_progress": "Відповідно на {answered} з {total} запитань",
+  "story_loader_parts": "??????? {done} ? {total}",
+  "story_loader_questions": "{count} ????????",
+  "story_loader_cast": "? {names}",
+  "story_loader_voice": "?????: {voice}"
 }

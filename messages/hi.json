@@ -181,5 +181,9 @@
   "stories_group_hint": "कहानियों और सुनने के अभ्यास के लिए आवाज़, गति और बोलियाँ।",
   "story_reading_mode": "पढ़ने का मोड",
   "story_reading_mode_hint": "पूरी कहानी एक साथ पढ़ें और सवालों के जवाब सीधे पाठ में दें।",
-  "story_reading_progress": "{total} में से {answered} प्रश्नों के उत्तर दिए"
+  "story_reading_progress": "{total} में से {answered} प्रश्नों के उत्तर दिए",
+  "story_loader_parts": "??? {done} / {total}",
+  "story_loader_questions": "{count} ??????",
+  "story_loader_cast": "{names} ?? ???",
+  "story_loader_voice": "?????: {voice}"
 }

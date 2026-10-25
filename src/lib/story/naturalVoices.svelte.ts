@@ -149,6 +149,30 @@ export function naturalMegabytes(language: Language, model: NaturalModel = setti
   return RUNTIME_MEGABYTES + modelsOf(language, model).reduce((sum, name) => sum + modelMegabytes[name], 0);
 }
 
+// The name of the voice that reads the narration, for the story loading screen.
+const voiceNames: Record<string, string> = {
+  [THORSTEN_HIGH]: 'Thorsten',
+  [THORSTEN]: 'Thorsten',
+  [KARLSSON]: 'Karlsson',
+  [KERSTIN]: 'Kerstin',
+  [EVA]: 'Eva',
+  [CORI]: 'Cori',
+  [SEMANA]: 'Semaine',
+  [UPMC]: 'UPMC',
+  [SERENA]: 'Serena',
+  [PAOLA]: 'Paola',
+  [RICCARDO]: 'Riccardo',
+  [SHARVARD]: 'Sharvard',
+  [FABER]: 'Faber',
+  [TETIANA]: 'Tetiana',
+  [UKRAINIAN]: 'Ukrainian'
+};
+
+export function naturalNarratorVoice(language: Language, model: NaturalModel = settings.naturalModel) {
+  const narrator = voices[model][language].narrator;
+  return narrator ? voiceNames[narrator.model] ?? '' : '';
+}
+
 export function naturalSupported() {
   return typeof window !== 'undefined' && 'Worker' in window && 'caches' in window && 'AudioContext' in window;
 }

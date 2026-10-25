@@ -19,7 +19,7 @@
   import { intonationOf, pauseAfter, pronounceable, sentences, splitSounds } from './speech';
   import { LipSync } from './lipSync.svelte';
   import { WordMarks } from './wordMarks.svelte';
-  import { clearNaturalAudio, naturalReady, naturalState, naturalSupported, playNatural, prepareNatural, synthesizeNatural, type NaturalClip } from './naturalVoices.svelte';
+  import { clearNaturalAudio, naturalNarratorVoice, naturalReady, naturalState, naturalSupported, playNatural, prepareNatural, synthesizeNatural, type NaturalClip } from './naturalVoices.svelte';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconVolumeOff from '~icons/material-symbols/volume-off-rounded';
   import IconCheck from '~icons/material-symbols/check-rounded';
@@ -152,6 +152,9 @@
   let audioReady = $state(true);
   let audioDone = $state(0);
   let audioTotal = $state(0);
+  // When the story's clips started generating, and a one-second clock that keeps the estimate moving.
+  let prepStartedAt = $state(0);
+  let clock = $state(0);
   let orders = $state<number[][]>([]);
   let wrong = $state<Record<number, number[]>>({});
   let solved = $state<Record<number, true>>({});
@@ -224,6 +227,30 @@
   const voiceCast = $derived<Speaker[]>(story ? castFor(story) : []);
   const audioLoadingPercent = $derived(naturalReady(lang) ? (audioTotal ? Math.round((audioDone / audioTotal) * 100) : 0) : Math.round((naturalState.progress[lang] ?? 0) * 100));
   const audioLoadingLabel = $derived(naturalReady(lang) ? labels.loadingAudio : m.voice_quality_loading({ percent: String(audioLoadingPercent) }, { locale: settings.interfaceLocale }));
+  // While the voices download, their own estimate is used; while the story's clips are prepared, the
+  // pace of the clips already done predicts the rest.
+  function formatRemaining(seconds: number) {
+    const value = seconds < 60 ? Math.max(5, Math.ceil(seconds / 5) * 5) : Math.ceil(seconds / 60);
+    const unit = seconds < 60 ? 'second' : 'minute';
+    try {
+      return new Intl.NumberFormat(settings.interfaceLocale, { style: 'unit', unit, unitDisplay: 'short' }).format(value);
+    } catch {
+      return `${value} ${unit}`;
+    }
+  }
+  const audioEta = $derived.by(() => {
+    if (audioReady) return '';
+    if (!naturalReady(lang)) {
+      const remaining = naturalState.remaining[lang];
+      return typeof remaining === 'number' && remaining > 0
+        ? m.voice_quality_remaining({ time: formatRemaining(remaining) }, { locale: settings.interfaceLocale })
+        : '';
+    }
+    if (!prepStartedAt || !audioDone || !audioTotal) return '';
+    const elapsed = Math.max(0, (clock - prepStartedAt) / 1000);
+    const left = (elapsed / audioDone) * (audioTotal - audioDone);
+    return left > 0.5 ? m.voice_quality_remaining({ time: formatRemaining(left) }, { locale: settings.interfaceLocale }) : '';
+  });
   // Who is on stage and what they hold so far. Everyone whose first stage cue is an entrance waits
   // in the wings until then; exits send them off, and their own lines bring them back. The room
   // keeps the last `lights` it was given.
@@ -320,6 +347,7 @@
     reaction = null;
     audioDone = 0;
     audioTotal = playthrough.beats.length;
+    prepStartedAt = 0;
     if (reading) {
       audioReady = true;
       return;
@@ -348,6 +376,7 @@
     audioReady = true;
     audioDone = 0;
     audioTotal = progress.story.beats.length;
+    prepStartedAt = 0;
   }
   // A beat's sound: played where the text has onomatopoeia ("klirr!", "Miau!") when read aloud,
   // otherwise as the beat appears. Lilith purrs and Bello barks whenever they talk.
@@ -614,6 +643,8 @@
     }
   }
   async function prepareStoryAudio(next: Story, cast: Speaker[], language: Language, token: number) {
+    prepStartedAt = Date.now();
+    clock = Date.now();
     for (const beat of next.beats) {
       if (token !== audioPreparation || left || !naturalReady(language) || settings.voiceQuality !== 'natural') return;
       await prepareBeatAudio(beat, cast, language, token);
@@ -770,6 +801,13 @@
     const language = settings.lang;
     if (settings.voiceQuality === 'natural') untrack(() => void prepareNatural(language));
   });
+  // While the loading screen is up, a one-second clock keeps its remaining-time estimate honest.
+  $effect(() => {
+    if (audioReady) return;
+    clock = Date.now();
+    const timer = window.setInterval(() => (clock = Date.now()), 1000);
+    return () => clearInterval(timer);
+  });
 
   // Leaving the story (another page, or the tab going away) silences it at once: speech, sound
   // effects still ringing out, and anything queued to follow a right answer.
@@ -810,7 +848,7 @@
 {/snippet}
 
 {#if story && !audioReady}
-    <StoryAudioLoader {story} title={story.title[lang]} level={story.level} label={audioLoadingLabel} progress={audioLoadingPercent / 100} />
+    <StoryAudioLoader {story} title={story.title[lang]} level={story.level} label={audioLoadingLabel} progress={audioLoadingPercent / 100} lang={lang} part={audioDone} total={audioTotal} voice={naturalNarratorVoice(lang)} eta={audioEta} />
   {/if}
 
 {#if story && audioReady}

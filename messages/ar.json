@@ -181,5 +181,9 @@
   "stories_group_hint": "الأصوات والسرعة واللهجات للقصص والاستماع.",
   "story_reading_mode": "وضع القراءة",
   "story_reading_mode_hint": "اقرأ القصة كاملة دفعة واحدة وأجب عن الأسئلة مباشرة في النص.",
-  "story_reading_progress": "تمت الإجابة على {answered} من {total} سؤالاً"
+  "story_reading_progress": "تمت الإجابة على {answered} من {total} سؤالاً",
+  "story_loader_parts": "????? {done} ?? {total}",
+  "story_loader_questions": "{count} ?????",
+  "story_loader_cast": "?? {names}",
+  "story_loader_voice": "?????: {voice}"
 }
