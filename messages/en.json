@@ -174,6 +174,8 @@
   "voice_quality_standard": "Standard",
   "voice_quality_natural": "Natural",
   "voice_quality_hint": "Natural voices are generated on your device. They are downloaded once (about {size} MB for this language).",
+  "voice_quality_standard_hint": "Uses the voices already installed on this device. Ready instantly, even offline, but sounds more robotic.",
+  "voice_quality_natural_hint": "Uses neural voices generated on your device. Sounds much more natural; downloaded once (about {size} MB for this language).",
   "dialects": "Dialects",
   "dialects_hint": "Dialect characters speak with a regional accent. Turn this off to let them speak standard German.",
   "voice_quality_loading": "Downloading voices … {percent} %",

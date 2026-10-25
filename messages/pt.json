@@ -170,6 +170,8 @@
   "voice_quality_standard": "Padrão",
   "voice_quality_natural": "Natural",
   "voice_quality_hint": "As vozes naturais são geradas no seu aparelho. Elas são baixadas uma vez (cerca de {size} MB para este idioma).",
+  "voice_quality_standard_hint": "Usa as vozes já instaladas neste aparelho. Pronto na hora, mesmo offline, mas soa mais robótico.",
+  "voice_quality_natural_hint": "Usa vozes neurais geradas no seu aparelho. Soam muito mais naturais; são baixadas uma vez (cerca de {size} MB para este idioma).",
   "dialects": "Dialetos",
   "dialects_hint": "Personagens com dialeto falam com sotaque regional. Desative para que falem alemão padrão.",
   "voice_quality_loading": "Baixando vozes … {percent} %",
