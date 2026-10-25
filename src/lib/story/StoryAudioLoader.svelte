@@ -7,16 +7,18 @@
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
 
-  let { story, title, level, label, lang, part, total, voice }: {
+  let { story, title, level, label, lang, progress, part, total, voice }: {
     story: Story;
     title: string;
     level: VocabularyLevel;
     label: string;
     lang: Language;
+    progress: number;
     part: number;
     total: number;
     voice: string;
   } = $props();
+  const percent = $derived(Math.round(Math.min(1, Math.max(0, progress)) * 100));
   const questions = $derived(story.beats.filter((beat) => beat.kind === 'question' || beat.kind === 'reply').length);
   const castNames = $derived.by(() => {
     const names = story.cast.map((member) => characterNames[member][lang]);
@@ -40,6 +42,12 @@
       <p class="story-loader-status" dir="auto">{label}</p>
       <p class="story-loader-title" dir="auto">{title}</p>
       <p class="story-loader-level">Level {level.toUpperCase()}</p>
+      <div class="story-loader-progress">
+        <span class="story-loader-track" role="progressbar" aria-label={label} aria-valuemin="0" aria-valuemax="100" aria-valuenow={percent}>
+          <span style:width={`${percent}%`}></span>
+        </span>
+        <span class="story-loader-percent" aria-hidden="true">{percent}%</span>
+      </div>
       {#if partLabel || questionLabel || castLabel}
         <ul class="story-loader-facts" dir="auto">
           {#if partLabel}<li>{partLabel}</li>{/if}
@@ -67,6 +75,10 @@
   .story-loader-status { color:#172a45;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:800;line-height:1.35; }
   .story-loader-title { color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.1rem,4.8vw,1.35rem);font-weight:400;line-height:1.15; }
   .story-loader-level { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
+  .story-loader-progress { display:flex;align-items:center;gap:.45rem;width:min(100%,13rem); }
+  .story-loader-track { flex:1 1 auto;display:block;height:.36rem;overflow:hidden;border-radius:999px;background:rgba(23,42,69,.14); }
+  .story-loader-track > span { display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#d8941c,#e6a527,#f5ce6b);transition:width .25s ease; }
+  .story-loader-percent { flex:0 0 auto;min-width:2.1rem;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:900;letter-spacing:.02em;text-align:end;font-variant-numeric:tabular-nums; }
   .story-loader-facts { display:flex;flex-wrap:wrap;justify-content:center;gap:.22rem .55rem;margin:.05rem 0 0;padding:0;list-style:none;color:#596477;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:800;line-height:1.3; }
   .story-loader-facts li { display:flex;align-items:center;gap:.32rem;min-width:0; }
   .story-loader-facts li + li::before { content:'';flex:none;width:.22rem;height:.22rem;border-radius:50%;background:#e6a527; }
@@ -104,6 +116,8 @@
   :global(html.dark) .story-loader-status,
   :global(html.dark) .story-loader-title { color:#fffdf7; }
   :global(html.dark) .story-loader-facts { color:rgba(255,253,247,.72); }
+  :global(html.dark) .story-loader-track { background:rgba(255,253,247,.18); }
+  :global(html.dark) .story-loader-percent { color:#e9b07d; }
   :global(html.dark) .story-loader-meta { color:rgba(255,253,247,.6); }
   :global(html.dark) .story-loader-wave i { background:#e6a527; }
 </style>
