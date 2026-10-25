@@ -832,10 +832,10 @@ const weatherLines: Record<Weather, { indoor: Text; outdoor: Text }> = {
   }
 };
 
-function shuffled<T>(items: T[]): T[] {
+function shuffled<T>(items: T[], random: () => number = Math.random): T[] {
   const copy = [...items];
   for (let index = copy.length - 1; index > 0; index -= 1) {
-    const swap = Math.floor(Math.random() * (index + 1));
+    const swap = Math.floor(random() * (index + 1));
     [copy[index], copy[swap]] = [copy[swap], copy[index]];
   }
   return copy;
@@ -843,14 +843,15 @@ function shuffled<T>(items: T[]): T[] {
 
 /**
  * Every playthrough draws its own details (see Detail): the ball is red one time and blue the next,
- * the day a Sunday or a Tuesday, and the questions ask about whatever was drawn.
+ * the day a Sunday or a Tuesday, and the questions ask about whatever was drawn. A caller that
+ * needs the same draw every time (the reading catalog) passes its own random source.
  */
-export function withDetails(story: Story): Story {
+export function withDetails(story: Story, random: () => number = Math.random): Story {
   if (!story.details?.length) return story;
   const values: Record<string, Text> = {};
   let ball: string | undefined;
   for (const detail of story.details) {
-    const [chosen, ...others] = shuffled(detail);
+    const [chosen, ...others] = shuffled(detail, random);
     ball = chosen.ball ?? ball;
     for (const [key, text] of Object.entries(chosen.words)) {
       values[key] = text;
