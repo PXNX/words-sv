@@ -30,6 +30,78 @@
   const COMPLETED_KEY = 'wordcircle-story-completed-v1';
   const AUTO_READ_KEY = 'wordcircle-story-auto-read-v1';
   const READING_KEY = 'wordcircle-story-reading-v1';
+  const PROGRESS_KEY = 'wordcircle-story-progress-v2';
+  type SavedProgress = {
+    fingerprint: string;
+    story: Story;
+    written: Story | null;
+    revealed: number;
+    wrong: Record<number, number[]>;
+    solved: Record<number, true>;
+    orders: number[][];
+    reading: boolean;
+    savedAt: number;
+  };
+  function progressFingerprint() {
+    return `${settings.lang}|${settings.vocabularyLevel}|${settings.includeLowerVocabulary}`;
+  }
+  function readProgress(): SavedProgress | null {
+    if (typeof localStorage === 'undefined') return null;
+    try {
+      const parsed = JSON.parse(localStorage.getItem(PROGRESS_KEY) ?? 'null') as Partial<SavedProgress> | null;
+      if (!parsed || parsed.fingerprint !== progressFingerprint() || !parsed.story || !Array.isArray(parsed.story.beats)) return null;
+      const story = parsed.story;
+      // The answer order is saved, because reshuffling it would move the buttons under the learner's
+      // fingers. A story whose shape no longer matches the saved order starts its questions afresh.
+      const lengths = story.beats.map((beat) => (isInteractive(beat) ? beat.options.length : 0));
+      const saved = Array.isArray(parsed.orders) ? parsed.orders : [];
+      const orders = lengths.every((length, index) => (length ? Array.isArray(saved[index]) && saved[index].length === length : true))
+        ? saved
+        : story.beats.map((beat) => (isInteractive(beat) ? shuffledOrder(beat.options.length) : []));
+      return {
+        fingerprint: parsed.fingerprint,
+        story,
+        written: parsed.written ?? null,
+        revealed: Math.max(1, Math.min(story.beats.length, Number(parsed.revealed) || 1)),
+        wrong: parsed.wrong ?? {},
+        solved: parsed.solved ?? {},
+        orders,
+        reading: Boolean(parsed.reading),
+        savedAt: Number(parsed.savedAt) || 0
+      };
+    } catch {
+      return null;
+    }
+  }
+  // A story that was open when the learner left is restored in place instead of drawing a new one.
+  const restoredProgress = readProgress();
+  let progressTimer = 0;
+  function writeProgress() {
+    if (typeof localStorage === 'undefined' || !story) return;
+    try {
+      const snapshot: SavedProgress = {
+        fingerprint: progressFingerprint(),
+        story,
+        written,
+        revealed,
+        wrong,
+        solved,
+        orders,
+        reading,
+        savedAt: Date.now()
+      };
+      localStorage.setItem(PROGRESS_KEY, JSON.stringify(snapshot));
+    } catch {
+      // A full or blocked storage must not stop the story.
+    }
+  }
+  // Progress is saved as it changes, a little after the fact so a read-aloud beat does not write on
+  // every tick.
+  function saveProgress() {
+    if (typeof window === 'undefined') return;
+    clearTimeout(progressTimer);
+    progressTimer = window.setTimeout(writeProgress, 250);
+  }
   const startlingSounds: SoundEffect[] = ['glass', 'brakes', 'doorbell', 'knock'];
   const speechLocales: Record<string, string> = { de: 'de-DE', en: 'en-GB', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', pt: 'pt-BR', uk: 'uk-UA' };
   // Reading pace grows a little with the learner's level: unhurried for beginners, close to natural
@@ -72,8 +144,9 @@
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
 
   // `story` is the playthrough (with its random weather and details); `written` the story as written, for "again".
+  // A story left open comes back exactly as it was left: same scene, same answers, same place in the text.
   let story = $state<Story | null>(null);
-  let written: Story | null = null;
+  let written = $state<Story | null>(null);
   let run = 0;
   let revealed = $state(1);
   let audioReady = $state(true);
@@ -258,6 +331,23 @@
     }
     audioReady = true;
     presentBeat(playthrough.beats[0], 0);
+  }
+  // Puts a saved playthrough back on the page without reading a word aloud: the learner came back to
+  // the place they left, not to a new performance.
+  function restore(progress: SavedProgress) {
+    cancelSpeech();
+    run += 1;
+    written = progress.written;
+    story = progress.story;
+    reading = progress.reading;
+    revealed = progress.reading ? progress.story.beats.length : progress.revealed;
+    wrong = progress.wrong;
+    solved = progress.solved;
+    orders = progress.orders;
+    reaction = null;
+    audioReady = true;
+    audioDone = 0;
+    audioTotal = progress.story.beats.length;
   }
   // A beat's sound: played where the text has onomatopoeia ("klirr!", "Miau!") when read aloud,
   // otherwise as the beat appears. Lilith purrs and Bello barks whenever they talk.
@@ -639,11 +729,33 @@
     if (canSpeak()) window.speechSynthesis.cancel();
   }
 
-  // A new level (or the "include lower levels" toggle) means a different story pool.
+  // A new level (or the "include lower levels" toggle) means a different story pool. A saved
+  // playthrough keeps its turn; only after it has been put back does a drawn story take over.
+  let restored = restoredProgress;
   $effect(() => {
     settings.vocabularyLevel;
     settings.includeLowerVocabulary;
-    untrack(() => start(pickStory()));
+    untrack(() => {
+      if (restored) {
+        const progress = restored;
+        restored = null;
+        restore(progress);
+        return;
+      }
+      start(pickStory());
+    });
+  });
+  // The playthrough survives leaving the page, so coming back continues where the learner stopped.
+  $effect(() => {
+    story;
+    written;
+    revealed;
+    wrong;
+    solved;
+    orders;
+    reading;
+    if (!story) return;
+    untrack(saveProgress);
   });
   $effect(() => {
     revealed;
@@ -662,6 +774,7 @@
   // Leaving the story (another page, or the tab going away) silences it at once: speech, sound
   // effects still ringing out, and anything queued to follow a right answer.
   function leave() {
+    writeProgress();
     left = true;
     run += 1;
     audioPreparation += 1;
@@ -682,6 +795,7 @@
       window.removeEventListener('pageshow', onPageShow);
       leave();
       clearNaturalAudio();
+      clearTimeout(progressTimer);
       clearTimeout(heartsTimer);
       clearTimeout(pettedTimer);
       clearTimeout(mimeTimer);
