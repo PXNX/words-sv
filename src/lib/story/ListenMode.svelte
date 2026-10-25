@@ -86,6 +86,15 @@
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   const currentStory = $derived(storyStarts.filter((entry) => entry.at <= position + 0.05).at(-1)?.title ?? storyStarts[0]?.title ?? labels.listen);
+  const visibleHistory = $derived.by(() => {
+    const seen = new Set<string>();
+    return history.filter((session) => {
+      const key = savedSessionKey(session);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  });
 
   const dateFormat = $derived(new Intl.DateTimeFormat(settings.interfaceLocale, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }));
   const soundEnabled = $derived(settings.sound);
@@ -260,9 +269,14 @@
     const words = wordCount(story);
     return words < QUESTION_WORD_LIMIT ? words + 110 : words;
   }
-  function pickStory(): Story | null {
-    const pool = [...new Map(storiesFor(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary).map((story) => [story.id, story])).values()];
+  function pickStory(avoidSaved = false): Story | null {
+    let pool = [...new Map(storiesFor(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary).map((story) => [story.id, story])).values()];
     if (!pool.length) return null;
+    if (avoidSaved) {
+      const covered = new Set(history.filter((session) => session.language === settings.lang).map(savedSessionKey));
+      const fresh = pool.filter((story) => !covered.has(storyKey(story)));
+      if (fresh.length) pool = fresh;
+    }
     const target = STORY_TARGETS[settings.vocabularyLevel] ?? 320;
     const ranked = [...pool].sort((left, right) => Math.abs(storyLength(left) - target) - Math.abs(storyLength(right) - target));
     const top = shuffled(ranked.slice(0, Math.min(3, ranked.length)));
@@ -468,8 +482,10 @@
       return;
     }
     if (!naturalSupported()) { phase = 'error'; error = labels.unsupported; return; }
-    const raw = pickStory();
+    const raw = pickStory(true);
     if (!raw) { phase = 'error'; error = 'No stories are available for this level yet.'; return; }
+    const existing = history.find((session) => savedSessionKey(session) === storyKey(raw));
+    if (existing) { await openSession(existing); return; }
     await prepareNatural(settings.lang);
     if (token !== generation) return;
     if (!naturalReady(settings.lang)) { phase = 'error'; error = labels.unsupported; return; }
@@ -588,6 +604,12 @@
   function sessionTitle(session: SavedAudio) {
     return session.stories[0]?.title ?? labels.listen;
   }
+  function savedSessionKey(session: SavedAudio) {
+    return `${session.language}|${session.level}|${sessionTitle(session)}`;
+  }
+  function storyKey(story: Story) {
+    return `${settings.lang}|${story.level}|${story.title[settings.lang]}`;
+  }
   function sessionScene(session: SavedAudio): SceneId | undefined {
     if (session.scene) return session.scene;
     const title = sessionTitle(session);
@@ -662,8 +684,8 @@
   function prevTrack() {
     if (!duration) return;
     if (position <= 2) {
-      const index = currentId ? history.findIndex((session) => session.id === currentId) : -1;
-      const previous = index >= 0 ? history[index + 1] : history[0];
+      const index = currentId ? visibleHistory.findIndex((session) => session.id === currentId) : -1;
+      const previous = index >= 0 ? visibleHistory[index + 1] : visibleHistory[0];
       if (previous) {
         void openSession(previous);
         return;
@@ -800,13 +822,13 @@
     {/if}
   </div>
 
-  {#if history.length}
+  {#if visibleHistory.length}
     <section class="listen-history" dir={interfaceDirection} lang={settings.interfaceLocale}>
       <div class="listen-history-head">
         <h2>{labels.history}</h2>
       </div>
       <ul>
-        {#each history as session (session.id)}
+        {#each visibleHistory as session (session.id)}
           {@const scene = sessionScene(session)}
           <li class:current={session.id === currentId}>
             <button type="button" class="listen-history-item" onclick={() => void openSession(session)}>
@@ -822,7 +844,7 @@
               </span>
               <span class="listen-history-text">
                 <strong lang={session.language}>{sessionTitle(session)}</strong>
-                <small>{dateFormat.format(session.updatedAt)} · {session.storyCount}</small>
+                <small>{session.level.toUpperCase()} · {dateFormat.format(session.updatedAt)}{#if session.storyCount > 1}{' · '}{session.storyCount}{/if}</small>
               </span>
               <span class="listen-history-at">{formatTime(session.position)} / {formatTime(session.duration)}</span>
             </button>
