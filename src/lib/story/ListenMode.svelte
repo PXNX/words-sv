@@ -4,10 +4,10 @@
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { fillName, moodFor, storiesFor, withDetails, withWeather, type Mood, type Story, type StoryBeat } from './stories';
+  import { characterNames, fillName, moodFor, storiesFor, withDetails, withWeather, type CharacterId, type Mood, type Story, type StoryBeat } from './stories';
   import { intonationOf, pronounceable, splitSounds, wordsOf } from './speech';
   import { naturalReady, naturalState, naturalSupported, prepareNatural, synthesizeNatural, combineNatural, type NaturalClip } from './naturalVoices.svelte';
-  import { applyVoice, type Speaker } from './voices';
+  import { applyVoice, profiles, type Dialect, type Speaker } from './voices';
   import { listAudioSessions, loadAudioBlob, saveAudioSession, updateAudioSessionPosition, type SavedAudio, type SavedSound, type SavedStoryStart } from './audioLibrary';
   import { playSoundEffect, soundEffectSeconds, type SoundEffect } from '#lib/sounds.js';
   import StoryCharacter from './StoryCharacter.svelte';
@@ -27,6 +27,17 @@
   const levelRates: Record<string, number> = { a1: 0.9, a2: 0.95, b1: 1.03, b2: 1.07, c1: 1.11, c2: 1.15 };
   const naturalLevelPace: Record<string, number> = { a1: 0.9, a2: 0.95, b1: 1, b2: 1, c1: 1, c2: 1 };
   const speechLocales: Record<string, string> = { de: 'de-DE', en: 'en-GB', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', pt: 'pt-BR', uk: 'uk-UA' };
+  const dialectAttention: Record<string, string> = { de: 'Vorsicht', en: 'Careful', fr: 'Attention', it: 'Attenzione', es: 'Cuidado', pt: 'Cuidado', uk: 'Обережно' };
+  const dialectNotes: Record<string, Record<Dialect, string>> = {
+    de: { bavarian: '{name} spricht Bayerisch.', berlin: '{name} spricht Berlinerisch.', alpine: '{name} spricht mit Alpenakzent.', northern: '{name} spricht Norddeutsch.' },
+    en: { bavarian: '{name} speaks Bavarian.', berlin: '{name} speaks the Berlin dialect.', alpine: '{name} speaks with an Alpine accent.', northern: '{name} speaks Northern German.' },
+    fr: { bavarian: '{name} parle bavarois.', berlin: '{name} parle le dialecte berlinois.', alpine: '{name} parle avec un accent alpin.', northern: "{name} parle l'allemand du nord." },
+    it: { bavarian: '{name} parla bavarese.', berlin: '{name} parla il dialetto berlinese.', alpine: '{name} parla con accento alpino.', northern: '{name} parla il tedesco settentrionale.' },
+    es: { bavarian: '{name} habla bávaro.', berlin: '{name} habla el dialecto berlinés.', alpine: '{name} habla con acento alpino.', northern: '{name} habla alemán del norte.' },
+    pt: { bavarian: '{name} fala bávaro.', berlin: '{name} fala o dialeto berlinense.', alpine: '{name} fala com sotaque alpino.', northern: '{name} fala alemão do norte.' },
+    uk: { bavarian: '{name} розмовляє баварським діалектом.', berlin: '{name} розмовляє берлінським діалектом.', alpine: '{name} розмовляє з альпійським акцентом.', northern: '{name} розмовляє північнонімецьким діалектом.' }
+  };
+
   type Phase = 'idle' | 'preparing' | 'generating' | 'loading' | 'ready' | 'error';
   type Segment = { text: string; speaker: Speaker; mood: Mood; gap: number; story: number; sound: SoundEffect | null; soundLead: number };
   type LiveSession = { story: Story; segments: Segment[]; starts: number[]; sounds: SavedSound[]; duration: number };
@@ -144,7 +155,7 @@
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = speechLocales[settings.lang] ?? settings.lang;
       const baseRate = levelRates[settings.vocabularyLevel] ?? 1;
-      applyVoice(utterance, segment.speaker, settings.lang, utterance.lang, liveSession?.story.cast ?? [], baseRate, segment.mood);
+      applyVoice(utterance, segment.speaker, settings.lang, utterance.lang, liveSession?.story.cast ?? [], baseRate, segment.mood, settings.dialects);
       const startPosition = position;
       const startedAt = performance.now();
       const estimated = estimateSpeech(text, utterance.rate || baseRate);
@@ -272,11 +283,31 @@
   function beatGap(text: string) {
     return intonationOf(text) === 'question' && wordsOf(text).length === 1 ? SINGLE_WORD_QUESTION_GAP : BEAT_GAP;
   }
+  function dialectIntroduction(story: Story) {
+    if (!settings.dialects) return '';
+    const speakers = new Set<Speaker>();
+    for (const beat of story.beats) {
+      if (beat.kind === 'line') speakers.add(beat.speaker);
+      else if (beat.kind === 'question' && beat.asker) speakers.add(beat.asker);
+    }
+    const templates = dialectNotes[settings.lang] ?? dialectNotes.en;
+    const attention = dialectAttention[settings.lang] ?? dialectAttention.en;
+    const notes: string[] = [];
+    for (const speaker of speakers) {
+      const dialect = profiles[speaker].dialect;
+      if (!dialect) continue;
+      const name = characterNames[speaker as CharacterId][settings.lang];
+      const note = `${attention}, ${templates[dialect].replace('{name}', name)}`;
+      if (!notes.includes(note)) notes.push(note);
+    }
+    return notes.join(' ');
+  }
   function segmentsForStory(story: Story): Segment[] {
     const segments: Segment[] = [];
     const title = `${say(story.title[settings.lang])}.`;
+    const dialect = dialectIntroduction(story);
     segments.push({
-      text: `${title} ${labels.level} ${story.level.toUpperCase()}.`,
+      text: `${title} ${labels.level} ${story.level.toUpperCase()}.${dialect ? ` ${dialect}` : ''}`,
       speaker: 'narrator',
       mood: 'neutral',
       gap: 0.7,

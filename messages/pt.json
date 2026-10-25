@@ -170,6 +170,8 @@
   "voice_quality_standard": "Padrão",
   "voice_quality_natural": "Natural",
   "voice_quality_hint": "As vozes naturais são geradas no seu aparelho. Elas são baixadas uma vez (cerca de {size} MB para este idioma).",
+  "dialects": "Dialetos",
+  "dialects_hint": "Personagens com dialeto falam com sotaque regional. Desative para que falem alemão padrão.",
   "voice_quality_loading": "Baixando vozes … {percent} %",
   "voice_quality_remaining": "Cerca de {time} restante",
   "voice_quality_failed": "Não foi possível carregar as vozes naturais, então as vozes padrão serão usadas."

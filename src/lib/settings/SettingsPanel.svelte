@@ -41,6 +41,8 @@
     voiceStandard: m.voice_quality_standard({}, { locale: settings.interfaceLocale }),
     voiceNatural: m.voice_quality_natural({}, { locale: settings.interfaceLocale }),
     voiceFailed: m.voice_quality_failed({}, { locale: settings.interfaceLocale }),
+    dialects: m.dialects({}, { locale: settings.interfaceLocale }),
+    dialectsHint: m.dialects_hint({}, { locale: settings.interfaceLocale }),
     notifications: m.notifications({}, { locale: settings.interfaceLocale }),
     notificationsEnabled: m.notifications_enabled({}, { locale: settings.interfaceLocale }),
     notificationsDenied: m.notifications_denied({}, { locale: settings.interfaceLocale }),
@@ -215,6 +217,8 @@
         <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">Neural voices for stories and listening; larger download.</p>
       {/if}
     {/if}
+    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.dialects}</span><input aria-label={labels.dialects} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.dialects} onchange={(event) => settings.setDialects((event.currentTarget as HTMLInputElement).checked)} /></div>
+    <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{labels.dialectsHint}</p>
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.notifications}</span><input aria-label={labels.notifications} type="checkbox" class="toggle toggle-sm toggle-primary" checked={notificationsEnabled} disabled={notificationBusy} onchange={(event) => toggleNotifications((event.currentTarget as HTMLInputElement).checked)} /></div>
     {#if notificationMessage}<p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{notificationMessage}</p>{/if}
   </section>

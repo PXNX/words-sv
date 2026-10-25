@@ -86,8 +86,8 @@ export const profiles: Record<Speaker, VoiceProfile> = {
 export const priority: Speaker[] = ['narrator', 'announcer', 'mia', 'tom', 'lilith', 'oma', 'paul', 'kim', 'leo', 'hans', 'albert', 'sabine', 'enzo', 'jana', 'becker', 'ali', 'robert', 'fritz', 'tobias', 'selma', 'kumar', 'simon', 'banker', 'ludwig', 'bello', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake', 'deer', 'fox', 'seagull', 'crow'];
 export const animals: Speaker[] = ['bello', 'crow', 'seagull', 'deer', 'fox', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
 
-function accentRank(speaker: Speaker, voice: SpeechSynthesisVoice) {
-  const dialect = profiles[speaker].dialect;
+function accentRank(speaker: Speaker, voice: SpeechSynthesisVoice, dialects = true) {
+  const dialect = dialects ? profiles[speaker].dialect : undefined;
   const accent = dialect ? dialectLocales[dialect] : [];
   const rank = accent.findIndex((locale) => voice.lang.toLowerCase().startsWith(locale));
   return rank === -1 ? accent.length : rank;
@@ -146,9 +146,9 @@ let cached: { key: string; casting: Casting } | null = null;
 
 // Gives every speaker of the story a voice: an unused voice of their gender, else an unused voice
 // of unknown gender, else the least used voice of their gender (which then counts as shared).
-function castVoices(cast: Speaker[], language: string, locale: string): Casting {
+function castVoices(cast: Speaker[], language: string, locale: string, dialects: boolean): Casting {
   const voices = voicesFor(language, locale, window.speechSynthesis.getVoices());
-  const hasAccentVoice = (speaker: Speaker) => voices.some((voice) => accentRank(speaker, voice) < (profiles[speaker].dialect ? dialectLocales[profiles[speaker].dialect!].length : 0));
+  const hasAccentVoice = (speaker: Speaker) => dialects && voices.some((voice) => accentRank(speaker, voice) < (profiles[speaker].dialect ? dialectLocales[profiles[speaker].dialect!].length : 0));
   const speakers = priority.filter((speaker) => speaker === 'narrator' || cast.includes(speaker))
     // The narrator always casts first, so the storyteller keeps the same male voice across stories;
     // characters with a regional voice only choose after them.
@@ -157,7 +157,7 @@ function castVoices(cast: Speaker[], language: string, locale: string): Casting 
       if (right === 'narrator') return 1;
       return Number(!hasAccentVoice(left)) - Number(!hasAccentVoice(right));
     });
-  const key = `${language}|${locale}|${speakers.join()}|${voices.map((voice) => voice.voiceURI).join()}`;
+  const key = `${language}|${locale}|${dialects ? 'dialects' : 'plain'}|${speakers.join()}|${voices.map((voice) => voice.voiceURI).join()}`;
   if (cached?.key === key) return cached.casting;
 
   const uses = new Map<SpeechSynthesisVoice, number>();
@@ -165,7 +165,7 @@ function castVoices(cast: Speaker[], language: string, locale: string): Casting 
   for (const speaker of speakers) {
     const gender = profiles[speaker].gender;
     const unused = (voice: SpeechSynthesisVoice) => !uses.has(voice);
-    const ofGender = voices.filter((voice) => genderOf(voice) === gender).sort((left, right) => accentRank(speaker, left) - accentRank(speaker, right));
+    const ofGender = voices.filter((voice) => genderOf(voice) === gender).sort((left, right) => accentRank(speaker, left, dialects) - accentRank(speaker, right, dialects));
     const pool = ofGender.length ? ofGender : voices.filter((voice) => genderOf(voice) === null);
     const voice = ofGender.find(unused)
       ?? voices.find((voice) => genderOf(voice) === null && unused(voice))
@@ -194,9 +194,9 @@ function wobble(amount: number) {
   return 1 + (Math.random() * 2 - 1) * amount;
 }
 
-export function applyVoice(utterance: SpeechSynthesisUtterance, speaker: Speaker, language: string, locale: string, cast: Speaker[], baseRate: number, mood: Mood = 'neutral') {
+export function applyVoice(utterance: SpeechSynthesisUtterance, speaker: Speaker, language: string, locale: string, cast: Speaker[], baseRate: number, mood: Mood = 'neutral', dialects = true) {
   const profile = profiles[speaker];
-  const { voice, shared } = castVoices(cast, language, locale).get(speaker) ?? { voice: null, shared: true };
+  const { voice, shared } = castVoices(cast, language, locale, dialects).get(speaker) ?? { voice: null, shared: true };
   const shape = moodShape[mood];
   // With a voice of their own, characters keep its natural pitch; a shared voice is shifted just
   // enough to tell the speakers apart. Animals keep their full profile either way.
