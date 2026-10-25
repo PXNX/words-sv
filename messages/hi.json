@@ -211,6 +211,7 @@
   "reading_word_singular": "एकवचन",
   "reading_word_plural": "बहुवचन",
   "reading_word_current_case": "इस वाक्य में",
+  "reading_character": "पात्र",
   "story_reading_mode": "पढ़ने का मोड",
   "story_reading_mode_hint": "पूरी कहानी एक साथ पढ़ें और सवालों के जवाब सीधे पाठ में दें।",
   "story_reading_progress": "{total} में से {answered} प्रश्नों के उत्तर दिए",

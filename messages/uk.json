@@ -211,6 +211,7 @@
   "reading_word_singular": "Однина",
   "reading_word_plural": "Множина",
   "reading_word_current_case": "у цьому реченні",
+  "reading_character": "Персонаж",
   "story_reading_mode": "Режим читання",
   "story_reading_mode_hint": "Прочитайте всю історію одразу й відповідайте на запитання прямо в тексті.",
   "story_reading_progress": "Відповідно на {answered} з {total} запитань",

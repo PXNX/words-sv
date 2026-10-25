@@ -215,6 +215,7 @@
   "reading_word_singular": "Singular",
   "reading_word_plural": "Plural",
   "reading_word_current_case": "in this sentence",
+  "reading_character": "Character",
   "story_reading_mode": "Reading mode",
   "story_reading_mode_hint": "Read the whole story at once and answer the questions right in the text.",
   "story_reading_progress": "{answered} of {total} questions answered",
