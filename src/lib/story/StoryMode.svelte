@@ -19,7 +19,7 @@
   import { intonationOf, pauseAfter, pronounceable, sentences, splitSounds } from './speech';
   import { LipSync } from './lipSync.svelte';
   import { WordMarks } from './wordMarks.svelte';
-  import { clearNaturalAudio, naturalNarratorVoice, naturalReady, naturalSupported, playNatural, prepareNatural, synthesizeNatural, type NaturalClip } from './naturalVoices.svelte';
+  import { clearNaturalAudio, naturalNarratorVoice, naturalReady, naturalState, naturalSupported, playNatural, prepareNatural, synthesizeNatural, type NaturalClip } from './naturalVoices.svelte';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconVolumeOff from '~icons/material-symbols/volume-off-rounded';
   import IconCheck from '~icons/material-symbols/check-rounded';
@@ -215,7 +215,13 @@
   const eagleCircling = $derived(Boolean(story?.beats.slice(0, revealed).some((beat) => beat.kind === 'narration' && beat.prop === 'eagle')));
   // The announcer only gets a voice cast in stories that have announcements.
   const voiceCast = $derived<Speaker[]>(story ? castFor(story) : []);
-  // No percentage or countdown here: the progress is shown as the part of the story being prepared.
+  // No countdown here, but the bar follows the work that is actually under way: the voice download
+  // first, then the story's clips.
+  const audioLoadingProgress = $derived(
+    naturalReady(lang)
+      ? (audioTotal ? audioDone / audioTotal : 0)
+      : (naturalState.progress[lang] ?? 0)
+  );
   const audioLoadingLabel = $derived(naturalReady(lang) ? labels.loadingAudio : m.story_loader_voices({}, { locale: settings.interfaceLocale }));
   // Who is on stage and what they hold so far. Everyone whose first stage cue is an entrance waits
   // in the wings until then; exits send them off, and their own lines bring them back. The room
@@ -806,7 +812,7 @@
 {/snippet}
 
 {#if story && !audioReady}
-    <StoryAudioLoader {story} title={story.title[lang]} level={story.level} label={audioLoadingLabel} lang={lang} part={audioDone} total={audioTotal} voice={naturalNarratorVoice(lang)} />
+    <StoryAudioLoader {story} title={story.title[lang]} level={story.level} label={audioLoadingLabel} lang={lang} progress={audioLoadingProgress} part={audioDone} total={audioTotal} voice={naturalNarratorVoice(lang)} />
   {/if}
 
 {#if story && audioReady}
