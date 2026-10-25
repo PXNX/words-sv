@@ -55,7 +55,9 @@
     // Kumar, the new flatmate from India: wild uncombed hair, stubble and a stained, slept-in yellow T-shirt.
     kumar: { skin: '#9a6440', hair: '#15110e', hairStyle: 'messy', top: '#e0b13e', stubble: true, outfit: 'tshirt' },
     // Simon the engineer: tidy short hair, glasses, light blue shirt with a row of pens in the breast pocket.
-    simon: { skin: '#f0c9a8', hair: '#8a5a2b', hairStyle: 'short', top: '#a9c8e8', glasses: true, outfit: 'shirt' }
+    simon: { skin: '#f0c9a8', hair: '#8a5a2b', hairStyle: 'short', top: '#a9c8e8', glasses: true, outfit: 'shirt' },
+    // Herr Bäuerle, the Swabian banker: grey side parting, moustache, glasses, white shirt and a dark tie.
+    banker: { skin: '#edc7a6', hair: '#8d8a83', hairStyle: 'short', top: '#fffdf7', glasses: true, moustache: true, outfit: 'tie' }
   };
   const look = $derived(animals.includes(id) ? null : looks[id as Exclude<CharacterId, Animal>]);
   const wide = $derived(look?.build === 'wide');
@@ -137,7 +139,7 @@
 
 <svg class="story-character" class:talking class:lip-synced={lipSynced} class:still viewBox="0 0 120 150" role="img" aria-label={label}>
   <!-- Bello-style eyes and brows shared by the farm and zoo animals. -->
-  {#snippet animalEyes(lx: number, rx: number, y: number, r: number, browColor: string)}
+  {#snippet animalEyes(lx: number, rx: number, y: number, r: number, browColor = '#172a45')}
     {@const brow = animalBrows(lx, rx, y)}
     {#if mood === 'happy'}
       <path class="story-eyes" d="M{lx - r} {y + 1}q{r} {-r * 1.2} {r * 2} 0M{rx - r} {y + 1}q{r} {-r * 1.2} {r * 2} 0" fill="none" stroke="#172a45" stroke-width="2.4" stroke-linecap="round" />
