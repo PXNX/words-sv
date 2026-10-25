@@ -501,9 +501,9 @@ export const stories: Story[] = [
         { de: 'Ein Empfehlungsschreiben des früheren Vermieters', en: 'A reference from his previous landlord', fr: 'Une lettre de recommandation de son ancien propriétaire', it: 'Una lettera di referenze del precedente proprietario', es: 'Una carta de recomendación de su anterior casero', pt: 'Uma carta de referência do antigo proprietário', uk: 'Рекомендаційний лист від попереднього орендодавця' }
       ] },
       { kind: 'question', prompt: { de: 'Wie hoch wäre die Kaution ungefähr?', en: 'Roughly how much would the deposit be?', fr: 'À combien s’élèverait la caution, à peu près ?', it: 'A quanto ammonterebbe più o meno la cauzione?', es: '¿De cuánto sería más o menos la fianza?', pt: 'De quanto seria mais ou menos o depósito caução?', uk: 'Приблизно скільки становила б застава?' }, options: [
-        { de: '2.700 Euro', en: '2,700 euros', fr: '2 700 euros', it: '2.700 euro', es: '2700 euros', pt: '2.700 euros', uk: '2700 євро' },
+        { de: '2 700 Euro', en: '2,700 euros', fr: '2 700 euros', it: '2.700 euro', es: '2700 euros', pt: '2.700 euros', uk: '2700 євро' },
         { de: '900 Euro', en: '900 euros', fr: '900 euros', it: '900 euro', es: '900 euros', pt: '900 euros', uk: '900 євро' },
-        { de: '1.800 Euro', en: '1,800 euros', fr: '1 800 euros', it: '1.800 euro', es: '1800 euros', pt: '1.800 euros', uk: '1800 євро' }
+        { de: '1 800 Euro', en: '1,800 euros', fr: '1 800 euros', it: '1.800 euro', es: '1800 euros', pt: '1.800 euros', uk: '1800 євро' }
       ] }
     ]
   },
