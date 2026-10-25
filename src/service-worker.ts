@@ -64,8 +64,11 @@ self.addEventListener('fetch', (event) => {
 			// Pages, build output and static files never change within a version: serve them straight from the
 			// cache, so the app opens instantly and never waits on a missing or flaky connection. A new
 			// deployment arrives as a new worker with its own cache (see UpdateAppHint).
+			// A navigation that is not in this build's cache belongs to a newer build (for example a route
+			// added after this worker was installed). Fetch it instead of falling back to the app shell;
+			// otherwise an old worker keeps showing the home page for the new route.
 			if (request.mode === 'navigate') {
-				const cached = (await cache.match(pageKey(url.pathname))) ?? (await cache.match(SHELL));
+				const cached = await cache.match(pageKey(url.pathname));
 				if (cached) return cached;
 			} else if (precached.has(url.pathname)) {
 				const cached = await cache.match(url.pathname);
