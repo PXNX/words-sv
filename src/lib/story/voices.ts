@@ -17,14 +17,14 @@ export type VoiceGender = 'female' | 'male';
 // from Germany for Berlin and the north, and a matching regional accent where the natural English
 // voices have one (Scottish for the Bavarians, Irish for the mountain farmer, London for Berlin,
 // northern English for Hamburg).
-export type Dialect = 'bavarian' | 'alpine' | 'berlin' | 'northern';
+export type Dialect = 'bavarian' | 'alpine' | 'berlin' | 'northern' | 'hessian';
 // Natural voices usually keep their own pitch; an older character can ask for a small, deliberate
 // lowering and slowdown on top of the selected speaker.
 export type VoiceAge = { pitch?: number; rate?: number };
 export type VoiceProfile = { gender: VoiceGender; pitch: number; rate: number; volume: number; dialect?: Dialect; natural?: VoiceAge };
 // The regional locales a dialect prefers among the system voices of the language, best first.
 // Berlin and the north need nothing special: voices from Germany come first anyway.
-const dialectLocales: Record<Dialect, string[]> = { bavarian: ['de-at', 'de-ch'], alpine: ['de-ch', 'de-at'], berlin: [], northern: [] };
+const dialectLocales: Record<Dialect, string[]> = { bavarian: ['de-at', 'de-ch'], alpine: ['de-ch', 'de-at'], berlin: [], northern: [], hessian: [] };
 export type Speaker = CharacterId | 'narrator' | 'announcer';
 
 export const profiles: Record<Speaker, VoiceProfile> = {
@@ -66,6 +66,8 @@ export const profiles: Record<Speaker, VoiceProfile> = {
   simon: { gender: 'male', pitch: 0.98, rate: 0.98, volume: 1, dialect: 'northern' },
   // Herr Bäuerle speaks calmly and a little slowly, with the friendly certainty of a bank adviser.
   banker: { gender: 'male', pitch: 0.9, rate: 0.92, volume: 1 },
+  // The Hessian innkeeper speaks warmly and unhurried, in the broad accent of Sachsenhausen.
+  wirt: { gender: 'male', pitch: 0.88, rate: 0.94, volume: 1, dialect: 'hessian' },
   // König Ludwig speaks slowly and grandly, as befits a king on a stage.
   ludwig: { gender: 'male', pitch: 0.9, rate: 0.88, volume: 1, dialect: 'bavarian' },
   // The animals mostly speak in sounds; when they do talk, their voices match their size.
@@ -83,7 +85,7 @@ export const profiles: Record<Speaker, VoiceProfile> = {
 
 // Who picks first when voices are scarce: the narrator talks most, then the main characters.
 // A speaker whose regional voice is installed jumps the queue, so nobody else takes it.
-export const priority: Speaker[] = ['narrator', 'announcer', 'mia', 'tom', 'lilith', 'oma', 'paul', 'kim', 'leo', 'hans', 'albert', 'sabine', 'enzo', 'jana', 'becker', 'ali', 'robert', 'fritz', 'tobias', 'selma', 'kumar', 'simon', 'banker', 'ludwig', 'bello', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake', 'deer', 'fox', 'seagull', 'crow'];
+export const priority: Speaker[] = ['narrator', 'announcer', 'mia', 'tom', 'lilith', 'oma', 'paul', 'kim', 'leo', 'hans', 'albert', 'sabine', 'enzo', 'jana', 'becker', 'ali', 'robert', 'fritz', 'tobias', 'selma', 'kumar', 'simon', 'banker', 'wirt', 'ludwig', 'bello', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake', 'deer', 'fox', 'seagull', 'crow'];
 export const animals: Speaker[] = ['bello', 'crow', 'seagull', 'deer', 'fox', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
 
 function accentRank(speaker: Speaker, voice: SpeechSynthesisVoice, dialects = true) {

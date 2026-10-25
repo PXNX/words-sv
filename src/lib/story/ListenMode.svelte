@@ -30,13 +30,13 @@
   const speechLocales: Record<string, string> = { de: 'de-DE', en: 'en-GB', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', pt: 'pt-BR', uk: 'uk-UA' };
   const dialectAttention: Record<string, string> = { de: 'Vorsicht', en: 'Careful', fr: 'Attention', it: 'Attenzione', es: 'Cuidado', pt: 'Cuidado', uk: 'Обережно' };
   const dialectNotes: Record<string, Record<Dialect, string>> = {
-    de: { bavarian: '{name} spricht Bayerisch.', berlin: '{name} spricht Berlinerisch.', alpine: '{name} spricht mit Alpenakzent.', northern: '{name} spricht Norddeutsch.' },
-    en: { bavarian: '{name} speaks Bavarian.', berlin: '{name} speaks the Berlin dialect.', alpine: '{name} speaks with an Alpine accent.', northern: '{name} speaks Northern German.' },
-    fr: { bavarian: '{name} parle bavarois.', berlin: '{name} parle le dialecte berlinois.', alpine: '{name} parle avec un accent alpin.', northern: "{name} parle l'allemand du nord." },
-    it: { bavarian: '{name} parla bavarese.', berlin: '{name} parla il dialetto berlinese.', alpine: '{name} parla con accento alpino.', northern: '{name} parla il tedesco settentrionale.' },
-    es: { bavarian: '{name} habla bávaro.', berlin: '{name} habla el dialecto berlinés.', alpine: '{name} habla con acento alpino.', northern: '{name} habla alemán del norte.' },
-    pt: { bavarian: '{name} fala bávaro.', berlin: '{name} fala o dialeto berlinense.', alpine: '{name} fala com sotaque alpino.', northern: '{name} fala alemão do norte.' },
-    uk: { bavarian: '{name} розмовляє баварським діалектом.', berlin: '{name} розмовляє берлінським діалектом.', alpine: '{name} розмовляє з альпійським акцентом.', northern: '{name} розмовляє північнонімецьким діалектом.' }
+    de: { bavarian: '{name} spricht Bayerisch.', berlin: '{name} spricht Berlinerisch.', alpine: '{name} spricht mit Alpenakzent.', northern: '{name} spricht Norddeutsch.', hessian: '{name} spricht Hessisch.' },
+    en: { bavarian: '{name} speaks Bavarian.', berlin: '{name} speaks the Berlin dialect.', alpine: '{name} speaks with an Alpine accent.', northern: '{name} speaks Northern German.', hessian: '{name} speaks Hessian.' },
+    fr: { bavarian: '{name} parle bavarois.', berlin: '{name} parle le dialecte berlinois.', alpine: '{name} parle avec un accent alpin.', northern: "{name} parle l'allemand du nord.", hessian: '{name} parle le dialecte hessois.' },
+    it: { bavarian: '{name} parla bavarese.', berlin: '{name} parla il dialetto berlinese.', alpine: '{name} parla con accento alpino.', northern: '{name} parla il tedesco settentrionale.', hessian: "{name} parla l'assiano." },
+    es: { bavarian: '{name} habla bávaro.', berlin: '{name} habla el dialecto berlinés.', alpine: '{name} habla con acento alpino.', northern: '{name} habla alemán del norte.', hessian: '{name} habla el dialecto de Hesse.' },
+    pt: { bavarian: '{name} fala bávaro.', berlin: '{name} fala o dialeto berlinense.', alpine: '{name} fala com sotaque alpino.', northern: '{name} fala alemão do norte.', hessian: '{name} fala o dialeto de Hesse.' },
+    uk: { bavarian: '{name} розмовляє баварським діалектом.', berlin: '{name} розмовляє берлінським діалектом.', alpine: '{name} розмовляє з альпійським акцентом.', northern: '{name} розмовляє північнонімецьким діалектом.', hessian: '{name} розмовляє гессенським діалектом.' }
   };
 
   type Phase = 'idle' | 'preparing' | 'generating' | 'loading' | 'ready' | 'error';

@@ -57,7 +57,8 @@
     // Simon the engineer: tidy short hair, glasses, light blue shirt with a row of pens in the breast pocket.
     simon: { skin: '#f0c9a8', hair: '#8a5a2b', hairStyle: 'short', top: '#a9c8e8', glasses: true, outfit: 'shirt' },
     // Herr Bäuerle, the Swabian banker: grey side parting, moustache, glasses, white shirt and a dark tie.
-    banker: { skin: '#edc7a6', hair: '#8d8a83', hairStyle: 'short', top: '#fffdf7', glasses: true, moustache: true, outfit: 'tie' }
+    banker: { skin: '#edc7a6', hair: '#8d8a83', hairStyle: 'short', top: '#fffdf7', glasses: true, moustache: true, outfit: 'tie' },
+    wirt: { skin: '#e7b68f', hair: '#8c8378', hairStyle: 'short', top: '#fffdf7', moustache: true, build: 'wide', accent: '#2f5a8f', outfit: 'apron' }
   };
   const look = $derived(animals.includes(id) ? null : looks[id as Exclude<CharacterId, Animal>]);
   const wide = $derived(look?.build === 'wide');
