@@ -454,8 +454,8 @@
   .reading-word.marked { background:rgba(217,123,108,.2);text-decoration-color:#c9604e; }
   .reading-word.marked:hover { background:rgba(217,123,108,.3); }
   .reading-word.highlighted { background:#f7e2b0;text-decoration-color:#c9862b; }
-  .reading-character { text-decoration-color:rgba(164,94,56,.45);text-decoration-style:solid; }
-  .reading-character:hover { background:rgba(164,94,56,.14);text-decoration-color:#a45e38; }
+  .reading-character { text-decoration-line:none; }
+  .reading-character:hover { background:rgba(164,94,56,.14); }
   .reading-article { text-decoration-color:rgba(164,94,56,.32); }
   .reading-words { width:min(100%,44rem);margin:0 auto;border:1px dashed rgba(23,42,69,.24);border-radius:.9rem;background:rgba(255,253,247,.7); }
   .reading-words summary { padding:.55rem .8rem;cursor:pointer;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:900;list-style:none; }
