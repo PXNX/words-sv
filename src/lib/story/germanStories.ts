@@ -1882,5 +1882,33 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Woran scheitert die Umsetzung laut Kim oft?'), options: [german('An der Finanzierung'), german('An den schlechten Vorträgen'), german('An der zu geringen Teilnehmerzahl')] },
       { kind: 'question', prompt: german('Womit endet die Konferenz morgen?'), options: [german('Mit einer Podiumsdiskussion'), german('Mit einem Konzert'), german('Mit einem Feuerwerk')] }
     ]
+  },
+  {
+    id: 'b2-job-application',
+    level: 'b2',
+    scene: 'office',
+    cast: ['kumar', 'kim'],
+    languages: ['de'],
+    title: german('Die Bewerbung'),
+    beats: [
+      { kind: 'narration', text: german('Kumar hat eine Stelle als Softwareentwickler ausgeschrieben gesehen und schreibt seine Bewerbung. Er überlegt, welche Erfahrungen und Fähigkeiten er hervorheben soll.') },
+      { kind: 'line', speaker: 'kim', text: german('Dein Lebenslauf sieht gut aus, Kumar. Aber das Anschreiben könnte noch präziser sein. Warum genau willst du für diese Firma arbeiten?') },
+      { kind: 'line', speaker: 'kumar', text: german('Wegen der spannenden Projekte und der guten Reputation. Die Firma arbeitet an innovativer KI-Technologie, und das interessiert mich sehr.') },
+      { kind: 'line', speaker: 'kim', text: german('Hallo {name}! Was würdest du im Anschreiben betonen?') },
+      { kind: 'reply', to: 'kumar', options: [
+        german('Meine Erfahrung mit Python und meine erfolgreichen Projekte an der Universität.'),
+        german('Ich brauche dringend Geld und habe sonst keine Arbeit.'),
+        german('Ich mag den Namen der Firma, weil er so klingt wie Käse.')
+      ] },
+      { kind: 'narration', text: german('Kumar überarbeitet sein Anschreiben und fügt Zeugnisse sowie Arbeitsproben bei.') },
+      { kind: 'line', speaker: 'kumar', text: german('Ich habe bei meinem letzten Projekt ein Team von fünf Entwicklern geleitet und die Termine eingehalten.') },
+      { kind: 'line', speaker: 'kim', text: german('Das ist genau das, was sie hören wollen. Führungserfahrung und Zuverlässigkeit sind wichtige Kriterien.') },
+      { kind: 'line', speaker: 'kumar', text: german('Ich habe mich auch über die Unternehmenskultur informiert. Flexible Arbeitszeiten und Homeofficeoptionen sind mir wichtig.') },
+      { kind: 'line', speaker: 'kim', text: german('Schick die Bewerbung bis Freitag ab. Viel Erfolg beim Vorstellungsgespräch!') },
+      { kind: 'question', prompt: german('Worum geht es in der Geschichte?'), options: [german('Kumars Bewerbung als Softwareentwickler'), german('Ein Umzug in eine neue Stadt'), german('Ein Studium an der Universität')] },
+      { kind: 'question', prompt: german('Warum will Kumar für diese Firma arbeiten?'), options: [german('Wegen der spannenden Projekte und der guten Reputation'), german('Weil die Firma in seiner Nähe liegt'), german('Weil er die Büros mag')] },
+      { kind: 'question', prompt: german('Was sollte Kumar im Anschreiben betonen?'), options: [german('Seine Erfahrung mit Python und erfolgreiche Universitätsprojekte'), german('Dass er dringend Geld braucht'), german('Den Namen der Firma')] },
+      { kind: 'question', prompt: german('Welche Erfahrung hebt Kumar hervor?'), options: [german('Er hat ein Team von fünf Entwicklern geleitet'), german('Er hat allein an einem Projekt gearbeitet'), german('Er hat keine Berufserfahrung')] }
+    ]
   }
 ];
