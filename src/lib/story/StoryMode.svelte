@@ -40,6 +40,7 @@
     solved: Record<number, true>;
     orders: number[][];
     reading: boolean;
+    audioDone: number;
     savedAt: number;
   };
   function progressFingerprint() {
@@ -67,6 +68,8 @@
         solved: parsed.solved ?? {},
         orders,
         reading: Boolean(parsed.reading),
+        // Older saves have no audio progress; the story then prepares from the beginning.
+        audioDone: Math.max(0, Math.min(story.beats.length, Number(parsed.audioDone) || 0)),
         savedAt: Number(parsed.savedAt) || 0
       };
     } catch {
@@ -89,6 +92,7 @@
         solved,
         orders,
         reading,
+        audioDone,
         savedAt: Date.now()
       };
       localStorage.setItem(PROGRESS_KEY, JSON.stringify(snapshot));
@@ -154,7 +158,9 @@
   let audioDone = $state(0);
   let audioTotal = $state(0);
   // When the story's clips started generating, and a one-second clock that keeps the estimate moving.
+  // `prepBaseline` is how many beats were already prepared when this run started (a resumed load).
   let prepStartedAt = $state(0);
+  let prepBaseline = $state(0);
   let clock = $state(0);
   let orders = $state<number[][]>([]);
   let wrong = $state<Record<number, number[]>>({});
@@ -247,9 +253,11 @@
         ? m.voice_quality_remaining({ time: formatRemaining(remaining) }, { locale: settings.interfaceLocale })
         : '';
     }
-    if (!prepStartedAt || !audioDone || !audioTotal) return '';
+    if (!prepStartedAt || !audioTotal) return '';
+    const preparedThisRun = audioDone - prepBaseline;
+    if (preparedThisRun <= 0) return '';
     const elapsed = Math.max(0, (clock - prepStartedAt) / 1000);
-    const left = (elapsed / audioDone) * (audioTotal - audioDone);
+    const left = (elapsed / preparedThisRun) * (audioTotal - audioDone);
     return left > 0.5 ? m.voice_quality_remaining({ time: formatRemaining(left) }, { locale: settings.interfaceLocale }) : '';
   });
   // Who is on stage and what they hold so far. Everyone whose first stage cue is an entrance waits
@@ -349,6 +357,7 @@
     audioDone = 0;
     audioTotal = playthrough.beats.length;
     prepStartedAt = 0;
+    prepBaseline = 0;
     if (reading) {
       audioReady = true;
       return;
@@ -362,10 +371,11 @@
     presentBeat(playthrough.beats[0], 0);
   }
   // Puts a saved playthrough back on the page without reading a word aloud: the learner came back to
-  // the place they left, not to a new performance.
+  // the place they left, not to a new performance. If its audio was still loading, the loading screen
+  // resumes at the part already prepared.
   function restore(progress: SavedProgress) {
     cancelSpeech();
-    run += 1;
+    const thisRun = ++run;
     written = progress.written;
     story = progress.story;
     reading = progress.reading;
@@ -374,10 +384,17 @@
     solved = progress.solved;
     orders = progress.orders;
     reaction = null;
-    audioReady = true;
-    audioDone = 0;
-    audioTotal = progress.story.beats.length;
+    const total = progress.story.beats.length;
+    audioTotal = total;
+    audioDone = Math.min(progress.audioDone, total);
     prepStartedAt = 0;
+    prepBaseline = audioDone;
+    const resume = !progress.reading && settings.voiceQuality === 'natural' && naturalSupported() && audioDone < total;
+    audioReady = !resume;
+    if (resume) {
+      const preparation = ++audioPreparation;
+      void prepareRestored(progress.story, castFor(progress.story), settings.lang, preparation, thisRun, audioDone);
+    }
   }
   // A beat's sound: played where the text has onomatopoeia ("klirr!", "Miau!") when read aloud,
   // otherwise as the beat appears. Lilith purrs and Bello barks whenever they talk.
@@ -643,29 +660,41 @@
       await prepareNaturalText(say(beat.prompt[language]), beat.asker ?? 'narrator', 'curious', cast, language, token);
     }
   }
-  async function prepareStoryAudio(next: Story, cast: Speaker[], language: Language, token: number) {
+  async function prepareStoryAudio(next: Story, cast: Speaker[], language: Language, token: number, from = 0) {
     prepStartedAt = Date.now();
+    prepBaseline = from;
     clock = Date.now();
-    for (const beat of next.beats) {
+    for (const [index, beat] of next.beats.entries()) {
+      if (index < from) continue;
       if (token !== audioPreparation || left || !naturalReady(language) || settings.voiceQuality !== 'natural') return;
       await prepareBeatAudio(beat, cast, language, token);
       if (token !== audioPreparation || left) return;
       audioDone += 1;
     }
   }
-  async function prepareAndPresent(next: Story, cast: Speaker[], language: Language, token: number, thisRun: number) {
+  // Loads the voices and prepares the story's clips up to the last beat. `from` lets a restored
+  // playthrough continue where its loading stopped instead of preparing everything again.
+  async function prepareAudio(next: Story, cast: Speaker[], language: Language, token: number, thisRun: number, from = 0) {
     try {
       await prepareNatural(language);
     } catch {}
-    if (token !== audioPreparation || thisRun !== run || left) return;
+    if (token !== audioPreparation || thisRun !== run || left) return false;
     if (naturalReady(language) && settings.voiceQuality === 'natural') {
       try {
-        await prepareStoryAudio(next, cast, language, token);
+        await prepareStoryAudio(next, cast, language, token, from);
       } catch {}
     }
-    if (token !== audioPreparation || thisRun !== run || left) return;
+    return token === audioPreparation && thisRun === run && !left;
+  }
+  async function prepareAndPresent(next: Story, cast: Speaker[], language: Language, token: number, thisRun: number) {
+    if (!(await prepareAudio(next, cast, language, token, thisRun))) return;
     audioReady = true;
     presentBeat(next.beats[0], 0);
+  }
+  // A restored story keeps the place it was left at; only the audio still missing is prepared.
+  async function prepareRestored(next: Story, cast: Speaker[], language: Language, token: number, thisRun: number, from: number) {
+    if (!(await prepareAudio(next, cast, language, token, thisRun, from))) return;
+    audioReady = true;
   }
   // The neural voice reads the passage in one piece: it sees the commas, questions and
   // exclamations together, so the melody carries across the message and its tempo stays even.
@@ -831,7 +860,8 @@
       window.removeEventListener('pagehide', onPageHide);
       window.removeEventListener('pageshow', onPageShow);
       leave();
-      clearNaturalAudio();
+      // The clips prepared for this story stay in memory: returning to it resumes loading instead of
+      // generating them again. A newly started story still clears the cache.
       clearTimeout(progressTimer);
       clearTimeout(heartsTimer);
       clearTimeout(pettedTimer);
