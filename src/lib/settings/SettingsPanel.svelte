@@ -39,6 +39,8 @@
     vibration: m.vibration({}, { locale: settings.interfaceLocale }),
     sound: 'Sound effects',
     voiceQuality: m.voice_quality({}, { locale: settings.interfaceLocale }),
+    storiesGroup: m.stories_group({}, { locale: settings.interfaceLocale }),
+    storiesGroupHint: m.stories_group_hint({}, { locale: settings.interfaceLocale }),
     voiceStandard: m.voice_quality_standard({}, { locale: settings.interfaceLocale }),
     voiceNatural: m.voice_quality_natural({}, { locale: settings.interfaceLocale }),
     voiceStandardHint: m.voice_quality_standard_hint({}, { locale: settings.interfaceLocale }),
@@ -215,7 +217,8 @@
     {#if notificationMessage}<p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{notificationMessage}</p>{/if}
   </section>
   <section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play" aria-labelledby="voice-settings-heading">
-    <h2 id="voice-settings-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.voiceQuality}</h2>
+    <h2 id="voice-settings-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.storiesGroup}</h2>
+    <p class="m-0 mt-[.35rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{labels.storiesGroupHint}</p>
     {#if voicesSupported}
       <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.voiceQuality}</span><div class="seg-play">{#each [['standard', labels.voiceStandard], ['natural', labels.voiceNatural]] as const as [quality, label]}<button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.voiceQuality === quality ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} aria-pressed={settings.voiceQuality === quality} onclick={() => selectVoiceQuality(quality)}>{label}</button>{/each}</div></div>
       {#if settings.voiceQuality === 'natural'}

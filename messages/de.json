@@ -180,5 +180,7 @@
   "dialects_hint": "Dialektfiguren sprechen mit regionalem Akzent. Ausschalten lässt sie normales Hochdeutsch sprechen.",
   "voice_quality_loading": "Stimmen werden geladen … {percent} %",
   "voice_quality_remaining": "Noch etwa {time}",
-  "voice_quality_failed": "Die natürlichen Stimmen konnten nicht geladen werden. Es werden die Standardstimmen verwendet."
+  "voice_quality_failed": "Die natürlichen Stimmen konnten nicht geladen werden. Es werden die Standardstimmen verwendet.",
+  "stories_group": "Geschichten",
+  "stories_group_hint": "Stimmen, Tempo und Dialekte für Geschichten und Hörübungen."
 }
