@@ -7,20 +7,17 @@
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
 
-  let { story, title, level, label, progress, lang, part, total, voice, eta }: {
+  let { story, title, level, label, lang, part, total, voice }: {
     story: Story;
     title: string;
     level: VocabularyLevel;
     label: string;
-    progress: number;
     lang: Language;
     part: number;
     total: number;
     voice: string;
-    eta: string;
   } = $props();
   const cast = $derived(story.cast.slice(0, 6));
-  const percent = $derived(Math.round(Math.min(1, Math.max(0, progress)) * 100));
   const questions = $derived(story.beats.filter((beat) => beat.kind === 'question' || beat.kind === 'reply').length);
   const castNames = $derived.by(() => {
     const names = story.cast.map((member) => characterNames[member][lang]);
@@ -44,10 +41,6 @@
     <p class="story-loader-title" dir="auto">{title}</p>
     <p class="story-loader-level">Level {level.toUpperCase()}</p>
     <p class="story-loader-label" dir="auto">{label}</p>
-    <span class="story-loader-track" role="progressbar" aria-label={label} aria-valuemin="0" aria-valuemax="100" aria-valuenow={percent}>
-      <span style:width={`${percent}%`}></span>
-    </span>
-    <p class="story-loader-percent">{percent}%</p>
     {#if partLabel || questionLabel || castLabel}
       <ul class="story-loader-facts" dir="auto">
         {#if partLabel}<li>{partLabel}</li>{/if}
@@ -55,11 +48,8 @@
         {#if castLabel}<li>{castLabel}</li>{/if}
       </ul>
     {/if}
-    {#if voiceLabel || eta}
-      <p class="story-loader-meta" dir="auto">
-        {#if voiceLabel}<span>{voiceLabel}</span>{/if}
-        {#if eta}<span>{eta}</span>{/if}
-      </p>
+    {#if voiceLabel}
+      <p class="story-loader-meta" dir="auto"><span>{voiceLabel}</span></p>
     {/if}
   </div>
   <div class="story-loader-cast" aria-hidden="true">
@@ -79,15 +69,12 @@
   .story-loader-title { font-size:clamp(1rem,4.4vw,1.25rem) !important; font-weight:700; }
   .story-loader-level { font-size:clamp(.65rem,2.8vw,.78rem) !important; color:#a45e38 !important; font-family:'DM Sans',sans-serif !important; font-weight:900 !important; letter-spacing:.12em !important; text-transform:uppercase; }
   .story-loader-label { font-size:clamp(.72rem,3.2vw,.85rem) !important; color:#596477 !important; font-style:italic !important; font-weight:600 !important; }
-  .story-loader-percent { font-size:clamp(.72rem,3.2vw,.85rem) !important; color:#a45e38 !important; font-family:'DM Sans',sans-serif !important; font-weight:900 !important; }
   .story-loader-eq { display:flex;align-items:flex-end;gap:.18rem;height:1.45rem; }
   .story-loader-eq i { width:.22rem;height:100%;border-radius:999px;background:#e6a527;transform-origin:bottom;animation:story-loader-eq .9s ease-in-out infinite alternate; }
   .story-loader-eq i:nth-child(2) { animation-delay:-.65s;animation-duration:1.05s; }
   .story-loader-eq i:nth-child(3) { animation-delay:-.3s;animation-duration:.75s; }
   .story-loader-eq i:nth-child(4) { animation-delay:-.82s;animation-duration:.95s; }
   .story-loader-eq i:nth-child(5) { animation-delay:-.45s;animation-duration:1.15s; }
-  .story-loader-track { display:block;width:min(100%,11rem);height:.38rem;overflow:hidden;border-radius:999px;background:rgba(23,42,69,.14); }
-  .story-loader-track > span { display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#d8941c,#e6a527,#f5ce6b);transition:width .25s ease; }
   .story-loader-facts { display:flex;flex-wrap:wrap;justify-content:center;gap:.22rem .55rem;margin:.1rem 0 0;padding:0;list-style:none;font-family:'DM Sans',sans-serif;font-size:clamp(.6rem,2.6vw,.7rem);font-weight:700;line-height:1.3;color:#596477; }
   .story-loader-facts li { display:flex;align-items:center;gap:.32rem;min-width:0; }
   .story-loader-facts li + li::before { content:'';flex:none;width:.22rem;height:.22rem;border-radius:50%;background:#e6a527; }
@@ -123,7 +110,6 @@
   :global(html.dark) .story-loader-wash { background:linear-gradient(180deg,rgba(18,34,55,.96) 0%,rgba(18,34,55,.66) 28%,rgba(18,34,55,.14) 55%,transparent 72%,rgba(0,0,0,.22) 100%); }
   :global(html.dark) .story-loader-copy { border-color:rgba(255,253,247,.3);background:rgba(15,30,50,.9);box-shadow:0 14px 38px rgba(0,0,0,.35); }
   :global(html.dark) .story-loader-copy p { color:#fffdf7; }
-  :global(html.dark) .story-loader-track { background:rgba(255,253,247,.18); }
   :global(html.dark) .story-loader-facts { color:rgba(255,253,247,.72); }
   :global(html.dark) .story-loader-meta { color:rgba(255,253,247,.6) !important; }
 </style>

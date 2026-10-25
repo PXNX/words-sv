@@ -189,5 +189,6 @@
   "story_loader_parts": "{done} von {total} Abschnitten",
   "story_loader_questions": "{count} Fragen",
   "story_loader_cast": "Mit {names}",
-  "story_loader_voice": "Stimme: {voice}"
+  "story_loader_voice": "Stimme: {voice}",
+  "story_loader_voices": "Stimmen werden geladen ?"
 }
