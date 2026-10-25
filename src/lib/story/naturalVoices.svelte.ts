@@ -20,14 +20,18 @@ import { speechChunks } from './speech';
 type NaturalVoice = { model: string; speaker?: number; f0?: number };
 type LanguageVoices = { narrator?: NaturalVoice; female: NaturalVoice[]; male: NaturalVoice[] };
 
-const THORSTEN = 'de/de_DE/thorsten_emotional/medium/de_DE-thorsten_emotional-medium.onnx';
+const THORSTEN = 'de/de_DE/thorsten/high/de_DE-thorsten-high.onnx';
+const CORI = 'en/en_GB/cori/high/en_GB-cori-high.onnx';
+const SERENA = 'it/it_IT/serena/high/it_IT-serena-high.onnx';
+const TETIANA = 'uk/uk_UA/tetiana/high/uk_UA-tetiana-high.onnx';
 const voices: Record<Language, LanguageVoices> = {
   de: {
-    narrator: { model: THORSTEN, speaker: 4 },
+    narrator: { model: THORSTEN, speaker: 0 },
     female: germanSpeakers.female.map(([speaker, f0]) => ({ model: GERMAN_CAST_MODEL, speaker, f0 })),
     male: germanSpeakers.male.map(([speaker, f0]) => ({ model: GERMAN_CAST_MODEL, speaker, f0 }))
   },
   en: {
+    narrator: { model: CORI },
     female: [{ model: 'en/en_GB/semaine/medium/en_GB-semaine-medium.onnx', speaker: 0 }, { model: 'en/en_GB/semaine/medium/en_GB-semaine-medium.onnx', speaker: 3 }],
     male: [{ model: 'en/en_GB/semaine/medium/en_GB-semaine-medium.onnx', speaker: 1 }, { model: 'en/en_GB/semaine/medium/en_GB-semaine-medium.onnx', speaker: 2 }]
   },
@@ -36,6 +40,7 @@ const voices: Record<Language, LanguageVoices> = {
     male: [{ model: 'fr/fr_FR/upmc/medium/fr_FR-upmc-medium.onnx', speaker: 1 }]
   },
   it: {
+    narrator: { model: SERENA },
     female: [{ model: 'it/it_IT/paola/medium/it_IT-paola-medium.onnx' }],
     male: [{ model: 'it/it_IT/riccardo/x_low/it_IT-riccardo-x_low.onnx' }]
   },
@@ -49,6 +54,7 @@ const voices: Record<Language, LanguageVoices> = {
     male: [{ model: 'pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx' }]
   },
   uk: {
+    narrator: { model: TETIANA },
     female: [{ model: 'uk/uk_UA/ukrainian_tts/medium/uk_UA-ukrainian_tts-medium.onnx', speaker: 0 }, { model: 'uk/uk_UA/ukrainian_tts/medium/uk_UA-ukrainian_tts-medium.onnx', speaker: 2 }],
     male: [{ model: 'uk/uk_UA/ukrainian_tts/medium/uk_UA-ukrainian_tts-medium.onnx', speaker: 1 }]
   }
@@ -56,13 +62,16 @@ const voices: Record<Language, LanguageVoices> = {
 // Download sizes in MB, plus about 30 MB of runtime (speech engine and phonemizer) shared by all languages.
 const modelMegabytes: Record<string, number> = {
   'de/de_DE/mls/medium/de_DE-mls-medium.onnx': 77,
-  'de/de_DE/thorsten_emotional/medium/de_DE-thorsten_emotional-medium.onnx': 77,
+  'de/de_DE/thorsten/high/de_DE-thorsten-high.onnx': 109,
+  'en/en_GB/cori/high/en_GB-cori-high.onnx': 109,
   'en/en_GB/semaine/medium/en_GB-semaine-medium.onnx': 77,
   'fr/fr_FR/upmc/medium/fr_FR-upmc-medium.onnx': 77,
+  'it/it_IT/serena/high/it_IT-serena-high.onnx': 109,
   'it/it_IT/paola/medium/it_IT-paola-medium.onnx': 64,
   'it/it_IT/riccardo/x_low/it_IT-riccardo-x_low.onnx': 28,
   'es/es_ES/sharvard/medium/es_ES-sharvard-medium.onnx': 77,
   'pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx': 63,
+  'uk/uk_UA/tetiana/high/uk_UA-tetiana-high.onnx': 109,
   'uk/uk_UA/ukrainian_tts/medium/uk_UA-ukrainian_tts-medium.onnx': 77
 };
 const RUNTIME_MEGABYTES = 30;
