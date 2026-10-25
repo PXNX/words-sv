@@ -5,7 +5,7 @@
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { fillName, moodFor, storiesFor, withDetails, withWeather, type Mood, type Story } from './stories';
-  import { pronounceable } from './speech';
+  import { intonationOf, pronounceable, wordsOf } from './speech';
   import { naturalReady, naturalState, naturalSupported, prepareNatural, synthesizeNatural, combineNatural, type NaturalClip } from './naturalVoices.svelte';
   import type { Speaker } from './voices';
   import { listAudioSessions, loadAudioBlob, saveAudioSession, updateAudioSessionPosition, type SavedAudio, type SavedStoryStart } from './audioLibrary';
@@ -21,6 +21,7 @@
 
   const TARGET_WORDS = 375;
   const BEAT_GAP = 0.32;
+  const SINGLE_WORD_QUESTION_GAP = 1.25;
   const STORY_GAP = 1.1;
   const levelRates: Record<string, number> = { a1: 0.9, a2: 0.95, b1: 1.03, b2: 1.07, c1: 1.11, c2: 1.15 };
   const naturalLevelPace: Record<string, number> = { a1: 0.9, a2: 0.95, b1: 1, b2: 1, c1: 1, c2: 1 };
@@ -35,6 +36,7 @@
   let error = $state('');
   let storyStarts = $state<SavedStoryStart[]>([]);
   let storyCount = $state(0);
+  let audioUrl = $state('');
   let currentId = $state('');
   let history = $state<SavedAudio[]>([]);
   let audio: HTMLAudioElement | null = null;
@@ -145,21 +147,24 @@
     if (splitSounds(beat.text[settings.lang], settings.lang).some((part: any) => part.kind === 'sound')) return sounds.slot;
     return sounds.start;
   }
+  function beatGap(text: string) {
+    return intonationOf(text) === 'question' && wordsOf(text).length === 1 ? SINGLE_WORD_QUESTION_GAP : BEAT_GAP;
+  }
   function segmentsFor(picked: Story[]): Segment[] {
     const segments: Segment[] = [];
     picked.forEach((raw, index) => {
       const story = withWeather(withDetails(raw));
       const title = `${say(story.title[settings.lang])}.`;
       segments.push({
-        text: index === 0 ? `${title} ${levelLabel} ${story.level.toUpperCase()}.` : title,
+        text: index === 0 ? `${title} ${labels.level} ${story.level.toUpperCase()}.` : title,
         speaker: 'narrator',
         mood: 'neutral',
         gap: 0.55,
         story: index
       });
       for (const beat of story.beats) {
-        if (beat.kind === 'narration') segments.push({ text: say(beat.text[settings.lang]), speaker: 'narrator', mood: 'neutral', gap: BEAT_GAP, story: index });
-        else if (beat.kind === 'line') segments.push({ text: say(beat.text[settings.lang]), speaker: beat.speaker, mood: moodFor(beat), gap: BEAT_GAP, story: index });
+        if (beat.kind === 'narration') segments.push({ text: say(beat.text[settings.lang]), speaker: 'narrator', mood: 'neutral', gap: beatGap(say(beat.text[settings.lang])), story: index });
+        else if (beat.kind === 'line') segments.push({ text: say(beat.text[settings.lang]), speaker: beat.speaker, mood: moodFor(beat), gap: beatGap(say(beat.text[settings.lang])), story: index });
       }
       const last = segments.at(-1);
       if (last?.story === index) last.gap = STORY_GAP;
@@ -413,6 +418,7 @@
       }
     }, 600);
   }
+  function skip(seconds: number) {
     if (!audio) return;
     audio.currentTime = Math.max(0, Math.min(duration, audio.currentTime + seconds));
     position = audio.currentTime;
@@ -463,6 +469,7 @@
     // Make the animated view follow currently playing audio
     playing = !audio.paused;
   });
+  function settingsFingerprint() {
     return `${settings.lang}|${settings.vocabularyLevel}|${settings.includeLowerVocabulary}`;
   }
 

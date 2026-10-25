@@ -761,7 +761,6 @@
   .story-question > div { display:grid;gap:.2rem;min-width:0; }
   .story-question p { margin:0;color:#172a45;font-size:.82rem;font-weight:800;line-height:1.35; }
   .story-question.solved { border-style:solid;border-color:rgba(52,130,77,.45);background:rgba(52,130,77,.07); }
-  .story-question--longbreak { margin-bottom:.9rem; }
   .story-answer { display:inline-flex;align-items:center;gap:.25rem;color:#34824d;font-size:.76rem;font-weight:800; }
   .story-answer :global(svg) { width:1rem;height:1rem;flex:none; }
   .story-listen { flex:none;align-self:center;box-shadow:2px 2px 0 #172a45;color:#a45e38; }

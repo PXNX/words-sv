@@ -11,6 +11,7 @@
   <meta name="twitter:description" content="Practice German vocabulary, grammar and stories with interactive exercises." />
   <meta name="twitter:image" content="https://words-sv.vercel.app/pwa-512x512.png" />
 </svelte:head>
+<script lang="ts">
   import { onMount } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
