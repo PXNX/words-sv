@@ -1799,5 +1799,33 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Wie viel kostet das Porto für das Paket?'), options: [german('Zwölf Euro'), german('Zwanzig Euro'), german('Zwei Euro')] },
       { kind: 'question', prompt: german('Wann kommt das Paket in Berlin an?'), options: [german('Morgen'), german('In einer Woche'), german('Nächsten Monat')] }
     ]
+  },
+  {
+    id: 'b1-job-interview',
+    level: 'b1',
+    scene: 'office',
+    cast: ['mia', 'kim'],
+    languages: ['de'],
+    title: german('Das Vorstellungsgespräch'),
+    beats: [
+      { kind: 'narration', text: german('Mia hat ein Vorstellungsgespräch in einem Architekturbüro. Sie ist nervös, aber gut vorbereitet.') },
+      { kind: 'line', speaker: 'kim', text: german('Guten Morgen, Mia. Nehmen Sie bitte Platz. Erzählen Sie uns etwas über sich.') },
+      { kind: 'line', speaker: 'mia', text: german('Gerne. Ich habe Architektur studiert und drei Jahre in einem Büro gearbeitet.') },
+      { kind: 'line', speaker: 'kim', text: german('Was sind Ihre Stärken und Schwächen?') },
+      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Was würdest du antworten?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Ich bin zuverlässig und arbeite gern im Team. Manchmal bin ich etwas ungeduldig.'),
+        german('Ich kann nicht früh aufstehen und mag keine Arbeit.'),
+        german('Ich bin ein Robot und schlafe nie.')
+      ] },
+      { kind: 'narration', text: german('Kim zeigt Mia das Büro und stellt sie dem Team vor.') },
+      { kind: 'line', speaker: 'mia', text: german('Die Büros sind hell und modern. Ich gefällt mir die Atmosphäre hier.') },
+      { kind: 'line', speaker: 'kim', text: german('Wir rufen Sie nächste Woche an und sagen Ihnen Bescheid.') },
+      { kind: 'line', speaker: 'mia', text: german('Vielen Dank für das Gespräch. Auf Wiedersehen!') },
+      { kind: 'question', prompt: german('Wo findet das Gespräch statt?'), options: [german('In einem Architekturbüro'), german('Im Krankenhaus'), german('In der Schule')] },
+      { kind: 'question', prompt: german('Was hat Mia studiert?'), options: [german('Architektur'), german('Medizin'), german('Lehramt')] },
+      { kind: 'question', prompt: german('Wann bekommt Mia eine Antwort?'), options: [german('Nächste Woche'), german('Morgen'), german('In einem Monat')] },
+      { kind: 'question', prompt: german('Wie gefällt Mia das Büro?'), options: [german('Hell und modern'), german('Dunkel und alt'), german('Klein und laut')] },
+    ]
   }
 ];
