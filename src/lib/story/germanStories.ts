@@ -1855,5 +1855,32 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was macht Robert?'), options: [german('Er wechselt die Bremsbeläge'), german('Er wäscht das Auto'), german('Er tankt das Auto')] },
       { kind: 'question', prompt: german('Wie viel kostet die Reparatur?'), options: [german('Einhundertfünfzig Euro'), german('Fünfzig Euro'), german('Fünfhundert Euro')] }
     ]
+  },
+  {
+    id: 'b2-conference',
+    level: 'b2',
+    scene: 'office',
+    cast: ['kim', 'jana'],
+    languages: ['de'],
+    title: german('Die Fachkonferenz'),
+    beats: [
+      { kind: 'narration', text: german('Kim und Jana nehmen an einer Fachkonferenz für nachhaltige Architektur teil. Es geht um energieeffizientes Bauen und die Zukunft der Städte.') },
+      { kind: 'line', speaker: 'jana', text: german('Der erste Vortrag war faszinierend. Der Architekt hat erklärt, wie man mit recycelten Materialien bauen kann, ohne die Qualität zu gefährden.') },
+      { kind: 'line', speaker: 'kim', text: german('Ich fand besonders interessant, dass die Stadtverwaltung nun strengere Anforderungen an Neubauten stellt. Die Genehmigungsverfahren werden dadurch allerdings komplexer.') },
+      { kind: 'line', speaker: 'jana', text: german('Hallo {name}! Was ist deine Meinung zu nachhaltigem Bauen?') },
+      { kind: 'reply', to: 'jana', options: [
+        german('Es ist notwendig, aber die Kosten dürfen nicht zu hoch werden für normale Familien.'),
+        german('Wir sollten alle Häuser aus Glas bauen, damit mehr Licht reinkommt.'),
+        german('Ich finde, wir sollten unter der Erde wohnen wie Maulwürfe.')
+      ] },
+      { kind: 'narration', text: german('In der Pause diskutieren die Teilnehmer über die Herausforderungen der Umsetzung.') },
+      { kind: 'line', speaker: 'kim', text: german('Viele Konzepte klingen gut auf dem Papier, doch in der Praxis scheitert es oft an der Finanzierung.') },
+      { kind: 'line', speaker: 'jana', text: german('Genau. Deshalb brauchen wir mehr staatliche Förderprogramme und eine klare rechtliche Grundlage.') },
+      { kind: 'line', speaker: 'kim', text: german('Die Konferenz endet morgen mit einer Podiumsdiskussion. Ich bin gespannt auf die Ergebnisse.') },
+      { kind: 'question', prompt: german('Worum geht es auf der Konferenz?'), options: [german('Nachhaltige Architektur und energieeffizientes Bauen'), german('Über die neuesten Smartphone-Modelle'), german('Über internationale Reiseziele')] },
+      { kind: 'question', prompt: german('Was findet Kim besonders interessant?'), options: [german('Die strengeren Anforderungen der Stadtverwaltung an Neubauten'), german('Die Kaffeepausen zwischen den Vorträgen'), german('Die Parkplätze vor dem Konferenzzentrum')] },
+      { kind: 'question', prompt: german('Woran scheitert die Umsetzung laut Kim oft?'), options: [german('An der Finanzierung'), german('An den schlechten Vorträgen'), german('An der zu geringen Teilnehmerzahl')] },
+      { kind: 'question', prompt: german('Womit endet die Konferenz morgen?'), options: [german('Mit einer Podiumsdiskussion'), german('Mit einem Konzert'), german('Mit einem Feuerwerk')] }
+    ]
   }
 ];
