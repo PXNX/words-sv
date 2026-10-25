@@ -59,6 +59,7 @@
     neuter: m.reading_word_gender_neuter({}, { locale: settings.interfaceLocale }),
     mark: m.reading_word_mark({}, { locale: settings.interfaceLocale }),
     unmark: m.reading_word_unmark({}, { locale: settings.interfaceLocale }),
+    markHint: m.reading_word_mark_hint({}, { locale: settings.interfaceLocale }),
     noDefinition: m.reading_word_no_definition({}, { locale: settings.interfaceLocale }),
     close: m.reading_word_close({}, { locale: settings.interfaceLocale }),
     explain: m.explain({}, { locale: settings.interfaceLocale }),
@@ -418,6 +419,7 @@
             {markedWords.has(sheet.info.word) ? labels.unmark : labels.mark}
           </button>
           <a class="word-sheet-link" href={wiktionaryUrl(settings.lang, sheet.info.spelling)} target="_blank" rel="noreferrer">{labels.explain}</a>
+          <p class="word-sheet-hint">{labels.markHint}</p>
         </div>
       {/if}
     </div>
@@ -507,6 +509,7 @@
   .word-sheet-mark.active { border-color:rgba(201,96,78,.5);background:rgba(217,123,108,.22); }
   .word-sheet-link { flex:1 1 10rem;padding:.5rem .6rem;border-radius:.65rem;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:900;text-align:center;text-decoration:underline;text-underline-offset:.16em; }
   .word-sheet-link:hover { background:rgba(247,226,176,.5); }
+  .word-sheet-hint { flex:1 1 100%;margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:700;line-height:1.35;text-align:center; }
   @keyframes word-sheet-in { from { opacity:0;transform:translateY(1.1rem); } to { opacity:1;transform:none; } }
   @media (prefers-reduced-motion:reduce) { .word-sheet { animation:none; } }
   @media (min-width:640px) {
@@ -550,5 +553,6 @@
   :global(html.dark) .word-sheet-cases div.current { border-color:#e6a527;background:rgba(230,165,39,.18); }
   :global(html.dark) .word-sheet-cases div.current dt { color:#fffdf7; }
   :global(html.dark) .word-sheet-cases dt small { background:#e6a527;color:#152b47; }
+  :global(html.dark) .word-sheet-hint { color:rgba(255,253,247,.62); }
   :global(html.dark) .character-portrait { border-color:rgba(255,253,247,.2);background:radial-gradient(circle at 50% 34%,#2b4a73 0%,#152b47 72%); }
 </style>

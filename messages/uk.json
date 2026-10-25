@@ -201,6 +201,7 @@
   "reading_word_gender_feminine": "жіночий",
   "reading_word_gender_neuter": "середній",
   "reading_word_mark": "Позначити як незнайоме",
+  "reading_word_mark_hint": "Позначені слова частіше повторюються під час повторення.",
   "reading_word_unmark": "Зняти позначку",
   "reading_word_no_definition": "Для цього слова ще немає значення.",
   "reading_word_close": "Закрити",

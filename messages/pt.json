@@ -201,6 +201,7 @@
   "reading_word_gender_feminine": "feminino",
   "reading_word_gender_neuter": "neutro",
   "reading_word_mark": "Marcar como desconhecida",
+  "reading_word_mark_hint": "As palavras marcadas aparecem com mais frequência nas revisões.",
   "reading_word_unmark": "Remover marca",
   "reading_word_no_definition": "Ainda não há significado guardado para esta palavra.",
   "reading_word_close": "Fechar",

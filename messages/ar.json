@@ -201,6 +201,7 @@
   "reading_word_gender_feminine": "مؤنث",
   "reading_word_gender_neuter": "محايد",
   "reading_word_mark": "وضع علامة ككلمة غير معروفة",
+  "reading_word_mark_hint": "تظهر الكلمات المميزة بشكل أكثر تكرارًا في المراجعات.",
   "reading_word_unmark": "إزالة العلامة",
   "reading_word_no_definition": "لا يوجد معنى محفوظ لهذه الكلمة بعد.",
   "reading_word_close": "إغلاق",

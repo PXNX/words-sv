@@ -205,6 +205,7 @@
   "reading_word_gender_feminine": "feminine",
   "reading_word_gender_neuter": "neuter",
   "reading_word_mark": "Mark as unknown",
+  "reading_word_mark_hint": "Marked words come up more often in your reviews.",
   "reading_word_unmark": "Remove mark",
   "reading_word_no_definition": "No meaning is stored for this word yet.",
   "reading_word_close": "Close",

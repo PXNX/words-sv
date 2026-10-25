@@ -205,6 +205,7 @@
   "reading_word_gender_feminine": "feminin",
   "reading_word_gender_neuter": "neutrum",
   "reading_word_mark": "Als unbekannt markieren",
+  "reading_word_mark_hint": "Markierte Wörter werden in den Wiederholungen öfter abgefragt.",
   "reading_word_unmark": "Markierung entfernen",
   "reading_word_no_definition": "Für dieses Wort ist noch keine Bedeutung hinterlegt.",
   "reading_word_close": "Schließen",
