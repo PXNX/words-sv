@@ -1825,7 +1825,35 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Wo findet das Gespräch statt?'), options: [german('In einem Architekturbüro'), german('Im Krankenhaus'), german('In der Schule')] },
       { kind: 'question', prompt: german('Was hat Mia studiert?'), options: [german('Architektur'), german('Medizin'), german('Lehramt')] },
       { kind: 'question', prompt: german('Wann bekommt Mia eine Antwort?'), options: [german('Nächste Woche'), german('Morgen'), german('In einem Monat')] },
-      { kind: 'question', prompt: german('Wie gefällt Mia das Büro?'), options: [german('Hell und modern'), german('Dunkel und alt'), german('Klein und laut')] },
+      { kind: 'question', prompt: german('Wie gefällt Mia das Büro?'), options: [german('Hell und modern'), german('Dunkel und alt'), german('Klein und laut')] }
+    ]
+  },
+  {
+    id: 'b1-car-repair',
+    level: 'b1',
+    scene: 'office',
+    cast: ['mia', 'robert'],
+    languages: ['de'],
+    title: german('Die Autowerkstatt'),
+    beats: [
+      { kind: 'narration', text: german('Mias Auto macht ein komisches Geräusch. Sie bringt es zu Robert in die Werkstatt.') },
+      { kind: 'line', speaker: 'robert', text: german('Guten Tag, Mia. Was ist mit dem Auto los?') },
+      { kind: 'line', speaker: 'mia', text: german('Beim Bremsen quietscht es, und die Warnleuchte leuchtet.') },
+      { kind: 'line', speaker: 'robert', text: german('Ich schaue mir das an. Das dauert etwa eine Stunde.') },
+      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Was denkst du, was kaputt ist?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Wahrscheinlich die Bremsen. Das muss er reparieren.'),
+        german('Das Auto fliegt davon.'),
+        german('Ich kaufe ein neues Auto aus Schokolade.')
+      ] },
+      { kind: 'narration', text: german('Robert prüft die Bremsen und wechselt die Bremsbeläge.') },
+      { kind: 'line', speaker: 'robert', text: german('Die Bremsen waren abgenutzt. Jetzt ist alles wieder in Ordnung.') },
+      { kind: 'line', speaker: 'mia', text: german('Wie viel kostet die Reparatur?') },
+      { kind: 'line', speaker: 'robert', text: german('Etwa einhundertfünfzig Euro, inklusive der neuen Teile.') },
+      { kind: 'question', prompt: german('Wo bringt Mia ihr Auto hin?'), options: [german('In die Autowerkstatt'), german('In die Waschstraße'), german('Zum TÜV')] },
+      { kind: 'question', prompt: german('Was ist das Problem mit dem Auto?'), options: [german('Die Bremsen quietschen und eine Warnleuchte leuchtet'), german('Der Motor springt nicht an'), german('Ein Reifen ist platt')] },
+      { kind: 'question', prompt: german('Was macht Robert?'), options: [german('Er wechselt die Bremsbeläge'), german('Er wäscht das Auto'), german('Er tankt das Auto')] },
+      { kind: 'question', prompt: german('Wie viel kostet die Reparatur?'), options: [german('Einhundertfünfzig Euro'), german('Fünfzig Euro'), german('Fünfhundert Euro')] }
     ]
   }
 ];
