@@ -181,5 +181,9 @@
   "stories_group_hint": "കഥകൾക്കും കേൾവി പരിശീലനത്തിനുമുള്ള ശബ്ദങ്ങൾ, വേഗത, ഭാഷാഭേദങ്ങൾ.",
   "story_reading_mode": "വായന മോഡ്",
   "story_reading_mode_hint": "മുഴുവൻ കഥയും ഒരുമിച്ച് വായിച്ച് ചോദ്യങ്ങൾക്ക് നേരിട്ട് പാഠത്തിൽ ഉത്തരം നൽകുക.",
-  "story_reading_progress": "{total}-ൽ {answered} ചോദ്യങ്ങൾക്ക് ഉത്തരം നൽകി"
+  "story_reading_progress": "{total}-ൽ {answered} ചോദ്യങ്ങൾക്ക് ഉത്തരം നൽകി",
+  "story_loader_parts": "???? {done} / {total}",
+  "story_loader_questions": "{count} ?????????",
+  "story_loader_cast": "{names} ?????",
+  "story_loader_voice": "?????: {voice}"
 }

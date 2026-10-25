@@ -181,5 +181,9 @@
   "stories_group_hint": "صداها، سرعت و گویش‌ها برای داستان‌ها و تمرین شنیداری.",
   "story_reading_mode": "حالت مطالعه",
   "story_reading_mode_hint": "کل داستان را یک‌جا بخوانید و به پرسش‌ها مستقیم در متن پاسخ دهید.",
-  "story_reading_progress": "{answered} از {total} پرسش پاسخ داده شد"
+  "story_reading_progress": "{answered} از {total} پرسش پاسخ داده شد",
+  "story_loader_parts": "??? {done} ?? {total}",
+  "story_loader_questions": "{count} ????",
+  "story_loader_cast": "?? {names}",
+  "story_loader_voice": "???: {voice}"
 }

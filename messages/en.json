@@ -185,5 +185,9 @@
   "stories_group_hint": "Voices, pace and dialects for stories and listening practice.",
   "story_reading_mode": "Reading mode",
   "story_reading_mode_hint": "Read the whole story at once and answer the questions right in the text.",
-  "story_reading_progress": "{answered} of {total} questions answered"
+  "story_reading_progress": "{answered} of {total} questions answered",
+  "story_loader_parts": "Part {done} of {total}",
+  "story_loader_questions": "{count} questions",
+  "story_loader_cast": "With {names}",
+  "story_loader_voice": "Voice: {voice}"
 }

@@ -181,5 +181,9 @@
   "stories_group_hint": "Vozes, ritmo e dialetos para as histórias e a escuta.",
   "story_reading_mode": "Modo de leitura",
   "story_reading_mode_hint": "Leia a história inteira de uma vez e responda às perguntas diretamente no texto.",
-  "story_reading_progress": "{answered} de {total} perguntas respondidas"
+  "story_reading_progress": "{answered} de {total} perguntas respondidas",
+  "story_loader_parts": "Parte {done} de {total}",
+  "story_loader_questions": "{count} perguntas",
+  "story_loader_cast": "Com {names}",
+  "story_loader_voice": "Voz: {voice}"
 }
