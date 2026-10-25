@@ -1719,5 +1719,33 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Wann gibt es Frühstück?'), options: [german('Von sieben bis zehn Uhr'), german('Nur am Abend'), german('Um Mitternacht')] },
       { kind: 'question', prompt: german('Wo ist der Aufzug?'), options: [german('Rechts'), german('Links'), german('Im Garten')] }
     ]
+  },
+  {
+    id: 'a2-haircut',
+    level: 'a2',
+    scene: 'home',
+    cast: ['mia', 'kim'],
+    languages: ['de'],
+    title: german('Beim Friseur'),
+    beats: [
+      { kind: 'narration', text: german('Mia hat einen Termin beim Friseur. Sie möchte ihre langen Haare schneiden lassen.') },
+      { kind: 'line', speaker: 'kim', text: german('Guten Tag, Mia! Setzen Sie sich bitte. Was darf es heute sein?') },
+      { kind: 'line', speaker: 'mia', text: german('Ich möchte meine Haare kürzer haben. Vielleicht schulterlang.') },
+      { kind: 'line', speaker: 'kim', text: german('Gerne. Ich wasche sie zuerst, dann schneide und föhne ich sie.') },
+      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Findest du, dass mir kurze Haare stehen?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Ja, sehr gut! Kurz steht dir ausgezeichnet.'),
+        german('Nein, du siehst aus wie ein Topf.'),
+        german('Ich kaufe mir eine Perücke.')
+      ] },
+      { kind: 'narration', text: german('Kim schneidet Mias Haare. Es dauert etwa eine halbe Stunde.') },
+      { kind: 'line', speaker: 'mia', text: german('Das sieht toll aus! Vielen Dank, Kim.') },
+      { kind: 'line', speaker: 'kim', text: german('Gerne. Das macht achtundvierzig Euro.') },
+      { kind: 'line', speaker: 'mia', text: german('Hier, bitte. Bis zum nächsten Mal!') },
+      { kind: 'question', prompt: german('Wo ist Mia?'), options: [german('Beim Friseur'), german('Im Supermarkt'), german('Im Fitnessstudio')] },
+      { kind: 'question', prompt: german('Was möchte Mia machen lassen?'), options: [german('Ihre Haare schneiden lassen'), german('Sich die Nägel machen lassen'), german('Eine Massage bekommen')] },
+      { kind: 'question', prompt: german('Wie viel kostet der Friseurbesuch?'), options: [german('Achtundvierzig Euro'), german('Acht Euro'), german('Vierzig Euro')] },
+      { kind: 'question', prompt: german('Wie lange dauert der Haarschnitt?'), options: [german('Eine halbe Stunde'), german('Eine Stunde'), german('Zwei Stunden')] }
+    ]
   }
 ];
