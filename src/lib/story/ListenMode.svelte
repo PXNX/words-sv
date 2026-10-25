@@ -95,6 +95,7 @@
   const visibleHistory = $derived.by(() => {
     const seen = new Set<string>();
     return history.filter((session) => {
+      if (session.language !== settings.lang) return false;
       const key = savedSessionKey(session);
       if (seen.has(key)) return false;
       seen.add(key);
