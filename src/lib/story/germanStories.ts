@@ -1773,5 +1773,31 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Wie lange kann Mia das Buch behalten?'), options: [german('Vier Wochen'), german('Ein Tag'), german('Ein Jahr')] },
       { kind: 'question', prompt: german('Wo stehen die Geschichtsbücher?'), options: [german('In der dritten Regalreihe links'), german('Im Keller'), german('Auf dem Dach')] }
     ]
+  },
+  {
+    id: 'a2-post-office',
+    level: 'a2',
+    scene: 'home',
+    cast: ['mia', 'oma'],
+    languages: ['de'],
+    title: german('Auf der Post'),
+    beats: [
+      { kind: 'narration', text: german('Oma und Mia gehen zur Post. Oma möchte ein Paket verschicken.') },
+      { kind: 'line', speaker: 'oma', text: german('Guten Tag! Ich möchte dieses Paket nach Berlin schicken.') },
+      { kind: 'line', speaker: 'mia', text: german('Und ich brauche Briefmarken für drei Briefe.') },
+      { kind: 'line', speaker: 'oma', text: german('Hallo {name}! Weißt du, wie viel das Porto kostet?') },
+      { kind: 'reply', to: 'oma', options: [
+        german('Ja, für das Paket sind es zwölf Euro.'),
+        german('Die Briefmarke kostet ein Auto.'),
+        german('Ich schicke das Paket zum Mond.')
+      ] },
+      { kind: 'narration', text: german('Die Mitarbeiterin wiegt das Paket und klebt ein Etikett darauf.') },
+      { kind: 'line', speaker: 'mia', text: german('Das Paket kommt morgen in Berlin an.') },
+      { kind: 'line', speaker: 'oma', text: german('Gut. Und ich kaufe noch eine Postkarte für meine Freundin.') },
+      { kind: 'question', prompt: german('Wo sind Oma und Mia?'), options: [german('Auf der Post'), german('Im Supermarkt'), german('Im Kino')] },
+      { kind: 'question', prompt: german('Was möchte Oma schicken?'), options: [german('Ein Paket nach Berlin'), german('Ein Brief an den Chef'), german('Ein Paket zum Mond')] },
+      { kind: 'question', prompt: german('Wie viel kostet das Porto für das Paket?'), options: [german('Zwölf Euro'), german('Zwanzig Euro'), german('Zwei Euro')] },
+      { kind: 'question', prompt: german('Wann kommt das Paket in Berlin an?'), options: [german('Morgen'), german('In einer Woche'), german('Nächsten Monat')] }
+    ]
   }
 ];
