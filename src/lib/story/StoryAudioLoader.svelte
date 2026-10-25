@@ -114,6 +114,11 @@
     .story-loader-bob { animation:none; }
     .story-loader-eq i { animation:none;transform:scaleY(.5); }
   }
+  /* A short viewport (phone in landscape) still needs the title and the facts without clipping. */
+  @media (max-height:520px) {
+    .story-loader-copy { margin-top:1rem;gap:.35rem;padding:.7rem .9rem .8rem; }
+    .story-loader-cast { height:34%; }
+  }
 
   :global(html.dark) .story-loader-wash { background:linear-gradient(180deg,rgba(18,34,55,.96) 0%,rgba(18,34,55,.66) 28%,rgba(18,34,55,.14) 55%,transparent 72%,rgba(0,0,0,.22) 100%); }
   :global(html.dark) .story-loader-copy { border-color:rgba(255,253,247,.3);background:rgba(15,30,50,.9);box-shadow:0 14px 38px rgba(0,0,0,.35); }
