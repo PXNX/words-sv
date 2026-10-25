@@ -7,7 +7,7 @@
   import { characterNames, fillName, moodFor, storiesFor, withDetails, withWeather, type CharacterId, type Mood, type SceneId, type Story, type StoryBeat } from './stories';
   import type { Language, VocabularyLevel } from '#lib/data/vocabulary.js';
   import { intonationOf, pronounceable, splitSounds, wordsOf } from './speech';
-  import { naturalReady, naturalState, naturalSupported, prepareNatural, synthesizeNatural, combineNatural, type NaturalClip } from './naturalVoices.svelte';
+  import { naturalMegabytes, naturalReady, naturalState, naturalSupported, prepareNatural, synthesizeNatural, combineNatural, type NaturalClip } from './naturalVoices.svelte';
   import { applyVoice, profiles, type Dialect, type Speaker } from './voices';
   import { listAudioSessions, loadAudioBlob, saveAudioSession, updateAudioSessionPosition, type SavedAudio, type SavedSound, type SavedStoryStart } from './audioLibrary';
   import { playSoundEffect, soundEffectSeconds, type SoundEffect } from '#lib/sounds.js';
@@ -61,6 +61,11 @@
   let pendingSeek: number | null = null;
   let lastSavedAt = 0;
   let eta = $state<number | null>(null);
+  let batchIndex = $state(0);
+  let batchTotal = $state(0);
+  let generatingTitle = $state('');
+  let generatingScene = $state<SceneId | undefined>(undefined);
+  let generatingWeather = $state<Story['weather']>(undefined);
   let settingsReady = $state(false);
   let settingsKey = '';
   let liveSession = $state<LiveSession | null>(null);
@@ -70,6 +75,8 @@
 
   const standardMode = $derived(settings.voiceQuality !== 'natural');
   const download = $derived(Math.round((naturalState.progress[settings.lang] ?? 0) * 100));
+  const downloadMegabytes = $derived(Math.round(naturalState.downloaded[settings.lang] ?? 0));
+  const downloadTotalMegabytes = $derived(Math.round(naturalState.total[settings.lang] ?? naturalMegabytes(settings.lang)));
   const downloadRemaining = $derived(naturalState.remaining[settings.lang] ?? null);
   const labels = $derived({
     listen: m.story_listen({}, { locale: settings.interfaceLocale }),
@@ -456,6 +463,54 @@
     lastSavedAt = Date.now();
     savePosition();
   }
+  function storiesForLevel() {
+    return [...new Map(storiesFor(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary).map((story) => [story.id, story])).values()];
+  }
+  async function generateNaturalStory(raw: Story, token: number, onSegment?: (done: number, total: number) => void) {
+    const story = withWeather(withDetails(raw));
+    const segments = segmentsForStory(story);
+    if (wordCount(raw) < QUESTION_WORD_LIMIT) segments.push(...questionSegments(story));
+    const clips: NaturalClip[] = [];
+    const gaps: number[] = [];
+    const leads: number[] = [];
+    const timedSounds: SavedSound[] = [];
+    const rate = (levelRates[settings.vocabularyLevel] ?? 1) * (naturalLevelPace[settings.vocabularyLevel] ?? 1);
+    let at = 0;
+    for (const [index, segment] of segments.entries()) {
+      if (token !== generation) return null;
+      if (segment.sound) timedSounds.push({ at, effect: segment.sound });
+      const clip = await synthesizeNatural(pronounceable(segment.text, settings.lang).text, segment.speaker, segment.mood, story.cast, settings.lang, rate);
+      if (token !== generation) return null;
+      clips.push(clip);
+      gaps.push(segment.gap);
+      leads.push(segment.soundLead);
+      at += segment.soundLead + clip.buffer.duration / clip.playbackRate + segment.gap;
+      onSegment?.(index + 1, segments.length);
+    }
+    const buffer = await combineNatural(clips, gaps, leads);
+    if (token !== generation) return null;
+    const blob = wavBlob(buffer);
+    const now = Date.now();
+    const savedStarts: SavedStoryStart[] = [{ at: 0, title: story.title[settings.lang] }];
+    const saved: SavedAudio = {
+      id: newSessionId(),
+      createdAt: now,
+      updatedAt: now,
+      language: settings.lang,
+      level: settings.vocabularyLevel,
+      duration: buffer.duration,
+      position: 0,
+      storyCount: 1,
+      stories: savedStarts,
+      scene: story.scene,
+      weather: story.weather,
+      sounds: timedSounds
+    };
+    try {
+      await saveAudioSession(saved, blob);
+    } catch {}
+    return { saved, blob };
+  }
   async function startSession() {
     flushPosition();
     const token = ++generation;
@@ -490,56 +545,25 @@
     if (token !== generation) return;
     if (!naturalReady(settings.lang)) { phase = 'error'; error = labels.unsupported; return; }
     phase = 'generating';
-    const story = withWeather(withDetails(raw));
-    const segments = segmentsForStory(story);
-    if (wordCount(raw) < QUESTION_WORD_LIMIT) segments.push(...questionSegments(story));
-    total = segments.length;
-    const clips: NaturalClip[] = [];
-    const gaps: number[] = [];
-    const leads: number[] = [];
-    const timedSounds: SavedSound[] = [];
-    const rate = (levelRates[settings.vocabularyLevel] ?? 1) * (naturalLevelPace[settings.vocabularyLevel] ?? 1);
     const startedAt = performance.now();
-    let at = 0;
+    batchIndex = 1;
+    batchTotal = 1;
+    done = 0;
+    total = 0;
+    const shaped = withWeather(withDetails(raw));
+    generatingTitle = shaped.title[settings.lang];
+    generatingScene = shaped.scene;
+    generatingWeather = shaped.weather;
     try {
-      for (const [index, segment] of segments.entries()) {
-        if (token !== generation) return;
-        if (segment.sound) timedSounds.push({ at, effect: segment.sound });
-        const clip = await synthesizeNatural(pronounceable(segment.text, settings.lang).text, segment.speaker, segment.mood, story.cast, settings.lang, rate);
-        if (token !== generation) return;
-        clips.push(clip);
-        gaps.push(segment.gap);
-        leads.push(segment.soundLead);
-        at += segment.soundLead + clip.buffer.duration / clip.playbackRate + segment.gap;
-        done = index + 1;
-        progress = done / total;
+      const generated = await generateNaturalStory(raw, token, (partDone, partTotal) => {
+        done = partDone;
+        total = partTotal;
+        progress = partTotal ? partDone / partTotal : 0;
         const elapsed = (performance.now() - startedAt) / 1000;
         eta = progress > 0 ? Math.max(0, elapsed / progress - elapsed) : null;
-      }
-      const buffer = await combineNatural(clips, gaps, leads);
-      if (token !== generation) return;
-      eta = 0;
-      const blob = wavBlob(buffer);
-      const savedStarts: SavedStoryStart[] = [{ at: 0, title: story.title[settings.lang] }];
-      const now = Date.now();
-      const saved: SavedAudio = {
-        id: newSessionId(),
-        createdAt: now,
-        updatedAt: now,
-        language: settings.lang,
-        level: settings.vocabularyLevel,
-        duration: buffer.duration,
-        position: 0,
-        storyCount: 1,
-        stories: savedStarts,
-        scene: story.scene,
-        weather: story.weather,
-        sounds: timedSounds
-      };
-      try {
-        await saveAudioSession(saved, blob);
-      } catch {}
-      if (token !== generation) return;
+      });
+      if (!generated || token !== generation) return;
+      const { saved, blob } = generated;
       try {
         history = await listAudioSessions();
       } catch {
@@ -547,19 +571,94 @@
       }
       if (token !== generation) return;
       currentId = saved.id;
-      storyStarts = savedStarts;
+      storyStarts = saved.stories;
       storyCount = 1;
-      sounds = timedSounds;
+      sounds = saved.sounds ?? [];
       lastSoundAt = 0;
       audioUrl = URL.createObjectURL(blob);
-      duration = buffer.duration;
+      duration = saved.duration;
       progress = 1;
+      eta = 0;
       phase = 'ready';
       pendingSeek = 0;
       await tick();
       if (token !== generation || !audio) return;
       audio.src = audioUrl;
       audio.load();
+    } catch {
+      if (token === generation) {
+        phase = 'error';
+        error = 'The audio could not be generated.';
+      }
+    }
+  }
+  async function startBatch() {
+    flushPosition();
+    const token = ++generation;
+    clearAudio();
+    phase = 'preparing';
+    error = '';
+    progress = 0;
+    done = 0;
+    total = 0;
+    batchIndex = 0;
+    batchTotal = 0;
+    generatingTitle = '';
+    generatingScene = undefined;
+    generatingWeather = undefined;
+    if (!settings.firstName) { void goto('/', { replace: true }); return; }
+    if (!naturalSupported()) { phase = 'error'; error = labels.unsupported; return; }
+    const allStories = storiesForLevel();
+    if (!allStories.length) { phase = 'error'; error = 'No stories are available for this level yet.'; return; }
+    const savedKeys = new Set(history.map(savedSessionKey));
+    const missing = allStories.filter((story) => !savedKeys.has(storyKey(story)));
+    batchTotal = allStories.length;
+    if (!missing.length) {
+      const latest = history.find((session) => session.language === settings.lang && session.level === settings.vocabularyLevel) ?? history[0];
+      if (latest) { await openSession(latest); return; }
+      phase = 'error';
+      error = 'No audio is available for this level yet.';
+      return;
+    }
+    await prepareNatural(settings.lang);
+    if (token !== generation) return;
+    if (!naturalReady(settings.lang)) { phase = 'error'; error = labels.unsupported; return; }
+    phase = 'generating';
+    const alreadySaved = allStories.length - missing.length;
+    const startedAt = performance.now();
+    try {
+      for (const [index, raw] of missing.entries()) {
+        if (token !== generation) return;
+        const story = withWeather(withDetails(raw));
+        generatingTitle = story.title[settings.lang];
+        generatingScene = story.scene;
+        generatingWeather = story.weather;
+        batchIndex = alreadySaved + index + 1;
+        const generated = await generateNaturalStory(raw, token, (partDone, partTotal) => {
+          done = partDone;
+          total = partTotal;
+          const part = partTotal ? partDone / partTotal : 0;
+          progress = (alreadySaved + index + part) / allStories.length;
+          const elapsed = (performance.now() - startedAt) / 1000;
+          eta = progress > 0 ? Math.max(0, elapsed / progress - elapsed) : null;
+        });
+        if (!generated || token !== generation) return;
+        try {
+          history = await listAudioSessions();
+        } catch {
+          mergeHistory(generated.saved);
+        }
+        if (token !== generation) return;
+        progress = (alreadySaved + index + 1) / allStories.length;
+      }
+      progress = 1;
+      eta = 0;
+      const latest = history.find((session) => session.language === settings.lang && session.level === settings.vocabularyLevel) ?? history[0];
+      if (latest) await openSession(latest);
+      else {
+        phase = 'error';
+        error = 'The audio could not be generated.';
+      }
     } catch {
       if (token === generation) {
         phase = 'error';
@@ -709,7 +808,7 @@
     playing = !audio.paused;
   });
   function settingsFingerprint() {
-    return `${settings.lang}|${settings.vocabularyLevel}|${settings.includeLowerVocabulary}|${settings.voiceQuality}`;
+    return `${settings.lang}|${settings.vocabularyLevel}|${settings.includeLowerVocabulary}|${settings.voiceQuality}|${settings.naturalModel}`;
   }
 
   $effect(() => {
@@ -717,7 +816,7 @@
     if (!settingsReady) return;
     if (fingerprint === settingsKey) return;
     settingsKey = fingerprint;
-    untrack(() => void startSession());
+    untrack(() => void (standardMode ? startSession() : startBatch()));
   });
   onMount(() => {
     if (!settings.firstName) {
@@ -734,9 +833,8 @@
       history = saved;
       settingsKey = settingsFingerprint();
       settingsReady = true;
-      const latest = saved[0];
-      if (latest && !standardMode) await openSession(latest);
-      else await startSession();
+      if (standardMode) await startSession();
+      else await startBatch();
     };
     void loadLibrary();
     const onPageHide = () => flushPosition();
@@ -770,18 +868,26 @@
         <span class="listen-pulse" aria-hidden="true"><IconHeadphones /></span>
         <p>{labels.download}</p>
         <div class="listen-bar"><span style={`width:${download}%`}></span></div>
+        <small>{downloadMegabytes} / {downloadTotalMegabytes} MB</small>
         {#if downloadRemaining !== null && downloadRemaining >= 1}
           <small>{m.voice_quality_remaining({ time: formatTime(downloadRemaining) }, { locale: settings.interfaceLocale })}</small>
         {/if}
       </div>
     {:else if phase === 'generating'}
-      <div class="listen-state listen-generating" aria-live="polite">
-        <span class="listen-walk" aria-hidden="true"><span class="listen-walker"><StoryCharacter id="lilith" mood="happy" /></span></span>
-        <p>{labels.audio} · {Math.round(progress * 100)} %</p>
-        <div class="listen-bar"><span style={`width:${progress * 100}%`}></span></div>
-        <div class="listen-eta">
-          <small>{done} / {total}</small>
-          {#if eta !== null && eta >= 1}<small>{m.voice_quality_remaining({ time: formatTime(eta) }, { locale: settings.interfaceLocale })}</small>{/if}
+      <div class="listen-state listen-generating" class:has-scene={generatingScene} aria-live="polite">
+        {#if generatingScene}
+          <span class="listen-generating-bg" aria-hidden="true"><StoryScene scene={generatingScene} weather={generatingWeather} /></span>
+        {/if}
+        <div class="listen-generating-content">
+          <span class="listen-walk" aria-hidden="true"><span class="listen-walker"><StoryCharacter id="lilith" mood="happy" /></span></span>
+          <p class="listen-current" lang={settings.lang}>{generatingTitle || labels.audio}</p>
+          <p>{labels.audio} · {Math.round(progress * 100)} %</p>
+          <div class="listen-bar"><span style={`width:${progress * 100}%`}></span></div>
+          <div class="listen-eta">
+            <small>Audio {batchIndex} of {batchTotal}</small>
+            {#if eta !== null && eta >= 1}<small>{m.voice_quality_remaining({ time: formatTime(eta) }, { locale: settings.interfaceLocale })}</small>{/if}
+          </div>
+          <small class="listen-part">Part {done} of {total}</small>
         </div>
       </div>
     {:else if phase === 'loading'}
@@ -880,6 +986,14 @@
   .listen-bar { width:min(100%,16rem);height:.42rem;overflow:hidden;border-radius:999px;background:rgba(23,42,69,.12); }
   .listen-bar span { display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#e6a527,#a45e38);transition:width .2s ease; }
   .listen-generating { position:relative;overflow:hidden;padding-top:.8rem; }
+  .listen-generating.has-scene { background:#cfe6f2; }
+  .listen-generating-bg { position:absolute;inset:0; }
+  .listen-generating-bg :global(.story-scene) { position:absolute;inset:0;width:100%;height:100%; }
+  .listen-generating-bg :global(.story-scene *) { animation-play-state:paused; }
+  .listen-generating::after { content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,253,247,.52),rgba(255,253,247,.78)); }
+  .listen-generating-content { position:relative;z-index:1;display:grid;justify-items:center;gap:.65rem;width:100%; }
+  .listen-current { font-family:'DM Serif Display',serif !important;font-size:1.05rem !important;font-weight:400 !important;line-height:1.15 !important; }
+  .listen-part { color:#596477;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:800; }
   .listen-walk { position:relative;display:block;width:100%;height:5.4rem;overflow:hidden; }
   .listen-walker { position:absolute;bottom:0;left:0;width:3.6rem;height:5.2rem;transform-origin:50% 100%;animation:listen-walk 8s ease-in-out infinite; }
   .listen-walker :global(.story-character) { display:block;width:100%;height:100%;transform-origin:50% 100%;animation:listen-bob .34s ease-in-out infinite alternate; }
@@ -932,6 +1046,8 @@
   :global(html.dark) .listen-state,:global(html.dark) .listen-player { border-color:rgba(255,253,247,.36);background:#213a5d; }
   :global(html.dark) .listen-state p,:global(html.dark) .listen-now p { color:#fffdf7; }
   :global(html.dark) .listen-state small,:global(html.dark) .listen-time { color:rgba(255,253,247,.72); }
+  :global(html.dark) .listen-generating::after { background:linear-gradient(180deg,rgba(23,42,69,.58),rgba(23,42,69,.84)); }
+  :global(html.dark) .listen-part { color:rgba(255,253,247,.72); }
   :global(html.dark) .listen-art { border-color:#e6a527;background:#2b4a70;color:#e6a527; }
   :global(html.dark) .listen-wave { background:rgba(23,42,69,.86); }
   :global(html.dark) .listen-wave span,:global(html.dark) .listen-mini-wave span { background:#e6a527; }
