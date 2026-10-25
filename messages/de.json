@@ -174,6 +174,8 @@
   "voice_quality_standard": "Standard",
   "voice_quality_natural": "Natürlich",
   "voice_quality_hint": "Natürliche Stimmen werden auf deinem Gerät erzeugt. Sie werden einmal heruntergeladen (etwa {size} MB für diese Sprache).",
+  "dialects": "Dialekte",
+  "dialects_hint": "Dialektfiguren sprechen mit regionalem Akzent. Ausschalten lässt sie normales Hochdeutsch sprechen.",
   "voice_quality_loading": "Stimmen werden geladen … {percent} %",
   "voice_quality_remaining": "Noch etwa {time}",
   "voice_quality_failed": "Die natürlichen Stimmen konnten nicht geladen werden. Es werden die Standardstimmen verwendet."

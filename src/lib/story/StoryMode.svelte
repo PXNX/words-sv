@@ -458,7 +458,7 @@
       const { text: spoken, written } = pronounceable(sentence, lang);
       const utterance = new SpeechSynthesisUtterance(spoken);
       utterance.lang = locale;
-      applyVoice(utterance, speaker, lang, locale, voiceCast, baseRate, mood);
+      applyVoice(utterance, speaker, lang, locale, voiceCast, baseRate, mood, settings.dialects);
       // Under a roaring plane the voice is barely carrying.
       if (noisy) utterance.volume *= 0.45;
       if (speaker !== 'narrator' && speaker !== 'announcer') lipSync.track(utterance, spoken);

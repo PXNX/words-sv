@@ -25,6 +25,7 @@ const THEME_KEY = 'wordcircle-theme';
 const VIBRATION_KEY = 'wordcircle-vibration';
 const SOUND_KEY = 'wordcircle-sound';
 const VOICE_QUALITY_KEY = 'wordcircle-voice-quality-v1';
+const DIALECTS_KEY = 'wordcircle-dialects-v1';
 const BACKWARD_WORDS_KEY = 'wordcircle-backward-words-v1';
 const VOCABULARY_LEVEL_KEY = 'wordcircle-vocabulary-level-v1';
 const INCLUDE_LOWER_VOCABULARY_KEY = 'wordcircle-include-lower-vocabulary-v1';
@@ -78,6 +79,7 @@ class SettingsStore {
   vibration = $state(typeof localStorage === 'undefined' || localStorage.getItem(VIBRATION_KEY) !== 'off');
   sound = $state(typeof localStorage === 'undefined' || localStorage.getItem(SOUND_KEY) !== 'off');
   voiceQuality = $state<VoiceQuality>(typeof localStorage !== 'undefined' && localStorage.getItem(VOICE_QUALITY_KEY) === 'natural' ? 'natural' : 'standard');
+  dialects = $state(typeof localStorage === 'undefined' || localStorage.getItem(DIALECTS_KEY) !== 'off');
   lang = $state<Language>(readLanguage());
   interfaceLocale = $state<InterfaceLocale>(readInterfaceLocale());
   vocabularyLevel = $state<VocabularyLevel>(readVocabularyLevel());
@@ -105,6 +107,10 @@ class SettingsStore {
   setVoiceQuality(next: VoiceQuality) {
     this.voiceQuality = next;
     localStorage.setItem(VOICE_QUALITY_KEY, next);
+  }
+  setDialects(next: boolean) {
+    this.dialects = next;
+    localStorage.setItem(DIALECTS_KEY, next ? 'on' : 'off');
   }
   setSound(next: boolean) {
     this.sound = next;
