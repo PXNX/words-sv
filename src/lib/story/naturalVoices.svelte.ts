@@ -300,8 +300,27 @@ const THINKING_BREAK = 0.35;
 
 export type NaturalClip ={ buffer: AudioBuffer; playbackRate: number; volume: number };
 
+const renderedAudio = new Map<string, Promise<NaturalClip>>();
+
+/** Drops rendered story audio, e.g. when a new story takes the stage. */
+export function clearNaturalAudio() {
+  renderedAudio.clear();
+}
+
 /** Speaks a sentence in the speaker's natural voice; resolves with audio ready to play. */
-export async function synthesizeNatural(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number): Promise<NaturalClip> {
+export function synthesizeNatural(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number): Promise<NaturalClip> {
+  const key = `${settings.naturalModel}|${language}|${baseRate}|${speaker}|${mood}|${cast.join()}|${text}`;
+  const cached = renderedAudio.get(key);
+  if (cached) return cached;
+  const task = renderNatural(text, speaker, mood, cast, language, baseRate);
+  renderedAudio.set(key, task);
+  void task.catch(() => {
+    if (renderedAudio.get(key) === task) renderedAudio.delete(key);
+  });
+  return task;
+}
+
+async function renderNatural(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number): Promise<NaturalClip> {
   const chunks = speechChunks(text);
   if (chunks.length < 2) return synthesizeChunk(text, speaker, mood, cast, language, baseRate);
   const clips: NaturalClip[] = [];

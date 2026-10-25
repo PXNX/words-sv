@@ -6,6 +6,7 @@
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
+  import type { Language } from '#lib/data/vocabulary.js';
   import { playErrorSound, playSoundEffect, playSuccessSound, soundEffectSeconds, startCrackle, stopSoundEffects } from '#lib/sounds.js';
   import { characterNames, fillName, moodFor, storiesFor, withDetails, withWeather, type CharacterId, type HeldItem, type Lights, type Mood, type Story, type StoryBeat } from './stories';
   import type { SoundEffect } from '#lib/sounds.js';
@@ -17,7 +18,7 @@
   import { intonationOf, pauseAfter, pronounceable, sentences, splitSounds } from './speech';
   import { LipSync } from './lipSync.svelte';
   import { WordMarks } from './wordMarks.svelte';
-  import { naturalReady, playNatural, prepareNatural, synthesizeNatural, type NaturalClip } from './naturalVoices.svelte';
+  import { clearNaturalAudio, naturalReady, playNatural, prepareNatural, synthesizeNatural, type NaturalClip } from './naturalVoices.svelte';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconVolumeOff from '~icons/material-symbols/volume-off-rounded';
   import IconCheck from '~icons/material-symbols/check-rounded';
@@ -92,6 +93,8 @@
   let pettedTimer = 0;
   // Bumped whenever speech is cancelled or replaced, so a running performance knows to stop.
   let performing = 0;
+  // Bumped when another story replaces this one, so its audio preparation stops.
+  let audioPreparation = 0;
   let effectUntil = 0;
   // Chrome drops utterances that are garbage-collected mid-speech, before their end event fires.
   let liveUtterances: SpeechSynthesisUtterance[] = [];
@@ -214,6 +217,8 @@
   }
   function start(next: Story) {
     cancelSpeech();
+    audioPreparation += 1;
+    clearNaturalAudio();
     run += 1;
     written = next;
     const playthrough = withoutQuestions(withWeather(withDetails(next)));
@@ -438,6 +443,54 @@
     silenceCrackle();
     if (token === performing) marks.clear();
   }
+  function storyNaturalRate() {
+    return (levelRates[settings.vocabularyLevel] ?? 1) * (naturalLevelPace[settings.vocabularyLevel] ?? 1);
+  }
+  async function prepareNaturalText(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, token: number) {
+    if (token !== audioPreparation) return;
+    try {
+      await synthesizeNatural(pronounceable(text, language).text, speaker, mood, cast, language, storyNaturalRate());
+    } catch {
+      // Playback falls back to the system voice.
+    }
+  }
+  async function prepareNaturalRead(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, token: number) {
+    for (const part of splitSounds(text, language)) {
+      if (token !== audioPreparation) return;
+      if (part.kind === 'say') await prepareNaturalText(part.text, speaker, mood, cast, language, token);
+    }
+  }
+  async function prepareBeatAudio(beat: StoryBeat, cast: Speaker[], language: Language, token: number) {
+    if (beat.kind === 'narration' && beat.announcement) {
+      const text = say(beat.text[language]);
+      const quote = text.match(/^(.*?)[„“"«»]([^„“”"«»]+)[“”"«»]\s*$/su);
+      if (!quote) {
+        await prepareNaturalRead(text, 'narrator', 'neutral', cast, language, token);
+        return;
+      }
+      const intro = quote[1].replace(/[\s:,–—-]+$/u, '');
+      if (/\p{L}/u.test(intro)) await prepareNaturalText(intro, 'narrator', 'neutral', cast, language, token);
+      if (token !== audioPreparation) return;
+      await prepareNaturalText(quote[2], 'narrator', 'neutral', cast, language, token);
+      return;
+    }
+    if (beat.kind === 'narration') {
+      await prepareNaturalRead(say(beat.text[language]), 'narrator', 'neutral', cast, language, token);
+    } else if (beat.kind === 'line') {
+      await prepareNaturalRead(say(beat.text[language]), beat.speaker, moodFor(beat), cast, language, token);
+      if (token !== audioPreparation) return;
+      if (beat.word) await prepareNaturalText(beat.word, beat.speaker, moodFor(beat), cast, language, token);
+    } else if (beat.kind === 'question') {
+      await prepareNaturalText(say(beat.prompt[language]), beat.asker ?? 'narrator', 'curious', cast, language, token);
+    }
+  }
+  async function prepareStoryAudio(next: Story, cast: Speaker[], language: Language) {
+    const token = ++audioPreparation;
+    for (const beat of next.beats) {
+      if (token !== audioPreparation || left || !naturalReady(language) || settings.voiceQuality !== 'natural') return;
+      await prepareBeatAudio(beat, cast, language, token);
+    }
+  }
   // The neural voice reads the passage in one piece: it sees the commas, questions and
   // exclamations together, so the melody carries across the message and its tempo stays even.
   // A spaced dash is split off as a short thinking break (see synthesizeNatural). System voices
@@ -445,8 +498,7 @@
   async function speakSentences(text: string, speaker: Speaker, mood: Mood, token: number, noisy: boolean, place: Place) {
     const baseRate = levelRates[settings.vocabularyLevel] ?? 1;
     if (naturalVoices) {
-      const naturalRate = baseRate * (naturalLevelPace[settings.vocabularyLevel] ?? 1);
-      const clip = await synthesizeNatural(pronounceable(text, lang).text, speaker, mood, voiceCast, lang, naturalRate).catch(() => null);
+      const clip = await synthesizeNatural(pronounceable(text, lang).text, speaker, mood, voiceCast, lang, storyNaturalRate()).catch(() => null);
       if (token !== performing) return;
       if (clip) {
         await playSentence(clip, text, speaker, noisy, place, token);
@@ -552,12 +604,23 @@
     const language = settings.lang;
     if (settings.voiceQuality === 'natural') untrack(() => void prepareNatural(language));
   });
+  // Once the voices are ready, the whole story is rendered in the background so each beat can
+  // start speaking at once instead of waiting for its audio.
+  $effect(() => {
+    const next = story;
+    const ready = naturalVoices;
+    const cast = voiceCast;
+    const language = lang;
+    if (!next || !ready) return;
+    untrack(() => void prepareStoryAudio(next, cast, language));
+  });
 
   // Leaving the story (another page, or the tab going away) silences it at once: speech, sound
   // effects still ringing out, and anything queued to follow a right answer.
   function leave() {
     left = true;
     run += 1;
+    audioPreparation += 1;
     cancelSpeech();
     stopSoundEffects();
   }
@@ -574,6 +637,7 @@
       window.removeEventListener('pagehide', onPageHide);
       window.removeEventListener('pageshow', onPageShow);
       leave();
+      clearNaturalAudio();
       clearTimeout(heartsTimer);
       clearTimeout(pettedTimer);
       clearTimeout(mimeTimer);
