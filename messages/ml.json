@@ -227,5 +227,12 @@
   "streak_mode_done": "ഇന്ന് പൂർത്തിയായി",
   "streak_grammar_progress": "വ്യാകരണം: {done}/{goal}",
   "streak_pronunciation_progress": "ഉച്ചാരണം: {done}/{goal}",
-  "streak_goal_choose": "ദൈനംദിന ലക്ഷ്യം തിരഞ്ഞെടുക്കുക"
+  "streak_goal_choose": "ദൈനംദിന ലക്ഷ്യം തിരഞ്ഞെടുക്കുക",
+  "today_kicker": "നിങ്ങളുടെ അടുത്ത ചുവട്",
+  "today_due": "{count} വാക്കുകൾ ആവർത്തിക്കാനുണ്ട് — ഏകദേശം {minutes} മിനിറ്റ്",
+  "today_reading": "«{title}» തുടരുക — ചോദ്യം {number} കാത്തിരിക്കുന്നു",
+  "today_streak": "നിങ്ങളുടെ സ്ട്രീക്കിന് ഇനി {count} ശരിയുത്തരങ്ങൾ വേണം",
+  "today_marked": "നിങ്ങൾ {count} വാക്കുകൾ അടയാളപ്പെടുത്തി — അവ ആവർത്തിക്കുക",
+  "today_done": "ഇന്നത്തേക്ക് എല്ലാം പൂർത്തിയായി.",
+  "today_start": "തുടങ്ങുക"
 }

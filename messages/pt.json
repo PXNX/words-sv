@@ -227,5 +227,12 @@
   "streak_mode_done": "Feito hoje",
   "streak_grammar_progress": "Gramática: {done}/{goal}",
   "streak_pronunciation_progress": "Pronúncia: {done}/{goal}",
-  "streak_goal_choose": "Escolher meta diária"
+  "streak_goal_choose": "Escolher meta diária",
+  "today_kicker": "O teu próximo passo",
+  "today_due": "{count} palavras para rever — cerca de {minutes} minutos",
+  "today_reading": "Continua «{title}» — a pergunta {number} está à espera",
+  "today_streak": "A tua sequência precisa de mais {count} respostas certas",
+  "today_marked": "Marcaste {count} palavras — repete-as",
+  "today_done": "Tudo feito por hoje.",
+  "today_start": "Começar"
 }

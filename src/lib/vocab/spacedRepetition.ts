@@ -51,6 +51,21 @@ export function prioritizeLearningWords(words: string[], progressByWord: Record<
   });
 }
 
+/**
+ * Words from the current pool that are worth a review now: marked as hard or whose interval has
+ * elapsed. Unseen words are not counted, because a review never runs out of fresh material.
+ */
+export function readDueVocabulary(language: Language, level: VocabularyLevel, now: number = Date.now()): number {
+  const words = wordPools[language]?.[level] ?? [];
+  const progressByWord = readLevelProgress(language, level);
+  let due = 0;
+  for (const word of words) {
+    const progress = normalizeReviewProgress(progressByWord[word]);
+    if ((progress.lapses ?? 0) > 0 || (progress.dueAt > 0 && progress.dueAt <= now)) due += 1;
+  }
+  return due;
+}
+
 export type LevelMastery = {
   level: VocabularyLevel;
   masteredWords: number;

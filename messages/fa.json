@@ -227,5 +227,12 @@
   "streak_mode_done": "امروز انجام شد",
   "streak_grammar_progress": "دستور زبان: {done}/{goal}",
   "streak_pronunciation_progress": "تلفظ: {done}/{goal}",
-  "streak_goal_choose": "انتخاب هدف روزانه"
+  "streak_goal_choose": "انتخاب هدف روزانه",
+  "today_kicker": "قدم بعدی تو",
+  "today_due": "{count} واژه برای مرور آماده است — حدود {minutes} دقیقه",
+  "today_reading": "ادامهٔ «{title}» — پرسش {number} منتظر است",
+  "today_streak": "{count} پاسخ درست دیگر برای زنجیرهٔ تو لازم است",
+  "today_marked": "{count} واژه را علامت زدی — آن‌ها را مرور کن",
+  "today_done": "برای امروز همه‌چیز انجام شد.",
+  "today_start": "شروع"
 }

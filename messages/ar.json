@@ -227,5 +227,12 @@
   "streak_mode_done": "أُنجز اليوم",
   "streak_grammar_progress": "القواعد: {done}/{goal}",
   "streak_pronunciation_progress": "النطق: {done}/{goal}",
-  "streak_goal_choose": "اختيار الهدف اليومي"
+  "streak_goal_choose": "اختيار الهدف اليومي",
+  "today_kicker": "خطوتك التالية",
+  "today_due": "{count} كلمات للمراجعة — نحو {minutes} دقائق",
+  "today_reading": "تابع «{title}» — السؤال {number} في انتظارك",
+  "today_streak": "يحتاج تسلسلك إلى {count} إجابات صحيحة أخرى",
+  "today_marked": "علّمت {count} كلمات — راجعها",
+  "today_done": "تم إنجاز كل شيء اليوم.",
+  "today_start": "ابدأ"
 }

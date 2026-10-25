@@ -231,5 +231,12 @@
   "streak_mode_done": "Done today",
   "streak_grammar_progress": "Grammar: {done}/{goal}",
   "streak_pronunciation_progress": "Pronunciation: {done}/{goal}",
-  "streak_goal_choose": "Choose daily goal"
+  "streak_goal_choose": "Choose daily goal",
+  "today_kicker": "Your next step",
+  "today_due": "{count} words are due — about {minutes} minutes",
+  "today_reading": "Pick up “{title}” — question {number} is waiting",
+  "today_streak": "Your streak needs {count} more correct words",
+  "today_marked": "You marked {count} words — repeat them",
+  "today_done": "Everything done for today.",
+  "today_start": "Start"
 }

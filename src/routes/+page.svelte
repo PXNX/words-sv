@@ -24,6 +24,10 @@
   import { playableLanguages, type Language } from '#lib/data/vocabulary.js';
   import { VOCABULARY_GOALS, modeDone, type StreakMode } from '#lib/clientStreak.js';
   import TodayBadge from '#lib/streak/TodayBadge.svelte';
+  import { buildTodayPlan, estimatedMinutes, type TodayPlan, type TodayReading } from '#lib/today/todayPlan.js';
+  import { readingCatalog } from '#lib/story/readingCatalog.js';
+  import { readDueVocabulary } from '#lib/vocab/spacedRepetition.js';
+  import { readMissedWords } from '#lib/story/missedWords.js';
   import IconSettings from '~icons/material-symbols/settings-rounded';
   import IconHelp from '~icons/material-symbols/question-mark-rounded';
   import IconFlame from '~icons/material-symbols/local-fire-department-rounded';
@@ -41,6 +45,7 @@
   import IconStory from '~icons/material-symbols/auto-stories-rounded';
   import IconMenuBook from '~icons/material-symbols/menu-book-rounded';
   import IconHeadphones from '~icons/material-symbols/headphones-rounded';
+  import IconExplore from '~icons/material-symbols/explore-rounded';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
 
@@ -101,7 +106,14 @@
     nameHint: m.onboarding_name_hint({}, { locale: settings.interfaceLocale }),
     continue: m.continue({}, { locale: settings.interfaceLocale }),
     homeCast: m.home_cast({}, { locale: settings.interfaceLocale }),
-    petLilith: m.pet_lilith({}, { locale: settings.interfaceLocale })
+    petLilith: m.pet_lilith({}, { locale: settings.interfaceLocale }),
+    todayKicker: m.today_kicker({}, { locale: settings.interfaceLocale }),
+    todayDone: m.today_done({}, { locale: settings.interfaceLocale }),
+    todayStart: m.today_start({}, { locale: settings.interfaceLocale }),
+    todayDue: (count: number, minutes: number) => m.today_due({ count, minutes }, { locale: settings.interfaceLocale }),
+    todayReading: (title: string, number: number) => m.today_reading({ title, number }, { locale: settings.interfaceLocale }),
+    todayStreak: (count: number) => m.today_streak({ count }, { locale: settings.interfaceLocale }),
+    todayMarked: (count: number) => m.today_marked({ count }, { locale: settings.interfaceLocale })
   });
 
   function formatMinutes(minutes: number) {
@@ -135,12 +147,48 @@
   const dailyGoal = $derived(settings.dailyGoal());
   // The ring shows how far today's vocabulary goal is met, or a full ring once any mode qualified.
   const goalProgress = $derived(settings.streak.qualified ? 1 : Math.min(1, settings.streak.vocabCorrect / Math.max(1, settings.streak.vocabularyGoal)));
+  let todayPlan = $state<TodayPlan | null>(null);
+
+  // The next best action is derived from local progress only: due reviews first, then an unfinished
+  // text, the daily streak and finally the words marked while reading.
+  function refreshToday() {
+    if (typeof localStorage === 'undefined') return;
+    todayPlan = buildTodayPlan({
+      dueWords: readDueVocabulary(settings.lang, settings.vocabularyLevel),
+      markedWords: readMissedWords(settings.lang).length,
+      reading: readingToday(),
+      streakQualified: settings.streak.qualified,
+      vocabCorrect: settings.streak.vocabCorrect,
+      vocabularyGoal: settings.streak.vocabularyGoal
+    });
+  }
+  function readingToday(): TodayReading | null {
+    try {
+      const fingerprint = `${settings.lang}|${settings.vocabularyLevel}|${settings.includeLowerVocabulary}`;
+      const parsed = JSON.parse(localStorage.getItem('wordcircle-reading-progress-v1') ?? 'null') as { fingerprint?: string; id?: string; solved?: Record<string, Record<number, true>> } | null;
+      if (!parsed || parsed.fingerprint !== fingerprint || typeof parsed.id !== 'string') return null;
+      const item = readingCatalog(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary, settings.firstName || 'du').find((entry) => entry.id === parsed.id);
+      if (!item || item.questions.length === 0) return null;
+      const solved = parsed.solved?.[item.id] ?? {};
+      const answered = item.questions.filter((_, index) => solved[index]).length;
+      return answered < item.questions.length ? { id: item.id, title: item.title, answered, total: item.questions.length } : null;
+    } catch {
+      return null;
+    }
+  }
+  function todayTitle(plan: TodayPlan): string {
+    if (plan.kind === 'due') return labels.todayDue(plan.count, estimatedMinutes(plan.count));
+    if (plan.kind === 'reading') return labels.todayReading(plan.title, plan.answered + 1);
+    if (plan.kind === 'streak') return labels.todayStreak(plan.count);
+    if (plan.kind === 'marked') return labels.todayMarked(plan.count);
+    return labels.todayDone;
+  }
 
   onMount(() => {
     if (!settings.hasStoredInterfaceLocale()) settings.applyPreferredInterfaceLocale();
     if (localStorage.getItem(ROOT_ONBOARDING_KEY) !== 'complete') rootOnboarding = true;
-    void settings.refreshStreak();
-    streakTimer = window.setInterval(() => void settings.refreshStreak(), 30_000);
+    void settings.refreshStreak().then(refreshToday);
+    streakTimer = window.setInterval(() => void settings.refreshStreak().then(refreshToday), 30_000);
     return () => {
       if (streakTimer !== null) window.clearInterval(streakTimer);
     };
@@ -198,11 +246,21 @@
         <span class="home-goal-hint">{labels.streakGoalHint}</span>
         <div class="home-goal-options">
           {#each VOCABULARY_GOALS as goal (goal)}
-            <button type="button" class="home-goal-option" class:active={goal === dailyGoal} aria-pressed={goal === dailyGoal} onclick={() => void settings.setDailyGoal(goal)}>{labels.streakGoalWords(goal)}</button>
+            <button type="button" class="home-goal-option" class:active={goal === dailyGoal} aria-pressed={goal === dailyGoal} onclick={() => void settings.setDailyGoal(goal).then(refreshToday)}>{labels.streakGoalWords(goal)}</button>
           {/each}
         </div>
       </div>
     </div>
+    {#if todayPlan}
+      <a class="card-play home-today" href={todayPlan.href}>
+        <span class="home-today-icon" aria-hidden="true"><IconExplore /></span>
+        <span class="home-today-copy">
+          <small>{labels.todayKicker}</small>
+          <strong>{todayTitle(todayPlan)}</strong>
+        </span>
+        <span class="home-today-start">{labels.todayStart}<IconChevronRight aria-hidden="true" /></span>
+      </a>
+    {/if}
     <h2 class="home-group-heading">{labels.gamesGroup}</h2>
     <div class="home-games home-games--games">
       <div class="home-card-slot"><a class="card-play {streakClass('circle')}" href="/circle"><span class="home-icon" aria-hidden="true"><IconCrossword /></span><h2>{labels.modeCrossword}</h2><p>{labels.homeCircle}</p><TodayBadge done={modeDone(settings.streak, 'circle')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/circle/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
@@ -251,6 +309,14 @@
   .home-goal-option { min-height:1.5rem;padding:.1rem .5rem;border:1.5px solid rgba(23,42,69,.3);border-radius:999px;background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.53rem;font-weight:900;cursor:pointer; }
   .home-goal-option.active { border-color:#172a45;background:#172a45;color:#fffdf7; }
   .home-goal-option:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
+  .home-today { display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.7rem;justify-self:center;width:min(100%,27rem);padding:.75rem .9rem;--tilt:.35deg;background:#f7e2b0;color:inherit;text-decoration:none; }
+  .home-today-icon { display:grid;place-items:center;width:2.2rem;height:2.2rem;flex:none;border:2px solid #172a45;border-radius:50% 46% 52% 48% / 48% 52% 46% 50%;background:#fffdf7;color:#a45e38; }
+  .home-today-icon :global(svg) { width:1.2rem;height:1.2rem; }
+  .home-today-copy { display:grid;gap:.1rem;min-width:0; }
+  .home-today-copy small { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.5rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase; }
+  .home-today-copy strong { color:#172a45;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:800;line-height:1.3; }
+  .home-today-start { display:inline-flex;align-items:center;gap:.1rem;flex:none;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:900;white-space:nowrap; }
+  .home-today-start :global(svg) { width:.95rem;height:.95rem; }
   .home-streak-count { display:grid;gap:0;justify-items:start;min-width:2.6rem; }.home-streak-count strong { color:#172a45;font-family:'DM Serif Display',serif;font-size:1.65rem;font-weight:400;line-height:.85; }.home-streak-count small { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.5rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }
   .home-streak-detail { display:grid;gap:.15rem;justify-items:start; }.home-streak-detail b { color:#172a45;font-family:'DM Sans',sans-serif;font-size:.63rem;font-weight:800;line-height:1.3; }.home-streak-detail small { color:#596477;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:800; }
   .home-streak :global(.home-streak-arrow) { width:1.2rem;height:1.2rem;flex:none;color:rgba(23,42,69,.4); }
@@ -303,4 +369,8 @@
   :global(html.dark) .home-goal-hint { color:rgba(255,253,247,.72); }
   :global(html.dark) .home-goal-option { border-color:rgba(255,253,247,.32);background:#213a5d;color:#fffdf7; }
   :global(html.dark) .home-goal-option.active { border-color:#e6a527;background:#e6a527;color:#172a45; }
+  :global(html.dark) .home-today { background:#2b4a73; }
+  :global(html.dark) .home-today-icon { border-color:#0b1626;background:#213a5d;color:#e6a527; }
+  :global(html.dark) .home-today-copy small { color:#f0c06a; }
+  :global(html.dark) .home-today-copy strong,:global(html.dark) .home-today-start { color:#fffdf7; }
 </style>
