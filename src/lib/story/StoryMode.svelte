@@ -219,9 +219,6 @@
     const completed = readCompleted();
     if (!completed.includes(id)) localStorage.setItem(COMPLETED_KEY, JSON.stringify([...completed, id]));
   }
-  function withoutQuestions(next: Story): Story {
-    return { ...next, beats: next.beats.filter((beat) => !isInteractive(beat)) };
-  }
   function castFor(next: Story): Speaker[] {
     return [...next.cast, ...(next.beats.some((beat) => beat.kind === 'narration' && beat.announcement) ? ['announcer' as const] : [])];
   }
@@ -232,7 +229,7 @@
     run += 1;
     const thisRun = run;
     written = next;
-    const playthrough = withoutQuestions(withWeather(withDetails(next)));
+    const playthrough = withWeather(withDetails(next));
     story = playthrough;
     revealed = 1;
     wrong = {};

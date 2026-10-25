@@ -6,7 +6,7 @@ import { german, germanStories } from './germanStories';
 export type Text = Record<Language, string>;
 export type CharacterId = 'crow' | 'seagull' | 'ludwig' | 'deer' | 'fox' | 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello' | 'lilith' | 'hans' | 'albert' | 'sabine' | 'enzo' | 'jana' | 'becker' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake' | 'ali' | 'robert' | 'fritz' | 'tobias' | 'selma' | 'kumar' | 'simon' | 'banker' | 'wirt';
 export type Mood = 'neutral' | 'happy' | 'sad' | 'surprised' | 'curious' | 'angry' | 'worried' | 'laughing' | 'sleepy';
-export type SceneId = 'frankfurt' | 'cologne' | 'munich' | 'hamburg' | 'berlin' | 'cliffs' | 'mainau' | 'lindau' | 'castle' | 'alps' | 'forest' | 'cafe' | 'park' | 'station' | 'home' | 'office' | 'flat' | 'square' | 'attic' | 'beergarden' | 'farm' | 'zoo' | 'butcher' | 'bakery' | 'boutique' | 'perfumery' | 'workshop' | 'beach' | 'airport';
+export type SceneId = 'frankfurt' | 'cologne' | 'munich' | 'hamburg' | 'berlin' | 'cliffs' | 'mainau' | 'lindau' | 'castle' | 'alps' | 'forest' | 'cafe' | 'park' | 'station' | 'home' | 'office' | 'flat' | 'square' | 'attic' | 'beergarden' | 'farm' | 'zoo' | 'butcher' | 'bakery' | 'boutique' | 'perfumery' | 'workshop' | 'beach' | 'airport' | 'library';
 export type Weather = 'sunny' | 'cloudy' | 'rainy' | 'snowy';
 export type StoryProp = 'ball' | 'wool' | 'eagle';
 // Something a character holds (or, for Lilith, has in front of her) from that beat on.

@@ -35,7 +35,8 @@
     hamburg: { back: '#cfe6f2', floor: '#9aa3ad' },
     munich: { back: '#cfe6f2', floor: '#b8aa98' },
     cologne: { back: '#cfe6f2', floor: '#b8aa98' },
-    frankfurt: { back: '#cfe6f2', floor: '#c4cbd3' }
+    frankfurt: { back: '#cfe6f2', floor: '#c4cbd3' },
+    library: { back: '#e8e2d9', floor: '#b8a07e' }
   };
   const palette = $derived(palettes[scene]);
 
@@ -70,7 +71,8 @@
     hamburg: { x: 0, y: 0, w: 400, h: 172 },
     munich: { x: 0, y: 0, w: 400, h: 172 },
     cologne: { x: 0, y: 0, w: 400, h: 172 },
-    frankfurt: { x: 0, y: 0, w: 400, h: 172 }
+    frankfurt: { x: 0, y: 0, w: 400, h: 172 },
+    library: { x: 200, y: 40, w: 140, h: 110 }
   };
   const sky = $derived(skies[scene]);
   const outdoor = $derived(sky.w === 400);
@@ -414,6 +416,23 @@
     <g fill="#5a6f8a">{#each [0, 1, 2] as i (i)}<rect x={18 + i * 44} y="94" width="8" height="12" /><rect x={36 + i * 44} y="94" width="8" height="12" /><rect x={18 + i * 44} y="140" width="8" height="12" /><rect x={36 + i * 44} y="140" width="8" height="12" />{/each}</g>
     <path d="M10 160h132" stroke="#7a2e2a" stroke-width="1.5" />
     {#if weather === 'snowy'}<g fill="#ffffff">{#each [0, 1, 2] as i (i)}<path d="M{28 + i * 44} 60h6v3h-6Z M{22 + i * 44} 70h18v3H{22 + i * 44}Z" />{/each}</g>{/if}
+  {:else if scene === 'library'}
+    <!-- tall bookshelves filled with books, a reading desk with a lamp and a small window -->
+    <rect x="300" y="60" width="40" height="110" fill="#8c5b3d" stroke="#5a3d25" stroke-width="2" />
+    {#each [0, 1, 2] as i (i)}
+      <rect x={10 + i * 90} y="90" width="70" height="90" fill="#d9c7b3" stroke="#8c5b3d" stroke-width="2" />
+      <rect x={10 + i * 90} y="90" width="70" height="10" fill="#8c5b3d" opacity=".6" />
+      <rect x={10 + i * 90} y="150" width="70" height="10" fill="#8c5b3d" opacity=".6" />
+      <rect x={10 + i * 90} y="120" width="70" height="10" fill="#8c5b3d" opacity=".4" />
+    {/each}
+    {#each [0, 1, 2, 3, 4, 5, 6, 7, 8] as i (i)}
+      <rect x={14 + (i % 3) * 90 + (Math.floor(i / 3) * 18)} y={102 + (i % 3) * 26} width="12" height="4" fill={['#d64b45','#4b78c2','#34824d','#e6b52e','#8a62b6','#df8eb1'][i % 6]} />
+    {/each}
+    <rect x="200" y="100" width="60" height="30" fill="#fffdf7" stroke="#172a45" stroke-width="2" />
+    <rect x="215" y="94" width="30" height="8" fill="#e6a527" stroke="#8c5b3d" stroke-width="2" />
+    <rect x="220" y="104" width="20" height="12" fill="#cfe6f2" />
+    <rect x="260" y="104" width="10" height="4" fill="#a45e38" />
+    <rect x="150" y="30" width="50" height="50" rx="4" fill="none" stroke="#8c5b3d" stroke-width="4" /><path d="M175 30v50M150 55h50" stroke="#8c5b3d" stroke-width="3" />
   {/if}
   <rect y="172" width="400" height="48" fill={palette.floor} />
   <rect y="172" width="400" height="4" fill="rgba(23,42,69,.14)" />
