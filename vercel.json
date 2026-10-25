@@ -7,6 +7,6 @@
   "outputDirectory": "build",
   "routes": [
     { "handle": "filesystem" },
-    { "src": "/(circle(?:/tutorial|/definitions)?|wordle(?:/tutorial)?|hangman(?:/tutorial)?|vocab|pronunciation|alltag|grammar|story|progress|stats|settings)/?", "dest": "/$1/index.html" }
+    { "src": "/(circle(?:/tutorial|/definitions)?|wordle(?:/tutorial)?|hangman(?:/tutorial)?|vocab|pronunciation|alltag|grammar|stories|reading|listen|progress|stats|settings)/?", "dest": "/$1/index.html" }
   ]
 }
