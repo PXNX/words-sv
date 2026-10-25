@@ -182,5 +182,8 @@
   "voice_quality_remaining": "About {time} left",
   "voice_quality_failed": "The natural voices could not be loaded, so the standard voices are used.",
   "stories_group": "Stories",
-  "stories_group_hint": "Voices, pace and dialects for stories and listening practice."
+  "stories_group_hint": "Voices, pace and dialects for stories and listening practice.",
+  "story_reading_mode": "Reading mode",
+  "story_reading_mode_hint": "Read the whole story at once and answer the questions right in the text.",
+  "story_reading_progress": "{answered} of {total} questions answered"
 }

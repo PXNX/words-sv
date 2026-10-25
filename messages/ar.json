@@ -178,5 +178,8 @@
   "voice_quality_remaining": "يتبقى نحو {time}",
   "voice_quality_failed": "تعذّر تحميل الأصوات الطبيعية، لذلك تُستخدم الأصوات العادية.",
   "stories_group": "القصص",
-  "stories_group_hint": "الأصوات والسرعة واللهجات للقصص والاستماع."
+  "stories_group_hint": "الأصوات والسرعة واللهجات للقصص والاستماع.",
+  "story_reading_mode": "وضع القراءة",
+  "story_reading_mode_hint": "اقرأ القصة كاملة دفعة واحدة وأجب عن الأسئلة مباشرة في النص.",
+  "story_reading_progress": "تمت الإجابة على {answered} من {total} سؤالاً"
 }

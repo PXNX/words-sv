@@ -178,5 +178,8 @@
   "voice_quality_remaining": "Осталось около {time}",
   "voice_quality_failed": "Не удалось загрузить естественные голоса, поэтому используются стандартные.",
   "stories_group": "Истории",
-  "stories_group_hint": "Голоса, темп и диалекты для историй и аудирования."
+  "stories_group_hint": "Голоса, темп и диалекты для историй и аудирования.",
+  "story_reading_mode": "Режим чтения",
+  "story_reading_mode_hint": "Прочитайте всю историю сразу и отвечайте на вопросы прямо в тексте.",
+  "story_reading_progress": "Отвечено на {answered} из {total} вопросов"
 }

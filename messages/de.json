@@ -182,5 +182,8 @@
   "voice_quality_remaining": "Noch etwa {time}",
   "voice_quality_failed": "Die natürlichen Stimmen konnten nicht geladen werden. Es werden die Standardstimmen verwendet.",
   "stories_group": "Geschichten",
-  "stories_group_hint": "Stimmen, Tempo und Dialekte für Geschichten und Hörübungen."
+  "stories_group_hint": "Stimmen, Tempo und Dialekte für Geschichten und Hörübungen.",
+  "story_reading_mode": "Lesemodus",
+  "story_reading_mode_hint": "Die ganze Geschichte auf einmal lesen und die Fragen direkt im Text beantworten.",
+  "story_reading_progress": "{answered} von {total} Fragen beantwortet"
 }
