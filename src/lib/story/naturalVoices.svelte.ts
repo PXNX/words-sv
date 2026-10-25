@@ -266,6 +266,10 @@ function castNatural(cast: Speaker[], language: Language): Casting {
       casting.set(speaker, { voice: narrator, shared: false, borrowed: false });
       continue;
     }
+    if (speaker === 'wirt' && narrator) {
+      casting.set(speaker, { voice: narrator, shared: true, borrowed: false });
+      continue;
+    }
     const own = voices[model][language][profiles[speaker].gender];
     const borrowed = own.length === 0;
     const pool = borrowed ? voices[model][language][profiles[speaker].gender === 'female' ? 'male' : 'female'] : own;
@@ -277,6 +281,8 @@ function castNatural(cast: Speaker[], language: Language): Casting {
     casting.set(speaker, { voice, shared: false, borrowed });
   }
   for (const entry of casting.values()) entry.shared = (uses.get(entry.voice) ?? 0) > 1;
+  const innkeeper = casting.get('wirt');
+  if (innkeeper && narrator && innkeeper.voice === narrator) innkeeper.shared = true;
   cached = { key, casting };
   return casting;
 }

@@ -10,6 +10,7 @@
   import { playErrorSound, playSoundEffect, playSuccessSound, soundEffectSeconds, startCrackle, stopSoundEffects } from '#lib/sounds.js';
   import { characterNames, fillName, moodFor, storiesFor, withDetails, withWeather, type CharacterId, type HeldItem, type Lights, type Mood, type Story, type StoryBeat } from './stories';
   import type { SoundEffect } from '#lib/sounds.js';
+  import StoryAudioLoader from './StoryAudioLoader.svelte';
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
   import { generateStory, hasMissedWords } from './generated';
@@ -18,7 +19,7 @@
   import { intonationOf, pauseAfter, pronounceable, sentences, splitSounds } from './speech';
   import { LipSync } from './lipSync.svelte';
   import { WordMarks } from './wordMarks.svelte';
-  import { clearNaturalAudio, naturalReady, playNatural, prepareNatural, synthesizeNatural, type NaturalClip } from './naturalVoices.svelte';
+  import { clearNaturalAudio, naturalReady, naturalState, naturalSupported, playNatural, prepareNatural, synthesizeNatural, type NaturalClip } from './naturalVoices.svelte';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconVolumeOff from '~icons/material-symbols/volume-off-rounded';
   import IconCheck from '~icons/material-symbols/check-rounded';
@@ -57,6 +58,7 @@
     next: m.story_next({}, { locale: settings.interfaceLocale }),
     again: m.story_again({}, { locale: settings.interfaceLocale }),
     listen: m.story_listen({}, { locale: settings.interfaceLocale }),
+    loadingAudio: m.story_listen_loading({}, { locale: settings.interfaceLocale }),
     continue: m.continue({}, { locale: settings.interfaceLocale }),
     tryAgain: m.learning_try_again({}, { locale: settings.interfaceLocale }),
     forYou: m.story_for_you({}, { locale: settings.interfaceLocale }),
@@ -71,6 +73,9 @@
   let written: Story | null = null;
   let run = 0;
   let revealed = $state(1);
+  let audioReady = $state(true);
+  let audioDone = $state(0);
+  let audioTotal = $state(0);
   let orders = $state<number[][]>([]);
   let wrong = $state<Record<number, number[]>>({});
   let solved = $state<Record<number, true>>({});
@@ -134,7 +139,9 @@
   // Once the eagle has been pointed out, it keeps circling high above the stage.
   const eagleCircling = $derived(Boolean(story?.beats.slice(0, revealed).some((beat) => beat.kind === 'narration' && beat.prop === 'eagle')));
   // The announcer only gets a voice cast in stories that have announcements.
-  const voiceCast = $derived<Speaker[]>(story ? [...story.cast, ...(story.beats.some((beat) => beat.kind === 'narration' && beat.announcement) ? ['announcer' as const] : [])] : []);
+  const voiceCast = $derived<Speaker[]>(story ? castFor(story) : []);
+  const audioLoadingPercent = $derived(naturalReady(lang) ? (audioTotal ? Math.round((audioDone / audioTotal) * 100) : 0) : Math.round((naturalState.progress[lang] ?? 0) * 100));
+  const audioLoadingLabel = $derived(naturalReady(lang) ? labels.loadingAudio : m.voice_quality_loading({ percent: String(audioLoadingPercent) }, { locale: settings.interfaceLocale }));
   // Who is on stage and what they hold so far. Everyone whose first stage cue is an entrance waits
   // in the wings until then; exits send them off, and their own lines bring them back. The room
   // keeps the last `lights` it was given.
@@ -215,11 +222,15 @@
   function withoutQuestions(next: Story): Story {
     return { ...next, beats: next.beats.filter((beat) => !isInteractive(beat)) };
   }
+  function castFor(next: Story): Speaker[] {
+    return [...next.cast, ...(next.beats.some((beat) => beat.kind === 'narration' && beat.announcement) ? ['announcer' as const] : [])];
+  }
   function start(next: Story) {
     cancelSpeech();
-    audioPreparation += 1;
+    const preparation = ++audioPreparation;
     clearNaturalAudio();
     run += 1;
+    const thisRun = run;
     written = next;
     const playthrough = withoutQuestions(withWeather(withDetails(next)));
     story = playthrough;
@@ -228,6 +239,14 @@
     solved = {};
     orders = playthrough.beats.map((beat) => (isInteractive(beat) ? shuffledOrder(beat.options.length) : []));
     reaction = null;
+    audioDone = 0;
+    audioTotal = playthrough.beats.length;
+    if (settings.voiceQuality === 'natural' && naturalSupported()) {
+      audioReady = false;
+      void prepareAndPresent(playthrough, castFor(playthrough), settings.lang, preparation, thisRun);
+      return;
+    }
+    audioReady = true;
     presentBeat(playthrough.beats[0], 0);
   }
   // A beat's sound: played where the text has onomatopoeia ("klirr!", "Miau!") when read aloud,
@@ -484,12 +503,27 @@
       await prepareNaturalText(say(beat.prompt[language]), beat.asker ?? 'narrator', 'curious', cast, language, token);
     }
   }
-  async function prepareStoryAudio(next: Story, cast: Speaker[], language: Language) {
-    const token = ++audioPreparation;
+  async function prepareStoryAudio(next: Story, cast: Speaker[], language: Language, token: number) {
     for (const beat of next.beats) {
       if (token !== audioPreparation || left || !naturalReady(language) || settings.voiceQuality !== 'natural') return;
       await prepareBeatAudio(beat, cast, language, token);
+      if (token !== audioPreparation || left) return;
+      audioDone += 1;
     }
+  }
+  async function prepareAndPresent(next: Story, cast: Speaker[], language: Language, token: number, thisRun: number) {
+    try {
+      await prepareNatural(language);
+    } catch {}
+    if (token !== audioPreparation || thisRun !== run || left) return;
+    if (naturalReady(language) && settings.voiceQuality === 'natural') {
+      try {
+        await prepareStoryAudio(next, cast, language, token);
+      } catch {}
+    }
+    if (token !== audioPreparation || thisRun !== run || left) return;
+    audioReady = true;
+    presentBeat(next.beats[0], 0);
   }
   // The neural voice reads the passage in one piece: it sees the commas, questions and
   // exclamations together, so the melody carries across the message and its tempo stays even.
@@ -604,16 +638,6 @@
     const language = settings.lang;
     if (settings.voiceQuality === 'natural') untrack(() => void prepareNatural(language));
   });
-  // Once the voices are ready, the whole story is rendered in the background so each beat can
-  // start speaking at once instead of waiting for its audio.
-  $effect(() => {
-    const next = story;
-    const ready = naturalVoices;
-    const cast = voiceCast;
-    const language = lang;
-    if (!next || !ready) return;
-    untrack(() => void prepareStoryAudio(next, cast, language));
-  });
 
   // Leaving the story (another page, or the tab going away) silences it at once: speech, sound
   // effects still ringing out, and anything queued to follow a right answer.
@@ -651,7 +675,11 @@
   {#if mark}{text.slice(0, mark.start)}<mark class="story-word">{text.slice(mark.start, mark.end)}</mark>{text.slice(mark.end)}{:else}{text}{/if}
 {/snippet}
 
-{#if story}
+{#if story && !audioReady}
+  <StoryAudioLoader {story} label={audioLoadingLabel} progress={audioLoadingPercent / 100} />
+{/if}
+
+{#if story && audioReady}
   <section class="story-view" aria-label={labels.title}>
     {#if speechSupported}<button type="button" class="btn-play btn-play-round story-auto-read" class:btn-play-ink={autoRead} onclick={toggleAutoRead} aria-pressed={autoRead} aria-label={labels.autoRead} title={labels.autoRead}>{#if autoRead}<IconVolume aria-hidden="true" />{:else}<IconVolumeOff aria-hidden="true" />{/if}</button>{/if}
     <header class="story-header" dir={interfaceDirection} lang={settings.interfaceLocale}>

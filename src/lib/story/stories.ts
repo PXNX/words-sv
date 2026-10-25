@@ -4,7 +4,7 @@ import type { SoundEffect } from '#lib/sounds.js';
 import { german, germanStories } from './germanStories';
 
 export type Text = Record<Language, string>;
-export type CharacterId = 'crow' | 'seagull' | 'ludwig' | 'deer' | 'fox' | 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello' | 'lilith' | 'hans' | 'albert' | 'sabine' | 'enzo' | 'jana' | 'becker' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake' | 'ali' | 'robert' | 'fritz' | 'tobias' | 'selma' | 'kumar' | 'simon' | 'banker';
+export type CharacterId = 'crow' | 'seagull' | 'ludwig' | 'deer' | 'fox' | 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello' | 'lilith' | 'hans' | 'albert' | 'sabine' | 'enzo' | 'jana' | 'becker' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake' | 'ali' | 'robert' | 'fritz' | 'tobias' | 'selma' | 'kumar' | 'simon' | 'banker' | 'wirt';
 export type Mood = 'neutral' | 'happy' | 'sad' | 'surprised' | 'curious' | 'angry' | 'worried' | 'laughing' | 'sleepy';
 export type SceneId = 'frankfurt' | 'cologne' | 'munich' | 'hamburg' | 'berlin' | 'cliffs' | 'mainau' | 'lindau' | 'castle' | 'alps' | 'forest' | 'cafe' | 'park' | 'station' | 'home' | 'office' | 'flat' | 'square' | 'attic' | 'beergarden' | 'farm' | 'zoo' | 'butcher' | 'bakery' | 'boutique' | 'perfumery' | 'workshop' | 'beach' | 'airport';
 export type Weather = 'sunny' | 'cloudy' | 'rainy' | 'snowy';
@@ -100,7 +100,8 @@ export const characterNames: Record<CharacterId, Text> = {
   selma: { de: 'Selma', en: 'Selma', fr: 'Selma', it: 'Selma', es: 'Selma', pt: 'Selma', uk: 'Сельма' },
   kumar: { de: 'Kumar', en: 'Kumar', fr: 'Kumar', it: 'Kumar', es: 'Kumar', pt: 'Kumar', uk: 'Кумар' },
   simon: { de: 'Simon', en: 'Simon', fr: 'Simon', it: 'Simon', es: 'Simon', pt: 'Simon', uk: 'Сімон' },
-  banker: { de: 'Herr Bäuerle', en: 'Mr Bäuerle', fr: 'M. Bäuerle', it: 'Sig. Bäuerle', es: 'Sr. Bäuerle', pt: 'Sr. Bäuerle', uk: 'Пан Баєрле' }
+  banker: { de: 'Herr Bäuerle', en: 'Mr Bäuerle', fr: 'M. Bäuerle', it: 'Sig. Bäuerle', es: 'Sr. Bäuerle', pt: 'Sr. Bäuerle', uk: 'Пан Баєрле' },
+  wirt: { de: 'Der Wirt', en: 'The innkeeper', fr: "L'aubergiste", it: "L'oste", es: 'El tabernero', pt: 'O estalajadeiro', uk: 'Шинкар' }
 };
 
 export const stories: Story[] = [
