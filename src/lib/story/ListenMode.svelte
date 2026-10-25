@@ -105,6 +105,13 @@
 
   const dateFormat = $derived(new Intl.DateTimeFormat(settings.interfaceLocale, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }));
   const soundEnabled = $derived(settings.sound);
+  // The audio that fits the current learning language best: this level first, then any level of the
+  // same language. Another language's audio never opens on its own.
+  function latestForLanguage() {
+    return history.find((session) => session.language === settings.lang && session.level === settings.vocabularyLevel)
+      ?? history.find((session) => session.language === settings.lang)
+      ?? visibleHistory[0];
+  }
 
   let audioContextRef: AudioContext | null = null;
 
@@ -615,7 +622,7 @@
     const missing = allStories.filter((story) => !savedKeys.has(storyKey(story)));
     batchTotal = allStories.length;
     if (!missing.length) {
-      const latest = history.find((session) => session.language === settings.lang && session.level === settings.vocabularyLevel) ?? history[0];
+      const latest = latestForLanguage();
       if (latest) { await openSession(latest); return; }
       phase = 'error';
       error = 'No audio is available for this level yet.';
@@ -654,7 +661,7 @@
       }
       progress = 1;
       eta = 0;
-      const latest = history.find((session) => session.language === settings.lang && session.level === settings.vocabularyLevel) ?? history[0];
+      const latest = latestForLanguage();
       if (latest) await openSession(latest);
       else {
         phase = 'error';
