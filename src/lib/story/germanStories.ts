@@ -1603,5 +1603,121 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was ist teurer geworden?'), options: [german('Das Heizen'), german('Das Fernsehen'), german('Der Park')] },
       { kind: 'question', prompt: german('Wie wird das Wetter morgen?'), options: [german('Sonnig'), german('Regnerisch'), german('Schneit es')] }
     ]
+  },
+  {
+    id: 'a1-restaurant',
+    level: 'a1',
+    scene: 'cafe',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Im Restaurant'),
+    beats: [
+      { kind: 'narration', text: german('Mia und Tom sind im Restaurant. Es ist zwölf Uhr mittags.') },
+      { kind: 'line', speaker: 'mia', text: german('Ich hätte gern ein Glas Wasser, bitte.') },
+      { kind: 'line', speaker: 'tom', text: german('Gern. Und ich nehme ein Bier.') },
+      { kind: 'line', speaker: 'mia', text: german('Was essen wir? Die Speisekarte ist groß.') },
+      { kind: 'line', speaker: 'tom', text: german('Ich nehme die Suppe und dann das Fleisch mit Kartoffeln.') },
+      { kind: 'line', speaker: 'mia', text: german('Ich nehme den Salat. Und einen Kaffee danach.') },
+      { kind: 'line', speaker: 'tom', text: german('Hallo {name}! Was möchtest du essen?') },
+      { kind: 'reply', to: 'tom', options: [
+        german('Ich nehme die Pizza.'),
+        german('Ich esse ein Auto.'),
+        german('Ich trinke den Teller.')
+      ] },
+      { kind: 'line', speaker: 'mia', text: german('Der Kellner kommt. Wir können bestellen.') },
+      { kind: 'narration', text: german('Der Kellner nimmt die Bestellung auf und bringt die Getränke.') },
+      { kind: 'line', speaker: 'tom', text: german('Das Essen schmeckt sehr gut. Danke!') },
+      { kind: 'line', speaker: 'mia', text: german('Die Rechnung, bitte. Wie viel kostet alles?') },
+      { kind: 'line', speaker: 'tom', text: german('Zwölf Euro achtzig. Wir bezahlen zusammen.') },
+      { kind: 'question', prompt: german('Wo sind Mia und Tom?'), options: [german('Im Restaurant'), german('Im Kino'), german('Im Park')] },
+      { kind: 'question', prompt: german('Was isst Tom?'), options: [german('Suppe und Fleisch mit Kartoffeln'), german('Salat und Kaffee'), german('Pizza und Bier')] },
+      { kind: 'question', prompt: german('Was trinkt Mia?'), options: [german('Ein Glas Wasser'), german('Ein Bier'), german('Ein Tee')] },
+      { kind: 'question', prompt: german('Was kostet alles zusammen?'), options: [german('Zwölf Euro achtzig'), german('Zwanzig Euro'), german('Fünf Euro')] }
+    ]
+  },
+  {
+    id: 'a1-supermarket',
+    level: 'a1',
+    scene: 'home',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Im Supermarkt'),
+    beats: [
+      { kind: 'narration', text: german('Mia und Tom sind im Supermarkt. Sie kaufen Lebensmittel.') },
+      { kind: 'line', speaker: 'mia', text: german('Wir brauchen Brot, Milch und Eier.') },
+      { kind: 'line', speaker: 'tom', text: german('Und Käse, Butter und ein Apfel.') },
+      { kind: 'line', speaker: 'mia', text: german('Noch etwas Obst? Ich nehme Bananen und Tomaten.') },
+      { kind: 'line', speaker: 'tom', text: german('Gut. Und Salz, Zucker und Mehl für den Kuchen.') },
+      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Hilfst du uns beim Einkaufen?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Ja, gern! Was brauchen wir noch?'),
+        german('Ich kaufe ein Auto.'),
+        german('Ich esse den ganzen Käse.')
+      ] },
+      { kind: 'line', speaker: 'tom', text: german('Jetzt gehen wir zur Kasse.') },
+      { kind: 'narration', text: german('An der Kasse bezahlt Mia. Das Geld reicht.') },
+      { kind: 'line', speaker: 'mia', text: german('Das macht fünfzehn Euro vierzig.') },
+      { kind: 'line', speaker: 'tom', text: german('Hier, bitte. Einen schönen Tag noch!') },
+      { kind: 'question', prompt: german('Wo sind Mia und Tom?'), options: [german('Im Supermarkt'), german('Im Schwimmbad'), german('In der Schule')] },
+      { kind: 'question', prompt: german('Was kaufen sie nicht?'), options: [german('Ein Auto'), german('Brot'), german('Milch')] },
+      { kind: 'question', prompt: german('Was bezahlt Mia an der Kasse?'), options: [german('Lebensmittel'), german('Kleidung'), german('Ein Buch')] },
+      { kind: 'question', prompt: german('Was kosten die Sachen zusammen?'), options: [german('Fünfzehn Euro vierzig'), german('Zwanzig Euro'), german('Fünf Euro')] }
+    ]
+  },
+  {
+    id: 'a1-doctor',
+    level: 'a1',
+    scene: 'home',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Beim Arzt'),
+    beats: [
+      { kind: 'narration', text: german('Tom ist krank. Er hat Fieber und Kopfschmerzen.') },
+      { kind: 'line', speaker: 'tom', text: german('Mia, ich fühle mich nicht gut. Mein Bauch tut weh.') },
+      { kind: 'line', speaker: 'mia', text: german('Dann gehen wir zum Arzt. Ich rufe an und mache einen Termin.') },
+      { kind: 'narration', text: german('In der Praxis wartet Tom im Wartezimmer.') },
+      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Tom wartet auf den Arzt.') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Gute Besserung, Tom!'),
+        german('Ich bin der Arzt.'),
+        german('Ich gehe jetzt schwimmen.')
+      ] },
+      { kind: 'narration', text: german('Der Arzt untersucht Tom. Er sagt: Alles wird gut.') },
+      { kind: 'line', speaker: 'tom', text: german('Ich muss Medikamente nehmen und viel schlafen.') },
+      { kind: 'line', speaker: 'mia', text: german('Die Apotheke ist direkt neben der Praxis.') },
+      { kind: 'narration', text: german('Tom kauft die Medikamente und geht nach Hause.') },
+      { kind: 'line', speaker: 'tom', text: german('Morgen gehe ich wieder zur Arbeit.') },
+      { kind: 'question', prompt: german('Warum geht Tom zum Arzt?'), options: [german('Er ist krank und hat Fieber'), german('Er möchte einen Termin machen'), german('Er will Medikamente kaufen')] },
+      { kind: 'question', prompt: german('Was tut weh?'), options: [german('Sein Bauch'), german('Sein Arm'), german('Sein Bein')] },
+      { kind: 'question', prompt: german('Wo wartet Tom?'), options: [german('Im Wartezimmer'), german('In der Küche'), german('Im Bett')] },
+      { kind: 'question', prompt: german('Wo liegt die Apotheke?'), options: [german('Neben der Praxis'), german('Im Supermarkt'), german('Im Park')] }
+    ]
+  },
+  {
+    id: 'a1-hotel',
+    level: 'a1',
+    scene: 'home',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Im Hotel'),
+    beats: [
+      { kind: 'narration', text: german('Mia und Tom kommen im Hotel an. Sie haben ein Zimmer reserviert.') },
+      { kind: 'line', speaker: 'mia', text: german('Guten Tag! Wir haben ein Zimmer für zwei Nächte.') },
+      { kind: 'line', speaker: 'tom', text: german('Mein Name ist Tom. Und das ist Mia.') },
+      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Hast du auch einen Ausweis dabei?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Ja, meinen Personalausweis.'),
+        german('Nein, ich habe meinen Hund dabei.'),
+        german('Ich wohne schon hier.')
+      ] },
+      { kind: 'narration', text: german('Der Rezeptionist gibt Mia den Schlüssel für Zimmer zehn.') },
+      { kind: 'line', speaker: 'tom', text: german('Das Frühstück ist von sieben bis zehn Uhr.') },
+      { kind: 'line', speaker: 'mia', text: german('Der Aufzug ist rechts. Wir können unser Gepäck hochbringen.') },
+      { kind: 'line', speaker: 'tom', text: german('Morgen schauen wir uns die Stadt an.') },
+      { kind: 'question', prompt: german('Wo sind Mia und Tom?'), options: [german('Im Hotel'), german('Im Bahnhof'), german('Im Supermarkt')] },
+      { kind: 'question', prompt: german('Welche Nummer hat ihr Zimmer?'), options: [german('Zimmer zehn'), german('Zimmer eins'), german('Zimmer hundert')] },
+      { kind: 'question', prompt: german('Wann gibt es Frühstück?'), options: [german('Von sieben bis zehn Uhr'), german('Nur am Abend'), german('Um Mitternacht')] },
+      { kind: 'question', prompt: german('Wo ist der Aufzug?'), options: [german('Rechts'), german('Links'), german('Im Garten')] }
+    ]
   }
 ];
