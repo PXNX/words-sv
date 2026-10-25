@@ -176,5 +176,7 @@
   "dialects_hint": "Personagens com dialeto falam com sotaque regional. Desative para que falem alemão padrão.",
   "voice_quality_loading": "Baixando vozes … {percent} %",
   "voice_quality_remaining": "Cerca de {time} restante",
-  "voice_quality_failed": "Não foi possível carregar as vozes naturais, então as vozes padrão serão usadas."
+  "voice_quality_failed": "Não foi possível carregar as vozes naturais, então as vozes padrão serão usadas.",
+  "stories_group": "Histórias",
+  "stories_group_hint": "Vozes, ritmo e dialetos para as histórias e a escuta."
 }

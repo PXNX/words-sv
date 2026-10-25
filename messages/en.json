@@ -180,5 +180,7 @@
   "dialects_hint": "Dialect characters speak with a regional accent. Turn this off to let them speak standard German.",
   "voice_quality_loading": "Downloading voices … {percent} %",
   "voice_quality_remaining": "About {time} left",
-  "voice_quality_failed": "The natural voices could not be loaded, so the standard voices are used."
+  "voice_quality_failed": "The natural voices could not be loaded, so the standard voices are used.",
+  "stories_group": "Stories",
+  "stories_group_hint": "Voices, pace and dialects for stories and listening practice."
 }
