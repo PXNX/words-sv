@@ -881,10 +881,9 @@
         <div class="listen-generating-content">
           <span class="listen-walk" aria-hidden="true"><span class="listen-walker"><StoryCharacter id="lilith" mood="happy" /></span></span>
           <p class="listen-current" lang={settings.lang}>{generatingTitle || labels.audio}</p>
-          <p>{labels.audio} · {Math.round(progress * 100)} %</p>
+          <p class="listen-audio-dot">Audio {batchIndex} of {batchTotal} · {Math.round(progress * 100)}%</p>
           <div class="listen-bar"><span style={`width:${progress * 100}%`}></span></div>
           <div class="listen-eta">
-            <small>Audio {batchIndex} of {batchTotal}</small>
             {#if eta !== null && eta >= 1}<small>{m.voice_quality_remaining({ time: formatTime(eta) }, { locale: settings.interfaceLocale })}</small>{/if}
           </div>
           <small class="listen-part">Part {done} of {total}</small>
@@ -902,26 +901,28 @@
         <button type="button" class="btn-play btn-play-ink btn-play-sm" onclick={startSession}>{labels.again}</button>
       </div>
     {:else if phase === 'ready'}
-      <div class="listen-player">
-        <span class="listen-art" class:has-scene={currentScene} class:playing aria-hidden="true">
-          {#if currentScene}
-            <span class="listen-art-bg"><StoryScene scene={currentScene} weather={currentWeather} /></span>
-          {/if}
-          <span class="listen-wave">{#each [0, 1, 2, 3, 4] as bar (bar)}<span style={`--bar:${bar}`}></span>{/each}</span>
-        </span>
-        <div class="listen-now">
-          <p lang={settings.lang}>{currentStory}</p>
-          <small>{#if storyCount > 1}{storyCount} · {/if}{formatTime(duration)}</small>
+<div class="listen-player">
+          <div class="listen-player-row">
+            <span class="listen-art" class:has-scene={currentScene} class:playing aria-hidden="true">
+              {#if currentScene}
+                <span class="listen-art-bg"><StoryScene scene={currentScene} weather={currentWeather} /></span>
+              {/if}
+              <span class="listen-wave">{#each [0, 1, 2, 3, 4] as bar (bar)}<span style={`--bar:${bar}`}></span>{/each}</span>
+            </span>
+            <div class="listen-now">
+              <p lang={settings.lang}>{currentStory}</p>
+              <small class="listen-audio-dot">{#if storyCount > 1}{storyCount} · {/if}Audio 1 of 1 · 100%</small>
+            </div>
+          </div>
+          <input class="listen-seek" type="range" min="0" max={duration} step="0.1" value={position} oninput={seek} aria-label={labels.listen} />
+          <div class="listen-time"><span>{formatTime(position)}</span><span>{formatTime(duration)}</span></div>
+          <div class="listen-controls">
+            <button type="button" class="listen-control" onclick={prevTrack} aria-label="Previous" title="Previous"><IconRewind aria-hidden="true" /></button>
+            <button type="button" class="listen-control listen-control-main" onclick={togglePlay} aria-label={playing ? 'Pause' : labels.play} title={playing ? 'Pause' : labels.play}>{#if playing}<IconPause aria-hidden="true" />{:else}<IconPlay aria-hidden="true" />{/if}</button>
+            <button type="button" class="listen-control" onclick={() => skip(15)} aria-label="Forward 15 seconds" title="Forward 15 seconds"><IconForward aria-hidden="true" /></button>
+          </div>
+          <button type="button" class="btn-play btn-play-sm listen-new" onclick={startSession}>{labels.newAudio}</button>
         </div>
-        <input class="listen-seek" type="range" min="0" max={duration} step="0.1" value={position} oninput={seek} aria-label={labels.listen} />
-        <div class="listen-time"><span>{formatTime(position)}</span><span>{formatTime(duration)}</span></div>
-        <div class="listen-controls">
-          <button type="button" class="listen-control" onclick={prevTrack} aria-label="Previous" title="Previous"><IconRewind aria-hidden="true" /></button>
-          <button type="button" class="listen-control listen-control-main" onclick={togglePlay} aria-label={playing ? 'Pause' : labels.play} title={playing ? 'Pause' : labels.play}>{#if playing}<IconPause aria-hidden="true" />{:else}<IconPlay aria-hidden="true" />{/if}</button>
-          <button type="button" class="listen-control" onclick={() => skip(15)} aria-label="Forward 15 seconds" title="Forward 15 seconds"><IconForward aria-hidden="true" /></button>
-        </div>
-        <button type="button" class="btn-play btn-play-sm listen-new" onclick={startSession}>{labels.newAudio}</button>
-      </div>
     {:else}
       <div class="listen-state" aria-live="polite">
         <span class="listen-pulse" aria-hidden="true"><IconHeadphones /></span>
@@ -999,8 +1000,10 @@
   .listen-walker :global(.story-character) { display:block;width:100%;height:100%;transform-origin:50% 100%;animation:listen-bob .34s ease-in-out infinite alternate; }
   .listen-eta { display:flex;justify-content:space-between;gap:.5rem;width:min(100%,16rem); }
   .listen-player { gap:.55rem; }
-  .listen-now { display:grid;gap:.15rem;justify-items:center; }
+  .listen-player-row { display:flex;align-items:center;gap:1rem; }
+  .listen-now { display:grid;gap:.15rem;justify-items:flex-start; }
   .listen-now p { font-family:'DM Serif Display',serif;font-size:1.25rem;font-weight:400; }
+  .listen-now .listen-audio-dot { color:#596477;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:800; }
   .listen-wave { position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:center;gap:.18rem;width:2.25rem;height:1.9rem;padding:.4rem .45rem;border-radius:999px;background:rgba(255,253,247,.86); }
   .listen-wave span { width:.24rem;height:100%;border-radius:999px;background:#a45e38;transform:scaleY(.32);transform-origin:bottom;animation:listen-level 1s ease-in-out infinite alternate;animation-delay:calc(var(--bar) * -.17s);animation-play-state:paused; }
   .listen-wave span:nth-child(2) { height:74%; }
