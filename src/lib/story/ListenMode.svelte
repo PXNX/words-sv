@@ -25,7 +25,6 @@
   const STORY_GAP = 1.4;
   const QUESTION_WORD_LIMIT = 170;
   const QUESTION_COUNT = 5;
-  const SOUND_LEAD_MAX = 1.2;
   const levelRates: Record<string, number> = { a1: 0.9, a2: 0.95, b1: 1.03, b2: 1.07, c1: 1.11, c2: 1.15 };
   const naturalLevelPace: Record<string, number> = { a1: 0.9, a2: 0.95, b1: 1, b2: 1, c1: 1, c2: 1 };
   const speechLocales: Record<string, string> = { de: 'de-DE', en: 'en-GB', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', pt: 'pt-BR', uk: 'uk-UA' };
@@ -204,8 +203,9 @@
       position = begin;
       if (segment.sound) {
         if (index !== startIndex || begin <= segmentStart + 0.15) playSfx(segment.sound);
-        if (segment.soundLead > 0) {
-          await wait(segment.soundLead * 1000);
+        const remaining = Math.max(0, segmentStart + segment.soundLead - begin);
+        if (remaining > 0) {
+          await wait(remaining * 1000);
           if (token !== liveToken) return;
           position = Math.max(begin, segmentStart + segment.soundLead);
         }
@@ -318,7 +318,7 @@
     }
     return notes.join(' ');
   }
-  function segmentsForStory(story: Story): Segment[] {
+  function segmentsForStory(story: Story, withSoundLead = true): Segment[] {
     const segments: Segment[] = [];
     const title = `${say(story.title[settings.lang])}.`;
     const dialect = dialectIntroduction(story);
@@ -342,7 +342,7 @@
         gap: beatGap(text),
         story: 0,
         sound,
-        soundLead: sound ? Math.min(SOUND_LEAD_MAX, soundEffectSeconds[sound]) : 0
+        soundLead: sound && withSoundLead ? soundEffectSeconds[sound] : 0
       });
     }
     const last = segments.at(-1);
@@ -369,7 +369,7 @@
     const raw = pickStory();
     if (!raw) return null;
     const story = withWeather(withDetails(raw));
-    const segments = segmentsForStory(story);
+    const segments = segmentsForStory(story, settings.sound);
     if (wordCount(raw) < QUESTION_WORD_LIMIT) segments.push(...questionSegments(story));
     const starts: number[] = [];
     const timedSounds: SavedSound[] = [];
@@ -496,6 +496,7 @@
     total = segments.length;
     const clips: NaturalClip[] = [];
     const gaps: number[] = [];
+    const leads: number[] = [];
     const timedSounds: SavedSound[] = [];
     const rate = (levelRates[settings.vocabularyLevel] ?? 1) * (naturalLevelPace[settings.vocabularyLevel] ?? 1);
     const startedAt = performance.now();
@@ -508,13 +509,14 @@
         if (token !== generation) return;
         clips.push(clip);
         gaps.push(segment.gap);
-        at += clip.buffer.duration / clip.playbackRate + segment.gap;
+        leads.push(segment.soundLead);
+        at += segment.soundLead + clip.buffer.duration / clip.playbackRate + segment.gap;
         done = index + 1;
         progress = done / total;
         const elapsed = (performance.now() - startedAt) / 1000;
         eta = progress > 0 ? Math.max(0, elapsed / progress - elapsed) : null;
       }
-      const buffer = await combineNatural(clips, gaps);
+      const buffer = await combineNatural(clips, gaps, leads);
       if (token !== generation) return;
       eta = 0;
       const blob = wavBlob(buffer);

@@ -251,15 +251,16 @@ async function synthesizeChunk(text: string, speaker: Speaker, mood: Mood, cast:
   return { buffer, playbackRate, volume: Math.min(1, profile.volume * shape.volume) };
 }
 
-/** Renders clips one after another into a single buffer, with a silence after each. */
-export async function combineNatural(clips: NaturalClip[], gaps: number[]): Promise<AudioBuffer> {
+/** Renders clips one after another into a single buffer, with optional silence before and after each. */
+export async function combineNatural(clips: NaturalClip[], gaps: number[], leads: number[] = []): Promise<AudioBuffer> {
   if (!clips.length) throw new Error('no clips');
   const sampleRate = clips[0].buffer.sampleRate;
   const durations = clips.map((clip) => clip.buffer.duration / clip.playbackRate);
-  const total = durations.reduce((sum, duration, index) => sum + duration + (gaps[index] ?? 0), 0);
+  const total = durations.reduce((sum, duration, index) => sum + (leads[index] ?? 0) + duration + (gaps[index] ?? 0), 0);
   const offline = new OfflineAudioContext(1, Math.max(1, Math.ceil(total * sampleRate)), sampleRate);
   let at = 0;
   clips.forEach((clip, index) => {
+    at += leads[index] ?? 0;
     const source = offline.createBufferSource();
     const gain = offline.createGain();
     source.buffer = clip.buffer;

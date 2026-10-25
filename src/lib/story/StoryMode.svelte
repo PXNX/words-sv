@@ -92,6 +92,7 @@
   let pettedTimer = 0;
   // Bumped whenever speech is cancelled or replaced, so a running performance knows to stop.
   let performing = 0;
+  let effectUntil = 0;
   // Chrome drops utterances that are garbage-collected mid-speech, before their end event fires.
   let liveUtterances: SpeechSynthesisUtterance[] = [];
   // Set once the learner leaves the story, so nothing still pending starts speaking or playing sounds.
@@ -178,6 +179,16 @@
   function wait(ms: number) {
     return new Promise<void>((resolve) => setTimeout(resolve, ms));
   }
+  function playCue(effect: SoundEffect | null) {
+    if (!effect || !settings.sound) return;
+    playSoundEffect(true, effect);
+    effectUntil = Math.max(effectUntil, performance.now() + soundEffectSeconds[effect] * 1000);
+  }
+  async function waitForCue() {
+    const remaining = effectUntil - performance.now();
+    effectUntil = 0;
+    if (remaining > 0) await wait(remaining);
+  }
   function shuffledOrder(length: number) {
     const order = Array.from({ length }, (_, index) => index);
     for (let index = order.length - 1; index > 0; index -= 1) {
@@ -241,7 +252,7 @@
       void perform(beat.word, beat.speaker, index, moodFor(beat), sound);
       return;
     }
-    if (sound) playSoundEffect(settings.sound, sound);
+    if (sound) playCue(sound);
     if (beat.kind === 'line') mime(index, beat.text[lang]);
   }
   function mime(index: number, text: string) {
@@ -289,7 +300,8 @@
     heartsTimer = window.setTimeout(() => (heartsShown = false), 2200);
   }
   function petLilith() {
-    playSoundEffect(settings.sound, 'purr');
+    if (settings.sound) cancelSpeech();
+    playCue('purr');
     petted = true;
     burstHearts();
     clearTimeout(pettedTimer);
@@ -332,6 +344,7 @@
     if (option === 0) {
       if (beat.focus && !wrong[currentIndex]?.length) clearMissedWord(lang, beat.focus);
       solved = { ...solved, [currentIndex]: true };
+      if (settings.sound) cancelSpeech();
       playSuccessSound(settings.sound, 'vocab');
       if (revealed === story.beats.length && !story.generated) markCompleted(story.id);
       void continueAfter(beat);
@@ -339,6 +352,7 @@
     }
     if (beat.focus) recordMissedWord(lang, beat.focus);
     wrong = { ...wrong, [currentIndex]: [...(wrong[currentIndex] ?? []), option] };
+    if (settings.sound) cancelSpeech();
     playErrorSound(settings.sound, 'vocab');
     if (settings.vibration && 'vibrate' in navigator) navigator.vibrate(60);
   }
@@ -364,11 +378,13 @@
     marks.clear();
     silenceVoices();
     silenceCrackle();
+    await waitForCue();
+    if (token !== performing) return;
     const parts = splitSounds(text, lang);
     if (startSound && !parts.some((part) => part.kind === 'sound')) {
-      playSoundEffect(settings.sound, startSound);
       // The cue gets the stage to itself: the voice starts only once the effect has rung out.
-      if (settings.sound) await wait(soundEffectSeconds[startSound] * 1000);
+      playCue(startSound);
+      await waitForCue();
       if (token !== performing) return;
     }
     if (speaker === 'narrator') lipSync.stop();
@@ -381,9 +397,9 @@
         cursor = at + part.text.length;
         await speakSentences(part.text, speaker, mood, token, noisy, shown && beat !== null ? { beat, at } : null);
       } else if (slotSound && settings.sound) {
-        playSoundEffect(true, slotSound);
+        playCue(slotSound);
         if (speaker !== 'narrator') lipSync.pulse(Math.min(soundEffectSeconds[slotSound], 0.9));
-        await wait(soundEffectSeconds[slotSound] * 1000);
+        await waitForCue();
       } else {
         await wait(250);
       }
@@ -408,12 +424,14 @@
     silenceVoices();
     silenceCrackle();
     lipSync.stop();
+    await waitForCue();
+    if (token !== performing) return;
     const intro = quote[1].replace(/[\s:,–—-]+$/u, '');
     if (/\p{L}/u.test(intro)) await speakSentences(intro, 'narrator', 'neutral', token, false, shown ? { beat, at: 0 } : null);
     if (token !== performing) return;
     marks.clear();
-    playSoundEffect(settings.sound, 'gong');
-    if (settings.sound) await wait(soundEffectSeconds.gong * 1000);
+    playCue('gong');
+    await waitForCue();
     if (token !== performing) return;
     crackle = startCrackle(settings.sound);
     await speakSentences(quote[2], 'narrator', 'neutral', token, false, shown ? { beat, at: text.indexOf(quote[2], quote[1].length) } : null);
