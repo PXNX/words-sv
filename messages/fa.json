@@ -220,5 +220,12 @@
   "story_loader_questions": "{count} ????",
   "story_loader_cast": "?? {names}",
   "story_loader_voice": "???: {voice}",
-  "story_loader_voices": "????? ??????? ??????? ?"
+  "story_loader_voices": "????? ??????? ??????? ?",
+  "streak_goal_hint": "انتخاب کنید چند واژه یک روز یادگیری را می‌سازد.",
+  "streak_goal_words": "{count} واژه",
+  "streak_counts_today": "برای امروز حساب می‌شود",
+  "streak_mode_done": "امروز انجام شد",
+  "streak_grammar_progress": "دستور زبان: {done}/{goal}",
+  "streak_pronunciation_progress": "تلفظ: {done}/{goal}",
+  "streak_goal_choose": "انتخاب هدف روزانه"
 }

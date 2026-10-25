@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createRemindersEndpoint, cronAuthorized } from '../api/cron/reminders.mjs';
-import { applyStreakEvent, reminderTypes, streakSummary, VOCABULARY_GOAL } from '../api/_lib/streak.mjs';
+import { applyStreakEvent, reminderTypes, streakSummary, GRAMMAR_GOAL, PRONUNCIATION_GOAL, VOCABULARY_GOAL } from '../api/_lib/streak.mjs';
 
 function responseCapture() {
 	const result = { statusCode: 200, body: null };
@@ -23,7 +23,51 @@ test('Circle or Wordle completion qualifies a day without eight vocabulary answe
 	assert.equal(applyStreakEvent(base, 'UTC', 'wordle_completed', new Date('2026-08-26T12:00:00Z')).qualified, true);
 });
 
-test('a missed day breaks the displayed streak and a later qualification restarts it', () => {
+test('reading, story and listening sessions qualify a day', () => {
+	const base = { day_key: '2026-08-26', streak_count: 0, last_qualified_day: null };
+	for (const event of ['reading_completed', 'story_completed', 'listen_completed']) {
+		const state = applyStreakEvent(base, 'UTC', event, new Date('2026-08-26T12:00:00Z'));
+		assert.equal(state.qualified, true, event);
+		assert.equal(state.streakCount, 1, event);
+	}
+});
+
+test('grammar qualifies at five correct answers and pronunciation at ten attempts', () => {
+	/** @type {any} */
+	const base = { day_key: '2026-08-26', streak_count: 0, last_qualified_day: null };
+	/** @type {any} */
+	let grammar = base;
+	for (let index = 0; index < GRAMMAR_GOAL - 1; index += 1) grammar = applyStreakEvent(grammar, 'UTC', 'grammar_correct', new Date('2026-08-26T12:00:00Z'));
+	assert.equal(grammar.qualified, false);
+	grammar = applyStreakEvent(grammar, 'UTC', 'grammar_correct', new Date('2026-08-26T12:00:00Z'));
+	assert.equal(grammar.qualified, true);
+
+	let pronunciation = base;
+	for (let index = 0; index < PRONUNCIATION_GOAL - 1; index += 1) pronunciation = applyStreakEvent(pronunciation, 'UTC', 'pronunciation_practised', new Date('2026-08-26T12:00:00Z'));
+	assert.equal(pronunciation.qualified, false);
+	pronunciation = applyStreakEvent(pronunciation, 'UTC', 'pronunciation_practised', new Date('2026-08-26T12:00:00Z'));
+	assert.equal(pronunciation.qualified, true);
+});
+
+test('a selected daily goal of five words qualifies with five correct answers', () => {
+	/** @type {any} */
+	let state = { day_key: '2026-08-26', streak_count: 0, last_qualified_day: null, vocabulary_goal: 5 };
+	for (let index = 0; index < 5; index += 1) state = applyStreakEvent(state, 'UTC', 'vocab_correct', new Date('2026-08-26T12:00:00Z'));
+	assert.equal(state.qualified, true);
+	assert.equal(state.vocabularyGoal, 5);
+});
+
+test('an earned freeze bridges one missed day instead of resetting the streak', () => {
+	const stored = { day_key: '2026-08-24', vocab_correct: 8, current_qualified: 1, streak_count: 12, best_streak: 12, last_qualified_day: '2026-08-24', freezes: 1 };
+	const summary = streakSummary(stored, 'UTC', new Date('2026-08-26T12:00:00Z'));
+	assert.equal(summary.streakCount, 12);
+	assert.equal(summary.freezes, 0);
+	const restarted = applyStreakEvent(stored, 'UTC', 'reading_completed', new Date('2026-08-26T12:00:00Z'));
+	assert.equal(restarted.streakCount, 13);
+	assert.equal(restarted.lastQualifiedDay, '2026-08-26');
+});
+
+test('a missed day without a freeze breaks the displayed streak and a later qualification restarts it', () => {
 	const stored = { day_key: '2026-08-23', vocab_correct: 8, current_qualified: 1, streak_count: 9, last_qualified_day: '2026-08-23' };
 	const summary = streakSummary(stored, 'UTC', new Date('2026-08-26T12:00:00Z'));
 	assert.equal(summary.streakCount, 0);

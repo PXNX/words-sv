@@ -1,6 +1,6 @@
 import { requiresCumulativePool } from '#lib/circle/engine.js';
 import { wordPools, isLanguage, isVocabularyLevel, type Language, type VocabularyLevel } from '#lib/data/vocabulary.js';
-import { readStreak, syncStreak, type ClientStreak, type StreakEvent } from '#lib/clientStreak.js';
+import { normalizeVocabularyGoal, dateKey, readStreak, syncStreak, syncStreakGoal, type ClientStreak, type StreakEvent } from '#lib/clientStreak.js';
 import type { Locale } from '#lib/paraglide/runtime.js';
 
 export type Theme = 'light' | 'dark';
@@ -170,7 +170,22 @@ class SettingsStore {
     localStorage.setItem(ROUND_TOTAL_KEY, String(this.completedRounds));
   }
   async recordStreak(event: Exclude<StreakEvent, 'sync'>) {
+    // Boolean modes only need one request per day; counters always add to today's total.
+    if (this.streak.dateKey === dateKey() && (
+      (event === 'circle_completed' && this.streak.circleCompleted) ||
+      (event === 'wordle_completed' && this.streak.wordleCompleted) ||
+      (event === 'reading_completed' && this.streak.readingCompleted) ||
+      (event === 'story_completed' && this.streak.storyCompleted) ||
+      (event === 'listen_completed' && this.streak.listenCompleted)
+    )) return;
     this.streak = await syncStreak(event, this.streak);
+  }
+  // The goal lives in the streak state, so it travels with the snapshot and survives a reload.
+  dailyGoal() {
+    return normalizeVocabularyGoal(this.streak.vocabularyGoal);
+  }
+  async setDailyGoal(goal: number) {
+    this.streak = await syncStreakGoal(normalizeVocabularyGoal(goal), this.streak);
   }
   async refreshStreak() {
     this.streak = readStreak();

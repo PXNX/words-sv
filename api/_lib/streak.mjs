@@ -1,4 +1,15 @@
 export const VOCABULARY_GOAL = 8;
+export const GRAMMAR_GOAL = 5;
+export const PRONUNCIATION_GOAL = 10;
+export const FREEZE_EVERY = 7;
+export const MAX_FREEZES = 2;
+export const DAILY_GOALS = [5, 8, 12];
+
+/** @param {unknown} value */
+export function normalizeVocabularyGoal(value) {
+	const numeric = Number(value);
+	return DAILY_GOALS.includes(numeric) ? numeric : VOCABULARY_GOAL;
+}
 
 export function isSupportedTimeZone(timeZone) {
 	try {
@@ -21,6 +32,20 @@ export function previousDateKey(dateKey) {
 	return date.toISOString().slice(0, 10);
 }
 
+/** @param {string} earlier
+ * @param {string} later */
+function daysBetween(earlier, later) {
+	const start = Date.parse(`${earlier}T12:00:00.000Z`);
+	const end = Date.parse(`${later}T12:00:00.000Z`);
+	return Math.round((end - start) / (24 * 60 * 60 * 1000));
+}
+
+/** @param {unknown} value @param {number} [fallback] */
+function numberField(value, fallback = 0) {
+	const number = Number(value);
+	return Number.isSafeInteger(number) && number >= 0 ? number : fallback;
+}
+
 export function minutesUntilNextLocalDate(timeZone, now = new Date()) {
 	const currentKey = dateKeyFor(timeZone, now);
 	const start = now.getTime();
@@ -40,17 +65,80 @@ export function stateForToday(stored, timeZone, now = new Date()) {
 	const today = dateKeyFor(timeZone, now);
 	const previousDay = previousDateKey(today);
 	const storedDayKey = stored?.day_key ?? stored?.dateKey;
-	const vocabCorrect = Number(stored?.vocab_correct ?? stored?.vocabCorrect) || 0;
-	const circleCompleted = Boolean(stored?.circle_completed ?? stored?.circleCompleted);
-	const wordleCompleted = Boolean(stored?.wordle_completed ?? stored?.wordleCompleted);
-	const qualified = Boolean(stored?.current_qualified ?? stored?.qualified);
-	const storedCount = Number(stored?.streak_count ?? stored?.streakCount) || 0;
-	const lastQualifiedDay = stored?.last_qualified_day ?? stored?.lastQualifiedDay ?? null;
+	const vocabularyGoal = normalizeVocabularyGoal(stored?.vocabulary_goal ?? stored?.vocabularyGoal);
 	if (storedDayKey === today) {
-		return { dateKey: today, vocabCorrect, circleCompleted, wordleCompleted, qualified, streakCount: storedCount, lastQualifiedDay };
+		return {
+			dateKey: today,
+			vocabCorrect: numberField(stored?.vocab_correct ?? stored?.vocabCorrect),
+			circleCompleted: Boolean(stored?.circle_completed ?? stored?.circleCompleted),
+			wordleCompleted: Boolean(stored?.wordle_completed ?? stored?.wordleCompleted),
+			readingCompleted: Boolean(stored?.reading_completed ?? stored?.readingCompleted),
+			storyCompleted: Boolean(stored?.story_completed ?? stored?.storyCompleted),
+			grammarCorrect: numberField(stored?.grammar_correct ?? stored?.grammarCorrect),
+			listenCompleted: Boolean(stored?.listen_completed ?? stored?.listenCompleted),
+			pronunciationAttempts: numberField(stored?.pronunciation_attempts ?? stored?.pronunciationAttempts),
+			qualified: Boolean(stored?.current_qualified ?? stored?.qualified),
+			streakCount: numberField(stored?.streak_count ?? stored?.streakCount),
+			lastQualifiedDay: stored?.last_qualified_day ?? stored?.lastQualifiedDay ?? null,
+			vocabularyGoal,
+			freezes: Math.min(MAX_FREEZES, numberField(stored?.freezes)),
+			qualifiedDays: numberField(stored?.qualified_days ?? stored?.qualifiedDays)
+		};
 	}
-	const streakCount = lastQualifiedDay && lastQualifiedDay < previousDay ? 0 : storedCount;
-	return { dateKey: today, vocabCorrect: 0, circleCompleted: false, wordleCompleted: false, qualified: false, streakCount, lastQualifiedDay };
+	let lastQualifiedDay = stored?.last_qualified_day ?? stored?.lastQualifiedDay ?? null;
+	let freezes = Math.min(MAX_FREEZES, numberField(stored?.freezes));
+	if (lastQualifiedDay && lastQualifiedDay < previousDay && daysBetween(lastQualifiedDay, previousDay) === 1 && freezes > 0) {
+		freezes -= 1;
+		lastQualifiedDay = previousDay;
+	}
+	const streakCount = lastQualifiedDay && lastQualifiedDay >= previousDay ? numberField(stored?.streak_count ?? stored?.streakCount) : 0;
+	return {
+		dateKey: today,
+		vocabCorrect: 0,
+		circleCompleted: false,
+		wordleCompleted: false,
+		readingCompleted: false,
+		storyCompleted: false,
+		grammarCorrect: 0,
+		listenCompleted: false,
+		pronunciationAttempts: 0,
+		qualified: false,
+		streakCount,
+		lastQualifiedDay,
+		vocabularyGoal,
+		freezes,
+		qualifiedDays: numberField(stored?.qualified_days ?? stored?.qualifiedDays)
+	};
+}
+
+/** @param {any} state */
+export function qualifiesToday(state) {
+	return (
+		state.vocabCorrect >= state.vocabularyGoal ||
+		state.circleCompleted ||
+		state.wordleCompleted ||
+		state.readingCompleted ||
+		state.storyCompleted ||
+		state.grammarCorrect >= GRAMMAR_GOAL ||
+		state.listenCompleted ||
+		state.pronunciationAttempts >= PRONUNCIATION_GOAL
+	);
+}
+
+/** @param {any} state */
+function settleQualification(state) {
+	const qualifies = qualifiesToday(state) || state.qualified;
+	const next = { ...state, qualified: qualifies };
+	if (!qualifies || state.qualified) {
+		if (next.streakCount > next.bestStreak) next.bestStreak = next.streakCount;
+		return next;
+	}
+	next.qualifiedDays = state.qualifiedDays + 1;
+	if (next.qualifiedDays % FREEZE_EVERY === 0) next.freezes = Math.min(MAX_FREEZES, state.freezes + 1);
+	next.streakCount = state.lastQualifiedDay === previousDateKey(state.dateKey) ? state.streakCount + 1 : 1;
+	next.lastQualifiedDay = state.dateKey;
+	next.bestStreak = Math.max(state.bestStreak ?? 0, next.streakCount);
+	return next;
 }
 
 export function applyStreakEvent(stored, timeZone, event, now = new Date()) {
@@ -58,20 +146,19 @@ export function applyStreakEvent(stored, timeZone, event, now = new Date()) {
 	if (event === 'vocab_correct') state.vocabCorrect += 1;
 	if (event === 'circle_completed') state.circleCompleted = true;
 	if (event === 'wordle_completed') state.wordleCompleted = true;
-	const nextQualified = state.vocabCorrect >= VOCABULARY_GOAL || state.circleCompleted || state.wordleCompleted;
-	if (nextQualified && !state.qualified) {
-		state.streakCount = state.lastQualifiedDay === previousDateKey(state.dateKey) ? state.streakCount + 1 : 1;
-		state.lastQualifiedDay = state.dateKey;
-	}
-	state.qualified = nextQualified;
-	return state;
+	if (event === 'reading_completed') state.readingCompleted = true;
+	if (event === 'story_completed') state.storyCompleted = true;
+	if (event === 'grammar_correct') state.grammarCorrect += 1;
+	if (event === 'listen_completed') state.listenCompleted = true;
+	if (event === 'pronunciation_practised') state.pronunciationAttempts += 1;
+	return settleQualification(state);
 }
 
 export function streakSummary(stored, timeZone, now = new Date()) {
 	const state = stateForToday(stored, timeZone, now);
 	return {
 		...state,
-		vocabularyGoal: VOCABULARY_GOAL,
+		bestStreak: numberField(stored?.best_streak ?? stored?.bestStreak, state.streakCount),
 		minutesRemaining: minutesUntilNextLocalDate(timeZone, now),
 		canProtectStreak: state.lastQualifiedDay === previousDateKey(state.dateKey) && !state.qualified
 	};

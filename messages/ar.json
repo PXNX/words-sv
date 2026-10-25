@@ -220,5 +220,12 @@
   "story_loader_questions": "{count} ?????",
   "story_loader_cast": "?? {names}",
   "story_loader_voice": "?????: {voice}",
-  "story_loader_voices": "???? ????? ??????? ?"
+  "story_loader_voices": "???? ????? ??????? ?",
+  "streak_goal_hint": "اختر عدد الكلمات التي تصنع يوم تعلّم.",
+  "streak_goal_words": "{count} كلمات",
+  "streak_counts_today": "يُحتسب اليوم",
+  "streak_mode_done": "أُنجز اليوم",
+  "streak_grammar_progress": "القواعد: {done}/{goal}",
+  "streak_pronunciation_progress": "النطق: {done}/{goal}",
+  "streak_goal_choose": "اختيار الهدف اليومي"
 }

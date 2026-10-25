@@ -220,5 +220,12 @@
   "story_loader_questions": "{count} ??????",
   "story_loader_cast": "{names} ?? ???",
   "story_loader_voice": "?????: {voice}",
-  "story_loader_voices": "??????? ??? ?? ??? ??? ?"
+  "story_loader_voices": "??????? ??? ?? ??? ??? ?",
+  "streak_goal_hint": "चुनें कि एक सीखने के दिन के लिए कितने शब्द चाहिए।",
+  "streak_goal_words": "{count} शब्द",
+  "streak_counts_today": "आज के लिए गिना जाता है",
+  "streak_mode_done": "आज पूरा हुआ",
+  "streak_grammar_progress": "व्याकरण: {done}/{goal}",
+  "streak_pronunciation_progress": "उच्चारण: {done}/{goal}",
+  "streak_goal_choose": "दैनिक लक्ष्य चुनें"
 }

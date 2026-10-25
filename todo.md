@@ -5,17 +5,17 @@ tests/build, a focused commit and a push to `main`.
 
 ## 1. Let every meaningful session feed the streak (S–M)
 
-- [ ] Extend `StreakEvent` beyond `vocab_correct | circle_completed | wordle_completed`:
-  - [ ] `reading_completed` — all questions answered, or the text finished
-  - [ ] `story_completed` — use the existing completed-story signal in `StoryMode.svelte`
-  - [ ] `grammar_correct` — counts up, qualifies at 5 correct answers
-  - [ ] `listen_completed` — a full listening session finished
-  - [ ] `pronunciation_practised` — counts up, qualifies at 10 scored attempts
-- [ ] Show a small “counts toward today” indicator on every home card that can qualify.
-- [ ] Make the daily goal selectable (5 / 8 / 12) and persist it.
-- [ ] Show the goal on a progress ring (home streak card and `/progress`).
-- [ ] Keep the server streak endpoint and SQL schema in sync with the new fields.
-- [ ] Localise all new labels in the nine interface locales.
+- [x] Extend `StreakEvent` beyond `vocab_correct | circle_completed | wordle_completed`:
+  - [x] `reading_completed` — all questions answered, or the text finished
+  - [x] `story_completed` — use the existing completed-story signal in `StoryMode.svelte`
+  - [x] `grammar_correct` — counts up, qualifies at 5 correct answers
+  - [x] `listen_completed` — a full listening session finished
+  - [x] `pronunciation_practised` — counts up, qualifies at 10 scored attempts
+- [x] Show a small “counts toward today” indicator on every home card that can qualify.
+- [x] Make the daily goal selectable (5 / 8 / 12) and persist it.
+- [x] Show the goal on a progress ring (home streak card and `/progress`).
+- [x] Keep the server streak endpoint and SQL schema in sync with the new fields.
+- [x] Localise all new labels in the nine interface locales.
 
 ## 2. Turn the home screen into a “Today” coach (M)
 

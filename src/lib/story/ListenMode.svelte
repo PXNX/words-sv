@@ -256,6 +256,7 @@
     lastSoundAt = duration;
     flushPosition();
     playChime();
+    void settings.recordStreak('listen_completed');
     setTimeout(() => {
       if (phase === 'ready' && token === generation) void startSession();
     }, 600);

@@ -7,6 +7,7 @@
   import { readVocabularyProgressByLanguage } from '#lib/vocab/spacedRepetition.js';
   import { readGrammarProgressByLanguage } from '#lib/grammar/learning.js';
   import { readMissedWords } from '#lib/story/missedWords.js';
+  import { GRAMMAR_GOAL, PRONUNCIATION_GOAL, VOCABULARY_GOALS, modeDone } from '#lib/clientStreak.js';
   import IconExpand from '~icons/material-symbols/expand-more-rounded';
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
   import IconPending from '~icons/material-symbols/radio-button-unchecked-rounded';
@@ -17,6 +18,7 @@
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   // Lilith is happy once today keeps the streak going and sad until it does.
   const streakMood = $derived<Mood>(settings.streak.qualified ? 'happy' : 'sad');
+  const goalProgress = $derived(settings.streak.qualified ? 1 : Math.min(1, settings.streak.vocabCorrect / Math.max(1, settings.streak.vocabularyGoal)));
 
   const labels = $derived({
     title: m.stats_title({}, { locale: settings.interfaceLocale }),
@@ -24,6 +26,15 @@
     streakDone: m.streak_done({}, { locale: settings.interfaceLocale }),
     streakTimeLeft: m.streak_time_left({}, { locale: settings.interfaceLocale }),
     streakBest: m.streak_best({}, { locale: settings.interfaceLocale }),
+    streakGoalHint: m.streak_goal_hint({}, { locale: settings.interfaceLocale }),
+    streakGoalChoose: m.streak_goal_choose({}, { locale: settings.interfaceLocale }),
+    streakGoalWords: (count: number) => m.streak_goal_words({ count }, { locale: settings.interfaceLocale }),
+    streakCountsToday: m.streak_counts_today({}, { locale: settings.interfaceLocale }),
+    streakModeDone: m.streak_mode_done({}, { locale: settings.interfaceLocale }),
+    story: m.story_title({}, { locale: settings.interfaceLocale }),
+    reading: m.reading_title({}, { locale: settings.interfaceLocale }),
+    listen: m.story_listen({}, { locale: settings.interfaceLocale }),
+    pronunciation: m.mode_pronunciation({}, { locale: settings.interfaceLocale }),
     dailyGoal: m.stats_daily_goal({}, { locale: settings.interfaceLocale }),
     today: m.stats_today({}, { locale: settings.interfaceLocale }),
     modeCrossword: m.mode_crossword({}, { locale: settings.interfaceLocale }),
@@ -42,6 +53,18 @@
     trickyWords: m.stats_tricky_words({}, { locale: settings.interfaceLocale }),
     noneYet: m.stats_none_yet({}, { locale: settings.interfaceLocale })
   });
+
+  // Every mode that can qualify the day, so the daily progress is visible in one place.
+  const todayModes = $derived([
+    { label: labels.modeCrossword, done: modeDone(settings.streak, 'circle') },
+    { label: labels.modeWordle, done: modeDone(settings.streak, 'wordle') },
+    { label: labels.vocab, done: modeDone(settings.streak, 'vocab') },
+    { label: labels.story, done: modeDone(settings.streak, 'story') },
+    { label: labels.reading, done: modeDone(settings.streak, 'reading') },
+    { label: labels.listen, done: modeDone(settings.streak, 'listen') },
+    { label: labels.grammar, done: modeDone(settings.streak, 'grammar') },
+    { label: labels.pronunciation, done: modeDone(settings.streak, 'pronunciation') }
+  ]);
 
   // One accent colour per language keeps the cards apart without extra decoration.
   const languageColors: Record<Language, string> = {
@@ -103,8 +126,14 @@
     <div class="flex items-end justify-between gap-3">
       <div class="min-w-0">
         <h2 id="progress-streak-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.streak}</h2>
-        <div class="mt-[.3rem] flex items-center gap-[.35rem]">
-          <IconFlame aria-hidden="true" class={`w-[2.4rem] h-[2.4rem] ${settings.streak.qualified ? 'text-[#e8622c]' : 'text-base-content/30'}`} />
+        <div class="mt-[.3rem] flex items-center gap-[.5rem]">
+          <span class="relative grid place-items-center" aria-hidden="true">
+            <svg class="progress-ring absolute w-[3.2rem] h-[3.2rem]" viewBox="0 0 36 36">
+              <circle class="progress-ring-track" cx="18" cy="18" r="16" pathLength="100" />
+              <circle class="progress-ring-value" cx="18" cy="18" r="16" pathLength="100" stroke-dasharray="100" stroke-dashoffset={100 - goalProgress * 100} />
+            </svg>
+            <IconFlame class={`w-[2.4rem] h-[2.4rem] ${settings.streak.qualified ? 'text-[#e8622c]' : 'text-base-content/30'}`} />
+          </span>
           <strong class="font-['DM_Serif_Display',serif] text-[2.8rem] font-normal leading-none text-base-content">{settings.streak.streakCount}</strong>
         </div>
       </div>
@@ -124,11 +153,17 @@
       <p class="m-0 mt-[.45rem] text-[.62rem] font-extrabold text-base-content/70">
         {#if settings.streak.qualified}{labels.streakDone}{:else}{labels.streakTimeLeft}: {formatMinutes(settings.streak.minutesRemaining)}{/if}
       </p>
+      <div class="mt-[.5rem] flex flex-wrap items-center gap-[.3rem]" role="group" aria-label={labels.streakGoalChoose}>
+        {#each VOCABULARY_GOALS as goal (goal)}
+          <button type="button" class="progress-goal" class:active={goal === settings.streak.vocabularyGoal} aria-pressed={goal === settings.streak.vocabularyGoal} onclick={() => void settings.setDailyGoal(goal)}>{labels.streakGoalWords(goal)}</button>
+        {/each}
+      </div>
+      <p class="m-0 mt-[.3rem] text-base-content/55 text-[.56rem] font-bold">{labels.streakGoalHint}</p>
     </div>
 
     <div class="mt-[.7rem] flex flex-wrap items-center gap-x-4 gap-y-1 text-base-content text-[.64rem] font-extrabold" aria-label={labels.today}>
-      {#each [{ label: labels.modeCrossword, done: settings.streak.circleCompleted }, { label: labels.modeWordle, done: settings.streak.wordleCompleted }] as mode (mode.label)}
-        <span class="inline-flex items-center gap-[.25rem]">{#if mode.done}<IconCheck class="w-[1rem] h-[1rem] text-success" aria-label={labels.streakDone} />{:else}<IconPending class="w-[1rem] h-[1rem] text-base-content/35" aria-hidden="true" />{/if}{mode.label}</span>
+      {#each todayModes as mode (mode.label)}
+        <span class="inline-flex items-center gap-[.25rem]">{#if mode.done}<IconCheck class="w-[1rem] h-[1rem] text-success" aria-label={labels.streakModeDone} />{:else}<IconPending class="w-[1rem] h-[1rem] text-base-content/35" aria-hidden="true" />{/if}{mode.label}</span>
       {/each}
     </div>
 
@@ -210,4 +245,11 @@
 
 <style>
   .pip { border: 2px solid var(--play-line); border-radius: 5px; }
+  .progress-ring { rotate: -90deg; overflow: visible; }
+  .progress-ring-track { fill: none; stroke: var(--play-line); stroke-width: 2.4; opacity: .28; }
+  .progress-ring-value { fill: none; stroke: #e6a527; stroke-width: 2.4; stroke-linecap: round; transition: stroke-dashoffset .45s ease; }
+  .progress-goal { min-height: 1.7rem; padding: .15rem .55rem; border: 1.5px solid var(--play-line); border-radius: 999px; background: transparent; color: var(--play-ink, #172a45); font-size: .58rem; font-weight: 900; cursor: pointer; }
+  .progress-goal.active { border-color: #172a45; background: #172a45; color: #fffdf7; }
+  .progress-goal:focus-visible { outline: 2px solid #e6a527; outline-offset: 2px; }
+  :global(html.dark) .progress-goal.active { border-color: #e6a527; background: #e6a527; color: #172a45; }
 </style>

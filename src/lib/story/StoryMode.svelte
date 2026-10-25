@@ -298,7 +298,10 @@
   }
   function markCompleted(id: string) {
     const completed = readCompleted();
-    if (!completed.includes(id)) localStorage.setItem(COMPLETED_KEY, JSON.stringify([...completed, id]));
+    if (!completed.includes(id)) {
+      localStorage.setItem(COMPLETED_KEY, JSON.stringify([...completed, id]));
+      void settings.recordStreak('story_completed');
+    }
   }
   function castFor(next: Story): Speaker[] {
     return [...next.cast, ...(next.beats.some((beat) => beat.kind === 'narration' && beat.announcement) ? ['announcer' as const] : [])];
