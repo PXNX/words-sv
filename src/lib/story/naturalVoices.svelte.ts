@@ -3,6 +3,7 @@ import type { Mood } from './stories';
 import { animals, moodShape, priority, profiles, sharedPitch, type Speaker, type VoiceGender } from './voices';
 import { germanSpeakers, GERMAN_CAST_MODEL } from './germanSpeakers';
 import { speechChunks } from './speech';
+import { settings, type NaturalModel } from '#lib/state/settings.svelte.js';
 
 /*
  * Natural story voices: Piper neural voices generated on the learner's device (see
@@ -20,69 +21,122 @@ import { speechChunks } from './speech';
 type NaturalVoice = { model: string; speaker?: number; f0?: number };
 type LanguageVoices = { narrator?: NaturalVoice; female: NaturalVoice[]; male: NaturalVoice[] };
 
-const THORSTEN = 'de/de_DE/thorsten/high/de_DE-thorsten-high.onnx';
+const THORSTEN_HIGH = 'de/de_DE/thorsten/high/de_DE-thorsten-high.onnx';
+const THORSTEN_STANDARD = 'de/de_DE/thorsten_emotional/medium/de_DE-thorsten_emotional-medium.onnx';
 const CORI = 'en/en_GB/cori/high/en_GB-cori-high.onnx';
 const SERENA = 'it/it_IT/serena/high/it_IT-serena-high.onnx';
 const TETIANA = 'uk/uk_UA/tetiana/high/uk_UA-tetiana-high.onnx';
-const voices: Record<Language, LanguageVoices> = {
-  de: {
-    narrator: { model: THORSTEN, speaker: 0 },
-    female: germanSpeakers.female.map(([speaker, f0]) => ({ model: GERMAN_CAST_MODEL, speaker, f0 })),
-    male: germanSpeakers.male.map(([speaker, f0]) => ({ model: GERMAN_CAST_MODEL, speaker, f0 }))
+const SEMANA = 'en/en_GB/semaine/medium/en_GB-semaine-medium.onnx';
+const PAOLA = 'it/it_IT/paola/medium/it_IT-paola-medium.onnx';
+const RICCARDO = 'it/it_IT/riccardo/x_low/it_IT-riccardo-x_low.onnx';
+const UPMC = 'fr/fr_FR/upmc/medium/fr_FR-upmc-medium.onnx';
+const SHARVARD = 'es/es_ES/sharvard/medium/es_ES-sharvard-medium.onnx';
+const FABER = 'pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx';
+const UKRAINIAN = 'uk/uk_UA/ukrainian_tts/medium/uk_UA-ukrainian_tts-medium.onnx';
+
+const germanFemale = germanSpeakers.female.map(([speaker, f0]) => ({ model: GERMAN_CAST_MODEL, speaker, f0 }));
+const germanMale = germanSpeakers.male.map(([speaker, f0]) => ({ model: GERMAN_CAST_MODEL, speaker, f0 }));
+const semanaFemale = [{ model: SEMANA, speaker: 0 }, { model: SEMANA, speaker: 3 }];
+const semanaMale = [{ model: SEMANA, speaker: 1 }, { model: SEMANA, speaker: 2 }];
+const ukrainianFemale = [{ model: UKRAINIAN, speaker: 0 }, { model: UKRAINIAN, speaker: 2 }];
+const ukrainianMale = [{ model: UKRAINIAN, speaker: 1 }];
+
+const voices: Record<NaturalModel, Record<Language, LanguageVoices>> = {
+  high: {
+    de: {
+      narrator: { model: THORSTEN_HIGH, speaker: 0 },
+      female: germanFemale,
+      male: germanMale
+    },
+    en: {
+      narrator: { model: CORI },
+      female: semanaFemale,
+      male: semanaMale
+    },
+    fr: {
+      female: [{ model: UPMC, speaker: 0 }],
+      male: [{ model: UPMC, speaker: 1 }]
+    },
+    it: {
+      narrator: { model: SERENA },
+      female: [{ model: PAOLA }],
+      male: [{ model: RICCARDO }]
+    },
+    es: {
+      female: [{ model: SHARVARD, speaker: 1 }],
+      male: [{ model: SHARVARD, speaker: 0 }]
+    },
+    // There is no Brazilian Portuguese female voice yet; the women borrow the male one, pitched up.
+    pt: {
+      female: [],
+      male: [{ model: FABER }]
+    },
+    uk: {
+      narrator: { model: TETIANA },
+      female: ukrainianFemale,
+      male: ukrainianMale
+    }
   },
-  en: {
-    narrator: { model: CORI },
-    female: [{ model: 'en/en_GB/semaine/medium/en_GB-semaine-medium.onnx', speaker: 0 }, { model: 'en/en_GB/semaine/medium/en_GB-semaine-medium.onnx', speaker: 3 }],
-    male: [{ model: 'en/en_GB/semaine/medium/en_GB-semaine-medium.onnx', speaker: 1 }, { model: 'en/en_GB/semaine/medium/en_GB-semaine-medium.onnx', speaker: 2 }]
-  },
-  fr: {
-    female: [{ model: 'fr/fr_FR/upmc/medium/fr_FR-upmc-medium.onnx', speaker: 0 }],
-    male: [{ model: 'fr/fr_FR/upmc/medium/fr_FR-upmc-medium.onnx', speaker: 1 }]
-  },
-  it: {
-    narrator: { model: SERENA },
-    female: [{ model: 'it/it_IT/paola/medium/it_IT-paola-medium.onnx' }],
-    male: [{ model: 'it/it_IT/riccardo/x_low/it_IT-riccardo-x_low.onnx' }]
-  },
-  es: {
-    female: [{ model: 'es/es_ES/sharvard/medium/es_ES-sharvard-medium.onnx', speaker: 1 }],
-    male: [{ model: 'es/es_ES/sharvard/medium/es_ES-sharvard-medium.onnx', speaker: 0 }]
-  },
-  // There is no Brazilian Portuguese female voice yet; the women borrow the male one, pitched up.
-  pt: {
-    female: [],
-    male: [{ model: 'pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx' }]
-  },
-  uk: {
-    narrator: { model: TETIANA },
-    female: [{ model: 'uk/uk_UA/ukrainian_tts/medium/uk_UA-ukrainian_tts-medium.onnx', speaker: 0 }, { model: 'uk/uk_UA/ukrainian_tts/medium/uk_UA-ukrainian_tts-medium.onnx', speaker: 2 }],
-    male: [{ model: 'uk/uk_UA/ukrainian_tts/medium/uk_UA-ukrainian_tts-medium.onnx', speaker: 1 }]
+  standard: {
+    de: {
+      narrator: { model: THORSTEN_STANDARD, speaker: 4 },
+      female: germanFemale,
+      male: germanMale
+    },
+    en: {
+      narrator: { model: SEMANA, speaker: 0 },
+      female: semanaFemale,
+      male: semanaMale
+    },
+    fr: {
+      female: [{ model: UPMC, speaker: 0 }],
+      male: [{ model: UPMC, speaker: 1 }]
+    },
+    it: {
+      narrator: { model: PAOLA },
+      female: [{ model: PAOLA }],
+      male: [{ model: RICCARDO }]
+    },
+    es: {
+      female: [{ model: SHARVARD, speaker: 1 }],
+      male: [{ model: SHARVARD, speaker: 0 }]
+    },
+    pt: {
+      female: [],
+      male: [{ model: FABER }]
+    },
+    uk: {
+      narrator: { model: UKRAINIAN, speaker: 0 },
+      female: ukrainianFemale,
+      male: ukrainianMale
+    }
   }
 };
 // Download sizes in MB, plus about 30 MB of runtime (speech engine and phonemizer) shared by all languages.
 const modelMegabytes: Record<string, number> = {
-  'de/de_DE/mls/medium/de_DE-mls-medium.onnx': 77,
-  'de/de_DE/thorsten/high/de_DE-thorsten-high.onnx': 109,
-  'en/en_GB/cori/high/en_GB-cori-high.onnx': 109,
-  'en/en_GB/semaine/medium/en_GB-semaine-medium.onnx': 77,
-  'fr/fr_FR/upmc/medium/fr_FR-upmc-medium.onnx': 77,
-  'it/it_IT/serena/high/it_IT-serena-high.onnx': 109,
-  'it/it_IT/paola/medium/it_IT-paola-medium.onnx': 64,
-  'it/it_IT/riccardo/x_low/it_IT-riccardo-x_low.onnx': 28,
-  'es/es_ES/sharvard/medium/es_ES-sharvard-medium.onnx': 77,
-  'pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx': 63,
-  'uk/uk_UA/tetiana/high/uk_UA-tetiana-high.onnx': 109,
-  'uk/uk_UA/ukrainian_tts/medium/uk_UA-ukrainian_tts-medium.onnx': 77
+  [GERMAN_CAST_MODEL]: 77,
+  [THORSTEN_HIGH]: 109,
+  [THORSTEN_STANDARD]: 77,
+  [CORI]: 109,
+  [SEMANA]: 77,
+  [UPMC]: 77,
+  [SERENA]: 109,
+  [PAOLA]: 64,
+  [RICCARDO]: 28,
+  [SHARVARD]: 77,
+  [FABER]: 63,
+  [TETIANA]: 109,
+  [UKRAINIAN]: 77
 };
 const RUNTIME_MEGABYTES = 30;
 
-function modelsOf(language: Language) {
-  const { narrator, female, male } = voices[language];
+function modelsOf(language: Language, model: NaturalModel = settings.naturalModel) {
+  const { narrator, female, male } = voices[model][language];
   return [...new Set([...(narrator ? [narrator] : []), ...female, ...male].map((voice) => voice.model))];
 }
 
-export function naturalMegabytes(language: Language) {
-  return RUNTIME_MEGABYTES + modelsOf(language).reduce((sum, model) => sum + modelMegabytes[model], 0);
+export function naturalMegabytes(language: Language, model: NaturalModel = settings.naturalModel) {
+  return RUNTIME_MEGABYTES + modelsOf(language, model).reduce((sum, name) => sum + modelMegabytes[name], 0);
 }
 
 export function naturalSupported() {
@@ -93,9 +147,12 @@ type Status = 'idle' | 'loading' | 'ready' | 'failed';
 /** How far each language's natural voices are: the settings show it, and stories use them once ready. */
 export const naturalState = $state<{
   status: Partial<Record<Language, Status>>;
+  model: Partial<Record<Language, NaturalModel>>;
   progress: Partial<Record<Language, number>>;
+  downloaded: Partial<Record<Language, number>>;
+  total: Partial<Record<Language, number>>;
   remaining: Partial<Record<Language, number | null>>;
-}>({ status: {}, progress: {}, remaining: {} });
+}>({ status: {}, model: {}, progress: {}, downloaded: {}, total: {}, remaining: {} });
 
 type Reply = { type: 'progress'; loaded: number; total: number } | { type: 'done'; pcm?: Float32Array; sampleRate?: number } | { type: 'error'; message: string };
 let worker: Worker | null = null;
@@ -135,7 +192,8 @@ const preparation = new Map<Language, Promise<void>>();
 
 /** Downloads (once) and loads the voice models of a language, reporting progress in `naturalState`. */
 export function prepareNatural(language: Language): Promise<void> {
-  if (!naturalSupported() || naturalState.status[language] === 'ready') return Promise.resolve();
+  if (!naturalSupported()) return Promise.resolve();
+  if (naturalState.status[language] === 'ready' && naturalState.model[language] === settings.naturalModel) return Promise.resolve();
   const running = preparation.get(language);
   if (running) return running;
   const task = loadNatural(language).finally(() => preparation.delete(language));
@@ -144,26 +202,35 @@ export function prepareNatural(language: Language): Promise<void> {
 }
 
 async function loadNatural(language: Language) {
+  const model = settings.naturalModel;
+  const models = modelsOf(language, model);
+  const totalMegabytes = naturalMegabytes(language, model);
   naturalState.status[language] = 'loading';
+  naturalState.model[language] = model;
   naturalState.progress[language] = 0;
+  naturalState.downloaded[language] = 0;
+  naturalState.total[language] = totalMegabytes;
   naturalState.remaining[language] = null;
   const startedAt = performance.now();
-  const models = modelsOf(language);
-  const update = (fraction: number) => {
+  let finishedMegabytes = 0;
+  const update = (fraction: number, megabytes = finishedMegabytes) => {
     const now = performance.now();
     naturalState.progress[language] = fraction;
+    naturalState.downloaded[language] = Math.min(totalMegabytes, megabytes);
     const elapsed = (now - startedAt) / 1000;
     // Too little data at the very beginning gives wild estimates; wait for a real sample.
     if (fraction >= 0.02 && elapsed >= 0.8) naturalState.remaining[language] = Math.max(0, elapsed / fraction - elapsed);
   };
   try {
-    for (const [index, model] of models.entries()) {
-      await request({ type: 'load', model }, (loaded, total) => {
-        if (total) update((index + loaded / total) / models.length);
+    for (const [index, name] of models.entries()) {
+      await request({ type: 'load', model: name }, (loaded, total) => {
+        if (total) update((index + loaded / total) / models.length, finishedMegabytes + loaded / 1_000_000);
       });
       // Cached models report no download progress; this still marks each finished model at once.
-      update((index + 1) / models.length);
+      finishedMegabytes += modelMegabytes[name] ?? 0;
+      update((index + 1) / models.length, finishedMegabytes);
     }
+    naturalState.downloaded[language] = totalMegabytes;
     naturalState.remaining[language] = 0;
     naturalState.status[language] = 'ready';
   } catch {
@@ -173,7 +240,7 @@ async function loadNatural(language: Language) {
 }
 
 export function naturalReady(language: Language) {
-  return naturalState.status[language] === 'ready';
+  return naturalState.status[language] === 'ready' && naturalState.model[language] === settings.naturalModel;
 }
 
 type Casting = Map<Speaker, { voice: NaturalVoice; shared: boolean; borrowed: boolean }>;
@@ -187,20 +254,21 @@ const typicalPitch: Record<VoiceGender, number> = { male: 118, female: 205 };
 // the one whose measured pitch is closest to theirs, else (where voices are few) the least used one,
 // which then counts as shared.
 function castNatural(cast: Speaker[], language: Language): Casting {
+  const model = settings.naturalModel;
   const speakers = priority.filter((speaker) => speaker === 'narrator' || cast.includes(speaker));
-  const key = `${language}|${speakers.join()}`;
+  const key = `${model}|${language}|${speakers.join()}`;
   if (cached?.key === key) return cached.casting;
   const uses = new Map<NaturalVoice, number>();
   const casting: Casting = new Map();
-  const narrator = voices[language].narrator;
+  const narrator = voices[model][language].narrator;
   for (const speaker of speakers) {
     if (speaker === 'narrator' && narrator) {
       casting.set(speaker, { voice: narrator, shared: false, borrowed: false });
       continue;
     }
-    const own = voices[language][profiles[speaker].gender];
+    const own = voices[model][language][profiles[speaker].gender];
     const borrowed = own.length === 0;
-    const pool = borrowed ? voices[language][profiles[speaker].gender === 'female' ? 'male' : 'female'] : own;
+    const pool = borrowed ? voices[model][language][profiles[speaker].gender === 'female' ? 'male' : 'female'] : own;
     const target = typicalPitch[profiles[speaker].gender] * profiles[speaker].pitch;
     const distance = (candidate: NaturalVoice) => (candidate.f0 ? Math.abs(Math.log(candidate.f0 / target)) : 0);
     const unused = pool.filter((candidate) => !uses.has(candidate)).sort((left, right) => distance(left) - distance(right));
