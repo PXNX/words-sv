@@ -300,5 +300,9 @@
   "home_continue_reading": "واصل القراءة: {title}",
   "home_continue_story": "واصل القصة: {title}",
   "learning_rate_hint": "ما مدى معرفتك بالكلمة؟",
-  "learning_hard": "صعب"
+  "learning_hard": "صعب",
+  "word_bank_loading": "نسجّل الكلمات بصوت طبيعي …",
+  "word_bank_progress": "{done} من {total} كلمة",
+  "word_bank_hint": "في المرة الأولى فقط — بعدها تكون كل الكلمات جاهزة فورًا.",
+  "word_bank_continue": "العب دون انتظار"
 }

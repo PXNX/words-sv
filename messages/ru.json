@@ -300,5 +300,9 @@
   "home_continue_reading": "Продолжить чтение: {title}",
   "home_continue_story": "Продолжить историю: {title}",
   "learning_rate_hint": "Насколько хорошо вы знали слово?",
-  "learning_hard": "Сложно"
+  "learning_hard": "Сложно",
+  "word_bank_loading": "Записываем слова естественным голосом …",
+  "word_bank_progress": "{done} из {total} слов",
+  "word_bank_hint": "Только в первый раз — потом все слова готовы сразу.",
+  "word_bank_continue": "Играть, не дожидаясь"
 }

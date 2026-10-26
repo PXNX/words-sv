@@ -349,6 +349,29 @@ export function clearNaturalAudio() {
   renderedAudio.clear();
 }
 
+/** Renders a line without keeping it in the story cache: the word bank stores its own clips. */
+export function synthesizeNaturalOnce(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number): Promise<NaturalClip> {
+  return renderNatural(text, speaker, mood, cast, language, baseRate);
+}
+
+/** Copies a rendered clip into compact 16-bit PCM for persistent storage. */
+export function pcmFromClip(clip: NaturalClip) {
+  const channel = clip.buffer.getChannelData(0);
+  const samples = new Int16Array(channel.length);
+  for (let index = 0; index < channel.length; index += 1) {
+    samples[index] = Math.max(-32768, Math.min(32767, Math.round(channel[index] * 32767)));
+  }
+  return { samples, sampleRate: clip.buffer.sampleRate, playbackRate: clip.playbackRate, volume: clip.volume };
+}
+
+/** Rebuilds a playable clip from stored 16-bit PCM. */
+export function clipFromPcm(samples: Int16Array, sampleRate: number, playbackRate = 1, volume = 1): NaturalClip {
+  const buffer = audio().createBuffer(1, samples.length, sampleRate);
+  const channel = buffer.getChannelData(0);
+  for (let index = 0; index < samples.length; index += 1) channel[index] = samples[index] / 0x8000;
+  return { buffer, playbackRate, volume };
+}
+
 /** Speaks a sentence in the speaker's natural voice; resolves with audio ready to play. */
 export function synthesizeNatural(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number): Promise<NaturalClip> {
   const key = `${settings.naturalModel}|${language}|${baseRate}|${speaker}|${mood}|${cast.join()}|${text}`;

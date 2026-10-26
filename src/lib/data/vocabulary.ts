@@ -71,3 +71,24 @@ export const wordMetadata: Record<Language, Record<string, VocabularyMetadata>> 
 ) as Record<Language, Record<string, VocabularyMetadata>>;
 
 export const hintableBaseWords = new Set(Object.values(wordDefinitions).flatMap((definitions) => Object.keys(definitions)));
+
+// German nouns take their article from the entry (or, for older entries, from the gender).
+const articlesByGender: Partial<Record<Language, Record<string, string>>> = {
+  de: { masculine: 'der', feminine: 'die', neuter: 'das' }
+};
+
+/** The article a word is shown with, e.g. "die" for "Abfahrt"; empty when it takes none. */
+export function articleFor(language: Language, word: string) {
+  const entry = wordMetadata[language]?.[word];
+  if (!entry || entry.type !== 'noun') return '';
+  if (entry.article) return entry.article;
+  return entry.gender ? articlesByGender[language]?.[entry.gender] ?? '' : '';
+}
+
+/** The properly cased word as a learner should hear it, with the article for nouns. */
+export function spokenWord(language: Language, word: string) {
+  const entry = wordMetadata[language]?.[word];
+  const article = articleFor(language, word);
+  const spelling = entry?.spelling ?? word;
+  return article ? `${article} ${spelling}` : spelling;
+}

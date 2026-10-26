@@ -2,11 +2,14 @@
   import { onMount, untrack } from 'svelte';
   import { playSuccessSound, playErrorSound } from '#lib/sounds.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { wordPools, wordDefinitions, wordMetadata } from '#lib/data/vocabulary.js';
+  import { spokenWord, wordPools, wordDefinitions } from '#lib/data/vocabulary.js';
   import { m } from '#lib/paraglide/messages.js';
   import { definitionChoiceWords, insertLearningRepeat, pickReviewSection } from '#lib/vocab/learning.js';
   import { recordMissedWord } from '#lib/story/missedWords.js';
   import Companion from '#lib/story/Companion.svelte';
+  import { naturalNarratorVoice, naturalState, naturalSupported } from '#lib/story/naturalVoices.svelte.js';
+  import WordBankLoader from '#lib/audio/WordBankLoader.svelte';
+  import { cancelWordBank, hasWordAudio, playWordClip, prepareWordBank, wordBankState, wordBankStateKey } from '#lib/audio/wordBank.svelte.js';
   import { VOCABULARY_REVIEW_STORAGE_PREFIX, markWordForRepeat, updateReviewProgress } from '#lib/vocab/spacedRepetition.js';
   import { REPAIR_WORDS } from '#lib/clientStreak.js';
   import { dueReviewEntries, recordReview } from '#lib/review/ledger.js';
@@ -48,11 +51,23 @@
     repairDone: (count: number) => m.streak_repair_done({ count }, { locale: settings.interfaceLocale }),
     repairNone: m.streak_repair_none({}, { locale: settings.interfaceLocale }),
     home: m.home_button({}, { locale: settings.interfaceLocale }),
-    progress: m.stats_title({}, { locale: settings.interfaceLocale })
+    progress: m.stats_title({}, { locale: settings.interfaceLocale }),
+    bankLoading: m.word_bank_loading({}, { locale: settings.interfaceLocale })
   });
   const words = $derived(wordPools[settings.lang][settings.vocabularyLevel]);
   const definitions = $derived(wordDefinitions[settings.lang]);
-  const metadata = $derived(wordMetadata[settings.lang]);
+  // Natural word audio only plays when the learner chose the neural voices; every other setup keeps
+  // the browser voice and sees no loading screen.
+  const naturalMode = $derived(settings.voiceQuality === 'natural' && naturalSupported());
+  const bankKey = $derived(wordBankStateKey(settings.lang, settings.vocabularyLevel));
+  const bankDone = $derived(wordBankState.done[bankKey] ?? 0);
+  const bankTotal = $derived(wordBankState.total[bankKey] ?? words.length);
+  const bankProgress = $derived(
+    naturalState.status[settings.lang] === 'loading'
+      ? naturalState.progress[settings.lang] ?? 0
+      : bankTotal ? bankDone / bankTotal : 0
+  );
+  const bankVoice = $derived(naturalNarratorVoice(settings.lang));
 
   let section = $state<string[]>([]);
   let queue = $state<string[]>([]);
@@ -74,6 +89,12 @@
   let attempted = $state<string[]>([]);
   let tricky = $state<string[]>([]);
   let firstTry = $state<string[]>([]);
+  // The first round waits for its own six words; the rest of the level keeps rendering behind the
+  // scenes, so the loading screen is never in the way for long.
+  let audioReady = $state(true);
+  let audioRun = 0;
+  let naturalPlayback: { stop: () => void } | null = null;
+  const canHear = $derived(speechSupported || naturalMode);
 
   // `/vocab?due=1` is the Repeat hub's mixed session: only words that the shared ledger says are
   // due, drawn from reading marks, grammar answers, pronunciation and earlier vocabulary rounds.
@@ -91,14 +112,47 @@
 
   function random() { return Math.random(); }
   function speechLocale() { return ({ de: 'de-DE', en: 'en-US', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', pt: 'pt-PT', uk: 'uk-UA' } as Record<string, string>)[settings.lang] ?? settings.lang; }
-  function articleFor(word: string) { const entry = metadata[word]; if (!entry || entry.type !== 'noun') return ''; if (entry.article) return entry.article; const articlesByGender: Record<string, Record<string, string>> = { de: { masculine: 'der', feminine: 'die', neuter: 'das' } }; return entry.gender ? articlesByGender[settings.lang]?.[entry.gender] ?? '' : ''; }
-  // Pools are uppercased for matching; show the dictionary spelling so German nouns read "Abfahrt", not "ABFAHRT".
-  function displayWord(word: string) { const article = articleFor(word); const spelling = metadata[word]?.spelling ?? word; return article ? `${article} ${spelling}` : spelling; }
-  function cancelSpeech() { if (typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel(); }
-  function speak() {
-    if (!speechSupported || !currentWord) { speechStatus = labels.speechUnavailable; return; }
+  // Pools are uppercased for matching; the shared helper restores the dictionary spelling and the
+  // article, so German nouns read "Abfahrt" rather than "ABFAHRT".
+  function displayWord(word: string) { return spokenWord(settings.lang, word); }
+  function cancelSpeech() {
+    naturalPlayback?.stop();
+    naturalPlayback = null;
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+  }
+  function sleep(ms: number) { return new Promise<void>((resolve) => setTimeout(resolve, ms)); }
+  // Renders the level's word bank and leaves the loading screen as soon as this round can be heard.
+  async function prepareAudio(priority: string[]) {
+    const run = ++audioRun;
+    if (!naturalMode) { audioReady = true; return; }
+    const lang = settings.lang;
+    const level = settings.vocabularyLevel;
+    audioReady = !priority.length;
+    void prepareWordBank(lang, level, priority).catch(() => undefined);
+    while (run === audioRun) {
+      if (priority.every((word) => hasWordAudio(lang, word))) break;
+      if (wordBankState.status[wordBankStateKey(lang, level)] !== 'loading') break;
+      await sleep(110);
+    }
+    if (run === audioRun) audioReady = true;
+  }
+  // The loader's escape hatch: the round falls back to the browser voice for anything not ready yet.
+  function skipAudioPrep() {
+    audioRun += 1;
+    cancelWordBank();
+    audioReady = true;
+  }
+  async function speak() {
+    if (!currentWord) { speechStatus = labels.speechUnavailable; return; }
     speechStatus = '';
-    window.speechSynthesis.cancel();
+    cancelSpeech();
+    if (naturalMode) {
+      try {
+        const playback = await playWordClip(settings.lang, currentWord);
+        if (playback) { naturalPlayback = playback; return; }
+      } catch { /* fall back to the browser voice */ }
+    }
+    if (!speechSupported) { speechStatus = labels.speechUnavailable; return; }
     const utterance = new SpeechSynthesisUtterance(currentWord);
     utterance.lang = speechLocale();
     utterance.rate = .84;
@@ -139,6 +193,7 @@
     queue = [...section, ...section].sort(() => random() - .5);
     position = 0;
     resetSessionState();
+    void prepareAudio(section);
   }
   // The recap's primary action: the same words that were still wrong at the end come back,
   // twice, so a second ending is earned rather than skipped.
@@ -149,6 +204,7 @@
     queue = [...section, ...section].sort(() => random() - .5);
     position = 0;
     resetSessionState();
+    void prepareAudio(section);
   }
   function resetPrompt() {
     answerStatus = null;
@@ -237,18 +293,25 @@
   onMount(() => {
     repairAvailable = repairMode && Boolean(settings.repairCandidate());
     speechSupported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
-    if (!speechSupported) { speechStatus = labels.speechUnavailable; return; }
+    if (!speechSupported) {
+      if (!naturalMode) speechStatus = labels.speechUnavailable;
+      return () => { cancelSpeech(); cancelWordBank(); };
+    }
     const refreshVoices = () => {
       voices = window.speechSynthesis.getVoices();
       speechStatus = '';
     };
     refreshVoices();
     window.speechSynthesis.addEventListener('voiceschanged', refreshVoices);
-    return () => { window.speechSynthesis.removeEventListener('voiceschanged', refreshVoices); cancelSpeech(); };
+    return () => {
+      window.speechSynthesis.removeEventListener('voiceschanged', refreshVoices);
+      cancelSpeech();
+      cancelWordBank();
+    };
   });
 
   $effect(() => {
-    const nextSourceKey = `${settings.lang}|${settings.vocabularyLevel}|${words.join('|')}|${dueMode}`;
+    const nextSourceKey = `${settings.lang}|${settings.vocabularyLevel}|${settings.voiceQuality}|${settings.naturalModel}|${words.join('|')}|${dueMode}`;
     if (nextSourceKey === sourceKey) return;
     sourceKey = nextSourceKey;
     untrack(() => startSection());
@@ -269,11 +332,11 @@
     <div class="text-center">
       <span class="text-accent text-[.58rem] font-extrabold tracking-[.14em] uppercase">{labels.section} · {settings.vocabularyLevel.toUpperCase()}</span>
       <h1 class="my-[.16rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,7vw,2.65rem)] font-normal leading-none">{labels.title}</h1>
-      <p class="m-0 text-base-content/60 text-[.65rem] font-extrabold">{sessionDone ? queue.length : Math.min(position + 1, queue.length)} / {queue.length || 6}</p>
+      {#if audioReady}<p class="m-0 text-base-content/60 text-[.65rem] font-extrabold">{sessionDone ? queue.length : Math.min(position + 1, queue.length)} / {queue.length || 6}</p>{/if}
     </div>
     <Companion id="mia" mood={answerStatus === 'correct' ? 'happy' : answerStatus === 'wrong' ? 'sad' : sessionDone ? 'happy' : 'curious'} size="sm" />
   </header>
-  {#if repairMode && !sessionDone}
+  {#if audioReady && repairMode && !sessionDone}
     <div class="w-[min(100%,28rem)] grid gap-[.3rem] px-[.9rem] py-[.65rem] panel-play text-center" aria-live="polite">
       <p class="m-0 text-accent text-[.58rem] font-black tracking-[.12em] uppercase">{labels.repairTitle}</p>
       {#if repairAvailable}
@@ -284,7 +347,17 @@
       {/if}
     </div>
   {/if}
-  {#if repairMode && repairDone}
+  {#if !audioReady}
+    <WordBankLoader
+      level={settings.vocabularyLevel}
+      label={labels.bankLoading}
+      progress={bankProgress}
+      done={bankDone}
+      total={bankTotal}
+      voice={bankVoice}
+      oncontinue={skipAudioPrep}
+    />
+  {:else if repairMode && repairDone}
     <div class="w-[min(100%,28rem)] grid justify-items-center gap-[.7rem] p-[clamp(1.2rem,6vw,2rem)] panel-play text-center">
       <p class="m-0 text-accent text-[.6rem] font-black tracking-[.12em] uppercase">{labels.repairTitle}</p>
       <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.3rem,6vw,1.9rem)] leading-[1.15]">{labels.repairDone(settings.streak.streakCount)}</p>
@@ -317,7 +390,7 @@
       {#if promptKind === 'word'}
         <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.9rem,9vw,3.2rem)] font-normal tracking-[.06em] leading-none" lang={settings.lang}>{currentDisplayWord}</p>
       {:else}
-        <button class="btn-play btn-play-ink" onclick={speak} disabled={!speechSupported}><IconVolume class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />{labels.listen}</button>
+        <button class="btn-play btn-play-ink" onclick={speak} disabled={!canHear}><IconVolume class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />{labels.listen}</button>
         <p class="m-0 text-accent text-[.62rem] font-extrabold leading-[1.35]">{labels.audioPrompt}</p>
       {/if}
       {#if speechStatus && promptKind === 'audio'}<p class="m-0 text-accent text-[.62rem] font-extrabold leading-[1.35]">{speechStatus}</p>{/if}

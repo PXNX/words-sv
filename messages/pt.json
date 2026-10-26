@@ -300,5 +300,9 @@
   "home_continue_reading": "Continuar a ler: {title}",
   "home_continue_story": "Continuar a história: {title}",
   "learning_rate_hint": "Quão bem conhecias a palavra?",
-  "learning_hard": "Difícil"
+  "learning_hard": "Difícil",
+  "word_bank_loading": "A gravar as palavras com uma voz natural …",
+  "word_bank_progress": "{done} de {total} palavras",
+  "word_bank_hint": "Só na primeira vez – depois todas as palavras ficam prontas de imediato.",
+  "word_bank_continue": "Jogar sem esperar"
 }

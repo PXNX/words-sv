@@ -300,5 +300,9 @@
   "home_continue_reading": "Продовжити читання: {title}",
   "home_continue_story": "Продовжити історію: {title}",
   "learning_rate_hint": "Наскільки добре ви знали слово?",
-  "learning_hard": "Складно"
+  "learning_hard": "Складно",
+  "word_bank_loading": "Записуємо слова природним голосом …",
+  "word_bank_progress": "{done} з {total} слів",
+  "word_bank_hint": "Лише першого разу – потім усі слова готові одразу.",
+  "word_bank_continue": "Грати, не чекаючи"
 }
