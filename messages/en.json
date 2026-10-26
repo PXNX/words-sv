@@ -225,6 +225,7 @@
   "story_loader_questions": "{count} questions",
   "story_loader_cast": "With {names}",
   "story_loader_voice": "Voice: {voice}",
+  "story_loader_eta": "{seconds}s left",
   "story_loader_voices": "Loading voices ?",
   "streak_goal_hint": "Choose how many words make a learning day.",
   "streak_goal_words": "{count} words",

@@ -221,6 +221,7 @@
   "story_loader_questions": "{count} perguntas",
   "story_loader_cast": "Com {names}",
   "story_loader_voice": "Voz: {voice}",
+  "story_loader_eta": "Restam {seconds}s",
   "story_loader_voices": "A carregar as vozes ?",
   "streak_goal_hint": "Escolhe quantas palavras fazem um dia de estudo.",
   "streak_goal_words": "{count} palavras",

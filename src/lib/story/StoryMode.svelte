@@ -229,6 +229,9 @@
       : (naturalState.progress[lang] ?? 0)
   );
   const audioLoadingLabel = $derived(naturalReady(lang) ? labels.loadingAudio : m.story_loader_voices({}, { locale: settings.interfaceLocale }));
+  // The natural voice download prints its own ETA (seconds left); while it is still running, the
+  // loading screen can show how much longer the download will take instead of only a percentage.
+  const audioLoadingEta = $derived(naturalReady(lang) ? 0 : (naturalState.remaining[lang] ?? 0));
   // Who is on stage and what they hold so far. Everyone whose first stage cue is an entrance waits
   // in the wings until then; exits send them off, and their own lines bring them back. The room
   // keeps the last `lights` it was given.
@@ -837,7 +840,7 @@
 {/snippet}
 
 {#if story && !audioReady}
-    <StoryAudioLoader {story} title={story.title[lang]} level={story.level} label={audioLoadingLabel} lang={lang} progress={audioLoadingProgress} part={audioDone} total={audioTotal} voice={naturalNarratorVoice(lang)} />
+    <StoryAudioLoader {story} title={story.title[lang]} level={story.level} label={audioLoadingLabel} lang={lang} progress={audioLoadingProgress} part={audioDone} total={audioTotal} voice={naturalNarratorVoice(lang)} eta={audioLoadingEta} />
   {/if}
 
 {#if story && audioReady}
