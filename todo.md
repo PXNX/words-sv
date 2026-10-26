@@ -101,4 +101,4 @@ tests/build, a focused commit and a push to `main`.
 - [x] `npm run check` stays at the known baseline (69 errors / 6 warnings).
 - [x] Touched Vitest suites pass; only the pre-existing cron endpoint fails without `CRON_SECRET`,
   and the legacy `node --test` suites still fail on old imports (`src/lib/modes.js`).
-- [ ] Each phase committed separately and pushed to `main`; `out.js` stays untracked.
+- [x] Each phase committed separately and pushed to `main`; `out.js` stays untracked.
