@@ -122,9 +122,13 @@
     {#if sunset}
       <circle cx="270" cy="150" r="34" fill="#ffd36b" opacity=".95" /><circle cx="270" cy="150" r="48" fill="#ffd36b" opacity=".25" />
       {@render cloud(clouds[0].x, clouds[0].y, clouds[0].s * 0.8)}
-    {:else if weather === 'sunny'}
-      <circle class="story-sun" cx={outdoor ? 340 : sky.x + sky.w * 0.7} cy={outdoor ? 44 : sky.y + sky.h * 0.36} r={outdoor ? 24 : unit * 0.2} fill="#f4c84a" />
-      {@render cloud(clouds[0].x, clouds[0].y, clouds[0].s * 0.8)}
+     {:else if weather === 'sunny'}
+       <circle class="story-sun" cx={outdoor ? 340 : sky.x + sky.w * 0.7} cy={outdoor ? 44 : sky.y + sky.h * 0.36} r={outdoor ? 24 : unit * 0.2} fill="#f4c84a" />
+       {@render cloud(clouds[0].x, clouds[0].y, clouds[0].s * 0.8)}
+       <g class="story-birds" fill="none" stroke="#172a45" stroke-width="1.6" stroke-linecap="round">
+         <path d="M40 30q6-4 12 0q6-4 12 0" />
+         <path d="M120 55q5-3 10 0q5-3 10 0" />
+       </g>
     {:else}
       {#each clouds as c, index (index)}{@render cloud(c.x, c.y, c.s)}{/each}
     {/if}
@@ -454,8 +458,9 @@
   /* Two copies of the rain or snow, one sky-height apart, fall together so the loop has no seam */
   .story-rain { animation:story-fall .9s linear infinite; }
   .story-snow { animation:story-fall 7s linear infinite; }
-  .story-cloud { animation:story-drift 9s ease-in-out infinite alternate; }
-  .story-cloud:nth-of-type(2n) { animation-duration:12s;animation-direction:alternate-reverse; }
+   .story-cloud { animation:story-drift 9s ease-in-out infinite alternate; }
+   .story-cloud:nth-of-type(2n) { animation-duration:12s;animation-direction:alternate-reverse; }
+   .story-birds { animation:story-drift 6s ease-in-out infinite alternate; }
   @keyframes story-fall { from { transform:translateY(0); } to { transform:translateY(var(--fall)); } }
   @keyframes story-drift { from { translate:-6px 0; } to { translate:6px 0; } }
   /* the plane climbs slowly away and comes round again */
