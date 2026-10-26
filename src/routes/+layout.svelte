@@ -4,11 +4,12 @@
 	import { resolve } from '$app/paths';
 	import { goto, onNavigate } from '$app/navigation';
 	import { page, updated } from '$app/state';
-	import { onMount } from 'svelte';
-	import { getTextDirection, locales, localizeHref, setLocale } from '#lib/paraglide/runtime.js';
-	import { m } from '#lib/paraglide/messages.js';
-	import { settings } from '#lib/state/settings.svelte.js';
-	import StartupLoader from '#lib/StartupLoader.svelte';
+import { onMount } from 'svelte';
+import { getTextDirection, locales, localizeHref, setLocale } from '#lib/paraglide/runtime.js';
+import { m } from '#lib/paraglide/messages.js';
+import { settings } from '#lib/state/settings.svelte.js';
+import { warmLanguage, refreshHintableBaseWords } from '#lib/data/vocabulary.js';
+import StartupLoader from '#lib/StartupLoader.svelte';
 	import { pwaInstall } from '#lib/pwaInstall.svelte.js';
 	import { autoUpdateOnStart } from '#lib/pwaUpdate.js';
 	import { prepareNatural } from '#lib/story/naturalVoices.svelte.js';
@@ -57,11 +58,14 @@
 		});
 	});
 
-	onMount(() => {
-		void autoUpdateOnStart();
-		void updated.check();
-		pwaInstall.init();
-		hydrated = true;
+onMount(() => {
+    void autoUpdateOnStart();
+    void updated.check();
+    pwaInstall.init();
+    hydrated = true;
+    // Fetch the learner's vocabulary in the background so game modes that need it don't
+    // block on the first render. Other languages stay out of the bundle entirely.
+    void warmLanguage(settings.lang).then(refreshHintableBaseWords);
 		const blockGesture = (event: Event) => event.preventDefault();
 		const blockPinch = (event: TouchEvent) => { if (event.touches.length > 1) event.preventDefault(); };
 		document.addEventListener('gesturestart', blockGesture, { passive: false });
