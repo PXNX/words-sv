@@ -19,8 +19,9 @@ const ACTIVITY_BY_EVENT: Partial<Record<StreakEvent, ActivityKind>> = {
 export type Theme = 'light' | 'dark';
 export type InterfaceLocale = Locale;
 export type WordleLength = 3 | 4 | 5 | 6 | 7;
-// Story voices: the browser's own ('standard') or neural voices generated on the device ('natural').
-export type VoiceQuality = 'standard' | 'natural';
+// Story voices: the browser's own ('standard'), neural voices generated on the device ('natural'),
+// or the MiniMax cloud API ('minimax'), which needs an API key but gives the most natural speech.
+export type VoiceQuality = 'standard' | 'natural' | 'minimax';
 // Natural voice packs. Both run on the device; the high packs are larger and take longer to load.
 export type NaturalModel = 'standard' | 'high';
 
@@ -41,6 +42,7 @@ const VIBRATION_KEY = 'wordcircle-vibration';
 const SOUND_KEY = 'wordcircle-sound';
 const VOICE_QUALITY_KEY = 'wordcircle-voice-quality-v1';
 const NATURAL_MODEL_KEY = 'wordcircle-natural-model-v1';
+const MINIMAX_KEY = 'wordcircle-minimax-api-key-v1';
 const DIALECTS_KEY = 'wordcircle-dialects-v1';
 const BACKWARD_WORDS_KEY = 'wordcircle-backward-words-v1';
 const VOCABULARY_LEVEL_KEY = 'wordcircle-vocabulary-level-v1';
@@ -100,6 +102,7 @@ class SettingsStore {
     sound = $state(typeof localStorage === 'undefined' || localStorage.getItem(SOUND_KEY) !== 'off');
     voiceQuality = $state<VoiceQuality>(typeof localStorage !== 'undefined' && localStorage.getItem(VOICE_QUALITY_KEY) === 'natural' ? 'natural' : 'standard');
     naturalModel = $state<NaturalModel>(readNaturalModel());
+    minimaxKey = $state<string>(typeof localStorage !== 'undefined' ? localStorage.getItem(MINIMAX_KEY) ?? '' : '');
     dialects = $state(typeof localStorage === 'undefined' || localStorage.getItem(DIALECTS_KEY) !== 'off');
     lang = $state<Language>(readLanguage());
     interfaceLocale = $state<InterfaceLocale>(readInterfaceLocale());
@@ -138,6 +141,11 @@ class SettingsStore {
   setNaturalModel(next: NaturalModel) {
     this.naturalModel = next;
     localStorage.setItem(NATURAL_MODEL_KEY, next);
+  }
+  setMinimaxKey(next: string) {
+    this.minimaxKey = next;
+    localStorage.setItem(MINIMAX_KEY, next);
+    try { import('#lib/voice/minimax.js').then(({ setMinimaxApiKey }) => setMinimaxApiKey(next)); } catch {}
   }
   setDialects(next: boolean) {
     this.dialects = next;
