@@ -461,7 +461,8 @@
       const speaker = question.asker ?? 'narrator';
       if (prompt) segments.push({ text: prompt, speaker, mood: 'curious', gap: 1.8, story: 0, sound: null, soundLead: 0 });
       const options = question.options.map((option) => say(option[settings.lang]).trim()).filter(Boolean);
-      if (options.length) segments.push({ text: options.join(' … '), speaker, mood: 'neutral', gap: 2.4, story: 0, sound: null, soundLead: 0 });
+      const correct = options.length ? [options[0]] : [];
+      if (correct.length) segments.push({ text: correct.join(' … '), speaker, mood: 'neutral', gap: 2.4, story: 0, sound: null, soundLead: 0 });
     }
     return segments;
   }
