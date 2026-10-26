@@ -1,7 +1,15 @@
 import { requiresCumulativePool } from '#lib/circle/engine.js';
 import { wordPools, isLanguage, isVocabularyLevel, type Language, type VocabularyLevel } from '#lib/data/vocabulary.js';
 import { normalizeVocabularyGoal, dateKey, readStreak, syncStreak, syncStreakGoal, type ClientStreak, type StreakEvent } from '#lib/clientStreak.js';
+import { recordActivity, type ActivityKind } from '#lib/progress/activity.js';
 import type { Locale } from '#lib/paraglide/runtime.js';
+
+const ACTIVITY_BY_EVENT: Partial<Record<StreakEvent, ActivityKind>> = {
+  vocab_correct: 'vocab',
+  grammar_correct: 'grammar',
+  circle_completed: 'circle',
+  wordle_completed: 'wordle'
+};
 
 export type Theme = 'light' | 'dark';
 export type InterfaceLocale = Locale;
@@ -178,6 +186,10 @@ class SettingsStore {
       (event === 'story_completed' && this.streak.storyCompleted) ||
       (event === 'listen_completed' && this.streak.listenCompleted)
     )) return;
+    // Counters drop one timestamp per answer, so the weekly recap can measure real time spent.
+    // Reading, story and listening completions are logged where their ids are known.
+    const kind = ACTIVITY_BY_EVENT[event];
+    if (kind) recordActivity(kind);
     this.streak = await syncStreak(event, this.streak);
   }
   // The goal lives in the streak state, so it travels with the snapshot and survives a reload.

@@ -20,6 +20,7 @@ import { page } from '$app/state';
   import { characterNames, type CharacterId } from './stories';
   import StoryCharacter from './StoryCharacter.svelte';
   import { clearMissedWord, readMissedWords, recordMissedWord } from './missedWords';
+  import { recordActivity } from '#lib/progress/activity.js';
   import { clearWordRepeat, markWordForRepeat } from '#lib/vocab/spacedRepetition.js';
   import { wiktionaryUrl } from '#lib/wiktionary.js';
   import IconMenuBook from '~icons/material-symbols/menu-book-rounded';
@@ -221,7 +222,10 @@ import { page } from '$app/state';
       const nextSolved: Record<number, true> = { ...currentSolved, [index]: true };
       solved = { ...solved, [item.id]: nextSolved };
       // Every question answered ends the text, which is one of the ways to qualify the day.
-      if (item.questions.length > 0 && item.questions.every((_, questionIndex) => nextSolved[questionIndex])) void settings.recordStreak('reading_completed');
+      if (item.questions.length > 0 && item.questions.every((_, questionIndex) => nextSolved[questionIndex])) {
+        recordActivity('reading', { id: item.id });
+        void settings.recordStreak('reading_completed');
+      }
       if (settings.sound) playSuccessSound(settings.sound, 'vocab');
     } else {
       wrong = { ...wrong, [item.id]: { ...currentWrong, [index]: [...(currentWrong[index] ?? []), option] } };

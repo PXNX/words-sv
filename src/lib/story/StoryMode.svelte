@@ -15,6 +15,7 @@
   import StoryScene from './StoryScene.svelte';
   import { generateStory, hasMissedWords } from './generated';
   import { clearMissedWord, recordMissedWord } from './missedWords';
+  import { recordActivity } from '#lib/progress/activity.js';
   import { markWordForRepeat } from '#lib/vocab/spacedRepetition.js';
   import { applyVoice, type Speaker } from './voices';
   import { intonationOf, pauseAfter, pronounceable, sentences, splitSounds } from './speech';
@@ -305,6 +306,7 @@
     const completed = readCompleted();
     if (!completed.includes(id)) {
       localStorage.setItem(COMPLETED_KEY, JSON.stringify([...completed, id]));
+      recordActivity('story', { id });
       void settings.recordStreak('story_completed');
     }
   }
@@ -492,7 +494,7 @@
     const who = beat.kind === 'reply' ? beat.to : 'all';
     reaction = { who, mood: option === 0 ? 'happy' : 'curious' };
     if (option === 0) {
-      if (beat.focus && !wrong[index]?.length) clearMissedWord(lang, beat.focus);
+      if (beat.focus && !wrong[index]?.length) clearMissedWord(lang, beat.focus, true);
       solved = { ...solved, [index]: true };
       if (settings.sound) cancelSpeech();
       playSuccessSound(settings.sound, 'vocab');

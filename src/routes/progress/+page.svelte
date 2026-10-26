@@ -8,6 +8,10 @@
   import { readGrammarProgressByLanguage } from '#lib/grammar/learning.js';
   import { readMissedWords } from '#lib/story/missedWords.js';
   import { GRAMMAR_GOAL, PRONUNCIATION_GOAL, VOCABULARY_GOALS, modeDone } from '#lib/clientStreak.js';
+  import { readingTextsFor } from '#lib/story/readingTexts.js';
+  import { readReviewLedger, type ReviewLedger } from '#lib/review/ledger.js';
+  import { completedIds, countActivity, readActivity, type ActivityEvent } from '#lib/progress/activity.js';
+  import { buildMilestones, buildWeeklyRecap, milestonePercent, nextMilestone, weekStartTimestamp, type MilestoneId } from '#lib/progress/milestones.js';
   import IconExpand from '~icons/material-symbols/expand-more-rounded';
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
   import IconPending from '~icons/material-symbols/radio-button-unchecked-rounded';
@@ -51,7 +55,30 @@
     noProgress: m.stats_no_progress({}, { locale: settings.interfaceLocale }),
     topWords: m.stats_top_words({}, { locale: settings.interfaceLocale }),
     trickyWords: m.stats_tricky_words({}, { locale: settings.interfaceLocale }),
-    noneYet: m.stats_none_yet({}, { locale: settings.interfaceLocale })
+    noneYet: m.stats_none_yet({}, { locale: settings.interfaceLocale }),
+    milestonesTitle: m.milestones_title({}, { locale: settings.interfaceLocale }),
+    milestonesNext: m.milestones_next({}, { locale: settings.interfaceLocale }),
+    milestonesDone: m.milestones_done({}, { locale: settings.interfaceLocale }),
+    milestonesProgress: (value: number, target: number) => m.milestones_progress({ value, target }, { locale: settings.interfaceLocale }),
+    weekTitle: m.week_title({}, { locale: settings.interfaceLocale }),
+    weekWords: m.week_words({}, { locale: settings.interfaceLocale }),
+    weekMinutes: m.week_minutes({}, { locale: settings.interfaceLocale }),
+    weekBestStreak: m.week_best_streak({}, { locale: settings.interfaceLocale }),
+    weekHardest: m.week_hardest({}, { locale: settings.interfaceLocale }),
+    weekShare: m.week_share({}, { locale: settings.interfaceLocale }),
+    weekShared: m.week_shared({}, { locale: settings.interfaceLocale }),
+    weekEmpty: m.week_empty({}, { locale: settings.interfaceLocale })
+  });
+
+  // Milestone names live here, so the pure milestone model only deals with ids and numbers.
+  const milestoneLabels = $derived<Record<MilestoneId, string>>({
+    first_text: m.milestone_first_text({}, { locale: settings.interfaceLocale }),
+    first_story: m.milestone_first_story({}, { locale: settings.interfaceLocale }),
+    perfect_pronunciation: m.milestone_perfect_pronunciation({}, { locale: settings.interfaceLocale }),
+    streak_7: m.milestone_streak_7({}, { locale: settings.interfaceLocale }),
+    tricky_10: m.milestone_tricky_10({}, { locale: settings.interfaceLocale }),
+    all_a1_texts: m.milestone_all_a1_texts({}, { locale: settings.interfaceLocale }),
+    mastered_100: m.milestone_mastered_100({}, { locale: settings.interfaceLocale })
   });
 
   // Every mode that can qualify the day, so the daily progress is visible in one place.
@@ -94,6 +121,48 @@
       .sort((left, right) => (right.vocab?.totalRepetitions ?? 0) + (right.grammar?.totalRepetitions ?? 0) - (left.vocab?.totalRepetitions ?? 0) - (left.grammar?.totalRepetitions ?? 0))
   );
 
+  // Milestones and the weekly recap read the activity log and the shared review ledger. Both are
+  // loaded on the client so server rendering never sees a half-empty history.
+  let activity = $state<ActivityEvent[]>([]);
+  let ledger = $state<ReviewLedger>({});
+  let progressReady = $state(false);
+  let shareNote = $state('');
+
+  const textsRead = $derived(completedIds(activity, 'reading'));
+  const a1TextIds = $derived(readingTextsFor(settings.lang, 'a1', false).map((text) => text.id));
+  const masteredWords = $derived(Object.values(vocabProgress).reduce((sum, progress) => sum + progress.masteredWords, 0));
+  const milestones = $derived(buildMilestones({
+    textsRead: textsRead.length,
+    storiesCompleted: completedIds(activity, 'story').length,
+    perfectPronunciations: countActivity(activity, 'pronunciation', 0, Number.MAX_SAFE_INTEGER, (event) => event.perfect === true),
+    masteredWords,
+    bestStreak: settings.streak.bestStreak,
+    a1TextsRead: textsRead.filter((id) => a1TextIds.includes(id)).length,
+    a1TextsTotal: a1TextIds.length,
+    trickyCleared: countActivity(activity, 'tricky_cleared')
+  }));
+  const next = $derived(nextMilestone(milestones));
+  const weekly = $derived(buildWeeklyRecap({
+    ledger,
+    activity,
+    bestStreak: settings.streak.bestStreak,
+    since: weekStartTimestamp()
+  }));
+
+  async function shareWeek() {
+    const text = `${labels.weekTitle}: ${labels.weekWords} ${weekly.wordsMastered} · ${labels.weekMinutes} ${weekly.minutes} · ${labels.weekBestStreak} ${weekly.bestStreak}`;
+    try {
+      if (typeof navigator !== 'undefined' && navigator.share) {
+        await navigator.share({ title: labels.weekTitle, text });
+        return;
+      }
+      await navigator.clipboard.writeText(text);
+      shareNote = labels.weekShared;
+    } catch {
+      shareNote = '';
+    }
+  }
+
   // Clicking a language card reveals its top and tricky words.
   let expandedLanguages = $state<Language[]>([]);
   function toggleLanguage(code: Language) {
@@ -110,6 +179,9 @@
 
   let streakTimer: number | null = null;
   onMount(() => {
+    activity = readActivity();
+    ledger = readReviewLedger();
+    progressReady = true;
     void settings.refreshStreak();
     streakTimer = window.setInterval(() => void settings.refreshStreak(), 30_000);
     return () => {
@@ -171,6 +243,50 @@
       <div class="grid gap-[.1rem] text-center"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.4rem] leading-none text-base-content">{settings.streak.bestStreak}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.streakBest}</dt></div>
       <div class="grid gap-[.1rem] text-center border-s border-base-content/[.14] dark:border-base-content/[.22]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.4rem] leading-none text-base-content">{settings.completedRounds}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.completed}</dt></div>
     </dl>
+  </section>
+
+  <!-- Milestones: the nearest unfinished goal first, then the whole path. -->
+  <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4" aria-labelledby="progress-milestones-heading">
+    <h2 id="progress-milestones-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.milestonesTitle}</h2>
+    {#if next}
+      <div class="mt-[.5rem]">
+        <div class="flex items-center justify-between gap-3 text-base-content text-[.64rem] font-extrabold">
+          <span>{labels.milestonesNext}</span>
+          <span class="tabular-nums">{labels.milestonesProgress(next.value, next.target)}</span>
+        </div>
+        <p class="m-0 mt-[.2rem] text-base-content font-['DM_Serif_Display',serif] text-[1.15rem] leading-[1.15]">{milestoneLabels[next.id]}</p>
+        <div class="mt-[.4rem] h-[.5rem] w-full rounded-full bg-base-content/10 overflow-hidden" role="progressbar" aria-valuenow={milestonePercent(next)} aria-valuemin="0" aria-valuemax="100" aria-label={milestoneLabels[next.id]}>
+          <div class="h-full rounded-full bg-[#e6a527] transition-[width] duration-500" style={`width:${Math.max(milestonePercent(next), next.value > 0 ? 3 : 0)}%`}></div>
+        </div>
+      </div>
+    {:else if progressReady}
+      <p class="m-0 mt-[.45rem] text-success text-[.7rem] font-extrabold">{labels.milestonesDone}</p>
+    {/if}
+    <ul class="m-0 mt-[.7rem] p-0 list-none grid gap-[.3rem]">
+      {#each milestones as milestone (milestone.id)}
+        <li class="flex items-center gap-[.4rem] text-[.64rem] font-bold {milestone.done ? 'text-base-content' : 'text-base-content/50'}">
+          {#if milestone.done}<IconCheck class="w-[.95rem] h-[.95rem] flex-none text-success" aria-label={labels.milestonesDone} />{:else}<IconPending class="w-[.95rem] h-[.95rem] flex-none text-base-content/30" aria-hidden="true" />{/if}
+          <span class="min-w-0 flex-1 truncate">{milestoneLabels[milestone.id]}</span>
+          <span class="tabular-nums text-base-content/55">{labels.milestonesProgress(milestone.value, milestone.target)}</span>
+        </li>
+      {/each}
+    </ul>
+  </section>
+
+  <!-- Weekly recap: what actually happened this week, not a guessed average. -->
+  <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4" aria-labelledby="progress-week-heading">
+    <h2 id="progress-week-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.weekTitle}</h2>
+    <dl class="m-0 mt-[.6rem] grid grid-cols-2 gap-x-4 gap-y-[.55rem]">
+      <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{weekly.wordsMastered}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekWords}</dt></div>
+      <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{weekly.minutes}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekMinutes}</dt></div>
+      <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{weekly.bestStreak}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekBestStreak}</dt></div>
+      <div class="grid gap-[.1rem] min-w-0"><dd class="m-0 order-1 truncate text-base-content text-[.8rem] font-extrabold leading-[1.9]">{weekly.hardestWord ?? '—'}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekHardest}</dt></div>
+    </dl>
+    {#if weekly.wordsMastered === 0 && weekly.minutes === 0}
+      <p class="m-0 mt-[.5rem] text-base-content/55 text-[.62rem] font-bold">{labels.weekEmpty}</p>
+    {/if}
+    <button type="button" class="btn-play btn-play-soft btn-play-sm mt-[.7rem]" onclick={shareWeek}>{labels.weekShare}</button>
+    <p class="m-0 mt-[.35rem] text-success text-[.58rem] font-bold" aria-live="polite">{shareNote}</p>
   </section>
 
   <!-- One section per language, split into vocabulary (Tom) and grammar (Mia) -->

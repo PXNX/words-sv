@@ -2,6 +2,8 @@
  * Words the learner got wrong anywhere in the app (word quiz, grammar, a lost Wordle or Hangman
  * round). Generated stories practise these first; answering one right in a story clears it.
  */
+import { recordActivity } from '#lib/progress/activity.js';
+
 const MISSED_WORDS_KEY = 'wordcircle-missed-words-v1';
 const MAX_MISSED_WORDS = 60;
 
@@ -37,9 +39,14 @@ export function recordMissedWord(language: string, word: string) {
   writeMissedWords(language, [updated, ...words.filter((entry) => entry.word !== key)]);
 }
 
-export function clearMissedWord(language: string, word: string) {
+export function clearMissedWord(language: string, word: string, learned = false) {
   if (typeof localStorage === 'undefined') return;
   const key = word.toLocaleUpperCase();
   const words = readMissedWords(language);
-  if (words.some((entry) => entry.word === key)) writeMissedWords(language, words.filter((entry) => entry.word !== key));
+  if (words.some((entry) => entry.word === key)) {
+    writeMissedWords(language, words.filter((entry) => entry.word !== key));
+    // Answered right somewhere that practises the word, so it counts toward the "tricky words
+    // cleared" milestone. Un-marking a word by hand does not.
+    if (learned) recordActivity('tricky_cleared');
+  }
 }
