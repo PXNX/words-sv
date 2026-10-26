@@ -31,14 +31,14 @@ tests/build, a focused commit and a push to `main`.
 
 ## 3. Give every session a real ending and a next step (S–M)
 
-- [ ] Vocabulary ends after the second pass instead of looping the queue forever.
-  - [ ] Recap: correct on first try, words to repeat.
-  - [ ] One primary button: “Practise the N tricky words”.
-- [ ] Reading: after the last question show score, “Mark these words for repetition” and
+- [x] Vocabulary ends after the second pass instead of looping the queue forever.
+  - [x] Recap: correct on first try, words to repeat.
+  - [x] One primary button: “Practise the N tricky words”.
+- [x] Reading: after the last question show score, “Mark these words for repetition” and
   “Read the next text”.
-- [ ] Story: offer “Mark these words for repetition” for the words answered wrong.
-- [ ] Listening: recap after a full session, plus replay.
-- [ ] Add “undo last answer” in quiz modes; a mis-tap must not cost a lapse.
+- [x] Story: offer “Mark these words for repetition” for the words answered wrong.
+- [x] Listening: recap after a full session, plus replay.
+- [x] Add “undo last answer” in quiz modes; a mis-tap must not cost a lapse.
 
 ## 4. Unify review state across modes (M–L)
 

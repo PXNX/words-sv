@@ -234,5 +234,17 @@
   "today_streak": "يحتاج تسلسلك إلى {count} إجابات صحيحة أخرى",
   "today_marked": "علّمت {count} كلمات — راجعها",
   "today_done": "تم إنجاز كل شيء اليوم.",
-  "today_start": "ابدأ"
+  "today_start": "ابدأ",
+  "undo_last": "التراجع عن الإجابة الأخيرة",
+  "vocab_recap_title": "اكتملت الجولة",
+  "vocab_recap_score": "{correct} من {total} كلمات صحيحة من المحاولة الأولى.",
+  "vocab_recap_tricky": "هذه الكلمات تحتاج إلى جولة أخرى",
+  "vocab_recap_practise": "تدرّب على الكلمات الصعبة ({count})",
+  "vocab_recap_new": "جولة جديدة",
+  "vocab_recap_none": "لا توجد كلمات صعبة — أحسنت!",
+  "reading_recap_mark": "علّم هذه الكلمات للتكرار",
+  "reading_recap_next": "اقرأ النص التالي",
+  "story_recap_mark": "علّم الكلمات الخاطئة للتكرار",
+  "listen_recap_title": "اكتملت جلسة الاستماع",
+  "listen_recap_replay": "استمع مرة أخرى"
 }

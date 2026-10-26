@@ -234,5 +234,17 @@
   "today_streak": "{count} پاسخ درست دیگر برای زنجیرهٔ تو لازم است",
   "today_marked": "{count} واژه را علامت زدی — آن‌ها را مرور کن",
   "today_done": "برای امروز همه‌چیز انجام شد.",
-  "today_start": "شروع"
+  "today_start": "شروع",
+  "undo_last": "بازگرداندن پاسخ آخر",
+  "vocab_recap_title": "دوره تمام شد",
+  "vocab_recap_score": "{correct} از {total} واژه در اولین تلاش درست بود.",
+  "vocab_recap_tricky": "این واژه‌ها به یک دوره دیگر نیاز دارند",
+  "vocab_recap_practise": "تمرین {count} واژه دشوار",
+  "vocab_recap_new": "دوره جدید",
+  "vocab_recap_none": "واژه دشواری نبود — آفرین!",
+  "reading_recap_mark": "این واژه‌ها را برای تکرار علامت بزن",
+  "reading_recap_next": "متن بعدی را بخوان",
+  "story_recap_mark": "واژه‌های اشتباه را برای تکرار علامت بزن",
+  "listen_recap_title": "جلسه شنیدن تمام شد",
+  "listen_recap_replay": "دوباره گوش کن"
 }

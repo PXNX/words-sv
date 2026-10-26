@@ -71,7 +71,9 @@ import { page } from '$app/state';
     singular: m.reading_word_singular({}, { locale: settings.interfaceLocale }),
     plural: m.reading_word_plural({}, { locale: settings.interfaceLocale }),
     currentCase: m.reading_word_current_case({}, { locale: settings.interfaceLocale }),
-    character: m.reading_character({}, { locale: settings.interfaceLocale })
+    character: m.reading_character({}, { locale: settings.interfaceLocale }),
+    recapMark: m.reading_recap_mark({}, { locale: settings.interfaceLocale }),
+    recapNext: m.reading_recap_next({}, { locale: settings.interfaceLocale })
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   const name = $derived(settings.firstName);
@@ -192,6 +194,17 @@ import { page } from '$app/state';
     } else {
       markWordForRepeat(settings.lang, info.word);
       recordMissedWord(settings.lang, info.word);
+    }
+    markedWords = new Set(readMissedWords(settings.lang).map((entry) => entry.word));
+  }
+
+  // The end of a text offers its key words as tomorrow's review, without touching words the
+  // learner already marked while reading.
+  function markKeyWords() {
+    for (const word of current?.keyWords ?? []) {
+      if (markedWords.has(word.toLocaleUpperCase())) continue;
+      markWordForRepeat(settings.lang, word);
+      recordMissedWord(settings.lang, word);
     }
     markedWords = new Set(readMissedWords(settings.lang).map((entry) => entry.word));
   }
@@ -357,7 +370,17 @@ import { page } from '$app/state';
           {/each}
         </ol>
         {#if answered === current.questions.length}
-          <p class="reading-score">{m.story_score({ correct: String(firstTry), total: String(current.questions.length) }, { locale: settings.interfaceLocale })}</p>
+          <div class="reading-recap">
+            <p class="reading-score">{m.story_score({ correct: String(firstTry), total: String(current.questions.length) }, { locale: settings.interfaceLocale })}</p>
+            <div class="reading-recap-actions">
+              {#if current.keyWords.length}
+                <button type="button" class="btn-play btn-play-soft reading-nav" onclick={markKeyWords}>{labels.recapMark}</button>
+              {/if}
+              {#if nextItem}
+                <button type="button" class="btn-play btn-play-ink reading-nav" onclick={() => void select(nextItem.id)}>{labels.recapNext}</button>
+              {/if}
+            </div>
+          </div>
         {:else}
           <p class="reading-score">{m.story_reading_progress({ answered: String(answered), total: String(current.questions.length) }, { locale: settings.interfaceLocale })}</p>
         {/if}
@@ -485,6 +508,8 @@ import { page } from '$app/state';
   .reading-options button { flex:1 1 10rem; }
   .reading-options button.missed { opacity:.55;text-decoration:line-through; }
   .reading-score { margin:0;padding-top:.15rem;text-align:center;color:#596477;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:800; }
+  .reading-recap { display:grid;gap:.5rem;padding:.35rem 0 .1rem;border-top:1px dashed rgba(23,42,69,.2); }
+  .reading-recap-actions { display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem; }
   .reading-footer { display:flex;flex-wrap:wrap;justify-content:center;gap:.45rem;width:min(100%,44rem);margin:0 auto;padding-bottom:.4rem; }
   .reading-nav { display:inline-flex;align-items:center;gap:.3rem;min-height:2.4rem;font-size:.66rem; }
   .reading-nav :global(svg) { width:1rem;height:1rem; }
@@ -542,6 +567,7 @@ import { page } from '$app/state';
   :global(html.dark) .reading-questions { border-color:rgba(255,253,247,.24);background:#152b47;box-shadow:0 10px 28px rgba(0,0,0,.3); }
   :global(html.dark) .reading-paragraph { color:rgba(255,253,247,.9); }
   :global(html.dark) .reading-questions li { border-color:rgba(255,253,247,.14);background:rgba(255,253,247,.05); }
+  :global(html.dark) .reading-recap { border-color:rgba(255,253,247,.24); }
   :global(html.dark) .reading-words li { border-color:rgba(255,253,247,.2);background:#2b4a73;color:#fffdf7; }
   :global(html.dark) .reading-hint { color:rgba(255,253,247,.6); }
   :global(html.dark) .reading-kicker { color:#e9b07d; }

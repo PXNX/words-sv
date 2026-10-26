@@ -72,6 +72,8 @@
   let sounds = $state<SavedSound[]>([]);
   let lastSoundAt = -1;
   let liveToken = 0;
+  // A finished session now ends on a recap; replaying or starting the next one is a choice.
+  let sessionDone = $state(false);
 
   const standardMode = $derived(settings.voiceQuality !== 'natural');
   const download = $derived(Math.round((naturalState.progress[settings.lang] ?? 0) * 100));
@@ -88,7 +90,9 @@
     history: m.story_listen_history({}, { locale: settings.interfaceLocale }),
     play: m.home_play({}, { locale: settings.interfaceLocale }),
     again: m.learning_again({}, { locale: settings.interfaceLocale }),
-    unsupported: m.learning_speech_unavailable({}, { locale: settings.interfaceLocale })
+    unsupported: m.learning_speech_unavailable({}, { locale: settings.interfaceLocale }),
+    recapTitle: m.listen_recap_title({}, { locale: settings.interfaceLocale }),
+    recapReplay: m.listen_recap_replay({}, { locale: settings.interfaceLocale })
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   const currentStory = $derived(storyStarts.filter((entry) => entry.at <= position + 0.05).at(-1)?.title ?? storyStarts[0]?.title ?? labels.listen);
@@ -251,15 +255,23 @@
     playing = false;
   }
   function finishSession() {
-    const token = generation;
+    if (sessionDone) return;
+    sessionDone = true;
     position = duration;
     lastSoundAt = duration;
     flushPosition();
     playChime();
     void settings.recordStreak('listen_completed');
-    setTimeout(() => {
-      if (phase === 'ready' && token === generation) void startSession();
-    }, 600);
+  }
+  // Replays the session the learner just heard instead of drawing a new story.
+  function replaySession() {
+    sessionDone = false;
+    if (liveSession) { startStandardPlayback(0); return; }
+    if (!audio) return;
+    try { audio.currentTime = 0; } catch {}
+    position = 0;
+    lastSoundAt = -1;
+    void audio.play().catch(() => (playing = false));
   }
   function say(text: string) {
     return fillName(text, settings.firstName);
@@ -432,6 +444,7 @@
   }
   function clearAudio() {
     cancelStandardSpeech();
+    sessionDone = false;
     currentId = '';
     const current = audio;
     current?.pause();
@@ -913,7 +926,18 @@
         <button type="button" class="btn-play btn-play-ink btn-play-sm" onclick={startSession}>{labels.again}</button>
       </div>
     {:else if phase === 'ready'}
-<div class="listen-player">
+      {#if sessionDone}
+        <div class="listen-player listen-recap">
+          <span class="listen-pulse" aria-hidden="true"><IconHeadphones /></span>
+          <p class="listen-recap-title">{labels.recapTitle}</p>
+          <p lang={settings.lang}>{currentStory}</p>
+          <div class="listen-recap-actions">
+            <button type="button" class="btn-play btn-play-ink btn-play-sm" onclick={replaySession}>{labels.recapReplay}</button>
+            <button type="button" class="btn-play btn-play-soft btn-play-sm" onclick={startSession}>{labels.newAudio}</button>
+          </div>
+        </div>
+      {:else}
+        <div class="listen-player">
           <div class="listen-player-row">
             <span class="listen-art" class:has-scene={currentScene} class:playing aria-hidden="true">
               {#if currentScene}
@@ -934,6 +958,7 @@
           </div>
           <button type="button" class="btn-play btn-play-sm listen-new" onclick={startSession}>{labels.newAudio}</button>
         </div>
+      {/if}
     {:else}
       <div class="listen-state" aria-live="polite">
         <span class="listen-pulse" aria-hidden="true"><IconHeadphones /></span>
@@ -1011,6 +1036,9 @@
   .listen-walker :global(.story-character) { display:block;width:100%;height:100%;transform-origin:50% 100%;animation:listen-bob .34s ease-in-out infinite alternate; }
   .listen-eta { display:flex;justify-content:space-between;gap:.5rem;width:min(100%,16rem); }
   .listen-player { gap:.55rem; }
+  .listen-recap { justify-items:center; }
+  .listen-recap-title { font-family:'DM Serif Display',serif !important;font-size:1.25rem !important;font-weight:400 !important;line-height:1.15 !important; }
+  .listen-recap-actions { display:flex;flex-wrap:wrap;justify-content:center;gap:.45rem; }
   .listen-player-row { display:flex;align-items:center;gap:1rem; }
   .listen-now { display:grid;gap:.15rem;justify-items:flex-start; }
   .listen-now p { font-family:'DM Serif Display',serif;font-size:1.25rem;font-weight:400; }
