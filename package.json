@@ -12,8 +12,7 @@
     "preview": "vite preview --host 0.0.0.0",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "test": "node --test tests/modes.test.mjs tests/routes.test.mjs tests/streak.test.mjs tests/wordle-state.test.mjs tests/catalog.test.mjs tests/seo.test.mjs tests/vocabulary-definitions.test.mjs && vitest run --config tests/vitest.server.config.mjs",
-    "neutts:install": "bun scripts/install-neutts.ts",
-    "neutts:build": "bun scripts/build-neutts-voices.ts"
+    "voices:build": "bun scripts/build-character-voices.ts"
   },
   "devDependencies": {
     "@fontsource/dm-sans": "^5.3.0",
