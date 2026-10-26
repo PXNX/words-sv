@@ -282,5 +282,16 @@
   "week_hardest": "Hardest word",
   "week_share": "Share recap",
   "week_shared": "Recap copied",
-  "week_empty": "A new week starts now."
+  "week_empty": "A new week starts now.",
+  "streak_freezes": "Freezes: {count}",
+  "streak_freeze_hint": "Every 7 qualified days earns a freeze that bridges one missed day.",
+  "streak_repair_title": "Repair your streak",
+  "streak_repair_hint": "You missed one day. Answer {need} words correctly to keep your {count}-day streak.",
+  "streak_repair_progress": "{done} / {need} correct",
+  "streak_repair_done": "Your {count}-day streak is back.",
+  "streak_repair_none": "Nothing to repair today.",
+  "streak_repair_cta": "Repair streak",
+  "streak_repair_skip": "Not now",
+  "streak_restart": "Best: {count} days. Start a new streak.",
+  "streak_reminder_hint": "At most one gentle reminder a day, only when something is waiting."
 }

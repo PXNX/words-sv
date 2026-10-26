@@ -2,7 +2,7 @@ import { timingSafeEqual } from 'node:crypto';
 import { getDatabase } from '../_lib/database.mjs';
 import { respond } from '../_lib/http.mjs';
 import { sendPush } from '../_lib/push.mjs';
-import { reminderTypes } from '../_lib/streak.mjs';
+import { reminderNotification, reminderTypes } from '../_lib/streak.mjs';
 
 function constantTimeMatch(left, right) {
 	const leftValue = Buffer.from(left);
@@ -39,9 +39,7 @@ export function createRemindersEndpoint({ databaseProvider = getDatabase, pushSe
 					throw error;
 				}
 				attempted += 1;
-				const payload = type === 'deadline'
-					? { title: 'Keep your WordCircle streak', body: `Only ${summary.minutesRemaining} minutes remain to qualify today.`, url: '/' }
-					: { title: 'Continue your WordCircle streak', body: 'A new learning day has started.', url: '/' };
+				const payload = { ...reminderNotification(type, row.locale, summary.minutesRemaining), url: '/' };
 				try {
 					await pushSender({ endpoint: row.endpoint, keys: { p256dh: row.p256dh_key, auth: row.auth_key } }, payload);
 					delivered += 1;

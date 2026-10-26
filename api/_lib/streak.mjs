@@ -4,6 +4,14 @@ export const PRONUNCIATION_GOAL = 10;
 export const FREEZE_EVERY = 7;
 export const MAX_FREEZES = 2;
 export const DAILY_GOALS = [5, 8, 12];
+export const REMINDER_LOCALES = ['de', 'en', 'fa', 'pt', 'ru', 'ar', 'uk', 'hi', 'ml'];
+
+/** @param {unknown} value */
+export function normalizeReminderLocale(value) {
+	const language = String(value ?? '').toLowerCase();
+	const match = REMINDER_LOCALES.find((locale) => language === locale || language.startsWith(`${locale}-`));
+	return match ?? 'en';
+}
 
 /** @param {unknown} value */
 export function normalizeVocabularyGoal(value) {
@@ -164,10 +172,47 @@ export function streakSummary(stored, timeZone, now = new Date()) {
 	};
 }
 
+/** A device gets at most one reminder a day, so the most urgent type wins. */
 export function reminderTypes(stored, timeZone, now = new Date()) {
 	const summary = streakSummary(stored, timeZone, now);
 	const types = [];
-	if (summary.lastQualifiedDay === previousDateKey(summary.dateKey) && dateKeyFor(timeZone, new Date(now.getTime() - 2 * 60 * 60 * 1000)) !== summary.dateKey) types.push('new_day');
 	if (summary.canProtectStreak && summary.minutesRemaining > 0 && summary.minutesRemaining <= 120) types.push('deadline');
+	else if (summary.lastQualifiedDay === previousDateKey(summary.dateKey) && dateKeyFor(timeZone, new Date(now.getTime() - 2 * 60 * 60 * 1000)) !== summary.dateKey) types.push('new_day');
 	return { summary, types };
+}
+
+/** @type {Record<string, (type: string, minutes: number) => { title: string, body: string }>} */
+const NOTIFICATIONS = {
+	en: (type, minutes) => type === 'deadline'
+		? { title: 'Keep your WordCircle streak', body: `Only ${minutes} minutes remain to qualify today.` }
+		: { title: 'Continue your WordCircle streak', body: 'A new learning day has started.' },
+	de: (type, minutes) => type === 'deadline'
+		? { title: 'Deine WordCircle-Serie wartet', body: `Nur noch ${minutes} Minuten bis Mitternacht, um heute zu qualifizieren.` }
+		: { title: 'Weiter mit deiner WordCircle-Serie', body: 'Ein neuer Lerntag hat begonnen.' },
+	ar: (type, minutes) => type === 'deadline'
+		? { title: 'سلسلتك في WordCircle تنتظر', body: `تبقّى ${minutes} دقيقة حتى منتصف الليل لتُكمل اليوم.` }
+		: { title: 'واصل سلسلة WordCircle', body: 'بدأ يوم تعلّم جديد.' },
+	fa: (type, minutes) => type === 'deadline'
+		? { title: 'زنجیره WordCircle شما منتظر است', body: `فقط ${minutes} دقیقه تا نیمه‌شب برای امروز باقی مانده است.` }
+		: { title: 'زنجیره WordCircle خود را ادامه بده', body: 'روز یادگیری تازه‌ای آغاز شد.' },
+	hi: (type, minutes) => type === 'deadline'
+		? { title: 'आपकी WordCircle लय प्रतीक्षा में है', body: `आज पूरा करने के लिए मध्यरात्रि तक ${minutes} मिनट बाकी हैं।` }
+		: { title: 'अपनी WordCircle लय जारी रखें', body: 'नया सीखने का दिन शुरू हुआ।' },
+	ml: (type, minutes) => type === 'deadline'
+		? { title: 'നിങ്ങളുടെ WordCircle തുടർച്ച കാത്തിരിക്കുന്നു', body: `ഇന്ന് പൂർത്തിയാക്കാൻ അർധരാത്രി വരെ ${minutes} മിനിറ്റ് ബാക്കി.` }
+		: { title: 'നിങ്ങളുടെ WordCircle തുടർച്ച തുടരുക', body: 'പുതിയ പഠന ദിവസം തുടങ്ങി.' },
+	pt: (type, minutes) => type === 'deadline'
+		? { title: 'A sua sequência WordCircle está à espera', body: `Restam ${minutes} minutos até à meia-noite para qualificar hoje.` }
+		: { title: 'Continue a sua sequência WordCircle', body: 'Começou um novo dia de aprendizagem.' },
+	ru: (type, minutes) => type === 'deadline'
+		? { title: 'Ваша серия WordCircle ждёт', body: `До полуночи осталось ${minutes} минут, чтобы засчитать сегодняшний день.` }
+		: { title: 'Продолжите серию WordCircle', body: 'Начался новый учебный день.' },
+	uk: (type, minutes) => type === 'deadline'
+		? { title: 'Ваша серія WordCircle чекає', body: `До опівночі залишилося ${minutes} хвилин, щоб зарахувати сьогодні.` }
+		: { title: 'Продовжте серію WordCircle', body: 'Почався новий навчальний день.' }
+};
+
+/** @param {string} type @param {string} locale @param {number} minutesRemaining */
+export function reminderNotification(type, locale, minutesRemaining) {
+	return (NOTIFICATIONS[normalizeReminderLocale(locale)] ?? NOTIFICATIONS.en)(type, minutesRemaining);
 }

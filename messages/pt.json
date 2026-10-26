@@ -278,5 +278,16 @@
   "week_hardest": "Palavra mais difícil",
   "week_share": "Partilhar resumo",
   "week_shared": "Resumo copiado",
-  "week_empty": "Uma nova semana começa agora."
+  "week_empty": "Uma nova semana começa agora.",
+  "streak_freezes": "Proteções: {count}",
+  "streak_freeze_hint": "Cada 7 dias qualificados dá uma proteção que cobre um dia falhado.",
+  "streak_repair_title": "Reparar sequência",
+  "streak_repair_hint": "Falhou um dia. Responda a {need} palavras corretamente para manter a sequência de {count} dias.",
+  "streak_repair_progress": "{done} / {need} certas",
+  "streak_repair_done": "A sua sequência de {count} dias está de volta.",
+  "streak_repair_none": "Não há nada para reparar hoje.",
+  "streak_repair_cta": "Reparar sequência",
+  "streak_repair_skip": "Agora não",
+  "streak_restart": "Melhor: {count} dias. Comece uma nova sequência.",
+  "streak_reminder_hint": "No máximo um lembrete gentil por dia, só quando algo está à espera."
 }

@@ -278,5 +278,16 @@
   "week_hardest": "دشوارترین واژه",
   "week_share": "هم‌رسانی خلاصه",
   "week_shared": "خلاصه کپی شد",
-  "week_empty": "هفته‌ای تازه همین حالا آغاز می‌شود."
+  "week_empty": "هفته‌ای تازه همین حالا آغاز می‌شود.",
+  "streak_freezes": "محافظ: {count}",
+  "streak_freeze_hint": "هر ۷ روز واجد شرایط یک محافظ می‌دهد که یک روز ازدست‌رفته را پل می‌زند.",
+  "streak_repair_title": "ترمیم زنجیره",
+  "streak_repair_hint": "یک روز را از دست دادی. برای حفظ زنجیره {count} روزه، {need} واژه را درست پاسخ بده.",
+  "streak_repair_progress": "{done} / {need} درست",
+  "streak_repair_done": "زنجیره {count} روزه‌ات برگشت.",
+  "streak_repair_none": "امروز چیزی برای ترمیم نیست.",
+  "streak_repair_cta": "ترمیم زنجیره",
+  "streak_repair_skip": "الان نه",
+  "streak_restart": "بهترین: {count} روز. زنجیره تازه‌ای شروع کن.",
+  "streak_reminder_hint": "حداکثر یک یادآوری ملایم در روز، فقط وقتی چیزی منتظر است."
 }

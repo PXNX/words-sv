@@ -36,6 +36,9 @@ import { page } from '$app/state';
     id: string;
     solved: Record<string, Record<number, true>>;
     wrong: Record<string, Record<number, string[]>>;
+    // Mirrored for the service worker and the home card, which cannot rebuild the catalogue cheaply.
+    title?: string;
+    remaining?: number;
   };
 
   const labels = $derived({
@@ -264,7 +267,15 @@ import { page } from '$app/state';
     const misses = wrong;
     if (!ready || !item) return;
     try {
-      const snapshot: SavedReading = { fingerprint, id: item.id, solved: answers, wrong: misses };
+      const answered = item.questions.filter((_, index) => answers[item.id]?.[index]).length;
+      const snapshot: SavedReading = {
+        fingerprint,
+        id: item.id,
+        solved: answers,
+        wrong: misses,
+        title: item.title,
+        remaining: Math.max(0, item.questions.length - answered)
+      };
       localStorage.setItem(PROGRESS_KEY, JSON.stringify(snapshot));
     } catch {
       // A full or blocked storage must not stop the reading.

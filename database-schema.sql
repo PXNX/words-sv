@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS wordcircle_streak_devices (
   device_id VARCHAR(64) NOT NULL PRIMARY KEY,
   timezone VARCHAR(64) NOT NULL,
+  locale VARCHAR(8) NOT NULL DEFAULT 'en',
   day_key CHAR(10) NOT NULL,
   vocab_correct INT UNSIGNED NOT NULL DEFAULT 0,
   circle_completed TINYINT(1) NOT NULL DEFAULT 0,
@@ -33,6 +34,10 @@ CREATE TABLE IF NOT EXISTS wordcircle_streak_devices (
 --   ADD COLUMN vocabulary_goal TINYINT UNSIGNED NOT NULL DEFAULT 8,
 --   ADD COLUMN freezes TINYINT UNSIGNED NOT NULL DEFAULT 0,
 --   ADD COLUMN qualified_days INT UNSIGNED NOT NULL DEFAULT 0;
+--
+-- Reminders are now capped at one per local day and use the interface locale.
+-- ALTER TABLE wordcircle_streak_devices ADD COLUMN locale VARCHAR(8) NOT NULL DEFAULT 'en';
+-- ALTER TABLE wordcircle_reminder_deliveries DROP PRIMARY KEY, ADD PRIMARY KEY (device_id, delivery_date);
 
 CREATE TABLE IF NOT EXISTS wordcircle_push_subscriptions (
   endpoint_hash CHAR(64) NOT NULL PRIMARY KEY,
@@ -51,6 +56,6 @@ CREATE TABLE IF NOT EXISTS wordcircle_reminder_deliveries (
   delivery_date CHAR(10) NOT NULL,
   delivery_type VARCHAR(16) NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (device_id, delivery_date, delivery_type),
+  PRIMARY KEY (device_id, delivery_date),
   CONSTRAINT wordcircle_reminder_deliveries_device_fk FOREIGN KEY (device_id) REFERENCES wordcircle_streak_devices(device_id) ON DELETE CASCADE
 );

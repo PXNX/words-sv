@@ -278,5 +278,16 @@
   "week_hardest": "أصعب كلمة",
   "week_share": "شارك الملخص",
   "week_shared": "تم نسخ الملخص",
-  "week_empty": "يبدأ أسبوع جديد الآن."
+  "week_empty": "يبدأ أسبوع جديد الآن.",
+  "streak_freezes": "الحمايات: {count}",
+  "streak_freeze_hint": "كل 7 أيام مؤهلة تمنحك حماية تجسر يومًا فائتًا واحدًا.",
+  "streak_repair_title": "إصلاح السلسلة",
+  "streak_repair_hint": "فوّت يومًا واحدًا. أجب عن {need} كلمات بشكل صحيح للحفاظ على سلسلة {count} يومًا.",
+  "streak_repair_progress": "{done} / {need} صحيحة",
+  "streak_repair_done": "عادت سلسلتك الممتدة {count} يومًا.",
+  "streak_repair_none": "لا شيء لإصلاحه اليوم.",
+  "streak_repair_cta": "أصلح السلسلة",
+  "streak_repair_skip": "ليس الآن",
+  "streak_restart": "أفضل نتيجة: {count} يومًا. ابدأ سلسلة جديدة.",
+  "streak_reminder_hint": "تذكير لطيف واحد يوميًا على الأكثر، فقط عندما ينتظرك شيء."
 }

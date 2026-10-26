@@ -7,7 +7,7 @@
   import { readVocabularyProgressByLanguage } from '#lib/vocab/spacedRepetition.js';
   import { readGrammarProgressByLanguage } from '#lib/grammar/learning.js';
   import { readMissedWords } from '#lib/story/missedWords.js';
-  import { GRAMMAR_GOAL, PRONUNCIATION_GOAL, VOCABULARY_GOALS, modeDone } from '#lib/clientStreak.js';
+  import { GRAMMAR_GOAL, PRONUNCIATION_GOAL, REPAIR_WORDS, VOCABULARY_GOALS, modeDone, type StreakRepair } from '#lib/clientStreak.js';
   import { readingTextsFor } from '#lib/story/readingTexts.js';
   import { readReviewLedger, type ReviewLedger } from '#lib/review/ledger.js';
   import { completedIds, countActivity, readActivity, type ActivityEvent } from '#lib/progress/activity.js';
@@ -67,7 +67,14 @@
     weekHardest: m.week_hardest({}, { locale: settings.interfaceLocale }),
     weekShare: m.week_share({}, { locale: settings.interfaceLocale }),
     weekShared: m.week_shared({}, { locale: settings.interfaceLocale }),
-    weekEmpty: m.week_empty({}, { locale: settings.interfaceLocale })
+    weekEmpty: m.week_empty({}, { locale: settings.interfaceLocale }),
+    streakFreezes: (count: number) => m.streak_freezes({ count }, { locale: settings.interfaceLocale }),
+    streakFreezeHint: m.streak_freeze_hint({}, { locale: settings.interfaceLocale }),
+    streakRepairTitle: m.streak_repair_title({}, { locale: settings.interfaceLocale }),
+    streakRepairHint: (count: number, need: number) => m.streak_repair_hint({ count, need }, { locale: settings.interfaceLocale }),
+    streakRepairCta: m.streak_repair_cta({}, { locale: settings.interfaceLocale }),
+    streakRepairNone: m.streak_repair_none({}, { locale: settings.interfaceLocale }),
+    streakRestart: (count: number) => m.streak_restart({ count }, { locale: settings.interfaceLocale })
   });
 
   // Milestone names live here, so the pure milestone model only deals with ids and numbers.
@@ -178,12 +185,18 @@
   }
 
   let streakTimer: number | null = null;
+  let repairOffer = $state<StreakRepair | null>(null);
+  function refreshStreak() {
+    return settings.refreshStreak().then(() => {
+      repairOffer = settings.repairCandidate();
+    });
+  }
   onMount(() => {
     activity = readActivity();
     ledger = readReviewLedger();
     progressReady = true;
-    void settings.refreshStreak();
-    streakTimer = window.setInterval(() => void settings.refreshStreak(), 30_000);
+    void refreshStreak();
+    streakTimer = window.setInterval(() => void refreshStreak(), 30_000);
     return () => {
       if (streakTimer !== null) window.clearInterval(streakTimer);
     };
@@ -231,6 +244,15 @@
         {/each}
       </div>
       <p class="m-0 mt-[.3rem] text-base-content/55 text-[.56rem] font-bold">{labels.streakGoalHint}</p>
+      <p class="m-0 mt-[.2rem] text-base-content/55 text-[.56rem] font-bold">{labels.streakFreezes(settings.streak.freezes)} · {labels.streakFreezeHint}</p>
+      {#if repairOffer}
+        <div class="mt-[.55rem] p-[.6rem] border border-base-content/25 rounded-[.6rem] bg-[#fff4d9] dark:bg-[#294666]">
+          <p class="m-0 text-base-content text-[.6rem] font-extrabold leading-[1.4]">{labels.streakRepairHint(repairOffer.streakCount, REPAIR_WORDS)}</p>
+          <a class="btn-play btn-play-ink btn-play-sm mt-[.4rem]" href="/vocab?repair=1">{labels.streakRepairCta}</a>
+        </div>
+      {:else if !settings.streak.qualified && settings.streak.streakCount === 0 && settings.streak.bestStreak > 0}
+        <p class="m-0 mt-[.35rem] text-base-content/65 text-[.6rem] font-bold">{labels.streakRestart(settings.streak.bestStreak)}</p>
+      {/if}
     </div>
 
     <div class="mt-[.7rem] flex flex-wrap items-center gap-x-4 gap-y-1 text-base-content text-[.64rem] font-extrabold" aria-label={labels.today}>
