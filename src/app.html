@@ -10,10 +10,12 @@
 
 		<meta
 			name="viewport"
-			content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"
+			content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
 		/>
 
 		<meta name="theme-color" content="#172A45" />
+		<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#172A45" />
+		<meta name="background-color" content="#FFFDF7" />
 
 		<meta
 			name="description"
@@ -21,16 +23,16 @@
 		/>
 
 		<meta name="apple-mobile-web-app-capable" content="yes" />
-
 		<meta
 			name="apple-mobile-web-app-status-bar-style"
-			content="default"
+			content="black-translucent"
 		/>
+		<meta name="apple-mobile-web-app-title" content="WordCircle" />
+		<meta name="mobile-web-app-capable" content="yes" />
 
-		<meta
-			name="apple-mobile-web-app-title"
-			content="WordCircle"
-		/>
+		<!-- Edge-to-edge: the app draws under the system bars, so no browser chrome or URL bar shows -->
+		<meta name="edge-to-edge" content="true" />
+		<meta name="overscroll" content="none" />
 
 		<link
 			rel="icon"
@@ -44,6 +46,12 @@
 			rel="apple-touch-icon"
 			href="/icons/wordcircle-192.png"
 		/>
+		<link rel="apple-touch-icon" sizes="152x152" href="/icons/wordcircle-152.png" />
+		<link rel="apple-touch-icon" sizes="192x192" href="/icons/wordcircle-192.png" />
+		<link rel="apple-touch-icon" sizes="512x512" href="/icons/wordcircle-512.png" />
+
+		<link rel="apple-config-premium" href="/apple-app-site-association.json" />
+		<link rel="manifest" href="/manifest.webmanifest" />
 
 		%sveltekit.head%
 	</head>
