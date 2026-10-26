@@ -290,8 +290,8 @@ export const germanStories: Story[] = [
     ]
   },
   {
-    id: 'b1-beach',
-    level: 'b1',
+    id: 'a2-beach',
+    level: 'a2',
     scene: 'beach',
     cast: ['mia', 'leo', 'hans'],
     languages: ['de'],
@@ -302,20 +302,20 @@ export const germanStories: Story[] = [
       { kind: 'line', speaker: 'leo', text: german('Schau mal, wie die Sonne langsam im Meer versinkt. Der Himmel ist ganz orange und rosa.') },
       { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Wunderschön! Jetzt fehlt eigentlich nur noch ein kühles Getränk.') },
       { kind: 'narration', enters: ['hans'], text: german('In diesem Moment stapft Hans mit einer Kühltasche über den Sand.') },
-      { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Servus, ihr zwoa! I hab mir dacht, a Sonnenuntergang ohne Bier is wia a Brezn ohne Salz. Wer mag a Helles?') },
+       { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Hallo, ihr beiden! Ein Sonnenuntergang ohne Getränk ist wie ein Strand ohne Sand. Wer mag ein Bier?') },
       { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Du bist ein Schatz, Hans! {name}, magst du auch eins?') },
       { kind: 'reply', to: 'mia', options: [
         german('Gern, aber für mich bitte ein alkoholfreies.'),
         german('Nein danke, ich trinke lieber Sand.'),
         german('Ja, aber nur, wenn die Sonne aufgeht.')
       ] },
-      { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Freilich, alkoholfrei hab i aa dabei. Also dann: Prost auf den Urlaub!') },
+       { kind: 'line', speaker: 'hans', mood: 'happy', text: german('Gern, alkoholfrei hab ich auch dabei. Also dann: Prost auf den Urlaub!') },
       { kind: 'narration', sfx: 'waves', text: german('Die drei stoßen an. Die Wellen rauschen, und die letzten Sonnenstrahlen verschwinden hinter dem Horizont.') },
       { kind: 'line', speaker: 'leo', mood: 'happy', text: german('Wisst ihr was? Das machen wir ab jetzt jeden Abend.') },
       { kind: 'question', prompt: german('Wo machen Mia und Leo Urlaub?'), options: [german('An der Ostsee'), german('In den Alpen'), german('In Berlin')] },
       { kind: 'question', prompt: german('Welche Farben hat der Himmel?'), options: [german('Orange und Rosa'), german('Grau und Schwarz'), german('Grün und Blau')] },
       { kind: 'question', prompt: german('Was bringt Hans mit?'), options: [german('Eine Kühltasche mit Bier'), german('Einen Sonnenschirm'), german('Eine Gitarre')] },
-      { kind: 'question', prompt: german('Womit vergleicht Hans einen Sonnenuntergang ohne Bier?'), options: [german('Mit einer Brezel ohne Salz'), german('Mit einem Strand ohne Sand'), german('Mit einem Winter ohne Schnee')] },
+       { kind: 'question', prompt: german('Womit vergleicht Hans einen Sonnenuntergang ohne Getränk?'), options: [german('Mit einem Strand ohne Sand'), german('Mit einem Winter ohne Schnee'), german('Mit einem Meer ohne Wasser')] },
       { kind: 'question', prompt: german('Was wollen die drei ab jetzt jeden Abend machen?'), options: [german('Den Sonnenuntergang zusammen anschauen'), german('Früh ins Bett gehen'), german('Im Meer schwimmen')] }
     ]
   },
