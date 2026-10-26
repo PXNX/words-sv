@@ -6,6 +6,7 @@
   import { evaluateAttempt, ipaDiff, type CorrectionSegment } from '#lib/vocab/speechMatch.js';
   import { wiktionaryUrl } from '#lib/wiktionary.js';
   import { recordReview } from '#lib/review/ledger.js';
+  import { recordActivity } from '#lib/progress/activity.js';
   import { recordMissedWord } from '#lib/story/missedWords.js';
   import { playSuccessSound } from '#lib/sounds.js';
   import { pronounceable } from '#lib/story/speech.js';
@@ -201,6 +202,7 @@
     // stories and the Repeat hub draw from.
     if (heard && currentWord) {
       recordReview(settings.lang, currentWord, attempt.matched, 'pronunciation');
+      recordActivity('pronunciation', { perfect: attempt.matched });
       if (!attempt.matched) recordMissedWord(settings.lang, currentWord);
     }
     if (attempt.matched) {

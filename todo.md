@@ -53,14 +53,14 @@ tests/build, a focused commit and a push to `main`.
 
 ## 5. Milestones that mean something (M)
 
-- [ ] Learning milestones, not generic badges:
-  - [ ] First text / first story / first perfect pronunciation
-  - [ ] 100 words mastered, 7-day streak, all A1 texts read
-  - [ ] 10 tricky words cleared
-- [ ] Weekly recap: words mastered, minutes practised, best streak, hardest word.
-- [ ] Show the next milestone with a progress bar on `/progress`.
-- [ ] Add a light daily activity log so minutes practised are real, not guessed.
-- [ ] Make the weekly recap shareable.
+- [x] Learning milestones, not generic badges:
+  - [x] First text / first story / first perfect pronunciation
+  - [x] 100 words mastered, 7-day streak, all A1 texts read
+  - [x] 10 tricky words cleared
+- [x] Weekly recap: words mastered, minutes practised, best streak, hardest word.
+- [x] Show the next milestone with a progress bar on `/progress`.
+- [x] Add a light daily activity log so minutes practised are real, not guessed.
+- [x] Make the weekly recap shareable.
 
 ## 6. Useful reminders instead of deadline nagging (M)
 

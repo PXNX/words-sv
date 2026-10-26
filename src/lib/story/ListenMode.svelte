@@ -11,6 +11,7 @@
   import { applyVoice, profiles, type Dialect, type Speaker } from './voices';
   import { listAudioSessions, loadAudioBlob, saveAudioSession, updateAudioSessionPosition, type SavedAudio, type SavedSound, type SavedStoryStart } from './audioLibrary';
   import { generateStory, hasMissedWords } from './generated';
+  import { recordActivity } from '#lib/progress/activity.js';
   import { playSoundEffect, soundEffectSeconds, type SoundEffect } from '#lib/sounds.js';
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
@@ -262,6 +263,7 @@
     lastSoundAt = duration;
     flushPosition();
     playChime();
+    recordActivity('listen');
     void settings.recordStreak('listen_completed');
   }
   // Replays the session the learner just heard instead of drawing a new story.
