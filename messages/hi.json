@@ -234,5 +234,17 @@
   "today_streak": "आपकी स्ट्रीक के लिए {count} और सही शब्द चाहिए",
   "today_marked": "आपने {count} शब्द चिह्नित किए — उन्हें दोहराएँ",
   "today_done": "आज के लिए सब पूरा हुआ।",
-  "today_start": "शुरू करें"
+  "today_start": "शुरू करें",
+  "undo_last": "पिछला उत्तर वापस लें",
+  "vocab_recap_title": "दौर पूरा",
+  "vocab_recap_score": "{total} में से {correct} शब्द पहली बार में सही।",
+  "vocab_recap_tricky": "इन शब्दों को एक और दौर चाहिए",
+  "vocab_recap_practise": "{count} कठिन शब्दों का अभ्यास करें",
+  "vocab_recap_new": "नया दौर",
+  "vocab_recap_none": "कोई कठिन शब्द नहीं — बढ़िया!",
+  "reading_recap_mark": "इन शब्दों को दोहराने के लिए चिह्नित करें",
+  "reading_recap_next": "अगला पाठ पढ़ें",
+  "story_recap_mark": "गलत शब्दों को दोहराने के लिए चिह्नित करें",
+  "listen_recap_title": "सुनने का सत्र पूरा",
+  "listen_recap_replay": "फिर से सुनें"
 }

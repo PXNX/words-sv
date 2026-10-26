@@ -234,5 +234,17 @@
   "today_streak": "A tua sequência precisa de mais {count} respostas certas",
   "today_marked": "Marcaste {count} palavras — repete-as",
   "today_done": "Tudo feito por hoje.",
-  "today_start": "Começar"
+  "today_start": "Começar",
+  "undo_last": "Anular a última resposta",
+  "vocab_recap_title": "Ronda concluída",
+  "vocab_recap_score": "{correct} de {total} palavras certas à primeira.",
+  "vocab_recap_tricky": "Estas palavras precisam de outra ronda",
+  "vocab_recap_practise": "Praticar as {count} palavras difíceis",
+  "vocab_recap_new": "Nova ronda",
+  "vocab_recap_none": "Sem palavras difíceis — muito bem!",
+  "reading_recap_mark": "Marcar estas palavras para repetição",
+  "reading_recap_next": "Ler o próximo texto",
+  "story_recap_mark": "Marcar as palavras erradas para repetição",
+  "listen_recap_title": "Sessão de escuta concluída",
+  "listen_recap_replay": "Ouvir outra vez"
 }

@@ -28,7 +28,14 @@
     audioPrompt: m.learning_audio_prompt({}, { locale: settings.interfaceLocale }),
     continue: m.continue({}, { locale: settings.interfaceLocale }),
     correct: m.learning_correct({}, { locale: settings.interfaceLocale }),
-    tryAgain: m.learning_try_again({}, { locale: settings.interfaceLocale })
+    tryAgain: m.learning_try_again({}, { locale: settings.interfaceLocale }),
+    undo: m.undo_last({}, { locale: settings.interfaceLocale }),
+    recapTitle: m.vocab_recap_title({}, { locale: settings.interfaceLocale }),
+    recapScore: (correct: number, total: number) => m.vocab_recap_score({ correct, total }, { locale: settings.interfaceLocale }),
+    recapTricky: m.vocab_recap_tricky({}, { locale: settings.interfaceLocale }),
+    recapPractise: (count: number) => m.vocab_recap_practise({ count }, { locale: settings.interfaceLocale }),
+    recapNew: m.vocab_recap_new({}, { locale: settings.interfaceLocale }),
+    recapNone: m.vocab_recap_none({}, { locale: settings.interfaceLocale })
   });
   const words = $derived(wordPools[settings.lang][settings.vocabularyLevel]);
   const definitions = $derived(wordDefinitions[settings.lang]);
@@ -47,6 +54,22 @@
   let sourceKey = $state('');
   let choiceKey = $state('');
   let reviewProgress = $state<Record<string, { repetitions: number; dueAt: number }>>({});
+  // A session now has an ending: after the second pass it stops and shows what to repeat,
+  // instead of circling the same queue forever.
+  let sessionDone = $state(false);
+  let sessionId = $state(0);
+  let attempted = $state<string[]>([]);
+  let tricky = $state<string[]>([]);
+  let firstTry = $state<string[]>([]);
+  type UndoSnapshot = {
+    reviewProgress: Record<string, { repetitions: number; dueAt: number }>;
+    queue: string[];
+    position: number;
+    attempted: string[];
+    tricky: string[];
+    firstTry: string[];
+  };
+  let undoSnapshot = $state<UndoSnapshot | null>(null);
 
   const currentWord = $derived(queue[position] ?? '');
   const currentDefinition = $derived(definitions[currentWord] ?? '');
@@ -82,12 +105,31 @@
       return parsed && typeof parsed === 'object' ? parsed as Record<string, { repetitions: number; dueAt: number }> : {};
     } catch { return {}; }
   }
+  function resetSessionState() {
+    sessionDone = false;
+    attempted = [];
+    tricky = [];
+    firstTry = [];
+    undoSnapshot = null;
+    sessionId += 1;
+  }
   function startSection() {
     cancelSpeech();
     reviewProgress = loadProgress();
     section = pickReviewSection(definitionWords, reviewProgress, random, 6);
     queue = [...section, ...section].sort(() => random() - .5);
     position = 0;
+    resetSessionState();
+  }
+  // The recap's primary action: the same words that were still wrong at the end come back,
+  // twice, so a second ending is earned rather than skipped.
+  function startTricky() {
+    cancelSpeech();
+    reviewProgress = loadProgress();
+    section = [...tricky];
+    queue = [...section, ...section].sort(() => random() - .5);
+    position = 0;
+    resetSessionState();
   }
   function resetPrompt() {
     answerStatus = null;
@@ -97,20 +139,63 @@
     choiceWords = definitionChoiceWords(currentWord, [...section, ...definitionWords], definitions, random);
   }
   function chooseAnswer(event: MouseEvent) {
-    if (answerStatus || !currentWord) return;
+    if (answerStatus || !currentWord || sessionDone) return;
     const chosenWord = (event.currentTarget as HTMLButtonElement).value;
     if (!chosenWord) return;
-    const correct = chosenWord === currentWord;
+    const word = currentWord;
+    const correct = chosenWord === word;
+    // A mis-tap must not cost a lapse: the review progress, queue and counters are kept so the
+    // answer can be taken back before moving on.
+    undoSnapshot = {
+      reviewProgress: { ...reviewProgress },
+      queue: [...queue],
+      position,
+      attempted: [...attempted],
+      tricky: [...tricky],
+      firstTry: [...firstTry]
+    };
+    const firstAttempt = !attempted.includes(word);
     selectedChoice = chosenWord;
     answerStatus = correct ? 'correct' : 'wrong';
-    reviewProgress = updateReviewProgress(reviewProgress, currentWord, correct);
+    if (firstAttempt) attempted = [...attempted, word];
+    if (correct) {
+      if (firstAttempt) firstTry = [...firstTry, word];
+      tricky = tricky.filter((item) => item !== word);
+    } else if (!tricky.includes(word)) {
+      tricky = [...tricky, word];
+    }
+    reviewProgress = updateReviewProgress(reviewProgress, word, correct);
     persistProgress();
     if (correct) { playSuccessSound(settings.sound, 'vocab'); void settings.recordStreak('vocab_correct'); }
-    else { playErrorSound(settings.sound, 'vocab'); recordMissedWord(settings.lang, currentWord); queue = insertLearningRepeat(queue, position, currentWord); }
+    else { playErrorSound(settings.sound, 'vocab'); recordMissedWord(settings.lang, word); queue = insertLearningRepeat(queue, position, word); }
+  }
+  // Undo restores the snapshot taken before the answer, including the queue slot a wrong answer
+  // inserted, and lets the learner answer the same prompt again.
+  function undoLast() {
+    if (!undoSnapshot) return;
+    cancelSpeech();
+    reviewProgress = undoSnapshot.reviewProgress;
+    persistProgress();
+    queue = undoSnapshot.queue;
+    position = undoSnapshot.position;
+    attempted = undoSnapshot.attempted;
+    tricky = undoSnapshot.tricky;
+    firstTry = undoSnapshot.firstTry;
+    undoSnapshot = null;
+    answerStatus = null;
+    selectedChoice = null;
+    choiceKey = '';
+  }
+  function finishSession() {
+    cancelSpeech();
+    sessionDone = true;
+    undoSnapshot = null;
   }
   function continueLearning() {
     cancelSpeech();
-    position = position >= queue.length - 1 ? 0 : position + 1;
+    undoSnapshot = null;
+    if (position >= queue.length - 1) { finishSession(); return; }
+    position += 1;
   }
   function optionText(word: string) { return isDefinitionPrompt ? definitions[word] : displayWord(word); }
   function optionStateClasses(word: string) {
@@ -138,7 +223,7 @@
     untrack(() => startSection());
   });
   $effect(() => {
-    const nextChoiceKey = `${currentWord}|${section.join('|')}|${position}`;
+    const nextChoiceKey = `${currentWord}|${section.join('|')}|${position}|${sessionId}`;
     if (nextChoiceKey === choiceKey) return;
     choiceKey = nextChoiceKey;
     untrack(() => resetPrompt());
@@ -153,11 +238,26 @@
     <div class="text-center">
       <span class="text-accent text-[.58rem] font-extrabold tracking-[.14em] uppercase">{labels.section} · {settings.vocabularyLevel.toUpperCase()}</span>
       <h1 class="my-[.16rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,7vw,2.65rem)] font-normal leading-none">{labels.title}</h1>
-      <p class="m-0 text-base-content/60 text-[.65rem] font-extrabold">{Math.min(position + 1, queue.length)} / {queue.length || 6}</p>
+      <p class="m-0 text-base-content/60 text-[.65rem] font-extrabold">{sessionDone ? queue.length : Math.min(position + 1, queue.length)} / {queue.length || 6}</p>
     </div>
-    <Companion id="mia" mood={answerStatus === 'correct' ? 'happy' : answerStatus === 'wrong' ? 'sad' : 'curious'} size="sm" />
+    <Companion id="mia" mood={answerStatus === 'correct' ? 'happy' : answerStatus === 'wrong' ? 'sad' : sessionDone ? 'happy' : 'curious'} size="sm" />
   </header>
-  {#if !currentWord}
+  {#if sessionDone}
+    <div class="w-[min(100%,28rem)] grid justify-items-center gap-[.7rem] p-[clamp(1.2rem,6vw,2rem)] panel-play text-center">
+      <p class="m-0 text-accent text-[.6rem] font-black tracking-[.12em] uppercase">{labels.recapTitle}</p>
+      <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.3rem,6vw,1.9rem)] leading-[1.15]">{labels.recapScore(firstTry.length, attempted.length)}</p>
+      {#if tricky.length}
+        <p class="m-0 text-base-content/70 text-[.68rem] font-extrabold">{labels.recapTricky}</p>
+        <ul class="flex flex-wrap justify-center gap-[.35rem] m-0 p-0 list-none">
+          {#each tricky as word (word)}<li class="px-[.55rem] py-[.25rem] border border-accent/35 rounded-full bg-[#f7e2b0] text-[#172a45] text-[.66rem] font-extrabold">{displayWord(word)}</li>{/each}
+        </ul>
+        <button type="button" class="btn-play btn-play-ink" onclick={startTricky}>{labels.recapPractise(tricky.length)}</button>
+      {:else}
+        <p class="m-0 text-success text-[.75rem] font-extrabold">{labels.recapNone}</p>
+      {/if}
+      <button type="button" class="btn-play btn-play-soft" onclick={startSection}>{labels.recapNew}</button>
+    </div>
+  {:else if !currentWord}
     <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{labels.unavailable}</div>
   {:else}
     <article
@@ -185,7 +285,12 @@
             ><span class="flex-1">{optionText(word)}</span>{#if answerStatus !== null && word === currentWord}<IconCheck class="w-[1.25rem] h-[1.25rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && word === selectedChoice}<IconClose class="w-[1.25rem] h-[1.25rem] flex-none text-accent" aria-label={labels.tryAgain} />{/if}</button>
           {/each}
         </div>
-        {#if answerStatus}<button class="justify-self-center btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>{/if}
+        {#if answerStatus}
+          <div class="flex flex-wrap justify-center gap-[.45rem]">
+            <button class="btn-play btn-play-soft" onclick={undoLast} disabled={!undoSnapshot}>{labels.undo}</button>
+            <button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>
+          </div>
+        {/if}
       </section>
     {:else}<p class="max-w-[24rem] m-0 text-base-content/60 text-[.75rem] font-bold leading-[1.45] text-center">{currentDefinition || labels.unavailable}</p>{/if}
   {/if}

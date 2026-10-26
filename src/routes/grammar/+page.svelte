@@ -25,7 +25,8 @@
     chooseArticle: m.grammar_choose_article({}, { locale: settings.interfaceLocale }),
     continue: m.continue({}, { locale: settings.interfaceLocale }),
     correct: m.learning_correct({}, { locale: settings.interfaceLocale }),
-    tryAgain: m.learning_try_again({}, { locale: settings.interfaceLocale })
+    tryAgain: m.learning_try_again({}, { locale: settings.interfaceLocale }),
+    undo: m.undo_last({}, { locale: settings.interfaceLocale })
   });
 
   // German gets the full case/adjective/verb engine below (`cases.ts`, `adjectives.ts`,
@@ -94,6 +95,14 @@
   let reviewProgress = $state<Record<string, { repetitions: number; dueAt: number }>>({});
   let orderWords = $state<string[]>([]);
   let selectedOrder = $state<number[]>([]);
+  // A mis-tap in any grammar mode can be taken back before moving on: the review progress,
+  // requeued prompt and selected order all return to their state before the answer.
+  type GrammarUndo = {
+    reviewProgress: Record<string, { repetitions: number; dueAt: number }>;
+    queue: string[];
+    selectedOrder: number[];
+  };
+  let undoSnapshot = $state<GrammarUndo | null>(null);
 
   const currentKey = $derived(queue[position] ?? '');
 
@@ -115,6 +124,20 @@
     section = pickRandomSection(prioritized, random, 6);
     queue = [...section];
     position = 0;
+    undoSnapshot = null;
+  }
+  function snapshotAnswer() {
+    undoSnapshot = { reviewProgress: { ...reviewProgress }, queue: [...queue], selectedOrder: [...selectedOrder] };
+  }
+  function undoLastAnswer() {
+    if (!undoSnapshot) return;
+    reviewProgress = undoSnapshot.reviewProgress;
+    persistProgress();
+    queue = undoSnapshot.queue;
+    selectedOrder = undoSnapshot.selectedOrder;
+    selectedChoice = null;
+    answerStatus = null;
+    undoSnapshot = null;
   }
   function buildPromptForKey(key: string): GrammarPrompt | null {
     const separator = key.indexOf(':');
@@ -162,6 +185,7 @@
   }
   function chooseOrderWord(index: number) {
     if (answerStatus || selectedOrder.includes(index)) return;
+    snapshotAnswer();
     const next = [...selectedOrder, index];
     selectedOrder = next;
     if (next.length === orderWords.length) {
@@ -174,11 +198,12 @@
       persistProgress();
     }
   }
-  function resetOrder() { selectedOrder = []; answerStatus = null; }
+  function resetOrder() { selectedOrder = []; answerStatus = null; undoSnapshot = null; }
   function chooseAnswer(event: MouseEvent) {
     if (answerStatus || !prompt) return;
     const chosen = (event.currentTarget as HTMLButtonElement).value;
     if (!chosen) return;
+    snapshotAnswer();
     const correct = chosen === prompt.correct;
     selectedChoice = chosen;
     answerStatus = correct ? 'correct' : 'wrong';
@@ -193,6 +218,7 @@
     if (word && ['noun', 'adj', 'verb', 'article'].includes(kind)) recordMissedWord(settings.lang, word);
   }
   function continueLearning() {
+    undoSnapshot = null;
     position = position >= queue.length - 1 ? 0 : position + 1;
   }
   function optionStateClasses(choice: string) {
@@ -242,7 +268,19 @@
         <p class="m-0 min-h-[2.2rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.35rem,6vw,2.1rem)] leading-[1.3]">{selectedOrder.length > 0 ? selectedOrder.map((index) => orderWords[index]).join(' ') : '…'}</p>
       </article>
       <div class="w-[min(100%,28rem)] flex flex-wrap justify-center gap-[.45rem]">{#each orderWords as word, index}<button type="button" class="btn-play btn-play-choice min-h-[2.55rem] px-[.75rem] text-[.75rem] {selectedOrder.includes(index) ? 'border-neutral/30 bg-neutral/20 text-base-content/35 shadow-none' : ''}" onclick={() => chooseOrderWord(index)} disabled={selectedOrder.includes(index) || answerStatus !== null}>{word}</button>{/each}</div>
-      {#if answerStatus === 'wrong'}<div class="flex items-center gap-[.35rem] text-error text-[.7rem] font-extrabold"><IconClose class="w-[1rem] h-[1rem]" aria-hidden="true" />Not quite. Try again.</div><button class="btn-play btn-play-sm text-accent" onclick={resetOrder}>Reset order</button>{:else if answerStatus === 'correct'}<div class="flex items-center gap-[.35rem] text-success text-[.7rem] font-extrabold"><IconCheck class="w-[1rem] h-[1rem]" aria-hidden="true" />Correct!</div><button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>{/if}
+      {#if answerStatus === 'wrong'}
+        <div class="flex items-center gap-[.35rem] text-error text-[.7rem] font-extrabold"><IconClose class="w-[1rem] h-[1rem]" aria-hidden="true" />Not quite. Try again.</div>
+        <div class="flex flex-wrap justify-center gap-[.45rem]">
+          <button class="btn-play btn-play-soft btn-play-sm" onclick={undoLastAnswer}>{labels.undo}</button>
+          <button class="btn-play btn-play-sm text-accent" onclick={resetOrder}>Reset order</button>
+        </div>
+      {:else if answerStatus === 'correct'}
+        <div class="flex items-center gap-[.35rem] text-success text-[.7rem] font-extrabold"><IconCheck class="w-[1rem] h-[1rem]" aria-hidden="true" />Correct!</div>
+        <div class="flex flex-wrap justify-center gap-[.45rem]">
+          <button class="btn-play btn-play-soft" onclick={undoLastAnswer}>{labels.undo}</button>
+          <button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>
+        </div>
+      {/if}
     {:else}
     <article class="w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center">
             {#if prompt.question}<p class="m-0 text-accent text-[.62rem] font-black tracking-[.08em] uppercase">{prompt.question}</p>{/if}
@@ -262,7 +300,12 @@
             >{choice}{#if answerStatus !== null && choice === prompt.correct}<IconCheck class="w-[1.15rem] h-[1.15rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && choice === selectedChoice}<IconClose class="w-[1.15rem] h-[1.15rem] flex-none text-error" aria-label={labels.tryAgain} />{/if}</button>
           {/each}
         </div>
-        {#if answerStatus}<button class="justify-self-center btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>{/if}
+        {#if answerStatus}
+          <div class="flex flex-wrap justify-center gap-[.45rem]">
+            <button class="btn-play btn-play-soft" onclick={undoLastAnswer}>{labels.undo}</button>
+            <button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>
+          </div>
+        {/if}
       </section>
     {/if}
     {/if}

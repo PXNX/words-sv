@@ -238,5 +238,17 @@
   "today_streak": "Your streak needs {count} more correct words",
   "today_marked": "You marked {count} words — repeat them",
   "today_done": "Everything done for today.",
-  "today_start": "Start"
+  "today_start": "Start",
+  "undo_last": "Undo last answer",
+  "vocab_recap_title": "Round complete",
+  "vocab_recap_score": "{correct} of {total} words right on the first try.",
+  "vocab_recap_tricky": "These words need another round",
+  "vocab_recap_practise": "Practise the {count} tricky words",
+  "vocab_recap_new": "New round",
+  "vocab_recap_none": "No tricky words — well done!",
+  "reading_recap_mark": "Mark these words for repetition",
+  "reading_recap_next": "Read the next text",
+  "story_recap_mark": "Mark the missed words for repetition",
+  "listen_recap_title": "Listening session complete",
+  "listen_recap_replay": "Listen again"
 }

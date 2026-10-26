@@ -15,6 +15,7 @@
   import StoryScene from './StoryScene.svelte';
   import { generateStory, hasMissedWords } from './generated';
   import { clearMissedWord, recordMissedWord } from './missedWords';
+  import { markWordForRepeat } from '#lib/vocab/spacedRepetition.js';
   import { applyVoice, type Speaker } from './voices';
   import { intonationOf, pauseAfter, pronounceable, sentences, splitSounds } from './speech';
   import { LipSync } from './lipSync.svelte';
@@ -138,7 +139,8 @@
     forYou: m.story_for_you({}, { locale: settings.interfaceLocale }),
     practiceWords: m.story_practice_words({}, { locale: settings.interfaceLocale }),
     petLilith: m.pet_lilith({}, { locale: settings.interfaceLocale }),
-    autoRead: m.story_auto_read({}, { locale: settings.interfaceLocale })
+    autoRead: m.story_auto_read({}, { locale: settings.interfaceLocale }),
+    recapMark: m.story_recap_mark({}, { locale: settings.interfaceLocale })
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
 
@@ -167,6 +169,8 @@
   let autoRead = $state(typeof localStorage === 'undefined' || localStorage.getItem(AUTO_READ_KEY) !== 'off');
   let reaction = $state<{ who: CharacterId | 'all'; mood: Mood } | null>(null);
   let petted = $state(false);
+  // The words missed in this story can be sent to the review rotation once, from the recap.
+  let markedWrong = $state(false);
   let hearts = $state(0);
   let heartsShown = $state(false);
   let heartsTimer = 0;
@@ -207,6 +211,7 @@
   const speaker = $derived(lipSync.speaker ?? lineSpeaker);
   const interactiveIndices = $derived(story ? story.beats.flatMap((beat, index) => (isInteractive(beat) ? [index] : [])) : []);
   const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.length).length);
+  const missedIndexCount = $derived(Object.values(wrong).filter((options) => options.length > 0).length);
   const ballThrown = $derived(Boolean(story?.beats.slice(0, revealed).some((beat) => beat.kind === 'narration' && beat.prop === 'ball')));
   const lilithHappy = $derived(Boolean(story?.cast.includes('lilith')) && castMood('lilith') === 'happy');
   const purring = $derived(current ? [beatSounds(current).start, beatSounds(current).slot].includes('purr') : false);
@@ -306,8 +311,22 @@
   function castFor(next: Story): Speaker[] {
     return [...next.cast, ...(next.beats.some((beat) => beat.kind === 'narration' && beat.announcement) ? ['announcer' as const] : [])];
   }
+  function wrongStoryWords(): string[] {
+    if (!story) return [];
+    const words = new Set<string>();
+    for (const index of Object.keys(wrong)) {
+      const beat = story.beats[Number(index)];
+      if (isInteractive(beat) && beat.focus) words.add(beat.focus);
+    }
+    return [...words];
+  }
+  function markWrongStoryWords() {
+    for (const word of wrongStoryWords()) markWordForRepeat(lang, word);
+    markedWrong = true;
+  }
   function start(next: Story) {
     cancelSpeech();
+    markedWrong = false;
     const preparation = ++audioPreparation;
     clearNaturalAudio();
     run += 1;
@@ -335,6 +354,7 @@
   // resumes at the part already prepared.
   function restore(progress: SavedProgress) {
     cancelSpeech();
+    markedWrong = false;
     const thisRun = ++run;
     written = progress.written;
     story = progress.story;
@@ -918,6 +938,7 @@
           <div>
             <button type="button" class="btn-play story-secondary" onclick={() => written && start(written)}>{labels.again}</button>
             <button type="button" class="btn-play btn-play-ink story-primary" onclick={() => start(pickStory(story?.id))}>{labels.next}</button>
+            {#if missedIndexCount > 0}<button type="button" class="btn-play story-secondary" onclick={markWrongStoryWords} disabled={markedWrong}>{labels.recapMark}</button>{/if}
             {#if !story.generated}<button type="button" class="btn-play btn-play-sun" onclick={() => { const generated = storyForYou(); if (generated) start(generated); }}>{labels.practiceWords}</button>{/if}
           </div>
         </div>

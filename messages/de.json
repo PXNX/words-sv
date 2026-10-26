@@ -238,5 +238,17 @@
   "today_streak": "Deiner Serie fehlen noch {count} richtige Wörter",
   "today_marked": "Du hast {count} Wörter markiert — wiederhole sie",
   "today_done": "Für heute ist alles geschafft.",
-  "today_start": "Los geht’s"
+  "today_start": "Los geht’s",
+  "undo_last": "Letzte Antwort zurücknehmen",
+  "vocab_recap_title": "Runde geschafft",
+  "vocab_recap_score": "{correct} von {total} Wörtern gleich beim ersten Mal richtig.",
+  "vocab_recap_tricky": "Diese Wörter brauchen noch eine Runde",
+  "vocab_recap_practise": "Die {count} schwierigen Wörter üben",
+  "vocab_recap_new": "Neue Runde",
+  "vocab_recap_none": "Keine schwierigen Wörter — stark!",
+  "reading_recap_mark": "Diese Wörter zum Wiederholen merken",
+  "reading_recap_next": "Nächsten Text lesen",
+  "story_recap_mark": "Falsche Wörter zum Wiederholen merken",
+  "listen_recap_title": "Hörrunde geschafft",
+  "listen_recap_replay": "Noch einmal hören"
 }

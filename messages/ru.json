@@ -234,5 +234,17 @@
   "today_streak": "Для серии нужно ещё {count} правильных ответов",
   "today_marked": "Ты отметил {count} слов — повтори их",
   "today_done": "На сегодня всё сделано.",
-  "today_start": "Начать"
+  "today_start": "Начать",
+  "undo_last": "Отменить последний ответ",
+  "vocab_recap_title": "Круг завершён",
+  "vocab_recap_score": "{correct} из {total} слов верно с первой попытки.",
+  "vocab_recap_tricky": "Эти слова нужно повторить ещё раз",
+  "vocab_recap_practise": "Повторить сложные слова ({count})",
+  "vocab_recap_new": "Новый круг",
+  "vocab_recap_none": "Сложных слов нет — отлично!",
+  "reading_recap_mark": "Отметить эти слова для повторения",
+  "reading_recap_next": "Читать следующий текст",
+  "story_recap_mark": "Отметить неверные слова для повторения",
+  "listen_recap_title": "Сеанс слушания завершён",
+  "listen_recap_replay": "Слушать ещё раз"
 }
