@@ -235,7 +235,6 @@
   "today_marked": "علّمت {count} كلمات — راجعها",
   "today_done": "تم إنجاز كل شيء اليوم.",
   "today_start": "ابدأ",
-  "undo_last": "التراجع عن الإجابة الأخيرة",
   "vocab_recap_title": "اكتملت الجولة",
   "vocab_recap_score": "{correct} من {total} كلمات صحيحة من المحاولة الأولى.",
   "vocab_recap_tricky": "هذه الكلمات تحتاج إلى جولة أخرى",
@@ -289,5 +288,16 @@
   "streak_repair_cta": "أصلح السلسلة",
   "streak_repair_skip": "ليس الآن",
   "streak_restart": "أفضل نتيجة: {count} يومًا. ابدأ سلسلة جديدة.",
-  "streak_reminder_hint": "تذكير لطيف واحد يوميًا على الأكثر، فقط عندما ينتظرك شيء."
+  "streak_reminder_hint": "تذكير لطيف واحد يوميًا على الأكثر، فقط عندما ينتظرك شيء.",
+  "home_definitions": "نفس الكلمات المتقاطعة، لكن اضغط على أي مربع لترى تعريف الكلمة.",
+  "home_hangman": "خمّن الكلمة المخفية حرفًا بحرف.",
+  "home_pronunciation": "استمع إلى أمثلة صوتية وتدرّب على النطق.",
+  "home_alltag": "حروف الجر والأرقام والألوان للحياة اليومية.",
+  "home_false_friends": "كلمات تبدو متشابهة لكنها تعني شيئًا مختلفًا.",
+  "home_determine": "حدّد الحالة والجنس والعدد والشخص والزمن.",
+  "home_order": "رتّب الكلمات وكوّن جملة صحيحة.",
+  "home_continue_reading": "واصل القراءة: {title}",
+  "home_continue_story": "واصل القصة: {title}",
+  "learning_rate_hint": "ما مدى معرفتك بالكلمة؟",
+  "learning_hard": "صعب"
 }

@@ -22,6 +22,8 @@
   import IconForward from '~icons/material-symbols/fast-forward-rounded';
 
   const STORY_TARGETS: Record<string, number> = { a1: 200, a2: 250, b1: 320, b2: 380, c1: 420, c2: 480 };
+  const LISTEN_PROGRESS_KEY = 'wordcircle-listen-progress-v1';
+  type SavedListen = { fingerprint: string; storyId: string; position: number };
   const BEAT_GAP = 0.6;
   const SINGLE_WORD_QUESTION_GAP = 1.4;
   const STORY_GAP = 1.4;
@@ -62,6 +64,7 @@
   let generation = 0;
   let pendingSeek: number | null = null;
   let lastSavedAt = 0;
+  let lastListenSavedAt = 0;
   let eta = $state<number | null>(null);
   let batchIndex = $state(0);
   let batchTotal = $state(0);
@@ -193,6 +196,7 @@
       const ticker = window.setInterval(() => {
         if (token !== liveToken) return;
         position = Math.min(startPosition + estimated, startPosition + (performance.now() - startedAt) / 1000);
+        saveListenProgress();
       }, 200);
       let done = false;
       let safety = 0;
@@ -255,12 +259,14 @@
   function pauseStandard() {
     cancelStandardSpeech();
     playing = false;
+    saveListenProgress(true);
   }
   function finishSession() {
     if (sessionDone) return;
     sessionDone = true;
     position = duration;
     lastSoundAt = duration;
+    clearListenProgress();
     flushPosition();
     playChime();
     recordActivity('listen');
@@ -318,6 +324,59 @@
     const ranked = [...pool].sort((left, right) => Math.abs(storyLength(left) - target) - Math.abs(storyLength(right) - target));
     const top = shuffled(ranked.slice(0, Math.min(3, ranked.length)));
     return top[0] ?? ranked[0] ?? null;
+  }
+  function listenFingerprint() {
+    return `${settings.lang}|${settings.vocabularyLevel}|${settings.includeLowerVocabulary}`;
+  }
+  function readListenProgress(): SavedListen | null {
+    if (typeof localStorage === 'undefined') return null;
+    try {
+      const parsed = JSON.parse(localStorage.getItem(LISTEN_PROGRESS_KEY) ?? 'null') as Partial<SavedListen> | null;
+      if (!parsed || parsed.fingerprint !== listenFingerprint() || typeof parsed.storyId !== 'string') return null;
+      const at = Number(parsed.position);
+      return Number.isFinite(at) && at > 1 ? { fingerprint: parsed.fingerprint, storyId: parsed.storyId, position: at } : null;
+    } catch {
+      return null;
+    }
+  }
+  function saveListenProgress(force = false) {
+    if (typeof localStorage === 'undefined' || !liveSession || !duration || sessionDone) return;
+    const now = Date.now();
+    if (!force && now - lastListenSavedAt < 2000) return;
+    lastListenSavedAt = now;
+    try {
+      localStorage.setItem(LISTEN_PROGRESS_KEY, JSON.stringify({
+        fingerprint: listenFingerprint(),
+        storyId: liveSession.story.id,
+        position: Math.max(0, Math.min(position, duration - 1))
+      } satisfies SavedListen));
+    } catch {
+      // A full quota must not interrupt listening.
+    }
+  }
+  function clearListenProgress() {
+    if (typeof localStorage === 'undefined') return;
+    try { localStorage.removeItem(LISTEN_PROGRESS_KEY); } catch { /* ignore */ }
+  }
+  // Standard-voice sessions have no generated audio file to store a position in, so the place in the
+  // story travels in localStorage and the same story is rebuilt on return.
+  function resumeStandardSession(): boolean {
+    const saved = readListenProgress();
+    if (!saved) return false;
+    const raw = storiesFor(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary).find((story) => story.id === saved.storyId);
+    if (!raw) return false;
+    const session = buildStandardSession(raw);
+    if (!session || saved.position >= session.duration - 1) return false;
+    liveSession = session;
+    sounds = session.sounds;
+    storyStarts = [{ at: 0, title: session.story.title[settings.lang] }];
+    storyCount = 1;
+    duration = session.duration;
+    position = saved.position;
+    lastSoundAt = position - 0.05;
+    sessionDone = false;
+    phase = 'ready';
+    return true;
   }
   function beatSounds(beat: any): { start: any; slot: any } {
     if (beat.kind === 'narration' && beat.announcement) return { start: beat.sfx ?? 'gong', slot: beat.sfx ?? null };
@@ -402,8 +461,7 @@
     const rateValue = Math.max(0.5, rate);
     return Math.max(0.9, (Math.max(1, wordsOf(text).length) / 2.6 + 0.5) / rateValue);
   }
-  function buildStandardSession(): LiveSession | null {
-    const raw = pickStory();
+  function buildStandardSession(raw: Story | null = pickStory()): LiveSession | null {
     if (!raw) return null;
     const story = withWeather(withDetails(raw));
     const segments = segmentsForStory(story, settings.sound);
@@ -554,6 +612,7 @@
     if (!settings.firstName) { void goto('/', { replace: true }); return; }
     if (standardMode) {
       if (!canSpeak()) { phase = 'error'; error = labels.unsupported; return; }
+      clearListenProgress();
       const session = buildStandardSession();
       if (token !== generation) return;
       if (!session) { phase = 'error'; error = 'No stories are available for this level yet.'; return; }
@@ -780,6 +839,7 @@
     }
     lastSoundAt = position;
     scheduleSave();
+    if (liveSession) saveListenProgress();
   }
   function togglePlay() {
     if (liveSession) {
@@ -802,6 +862,7 @@
       cancelStandardSpeech();
       position = target;
       lastSoundAt = target;
+      saveListenProgress(true);
       if (wasPlaying) startStandardPlayback(target);
       return;
     }
@@ -867,13 +928,15 @@
       history = saved;
       settingsKey = settingsFingerprint();
       settingsReady = true;
-      if (standardMode) await startSession();
+      if (standardMode) {
+        if (!resumeStandardSession()) await startSession();
+      }
       else await startBatch();
     };
     void loadLibrary();
-    const onPageHide = () => flushPosition();
+    const onPageHide = () => { flushPosition(); saveListenProgress(true); };
     const onVisibility = () => {
-      if (document.visibilityState === 'hidden') flushPosition();
+      if (document.visibilityState === 'hidden') { flushPosition(); saveListenProgress(true); }
     };
     window.addEventListener('pagehide', onPageHide);
     document.addEventListener('visibilitychange', onVisibility);
@@ -882,6 +945,7 @@
       window.removeEventListener('pagehide', onPageHide);
       document.removeEventListener('visibilitychange', onVisibility);
       flushPosition();
+      saveListenProgress(true);
       generation += 1;
       cancelStandardSpeech();
       audio?.pause();

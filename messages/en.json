@@ -239,7 +239,6 @@
   "today_marked": "You marked {count} words — repeat them",
   "today_done": "Everything done for today.",
   "today_start": "Start",
-  "undo_last": "Undo last answer",
   "vocab_recap_title": "Round complete",
   "vocab_recap_score": "{correct} of {total} words right on the first try.",
   "vocab_recap_tricky": "These words need another round",
@@ -293,5 +292,16 @@
   "streak_repair_cta": "Repair streak",
   "streak_repair_skip": "Not now",
   "streak_restart": "Best: {count} days. Start a new streak.",
-  "streak_reminder_hint": "At most one gentle reminder a day, only when something is waiting."
+  "streak_reminder_hint": "At most one gentle reminder a day, only when something is waiting.",
+  "home_definitions": "Same crossword, but tap any square for that word's definition.",
+  "home_hangman": "Guess the hidden word one letter at a time.",
+  "home_pronunciation": "Listen to audio samples and practise speaking.",
+  "home_alltag": "Prepositions, numbers and colours for everyday life.",
+  "home_false_friends": "Words that look deceptively similar but mean something else.",
+  "home_determine": "Identify case, gender, number, person and tense.",
+  "home_order": "Put the words in order to build a correct sentence.",
+  "home_continue_reading": "Continue reading: {title}",
+  "home_continue_story": "Continue story: {title}",
+  "learning_rate_hint": "How well did you know it?",
+  "learning_hard": "Hard"
 }

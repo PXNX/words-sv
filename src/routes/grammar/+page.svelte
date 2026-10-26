@@ -8,7 +8,7 @@
   import { recordMissedWord } from '#lib/story/missedWords.js';
   import Companion from '#lib/story/Companion.svelte';
   import { prioritizeLearningWords, updateReviewProgress } from '#lib/vocab/spacedRepetition.js';
-  import { dueReviewEntries, readReviewLedger, recordReview, writeReviewLedger, type ReviewLedger } from '#lib/review/ledger.js';
+  import { dueReviewEntries, recordReview } from '#lib/review/ledger.js';
   import { articleChoiceOptions, gapSentenceSuffixes, grammarArticles, pickRandomSection, shuffled, GRAMMAR_REVIEW_STORAGE_PREFIX } from '#lib/grammar/learning.js';
   import { buildNounCasePrompt, buildNounPropertyPrompt, type GrammarPrompt } from '#lib/grammar/cases.js';
   import { buildAdjectivePrompt, isEligibleAdjective } from '#lib/grammar/adjectives.js';
@@ -26,8 +26,7 @@
     chooseArticle: m.grammar_choose_article({}, { locale: settings.interfaceLocale }),
     continue: m.continue({}, { locale: settings.interfaceLocale }),
     correct: m.learning_correct({}, { locale: settings.interfaceLocale }),
-    tryAgain: m.learning_try_again({}, { locale: settings.interfaceLocale }),
-    undo: m.undo_last({}, { locale: settings.interfaceLocale })
+    tryAgain: m.learning_try_again({}, { locale: settings.interfaceLocale })
   });
 
   // German gets the full case/adjective/verb engine below (`cases.ts`, `adjectives.ts`,
@@ -96,15 +95,6 @@
   let reviewProgress = $state<Record<string, { repetitions: number; dueAt: number }>>({});
   let orderWords = $state<string[]>([]);
   let selectedOrder = $state<number[]>([]);
-  // A mis-tap in any grammar mode can be taken back before moving on: the review progress,
-  // requeued prompt and selected order all return to their state before the answer.
-  type GrammarUndo = {
-    reviewProgress: Record<string, { repetitions: number; dueAt: number }>;
-    queue: string[];
-    selectedOrder: number[];
-    ledger: ReviewLedger;
-  };
-  let undoSnapshot = $state<GrammarUndo | null>(null);
 
   const currentKey = $derived(queue[position] ?? '');
 
@@ -132,21 +122,6 @@
     section = [...focus, ...pickRandomSection(rest, random, 6 - focus.length)];
     queue = [...section];
     position = 0;
-    undoSnapshot = null;
-  }
-  function snapshotAnswer() {
-    undoSnapshot = { reviewProgress: { ...reviewProgress }, queue: [...queue], selectedOrder: [...selectedOrder], ledger: readReviewLedger() };
-  }
-  function undoLastAnswer() {
-    if (!undoSnapshot) return;
-    reviewProgress = undoSnapshot.reviewProgress;
-    persistProgress();
-    queue = undoSnapshot.queue;
-    selectedOrder = undoSnapshot.selectedOrder;
-    writeReviewLedger(undoSnapshot.ledger);
-    selectedChoice = null;
-    answerStatus = null;
-    undoSnapshot = null;
   }
   function buildPromptForKey(key: string): GrammarPrompt | null {
     const separator = key.indexOf(':');
@@ -194,7 +169,6 @@
   }
   function chooseOrderWord(index: number) {
     if (answerStatus || selectedOrder.includes(index)) return;
-    snapshotAnswer();
     const next = [...selectedOrder, index];
     selectedOrder = next;
     if (next.length === orderWords.length) {
@@ -208,12 +182,11 @@
       recordReview(settings.lang, currentKey, answerStatus === 'correct', 'grammar');
     }
   }
-  function resetOrder() { selectedOrder = []; answerStatus = null; undoSnapshot = null; }
+  function resetOrder() { selectedOrder = []; answerStatus = null; }
   function chooseAnswer(event: MouseEvent) {
     if (answerStatus || !prompt) return;
     const chosen = (event.currentTarget as HTMLButtonElement).value;
     if (!chosen) return;
-    snapshotAnswer();
     const correct = chosen === prompt.correct;
     selectedChoice = chosen;
     answerStatus = correct ? 'correct' : 'wrong';
@@ -229,7 +202,6 @@
     if (word && ['noun', 'adj', 'verb', 'article'].includes(kind)) recordMissedWord(settings.lang, word);
   }
   function continueLearning() {
-    undoSnapshot = null;
     position = position >= queue.length - 1 ? 0 : position + 1;
   }
   function optionStateClasses(choice: string) {
@@ -282,13 +254,11 @@
       {#if answerStatus === 'wrong'}
         <div class="flex items-center gap-[.35rem] text-error text-[.7rem] font-extrabold"><IconClose class="w-[1rem] h-[1rem]" aria-hidden="true" />Not quite. Try again.</div>
         <div class="flex flex-wrap justify-center gap-[.45rem]">
-          <button class="btn-play btn-play-soft btn-play-sm" onclick={undoLastAnswer}>{labels.undo}</button>
           <button class="btn-play btn-play-sm text-accent" onclick={resetOrder}>Reset order</button>
         </div>
       {:else if answerStatus === 'correct'}
         <div class="flex items-center gap-[.35rem] text-success text-[.7rem] font-extrabold"><IconCheck class="w-[1rem] h-[1rem]" aria-hidden="true" />Correct!</div>
         <div class="flex flex-wrap justify-center gap-[.45rem]">
-          <button class="btn-play btn-play-soft" onclick={undoLastAnswer}>{labels.undo}</button>
           <button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>
         </div>
       {/if}
@@ -313,7 +283,6 @@
         </div>
         {#if answerStatus}
           <div class="flex flex-wrap justify-center gap-[.45rem]">
-            <button class="btn-play btn-play-soft" onclick={undoLastAnswer}>{labels.undo}</button>
             <button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>
           </div>
         {/if}

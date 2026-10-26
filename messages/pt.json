@@ -235,7 +235,6 @@
   "today_marked": "Marcaste {count} palavras — repete-as",
   "today_done": "Tudo feito por hoje.",
   "today_start": "Começar",
-  "undo_last": "Anular a última resposta",
   "vocab_recap_title": "Ronda concluída",
   "vocab_recap_score": "{correct} de {total} palavras certas à primeira.",
   "vocab_recap_tricky": "Estas palavras precisam de outra ronda",
@@ -289,5 +288,16 @@
   "streak_repair_cta": "Reparar sequência",
   "streak_repair_skip": "Agora não",
   "streak_restart": "Melhor: {count} dias. Comece uma nova sequência.",
-  "streak_reminder_hint": "No máximo um lembrete gentil por dia, só quando algo está à espera."
+  "streak_reminder_hint": "No máximo um lembrete gentil por dia, só quando algo está à espera.",
+  "home_definitions": "O mesmo cruzamento, mas toque numa casa para ver a definição.",
+  "home_hangman": "Adivinhe a palavra escondida letra a letra.",
+  "home_pronunciation": "Ouça exemplos de áudio e pratique a pronúncia.",
+  "home_alltag": "Preposições, números e cores para o dia a dia.",
+  "home_false_friends": "Palavras que parecem iguais, mas significam outra coisa.",
+  "home_determine": "Identifique caso, género, número, pessoa e tempo.",
+  "home_order": "Ordene as palavras e forme uma frase correta.",
+  "home_continue_reading": "Continuar a ler: {title}",
+  "home_continue_story": "Continuar a história: {title}",
+  "learning_rate_hint": "Quão bem conhecias a palavra?",
+  "learning_hard": "Difícil"
 }
