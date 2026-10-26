@@ -1,0 +1,80 @@
+# TTS options for character voices
+
+The story cast needs natural German speech for 16 characters. The app already has a working
+on-device Piper TTS (Thorsten-high + MLS audiobook model, both modern Piper 1.0.0 phoneme set),
+so the goal is to produce **pre-recorded MP3s** — one per character — that ship with the app and
+play back instantly, instead of synthesizing on the fly.
+
+## Environment constraints
+
+- No ffmpeg, no Python, no working cloud TTS endpoint (Edge TTS / Microsoft free endpoint is
+  currently returning HTTP 400 "Our services aren't available right now").
+- npm is blocked by the PowerShell execution policy; Node is not on PATH (nvm4w at
+  `C:\Users\fhuber\AppData\Roaming\nvm4w\nodejs\node.exe`).
+- The browser **can** run the app's own Piper worker (`static/voices/piper-worker.js`) — it
+  downloads models from Hugging Face, caches them in `story-voices-v1`, and synthesizes audio
+  via onnxruntime-web + espeak-ng WASM. This is the only path that is known to work.
+
+## Idea 1 — Generate in the browser with the app's own Piper worker (chosen)
+
+A one-page HTML app (`gen.html`, served from `localhost:8766`) loads `lamejs` from jsDelivr,
+spawns `Worker('/voices/piper-worker.js')`, downloads the two models once, then synthesizes
+each character's reference sentence and encodes it to MP3. The MP3s are POSTed to a small Node
+receiver (`gen-server.js`) that writes them into `static/voices/<id>.mp3` plus
+`static/voices/voices-meta.json`.
+
+- Models: `de_DE-thorsten-high.onnx` (narrator), `de_DE-mls-medium.onnx` (the rest).
+- MLS speaker cast by measured pitch: speaker 0 (167 Hz), 2 (178 Hz), 4 (192 Hz), 5 (193 Hz)
+  female; speaker 1 (119 Hz), 3 (148 Hz) male.
+- Per-character `lengthScale` (rate) from the voice profile: e.g. Paul 0.85, Kim 1.1, Oma 0.85.
+- Pros: no external service, no API key, works offline after the first model download, reuses
+  code already in the repo.
+- Cons: requires a user gesture to start the AudioContext, models are ~200 MB total, first run
+  takes a few minutes.
+
+Runtime playback is wired into `src/lib/voice/recordedVoices.ts` (lazy-loads each MP3, decodes to
+an `AudioBuffer`, caches it) and `src/lib/story/naturalVoices.svelte.ts` (`renderNatural` checks
+for a recorded clip before falling back to on-device synthesis). `StoryMode.svelte` treats
+`useRecordedVoices()` as equivalent to `naturalReady()` so the loading screen is skipped.
+
+## Idea 2 — Browser `speechSynthesis` (free, no download)
+
+Record each character with `window.speechSynthesis` + `MediaRecorder` (as in `record.html`).
+- Voices: `de-DE-KatjaNeural`, `de-DE-ConradNeural`, plus any other installed German voices.
+- Pros: zero model download, works immediately.
+- Cons: depends on the browser having German neural voices installed (Chrome/Edge do, but the
+  page reported **0 German voices** in this environment — the voices hadn't loaded yet, needed a
+  refresh / `voiceschanged` event). Lower quality than Piper MLS.
+
+## Idea 3 — Cloud TTS APIs (blocked / not attempted)
+
+- **Edge TTS** (`wss://speech.platform.bing.com/speech/synthesize/context`) — `src/lib/voice/edgeTts.ts`
+  exists, but the endpoint returned HTTP 400 "Our services aren't available right now".
+- **MiniMax** — needs an API key (`MINIMAX_KEY` in settings); `src/lib/voice/minimax.ts` was deleted.
+- **ElevenLabs / Google Cloud TTS** — would need keys and an account.
+
+## Idea 4 — Local llama.cpp / Ollama TTS
+
+Ollama is installed (`C:\Users\fhuber\AppData\Local\Programs\Ollama\ollama.exe`) but no TTS model
+was listed and the CLI errored out. llama-cpp-python is not available in Node. Not viable without
+a separate install step.
+
+## Idea 5 — Ship smaller on-device models at runtime (no pre-recording)
+
+Keep the existing `naturalVoices.svelte.ts` pipeline as-is: the Piper worker downloads models on
+first use and synthesizes every sentence. Already works; just slower and needs network on first
+play. The recorded-clip path is an optimization on top of this, not a replacement — the worker
+is the fallback.
+
+## Files
+
+| File | Purpose |
+| --- | --- |
+| `static/voices/piper-worker.js` | Existing Piper worker (unchanged) |
+| `static/voices/<id>.mp3` | Generated character clips (16 files) |
+| `static/voices/voices-meta.json` | `{ id: { model, speaker, rate, text, bytes } }` |
+| `src/lib/voice/recordedVoices.ts` | Runtime playback of the pre-recorded clips |
+| `src/lib/story/naturalVoices.svelte.ts` | Prefers recorded clips, falls back to synthesis |
+| `src/lib/story/StoryMode.svelte` | Treats recorded voices as ready instantly |
+| `scripts/build-character-voices.ts` | Edge TTS build script (endpoint broken) |
+| `scripts/build-neutts-voices.ts` | NeuTTS Air build script (needs Python/llama-cpp) |

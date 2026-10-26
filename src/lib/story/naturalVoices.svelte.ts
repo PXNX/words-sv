@@ -3,6 +3,7 @@ import type { Mood } from './stories';
 import { accentShape, animals, moodShape, priority, profiles, sharedPitch, type Speaker, type VoiceGender } from './voices';
 import { speechChunks } from './speech';
 import { settings, type NaturalModel } from '#lib/state/settings.svelte.js';
+import { loadRecordedVoice, useRecordedVoices } from '#lib/voice/recordedVoices.js';
 
 /*
  * Natural story voices: Piper neural voices generated on the learner's device (see
@@ -388,6 +389,12 @@ export function synthesizeNatural(text: string, speaker: Speaker, mood: Mood, ca
 }
 
 async function renderNatural(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number): Promise<NaturalClip> {
+  // Pre-recorded clips (one MP3 per character, generated offline) play back instantly and never
+  // need the Piper worker. They take priority over on-device synthesis.
+  if (useRecordedVoices() && speaker !== 'announcer') {
+    const buffer = await loadRecordedVoice(speaker);
+    if (buffer) return { buffer, playbackRate: 1, volume: 1 };
+  }
   const chunks = speechChunks(text);
   if (chunks.length < 2) return synthesizeChunk(text, speaker, mood, cast, language, baseRate);
   const clips: NaturalClip[] = [];

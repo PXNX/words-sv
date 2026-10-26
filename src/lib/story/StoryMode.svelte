@@ -22,6 +22,7 @@
   import { LipSync } from './lipSync.svelte';
   import { WordMarks } from './wordMarks.svelte';
   import { clearNaturalAudio, naturalNarratorVoice, naturalReady, naturalState, naturalSupported, playNatural, prepareNatural, synthesizeNatural, type NaturalClip } from './naturalVoices.svelte';
+import { useRecordedVoices } from '#lib/voice/recordedVoices.js';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconVolumeOff from '~icons/material-symbols/volume-off-rounded';
   import IconCheck from '~icons/material-symbols/check-rounded';
@@ -202,8 +203,8 @@
   let reduceMotion = $state(false);
 
   const lang = $derived(settings.lang);
-  // Natural voices read the story once they are downloaded; until then (or if they fail) the system voices do.
-  const naturalVoices = $derived(settings.voiceQuality === 'natural' && naturalReady(settings.lang));
+  // Pre-recorded clips play instantly; on-device Piper voices need a download first.
+  const naturalVoices = $derived((settings.voiceQuality === 'natural' && (useRecordedVoices() || naturalReady(settings.lang))));
   const name = $derived(settings.firstName);
   const currentIndex = $derived(revealed - 1);
   const current = $derived(story?.beats[currentIndex] ?? null);
@@ -341,7 +342,7 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
     audioTotal = playthrough.beats.length;
     audioGenerationStart = 0;
     audioGenerationEta = 0;
-    if (settings.voiceQuality === 'natural' && naturalSupported()) {
+    if (settings.voiceQuality === 'natural' && naturalSupported() && !useRecordedVoices()) {
       audioReady = false;
       void prepareAndPresent(playthrough, castFor(playthrough), settings.lang, preparation, thisRun);
       return;
