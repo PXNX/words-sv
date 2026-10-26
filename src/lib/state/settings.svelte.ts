@@ -1,5 +1,5 @@
 import { requiresCumulativePool } from '#lib/circle/engine.js';
-import { wordPools, isLanguage, isVocabularyLevel, type Language, type VocabularyLevel } from '#lib/data/vocabulary.js';
+import { wordPools, isLanguage, isVocabularyLevel, type Language, type VocabularyLevel, warmLanguage, refreshHintableBaseWords } from '#lib/data/vocabulary.js';
 import { normalizeVocabularyGoal, dateKey, readStreak, repairCandidate, repairStreak as repairStoredStreak, syncStreak, syncStreakGoal, type ClientStreak, type StreakRepair, type StreakEvent } from '#lib/clientStreak.js';
 import { recordActivity, type ActivityKind } from '#lib/progress/activity.js';
 import { publishReminderState } from '#lib/pwaReminders.js';
@@ -95,21 +95,27 @@ function readWordleLength(): WordleLength {
 }
 
 class SettingsStore {
-  theme = $state<Theme>(typeof localStorage !== 'undefined' && localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light');
-  vibration = $state(typeof localStorage === 'undefined' || localStorage.getItem(VIBRATION_KEY) !== 'off');
-  sound = $state(typeof localStorage === 'undefined' || localStorage.getItem(SOUND_KEY) !== 'off');
-  voiceQuality = $state<VoiceQuality>(typeof localStorage !== 'undefined' && localStorage.getItem(VOICE_QUALITY_KEY) === 'natural' ? 'natural' : 'standard');
-  naturalModel = $state<NaturalModel>(readNaturalModel());
-  dialects = $state(typeof localStorage === 'undefined' || localStorage.getItem(DIALECTS_KEY) !== 'off');
-  lang = $state<Language>(readLanguage());
-  interfaceLocale = $state<InterfaceLocale>(readInterfaceLocale());
-  vocabularyLevel = $state<VocabularyLevel>(readVocabularyLevel());
-  includeLowerVocabulary = $state(typeof localStorage !== 'undefined' && localStorage.getItem(INCLUDE_LOWER_VOCABULARY_KEY) === 'on');
-  allowBackwardWords = $state(typeof localStorage !== 'undefined' && localStorage.getItem(BACKWARD_WORDS_KEY) === 'on');
-  completedRounds = $state(readCompletedRounds());
-  wordleLength = $state<WordleLength>(readWordleLength());
-  streak = $state<ClientStreak>(readStreak());
-  firstName = $state(typeof localStorage === 'undefined' ? '' : localStorage.getItem(FIRST_NAME_KEY) ?? '');
+    theme = $state<Theme>(typeof localStorage !== 'undefined' && localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light');
+    vibration = $state(typeof localStorage === 'undefined' || localStorage.getItem(VIBRATION_KEY) !== 'off');
+    sound = $state(typeof localStorage === 'undefined' || localStorage.getItem(SOUND_KEY) !== 'off');
+    voiceQuality = $state<VoiceQuality>(typeof localStorage !== 'undefined' && localStorage.getItem(VOICE_QUALITY_KEY) === 'natural' ? 'natural' : 'standard');
+    naturalModel = $state<NaturalModel>(readNaturalModel());
+    dialects = $state(typeof localStorage === 'undefined' || localStorage.getItem(DIALECTS_KEY) !== 'off');
+    lang = $state<Language>(readLanguage());
+    interfaceLocale = $state<InterfaceLocale>(readInterfaceLocale());
+    vocabularyLevel = $state<VocabularyLevel>(readVocabularyLevel());
+    includeLowerVocabulary = $state(typeof localStorage !== 'undefined' && localStorage.getItem(INCLUDE_LOWER_VOCABULARY_KEY) === 'on');
+    allowBackwardWords = $state(typeof localStorage !== 'undefined' && localStorage.getItem(BACKWARD_WORDS_KEY) === 'on');
+    completedRounds = $state(readCompletedRounds());
+    wordleLength = $state<WordleLength>(readWordleLength());
+    streak = $state<ClientStreak>(readStreak());
+    firstName = $state(typeof localStorage === 'undefined' ? '' : localStorage.getItem(FIRST_NAME_KEY) ?? '');
+
+    constructor() {
+      // Fetch the learner's vocabulary in the background so game modes that need it don't
+      // block on the first render. Other languages stay out of the initial bundle entirely.
+      void warmLanguage(this.lang).then(refreshHintableBaseWords);
+    }
 
   hasStoredInterfaceLocale() {
     return typeof localStorage !== 'undefined' && Boolean(localStorage.getItem(INTERFACE_LOCALE_KEY));
@@ -149,6 +155,9 @@ class SettingsStore {
     this.lang = next;
     localStorage.setItem(LANGUAGE_KEY, next);
     this.normalizeVocabulary();
+    // Fetch the new language's vocabulary in the background; game modes that need it
+    // pick it up from the cache as soon as it arrives.
+    void warmLanguage(next).then(refreshHintableBaseWords);
   }
   setVocabularyLevel(next: VocabularyLevel) {
     this.vocabularyLevel = next;
