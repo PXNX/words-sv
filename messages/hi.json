@@ -300,5 +300,9 @@
   "home_continue_reading": "पढ़ना जारी रखें: {title}",
   "home_continue_story": "कहानी जारी रखें: {title}",
   "learning_rate_hint": "आप इस शब्द को कितना जानते थे?",
-  "learning_hard": "कठिन"
+  "learning_hard": "कठिन",
+  "word_bank_loading": "शब्दों को प्राकृतिक आवाज़ में रिकॉर्ड किया जा रहा है …",
+  "word_bank_progress": "{total} में से {done} शब्द",
+  "word_bank_hint": "सिर्फ़ पहली बार — उसके बाद हर शब्द तुरंत तैयार है।",
+  "word_bank_continue": "बिना इंतज़ार खेलें"
 }

@@ -94,9 +94,21 @@ tests/build, a focused commit and a push to `main`.
 - [x] The daily word goal (5 / 8 / 12) can only be changed on the stats page; home just shows
   today's ring.
 
+## 7. Shared word audio for Learn and Listen (M)
+
+- [x] Generate the whole level's word bank with the natural voice model on a loading screen
+  (`/vocab` and the natural path of `/listen`).
+- [x] Keep the bank on the device (`wordcircle-word-audio-v1` in IndexedDB, 16-bit PCM) so a clip
+  generated in one mode plays instantly in the other and survives a reload.
+- [x] Resume where a session stopped and render the current round's words first.
+- [x] Offer "play without waiting" on the loader; the remaining words stay for the next session.
+- [x] Fall back to the browser voice whenever a clip is still missing.
+- [x] Drop clips of an older voice model and cap decoded buffers in memory.
+
 ## Verification checklist
 
-- [x] Vitest suites for new pure helpers (streak, Today card, ledger, milestones, Lilith moods).
+- [x] Vitest suites for new pure helpers (streak, Today card, ledger, milestones, Lilith moods,
+  word-bank ordering and spoken forms).
 - [x] `npm run build` exits 0.
 - [x] `npm run check` stays at the known baseline (69 errors / 6 warnings).
 - [x] Touched Vitest suites pass; only the pre-existing cron endpoint fails without `CRON_SECRET`,

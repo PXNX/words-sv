@@ -300,5 +300,9 @@
   "home_continue_reading": "ادامه خواندن: {title}",
   "home_continue_story": "ادامه داستان: {title}",
   "learning_rate_hint": "چقدر این واژه را می‌شناختی؟",
-  "learning_hard": "سخت"
+  "learning_hard": "سخت",
+  "word_bank_loading": "واژه‌ها را با صدای طبیعی ضبط می‌کنیم …",
+  "word_bank_progress": "{done} از {total} واژه",
+  "word_bank_hint": "فقط بار اول — بعد از آن همهٔ واژه‌ها فوراً آماده‌اند.",
+  "word_bank_continue": "بدون انتظار بازی کن"
 }

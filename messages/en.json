@@ -304,5 +304,9 @@
   "home_continue_reading": "Continue reading: {title}",
   "home_continue_story": "Continue story: {title}",
   "learning_rate_hint": "How well did you know it?",
-  "learning_hard": "Hard"
+  "learning_hard": "Hard",
+  "word_bank_loading": "Recording the words in a natural voice …",
+  "word_bank_progress": "{done} of {total} words",
+  "word_bank_hint": "Only the first time – after that every word is ready instantly.",
+  "word_bank_continue": "Play without waiting"
 }

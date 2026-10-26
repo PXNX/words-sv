@@ -300,5 +300,9 @@
   "home_continue_reading": "വായന തുടരുക: {title}",
   "home_continue_story": "കഥ തുടരുക: {title}",
   "learning_rate_hint": "ഈ വാക്ക് നിങ്ങൾക്ക് എത്ര നന്നായി അറിയാമായിരുന്നു?",
-  "learning_hard": "ബുദ്ധിമുട്ട്"
+  "learning_hard": "ബുദ്ധിമുട്ട്",
+  "word_bank_loading": "വാക്കുകൾ സ്വാഭാവിക ശബ്ദത്തിൽ റെക്കോർഡ് ചെയ്യുന്നു …",
+  "word_bank_progress": "{total} വാക്കുകളിൽ {done}",
+  "word_bank_hint": "ആദ്യത്തെ തവണ മാത്രം — അതിനു ശേഷം എല്ലാ വാക്കുകളും ഉടൻ തയ്യാർ.",
+  "word_bank_continue": "കാത്തിരിക്കാതെ കളിക്കുക"
 }

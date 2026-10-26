@@ -304,5 +304,9 @@
   "home_continue_reading": "Weiterlesen: {title}",
   "home_continue_story": "Geschichte fortsetzen: {title}",
   "learning_rate_hint": "Wie gut kanntest du das Wort?",
-  "learning_hard": "Schwer"
+  "learning_hard": "Schwer",
+  "word_bank_loading": "Wörter werden mit natürlicher Stimme aufgenommen …",
+  "word_bank_progress": "{done} von {total} Wörtern",
+  "word_bank_hint": "Nur beim ersten Mal – danach sind alle Wörter sofort da.",
+  "word_bank_continue": "Trotzdem weiterspielen"
 }

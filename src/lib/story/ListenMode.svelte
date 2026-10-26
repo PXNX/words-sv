@@ -7,7 +7,9 @@
   import { characterNames, fillName, moodFor, storiesFor, withDetails, withWeather, type CharacterId, type Mood, type SceneId, type Story, type StoryBeat } from './stories';
   import type { Language, VocabularyLevel } from '#lib/data/vocabulary.js';
   import { intonationOf, pronounceable, splitSounds, wordsOf } from './speech';
-  import { naturalMegabytes, naturalReady, naturalState, naturalSupported, prepareNatural, synthesizeNatural, combineNatural, type NaturalClip } from './naturalVoices.svelte';
+  import { naturalMegabytes, naturalNarratorVoice, naturalReady, naturalState, naturalSupported, prepareNatural, synthesizeNatural, combineNatural, type NaturalClip } from './naturalVoices.svelte';
+  import { cancelWordBank, prepareWordBank, wordBankState, wordBankStateKey } from '#lib/audio/wordBank.svelte.js';
+  import WordBankLoader from '#lib/audio/WordBankLoader.svelte';
   import { applyVoice, profiles, type Dialect, type Speaker } from './voices';
   import { listAudioSessions, loadAudioBlob, saveAudioSession, updateAudioSessionPosition, type SavedAudio, type SavedSound, type SavedStoryStart } from './audioLibrary';
   import { generateStory, hasMissedWords } from './generated';
@@ -43,7 +45,7 @@
     uk: { bavarian: '{name} розмовляє баварським діалектом.', berlin: '{name} розмовляє берлінським діалектом.', alpine: '{name} розмовляє з альпійським акцентом.', northern: '{name} розмовляє північнонімецьким діалектом.', hessian: '{name} розмовляє гессенським діалектом.', italian: '{name} розмовляє з італійським акцентом.' }
   };
 
-  type Phase = 'idle' | 'preparing' | 'generating' | 'loading' | 'ready' | 'error';
+  type Phase = 'idle' | 'preparing' | 'words' | 'generating' | 'loading' | 'ready' | 'error';
   type Segment = { text: string; speaker: Speaker; mood: Mood; gap: number; story: number; sound: SoundEffect | null; soundLead: number };
   type LiveSession = { story: Story; segments: Segment[]; starts: number[]; sounds: SavedSound[]; duration: number };
 
@@ -62,6 +64,7 @@
   let position = $state(0);
   let playing = $state(false);
   let generation = 0;
+  let wordRun = 0;
   let pendingSeek: number | null = null;
   let lastSavedAt = 0;
   let lastListenSavedAt = 0;
@@ -85,12 +88,17 @@
   const downloadMegabytes = $derived(Math.round(naturalState.downloaded[settings.lang] ?? 0));
   const downloadTotalMegabytes = $derived(Math.round(naturalState.total[settings.lang] ?? naturalMegabytes(settings.lang)));
   const downloadRemaining = $derived(naturalState.remaining[settings.lang] ?? null);
+  const bankKey = $derived(wordBankStateKey(settings.lang, settings.vocabularyLevel));
+  const bankDone = $derived(wordBankState.done[bankKey] ?? 0);
+  const bankTotal = $derived(wordBankState.total[bankKey] ?? 0);
+  const bankVoice = $derived(naturalNarratorVoice(settings.lang));
   const labels = $derived({
     listen: m.story_listen({}, { locale: settings.interfaceLocale }),
     level: m.vocabulary({}, { locale: settings.interfaceLocale }),
     download: m.voice_quality_loading({ percent: String(download) }, { locale: settings.interfaceLocale }),
     audio: m.story_listen_audio({}, { locale: settings.interfaceLocale }),
     loading: m.story_listen_loading({}, { locale: settings.interfaceLocale }),
+    wordBankLoading: m.word_bank_loading({}, { locale: settings.interfaceLocale }),
     newAudio: m.story_listen_new({}, { locale: settings.interfaceLocale }),
     history: m.story_listen_history({}, { locale: settings.interfaceLocale }),
     play: m.home_play({}, { locale: settings.interfaceLocale }),
@@ -600,6 +608,15 @@
     } catch {}
     return { saved, blob };
   }
+  // The shared word audio: every word of the level, generated once on the device. The vocabulary
+  // quiz fills the same bank, so a word rendered here is instantly available there (and the other
+  // way round). The loader offers to skip, which stops the rest of the level.
+  async function generateWords(token: number) {
+    phase = 'words';
+    const run = ++wordRun;
+    await prepareWordBank(settings.lang, settings.vocabularyLevel);
+    return token === generation && run === wordRun;
+  }
   async function startSession() {
     flushPosition();
     const token = ++generation;
@@ -634,6 +651,7 @@
     await prepareNatural(settings.lang);
     if (token !== generation) return;
     if (!naturalReady(settings.lang)) { phase = 'error'; error = labels.unsupported; return; }
+    if (!(await generateWords(token))) return;
     phase = 'generating';
     const startedAt = performance.now();
     batchIndex = 1;
@@ -713,6 +731,7 @@
     await prepareNatural(settings.lang);
     if (token !== generation) return;
     if (!naturalReady(settings.lang)) { phase = 'error'; error = labels.unsupported; return; }
+    if (!(await generateWords(token))) return;
     phase = 'generating';
     const alreadySaved = allStories.length - missing.length;
     const startedAt = performance.now();
@@ -947,6 +966,8 @@
       flushPosition();
       saveListenProgress(true);
       generation += 1;
+      wordRun += 1;
+      cancelWordBank();
       cancelStandardSpeech();
       audio?.pause();
       if (audioUrl) URL.revokeObjectURL(audioUrl);
@@ -971,6 +992,16 @@
           <small>{m.voice_quality_remaining({ time: formatTime(downloadRemaining) }, { locale: settings.interfaceLocale })}</small>
         {/if}
       </div>
+    {:else if phase === 'words'}
+      <WordBankLoader
+        level={settings.vocabularyLevel}
+        label={labels.wordBankLoading}
+        progress={bankTotal ? bankDone / bankTotal : 0}
+        done={bankDone}
+        total={bankTotal}
+        voice={bankVoice}
+        oncontinue={cancelWordBank}
+      />
     {:else if phase === 'generating'}
       <div class="listen-state listen-generating" class:has-scene={generatingScene} aria-live="polite">
         {#if generatingScene}
