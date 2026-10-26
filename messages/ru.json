@@ -246,5 +246,18 @@
   "reading_recap_next": "Читать следующий текст",
   "story_recap_mark": "Отметить неверные слова для повторения",
   "listen_recap_title": "Сеанс слушания завершён",
-  "listen_recap_replay": "Слушать ещё раз"
+  "listen_recap_replay": "Слушать ещё раз",
+  "repeat_title": "Повторение",
+  "repeat_kicker": "Ваш повтор",
+  "repeat_due": "Пора повторить: {count}",
+  "repeat_mixed": "Смешанный круг ({count} слов)",
+  "repeat_empty": "Сейчас повторять нечего. Отмечайте слова при чтении или ответьте на несколько вопросов — всё соберётся здесь.",
+  "repeat_no_words": "Нет слов для повтора. Откройте одну из групп ниже.",
+  "repeat_group_count": "{count} на повторение",
+  "repeat_group_vocab": "Лексика",
+  "repeat_group_reading": "Отмечено при чтении",
+  "repeat_group_grammar": "Грамматика",
+  "repeat_group_pronunciation": "Произношение",
+  "repeat_group_story": "Истории",
+  "repeat_group_listening": "Аудирование"
 }

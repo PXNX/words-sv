@@ -42,14 +42,14 @@ tests/build, a focused commit and a push to `main`.
 
 ## 4. Unify review state across modes (M–L)
 
-- [ ] Create one review ledger keyed by `language:item` with `repetitions`, `dueAt`, `lapses`
+- [x] Create one review ledger keyed by `language:item` with `repetitions`, `dueAt`, `lapses`
   and a `source`.
-- [ ] Write reading marks, vocabulary answers, grammar answers and pronunciation results into it.
-- [ ] Marked reading words resurface as grammar prompts and in generated stories.
-- [ ] Pronunciation scores feed the same “hard words” list.
-- [ ] Listening prioritises words the learner marked.
-- [ ] Add a **Repeat** hub with due count, grouped sources and a mixed session.
-- [ ] Keep the existing stores readable so no local progress is lost.
+- [x] Write reading marks, vocabulary answers, grammar answers and pronunciation results into it.
+- [x] Marked reading words resurface as grammar prompts and in generated stories.
+- [x] Pronunciation scores feed the same “hard words” list.
+- [x] Listening prioritises words the learner marked.
+- [x] Add a **Repeat** hub with due count, grouped sources and a mixed session.
+- [x] Keep the existing stores readable so no local progress is lost.
 
 ## 5. Milestones that mean something (M)
 

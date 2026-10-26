@@ -28,6 +28,7 @@
   import { readingCatalog } from '#lib/story/readingCatalog.js';
   import { readDueVocabulary } from '#lib/vocab/spacedRepetition.js';
   import { readMissedWords } from '#lib/story/missedWords.js';
+  import { dueReviewCount } from '#lib/review/ledger.js';
   import IconSettings from '~icons/material-symbols/settings-rounded';
   import IconHelp from '~icons/material-symbols/question-mark-rounded';
   import IconFlame from '~icons/material-symbols/local-fire-department-rounded';
@@ -46,6 +47,7 @@
   import IconMenuBook from '~icons/material-symbols/menu-book-rounded';
   import IconHeadphones from '~icons/material-symbols/headphones-rounded';
   import IconExplore from '~icons/material-symbols/explore-rounded';
+  import IconReplay from '~icons/material-symbols/replay-rounded';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
 
@@ -113,7 +115,9 @@
     todayDue: (count: number, minutes: number) => m.today_due({ count, minutes }, { locale: settings.interfaceLocale }),
     todayReading: (title: string, number: number) => m.today_reading({ title, number }, { locale: settings.interfaceLocale }),
     todayStreak: (count: number) => m.today_streak({ count }, { locale: settings.interfaceLocale }),
-    todayMarked: (count: number) => m.today_marked({ count }, { locale: settings.interfaceLocale })
+    todayMarked: (count: number) => m.today_marked({ count }, { locale: settings.interfaceLocale }),
+    repeatTitle: m.repeat_title({}, { locale: settings.interfaceLocale }),
+    repeatDue: (count: number) => m.repeat_due({ count }, { locale: settings.interfaceLocale })
   });
 
   function formatMinutes(minutes: number) {
@@ -148,11 +152,13 @@
   // The ring shows how far today's vocabulary goal is met, or a full ring once any mode qualified.
   const goalProgress = $derived(settings.streak.qualified ? 1 : Math.min(1, settings.streak.vocabCorrect / Math.max(1, settings.streak.vocabularyGoal)));
   let todayPlan = $state<TodayPlan | null>(null);
+  let repeatDue = $state(0);
 
   // The next best action is derived from local progress only: due reviews first, then an unfinished
   // text, the daily streak and finally the words marked while reading.
   function refreshToday() {
     if (typeof localStorage === 'undefined') return;
+    repeatDue = dueReviewCount(settings.lang);
     todayPlan = buildTodayPlan({
       dueWords: readDueVocabulary(settings.lang, settings.vocabularyLevel),
       markedWords: readMissedWords(settings.lang).length,
@@ -276,6 +282,9 @@
     </div>
     <h2 class="home-group-heading">{labels.vocabularyGroup}</h2>
     <div class="home-games">
+      {#if repeatDue > 0}
+        <a class="card-play {streakClass(null)}" href="/repeat"><span class="home-icon" aria-hidden="true"><IconReplay /></span><h2>{labels.repeatTitle}</h2><p>{labels.repeatDue(repeatDue)}</p></a>
+      {/if}
       <a class="card-play {streakClass('vocab')}" href="/vocab"><span class="home-icon" aria-hidden="true"><IconQuiz /></span><h2>{labels.wordQuiz}</h2><p>{labels.homeVocab}</p><TodayBadge done={modeDone(settings.streak, 'vocab')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
       <a class="card-play {streakClass('pronunciation')}" href="/pronunciation"><span class="home-icon" aria-hidden="true"><IconMic /></span><h2>{labels.pronunciation}</h2><p>Listen to audio samples and practise speaking.</p><TodayBadge done={modeDone(settings.streak, 'pronunciation')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
       <a class="card-play {streakClass(null)}" href="/alltag"><span class="home-icon" aria-hidden="true"><IconEmoji /></span><h2>{labels.alltag}</h2><p>Präpositionen, Zahlen und Farben für den Alltag.</p></a>

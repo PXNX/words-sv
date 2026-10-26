@@ -250,5 +250,18 @@
   "reading_recap_next": "Nächsten Text lesen",
   "story_recap_mark": "Falsche Wörter zum Wiederholen merken",
   "listen_recap_title": "Hörrunde geschafft",
-  "listen_recap_replay": "Noch einmal hören"
+  "listen_recap_replay": "Noch einmal hören",
+  "repeat_title": "Wiederholen",
+  "repeat_kicker": "Deine Wiederholung",
+  "repeat_due": "Jetzt fällig: {count}",
+  "repeat_mixed": "Gemischte Runde ({count} Wörter)",
+  "repeat_empty": "Gerade ist nichts fällig. Merke Wörter beim Lesen oder beantworte ein paar Fragen — hier sammelt sich alles.",
+  "repeat_no_words": "Keine Vokabeln fällig. Öffne unten eine Gruppe.",
+  "repeat_group_count": "{count} zum Wiederholen",
+  "repeat_group_vocab": "Vokabeln",
+  "repeat_group_reading": "Beim Lesen gemerkt",
+  "repeat_group_grammar": "Grammatik",
+  "repeat_group_pronunciation": "Aussprache",
+  "repeat_group_story": "Geschichten",
+  "repeat_group_listening": "Hören"
 }

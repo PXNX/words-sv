@@ -8,6 +8,8 @@
   import { recordMissedWord } from '#lib/story/missedWords.js';
   import Companion from '#lib/story/Companion.svelte';
   import { VOCABULARY_REVIEW_STORAGE_PREFIX, updateReviewProgress } from '#lib/vocab/spacedRepetition.js';
+  import { dueReviewEntries, readReviewLedger, recordReview, writeReviewLedger, type ReviewLedger } from '#lib/review/ledger.js';
+  import { page } from '$app/state';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
@@ -68,9 +70,13 @@
     attempted: string[];
     tricky: string[];
     firstTry: string[];
+    ledger: ReviewLedger;
   };
   let undoSnapshot = $state<UndoSnapshot | null>(null);
 
+  // `/vocab?due=1` is the Repeat hub's mixed session: only words that the shared ledger says are
+  // due, drawn from reading marks, grammar answers, pronunciation and earlier vocabulary rounds.
+  const dueMode = $derived(page.url.searchParams.get('due') === '1');
   const currentWord = $derived(queue[position] ?? '');
   const currentDefinition = $derived(definitions[currentWord] ?? '');
   const currentDisplayWord = $derived(displayWord(currentWord));
@@ -116,7 +122,13 @@
   function startSection() {
     cancelSpeech();
     reviewProgress = loadProgress();
-    section = pickReviewSection(definitionWords, reviewProgress, random, 6);
+    const due = dueMode
+      ? dueReviewEntries(settings.lang).map(({ item }) => item).filter((item) => definitionWords.includes(item)).slice(0, 4)
+      : [];
+    const remaining = definitionWords.filter((word) => !due.includes(word));
+    section = due.length
+      ? [...due, ...pickReviewSection(remaining, reviewProgress, random, 6 - due.length)]
+      : pickReviewSection(definitionWords, reviewProgress, random, 6);
     queue = [...section, ...section].sort(() => random() - .5);
     position = 0;
     resetSessionState();
@@ -152,7 +164,8 @@
       position,
       attempted: [...attempted],
       tricky: [...tricky],
-      firstTry: [...firstTry]
+      firstTry: [...firstTry],
+      ledger: readReviewLedger()
     };
     const firstAttempt = !attempted.includes(word);
     selectedChoice = chosenWord;
@@ -166,6 +179,7 @@
     }
     reviewProgress = updateReviewProgress(reviewProgress, word, correct);
     persistProgress();
+    recordReview(settings.lang, word, correct, 'vocab');
     if (correct) { playSuccessSound(settings.sound, 'vocab'); void settings.recordStreak('vocab_correct'); }
     else { playErrorSound(settings.sound, 'vocab'); recordMissedWord(settings.lang, word); queue = insertLearningRepeat(queue, position, word); }
   }
@@ -181,6 +195,7 @@
     attempted = undoSnapshot.attempted;
     tricky = undoSnapshot.tricky;
     firstTry = undoSnapshot.firstTry;
+    writeReviewLedger(undoSnapshot.ledger);
     undoSnapshot = null;
     answerStatus = null;
     selectedChoice = null;
@@ -217,7 +232,7 @@
   });
 
   $effect(() => {
-    const nextSourceKey = `${settings.lang}|${settings.vocabularyLevel}|${words.join('|')}`;
+    const nextSourceKey = `${settings.lang}|${settings.vocabularyLevel}|${words.join('|')}|${dueMode}`;
     if (nextSourceKey === sourceKey) return;
     sourceKey = nextSourceKey;
     untrack(() => startSection());

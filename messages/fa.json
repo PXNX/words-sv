@@ -246,5 +246,18 @@
   "reading_recap_next": "متن بعدی را بخوان",
   "story_recap_mark": "واژه‌های اشتباه را برای تکرار علامت بزن",
   "listen_recap_title": "جلسه شنیدن تمام شد",
-  "listen_recap_replay": "دوباره گوش کن"
+  "listen_recap_replay": "دوباره گوش کن",
+  "repeat_title": "تکرار",
+  "repeat_kicker": "مرور شما",
+  "repeat_due": "اکنون سررسید: {count}",
+  "repeat_mixed": "دوره ترکیبی ({count} واژه)",
+  "repeat_empty": "اکنون چیزی برای مرور نیست. هنگام خواندن واژه‌ها را علامت بزن یا به چند پرسش پاسخ بده — همه اینجا جمع می‌شوند.",
+  "repeat_no_words": "واژه‌ای برای مرور نیست. یکی از گروه‌های زیر را باز کن.",
+  "repeat_group_count": "{count} برای مرور",
+  "repeat_group_vocab": "واژگان",
+  "repeat_group_reading": "علامت‌خورده هنگام خواندن",
+  "repeat_group_grammar": "دستور زبان",
+  "repeat_group_pronunciation": "تلفظ",
+  "repeat_group_story": "داستان‌ها",
+  "repeat_group_listening": "شنیدن"
 }

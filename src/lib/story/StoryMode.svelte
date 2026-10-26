@@ -321,7 +321,7 @@
     return [...words];
   }
   function markWrongStoryWords() {
-    for (const word of wrongStoryWords()) markWordForRepeat(lang, word);
+    for (const word of wrongStoryWords()) markWordForRepeat(lang, word, Date.now(), 'story');
     markedWrong = true;
   }
   function start(next: Story) {

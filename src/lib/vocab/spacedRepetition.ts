@@ -1,4 +1,5 @@
 import { vocabularyLevels, wordPools, type Language, type VocabularyLevel } from '#lib/data/vocabulary.js';
+import { clearReviewItem, markReviewItem, type ReviewSource } from '#lib/review/ledger.js';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const INTERVAL_DAYS = [1, 2, 4, 8, 16, 32];
@@ -113,7 +114,7 @@ function levelsWithWord(language: Language, word: string): VocabularyLevel[] {
  * and its lapse count grows, so it moves ahead of unseen words in the next practice session and
  * stays in rotation until it is answered right often enough.
  */
-export function markWordForRepeat(language: Language, word: string, now: number = Date.now()) {
+export function markWordForRepeat(language: Language, word: string, now: number = Date.now(), source: ReviewSource = 'reading') {
   const key = word.trim().toLocaleUpperCase();
   for (const level of levelsWithWord(language, key)) {
     const progress = readLevelProgress(language, level);
@@ -121,6 +122,8 @@ export function markWordForRepeat(language: Language, word: string, now: number 
     progress[key] = { repetitions: 0, dueAt: now, lapses: (current.lapses ?? 0) + 1 };
     writeLevelProgress(language, level, progress);
   }
+  // The shared ledger is what the Repeat hub reads, so a word marked here also shows up there.
+  markReviewItem(language, key, source, now);
 }
 
 /** Takes a manual mark back: the word returns to a normal, unseen-like rotation. */
@@ -133,6 +136,7 @@ export function clearWordRepeat(language: Language, word: string) {
     progress[key] = { repetitions: current.repetitions, dueAt: 0, lapses: 0 };
     writeLevelProgress(language, level, progress);
   }
+  clearReviewItem(language, key);
 }
 
 // Scans every `wordcircle-vocabulary-review-v2:<language>:<level>` entry (one per level the

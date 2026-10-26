@@ -246,5 +246,18 @@
   "reading_recap_next": "Читати наступний текст",
   "story_recap_mark": "Позначити помилкові слова для повторення",
   "listen_recap_title": "Сеанс слухання завершено",
-  "listen_recap_replay": "Слухати ще раз"
+  "listen_recap_replay": "Слухати ще раз",
+  "repeat_title": "Повторення",
+  "repeat_kicker": "Ваше повторення",
+  "repeat_due": "Час повторити: {count}",
+  "repeat_mixed": "Змішане коло ({count} слів)",
+  "repeat_empty": "Зараз повторювати нічого. Позначайте слова під час читання або дайте відповіді на кілька питань — усе збереться тут.",
+  "repeat_no_words": "Немає слів для повторення. Відкрийте одну з груп нижче.",
+  "repeat_group_count": "{count} на повторення",
+  "repeat_group_vocab": "Лексика",
+  "repeat_group_reading": "Позначено під час читання",
+  "repeat_group_grammar": "Граматика",
+  "repeat_group_pronunciation": "Вимова",
+  "repeat_group_story": "Історії",
+  "repeat_group_listening": "Аудіювання"
 }
