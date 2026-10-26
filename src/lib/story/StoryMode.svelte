@@ -154,6 +154,10 @@
   let audioReady = $state(true);
   let audioDone = $state(0);
   let audioTotal = $state(0);
+  // When audio generation started, so the loading screen can show how long it has taken and how much
+  // is left based on the beats already prepared.
+  let audioGenerationStart = $state(0);
+  let audioGenerationEta = $state(0);
   let orders = $state<number[][]>([]);
   let wrong = $state<Record<number, number[]>>({});
   let solved = $state<Record<number, true>>({});
@@ -231,7 +235,13 @@
   const audioLoadingLabel = $derived(naturalReady(lang) ? labels.loadingAudio : m.story_loader_voices({}, { locale: settings.interfaceLocale }));
   // The natural voice download prints its own ETA (seconds left); while it is still running, the
   // loading screen can show how much longer the download will take instead of only a percentage.
-  const audioLoadingEta = $derived(naturalReady(lang) ? 0 : (naturalState.remaining[lang] ?? 0));
+  // Once the voices are ready and the story's clips are being generated, the ETA follows the beats
+  // already prepared so the learner sees how long the remaining synthesis will take.
+  const audioLoadingEta = $derived(
+    naturalReady(lang)
+      ? (audioDone < audioTotal ? audioGenerationEta : 0)
+      : (naturalState.remaining[lang] ?? 0)
+  );
   // Who is on stage and what they hold so far. Everyone whose first stage cue is an entrance waits
   // in the wings until then; exits send them off, and their own lines bring them back. The room
   // keeps the last `lights` it was given.
@@ -346,6 +356,8 @@
     reaction = null;
     audioDone = 0;
     audioTotal = playthrough.beats.length;
+    audioGenerationStart = 0;
+    audioGenerationEta = 0;
     if (settings.voiceQuality === 'natural' && naturalSupported()) {
       audioReady = false;
       void prepareAndPresent(playthrough, castFor(playthrough), settings.lang, preparation, thisRun);
@@ -635,12 +647,18 @@
     }
   }
   async function prepareStoryAudio(next: Story, cast: Speaker[], language: Language, token: number, from = 0) {
+    if (!audioGenerationStart) audioGenerationStart = performance.now();
     for (const [index, beat] of next.beats.entries()) {
       if (index < from) continue;
       if (token !== audioPreparation || left || !naturalReady(language) || settings.voiceQuality !== 'natural') return;
       await prepareBeatAudio(beat, cast, language, token);
       if (token !== audioPreparation || left) return;
       audioDone += 1;
+      // Estimate how long the remaining beats will take based on the ones already prepared.
+      const elapsed = performance.now() - audioGenerationStart;
+      const perBeat = audioDone > 0 ? elapsed / audioDone : 0;
+      const remaining = Math.max(0, (audioTotal - audioDone) * perBeat);
+      audioGenerationEta = remaining;
     }
   }
   // Loads the voices and prepares the story's clips up to the last beat. `from` lets a restored
