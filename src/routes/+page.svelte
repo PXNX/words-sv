@@ -22,7 +22,7 @@
   import SelectMenu from '#lib/settings/SelectMenu.svelte';
   import { playSoundEffect } from '#lib/sounds.js';
   import { playableLanguages, type Language } from '#lib/data/vocabulary.js';
-  import { REPAIR_WORDS, VOCABULARY_GOALS, lilithFace, lilithMood, modeDone, type StreakMode, type StreakRepair } from '#lib/clientStreak.js';
+  import { REPAIR_WORDS, lilithFace, lilithMood, modeDone, type StreakMode, type StreakRepair } from '#lib/clientStreak.js';
   import TodayBadge from '#lib/streak/TodayBadge.svelte';
   import { buildTodayPlan, estimatedMinutes, type TodayPlan, type TodayReading } from '#lib/today/todayPlan.js';
   import { readingCatalog } from '#lib/story/readingCatalog.js';
@@ -66,6 +66,7 @@
     homeWordle: m.home_wordle({}, { locale: settings.interfaceLocale }),
     homeVocab: m.home_vocab({}, { locale: settings.interfaceLocale }),
     homeGrammar: m.home_grammar({}, { locale: settings.interfaceLocale }),
+    modeDefinitions: m.mode_definitions({}, { locale: settings.interfaceLocale }),
     homeDefinitions: m.home_definitions({}, { locale: settings.interfaceLocale }),
     homeHangman: m.home_hangman({}, { locale: settings.interfaceLocale }),
     homePronunciation: m.home_pronunciation({}, { locale: settings.interfaceLocale }),
@@ -100,9 +101,6 @@
     streakDone: m.streak_done({}, { locale: settings.interfaceLocale }),
     streakProgress: m.streak_progress({}, { locale: settings.interfaceLocale }),
     streakTimeLeft: m.streak_time_left({}, { locale: settings.interfaceLocale }),
-    streakGoalHint: m.streak_goal_hint({}, { locale: settings.interfaceLocale }),
-    streakGoalChoose: m.streak_goal_choose({}, { locale: settings.interfaceLocale }),
-    streakGoalWords: (count: number) => m.streak_goal_words({ count }, { locale: settings.interfaceLocale }),
     streakCountsToday: m.streak_counts_today({}, { locale: settings.interfaceLocale }),
     streakModeDone: m.streak_mode_done({}, { locale: settings.interfaceLocale }),
     story: m.story_title({}, { locale: settings.interfaceLocale }),
@@ -162,8 +160,8 @@
     if (!kind) return 'streak-none';
     return modeDone(settings.streak, kind) ? 'streak-done' : 'streak-pending';
   }
-  const dailyGoal = $derived(settings.dailyGoal());
-  // The ring shows how far today's vocabulary goal is met, or a full ring once any mode qualified.
+  // The ring shows how far today's vocabulary goal is met, or a full ring once any mode
+  // qualified. The goal itself can only be changed on the stats page.
   const goalProgress = $derived(settings.streak.qualified ? 1 : Math.min(1, settings.streak.vocabCorrect / Math.max(1, settings.streak.vocabularyGoal)));
   let todayPlan = $state<TodayPlan | null>(null);
   let repeatDue = $state(0);
@@ -307,14 +305,6 @@
         </span>
         <IconChevronRight class="home-streak-arrow" aria-hidden="true" />
       </a>
-      <div class="home-goal" role="group" aria-label={labels.streakGoalChoose}>
-        <span class="home-goal-hint">{labels.streakGoalHint}</span>
-        <div class="home-goal-options">
-          {#each VOCABULARY_GOALS as goal (goal)}
-            <button type="button" class="home-goal-option" class:active={goal === dailyGoal} aria-pressed={goal === dailyGoal} onclick={() => void settings.setDailyGoal(goal).then(refreshToday)}>{labels.streakGoalWords(goal)}</button>
-          {/each}
-        </div>
-      </div>
       <div class="home-streak-meta">
         <span>{labels.streakFreezes(settings.streak.freezes)}</span>
         <span>{labels.streakFreezeHint}</span>
@@ -352,9 +342,9 @@
     <h2 class="home-group-heading">{labels.gamesGroup}</h2>
     <div class="home-games home-games--games">
       <div class="home-card-slot"><a class="card-play {streakClass('circle')}" href="/circle"><span class="home-icon" aria-hidden="true"><IconCrossword /></span><h2>{labels.modeCrossword}</h2><p>{labels.homeCircle}</p><TodayBadge done={modeDone(settings.streak, 'circle')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/circle/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
-      <a class="card-play {streakClass(null)}" href="/circle/definitions"><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>Kreuzwort</h2><p>{labels.homeDefinitions}</p></a>
+      <a class="card-play {streakClass('definitions')}" href="/circle/definitions"><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>{labels.modeDefinitions}</h2><p>{labels.homeDefinitions}</p><TodayBadge done={modeDone(settings.streak, 'definitions')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
       <div class="home-card-slot"><a class="card-play {streakClass('wordle')}" href="/wordle"><span class="home-icon" aria-hidden="true"><IconSpellcheck /></span><h2>{labels.modeWordle}</h2><p>{labels.homeWordle}</p><TodayBadge done={modeDone(settings.streak, 'wordle')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/wordle/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
-      <div class="home-card-slot"><a class="card-play {streakClass(null)}" href="/hangman"><span class="home-icon" aria-hidden="true"><IconHangman /></span><h2>{labels.modeHangman}</h2><p>{labels.homeHangman}</p></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/hangman/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
+      <div class="home-card-slot"><a class="card-play {streakClass('hangman')}" href="/hangman"><span class="home-icon" aria-hidden="true"><IconHangman /></span><h2>{labels.modeHangman}</h2><p>{labels.homeHangman}</p><TodayBadge done={modeDone(settings.streak, 'hangman')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/hangman/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
     </div>
     <h2 class="home-group-heading">{labels.story}</h2>
     <div class="home-games">
@@ -369,7 +359,7 @@
       {/if}
       <a class="card-play {streakClass('vocab')}" href="/vocab"><span class="home-icon" aria-hidden="true"><IconQuiz /></span><h2>{labels.wordQuiz}</h2><p>{labels.homeVocab}</p>{#if wordDue > 0}<span class="home-due-badge">{labels.repeatDue(wordDue)}</span>{/if}<TodayBadge done={modeDone(settings.streak, 'vocab')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
       <a class="card-play {streakClass('pronunciation')}" href="/pronunciation"><span class="home-icon" aria-hidden="true"><IconMic /></span><h2>{labels.pronunciation}</h2><p>{labels.homePronunciation}</p><TodayBadge done={modeDone(settings.streak, 'pronunciation')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
-      <a class="card-play {streakClass(null)}" href="/alltag"><span class="home-icon" aria-hidden="true"><IconEmoji /></span><h2>{labels.alltag}</h2><p>{labels.homeAlltag}</p></a>
+      <a class="card-play {streakClass('alltag')}" href="/alltag"><span class="home-icon" aria-hidden="true"><IconEmoji /></span><h2>{labels.alltag}</h2><p>{labels.homeAlltag}</p><TodayBadge done={modeDone(settings.streak, 'alltag')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
       <a class="card-play {streakClass('grammar')}" href="/grammar?mode=falsefriends"><span class="home-icon" aria-hidden="true"><IconSwapHoriz /></span><h2>{labels.grammarFalseFriends}</h2><p>{labels.homeFalseFriends}</p><TodayBadge done={modeDone(settings.streak, 'grammar')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
     </div>
     <h2 class="home-group-heading">{labels.grammarGroup}</h2>
@@ -394,12 +384,6 @@
   .home-streak-ring-track { fill:none;stroke:rgba(23,42,69,.16);stroke-width:2.4; }
   .home-streak-ring-value { fill:none;stroke:#34824d;stroke-width:2.4;stroke-linecap:round;transition:stroke-dashoffset .45s var(--play-ease); }
   .home-streak.qualified .home-streak-ring-value { stroke:#34824d; }
-  .home-goal { display:flex;align-items:center;justify-content:center;gap:.45rem;flex-wrap:wrap; }
-  .home-goal-hint { color:#596477;font-family:'DM Sans',sans-serif;font-size:.53rem;font-weight:800; }
-  .home-goal-options { display:flex;gap:.25rem; }
-  .home-goal-option { min-height:1.5rem;padding:.1rem .5rem;border:1.5px solid rgba(23,42,69,.3);border-radius:999px;background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.53rem;font-weight:900;cursor:pointer; }
-  .home-goal-option.active { border-color:#172a45;background:#172a45;color:#fffdf7; }
-  .home-goal-option:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
   .home-streak-meta { display:grid;justify-items:center;gap:.1rem;color:#596477;font-family:'DM Sans',sans-serif;text-align:center; }
   .home-streak-meta span:first-child { color:#a45e38;font-size:.56rem;font-weight:900;letter-spacing:.04em;text-transform:uppercase; }
   .home-streak-meta span:last-child { font-size:.53rem;font-weight:800;line-height:1.35; }
@@ -477,9 +461,6 @@
   :global(html.dark) .home-language-choice button:first-child { background:#e6a527;color:#172a45; }
   :global(html.dark) .home-streak-count strong,:global(html.dark) .home-streak-detail b { color:#fffdf7; }:global(html.dark) .home-streak-detail small { color:rgba(255,253,247,.72); }:global(html.dark) .home-streak :global(.home-streak-arrow) { color:rgba(255,253,247,.42); }:global(html.dark) .home-streak.qualified .home-streak-count strong,:global(html.dark) .home-streak.qualified .home-streak-detail b { color:#8ed8a2; }
   :global(html.dark) .home-streak-ring-track { stroke:rgba(255,253,247,.2); }
-  :global(html.dark) .home-goal-hint { color:rgba(255,253,247,.72); }
-  :global(html.dark) .home-goal-option { border-color:rgba(255,253,247,.32);background:#213a5d;color:#fffdf7; }
-  :global(html.dark) .home-goal-option.active { border-color:#e6a527;background:#e6a527;color:#172a45; }
   :global(html.dark) .home-today { background:#2b4a73; }
   :global(html.dark) .home-today-icon { border-color:#0b1626;background:#213a5d;color:#e6a527; }
   :global(html.dark) .home-today-copy small { color:#f0c06a; }

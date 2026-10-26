@@ -88,6 +88,11 @@ tests/build, a focused commit and a push to `main`.
 - [x] Keep the streak count visible but frame a reset as a restart.
 - [x] Daily progress rings and pips in green instead of amber.
 - [x] Lilith reacts with sad / shocked / happy moods and looks loving from a 5-day streak on.
+- [x] Every game mode counts toward the daily streak: definitions, hangman and Alltag record
+  their own streak events (`definitions_completed`, `hangman_completed`, `alltag_correct`) and
+  show their progress badges on home and on `/progress`.
+- [x] The daily word goal (5 / 8 / 12) can only be changed on the stats page; home just shows
+  today's ring.
 
 ## Verification checklist
 

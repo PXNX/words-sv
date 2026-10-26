@@ -1,6 +1,7 @@
 export const VOCABULARY_GOAL = 8;
 export const GRAMMAR_GOAL = 5;
 export const PRONUNCIATION_GOAL = 10;
+export const ALLTAG_GOAL = 5;
 export const FREEZE_EVERY = 7;
 export const MAX_FREEZES = 2;
 export const DAILY_GOALS = [5, 8, 12];
@@ -79,12 +80,15 @@ export function stateForToday(stored, timeZone, now = new Date()) {
 			dateKey: today,
 			vocabCorrect: numberField(stored?.vocab_correct ?? stored?.vocabCorrect),
 			circleCompleted: Boolean(stored?.circle_completed ?? stored?.circleCompleted),
+			definitionsCompleted: Boolean(stored?.definitions_completed ?? stored?.definitionsCompleted),
 			wordleCompleted: Boolean(stored?.wordle_completed ?? stored?.wordleCompleted),
 			readingCompleted: Boolean(stored?.reading_completed ?? stored?.readingCompleted),
 			storyCompleted: Boolean(stored?.story_completed ?? stored?.storyCompleted),
 			grammarCorrect: numberField(stored?.grammar_correct ?? stored?.grammarCorrect),
 			listenCompleted: Boolean(stored?.listen_completed ?? stored?.listenCompleted),
 			pronunciationAttempts: numberField(stored?.pronunciation_attempts ?? stored?.pronunciationAttempts),
+			hangmanCompleted: Boolean(stored?.hangman_completed ?? stored?.hangmanCompleted),
+			alltagCorrect: numberField(stored?.alltag_correct ?? stored?.alltagCorrect),
 			qualified: Boolean(stored?.current_qualified ?? stored?.qualified),
 			streakCount: numberField(stored?.streak_count ?? stored?.streakCount),
 			lastQualifiedDay: stored?.last_qualified_day ?? stored?.lastQualifiedDay ?? null,
@@ -104,12 +108,15 @@ export function stateForToday(stored, timeZone, now = new Date()) {
 		dateKey: today,
 		vocabCorrect: 0,
 		circleCompleted: false,
+		definitionsCompleted: false,
 		wordleCompleted: false,
 		readingCompleted: false,
 		storyCompleted: false,
 		grammarCorrect: 0,
 		listenCompleted: false,
 		pronunciationAttempts: 0,
+		hangmanCompleted: false,
+		alltagCorrect: 0,
 		qualified: false,
 		streakCount,
 		lastQualifiedDay,
@@ -124,12 +131,15 @@ export function qualifiesToday(state) {
 	return (
 		state.vocabCorrect >= state.vocabularyGoal ||
 		state.circleCompleted ||
+		state.definitionsCompleted ||
 		state.wordleCompleted ||
 		state.readingCompleted ||
 		state.storyCompleted ||
 		state.grammarCorrect >= GRAMMAR_GOAL ||
 		state.listenCompleted ||
-		state.pronunciationAttempts >= PRONUNCIATION_GOAL
+		state.pronunciationAttempts >= PRONUNCIATION_GOAL ||
+		state.hangmanCompleted ||
+		state.alltagCorrect >= ALLTAG_GOAL
 	);
 }
 
@@ -153,12 +163,15 @@ export function applyStreakEvent(stored, timeZone, event, now = new Date()) {
 	const state = stateForToday(stored, timeZone, now);
 	if (event === 'vocab_correct') state.vocabCorrect += 1;
 	if (event === 'circle_completed') state.circleCompleted = true;
+	if (event === 'definitions_completed') state.definitionsCompleted = true;
 	if (event === 'wordle_completed') state.wordleCompleted = true;
 	if (event === 'reading_completed') state.readingCompleted = true;
 	if (event === 'story_completed') state.storyCompleted = true;
 	if (event === 'grammar_correct') state.grammarCorrect += 1;
 	if (event === 'listen_completed') state.listenCompleted = true;
 	if (event === 'pronunciation_practised') state.pronunciationAttempts += 1;
+	if (event === 'hangman_completed') state.hangmanCompleted = true;
+	if (event === 'alltag_correct') state.alltagCorrect += 1;
 	return settleQualification(state);
 }
 

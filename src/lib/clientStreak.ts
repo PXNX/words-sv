@@ -4,25 +4,31 @@ export type StreakEvent =
 	| 'sync'
 	| 'vocab_correct'
 	| 'circle_completed'
+	| 'definitions_completed'
 	| 'wordle_completed'
 	| 'reading_completed'
 	| 'story_completed'
 	| 'grammar_correct'
 	| 'listen_completed'
-	| 'pronunciation_practised';
+	| 'pronunciation_practised'
+	| 'hangman_completed'
+	| 'alltag_correct';
 
-export type StreakMode = 'vocab' | 'circle' | 'wordle' | 'reading' | 'story' | 'grammar' | 'listen' | 'pronunciation';
+export type StreakMode = 'vocab' | 'circle' | 'definitions' | 'wordle' | 'reading' | 'story' | 'grammar' | 'listen' | 'pronunciation' | 'hangman' | 'alltag';
 
 export type ClientStreak = {
 	dateKey: string;
 	vocabCorrect: number;
 	circleCompleted: boolean;
+	definitionsCompleted: boolean;
 	wordleCompleted: boolean;
 	readingCompleted: boolean;
 	storyCompleted: boolean;
 	grammarCorrect: number;
 	listenCompleted: boolean;
 	pronunciationAttempts: number;
+	hangmanCompleted: boolean;
+	alltagCorrect: number;
 	qualified: boolean;
 	streakCount: number;
 	bestStreak: number;
@@ -38,6 +44,7 @@ export type ClientStreak = {
 export const VOCABULARY_GOALS = [5, 8, 12] as const;
 export const GRAMMAR_GOAL = 5;
 export const PRONUNCIATION_GOAL = 10;
+export const ALLTAG_GOAL = 5;
 export const FREEZE_EVERY = 7;
 export const MAX_FREEZES = 2;
 const DEFAULT_VOCABULARY_GOAL = 8;
@@ -85,12 +92,15 @@ function defaultState(now = new Date()): ClientStreak {
 		dateKey: dateKey(now),
 		vocabCorrect: 0,
 		circleCompleted: false,
+		definitionsCompleted: false,
 		wordleCompleted: false,
 		readingCompleted: false,
 		storyCompleted: false,
 		grammarCorrect: 0,
 		listenCompleted: false,
 		pronunciationAttempts: 0,
+		hangmanCompleted: false,
+		alltagCorrect: 0,
 		qualified: false,
 		streakCount: 0,
 		bestStreak: 0,
@@ -157,11 +167,14 @@ export function readStreak(now = new Date()) {
 			vocabCorrect: numberField(saved.vocabCorrect),
 			grammarCorrect: numberField(saved.grammarCorrect),
 			pronunciationAttempts: numberField(saved.pronunciationAttempts),
+			alltagCorrect: numberField(saved.alltagCorrect),
 			circleCompleted: Boolean(saved.circleCompleted),
+			definitionsCompleted: Boolean(saved.definitionsCompleted),
 			wordleCompleted: Boolean(saved.wordleCompleted),
 			readingCompleted: Boolean(saved.readingCompleted),
 			storyCompleted: Boolean(saved.storyCompleted),
 			listenCompleted: Boolean(saved.listenCompleted),
+			hangmanCompleted: Boolean(saved.hangmanCompleted),
 			qualified: Boolean(saved.qualified),
 			vocabularyGoal: goal,
 			minutesRemaining: minutesLeft(now),
@@ -180,12 +193,15 @@ export function qualifiesToday(state: ClientStreak): boolean {
 	return (
 		state.vocabCorrect >= state.vocabularyGoal ||
 		state.circleCompleted ||
+		state.definitionsCompleted ||
 		state.wordleCompleted ||
 		state.readingCompleted ||
 		state.storyCompleted ||
 		state.grammarCorrect >= GRAMMAR_GOAL ||
 		state.listenCompleted ||
-		state.pronunciationAttempts >= PRONUNCIATION_GOAL
+		state.pronunciationAttempts >= PRONUNCIATION_GOAL ||
+		state.hangmanCompleted ||
+		state.alltagCorrect >= ALLTAG_GOAL
 	);
 }
 
@@ -212,12 +228,15 @@ export function applyLocalEvent(current: ClientStreak, event: StreakEvent, now =
 	const next: ClientStreak = { ...start, minutesRemaining: minutesLeft(now) };
 	if (event === 'vocab_correct') next.vocabCorrect += 1;
 	if (event === 'circle_completed') next.circleCompleted = true;
+	if (event === 'definitions_completed') next.definitionsCompleted = true;
 	if (event === 'wordle_completed') next.wordleCompleted = true;
 	if (event === 'reading_completed') next.readingCompleted = true;
 	if (event === 'story_completed') next.storyCompleted = true;
 	if (event === 'grammar_correct') next.grammarCorrect += 1;
 	if (event === 'listen_completed') next.listenCompleted = true;
 	if (event === 'pronunciation_practised') next.pronunciationAttempts += 1;
+	if (event === 'hangman_completed') next.hangmanCompleted = true;
+	if (event === 'alltag_correct') next.alltagCorrect += 1;
 	return writeStreak(settleQualification(next));
 }
 
@@ -302,11 +321,14 @@ export function lilithFace(mood: LilithMood) {
 export function modeDone(state: ClientStreak, mode: StreakMode): boolean {
 	if (mode === 'vocab') return state.vocabCorrect >= state.vocabularyGoal;
 	if (mode === 'circle') return state.circleCompleted;
+	if (mode === 'definitions') return state.definitionsCompleted;
 	if (mode === 'wordle') return state.wordleCompleted;
 	if (mode === 'reading') return state.readingCompleted;
 	if (mode === 'story') return state.storyCompleted;
 	if (mode === 'grammar') return state.grammarCorrect >= GRAMMAR_GOAL;
 	if (mode === 'listen') return state.listenCompleted;
+	if (mode === 'hangman') return state.hangmanCompleted;
+	if (mode === 'alltag') return state.alltagCorrect >= ALLTAG_GOAL;
 	return state.pronunciationAttempts >= PRONUNCIATION_GOAL;
 }
 

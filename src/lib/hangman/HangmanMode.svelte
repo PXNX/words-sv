@@ -32,10 +32,12 @@
   const lilithMood = $derived<Mood>(won ? 'happy' : lost ? 'sad' : !lastGuess ? 'curious' : !target.includes(lastGuess) ? (wrongGuesses >= 4 ? 'sad' : 'surprised') : 'happy');
   const lilithLine = $derived(won ? 'Purr! You got it!' : lost ? 'Meow… next time!' : '');
 
+  let recordedCompletion = '';
   function start() {
     target = candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : '';
     guessed = [];
     started = true;
+    recordedCompletion = '';
   }
   function press(letter: string) {
     if (!started || finished || guessedSet.has(letter)) return;
@@ -49,6 +51,13 @@
     if (!lost || recordedLoss === target) return;
     recordedLoss = target;
     recordMissedWord(language, target);
+  });
+
+  // Every finished word - won or lost - is a completed hangman round for today's streak.
+  $effect(() => {
+    if (!finished || !target || recordedCompletion === target) return;
+    recordedCompletion = target;
+    void settings.recordStreak('hangman_completed');
   });
 
   $effect(() => {

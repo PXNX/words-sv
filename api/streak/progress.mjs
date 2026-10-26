@@ -6,12 +6,15 @@ const events = new Set([
 	'sync',
 	'vocab_correct',
 	'circle_completed',
+	'definitions_completed',
 	'wordle_completed',
 	'reading_completed',
 	'story_completed',
 	'grammar_correct',
 	'listen_completed',
-	'pronunciation_practised'
+	'pronunciation_practised',
+	'hangman_completed',
+	'alltag_correct'
 ]);
 const validDeviceId = (value) => typeof value === 'string' && /^[a-zA-Z0-9_-]{16,64}$/.test(value);
 
@@ -36,11 +39,14 @@ export default async function streakProgress(req, res) {
 			merged.vocabCorrect = Math.max(merged.vocabCorrect, counter(snapshot.vocabCorrect));
 			merged.grammarCorrect = Math.max(merged.grammarCorrect, counter(snapshot.grammarCorrect));
 			merged.pronunciationAttempts = Math.max(merged.pronunciationAttempts, counter(snapshot.pronunciationAttempts));
+			merged.alltagCorrect = Math.max(merged.alltagCorrect, counter(snapshot.alltagCorrect));
 			merged.circleCompleted = merged.circleCompleted || Boolean(snapshot.circleCompleted);
+			merged.definitionsCompleted = merged.definitionsCompleted || Boolean(snapshot.definitionsCompleted);
 			merged.wordleCompleted = merged.wordleCompleted || Boolean(snapshot.wordleCompleted);
 			merged.readingCompleted = merged.readingCompleted || Boolean(snapshot.readingCompleted);
 			merged.storyCompleted = merged.storyCompleted || Boolean(snapshot.storyCompleted);
 			merged.listenCompleted = merged.listenCompleted || Boolean(snapshot.listenCompleted);
+			merged.hangmanCompleted = merged.hangmanCompleted || Boolean(snapshot.hangmanCompleted);
 			// The device is the only place that knows when a freeze was consumed, so take the lower count.
 			merged.freezes = Math.min(merged.freezes, counter(snapshot.freezes, 2));
 			merged.qualifiedDays = Math.max(merged.qualifiedDays, counter(snapshot.qualifiedDays, 100000));
@@ -54,9 +60,9 @@ export default async function streakProgress(req, res) {
 		const next = applyStreakEvent(merged, timeZone, event);
 		const bestStreak = Math.max(counter(rows[0]?.best_streak), counter(snapshot?.bestStreak, 100000), next.bestStreak, next.streakCount);
 		await db.execute(
-			`INSERT INTO wordcircle_streak_devices (device_id, timezone, locale, day_key, vocab_correct, circle_completed, wordle_completed, reading_completed, story_completed, grammar_correct, listen_completed, pronunciation_attempts, current_qualified, last_qualified_day, streak_count, best_streak, vocabulary_goal, freezes, qualified_days)
-			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-			 ON DUPLICATE KEY UPDATE timezone = VALUES(timezone), locale = VALUES(locale), day_key = VALUES(day_key), vocab_correct = VALUES(vocab_correct), circle_completed = VALUES(circle_completed), wordle_completed = VALUES(wordle_completed), reading_completed = VALUES(reading_completed), story_completed = VALUES(story_completed), grammar_correct = VALUES(grammar_correct), listen_completed = VALUES(listen_completed), pronunciation_attempts = VALUES(pronunciation_attempts), current_qualified = VALUES(current_qualified), last_qualified_day = VALUES(last_qualified_day), streak_count = VALUES(streak_count), best_streak = VALUES(best_streak), vocabulary_goal = VALUES(vocabulary_goal), freezes = VALUES(freezes), qualified_days = VALUES(qualified_days)`,
+			`INSERT INTO wordcircle_streak_devices (device_id, timezone, locale, day_key, vocab_correct, circle_completed, definitions_completed, wordle_completed, reading_completed, story_completed, grammar_correct, listen_completed, pronunciation_attempts, hangman_completed, alltag_correct, current_qualified, last_qualified_day, streak_count, best_streak, vocabulary_goal, freezes, qualified_days)
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+			 ON DUPLICATE KEY UPDATE timezone = VALUES(timezone), locale = VALUES(locale), day_key = VALUES(day_key), vocab_correct = VALUES(vocab_correct), circle_completed = VALUES(circle_completed), definitions_completed = VALUES(definitions_completed), wordle_completed = VALUES(wordle_completed), reading_completed = VALUES(reading_completed), story_completed = VALUES(story_completed), grammar_correct = VALUES(grammar_correct), listen_completed = VALUES(listen_completed), pronunciation_attempts = VALUES(pronunciation_attempts), hangman_completed = VALUES(hangman_completed), alltag_correct = VALUES(alltag_correct), current_qualified = VALUES(current_qualified), last_qualified_day = VALUES(last_qualified_day), streak_count = VALUES(streak_count), best_streak = VALUES(best_streak), vocabulary_goal = VALUES(vocabulary_goal), freezes = VALUES(freezes), qualified_days = VALUES(qualified_days)`,
 			[
 				deviceId,
 				timeZone,
@@ -64,12 +70,15 @@ export default async function streakProgress(req, res) {
 				next.dateKey,
 				next.vocabCorrect,
 				next.circleCompleted ? 1 : 0,
+				next.definitionsCompleted ? 1 : 0,
 				next.wordleCompleted ? 1 : 0,
 				next.readingCompleted ? 1 : 0,
 				next.storyCompleted ? 1 : 0,
 				next.grammarCorrect,
 				next.listenCompleted ? 1 : 0,
 				next.pronunciationAttempts,
+				next.hangmanCompleted ? 1 : 0,
+				next.alltagCorrect,
 				next.qualified ? 1 : 0,
 				next.lastQualifiedDay,
 				next.streakCount,
@@ -86,12 +95,15 @@ export default async function streakProgress(req, res) {
 					day_key: next.dateKey,
 					vocab_correct: next.vocabCorrect,
 					circle_completed: next.circleCompleted,
+					definitions_completed: next.definitionsCompleted,
 					wordle_completed: next.wordleCompleted,
 					reading_completed: next.readingCompleted,
 					story_completed: next.storyCompleted,
 					grammar_correct: next.grammarCorrect,
 					listen_completed: next.listenCompleted,
 					pronunciation_attempts: next.pronunciationAttempts,
+					hangman_completed: next.hangmanCompleted,
+					alltag_correct: next.alltagCorrect,
 					current_qualified: next.qualified,
 					last_qualified_day: next.lastQualifiedDay,
 					streak_count: next.streakCount,

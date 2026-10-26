@@ -44,7 +44,10 @@
     dailyGoal: m.stats_daily_goal({}, { locale: settings.interfaceLocale }),
     today: m.stats_today({}, { locale: settings.interfaceLocale }),
     modeCrossword: m.mode_crossword({}, { locale: settings.interfaceLocale }),
+    modeDefinitions: m.mode_definitions({}, { locale: settings.interfaceLocale }),
     modeWordle: m.mode_wordle({}, { locale: settings.interfaceLocale }),
+    modeHangman: m.mode_hangman({}, { locale: settings.interfaceLocale }),
+    alltag: m.mode_alltag({}, { locale: settings.interfaceLocale }),
     completed: m.completed({}, { locale: settings.interfaceLocale }),
     languagesHeading: m.stats_languages_heading({}, { locale: settings.interfaceLocale }),
     vocab: m.stats_vocab({}, { locale: settings.interfaceLocale }),
@@ -93,11 +96,14 @@
   // Every mode that can qualify the day, so the daily progress is visible in one place.
   const todayModes = $derived([
     { label: labels.modeCrossword, done: modeDone(settings.streak, 'circle') },
+    { label: labels.modeDefinitions, done: modeDone(settings.streak, 'definitions') },
     { label: labels.modeWordle, done: modeDone(settings.streak, 'wordle') },
+    { label: labels.modeHangman, done: modeDone(settings.streak, 'hangman') },
     { label: labels.vocab, done: modeDone(settings.streak, 'vocab') },
     { label: labels.story, done: modeDone(settings.streak, 'story') },
     { label: labels.reading, done: modeDone(settings.streak, 'reading') },
     { label: labels.listen, done: modeDone(settings.streak, 'listen') },
+    { label: labels.alltag, done: modeDone(settings.streak, 'alltag') },
     { label: labels.grammar, done: modeDone(settings.streak, 'grammar') },
     { label: labels.pronunciation, done: modeDone(settings.streak, 'pronunciation') }
   ]);
