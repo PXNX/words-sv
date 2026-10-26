@@ -35,7 +35,11 @@
     const distractors = shuffle(items.filter((item) => item.category === current.category && item.word !== current.word)).slice(0, 2);
     choices = shuffle([current.meaning, ...distractors.map((item) => item.meaning)]);
   }
-  function choose(value: string) { if (!answer) answer = value; }
+  function choose(value: string) {
+    if (answer) return;
+    answer = value;
+    if (value === (numberReverse ? current.word : current.meaning)) void settings.recordStreak('alltag_correct');
+  }
   function next() { answer = null; index = (index + 1) % items.length; resetChoices(); }
   $effect(() => { current; resetChoices(); });
 </script>

@@ -11,7 +11,7 @@ globalThis.localStorage = {
 	length: 0
 } as Storage;
 
-const { dateKey, previousDate, readStreak, repairCandidate, repairStreak, dismissRepair, lilithMood } = await import('../src/lib/clientStreak.js');
+const { applyLocalEvent, ALLTAG_GOAL, dateKey, modeDone, previousDate, readStreak, repairCandidate, repairStreak, dismissRepair, lilithMood } = await import('../src/lib/clientStreak.js');
 
 const NOW = new Date('2026-10-26T12:00:00Z');
 const TODAY = dateKey(NOW);
@@ -71,6 +71,34 @@ describe('streak repair', () => {
 		dismissRepair(NOW);
 		expect(repairCandidate(NOW)).toBeNull();
 		expect(readStreak(NOW).streakCount).toBe(0);
+	});
+});
+
+describe('every game mode counts toward the streak', () => {
+	beforeEach(() => store.clear());
+
+	const today = (): ClientStreak => ({ ...readStreak(NOW), dateKey: TODAY, qualified: false, streakCount: 0, lastQualifiedDay: YESTERDAY });
+
+	test('definitions, hangman and Alltag each qualify today', () => {
+		const definitions = applyLocalEvent(today(), 'definitions_completed', NOW);
+		expect(definitions.qualified).toBe(true);
+		expect(definitions.streakCount).toBe(1);
+		expect(modeDone(definitions, 'definitions')).toBe(true);
+
+		store.clear();
+		const hangman = applyLocalEvent(today(), 'hangman_completed', NOW);
+		expect(hangman.qualified).toBe(true);
+		expect(modeDone(hangman, 'hangman')).toBe(true);
+
+		store.clear();
+		let alltag = today();
+		for (let index = 0; index < ALLTAG_GOAL - 1; index += 1) alltag = applyLocalEvent(alltag, 'alltag_correct', NOW);
+		expect(alltag.qualified).toBe(false);
+		expect(modeDone(alltag, 'alltag')).toBe(false);
+		alltag = applyLocalEvent(alltag, 'alltag_correct', NOW);
+		expect(alltag.qualified).toBe(true);
+		expect(alltag.streakCount).toBe(1);
+		expect(modeDone(alltag, 'alltag')).toBe(true);
 	});
 });
 

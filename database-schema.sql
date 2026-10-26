@@ -5,12 +5,15 @@ CREATE TABLE IF NOT EXISTS wordcircle_streak_devices (
   day_key CHAR(10) NOT NULL,
   vocab_correct INT UNSIGNED NOT NULL DEFAULT 0,
   circle_completed TINYINT(1) NOT NULL DEFAULT 0,
+  definitions_completed TINYINT(1) NOT NULL DEFAULT 0,
   wordle_completed TINYINT(1) NOT NULL DEFAULT 0,
   reading_completed TINYINT(1) NOT NULL DEFAULT 0,
   story_completed TINYINT(1) NOT NULL DEFAULT 0,
   grammar_correct INT UNSIGNED NOT NULL DEFAULT 0,
   listen_completed TINYINT(1) NOT NULL DEFAULT 0,
   pronunciation_attempts INT UNSIGNED NOT NULL DEFAULT 0,
+  hangman_completed TINYINT(1) NOT NULL DEFAULT 0,
+  alltag_correct INT UNSIGNED NOT NULL DEFAULT 0,
   current_qualified TINYINT(1) NOT NULL DEFAULT 0,
   last_qualified_day CHAR(10) NULL,
   streak_count INT UNSIGNED NOT NULL DEFAULT 0,
@@ -38,6 +41,12 @@ CREATE TABLE IF NOT EXISTS wordcircle_streak_devices (
 -- Reminders are now capped at one per local day and use the interface locale.
 -- ALTER TABLE wordcircle_streak_devices ADD COLUMN locale VARCHAR(8) NOT NULL DEFAULT 'en';
 -- ALTER TABLE wordcircle_reminder_deliveries DROP PRIMARY KEY, ADD PRIMARY KEY (device_id, delivery_date);
+
+-- Migration for deployments created before the definitions and alltag goals existed.
+-- ALTER TABLE wordcircle_streak_devices
+--   ADD COLUMN definitions_completed TINYINT(1) NOT NULL DEFAULT 0,
+--   ADD COLUMN hangman_completed TINYINT(1) NOT NULL DEFAULT 0,
+--   ADD COLUMN alltag_correct INT UNSIGNED NOT NULL DEFAULT 0;
 
 CREATE TABLE IF NOT EXISTS wordcircle_push_subscriptions (
   endpoint_hash CHAR(64) NOT NULL PRIMARY KEY,

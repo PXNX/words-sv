@@ -41,6 +41,7 @@
   "idle_hint": "Hint",
   "mode": "Mode",
   "mode_crossword": "Circle",
+  "mode_definitions": "Definitions",
   "mode_wordle": "Wordle",
   "mode_learning": "Learn vocabulary",
   "mode_grammar": "Grammar",

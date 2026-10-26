@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createRemindersEndpoint, cronAuthorized } from '../api/cron/reminders.mjs';
-import { applyStreakEvent, reminderTypes, streakSummary, GRAMMAR_GOAL, PRONUNCIATION_GOAL, VOCABULARY_GOAL } from '../api/_lib/streak.mjs';
+import { applyStreakEvent, reminderTypes, streakSummary, ALLTAG_GOAL, GRAMMAR_GOAL, PRONUNCIATION_GOAL, VOCABULARY_GOAL } from '../api/_lib/streak.mjs';
 
 function responseCapture() {
 	const result = { statusCode: 200, body: null };
@@ -17,10 +17,24 @@ test('eight correct vocabulary answers qualify the local day exactly once', () =
 	assert.equal(state.lastQualifiedDay, '2026-08-26');
 });
 
-test('Circle or Wordle completion qualifies a day without eight vocabulary answers', () => {
+test('Circle, definitions, Wordle and Hangman completion qualify a day without eight vocabulary answers', () => {
 	const base = { day_key: '2026-08-26', streak_count: 4, last_qualified_day: '2026-08-25' };
-	assert.equal(applyStreakEvent(base, 'UTC', 'circle_completed', new Date('2026-08-26T12:00:00Z')).qualified, true);
-	assert.equal(applyStreakEvent(base, 'UTC', 'wordle_completed', new Date('2026-08-26T12:00:00Z')).qualified, true);
+	for (const event of ['circle_completed', 'definitions_completed', 'wordle_completed', 'hangman_completed']) {
+		const state = applyStreakEvent(base, 'UTC', event, new Date('2026-08-26T12:00:00Z'));
+		assert.equal(state.qualified, true, event);
+		assert.equal(state.streakCount, 5, event);
+	}
+});
+
+test('Alltag qualifies at five correct answers', () => {
+	/** @type {any} */
+	let state = { day_key: '2026-08-26', streak_count: 0, last_qualified_day: null };
+	for (let index = 0; index < ALLTAG_GOAL - 1; index += 1) state = applyStreakEvent(state, 'UTC', 'alltag_correct', new Date('2026-08-26T12:00:00Z'));
+	assert.equal(state.qualified, false);
+	assert.equal(state.alltagCorrect, ALLTAG_GOAL - 1);
+	state = applyStreakEvent(state, 'UTC', 'alltag_correct', new Date('2026-08-26T12:00:00Z'));
+	assert.equal(state.qualified, true);
+	assert.equal(state.streakCount, 1);
 });
 
 test('reading, story and listening sessions qualify a day', () => {

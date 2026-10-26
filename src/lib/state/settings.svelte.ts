@@ -10,7 +10,10 @@ const ACTIVITY_BY_EVENT: Partial<Record<StreakEvent, ActivityKind>> = {
   vocab_correct: 'vocab',
   grammar_correct: 'grammar',
   circle_completed: 'circle',
-  wordle_completed: 'wordle'
+  definitions_completed: 'circle',
+  wordle_completed: 'wordle',
+  hangman_completed: 'hangman',
+  alltag_correct: 'alltag'
 };
 
 export type Theme = 'light' | 'dark';
@@ -183,10 +186,12 @@ class SettingsStore {
     // Boolean modes only need one request per day; counters always add to today's total.
     if (this.streak.dateKey === dateKey() && (
       (event === 'circle_completed' && this.streak.circleCompleted) ||
+      (event === 'definitions_completed' && this.streak.definitionsCompleted) ||
       (event === 'wordle_completed' && this.streak.wordleCompleted) ||
       (event === 'reading_completed' && this.streak.readingCompleted) ||
       (event === 'story_completed' && this.streak.storyCompleted) ||
-      (event === 'listen_completed' && this.streak.listenCompleted)
+      (event === 'listen_completed' && this.streak.listenCompleted) ||
+      (event === 'hangman_completed' && this.streak.hangmanCompleted)
     )) return;
     // Counters drop one timestamp per answer, so the weekly recap can measure real time spent.
     // Reading, story and listening completions are logged where their ids are known.

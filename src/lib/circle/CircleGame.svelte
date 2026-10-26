@@ -307,7 +307,7 @@
       completedDuration = Math.max(0, Date.now() - startedAt);
       if (!tutorialPractice) {
         settings.recordRoundCompleted();
-        void settings.recordStreak('circle_completed');
+        void settings.recordStreak(showDefinitions ? 'definitions_completed' : 'circle_completed');
       }
       celebration = true;
     }
