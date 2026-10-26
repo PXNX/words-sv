@@ -1,8 +1,11 @@
 import { deviceId, readStreak, timeZone } from '#lib/clientStreak.js';
+import { settings } from '#lib/state/settings.svelte.js';
+import { reminderExtras } from '#lib/reminders/reminderSnapshot.js';
 import {
 	periodicRemindersRegistered,
 	publishReminderState,
 	registerPeriodicReminders,
+	reminderLocale,
 	requestReminderCheck,
 	setReminderEnabled,
 	unregisterPeriodicReminders
@@ -30,7 +33,7 @@ async function subscribeServer() {
 		if (!keyResponse.ok || typeof keyBody?.publicKey !== 'string') throw new Error('push_unavailable');
 		subscription = await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: decodeApplicationServerKey(keyBody.publicKey) });
 	}
-	const response = await fetch('/api/push/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ deviceId: deviceId(), timeZone: timeZone(), subscription: subscription.toJSON() }) });
+	const response = await fetch('/api/push/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), subscription: subscription.toJSON() }) });
 	if (!response.ok) throw new Error('subscription_failed');
 	return subscription;
 }
@@ -48,7 +51,7 @@ export async function enablePush() {
 	const permission = await Notification.requestPermission();
 	if (permission !== 'granted') throw new Error('permission_denied');
 
-	await publishReminderState(readStreak());
+	await publishReminderState(readStreak(), reminderExtras(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary, settings.firstName || 'du'));
 	await setReminderEnabled(true);
 
 	let server = false;

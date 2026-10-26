@@ -1,7 +1,9 @@
 import { requiresCumulativePool } from '#lib/circle/engine.js';
 import { wordPools, isLanguage, isVocabularyLevel, type Language, type VocabularyLevel } from '#lib/data/vocabulary.js';
-import { normalizeVocabularyGoal, dateKey, readStreak, syncStreak, syncStreakGoal, type ClientStreak, type StreakEvent } from '#lib/clientStreak.js';
+import { normalizeVocabularyGoal, dateKey, readStreak, repairCandidate, repairStreak as repairStoredStreak, syncStreak, syncStreakGoal, type ClientStreak, type StreakRepair, type StreakEvent } from '#lib/clientStreak.js';
 import { recordActivity, type ActivityKind } from '#lib/progress/activity.js';
+import { publishReminderState } from '#lib/pwaReminders.js';
+import { reminderExtras } from '#lib/reminders/reminderSnapshot.js';
 import type { Locale } from '#lib/paraglide/runtime.js';
 
 const ACTIVITY_BY_EVENT: Partial<Record<StreakEvent, ActivityKind>> = {
@@ -201,6 +203,20 @@ class SettingsStore {
   }
   async refreshStreak() {
     this.streak = readStreak();
+    this.streak = await syncStreak('sync', this.streak);
+    this.publishReminderState();
+  }
+  // The reminder worker can only read IndexedDB, so due words and the unfinished text travel along.
+  publishReminderState() {
+    void publishReminderState(this.streak, reminderExtras(this.lang, this.vocabularyLevel, this.includeLowerVocabulary, this.firstName || 'du'));
+  }
+  repairCandidate(): StreakRepair | null {
+    return repairCandidate();
+  }
+  async repairStreak() {
+    this.streak = repairStoredStreak();
+    this.publishReminderState();
+    // A repaired streak still travels to the server, which keeps its own copy for push reminders.
     this.streak = await syncStreak('sync', this.streak);
   }
 }

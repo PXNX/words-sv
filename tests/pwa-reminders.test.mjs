@@ -8,7 +8,10 @@ const base = {
 	dateKey: '2026-10-19',
 	qualified: true,
 	lastQualifiedDay: '2026-10-19',
-	locale: 'en'
+	locale: 'en',
+	dueWords: 0,
+	readingTitle: null,
+	weeklyReady: false
 };
 
 describe('pwa streak reminders', () => {
@@ -35,6 +38,16 @@ describe('pwa streak reminders', () => {
 		const midday = new Date('2026-10-20T10:00:00Z');
 		expect(dueReminderTypes({ ...base, dateKey: '2026-10-20', qualified: false }, midday).types).toEqual([]);
 		expect(dueReminderTypes({ ...base, dateKey: '2026-10-20', qualified: true, lastQualifiedDay: '2026-10-20' }, midday).types).toEqual([]);
+	});
+
+	it('reminds about due words during the day, and the deadline still wins', () => {
+		const noon = new Date('2026-10-20T10:00:00Z');
+		const due = { ...base, dateKey: '2026-10-20', qualified: false, lastQualifiedDay: null, dueWords: 3 };
+		expect(dueReminderTypes(due, noon).types).toEqual(['due']);
+		const urgent = { ...due, lastQualifiedDay: '2026-10-19' };
+		expect(dueReminderTypes(urgent, noon).types).toEqual(['due']);
+		const deadline = dueReminderTypes(urgent, new Date('2026-10-20T21:30:00Z'));
+		expect(deadline.types).toEqual(['deadline']);
 	});
 
 	it('never fires while reminders are disabled', () => {

@@ -1,4 +1,4 @@
-import { publishReminderState } from './pwaReminders.js';
+import { publishReminderState, reminderLocale } from './pwaReminders.js';
 
 export type StreakEvent =
 	| 'sync'
@@ -45,6 +45,12 @@ const DEFAULT_VOCABULARY_GOAL = 8;
 const DEVICE_KEY = 'wordcircle-streak-device-v1';
 const STREAK_KEY = 'wordcircle-streak-state-v1';
 const DAILY_GOAL_KEY = 'wordcircle-daily-goal-v1';
+// Remembers a broken-but-repairable streak for the rest of the day, so opening the app before
+// the repair session does not erase the count we are about to restore.
+const REPAIR_KEY = 'wordcircle-streak-repair-v1';
+export const REPAIR_WORDS = 5;
+
+export type StreakRepair = { dateKey: string; streakCount: number; bestStreak: number };
 
 export function timeZone() { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; }
 export function dateKey(now = new Date()) { const pieces = new Intl.DateTimeFormat('en-CA', { timeZone: timeZone(), year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now); const value = Object.fromEntries(pieces.filter((piece) => piece.type !== 'literal').map((piece) => [piece.type, piece.value])); return `${value.year}-${value.month}-${value.day}`; }
@@ -101,6 +107,18 @@ function numberField(value: unknown, fallback = 0) {
 	return Number.isSafeInteger(number) && number >= 0 ? number : fallback;
 }
 
+function rememberRepair(dateKeyValue: string, saved: Partial<ClientStreak>) {
+	if (typeof localStorage === 'undefined') return;
+	const streakCount = numberField(saved.streakCount);
+	if (streakCount < 1) return;
+	const repair: StreakRepair = {
+		dateKey: dateKeyValue,
+		streakCount,
+		bestStreak: numberField(saved.bestStreak)
+	};
+	try { localStorage.setItem(REPAIR_KEY, JSON.stringify(repair)); } catch { /* Storage may be full; the streak just resets. */ }
+}
+
 /** Reads a stored state into today's shape, consuming one freeze when it can bridge one missed day. */
 export function readStreak(now = new Date()) {
 	if (typeof localStorage === 'undefined') return defaultState(now);
@@ -113,9 +131,13 @@ export function readStreak(now = new Date()) {
 			const yesterday = previousDate(today);
 			let lastQualifiedDay = typeof saved.lastQualifiedDay === 'string' ? saved.lastQualifiedDay : null;
 			let freezes = Math.min(MAX_FREEZES, numberField(saved.freezes));
-			if (lastQualifiedDay && lastQualifiedDay < yesterday && daysBetween(lastQualifiedDay, yesterday) === 1 && freezes > 0) {
+			const missedYesterday = Boolean(lastQualifiedDay && lastQualifiedDay < yesterday && daysBetween(lastQualifiedDay, yesterday) === 1);
+			if (missedYesterday && freezes > 0) {
 				freezes -= 1;
 				lastQualifiedDay = yesterday;
+			} else if (missedYesterday) {
+				// One missed day is repairable with a short session later that day instead of losing months.
+				rememberRepair(today, saved);
 			}
 			const streakCount = lastQualifiedDay && lastQualifiedDay >= yesterday ? numberField(saved.streakCount) : 0;
 			return {
@@ -169,8 +191,8 @@ export function qualifiesToday(state: ClientStreak): boolean {
 
 /* Qualifies the day if the counters now meet the goal. An already-qualified day stays qualified,
    even when the learner raises the goal afterwards. */
-function settleQualification(state: ClientStreak): ClientStreak {
-	const qualifies = qualifiesToday(state) || state.qualified;
+function settleQualification(state: ClientStreak, force = false): ClientStreak {
+	const qualifies = force || qualifiesToday(state) || state.qualified;
 	const next = { ...state, qualified: qualifies };
 	if (!qualifies || state.qualified) {
 		next.bestStreak = Math.max(next.bestStreak, next.streakCount);
@@ -208,6 +230,55 @@ export function setStreakGoal(current: ClientStreak, goal: number, now = new Dat
 	return writeStreak(settleQualification(next));
 }
 
+function storedRepairCandidate(now = new Date()): StreakRepair | null {
+	if (typeof localStorage === 'undefined') return null;
+	try {
+		const parsed = JSON.parse(localStorage.getItem(REPAIR_KEY) ?? 'null') as Partial<StreakRepair> | null;
+		if (!parsed || parsed.dateKey !== dateKey(now)) return null;
+		if (numberField(parsed.streakCount) < 1) return null;
+		return {
+			dateKey: parsed.dateKey,
+			streakCount: numberField(parsed.streakCount),
+			bestStreak: numberField(parsed.bestStreak)
+		};
+	} catch {
+		return null;
+	}
+}
+
+/** A broken streak that yesterday’s short session can restore, or null. */
+export function repairCandidate(now = new Date()): StreakRepair | null {
+	const streak = readStreak(now);
+	const candidate = storedRepairCandidate(now);
+	if (!candidate) return null;
+	// Once today is qualified — normally or by repair — there is nothing left to restore.
+	if (streak.qualified || streak.lastQualifiedDay === previousDate(streak.dateKey)) return null;
+	return candidate;
+}
+
+/** Restores the streak and counts today, so the repair session ends the day qualified. */
+export function repairStreak(now = new Date()) {
+	const current = readStreak(now);
+	const candidate = storedRepairCandidate(now);
+	if (!candidate) return current;
+	if (typeof localStorage !== 'undefined') localStorage.removeItem(REPAIR_KEY);
+	const repaired = settleQualification({
+		...current,
+		lastQualifiedDay: previousDate(current.dateKey),
+		streakCount: candidate.streakCount,
+		bestStreak: Math.max(current.bestStreak, candidate.bestStreak, candidate.streakCount)
+	}, true);
+	return writeStreak(repaired);
+}
+
+/** Clearing a candidate the learner declined; the rolled-over state is saved so it stays gone. */
+export function dismissRepair(now = new Date()) {
+	if (typeof localStorage === 'undefined') return;
+	const state = readStreak(now);
+	if (storedRepairCandidate(now)) localStorage.removeItem(REPAIR_KEY);
+	writeStreak(state);
+}
+
 export function modeDone(state: ClientStreak, mode: StreakMode): boolean {
 	if (mode === 'vocab') return state.vocabCorrect >= state.vocabularyGoal;
 	if (mode === 'circle') return state.circleCompleted;
@@ -225,7 +296,7 @@ export async function syncStreak(event: StreakEvent, fallback = readStreak()) {
 	// The /api functions only exist on Vercel; under `vite dev` every call would just 404.
 	if (import.meta.env?.DEV) return optimistic;
 	try {
-		const response = await fetch('/api/streak/progress', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ deviceId: deviceId(), timeZone: timeZone(), event, snapshot: optimistic }) });
+		const response = await fetch('/api/streak/progress', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), event, snapshot: optimistic }) });
 		const body = await response.json();
 		if (response.ok && body?.streak) {
 			const saved = writeStreak(body.streak);
@@ -241,7 +312,7 @@ export async function syncStreakGoal(goal: number, fallback = readStreak()) {
 	void publishReminderState(optimistic);
 	if (import.meta.env?.DEV) return optimistic;
 	try {
-		const response = await fetch('/api/streak/progress', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ deviceId: deviceId(), timeZone: timeZone(), event: 'sync', snapshot: optimistic }) });
+		const response = await fetch('/api/streak/progress', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), event: 'sync', snapshot: optimistic }) });
 		const body = await response.json();
 		if (response.ok && body?.streak) return writeStreak(body.streak);
 	} catch { /* Local goal still applies; the next event retries it. */ }

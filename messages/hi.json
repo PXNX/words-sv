@@ -278,5 +278,16 @@
   "week_hardest": "सबसे कठिन शब्द",
   "week_share": "सारांश साझा करें",
   "week_shared": "सारांश कॉपी हुआ",
-  "week_empty": "नया सप्ताह अभी शुरू होता है।"
+  "week_empty": "नया सप्ताह अभी शुरू होता है।",
+  "streak_freezes": "फ़्रीज़: {count}",
+  "streak_freeze_hint": "हर 7 योग्य दिन एक फ़्रीज़ देते हैं जो एक छूटा दिन जोड़ देता है।",
+  "streak_repair_title": "लय की मरम्मत",
+  "streak_repair_hint": "आपने एक दिन छोड़ा। {count} दिन की लय बचाने के लिए {need} शब्द सही उत्तर दें।",
+  "streak_repair_progress": "{done} / {need} सही",
+  "streak_repair_done": "आपकी {count} दिन की लय वापस आ गई।",
+  "streak_repair_none": "आज मरम्मत करने को कुछ नहीं।",
+  "streak_repair_cta": "लय सुधारें",
+  "streak_repair_skip": "अभी नहीं",
+  "streak_restart": "सर्वश्रेष्ठ: {count} दिन। नई लय शुरू करें।",
+  "streak_reminder_hint": "प्रतिदिन अधिकतम एक सौम्य अनुस्मारक, केवल जब कुछ प्रतीक्षा में हो।"
 }

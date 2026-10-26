@@ -64,17 +64,17 @@ tests/build, a focused commit and a push to `main`.
 
 ## 6. Useful reminders instead of deadline nagging (M)
 
-- [ ] Add reminder types:
-  - [ ] “N words are due — 2 minutes” at an opt-in time
-  - [ ] “Continue <text>”
-  - [ ] Weekly recap notification
-- [ ] Support all nine interface locales (not only German/English).
-- [ ] Hard cap: one reminder per day; no repeat after dismissal.
-- [ ] Streak freeze/repair:
-  - [ ] Earn one freeze per 7 qualified days.
-  - [ ] Auto-consume a freeze to bridge one missed day.
-  - [ ] Offer “repair yesterday” with a short session.
-- [ ] Frame a reset as a restart (“Best: 41 days — start a new streak”).
+- [x] Add reminder types:
+  - [x] “N words are due — 2 minutes” at an opt-in time
+  - [x] “Continue <text>”
+  - [x] Weekly recap notification
+- [x] Support all nine interface locales (not only German/English).
+- [x] Hard cap: one reminder per day; no repeat after dismissal.
+- [x] Streak freeze/repair:
+  - [x] Earn one freeze per 7 qualified days.
+  - [x] Auto-consume a freeze to bridge one missed day.
+  - [x] Offer “repair yesterday” with a short session.
+- [x] Frame a reset as a restart (“Best: 41 days — start a new streak”).
 
 ## Quick fixes with outsized ROI
 
@@ -92,5 +92,5 @@ tests/build, a focused commit and a push to `main`.
 - [ ] `node --test` suites for new pure helpers (streak, Today card, ledger, milestones).
 - [ ] `npm test` passes for the touched suites.
 - [ ] `npm run build` exits 0.
-- [ ] `npm run check` stays at the known baseline (70 errors / 6 warnings).
+- [ ] `npm run check` stays at the known baseline (69 errors / 6 warnings).
 - [ ] Each phase committed separately and pushed to `main`; `out.js` stays untracked.

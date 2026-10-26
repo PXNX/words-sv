@@ -8,6 +8,7 @@
   import { recordMissedWord } from '#lib/story/missedWords.js';
   import Companion from '#lib/story/Companion.svelte';
   import { VOCABULARY_REVIEW_STORAGE_PREFIX, updateReviewProgress } from '#lib/vocab/spacedRepetition.js';
+  import { REPAIR_WORDS } from '#lib/clientStreak.js';
   import { dueReviewEntries, readReviewLedger, recordReview, writeReviewLedger, type ReviewLedger } from '#lib/review/ledger.js';
   import { page } from '$app/state';
   import IconCheck from '~icons/material-symbols/check-rounded';
@@ -37,7 +38,14 @@
     recapTricky: m.vocab_recap_tricky({}, { locale: settings.interfaceLocale }),
     recapPractise: (count: number) => m.vocab_recap_practise({ count }, { locale: settings.interfaceLocale }),
     recapNew: m.vocab_recap_new({}, { locale: settings.interfaceLocale }),
-    recapNone: m.vocab_recap_none({}, { locale: settings.interfaceLocale })
+    recapNone: m.vocab_recap_none({}, { locale: settings.interfaceLocale }),
+    repairTitle: m.streak_repair_title({}, { locale: settings.interfaceLocale }),
+    repairHint: (count: number, need: number) => m.streak_repair_hint({ count, need }, { locale: settings.interfaceLocale }),
+    repairProgress: (done: number, need: number) => m.streak_repair_progress({ done, need }, { locale: settings.interfaceLocale }),
+    repairDone: (count: number) => m.streak_repair_done({ count }, { locale: settings.interfaceLocale }),
+    repairNone: m.streak_repair_none({}, { locale: settings.interfaceLocale }),
+    home: m.home_button({}, { locale: settings.interfaceLocale }),
+    progress: m.stats_title({}, { locale: settings.interfaceLocale })
   });
   const words = $derived(wordPools[settings.lang][settings.vocabularyLevel]);
   const definitions = $derived(wordDefinitions[settings.lang]);
@@ -76,6 +84,11 @@
 
   // `/vocab?due=1` is the Repeat hub's mixed session: only words that the shared ledger says are
   // due, drawn from reading marks, grammar answers, pronunciation and earlier vocabulary rounds.
+  // `/vocab?repair=1` is the short session that restores a streak broken by exactly one missed day.
+  const repairMode = $derived(page.url.searchParams.get('repair') === '1');
+  let repairCount = $state(0);
+  let repairDone = $state(false);
+  let repairAvailable = $state(false);
   const dueMode = $derived(page.url.searchParams.get('due') === '1');
   const currentWord = $derived(queue[position] ?? '');
   const currentDefinition = $derived(definitions[currentWord] ?? '');
@@ -116,6 +129,8 @@
     attempted = [];
     tricky = [];
     firstTry = [];
+    repairCount = 0;
+    repairDone = false;
     undoSnapshot = null;
     sessionId += 1;
   }
@@ -172,7 +187,13 @@
     answerStatus = correct ? 'correct' : 'wrong';
     if (firstAttempt) attempted = [...attempted, word];
     if (correct) {
-      if (firstAttempt) firstTry = [...firstTry, word];
+      if (firstAttempt) {
+        firstTry = [...firstTry, word];
+        if (repairMode && repairAvailable && repairCount < REPAIR_WORDS) {
+          repairCount += 1;
+          if (repairCount >= REPAIR_WORDS) finishRepair();
+        }
+      }
       tricky = tricky.filter((item) => item !== word);
     } else if (!tricky.includes(word)) {
       tricky = [...tricky, word];
@@ -180,8 +201,20 @@
     reviewProgress = updateReviewProgress(reviewProgress, word, correct);
     persistProgress();
     recordReview(settings.lang, word, correct, 'vocab');
-    if (correct) { playSuccessSound(settings.sound, 'vocab'); void settings.recordStreak('vocab_correct'); }
+    if (correct) {
+      playSuccessSound(settings.sound, 'vocab');
+      // The repair reward qualifies the day itself; a normal event would race its sync.
+      if (!(repairMode && repairAvailable)) void settings.recordStreak('vocab_correct');
+    }
     else { playErrorSound(settings.sound, 'vocab'); recordMissedWord(settings.lang, word); queue = insertLearningRepeat(queue, position, word); }
+  }
+  function finishRepair() {
+    repairDone = true;
+    sessionDone = true;
+    undoSnapshot = null;
+    void settings.repairStreak().then(() => {
+      repairAvailable = false;
+    });
   }
   // Undo restores the snapshot taken before the answer, including the queue slot a wrong answer
   // inserted, and lets the learner answer the same prompt again.
@@ -220,6 +253,7 @@
   }
 
   onMount(() => {
+    repairAvailable = repairMode && Boolean(settings.repairCandidate());
     speechSupported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
     if (!speechSupported) { speechStatus = labels.speechUnavailable; return; }
     const refreshVoices = () => {
@@ -257,7 +291,27 @@
     </div>
     <Companion id="mia" mood={answerStatus === 'correct' ? 'happy' : answerStatus === 'wrong' ? 'sad' : sessionDone ? 'happy' : 'curious'} size="sm" />
   </header>
-  {#if sessionDone}
+  {#if repairMode && !sessionDone}
+    <div class="w-[min(100%,28rem)] grid gap-[.3rem] px-[.9rem] py-[.65rem] panel-play text-center" aria-live="polite">
+      <p class="m-0 text-accent text-[.58rem] font-black tracking-[.12em] uppercase">{labels.repairTitle}</p>
+      {#if repairAvailable}
+        <p class="m-0 text-base-content/70 text-[.66rem] font-bold leading-[1.4]">{labels.repairHint(settings.streak.bestStreak, REPAIR_WORDS)}</p>
+        <p class="m-0 text-base-content text-[.7rem] font-extrabold tabular-nums">{labels.repairProgress(repairCount, REPAIR_WORDS)}</p>
+      {:else}
+        <p class="m-0 text-base-content/60 text-[.66rem] font-bold">{labels.repairNone}</p>
+      {/if}
+    </div>
+  {/if}
+  {#if repairMode && repairDone}
+    <div class="w-[min(100%,28rem)] grid justify-items-center gap-[.7rem] p-[clamp(1.2rem,6vw,2rem)] panel-play text-center">
+      <p class="m-0 text-accent text-[.6rem] font-black tracking-[.12em] uppercase">{labels.repairTitle}</p>
+      <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.3rem,6vw,1.9rem)] leading-[1.15]">{labels.repairDone(settings.streak.streakCount)}</p>
+      <div class="flex flex-wrap justify-center gap-[.5rem]">
+        <a class="btn-play btn-play-ink" href="/progress">{labels.progress}</a>
+        <a class="btn-play btn-play-soft" href="/">{labels.home}</a>
+      </div>
+    </div>
+  {:else if sessionDone}
     <div class="w-[min(100%,28rem)] grid justify-items-center gap-[.7rem] p-[clamp(1.2rem,6vw,2rem)] panel-play text-center">
       <p class="m-0 text-accent text-[.6rem] font-black tracking-[.12em] uppercase">{labels.recapTitle}</p>
       <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.3rem,6vw,1.9rem)] leading-[1.15]">{labels.recapScore(firstTry.length, attempted.length)}</p>

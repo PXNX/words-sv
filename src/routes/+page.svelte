@@ -22,7 +22,7 @@
   import SelectMenu from '#lib/settings/SelectMenu.svelte';
   import { playSoundEffect } from '#lib/sounds.js';
   import { playableLanguages, type Language } from '#lib/data/vocabulary.js';
-  import { VOCABULARY_GOALS, modeDone, type StreakMode } from '#lib/clientStreak.js';
+  import { REPAIR_WORDS, VOCABULARY_GOALS, modeDone, type StreakMode, type StreakRepair } from '#lib/clientStreak.js';
   import TodayBadge from '#lib/streak/TodayBadge.svelte';
   import { buildTodayPlan, estimatedMinutes, type TodayPlan, type TodayReading } from '#lib/today/todayPlan.js';
   import { readingCatalog } from '#lib/story/readingCatalog.js';
@@ -117,7 +117,12 @@
     todayStreak: (count: number) => m.today_streak({ count }, { locale: settings.interfaceLocale }),
     todayMarked: (count: number) => m.today_marked({ count }, { locale: settings.interfaceLocale }),
     repeatTitle: m.repeat_title({}, { locale: settings.interfaceLocale }),
-    repeatDue: (count: number) => m.repeat_due({ count }, { locale: settings.interfaceLocale })
+    repeatDue: (count: number) => m.repeat_due({ count }, { locale: settings.interfaceLocale }),
+    streakFreezes: (count: number) => m.streak_freezes({ count }, { locale: settings.interfaceLocale }),
+    streakFreezeHint: m.streak_freeze_hint({}, { locale: settings.interfaceLocale }),
+    streakRepairHint: (count: number, need: number) => m.streak_repair_hint({ count, need }, { locale: settings.interfaceLocale }),
+    streakRepairCta: m.streak_repair_cta({}, { locale: settings.interfaceLocale }),
+    streakRestart: (count: number) => m.streak_restart({ count }, { locale: settings.interfaceLocale })
   });
 
   function formatMinutes(minutes: number) {
@@ -153,12 +158,14 @@
   const goalProgress = $derived(settings.streak.qualified ? 1 : Math.min(1, settings.streak.vocabCorrect / Math.max(1, settings.streak.vocabularyGoal)));
   let todayPlan = $state<TodayPlan | null>(null);
   let repeatDue = $state(0);
+  let repairOffer = $state<StreakRepair | null>(null);
 
   // The next best action is derived from local progress only: due reviews first, then an unfinished
   // text, the daily streak and finally the words marked while reading.
   function refreshToday() {
     if (typeof localStorage === 'undefined') return;
     repeatDue = dueReviewCount(settings.lang);
+    repairOffer = settings.repairCandidate();
     todayPlan = buildTodayPlan({
       dueWords: readDueVocabulary(settings.lang, settings.vocabularyLevel),
       markedWords: readMissedWords(settings.lang).length,
@@ -256,6 +263,18 @@
           {/each}
         </div>
       </div>
+      <div class="home-streak-meta">
+        <span>{labels.streakFreezes(settings.streak.freezes)}</span>
+        <span>{labels.streakFreezeHint}</span>
+      </div>
+      {#if repairOffer}
+        <div class="home-repair">
+          <p>{labels.streakRepairHint(repairOffer.streakCount, REPAIR_WORDS)}</p>
+          <a class="btn-play btn-play-ink btn-play-sm" href="/vocab?repair=1">{labels.streakRepairCta}</a>
+        </div>
+      {:else if !settings.streak.qualified && settings.streak.streakCount === 0 && settings.streak.bestStreak > 0}
+        <p class="home-restart">{labels.streakRestart(settings.streak.bestStreak)}</p>
+      {/if}
     </div>
     {#if todayPlan}
       <a class="card-play home-today" href={todayPlan.href}>
@@ -318,6 +337,14 @@
   .home-goal-option { min-height:1.5rem;padding:.1rem .5rem;border:1.5px solid rgba(23,42,69,.3);border-radius:999px;background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.53rem;font-weight:900;cursor:pointer; }
   .home-goal-option.active { border-color:#172a45;background:#172a45;color:#fffdf7; }
   .home-goal-option:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
+  .home-streak-meta { display:grid;justify-items:center;gap:.1rem;color:#596477;font-family:'DM Sans',sans-serif;text-align:center; }
+  .home-streak-meta span:first-child { color:#a45e38;font-size:.56rem;font-weight:900;letter-spacing:.04em;text-transform:uppercase; }
+  .home-streak-meta span:last-child { font-size:.53rem;font-weight:800;line-height:1.35; }
+  .home-repair { display:grid;justify-items:center;gap:.35rem;padding:.6rem .8rem;border:2px solid #172a45;border-radius:.7rem;background:#fff4d9;box-shadow:3px 3px 0 #172a45;text-align:center; }
+  :global(html.dark) .home-streak-meta span:first-child { color:#e6a527; }:global(html.dark) .home-streak-meta span:last-child,:global(html.dark) .home-restart { color:rgba(255,253,247,.72); }
+  :global(html.dark) .home-repair { border-color:#0b1626;background:#213a5d;box-shadow:3px 3px 0 #0b1626; }:global(html.dark) .home-repair p { color:#fffdf7; }
+  .home-repair p,.home-restart { margin:0;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:800;line-height:1.4; }
+  .home-restart { color:#596477;font-size:.56rem; }
   .home-today { display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.7rem;justify-self:center;width:min(100%,27rem);padding:.75rem .9rem;--tilt:.35deg;background:#f7e2b0;color:inherit;text-decoration:none; }
   .home-today-icon { display:grid;place-items:center;width:2.2rem;height:2.2rem;flex:none;border:2px solid #172a45;border-radius:50% 46% 52% 48% / 48% 52% 46% 50%;background:#fffdf7;color:#a45e38; }
   .home-today-icon :global(svg) { width:1.2rem;height:1.2rem; }

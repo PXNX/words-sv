@@ -282,5 +282,16 @@
   "week_hardest": "Schwierigstes Wort",
   "week_share": "Wochenrückblick teilen",
   "week_shared": "Rückblick kopiert",
-  "week_empty": "Eine neue Woche beginnt jetzt."
+  "week_empty": "Eine neue Woche beginnt jetzt.",
+  "streak_freezes": "Schutz: {count}",
+  "streak_freeze_hint": "Alle 7 qualifizierten Tage gibt es einen Schutz, der einen verpassten Tag überbrückt.",
+  "streak_repair_title": "Serie reparieren",
+  "streak_repair_hint": "Du hast einen Tag verpasst. Beantworte {need} Wörter richtig, um deine {count}-Tage-Serie zu halten.",
+  "streak_repair_progress": "{done} / {need} richtig",
+  "streak_repair_done": "Deine {count}-Tage-Serie ist zurück.",
+  "streak_repair_none": "Heute gibt es nichts zu reparieren.",
+  "streak_repair_cta": "Serie reparieren",
+  "streak_repair_skip": "Später",
+  "streak_restart": "Bestwert: {count} Tage. Starte eine neue Serie.",
+  "streak_reminder_hint": "Höchstens eine sanfte Erinnerung pro Tag, nur wenn etwas wartet."
 }
