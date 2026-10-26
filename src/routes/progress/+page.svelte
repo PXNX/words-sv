@@ -7,7 +7,7 @@
   import { readVocabularyProgressByLanguage } from '#lib/vocab/spacedRepetition.js';
   import { readGrammarProgressByLanguage } from '#lib/grammar/learning.js';
   import { readMissedWords } from '#lib/story/missedWords.js';
-  import { GRAMMAR_GOAL, PRONUNCIATION_GOAL, REPAIR_WORDS, VOCABULARY_GOALS, modeDone, type StreakRepair } from '#lib/clientStreak.js';
+  import { GRAMMAR_GOAL, PRONUNCIATION_GOAL, REPAIR_WORDS, VOCABULARY_GOALS, lilithFace, lilithMood, modeDone, type StreakRepair } from '#lib/clientStreak.js';
   import { readingTextsFor } from '#lib/story/readingTexts.js';
   import { readReviewLedger, type ReviewLedger } from '#lib/review/ledger.js';
   import { completedIds, countActivity, readActivity, type ActivityEvent } from '#lib/progress/activity.js';
@@ -20,8 +20,10 @@
   import type { Mood } from '#lib/story/stories.js';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
-  // Lilith is happy once today keeps the streak going and sad until it does.
-  const streakMood = $derived<Mood>(settings.streak.qualified ? 'happy' : 'sad');
+  // Lilith turns loving at five days, happy once today is qualified, sad about a broken streak and
+  // playfully shocked while the current one still waits for its session.
+  const lilith = $derived(lilithMood(settings.streak));
+  const streakMood = $derived<Mood>(lilithFace(lilith));
   const goalProgress = $derived(settings.streak.qualified ? 1 : Math.min(1, settings.streak.vocabCorrect / Math.max(1, settings.streak.vocabularyGoal)));
 
   const labels = $derived({
@@ -222,7 +224,7 @@
           <strong class="font-['DM_Serif_Display',serif] text-[2.8rem] font-normal leading-none text-base-content">{settings.streak.streakCount}</strong>
         </div>
       </div>
-      <Companion id="lilith" mood={streakMood} />
+      <span class="progress-lilith" class:loving={lilith === 'loving'}><Companion id="lilith" mood={streakMood} />{#if lilith === 'loving'}<span class="progress-lilith-hearts" aria-hidden="true"><span>♥</span><span>♥</span></span>{/if}</span>
     </div>
 
     <div class="mt-[.8rem]">
@@ -232,7 +234,7 @@
       </div>
       <ol class="m-0 mt-[.35rem] p-0 list-none flex gap-[.3rem]" role="progressbar" aria-valuenow={settings.streak.vocabCorrect} aria-valuemin="0" aria-valuemax={settings.streak.vocabularyGoal} aria-label={labels.dailyGoal}>
         {#each Array.from({ length: settings.streak.vocabularyGoal }) as _, index (index)}
-          <li class={`pip flex-1 h-[.6rem] ${index < settings.streak.vocabCorrect ? (settings.streak.qualified ? 'bg-[#34824d]' : 'bg-[#e6a527]') : 'bg-base-content/10'}`}></li>
+          <li class={`pip flex-1 h-[.6rem] ${index < settings.streak.vocabCorrect ? 'bg-[#34824d]' : 'bg-base-content/10'}`}></li>
         {/each}
       </ol>
       <p class="m-0 mt-[.45rem] text-[.62rem] font-extrabold text-base-content/70">
@@ -385,7 +387,13 @@
   .pip { border: 2px solid var(--play-line); border-radius: 5px; }
   .progress-ring { rotate: -90deg; overflow: visible; }
   .progress-ring-track { fill: none; stroke: var(--play-line); stroke-width: 2.4; opacity: .28; }
-  .progress-ring-value { fill: none; stroke: #e6a527; stroke-width: 2.4; stroke-linecap: round; transition: stroke-dashoffset .45s ease; }
+  .progress-ring-value { fill: none; stroke: #34824d; stroke-width: 2.4; stroke-linecap: round; transition: stroke-dashoffset .45s ease; }
+  .progress-lilith { position:relative;display:block;flex:none; }
+  .progress-lilith-hearts { position:absolute;inset:-.5rem 0 auto;display:flex;justify-content:center;gap:.12rem;color:#d9546a;font-size:.78rem;line-height:1;pointer-events:none; }
+  .progress-lilith-hearts span { display:block;animation:progress-heart 2s ease-in-out infinite; }
+  .progress-lilith-hearts span:last-child { margin-top:.35rem;font-size:.58rem;animation-delay:.7s; }
+  @keyframes progress-heart { 0% { opacity:0;translate:0 .3rem;scale:.7; } 35% { opacity:1; } 100% { opacity:0;translate:0 -1rem;scale:1; } }
+  @media (prefers-reduced-motion:reduce) { .progress-lilith-hearts span { animation:none;opacity:1; } }
   .progress-goal { min-height: 1.7rem; padding: .15rem .55rem; border: 1.5px solid var(--play-line); border-radius: 999px; background: transparent; color: var(--play-ink, #172a45); font-size: .58rem; font-weight: 900; cursor: pointer; }
   .progress-goal.active { border-color: #172a45; background: #172a45; color: #fffdf7; }
   .progress-goal:focus-visible { outline: 2px solid #e6a527; outline-offset: 2px; }

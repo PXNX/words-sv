@@ -22,13 +22,13 @@
   import SelectMenu from '#lib/settings/SelectMenu.svelte';
   import { playSoundEffect } from '#lib/sounds.js';
   import { playableLanguages, type Language } from '#lib/data/vocabulary.js';
-  import { REPAIR_WORDS, VOCABULARY_GOALS, modeDone, type StreakMode, type StreakRepair } from '#lib/clientStreak.js';
+  import { REPAIR_WORDS, VOCABULARY_GOALS, lilithFace, lilithMood, modeDone, type StreakMode, type StreakRepair } from '#lib/clientStreak.js';
   import TodayBadge from '#lib/streak/TodayBadge.svelte';
   import { buildTodayPlan, estimatedMinutes, type TodayPlan, type TodayReading } from '#lib/today/todayPlan.js';
   import { readingCatalog } from '#lib/story/readingCatalog.js';
   import { readDueVocabulary } from '#lib/vocab/spacedRepetition.js';
   import { readMissedWords } from '#lib/story/missedWords.js';
-  import { dueReviewCount } from '#lib/review/ledger.js';
+  import { dueReviewCount, dueReviewEntries } from '#lib/review/ledger.js';
   import IconSettings from '~icons/material-symbols/settings-rounded';
   import IconHelp from '~icons/material-symbols/question-mark-rounded';
   import IconFlame from '~icons/material-symbols/local-fire-department-rounded';
@@ -66,6 +66,15 @@
     homeWordle: m.home_wordle({}, { locale: settings.interfaceLocale }),
     homeVocab: m.home_vocab({}, { locale: settings.interfaceLocale }),
     homeGrammar: m.home_grammar({}, { locale: settings.interfaceLocale }),
+    homeDefinitions: m.home_definitions({}, { locale: settings.interfaceLocale }),
+    homeHangman: m.home_hangman({}, { locale: settings.interfaceLocale }),
+    homePronunciation: m.home_pronunciation({}, { locale: settings.interfaceLocale }),
+    homeAlltag: m.home_alltag({}, { locale: settings.interfaceLocale }),
+    homeFalseFriends: m.home_false_friends({}, { locale: settings.interfaceLocale }),
+    homeDetermine: m.home_determine({}, { locale: settings.interfaceLocale }),
+    homeOrder: m.home_order({}, { locale: settings.interfaceLocale }),
+    homeContinueReading: (title: string) => m.home_continue_reading({ title }, { locale: settings.interfaceLocale }),
+    homeContinueStory: (title: string) => m.home_continue_story({ title }, { locale: settings.interfaceLocale }),
     homePlay: m.home_play({}, { locale: settings.interfaceLocale }),
     modeCrossword: m.mode_crossword({}, { locale: settings.interfaceLocale }),
     modeWordle: m.mode_wordle({}, { locale: settings.interfaceLocale }),
@@ -159,6 +168,12 @@
   let todayPlan = $state<TodayPlan | null>(null);
   let repeatDue = $state(0);
   let repairOffer = $state<StreakRepair | null>(null);
+  const lilith = $derived(lilithMood(settings.streak, repairOffer));
+  let wordDue = $state(0);
+  let grammarDue = $state(0);
+  let readingDue = $state(0);
+  type HomeContinue = { href: string; label: string; detail: string };
+  let homeContinue = $state<HomeContinue[]>([]);
 
   // The next best action is derived from local progress only: due reviews first, then an unfinished
   // text, the daily streak and finally the words marked while reading.
@@ -166,14 +181,51 @@
     if (typeof localStorage === 'undefined') return;
     repeatDue = dueReviewCount(settings.lang);
     repairOffer = settings.repairCandidate();
+    wordDue = readDueVocabulary(settings.lang, settings.vocabularyLevel);
+    grammarDue = dueReviewEntries(settings.lang).filter(({ entry }) => entry.source === 'grammar').length;
+    const reading = readingToday();
+    readingDue = reading ? reading.total - reading.answered : 0;
     todayPlan = buildTodayPlan({
-      dueWords: readDueVocabulary(settings.lang, settings.vocabularyLevel),
+      dueWords: wordDue,
       markedWords: readMissedWords(settings.lang).length,
-      reading: readingToday(),
+      reading,
       streakQualified: settings.streak.qualified,
       vocabCorrect: settings.streak.vocabCorrect,
       vocabularyGoal: settings.streak.vocabularyGoal
     });
+    const next: HomeContinue[] = [];
+    // When the Today card already points into the text, a second link would only repeat it.
+    if (reading && todayPlan.kind !== 'reading') {
+      next.push({
+        href: `/reading?text=${encodeURIComponent(reading.id)}`,
+        label: labels.homeContinueReading(reading.title),
+        detail: `${reading.answered}/${reading.total}`
+      });
+    }
+    const story = storyToday();
+    if (story) {
+      next.push({ href: '/stories', label: labels.homeContinueStory(story.title), detail: `${story.revealed}/${story.total}` });
+    }
+    homeContinue = next;
+  }
+  function storyToday(): { title: string; revealed: number; total: number } | null {
+    try {
+      const fingerprint = `${settings.lang}|${settings.vocabularyLevel}|${settings.includeLowerVocabulary}`;
+      const parsed = JSON.parse(localStorage.getItem('wordcircle-story-progress-v2') ?? 'null') as {
+        fingerprint?: string;
+        story?: { title?: Record<string, string>; beats?: unknown[] };
+        revealed?: number;
+      } | null;
+      if (!parsed || parsed.fingerprint !== fingerprint || !parsed.story || !Array.isArray(parsed.story.beats)) return null;
+      const total = parsed.story.beats.length;
+      const revealed = Math.max(1, Math.min(total, Number(parsed.revealed) || 1));
+      if (revealed >= total) return null;
+      const title = parsed.story.title?.[settings.lang];
+      if (typeof title !== 'string' || !title) return null;
+      return { title, revealed, total };
+    } catch {
+      return null;
+    }
   }
   function readingToday(): TodayReading | null {
     try {
@@ -237,7 +289,7 @@
     <UpdateAppHint />
     <InstallAppHint />
     <header class="home-header">
-      <div class="home-family"><span class="home-family-people" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="tom" /></span><button type="button" class="home-lilith-pet" class:petting onclick={petLilith} onanimationend={() => (petting = false)} aria-label={labels.petLilith}><span class="home-lilith"><StoryCharacter id="lilith" mood={petting ? 'happy' : 'neutral'} /></span></button></div>
+      <div class="home-family"><span class="home-family-people" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="tom" /></span><button type="button" class="home-lilith-pet" class:petting onclick={petLilith} onanimationend={() => (petting = false)} aria-label={labels.petLilith}><span class="home-lilith" class:loving={lilith === 'loving'}><StoryCharacter id="lilith" mood={petting && lilith !== 'loving' ? 'happy' : lilithFace(lilith)} />{#if lilith === 'loving'}<span class="home-lilith-hearts" aria-hidden="true"><span>♥</span><span>♥</span></span>{/if}</span></button></div>
       <h1>{labels.homeTitle}</h1><span class="home-cast-note">{labels.homeCast}</span>
     </header>
     <div class="home-streak-block">
@@ -286,17 +338,28 @@
         <span class="home-today-start">{labels.todayStart}<IconChevronRight aria-hidden="true" /></span>
       </a>
     {/if}
+    {#if homeContinue.length}
+      <div class="home-continue-row">
+        {#each homeContinue as item (item.href)}
+          <a class="card-play home-continue" href={item.href}>
+            <span class="home-continue-label">{item.label}</span>
+            <span class="home-continue-detail">{item.detail}</span>
+            <IconChevronRight class="home-continue-arrow" aria-hidden="true" />
+          </a>
+        {/each}
+      </div>
+    {/if}
     <h2 class="home-group-heading">{labels.gamesGroup}</h2>
     <div class="home-games home-games--games">
       <div class="home-card-slot"><a class="card-play {streakClass('circle')}" href="/circle"><span class="home-icon" aria-hidden="true"><IconCrossword /></span><h2>{labels.modeCrossword}</h2><p>{labels.homeCircle}</p><TodayBadge done={modeDone(settings.streak, 'circle')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/circle/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
-      <a class="card-play {streakClass(null)}" href="/circle/definitions"><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>Kreuzwort</h2><p>Same crossword, but tap any square for that word's definition.</p></a>
+      <a class="card-play {streakClass(null)}" href="/circle/definitions"><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>Kreuzwort</h2><p>{labels.homeDefinitions}</p></a>
       <div class="home-card-slot"><a class="card-play {streakClass('wordle')}" href="/wordle"><span class="home-icon" aria-hidden="true"><IconSpellcheck /></span><h2>{labels.modeWordle}</h2><p>{labels.homeWordle}</p><TodayBadge done={modeDone(settings.streak, 'wordle')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/wordle/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
-      <div class="home-card-slot"><a class="card-play {streakClass(null)}" href="/hangman"><span class="home-icon" aria-hidden="true"><IconHangman /></span><h2>{labels.modeHangman}</h2><p>Guess the hidden word one letter at a time.</p></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/hangman/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
+      <div class="home-card-slot"><a class="card-play {streakClass(null)}" href="/hangman"><span class="home-icon" aria-hidden="true"><IconHangman /></span><h2>{labels.modeHangman}</h2><p>{labels.homeHangman}</p></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/hangman/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
     </div>
     <h2 class="home-group-heading">{labels.story}</h2>
     <div class="home-games">
       <a class="card-play {streakClass('story')}" href="/stories"><span class="home-icon" aria-hidden="true"><IconStory /></span><h2>{labels.story}</h2><p>{labels.homeStory}</p><TodayBadge done={modeDone(settings.streak, 'story')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
-      <a class="card-play {streakClass('reading')}" href="/reading"><span class="home-icon" aria-hidden="true"><IconMenuBook /></span><h2>{labels.reading}</h2><p>{labels.homeReading}</p><TodayBadge done={modeDone(settings.streak, 'reading')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
+      <a class="card-play {streakClass('reading')}" href="/reading"><span class="home-icon" aria-hidden="true"><IconMenuBook /></span><h2>{labels.reading}</h2><p>{labels.homeReading}</p>{#if readingDue > 0}<span class="home-due-badge">{labels.repeatDue(readingDue)}</span>{/if}<TodayBadge done={modeDone(settings.streak, 'reading')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
       <a class="card-play {streakClass('listen')}" href="/listen"><span class="home-icon" aria-hidden="true"><IconHeadphones /></span><h2>{labels.listen}</h2><p>{labels.homeListen}</p><TodayBadge done={modeDone(settings.streak, 'listen')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
     </div>
     <h2 class="home-group-heading">{labels.vocabularyGroup}</h2>
@@ -304,16 +367,16 @@
       {#if repeatDue > 0}
         <a class="card-play {streakClass(null)}" href="/repeat"><span class="home-icon" aria-hidden="true"><IconReplay /></span><h2>{labels.repeatTitle}</h2><p>{labels.repeatDue(repeatDue)}</p></a>
       {/if}
-      <a class="card-play {streakClass('vocab')}" href="/vocab"><span class="home-icon" aria-hidden="true"><IconQuiz /></span><h2>{labels.wordQuiz}</h2><p>{labels.homeVocab}</p><TodayBadge done={modeDone(settings.streak, 'vocab')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
-      <a class="card-play {streakClass('pronunciation')}" href="/pronunciation"><span class="home-icon" aria-hidden="true"><IconMic /></span><h2>{labels.pronunciation}</h2><p>Listen to audio samples and practise speaking.</p><TodayBadge done={modeDone(settings.streak, 'pronunciation')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
-      <a class="card-play {streakClass(null)}" href="/alltag"><span class="home-icon" aria-hidden="true"><IconEmoji /></span><h2>{labels.alltag}</h2><p>Präpositionen, Zahlen und Farben für den Alltag.</p></a>
-      <a class="card-play {streakClass('grammar')}" href="/grammar?mode=falsefriends"><span class="home-icon" aria-hidden="true"><IconSwapHoriz /></span><h2>{labels.grammarFalseFriends}</h2><p>Wörter, die täuschend ähnlich aussehen, aber etwas anderes bedeuten.</p><TodayBadge done={modeDone(settings.streak, 'grammar')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
+      <a class="card-play {streakClass('vocab')}" href="/vocab"><span class="home-icon" aria-hidden="true"><IconQuiz /></span><h2>{labels.wordQuiz}</h2><p>{labels.homeVocab}</p>{#if wordDue > 0}<span class="home-due-badge">{labels.repeatDue(wordDue)}</span>{/if}<TodayBadge done={modeDone(settings.streak, 'vocab')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
+      <a class="card-play {streakClass('pronunciation')}" href="/pronunciation"><span class="home-icon" aria-hidden="true"><IconMic /></span><h2>{labels.pronunciation}</h2><p>{labels.homePronunciation}</p><TodayBadge done={modeDone(settings.streak, 'pronunciation')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
+      <a class="card-play {streakClass(null)}" href="/alltag"><span class="home-icon" aria-hidden="true"><IconEmoji /></span><h2>{labels.alltag}</h2><p>{labels.homeAlltag}</p></a>
+      <a class="card-play {streakClass('grammar')}" href="/grammar?mode=falsefriends"><span class="home-icon" aria-hidden="true"><IconSwapHoriz /></span><h2>{labels.grammarFalseFriends}</h2><p>{labels.homeFalseFriends}</p><TodayBadge done={modeDone(settings.streak, 'grammar')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
     </div>
     <h2 class="home-group-heading">{labels.grammarGroup}</h2>
     <div class="home-games">
-      <a class="card-play {streakClass('grammar')}" href="/grammar?mode=fill"><span class="home-icon" aria-hidden="true"><IconEditNote /></span><h2>{labels.grammarFill}</h2><p>{labels.homeGrammar}</p><TodayBadge done={modeDone(settings.streak, 'grammar')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
-      <a class="card-play {streakClass('grammar')}" href="/grammar?mode=determine"><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>{labels.grammarDetermine}</h2><p>Kasus, Genus, Numerus, Person und Tempus bestimmen.</p><TodayBadge done={modeDone(settings.streak, 'grammar')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
-      <a class="card-play {streakClass('grammar')}" href="/grammar?mode=order"><span class="home-icon" aria-hidden="true"><IconSort /></span><h2>{labels.grammarOrder}</h2><p>Ordne Wörter und bilde einen korrekten Satz.</p><TodayBadge done={modeDone(settings.streak, 'grammar')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
+      <a class="card-play {streakClass('grammar')}" href="/grammar?mode=fill"><span class="home-icon" aria-hidden="true"><IconEditNote /></span><h2>{labels.grammarFill}</h2><p>{labels.homeGrammar}</p>{#if grammarDue > 0}<span class="home-due-badge">{labels.repeatDue(grammarDue)}</span>{/if}<TodayBadge done={modeDone(settings.streak, 'grammar')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
+      <a class="card-play {streakClass('grammar')}" href="/grammar?mode=determine"><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>{labels.grammarDetermine}</h2><p>{labels.homeDetermine}</p><TodayBadge done={modeDone(settings.streak, 'grammar')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
+      <a class="card-play {streakClass('grammar')}" href="/grammar?mode=order"><span class="home-icon" aria-hidden="true"><IconSort /></span><h2>{labels.grammarOrder}</h2><p>{labels.homeOrder}</p><TodayBadge done={modeDone(settings.streak, 'grammar')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
     </div>
     <a class="btn-play btn-play-soft btn-play-sm home-settings-link" href="/settings"><IconSettings aria-hidden="true" /><span>{labels.settings}</span></a>
   {/if}
@@ -329,7 +392,7 @@
   .home-streak-flame :global(svg:not(.home-streak-ring)) { width:1.2rem;height:1.2rem; }
   .home-streak-ring { position:absolute;inset:-.32rem;width:calc(100% + .64rem);height:calc(100% + .64rem);rotate:-90deg;overflow:visible; }
   .home-streak-ring-track { fill:none;stroke:rgba(23,42,69,.16);stroke-width:2.4; }
-  .home-streak-ring-value { fill:none;stroke:#e6a527;stroke-width:2.4;stroke-linecap:round;transition:stroke-dashoffset .45s var(--play-ease); }
+  .home-streak-ring-value { fill:none;stroke:#34824d;stroke-width:2.4;stroke-linecap:round;transition:stroke-dashoffset .45s var(--play-ease); }
   .home-streak.qualified .home-streak-ring-value { stroke:#34824d; }
   .home-goal { display:flex;align-items:center;justify-content:center;gap:.45rem;flex-wrap:wrap; }
   .home-goal-hint { color:#596477;font-family:'DM Sans',sans-serif;font-size:.53rem;font-weight:800; }
@@ -346,6 +409,14 @@
   .home-repair p,.home-restart { margin:0;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:800;line-height:1.4; }
   .home-restart { color:#596477;font-size:.56rem; }
   .home-today { display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.7rem;justify-self:center;width:min(100%,27rem);padding:.75rem .9rem;--tilt:.35deg;background:#f7e2b0;color:inherit;text-decoration:none; }
+  .home-continue-row { display:grid;gap:.4rem;justify-self:center;width:min(100%,27rem); }
+  .home-continue { display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:.55rem;padding:.55rem .8rem;--tilt:-.25deg;text-decoration:none;color:inherit; }
+  .home-continue-label { overflow:hidden;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:900;line-height:1.3;text-overflow:ellipsis;white-space:nowrap; }
+  .home-continue-detail { color:#596477;font-family:'DM Sans',sans-serif;font-size:.55rem;font-weight:900;font-variant-numeric:tabular-nums; }
+  .home-continue-arrow { width:1rem;height:1rem;color:#a45e38; }
+  .home-due-badge { align-self:start;justify-self:start;margin-top:.15rem;padding:.1rem .38rem;border:1.5px solid #a45e38;border-radius:999px;background:#fff2e8;color:#8e4322;font-family:'DM Sans',sans-serif;font-size:.5rem;font-weight:900;line-height:1.2;white-space:nowrap; }
+  :global(html.dark) .home-continue-label { color:#fffdf7; }:global(html.dark) .home-continue-detail { color:rgba(255,253,247,.65); }:global(html.dark) .home-continue-arrow { color:#e6a527; }
+  :global(html.dark) .home-due-badge { border-color:#e6a527;background:#3a4f30;color:#f7e2b0; }
   .home-today-icon { display:grid;place-items:center;width:2.2rem;height:2.2rem;flex:none;border:2px solid #172a45;border-radius:50% 46% 52% 48% / 48% 52% 46% 50%;background:#fffdf7;color:#a45e38; }
   .home-today-icon :global(svg) { width:1.2rem;height:1.2rem; }
   .home-today-copy { display:grid;gap:.1rem;min-width:0; }
@@ -361,7 +432,11 @@
   .home-family-people { display:flex;align-items:flex-end;height:100%;padding:.55rem .9rem 0 .55rem;border:2px solid #172a45;border-bottom-width:0;border-radius:3.2rem 3.2rem .4rem .4rem;background:radial-gradient(circle at 50% 85%,#f7e2b0,#fbf1da 70%);overflow:hidden; }
   .home-family-people :global(.story-character) { width:4rem;height:5.4rem; }.home-family-people :global(.story-character + .story-character) { margin-inline-start:-.9rem; }
   .home-family::after { content:'';position:absolute;inset:auto -.6rem 0;height:2px;border-radius:2px;background:#172a45; }
-  .home-lilith { display:block;width:4.4rem;height:5.5rem;margin-inline-start:-1.35rem;transform-origin:50% 100%;animation:lilith-breathe 4.5s ease-in-out infinite; }.home-lilith :global(.story-character) { width:100%;height:100%; }
+  .home-lilith { position:relative;display:block;width:4.4rem;height:5.5rem;margin-inline-start:-1.35rem;transform-origin:50% 100%;animation:lilith-breathe 4.5s ease-in-out infinite; }.home-lilith :global(.story-character) { width:100%;height:100%; }
+  .home-lilith-hearts { position:absolute;inset:-.4rem 0 auto;display:flex;justify-content:center;gap:.15rem;color:#d9546a;font-size:.8rem;line-height:1;pointer-events:none; }
+  .home-lilith-hearts span { display:block;animation:lilith-heart 2s ease-in-out infinite; }
+  .home-lilith-hearts span:last-child { margin-top:.35rem;font-size:.6rem;animation-delay:.7s; }
+  @keyframes lilith-heart { 0% { opacity:0;translate:0 .3rem;scale:.7; } 35% { opacity:1; } 100% { opacity:0;translate:0 -1rem;scale:1; } }
   .home-lilith-pet { display:block;margin-inline-start:-1.35rem;padding:0;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transform-origin:50% 100%; }.home-lilith-pet .home-lilith { margin:0; }
   .home-lilith-pet:focus-visible { outline:3px dashed #e6a527;outline-offset:2px;border-radius:1rem; }
   .home-lilith-pet.petting { animation:lilith-wiggle .9s var(--play-ease); }
@@ -369,7 +444,7 @@
   @media (prefers-reduced-motion:reduce) { .home-lilith-pet.petting { animation:none; } }
   .home-cast-note { justify-self:center;color:#596477;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700; }
   @keyframes lilith-breathe { 0%,100% { scale:1; } 50% { scale:1.018 1.012; } }
-  @media (prefers-reduced-motion:reduce) { .home-lilith { animation:none; } }
+  @media (prefers-reduced-motion:reduce) { .home-lilith { animation:none; } .home-lilith-hearts span { animation:none;opacity:1; } }
   .home-games { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem; }.home-games a.card-play,.home-streak { color:inherit;text-decoration:none; }.home-card-slot { position:relative;display:grid; }.home-games .card-play { position:relative;display:grid;grid-template-rows:auto auto 1fr;justify-items:center;gap:.3rem;padding:1rem .6rem .9rem;border-top-width:5px;text-align:center;cursor:pointer; }.home-games > :nth-child(4n+1) { --tilt:-.7deg; }.home-games > :nth-child(4n+2) { --tilt:.5deg; }.home-games > :nth-child(4n+3) { --tilt:-.3deg; }.home-games > :nth-child(4n) { --tilt:.6deg; }.home-games .card-play.streak-done { border-top-color:#34824d; }.home-games .card-play.streak-pending { border-top-color:#e6a527; }.home-games .card-play.streak-none { border-top-color:#172a45; }.home-icon { display:grid;place-items:center;width:2.6rem;height:2.6rem;border:2px solid #172a45;border-radius:48% 52% 46% 54% / 54% 46% 52% 48%;background:#f7e2b0;color:#a45e38;transition:rotate .25s var(--play-ease); }.home-icon :global(svg) { width:1.3rem;height:1.3rem; }.home-games h2 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:.98rem;font-weight:400;line-height:1.15; }.home-games p { margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:700;line-height:1.35; }.home-tutorial-link { position:absolute;top:.45rem;right:.45rem;box-shadow:2px 2px 0 #172a45;color:#a45e38; }
   .home-onboarding { width:min(100%,27rem);display:grid;justify-self:center;gap:.9rem;padding:clamp(1.15rem,6vw,1.8rem);border-radius:22px 14px 20px 15px / 15px 20px 14px 22px;border:2px solid #172a45;background:#fffdf7;box-shadow:4px 4px 0 #172a45;text-align:center; }.home-language-choice { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem;margin-top:.45rem; }.home-language-choice button { min-width:0;min-height:2.8rem;font-size:.72rem;letter-spacing:.04em;text-transform:none; }.home-language-choice button:first-child { background:#172a45;color:#fffdf7; }
   .home-onboarding-field { display:grid;gap:.3rem;text-align:left; }.home-onboarding-field>span { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.58rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }

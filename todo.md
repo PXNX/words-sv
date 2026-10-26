@@ -38,7 +38,7 @@ tests/build, a focused commit and a push to `main`.
   “Read the next text”.
 - [x] Story: offer “Mark these words for repetition” for the words answered wrong.
 - [x] Listening: recap after a full session, plus replay.
-- [x] Add “undo last answer” in quiz modes; a mis-tap must not cost a lapse.
+- [x] No undo snapshot: mistakes are handled by the recap, the repeat queue and the 3-button self-rating instead (undo removed from vocabulary and grammar at the user's request).
 
 ## 4. Unify review state across modes (M–L)
 
@@ -78,19 +78,22 @@ tests/build, a focused commit and a push to `main`.
 
 ## Quick fixes with outsized ROI
 
-- [ ] Localise the hardcoded home-card descriptions (hangman, definitions, pronunciation,
+- [x] Localise the hardcoded home-card descriptions (hangman, definitions, pronunciation,
   Alltag, false friends, grammar determine/order).
-- [ ] Implement or remove `learning_known`: 3-button self-rating (Again / Hard / Good) in the
+- [x] Implement or remove `learning_known`: 3-button self-rating (Again / Hard / Good) in the
   word quiz.
-- [ ] Persist pronunciation and listening progress across navigation.
-- [ ] Show due counts on home cards (word quiz, grammar, reading).
-- [ ] Continue cards for the last unfinished story/text on home.
-- [ ] Keep the streak count visible but frame a reset as a restart.
+- [x] Persist pronunciation and listening progress across navigation.
+- [x] Show due counts on home cards (word quiz, grammar, reading).
+- [x] Continue cards for the last unfinished story/text on home.
+- [x] Keep the streak count visible but frame a reset as a restart.
+- [x] Daily progress rings and pips in green instead of amber.
+- [x] Lilith reacts with sad / shocked / happy moods and looks loving from a 5-day streak on.
 
 ## Verification checklist
 
-- [ ] `node --test` suites for new pure helpers (streak, Today card, ledger, milestones).
-- [ ] `npm test` passes for the touched suites.
-- [ ] `npm run build` exits 0.
-- [ ] `npm run check` stays at the known baseline (69 errors / 6 warnings).
+- [x] Vitest suites for new pure helpers (streak, Today card, ledger, milestones, Lilith moods).
+- [x] `npm run build` exits 0.
+- [x] `npm run check` stays at the known baseline (69 errors / 6 warnings).
+- [x] Touched Vitest suites pass; only the pre-existing cron endpoint fails without `CRON_SECRET`,
+  and the legacy `node --test` suites still fail on old imports (`src/lib/modes.js`).
 - [ ] Each phase committed separately and pushed to `main`; `out.js` stays untracked.

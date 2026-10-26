@@ -239,7 +239,6 @@
   "today_marked": "Du hast {count} Wörter markiert — wiederhole sie",
   "today_done": "Für heute ist alles geschafft.",
   "today_start": "Los geht’s",
-  "undo_last": "Letzte Antwort zurücknehmen",
   "vocab_recap_title": "Runde geschafft",
   "vocab_recap_score": "{correct} von {total} Wörtern gleich beim ersten Mal richtig.",
   "vocab_recap_tricky": "Diese Wörter brauchen noch eine Runde",
@@ -293,5 +292,16 @@
   "streak_repair_cta": "Serie reparieren",
   "streak_repair_skip": "Später",
   "streak_restart": "Bestwert: {count} Tage. Starte eine neue Serie.",
-  "streak_reminder_hint": "Höchstens eine sanfte Erinnerung pro Tag, nur wenn etwas wartet."
+  "streak_reminder_hint": "Höchstens eine sanfte Erinnerung pro Tag, nur wenn etwas wartet.",
+  "home_definitions": "Dasselbe Kreuzwort, aber tippe auf ein Feld für die Definition.",
+  "home_hangman": "Errate das versteckte Wort Buchstabe für Buchstabe.",
+  "home_pronunciation": "Höre Beispiele an und übe das Sprechen.",
+  "home_alltag": "Präpositionen, Zahlen und Farben für den Alltag.",
+  "home_false_friends": "Wörter, die täuschend ähnlich aussehen, aber etwas anderes bedeuten.",
+  "home_determine": "Kasus, Genus, Numerus, Person und Tempus bestimmen.",
+  "home_order": "Ordne Wörter und bilde einen korrekten Satz.",
+  "home_continue_reading": "Weiterlesen: {title}",
+  "home_continue_story": "Geschichte fortsetzen: {title}",
+  "learning_rate_hint": "Wie gut kanntest du das Wort?",
+  "learning_hard": "Schwer"
 }

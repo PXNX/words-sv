@@ -7,9 +7,9 @@
   import { definitionChoiceWords, insertLearningRepeat, pickReviewSection } from '#lib/vocab/learning.js';
   import { recordMissedWord } from '#lib/story/missedWords.js';
   import Companion from '#lib/story/Companion.svelte';
-  import { VOCABULARY_REVIEW_STORAGE_PREFIX, updateReviewProgress } from '#lib/vocab/spacedRepetition.js';
+  import { VOCABULARY_REVIEW_STORAGE_PREFIX, markWordForRepeat, updateReviewProgress } from '#lib/vocab/spacedRepetition.js';
   import { REPAIR_WORDS } from '#lib/clientStreak.js';
-  import { dueReviewEntries, readReviewLedger, recordReview, writeReviewLedger, type ReviewLedger } from '#lib/review/ledger.js';
+  import { dueReviewEntries, recordReview } from '#lib/review/ledger.js';
   import { page } from '$app/state';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
@@ -32,7 +32,10 @@
     continue: m.continue({}, { locale: settings.interfaceLocale }),
     correct: m.learning_correct({}, { locale: settings.interfaceLocale }),
     tryAgain: m.learning_try_again({}, { locale: settings.interfaceLocale }),
-    undo: m.undo_last({}, { locale: settings.interfaceLocale }),
+    rateHint: m.learning_rate_hint({}, { locale: settings.interfaceLocale }),
+    again: m.learning_again({}, { locale: settings.interfaceLocale }),
+    hard: m.learning_hard({}, { locale: settings.interfaceLocale }),
+    known: m.learning_known({}, { locale: settings.interfaceLocale }),
     recapTitle: m.vocab_recap_title({}, { locale: settings.interfaceLocale }),
     recapScore: (correct: number, total: number) => m.vocab_recap_score({ correct, total }, { locale: settings.interfaceLocale }),
     recapTricky: m.vocab_recap_tricky({}, { locale: settings.interfaceLocale }),
@@ -71,16 +74,6 @@
   let attempted = $state<string[]>([]);
   let tricky = $state<string[]>([]);
   let firstTry = $state<string[]>([]);
-  type UndoSnapshot = {
-    reviewProgress: Record<string, { repetitions: number; dueAt: number }>;
-    queue: string[];
-    position: number;
-    attempted: string[];
-    tricky: string[];
-    firstTry: string[];
-    ledger: ReviewLedger;
-  };
-  let undoSnapshot = $state<UndoSnapshot | null>(null);
 
   // `/vocab?due=1` is the Repeat hub's mixed session: only words that the shared ledger says are
   // due, drawn from reading marks, grammar answers, pronunciation and earlier vocabulary rounds.
@@ -131,7 +124,6 @@
     firstTry = [];
     repairCount = 0;
     repairDone = false;
-    undoSnapshot = null;
     sessionId += 1;
   }
   function startSection() {
@@ -171,17 +163,6 @@
     if (!chosenWord) return;
     const word = currentWord;
     const correct = chosenWord === word;
-    // A mis-tap must not cost a lapse: the review progress, queue and counters are kept so the
-    // answer can be taken back before moving on.
-    undoSnapshot = {
-      reviewProgress: { ...reviewProgress },
-      queue: [...queue],
-      position,
-      attempted: [...attempted],
-      tricky: [...tricky],
-      firstTry: [...firstTry],
-      ledger: readReviewLedger()
-    };
     const firstAttempt = !attempted.includes(word);
     selectedChoice = chosenWord;
     answerStatus = correct ? 'correct' : 'wrong';
@@ -211,37 +192,38 @@
   function finishRepair() {
     repairDone = true;
     sessionDone = true;
-    undoSnapshot = null;
     void settings.repairStreak().then(() => {
       repairAvailable = false;
     });
   }
-  // Undo restores the snapshot taken before the answer, including the queue slot a wrong answer
-  // inserted, and lets the learner answer the same prompt again.
-  function undoLast() {
-    if (!undoSnapshot) return;
-    cancelSpeech();
-    reviewProgress = undoSnapshot.reviewProgress;
-    persistProgress();
-    queue = undoSnapshot.queue;
-    position = undoSnapshot.position;
-    attempted = undoSnapshot.attempted;
-    tricky = undoSnapshot.tricky;
-    firstTry = undoSnapshot.firstTry;
-    writeReviewLedger(undoSnapshot.ledger);
-    undoSnapshot = null;
-    answerStatus = null;
-    selectedChoice = null;
-    choiceKey = '';
+  // A correct answer can still feel shaky. The three buttons steer the next review without
+  // punishing a learner who simply wants to move on.
+  function rateAnswer(kind: 'again' | 'hard' | 'good') {
+    const word = currentWord;
+    if (!word || answerStatus !== 'correct') return;
+    if (kind === 'again') {
+      reviewProgress = updateReviewProgress(reviewProgress, word, false);
+      persistProgress();
+      recordReview(settings.lang, word, false, 'vocab');
+      recordMissedWord(settings.lang, word);
+      firstTry = firstTry.filter((item) => item !== word);
+      if (!tricky.includes(word)) tricky = [...tricky, word];
+      queue = insertLearningRepeat(queue, position, word);
+      playErrorSound(settings.sound, 'vocab');
+    } else if (kind === 'hard') {
+      // A lapse moves the word ahead of unseen material in the next session and in the Repeat hub.
+      markWordForRepeat(settings.lang, word, Date.now(), 'vocab');
+      reviewProgress = loadProgress();
+      if (!tricky.includes(word)) tricky = [...tricky, word];
+    }
+    continueLearning();
   }
   function finishSession() {
     cancelSpeech();
     sessionDone = true;
-    undoSnapshot = null;
   }
   function continueLearning() {
     cancelSpeech();
-    undoSnapshot = null;
     if (position >= queue.length - 1) { finishSession(); return; }
     position += 1;
   }
@@ -354,9 +336,17 @@
             ><span class="flex-1">{optionText(word)}</span>{#if answerStatus !== null && word === currentWord}<IconCheck class="w-[1.25rem] h-[1.25rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && word === selectedChoice}<IconClose class="w-[1.25rem] h-[1.25rem] flex-none text-accent" aria-label={labels.tryAgain} />{/if}</button>
           {/each}
         </div>
-        {#if answerStatus}
-          <div class="flex flex-wrap justify-center gap-[.45rem]">
-            <button class="btn-play btn-play-soft" onclick={undoLast} disabled={!undoSnapshot}>{labels.undo}</button>
+        {#if answerStatus === 'correct'}
+          <div class="grid gap-[.35rem]">
+            <p class="m-0 text-center text-base-content/60 text-[.58rem] font-extrabold">{labels.rateHint}</p>
+            <div class="flex flex-wrap justify-center gap-[.45rem]">
+              <button class="btn-play btn-play-soft" onclick={() => rateAnswer('again')}>{labels.again}</button>
+              <button class="btn-play btn-play-soft" onclick={() => rateAnswer('hard')}>{labels.hard}</button>
+              <button class="btn-play btn-play-ink" onclick={() => rateAnswer('good')}>{labels.known}</button>
+            </div>
+          </div>
+        {:else if answerStatus === 'wrong'}
+          <div class="flex justify-center">
             <button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>
           </div>
         {/if}

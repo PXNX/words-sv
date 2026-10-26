@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, test } from 'vitest';
+import type { ClientStreak } from '../src/lib/clientStreak.js';
 
 const store = new Map<string, string>();
 globalThis.localStorage = {
@@ -10,7 +11,7 @@ globalThis.localStorage = {
 	length: 0
 } as Storage;
 
-const { dateKey, previousDate, readStreak, repairCandidate, repairStreak, dismissRepair } = await import('../src/lib/clientStreak.js');
+const { dateKey, previousDate, readStreak, repairCandidate, repairStreak, dismissRepair, lilithMood } = await import('../src/lib/clientStreak.js');
 
 const NOW = new Date('2026-10-26T12:00:00Z');
 const TODAY = dateKey(NOW);
@@ -70,5 +71,31 @@ describe('streak repair', () => {
 		dismissRepair(NOW);
 		expect(repairCandidate(NOW)).toBeNull();
 		expect(readStreak(NOW).streakCount).toBe(0);
+	});
+});
+
+describe('Lilith streak moods', () => {
+	beforeEach(() => store.clear());
+
+	const state = (overrides: Partial<ClientStreak>) => ({ ...readStreak(NOW), ...overrides });
+
+	test('a five-day streak turns loving even before today is done', () => {
+		expect(lilithMood(state({ streakCount: 5, qualified: false }))).toBe('loving');
+	});
+
+	test('a qualified day makes her happy', () => {
+		expect(lilithMood(state({ streakCount: 2, qualified: true }))).toBe('happy');
+	});
+
+	test('a broken streak from a previous best makes her sad', () => {
+		expect(lilithMood(state({ streakCount: 0, bestStreak: 4, qualified: false }))).toBe('sad');
+	});
+
+	test('a repairable streak makes her sad even before the reset is read', () => {
+		expect(lilithMood(state({ streakCount: 0, bestStreak: 0 }), { dateKey: TODAY, streakCount: 9, bestStreak: 9 })).toBe('sad');
+	});
+
+	test('a live streak waiting for today gets a surprised face', () => {
+		expect(lilithMood(state({ streakCount: 3, bestStreak: 3, qualified: false }))).toBe('surprised');
 	});
 });

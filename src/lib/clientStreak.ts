@@ -279,6 +279,26 @@ export function dismissRepair(now = new Date()) {
 	writeStreak(state);
 }
 
+export type LilithMood = 'loving' | 'happy' | 'sad' | 'surprised';
+
+/**
+ * Lilith's face for the streak header: in love from five days on, content once today is
+ * qualified, sad about a broken or repairable streak, and playfully shocked while a live streak
+ * still waits for its session.
+ */
+export function lilithMood(state: ClientStreak, repair: StreakRepair | null = null): LilithMood {
+	if (state.streakCount >= 5) return 'loving';
+	if (state.qualified) return 'happy';
+	if (repair || (state.streakCount === 0 && state.bestStreak > 0)) return 'sad';
+	return 'surprised';
+}
+
+const lilithFaces = { loving: 'laughing', happy: 'happy', sad: 'sad', surprised: 'surprised' } as const;
+
+export function lilithFace(mood: LilithMood) {
+	return lilithFaces[mood];
+}
+
 export function modeDone(state: ClientStreak, mode: StreakMode): boolean {
 	if (mode === 'vocab') return state.vocabCorrect >= state.vocabularyGoal;
 	if (mode === 'circle') return state.circleCompleted;

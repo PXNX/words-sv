@@ -38,6 +38,8 @@
 
   const BAR_COUNT = 20;
   const IDLE_LEVEL = 0.14;
+  const PRONUNCIATION_PROGRESS_KEY = 'wordcircle-pronunciation-progress-v1';
+  type SavedPronunciation = { fingerprint: string; word: string; heard: string; matched: boolean };
 
   let { words }: { words: string[] } = $props();
   let currentWord = $state('');
@@ -76,6 +78,8 @@
   let consecutiveErrors = 0;
   const MAX_CONSECUTIVE_ERRORS = 3;
   let startedByTap = false;
+  // A word restored together with its verdict should not start listening on its own.
+  let restoring = false;
   // Invalidates an in-flight natural clip when the word changes or another sample starts.
   let speechToken = 0;
   let stopNatural: () => void = () => {};
@@ -142,6 +146,49 @@
     utterance.onerror = resume;
     window.speechSynthesis.speak(utterance);
   }
+  function pronunciationFingerprint() {
+    return `${settings.lang}|${settings.vocabularyLevel}|${settings.includeLowerVocabulary}`;
+  }
+  function readPronunciationProgress(): SavedPronunciation | null {
+    if (typeof localStorage === 'undefined') return null;
+    try {
+      const parsed = JSON.parse(localStorage.getItem(PRONUNCIATION_PROGRESS_KEY) ?? 'null') as Partial<SavedPronunciation> | null;
+      if (!parsed || parsed.fingerprint !== pronunciationFingerprint() || typeof parsed.word !== 'string') return null;
+      return {
+        fingerprint: parsed.fingerprint,
+        word: parsed.word,
+        heard: typeof parsed.heard === 'string' ? parsed.heard : '',
+        matched: Boolean(parsed.matched)
+      };
+    } catch {
+      return null;
+    }
+  }
+  function savePronunciationProgress() {
+    if (typeof localStorage === 'undefined' || !currentWord) return;
+    try {
+      localStorage.setItem(PRONUNCIATION_PROGRESS_KEY, JSON.stringify({
+        fingerprint: pronunciationFingerprint(),
+        word: currentWord,
+        heard,
+        matched: matchState === 'correct'
+      } satisfies SavedPronunciation));
+    } catch {
+      // A full quota must not interrupt practising.
+    }
+  }
+  // Returns to the word and verdict the learner left, so navigating away does not throw away a try.
+  function restorePronunciationProgress(): boolean {
+    const saved = readPronunciationProgress();
+    if (!saved || !candidates.includes(saved.word)) return false;
+    restoring = true;
+    currentWord = saved.word;
+    heard = saved.heard;
+    heardIpa = heard ? transcribeToIpa(heard, settings.lang) : '';
+    matchState = saved.matched ? 'correct' : saved.heard ? 'incorrect' : 'idle';
+    correction = matchState === 'incorrect' ? ipaDiff(heardIpa, ipa) : null;
+    return true;
+  }
   function nextWord() {
     showDefinition = false;
     matchState = 'idle';
@@ -152,6 +199,7 @@
     recognitionStalled = false;
     consecutiveErrors = 0;
     currentWord = candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : '';
+    savePronunciationProgress();
   }
   function clearRestartTimer() {
     if (restartTimer !== null) window.clearTimeout(restartTimer);
@@ -198,6 +246,7 @@
     matchState = attempt.matched ? 'correct' : 'incorrect';
     correction = attempt.matched || !heardIpa ? null : ipaDiff(heardIpa, ipa);
     if (heard) void settings.recordStreak('pronunciation_practised');
+    savePronunciationProgress();
     // A heard attempt lands in the shared ledger; a miss also joins the hard-words list that
     // stories and the Repeat hub draw from.
     if (heard && currentWord) {
@@ -335,7 +384,7 @@
     micSupported = micSupported || exclusiveMic;
     const refreshVoices = () => (voices = window.speechSynthesis.getVoices());
     if (speechSupported) { refreshVoices(); window.speechSynthesis.addEventListener('voiceschanged', refreshVoices); }
-    nextWord();
+    if (!restorePronunciationProgress()) nextWord();
     return () => { stopAudio(); stopListening(); window.speechSynthesis?.removeEventListener('voiceschanged', refreshVoices); };
   });
   $effect(() => {
@@ -345,7 +394,12 @@
   $effect(() => {
     // Restart listening for every new word so the learner never has to press a button.
     currentWord;
-    untrack(() => { stopAudio(); stopListening(); if (currentWord) void startListening(); });
+    untrack(() => {
+      stopAudio();
+      stopListening();
+      if (restoring) { restoring = false; return; }
+      if (currentWord) void startListening();
+    });
   });
 </script>
 
