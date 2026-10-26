@@ -10,6 +10,7 @@
   import { naturalMegabytes, naturalReady, naturalState, naturalSupported, prepareNatural, synthesizeNatural, combineNatural, type NaturalClip } from './naturalVoices.svelte';
   import { applyVoice, profiles, type Dialect, type Speaker } from './voices';
   import { listAudioSessions, loadAudioBlob, saveAudioSession, updateAudioSessionPosition, type SavedAudio, type SavedSound, type SavedStoryStart } from './audioLibrary';
+  import { generateStory, hasMissedWords } from './generated';
   import { playSoundEffect, soundEffectSeconds, type SoundEffect } from '#lib/sounds.js';
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
@@ -298,6 +299,12 @@
     return words < QUESTION_WORD_LIMIT ? words + 110 : words;
   }
   function pickStory(avoidSaved = false): Story | null {
+    // A story built from the learner's marked words is the quickest way to hear them in context.
+    // Only the standard voice does this: natural audio is pre-generated and kept in the library.
+    if (standardMode && hasMissedWords(settings.lang)) {
+      const generated = generateStory(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary);
+      if (generated) return generated;
+    }
     let pool = [...new Map(storiesFor(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary).map((story) => [story.id, story])).values()];
     if (!pool.length) return null;
     if (avoidSaved) {

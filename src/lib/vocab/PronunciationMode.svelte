@@ -5,6 +5,8 @@
   import { transcribeToIpa } from '#lib/vocab/ipa.js';
   import { evaluateAttempt, ipaDiff, type CorrectionSegment } from '#lib/vocab/speechMatch.js';
   import { wiktionaryUrl } from '#lib/wiktionary.js';
+  import { recordReview } from '#lib/review/ledger.js';
+  import { recordMissedWord } from '#lib/story/missedWords.js';
   import { playSuccessSound } from '#lib/sounds.js';
   import { pronounceable } from '#lib/story/speech.js';
   import { naturalReady, naturalSupported, playNatural, prepareNatural, synthesizeNatural } from '#lib/story/naturalVoices.svelte.js';
@@ -195,6 +197,12 @@
     matchState = attempt.matched ? 'correct' : 'incorrect';
     correction = attempt.matched || !heardIpa ? null : ipaDiff(heardIpa, ipa);
     if (heard) void settings.recordStreak('pronunciation_practised');
+    // A heard attempt lands in the shared ledger; a miss also joins the hard-words list that
+    // stories and the Repeat hub draw from.
+    if (heard && currentWord) {
+      recordReview(settings.lang, currentWord, attempt.matched, 'pronunciation');
+      if (!attempt.matched) recordMissedWord(settings.lang, currentWord);
+    }
     if (attempt.matched) {
       playSuccessSound(settings.sound, 'pronunciation');
       stopListening();

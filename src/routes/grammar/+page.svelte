@@ -8,6 +8,7 @@
   import { recordMissedWord } from '#lib/story/missedWords.js';
   import Companion from '#lib/story/Companion.svelte';
   import { prioritizeLearningWords, updateReviewProgress } from '#lib/vocab/spacedRepetition.js';
+  import { dueReviewEntries, readReviewLedger, recordReview, writeReviewLedger, type ReviewLedger } from '#lib/review/ledger.js';
   import { articleChoiceOptions, gapSentenceSuffixes, grammarArticles, pickRandomSection, shuffled, GRAMMAR_REVIEW_STORAGE_PREFIX } from '#lib/grammar/learning.js';
   import { buildNounCasePrompt, buildNounPropertyPrompt, type GrammarPrompt } from '#lib/grammar/cases.js';
   import { buildAdjectivePrompt, isEligibleAdjective } from '#lib/grammar/adjectives.js';
@@ -101,6 +102,7 @@
     reviewProgress: Record<string, { repetitions: number; dueAt: number }>;
     queue: string[];
     selectedOrder: number[];
+    ledger: ReviewLedger;
   };
   let undoSnapshot = $state<GrammarUndo | null>(null);
 
@@ -121,13 +123,19 @@
   function startSection() {
     reviewProgress = loadProgress();
     const prioritized = prioritizeLearningWords(eligibleKeys, reviewProgress);
-    section = pickRandomSection(prioritized, random, 6);
+    // Words the learner marked in reading (or got wrong elsewhere) take up to three slots, so the
+    // shared review ledger actually changes what grammar asks next.
+    const dueKeys = new Set(dueReviewEntries(settings.lang).map(({ item }) => item));
+    const dueFirst = prioritized.filter((key) => dueKeys.has(key.toLocaleUpperCase()));
+    const focus = dueFirst.slice(0, 3);
+    const rest = prioritized.filter((key) => !focus.includes(key));
+    section = [...focus, ...pickRandomSection(rest, random, 6 - focus.length)];
     queue = [...section];
     position = 0;
     undoSnapshot = null;
   }
   function snapshotAnswer() {
-    undoSnapshot = { reviewProgress: { ...reviewProgress }, queue: [...queue], selectedOrder: [...selectedOrder] };
+    undoSnapshot = { reviewProgress: { ...reviewProgress }, queue: [...queue], selectedOrder: [...selectedOrder], ledger: readReviewLedger() };
   }
   function undoLastAnswer() {
     if (!undoSnapshot) return;
@@ -135,6 +143,7 @@
     persistProgress();
     queue = undoSnapshot.queue;
     selectedOrder = undoSnapshot.selectedOrder;
+    writeReviewLedger(undoSnapshot.ledger);
     selectedChoice = null;
     answerStatus = null;
     undoSnapshot = null;
@@ -196,6 +205,7 @@
       else { playErrorSound(settings.sound, 'grammar'); queue = [...queue, currentKey]; }
       reviewProgress = updateReviewProgress(reviewProgress, currentKey, answerStatus === 'correct');
       persistProgress();
+      recordReview(settings.lang, currentKey, answerStatus === 'correct', 'grammar');
     }
   }
   function resetOrder() { selectedOrder = []; answerStatus = null; undoSnapshot = null; }
@@ -209,6 +219,7 @@
     answerStatus = correct ? 'correct' : 'wrong';
     reviewProgress = updateReviewProgress(reviewProgress, currentKey, correct);
     persistProgress();
+    recordReview(settings.lang, currentKey, correct, 'grammar');
     if (correct) { playSuccessSound(settings.sound, 'grammar'); void settings.recordStreak('grammar_correct'); }
     else { playErrorSound(settings.sound, 'grammar'); recordMissedGrammarWord(currentKey); queue = [...queue, currentKey]; }
   }

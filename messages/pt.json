@@ -246,5 +246,18 @@
   "reading_recap_next": "Ler o próximo texto",
   "story_recap_mark": "Marcar as palavras erradas para repetição",
   "listen_recap_title": "Sessão de escuta concluída",
-  "listen_recap_replay": "Ouvir outra vez"
+  "listen_recap_replay": "Ouvir outra vez",
+  "repeat_title": "Repetir",
+  "repeat_kicker": "A sua revisão",
+  "repeat_due": "Para agora: {count}",
+  "repeat_mixed": "Sessão mista ({count} palavras)",
+  "repeat_empty": "Nada para rever agora. Marque palavras ao ler ou responda a algumas perguntas — tudo se junta aqui.",
+  "repeat_no_words": "Nenhuma palavra para rever. Abra um dos grupos abaixo.",
+  "repeat_group_count": "{count} para rever",
+  "repeat_group_vocab": "Vocabulário",
+  "repeat_group_reading": "Marcado ao ler",
+  "repeat_group_grammar": "Gramática",
+  "repeat_group_pronunciation": "Pronúncia",
+  "repeat_group_story": "Histórias",
+  "repeat_group_listening": "Escuta"
 }

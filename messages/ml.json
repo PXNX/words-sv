@@ -246,5 +246,18 @@
   "reading_recap_next": "അടുത്ത പാഠം വായിക്കുക",
   "story_recap_mark": "തെറ്റായ വാക്കുകൾ ആവർത്തിക്കാൻ അടയാളപ്പെടുത്തുക",
   "listen_recap_title": "കേൾവി സെഷൻ പൂർത്തിയായി",
-  "listen_recap_replay": "വീണ്ടും കേൾക്കുക"
+  "listen_recap_replay": "വീണ്ടും കേൾക്കുക",
+  "repeat_title": "ആവർത്തിക്കുക",
+  "repeat_kicker": "നിങ്ങളുടെ അവലോകനം",
+  "repeat_due": "ഇപ്പോൾ ബാക്കി: {count}",
+  "repeat_mixed": "മിശ്രിത സെഷൻ ({count} വാക്കുകൾ)",
+  "repeat_empty": "ഇപ്പോൾ ഒന്നും ബാക്കിയില്ല. വായിക്കുമ്പോൾ വാക്കുകൾ അടയാളപ്പെടുത്തുകയോ കുറച്ച് ചോദ്യങ്ങൾക്ക് ഉത്തരം നൽകുകയോ ചെയ്യുക — എല്ലാം ഇവിടെ ശേഖരിക്കും.",
+  "repeat_no_words": "വാക്കുകൾ ഒന്നും ബാക്കിയില്ല. താഴെയുള്ള ഒരു ഗ്രൂപ്പ് തുറക്കുക.",
+  "repeat_group_count": "{count} അവലോകനത്തിന്",
+  "repeat_group_vocab": "പദാവലി",
+  "repeat_group_reading": "വായനയിൽ അടയാളപ്പെടുത്തിയത്",
+  "repeat_group_grammar": "വ്യാകരണം",
+  "repeat_group_pronunciation": "ഉച്ചാരണം",
+  "repeat_group_story": "കഥകൾ",
+  "repeat_group_listening": "കേൾവി"
 }

@@ -246,5 +246,18 @@
   "reading_recap_next": "اقرأ النص التالي",
   "story_recap_mark": "علّم الكلمات الخاطئة للتكرار",
   "listen_recap_title": "اكتملت جلسة الاستماع",
-  "listen_recap_replay": "استمع مرة أخرى"
+  "listen_recap_replay": "استمع مرة أخرى",
+  "repeat_title": "التكرار",
+  "repeat_kicker": "مراجعتك",
+  "repeat_due": "مستحق الآن: {count}",
+  "repeat_mixed": "جولة مختلطة ({count} كلمات)",
+  "repeat_empty": "لا يوجد شيء مستحق الآن. علّم الكلمات أثناء القراءة أو أجب عن بعض الأسئلة — سيتجمع كل شيء هنا.",
+  "repeat_no_words": "لا توجد كلمات مستحقة. افتح إحدى المجموعات أدناه.",
+  "repeat_group_count": "{count} للمراجعة",
+  "repeat_group_vocab": "المفردات",
+  "repeat_group_reading": "عُلّمت أثناء القراءة",
+  "repeat_group_grammar": "القواعد",
+  "repeat_group_pronunciation": "النطق",
+  "repeat_group_story": "القصص",
+  "repeat_group_listening": "الاستماع"
 }

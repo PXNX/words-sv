@@ -246,5 +246,18 @@
   "reading_recap_next": "अगला पाठ पढ़ें",
   "story_recap_mark": "गलत शब्दों को दोहराने के लिए चिह्नित करें",
   "listen_recap_title": "सुनने का सत्र पूरा",
-  "listen_recap_replay": "फिर से सुनें"
+  "listen_recap_replay": "फिर से सुनें",
+  "repeat_title": "दोहराएँ",
+  "repeat_kicker": "आपकी समीक्षा",
+  "repeat_due": "अब देय: {count}",
+  "repeat_mixed": "मिश्रित सत्र ({count} शब्द)",
+  "repeat_empty": "अभी कुछ भी देय नहीं है। पढ़ते समय शब्द चिह्नित करें या कुछ प्रश्नों के उत्तर दें — सब यहाँ जमा होगा।",
+  "repeat_no_words": "कोई शब्द देय नहीं है। नीचे कोई समूह खोलें।",
+  "repeat_group_count": "{count} दोहराने के लिए",
+  "repeat_group_vocab": "शब्दावली",
+  "repeat_group_reading": "पढ़ते समय चिह्नित",
+  "repeat_group_grammar": "व्याकरण",
+  "repeat_group_pronunciation": "उच्चारण",
+  "repeat_group_story": "कहानियाँ",
+  "repeat_group_listening": "सुनना"
 }

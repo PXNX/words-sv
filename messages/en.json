@@ -250,5 +250,18 @@
   "reading_recap_next": "Read the next text",
   "story_recap_mark": "Mark the missed words for repetition",
   "listen_recap_title": "Listening session complete",
-  "listen_recap_replay": "Listen again"
+  "listen_recap_replay": "Listen again",
+  "repeat_title": "Repeat",
+  "repeat_kicker": "Your review",
+  "repeat_due": "Due now: {count}",
+  "repeat_mixed": "Mixed session ({count} words)",
+  "repeat_empty": "Nothing is due right now. Mark words while reading or answer a few questions — everything collects here.",
+  "repeat_no_words": "No vocabulary words are due. Open one of the groups below.",
+  "repeat_group_count": "{count} to review",
+  "repeat_group_vocab": "Vocabulary",
+  "repeat_group_reading": "Marked while reading",
+  "repeat_group_grammar": "Grammar",
+  "repeat_group_pronunciation": "Pronunciation",
+  "repeat_group_story": "Stories",
+  "repeat_group_listening": "Listening"
 }
