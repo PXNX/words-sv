@@ -7,7 +7,7 @@
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
 
-  let { story, title, level, label, lang, progress, part, total, voice }: {
+  let { story, title, level, label, lang, progress, part, total, voice, eta = 0 }: {
     story: Story;
     title: string;
     level: VocabularyLevel;
@@ -17,6 +17,7 @@
     part: number;
     total: number;
     voice: string;
+    eta?: number;
   } = $props();
   const percent = $derived(Math.round(Math.min(1, Math.max(0, progress)) * 100));
   const questions = $derived(story.beats.filter((beat) => beat.kind === 'question' || beat.kind === 'reply').length);
@@ -32,6 +33,7 @@
   const questionLabel = $derived(questions ? m.story_loader_questions({ count: String(questions) }, { locale: settings.interfaceLocale }) : '');
   const castLabel = $derived(castNames ? m.story_loader_cast({ names: castNames }, { locale: settings.interfaceLocale }) : '');
   const voiceLabel = $derived(voice ? m.story_loader_voice({ voice }, { locale: settings.interfaceLocale }) : '');
+  const etaLabel = $derived(eta > 0 ? m.story_loader_eta({ seconds: String(Math.ceil(eta)) }, { locale: settings.interfaceLocale }) : '');
 </script>
 
 <section class="story-audio-loader" aria-label={label} aria-busy="true">
@@ -57,6 +59,9 @@
       {/if}
       {#if voiceLabel}
         <p class="story-loader-meta" dir="auto"><span>{voiceLabel}</span></p>
+      {/if}
+      {#if etaLabel}
+        <p class="story-loader-meta" dir="auto"><span>{etaLabel}</span></p>
       {/if}
       <span class="story-loader-wave" aria-hidden="true">{#each [0, 1, 2, 3, 4] as bar (bar)}<i style={`--bar:${bar}`}></i>{/each}</span>
     </div>

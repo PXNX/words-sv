@@ -225,6 +225,7 @@
   "story_loader_questions": "{count} Fragen",
   "story_loader_cast": "Mit {names}",
   "story_loader_voice": "Stimme: {voice}",
+  "story_loader_eta": "Noch {seconds}s",
   "story_loader_voices": "Stimmen werden geladen ?",
   "streak_goal_hint": "Wähle, wie viele Wörter ein Lerntag braucht.",
   "streak_goal_words": "{count} Wörter",
