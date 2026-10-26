@@ -9,12 +9,13 @@ import { settings, type NaturalModel } from '#lib/state/settings.svelte.js';
  * static/voices/piper-worker.js). Each language has one or more voice models, some of them with
  * several speakers, and every character gets a speaker of their own.
  *
- * German uses a small set of clear, single-speaker models instead of the huge audiobook model:
- * Thorsten reads the narration, and the cast is drawn from Thorsten, Karlsson (deep male), Kerstin
- * (warm female) and Eva (bright female). The old 236-speaker model had wonderful variety but also
- * speakers that were hard to understand; learners need every word. Characters who have to share a
- * voice move only a few percent away from it, which keeps them clear. Only animals still get a
- * cartoon pitch. Enzo's Italian accent is a small melodic lift, applied when dialects are on.
+ * German: Thorsten (high) reads the narration. The cast draws from the Thorsten Emotional model
+ * — the same clear, well-articulated speaker as the narrator, with eight emotional styles for
+ * variety. The old low-quality models (Kerstin, Karlsson, Eva) used the Piper 0.2.0 phoneme set
+ * and produced mumbly, hard-to-understand output; learners need every word. Characters who have
+ * to share a voice move only a few percent away from it, which keeps them clear. Only animals
+ * still get a cartoon pitch. Enzo's Italian accent is a small melodic lift, applied when dialects
+ * are on.
  */
 // `f0` is the voice's typical pitch in Hz; it decides which character gets which voice.
 type NaturalVoice = { model: string; speaker?: number; f0?: number };
@@ -22,9 +23,7 @@ type LanguageVoices = { narrator?: NaturalVoice; female: NaturalVoice[]; male: N
 
 const THORSTEN_HIGH = 'de/de_DE/thorsten/high/de_DE-thorsten-high.onnx';
 const THORSTEN = 'de/de_DE/thorsten/medium/de_DE-thorsten-medium.onnx';
-const KARLSSON = 'de/de_DE/karlsson/low/de_DE-karlsson-low.onnx';
-const KERSTIN = 'de/de_DE/kerstin/low/de_DE-kerstin-low.onnx';
-const EVA = 'de/de_DE/eva_k/x_low/de_DE-eva_k-x_low.onnx';
+const THORSTEN_EMOTIONAL = 'de/de_DE/thorsten_emotional/medium/de_DE-thorsten_emotional-medium.onnx';
 const CORI = 'en/en_GB/cori/high/en_GB-cori-high.onnx';
 const SERENA = 'it/it_IT/serena/high/it_IT-serena-high.onnx';
 const TETIANA = 'uk/uk_UA/tetiana/high/uk_UA-tetiana-high.onnx';
@@ -36,13 +35,16 @@ const SHARVARD = 'es/es_ES/sharvard/medium/es_ES-sharvard-medium.onnx';
 const FABER = 'pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx';
 const UKRAINIAN = 'uk/uk_UA/ukrainian_tts/medium/uk_UA-ukrainian_tts-medium.onnx';
 
-const germanFemale = [
-  { model: KERSTIN, speaker: 0, f0: 186 },
-  { model: EVA, speaker: 0, f0: 212 }
+// Thorsten Emotional has eight styles (amused, angry, disgusted, drunk, neutral, sleepy,
+// surprised, whisper). Each is a clear, well-articulated reading voice — the same speaker as the
+// narrator, so the cast never sounds mumbly. The style names are the model's own speaker IDs.
+const thorstenFemale = [
+  { model: THORSTEN_EMOTIONAL, speaker: 0, f0: 205 },
+  { model: THORSTEN_EMOTIONAL, speaker: 4, f0: 205 }
 ];
-const germanMale = [
-  { model: THORSTEN, speaker: 0, f0: 106 },
-  { model: KARLSSON, speaker: 0, f0: 92 }
+const thorstenMale = [
+  { model: THORSTEN_EMOTIONAL, speaker: 1, f0: 118 },
+  { model: THORSTEN_EMOTIONAL, speaker: 6, f0: 118 }
 ];
 const semanaFemale = [{ model: SEMANA, speaker: 0 }, { model: SEMANA, speaker: 3 }];
 const semanaMale = [{ model: SEMANA, speaker: 1 }, { model: SEMANA, speaker: 2 }];
@@ -53,8 +55,8 @@ const voices: Record<NaturalModel, Record<Language, LanguageVoices>> = {
   high: {
     de: {
       narrator: { model: THORSTEN_HIGH, speaker: 0 },
-      female: germanFemale,
-      male: germanMale
+      female: thorstenFemale,
+      male: thorstenMale
     },
     en: {
       narrator: { model: CORI },
@@ -88,8 +90,8 @@ const voices: Record<NaturalModel, Record<Language, LanguageVoices>> = {
   standard: {
     de: {
       narrator: { model: THORSTEN, speaker: 0 },
-      female: germanFemale,
-      male: germanMale
+      female: thorstenFemale,
+      male: thorstenMale
     },
     en: {
       narrator: { model: SEMANA, speaker: 0 },
@@ -124,9 +126,7 @@ const voices: Record<NaturalModel, Record<Language, LanguageVoices>> = {
 const modelMegabytes: Record<string, number> = {
   [THORSTEN_HIGH]: 114,
   [THORSTEN]: 63,
-  [KARLSSON]: 63,
-  [KERSTIN]: 63,
-  [EVA]: 21,
+  [THORSTEN_EMOTIONAL]: 63,
   [CORI]: 109,
   [SEMANA]: 77,
   [UPMC]: 77,
@@ -153,9 +153,7 @@ export function naturalMegabytes(language: Language, model: NaturalModel = setti
 const voiceNames: Record<string, string> = {
   [THORSTEN_HIGH]: 'Thorsten',
   [THORSTEN]: 'Thorsten',
-  [KARLSSON]: 'Karlsson',
-  [KERSTIN]: 'Kerstin',
-  [EVA]: 'Eva',
+  [THORSTEN_EMOTIONAL]: 'Thorsten',
   [CORI]: 'Cori',
   [SEMANA]: 'Semaine',
   [UPMC]: 'UPMC',
