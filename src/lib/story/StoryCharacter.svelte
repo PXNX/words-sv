@@ -1,10 +1,13 @@
 <script lang="ts">
   import type { CharacterId, HeldItem, Mood } from './stories';
+  import type { Avatar } from '#lib/profile/avatar.js';
+  import { settings } from '#lib/state/settings.svelte.js';
 
   // `mouth` (0–1) is driven by the lip sync while this character's line is read aloud; null otherwise.
   // `holding` puts an item in their hand (or, for Lilith, in a bowl at her paws); `still` stops the
-  // blinking and wagging, for the small faces in the transcript.
-  let { id, talking = false, label = '', mood: feeling = 'neutral', mouth = null, holding = null, still = false }: { id: CharacterId; talking?: boolean; label?: string; mood?: Mood; mouth?: number | null; holding?: HeldItem | null; still?: boolean } = $props();
+  // blinking and wagging, for the small faces in the transcript. `avatar` draws a learner's own
+  // character instead; Kumar is drawn as the learner's character whenever they have made one.
+  let { id, talking = false, label = '', mood: feeling = 'neutral', mouth = null, holding = null, still = false, avatar = null }: { id: CharacterId; talking?: boolean; label?: string; mood?: Mood; mouth?: number | null; holding?: HeldItem | null; still?: boolean; avatar?: Avatar | null } = $props();
   // The animals know the five basic moods; the finer ones map onto the closest of those.
   const animalMoods: Record<Mood, Mood> = { neutral: 'neutral', happy: 'happy', sad: 'sad', surprised: 'surprised', curious: 'curious', angry: 'sad', worried: 'sad', laughing: 'happy', sleepy: 'neutral' };
   const lipSynced = $derived(mouth !== null);
@@ -16,7 +19,8 @@
 
   // `build` widens the body (and, for 'wide', the face); `accent` colours an apron or a pair of
   // overalls; `checked` lays a check pattern over the top.
-  type Look = { skin: string; hair: string; hairStyle: 'bun' | 'short' | 'curly' | 'bob' | 'bald' | 'messy'; top: string; glasses?: boolean; monocle?: boolean; beard?: boolean; stubble?: boolean; moustache?: boolean | 'kaiser'; hat?: 'tyrolean' | 'crown' | 'police' | 'toque' | 'straw'; headphones?: boolean; shades?: boolean; pencil?: boolean; build?: 'wide' | 'muscular'; accent?: string; checked?: boolean; outfit: 'plain' | 'hoodie' | 'cardigan' | 'apron' | 'blazer' | 'tie' | 'tracht' | 'waistcoat' | 'police' | 'chef' | 'overalls' | 'tanktop' | 'scrubs' | 'tshirt' | 'shirt' };
+  // `face`, `eyes`, `nose` and `striped` are only picked by learners for their own character.
+  type Look = { skin: string; hair: string; hairStyle: 'bun' | 'short' | 'curly' | 'bob' | 'bald' | 'messy' | 'long' | 'spiky' | 'mohawk'; top: string; face?: Avatar['face']; eyes?: Avatar['eyes']; nose?: Avatar['nose']; striped?: boolean; glasses?: boolean; monocle?: boolean; beard?: boolean; stubble?: boolean; moustache?: boolean | 'kaiser'; hat?: 'tyrolean' | 'crown' | 'police' | 'toque' | 'straw'; headphones?: boolean; shades?: boolean; pencil?: boolean; build?: 'wide' | 'muscular'; accent?: string; checked?: boolean; outfit: 'plain' | 'hoodie' | 'cardigan' | 'apron' | 'blazer' | 'tie' | 'tracht' | 'waistcoat' | 'police' | 'chef' | 'overalls' | 'tanktop' | 'scrubs' | 'tshirt' | 'shirt' };
   // Animals are hand-drawn branches below rather than entries in `looks`.
   type Animal = 'bello' | 'crow' | 'seagull' | 'deer' | 'fox' | 'lilith' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake';
   const animals: readonly CharacterId[] = ['bello', 'crow', 'seagull', 'deer', 'fox', 'lilith', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
@@ -60,8 +64,21 @@
     banker: { skin: '#edc7a6', hair: '#8d8a83', hairStyle: 'short', top: '#fffdf7', glasses: true, moustache: true, outfit: 'tie' },
     wirt: { skin: '#e7b68f', hair: '#8c8378', hairStyle: 'short', top: '#fffdf7', moustache: true, build: 'wide', accent: '#2f5a8f', outfit: 'apron' }
   };
-  const look = $derived(animals.includes(id) ? null : looks[id as Exclude<CharacterId, Animal>]);
+  // A learner's character in the same terms as the cast: patterned shirts are a plain T-shirt with a
+  // check or stripes, a slept-in T-shirt is Kumar's, and the extra is one accessory or a crown.
+  function avatarLook(own: Avatar): Look {
+    const { extra } = own;
+    return {
+      skin: own.skin, hair: own.hair, hairStyle: own.hairStyle, top: own.top, face: own.face, eyes: own.eyes, nose: own.nose,
+      outfit: own.shirt === 'stripes' || own.shirt === 'checked' ? 'plain' : own.shirt, checked: own.shirt === 'checked', striped: own.shirt === 'stripes',
+      glasses: extra === 'glasses', shades: extra === 'shades', beard: extra === 'beard', moustache: extra === 'moustache', stubble: extra === 'stubble', headphones: extra === 'headphones', hat: extra === 'crown' ? 'crown' : undefined
+    };
+  }
+  const own = $derived(avatar ?? (id === 'kumar' ? settings.avatar : null));
+  const look = $derived(own ? avatarLook(own) : animals.includes(id) ? null : looks[id as Exclude<CharacterId, Animal>]);
   const wide = $derived(look?.build === 'wide');
+  // The head, and where the ears sit beside it, for each face shape (the cast all have round faces).
+  const head = $derived(wide ? { rx: 33, ry: 31, cy: 59, ear: 33 } : look?.face === 'oval' ? { rx: 26, ry: 32, cy: 57, ear: 27 } : look?.face === 'wide' ? { rx: 34, ry: 28, cy: 60, ear: 33 } : { rx: 30, ry: 30, cy: 58, ear: 30 });
   const mood = $derived(look ? feeling : animalMoods[feeling]);
 
   // Eyebrows carry most of a face's mood; mouths and eyes follow below. A question lifts one brow
@@ -153,15 +170,18 @@
     <!-- hair behind the head -->
     {#if look.hairStyle === 'bun'}<circle cx="60" cy="54" r="33" fill={look.hair} /><circle cx="60" cy="19" r={id === 'oma' ? 10 : 13} fill={look.hair} />{/if}
     {#if look.hairStyle === 'bob'}<path d="M26 58C26 32 42 21 60 21s34 11 34 37v30q-34 7-68 0Z" fill={look.hair} />{/if}
+    {#if look.hairStyle === 'long'}<path d="M25 58C25 32 42 21 60 21s35 11 35 37v54q-9 5-18 0V80H43v32q-9 5-18 0Z" fill={look.hair} />{/if}
     <!-- body: a muscular build shows bare shoulders and arms, the tank top goes over them -->
     {#if look.checked}<defs><pattern id="{uid}-check" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" fill={look.top} /><path d="M0 4.5h9M4.5 0v9" stroke="rgba(255,253,247,.4)" stroke-width="2.4" /></pattern></defs>{/if}
+    {#if look.striped}<defs><pattern id="{uid}-stripes" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill={look.top} /><path d="M0 2.5h10" stroke={look.top === '#fffdf7' ? '#172a45' : '#fffdf7'} stroke-opacity=".7" stroke-width="3.2" /></pattern></defs>{/if}
+    {@const fabric = look.checked ? `url(#${uid}-check)` : look.striped ? `url(#${uid}-stripes)` : look.top}
     {#if look.build === 'wide'}
-      <path d="M2 150c0-34 24-52 58-52s58 18 58 52Z" fill={look.checked ? `url(#${uid}-check)` : look.top} stroke="rgba(23,42,69,.18)" stroke-width="1.5" />
+      <path d="M2 150c0-34 24-52 58-52s58 18 58 52Z" fill={fabric} stroke="rgba(23,42,69,.18)" stroke-width="1.5" />
     {:else if look.build === 'muscular'}
       <path d="M2 150c0-24 6-38 22-43q18-6 36-6t36 6c16 5 22 19 22 43Z" fill={look.outfit === 'tanktop' ? look.skin : look.top} stroke="rgba(23,42,69,.18)" stroke-width="1.5" />
       <path d="M8 138q4-16 16-18M112 138q-4-16-16-18M30 106q8 4 14-2M90 106q-8 4-14-2" fill="none" stroke="rgba(23,42,69,.2)" stroke-width="2" stroke-linecap="round" />
     {:else}
-      <path d="M14 150c0-30 20-48 46-48s46 18 46 48Z" fill={look.checked ? `url(#${uid}-check)` : look.top} stroke="rgba(23,42,69,.18)" stroke-width="1.5" />
+      <path d="M14 150c0-30 20-48 46-48s46 18 46 48Z" fill={fabric} stroke="rgba(23,42,69,.18)" stroke-width="1.5" />
     {/if}
     {#if look.outfit === 'hoodie'}<path d="M40 106q20 14 40 0" fill="none" stroke="rgba(23,42,69,.35)" stroke-width="3" stroke-linecap="round" /><path d="M52 112v14M68 112v14" stroke="#fffdf7" stroke-width="2" stroke-linecap="round" />{/if}
     {#if look.outfit === 'cardigan'}<path d="M60 104v46" stroke="rgba(23,42,69,.3)" stroke-width="2" /><g fill="#fffdf7"><circle cx="48" cy="108" r="2.4" /><circle cx="54" cy="112" r="2.4" /><circle cx="60" cy="113.5" r="2.4" /><circle cx="66" cy="112" r="2.4" /><circle cx="72" cy="108" r="2.4" /></g>{/if}
@@ -212,8 +232,8 @@
     {/if}
     <!-- neck, ears, head; a wide build gets a fuller face and a double chin -->
     <rect x={wide ? 49 : 51} y="82" width={wide ? 22 : 18} height="22" rx="6" fill={look.skin} />
-    <circle cx={wide ? 27 : 30} cy="60" r="6" fill={look.skin} /><circle cx={wide ? 93 : 90} cy="60" r="6" fill={look.skin} />
-    <ellipse cx="60" cy={wide ? 59 : 58} rx={wide ? 33 : 30} ry={wide ? 31 : 30} fill={look.skin} />
+    <circle cx={60 - head.ear} cy="60" r="6" fill={look.skin} /><circle cx={60 + head.ear} cy="60" r="6" fill={look.skin} />
+    {#if look.face === 'square'}<rect x="31" y="28" width="58" height="60" rx="17" fill={look.skin} />{:else}<ellipse cx="60" cy={head.cy} rx={head.rx} ry={head.ry} fill={look.skin} />{/if}
     {#if wide}<path d="M47 87q13 6 26 0" fill="none" stroke="rgba(23,42,69,.2)" stroke-width="1.8" stroke-linecap="round" />{/if}
     {#if look.stubble}<path d="M32 64c2 18 14 27 28 27s26-9 28-27c-5 10-14 14-28 14s-23-4-28-14Z" fill={look.hair} opacity=".22" />{/if}
     {#if look.beard}<path d="M31 62c1 22 14 32 29 32s28-10 29-32c-5 12-15 17-29 17s-24-5-29-17Z" fill={look.hair} />{/if}
@@ -221,7 +241,9 @@
     {#if look.hairStyle === 'bun'}<path d="M28 58c0-24 15-34 32-34s32 10 32 34c-7-12-20-18-34-17-13 1-24 7-30 17Z" fill={look.hair} />{/if}
     {#if look.hairStyle === 'short'}<path d="M30 54c-1-21 14-31 31-31 18 0 31 11 29 31-5-11-15-16-29-16s-25 5-31 16Z" fill={look.hair} />{/if}
     {#if look.hairStyle === 'curly'}<g fill={look.hair}><circle cx="37" cy="44" r="10" /><circle cx="46" cy="33" r="11" /><circle cx="60" cy="29" r="12" /><circle cx="74" cy="33" r="11" /><circle cx="83" cy="44" r="10" /></g>{/if}
-    {#if look.hairStyle === 'bob'}<path d="M30 52c0-19 13-29 30-29s30 10 30 29q-30-9-60 0Z" fill={look.hair} />{/if}
+    {#if look.hairStyle === 'bob' || look.hairStyle === 'long'}<path d="M30 52c0-19 13-29 30-29s30 10 30 29q-30-9-60 0Z" fill={look.hair} />{/if}
+    {#if look.hairStyle === 'spiky'}<path d="M30 54 31 31l9 6 2-17 10 11 8-17 8 17 10-11 2 17 9-6 1 23c-5-11-15-16-30-16s-25 5-30 16Z" fill={look.hair} />{/if}
+    {#if look.hairStyle === 'mohawk'}<path d="M33 50c3-12 13-19 27-19s24 7 27 19c-7-7-16-10-27-10s-20 3-27 10Z" fill={look.hair} opacity=".3" /><path d="M51 38 50 22l5 4 1-15 4 9 4-9 1 15 5-4-1 16q-9-3-18 0Z" fill={look.hair} />{/if}
     {#if look.hairStyle === 'bald'}<g fill={look.hair}><ellipse cx="32" cy="52" rx="5" ry="10" /><ellipse cx="88" cy="52" rx="5" ry="10" /></g>{/if}
     {#if look.hairStyle === 'messy'}<path d="M30 55c-3-12 1-22 8-27l-3-10 9 6 2-12 8 9 6-11 4 11 9-8-1 11 10-4-4 10c6 6 7 15 5 25-3-7-7-11-12-12l2 7-8-8-1 8-6-9-4 8-4-8-4 7-2-6c-6 2-11 7-12 13Z" fill={look.hair} />{/if}
     {#if look.pencil}<path d="M84 50 99 41" stroke="#e6b52e" stroke-width="3.4" stroke-linecap="round" /><path d="m99 41 3.5-2" stroke="#4a3326" stroke-width="2" stroke-linecap="round" />{/if}
@@ -268,12 +290,25 @@
     {:else if mood === 'surprised'}
       <g class="story-eyes"><circle cx="49" cy="60" r="4.3" fill="#172a45" /><circle cx="71" cy="60" r="4.3" fill="#172a45" /><circle cx="50.3" cy="58.6" r="1.3" fill="#fffdf7" /><circle cx="72.3" cy="58.6" r="1.3" fill="#fffdf7" /></g>
     {:else}
-      <g class="story-eyes" fill="#172a45"><circle cx={mood === 'curious' ? 50 : 49} cy={mood === 'sad' || mood === 'angry' ? 61 : mood === 'curious' ? 59 : 60} r={mood === 'worried' ? 3.6 : 3.3} /><circle cx={mood === 'curious' ? 72 : 71} cy={mood === 'sad' || mood === 'angry' ? 61 : mood === 'curious' ? 59.5 : 60} r={mood === 'worried' ? 3.6 : 3.3} /></g>
+      <!-- open eyes: plain dots for the cast; learners can pick big round eyes, lashes or tiny dots -->
+      {@const lx = mood === 'curious' ? 50 : 49}
+      {@const rx = mood === 'curious' ? 72 : 71}
+      {@const ly = mood === 'sad' || mood === 'angry' ? 61 : mood === 'curious' ? 59 : 60}
+      {@const ry = mood === 'sad' || mood === 'angry' ? 61 : mood === 'curious' ? 59.5 : 60}
+      {#if look.eyes === 'big'}
+        <g class="story-eyes"><circle cx={lx} cy={ly} r="5.6" fill="#fffdf7" stroke="#172a45" stroke-width="1.4" /><circle cx={rx} cy={ry} r="5.6" fill="#fffdf7" stroke="#172a45" stroke-width="1.4" /><circle cx={lx + .6} cy={ly + .6} r="3.3" fill="#172a45" /><circle cx={rx + .6} cy={ry + .6} r="3.3" fill="#172a45" /><circle cx={lx + 1.6} cy={ly - .6} r="1.1" fill="#fffdf7" /><circle cx={rx + 1.6} cy={ry - .6} r="1.1" fill="#fffdf7" /></g>
+      {:else}
+        {@const r = look.eyes === 'tiny' ? 2.1 : mood === 'worried' ? 3.6 : 3.3}
+        <g class="story-eyes" fill="#172a45"><circle cx={lx} cy={ly} {r} /><circle cx={rx} cy={ry} {r} />{#if look.eyes === 'lashes'}<path d="M{lx - 3} {ly - 2.6}l-3-2.6M{lx - 1} {ly - 3.4}l-1.6-3.4M{rx + 3} {ry - 2.6}l3-2.6M{rx + 1} {ry - 3.4}l1.6-3.4" stroke="#172a45" stroke-width="1.4" stroke-linecap="round" />{/if}</g>
+      {/if}
     {/if}
     <path class="story-brows" d={brows[mood]} fill="none" stroke={look.hairStyle === 'bald' || id === 'oma' ? '#8a857d' : look.hair} stroke-width="2.8" stroke-linecap="round" />
     {#if look.glasses}<g fill="none" stroke="#172a45" stroke-width="1.8"><circle cx="49" cy="60" r="7.5" /><circle cx="71" cy="60" r="7.5" /><path d="M56.5 60h7" /></g>{/if}
     {#if look.monocle}<circle cx="71" cy="60" r="7.5" fill="rgba(255,253,247,.18)" stroke="#c9a227" stroke-width="1.8" /><path d="M78.5 61q6 16 0 36" fill="none" stroke="#c9a227" stroke-width="1" />{/if}
-    <path d="M60 62q-3 5 0 7" fill="none" stroke="rgba(23,42,69,.4)" stroke-width="1.8" stroke-linecap="round" />
+    {#if look.nose === 'button'}<circle cx="60" cy="67" r="2.4" fill="rgba(23,42,69,.28)" />
+    {:else if look.nose === 'round'}<ellipse cx="60" cy="67" rx="4.6" ry="3.8" fill="#e0645a" /><circle cx="58.6" cy="65.8" r="1.2" fill="rgba(255,253,247,.6)" />
+    {:else if look.nose === 'pointy'}<path d="M60 59l-6 10h6" fill="none" stroke="rgba(23,42,69,.45)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    {:else}<path d="M60 62q-3 5 0 7" fill="none" stroke="rgba(23,42,69,.4)" stroke-width="1.8" stroke-linecap="round" />{/if}
     {#if look.moustache === 'kaiser'}<path d="M60 71c-5-3-11-3-15 0-3 2-5 0-6-4 0 5 3 8 7 8 6 0 10-2 14-3 4 1 8 3 14 3 4 0 7-3 7-8-1 4-3 6-6 4-4-3-10-3-15 0Z" fill={look.hair} />
     {:else if look.moustache}<path d="M47 73q6-6 13-2 7-4 13 2-13 3-26 0Z" fill={look.hair} />{/if}
     {#if mood === 'happy'}
