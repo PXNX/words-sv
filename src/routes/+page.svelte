@@ -30,7 +30,7 @@
   import { readingCatalog } from '#lib/story/readingCatalog.js';
   import { readDueVocabulary } from '#lib/vocab/spacedRepetition.js';
   import { readMissedWords } from '#lib/story/missedWords.js';
-  import { dueReviewCount, dueReviewEntries } from '#lib/review/ledger.js';
+  import { dueReviewEntries } from '#lib/review/ledger.js';
   import IconSettings from '~icons/material-symbols/settings-rounded';
   import IconHelp from '~icons/material-symbols/question-mark-rounded';
   import IconFlame from '~icons/material-symbols/local-fire-department-rounded';
@@ -49,7 +49,6 @@
   import IconMenuBook from '~icons/material-symbols/menu-book-rounded';
   import IconHeadphones from '~icons/material-symbols/headphones-rounded';
   import IconExplore from '~icons/material-symbols/explore-rounded';
-  import IconReplay from '~icons/material-symbols/replay-rounded';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
 
@@ -131,7 +130,6 @@
     todayReading: (title: string, number: number) => m.today_reading({ title, number }, { locale: settings.interfaceLocale }),
     todayStreak: (count: number) => m.today_streak({ count }, { locale: settings.interfaceLocale }),
     todayMarked: (count: number) => m.today_marked({ count }, { locale: settings.interfaceLocale }),
-    repeatTitle: m.repeat_title({}, { locale: settings.interfaceLocale }),
     repeatDue: (count: number) => m.repeat_due({ count }, { locale: settings.interfaceLocale }),
     streakFreezes: (count: number) => m.streak_freezes({ count }, { locale: settings.interfaceLocale }),
     streakFreezeHint: m.streak_freeze_hint({}, { locale: settings.interfaceLocale }),
@@ -197,7 +195,6 @@
   // qualified. The goal itself can only be changed on the stats page.
   const goalProgress = $derived(settings.streak.qualified ? 1 : Math.min(1, settings.streak.vocabCorrect / Math.max(1, settings.streak.vocabularyGoal)));
   let todayPlan = $state<TodayPlan | null>(null);
-  let repeatDue = $state(0);
   let repairOffer = $state<StreakRepair | null>(null);
   const lilith = $derived(lilithMood(settings.streak, repairOffer));
   let wordDue = $state(0);
@@ -210,7 +207,6 @@
   // text, the daily streak and finally the words marked while reading.
   function refreshToday() {
     if (typeof localStorage === 'undefined') return;
-    repeatDue = dueReviewCount(settings.lang);
     repairOffer = settings.repairCandidate();
     wordDue = readDueVocabulary(settings.lang, settings.vocabularyLevel);
     grammarDue = dueReviewEntries(settings.lang).filter(({ entry }) => entry.source === 'grammar').length;
@@ -399,9 +395,6 @@
     </div>
     <h2 class="home-group-heading">{labels.vocabularyGroup}</h2>
     <div class="home-games">
-      {#if repeatDue > 0}
-        <a class="card-play {streakClass(null)}" href="/repeat"><span class="home-icon" aria-hidden="true"><IconReplay /></span><h2>{labels.repeatTitle}</h2><p>{labels.repeatDue(repeatDue)}</p></a>
-      {/if}
       <a class="card-play {streakClass('vocab')}" href="/vocab"><span class="home-icon" aria-hidden="true"><IconQuiz /></span><h2>{labels.wordQuiz}</h2><p>{labels.homeVocab}</p>{#if wordDue > 0}<span class="home-due-badge">{labels.repeatDue(wordDue)}</span>{/if}<TodayBadge done={modeDone(settings.streak, 'vocab')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
       <a class="card-play {streakClass('pronunciation')}" href="/pronunciation"><span class="home-icon" aria-hidden="true"><IconMic /></span><h2>{labels.pronunciation}</h2><p>{labels.homePronunciation}</p><TodayBadge done={modeDone(settings.streak, 'pronunciation')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
       <a class="card-play {streakClass('alltag')}" href="/alltag"><span class="home-icon" aria-hidden="true"><IconEmoji /></span><h2>{labels.alltag}</h2><p>{labels.homeAlltag}</p><TodayBadge done={modeDone(settings.streak, 'alltag')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
@@ -419,11 +412,11 @@
 </section>
 
 <style>
-  .home-view { flex:1 1 auto;min-height:0;display:grid;align-content:safe center;gap:clamp(1rem,4vw,1.8rem);padding:clamp(.6rem,3vw,1.1rem) clamp(.7rem,3.4vw,1.25rem);overflow-x:hidden;overflow-y:auto; }
+  .home-view { flex:1 1 auto;min-height:0;display:grid;grid-auto-rows:max-content;align-content:safe center;gap:clamp(1rem,4vw,1.8rem);padding:clamp(.6rem,3vw,1.1rem) clamp(.7rem,3.4vw,1.25rem);overflow-x:hidden;overflow-y:auto; }
   .home-header { display:grid;gap:.35rem;text-align:center; }.home-group-heading { margin:0 -.1rem -.35rem;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase; }.home-header p,.home-onboarding>p { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }.home-header h1,.home-onboarding h1 { margin:0;color:#172a45 !important;text-shadow:0 1px 0 rgba(255,253,247,.72);font-family:'DM Serif Display',serif;font-size:clamp(2.1rem,10vw,3.35rem);font-weight:400;letter-spacing:-.05em;line-height:.9; }.home-onboarding>span { color:#596477;font-family:'DM Sans',sans-serif;font-size:.73rem;font-weight:700;line-height:1.4; }
   .home-settings-link { justify-self:center; }
   /* overflow clips the row backgrounds to the rounded corners; min-height keeps the scrolling home grid from squeezing the card to nothing */
-  .home-daily { display:grid;justify-self:center;width:min(100%,27rem);min-height:min-content;overflow:hidden;rotate:-.4deg; }
+  .home-daily { position:relative;z-index:1;display:grid;justify-self:center;width:min(100%,27rem);min-height:min-content;overflow:hidden;rotate:-.4deg; }
   .home-daily > * + * { border-top:1.5px dashed rgba(23,42,69,.22); }
   .home-streak { display:grid;grid-template-columns:auto auto 1fr auto;gap:.7rem;align-items:center;width:100%;padding:.75rem .9rem;text-align:start;cursor:pointer; }
   .home-streak-detail .home-daily-kicker { color:#a45e38;font-size:.5rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase; }
