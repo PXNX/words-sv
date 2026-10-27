@@ -22,7 +22,6 @@
   import { LipSync } from './lipSync.svelte';
   import { WordMarks } from './wordMarks.svelte';
   import { clearNaturalAudio, naturalNarratorVoice, naturalReady, naturalState, naturalSupported, playNatural, prepareNatural, synthesizeNatural, type NaturalClip } from './naturalVoices.svelte';
-import { useRecordedVoices } from '#lib/voice/recordedVoices.js';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconVolumeOff from '~icons/material-symbols/volume-off-rounded';
   import IconCheck from '~icons/material-symbols/check-rounded';
@@ -203,8 +202,8 @@ import { useRecordedVoices } from '#lib/voice/recordedVoices.js';
   let reduceMotion = $state(false);
 
   const lang = $derived(settings.lang);
-  // Pre-recorded clips play instantly; on-device Piper voices need a download first.
-  const naturalVoices = $derived((settings.voiceQuality === 'natural' && (useRecordedVoices() || naturalReady(settings.lang))));
+  // Piper voices need a download first; Edge voices are ready at once.
+  const naturalVoices = $derived(settings.clipVoices && naturalReady(settings.lang));
   const name = $derived(settings.firstName);
   const currentIndex = $derived(revealed - 1);
   const current = $derived(story?.beats[currentIndex] ?? null);
@@ -342,7 +341,7 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
     audioTotal = playthrough.beats.length;
     audioGenerationStart = 0;
     audioGenerationEta = 0;
-    if (settings.voiceQuality === 'natural' && naturalSupported() && !useRecordedVoices()) {
+    if (settings.clipVoices && naturalSupported()) {
       audioReady = false;
       void prepareAndPresent(playthrough, castFor(playthrough), settings.lang, preparation, thisRun);
       return;
@@ -366,7 +365,7 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
     const total = progress.story.beats.length;
     audioTotal = total;
     audioDone = Math.min(progress.audioDone, total);
-    const resume = settings.voiceQuality === 'natural' && naturalSupported() && audioDone < total;
+    const resume = settings.clipVoices && naturalSupported() && audioDone < total;
     audioReady = !resume;
     if (resume) {
       const preparation = ++audioPreparation;
@@ -636,7 +635,7 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
     if (!audioGenerationStart) audioGenerationStart = performance.now();
     for (const [index, beat] of next.beats.entries()) {
       if (index < from) continue;
-      if (token !== audioPreparation || left || !naturalReady(language) || settings.voiceQuality !== 'natural') return;
+      if (token !== audioPreparation || left || !naturalReady(language) || !settings.clipVoices) return;
       await prepareBeatAudio(beat, cast, language, token);
       if (token !== audioPreparation || left) return;
       audioDone += 1;
@@ -654,7 +653,7 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
       await prepareNatural(language);
     } catch {}
     if (token !== audioPreparation || thisRun !== run || left) return false;
-    if (naturalReady(language) && settings.voiceQuality === 'natural') {
+    if (naturalReady(language) && settings.clipVoices) {
       try {
         await prepareStoryAudio(next, cast, language, token, from);
         // The loader disappears at this point; a small bing says the clips are ready to hear.
@@ -803,7 +802,7 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
   // With natural voices chosen, they are downloaded (once) or loaded as the story opens.
   $effect(() => {
     const language = settings.lang;
-    if (settings.voiceQuality === 'natural') untrack(() => void prepareNatural(language));
+    if (settings.clipVoices) untrack(() => void prepareNatural(language));
   });
 
   // Leaving the story (another page, or the tab going away) silences it at once: speech, sound

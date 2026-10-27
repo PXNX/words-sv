@@ -1,57 +1,70 @@
 /*
- * Microsoft Edge TTS — free, no API key, 19+ languages including German.
+ * Microsoft Edge TTS — free, no API key, Microsoft's neural voices (e.g. "de-DE-KatjaNeural").
  *
- * Edge's "read aloud" calls a WebSocket service at speech.platform.bing.com that is free for
- * anyone to use. This module speaks to that service directly from the browser: it opens a
- * WebSocket, sends the SSML, and streams back MP3 chunks, which are concatenated into one blob.
- * The voices are Microsoft's own neural voices (e.g. "de-DE-KatjaNeural", "de-DE-ConradNeural")
- * and are picked by the story cast from a list fetched once and cached.
+ * Edge's "read aloud" uses a WebSocket service at speech.platform.bing.com. This module speaks the
+ * same protocol from the browser: it sends a speech.config message and the SSML, then collects the
+ * MP3 frames until the service reports `turn.end`. Every binary frame starts with a two-byte header
+ * length and a text header, which are stripped before the audio is kept.
  *
- * Nothing is uploaded anywhere; the audio is synthesized in the browser and played locally.
- * The service is free but has no SLA — if Microsoft changes it, the story falls back to the
- * browser's own speechSynthesis (see StoryMode.svelte).
+ * The service is free but has no SLA, and it may refuse connections that don't come from Edge
+ * itself (it answered 403 while this was written). A failed request rejects, and the story falls
+ * back to the browser's own speechSynthesis (see StoryMode.svelte).
  */
-const WS_URL = 'wss://speech.platform.bing.com/speech/synthesize/context';
-const VOICE_LIST_URL = 'https://speech.platform.bing.com/speech/voices/list';
+const TOKEN = '6A5AA1D4EAFF4E9FB37E23D68491D6F4';
+const GEC_VERSION = '1-143.0.3650.75';
+const WS_URL = 'wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1';
+const VOICE_LIST_URL = `https://speech.platform.bing.com/consumer/speech/synthesize/readaloud/voices/list?trustedclienttoken=${TOKEN}`;
+// Windows file time (100 ns ticks since 1601) of the start of this five-minute window.
+const WINDOWS_EPOCH_OFFSET = 11644473600;
 
-let cachedVoices: { voiceId: string; language: string; gender: string; name: string }[] | null = null;
+export type EdgeVoice = { voiceId: string; locale: string; gender: 'female' | 'male' };
 
-function uuid() {
-  const bytes = new Uint8Array(16);
-  crypto.getRandomValues(bytes);
-  bytes[6] = (bytes[6] & 0x0f) | 0x40;
-  bytes[8] = (bytes[8] & 0x3f) | 0x80;
-  const hex = [...bytes].map((b) => b.toString(16).padStart(2, '0')).join('');
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+let cachedVoices: Promise<EdgeVoice[]> | null = null;
+
+function connectionId() {
+  return crypto.randomUUID().replaceAll('-', '');
 }
 
-function ssml(text: string, voice: string, rate: number) {
-  const ratePct = Math.round((rate - 1) * 100);
-  return `<?xml version="1.0" encoding="UTF-8"?><speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="de-DE"><voice name="${voice}"><prosody rate="${ratePct >= 0 ? '+' : ''}${ratePct}%">${text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</prosody></voice></speak>`;
+// The service expects a hash of the current five-minute window and the public token.
+async function secMsGec() {
+  let seconds = Math.floor(Date.now() / 1000) + WINDOWS_EPOCH_OFFSET;
+  seconds -= seconds % 300;
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${BigInt(seconds) * 10_000_000n}${TOKEN}`));
+  return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('').toUpperCase();
+}
+
+function escapeXml(text: string) {
+  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+}
+
+function percent(factor: number) {
+  const value = Math.round((factor - 1) * 100);
+  return `${value >= 0 ? '+' : ''}${value}%`;
+}
+
+function ssml(text: string, voice: EdgeVoice, rate: number, pitch: number) {
+  return `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='${voice.locale}'><voice name='${voice.voiceId}'><prosody pitch='${percent(pitch)}' rate='${percent(rate)}' volume='+0%'>${escapeXml(text)}</prosody></voice></speak>`;
 }
 
 /** Fetches Microsoft's voice list once and caches it. */
-export async function listEdgeVoices(): Promise<{ voiceId: string; language: string; gender: string; name: string }[]> {
-  if (cachedVoices) return cachedVoices;
-  const response = await fetch(VOICE_LIST_URL);
-  if (!response.ok) throw new Error(`Edge voices: ${response.status}`);
-  const data = await response.json();
-  cachedVoices = data.map((voice: { VoiceName: string; ShortName: string; Gender: string; Locale: string }) => ({
-    voiceId: voice.ShortName,
-    language: voice.Locale,
-    gender: voice.Gender,
-    name: voice.VoiceName
-  }));
+export function listEdgeVoices(): Promise<EdgeVoice[]> {
+  cachedVoices ??= fetch(VOICE_LIST_URL)
+    .then((response) => {
+      if (!response.ok) throw new Error(`Edge voices: ${response.status}`);
+      return response.json() as Promise<{ ShortName: string; Gender: string; Locale: string }[]>;
+    })
+    .then((voices) => voices.map((voice) => ({ voiceId: voice.ShortName, locale: voice.Locale, gender: voice.Gender === 'Male' ? 'male' as const : 'female' as const })));
+  void cachedVoices.catch(() => (cachedVoices = null));
   return cachedVoices;
 }
 
-export type EdgeClip = { blob: Blob; duration: number };
-
-/** Synthesizes text to an MP3 blob via the Edge TTS WebSocket. */
-export async function speakEdge(text: string, voiceId: string, rate = 1): Promise<EdgeClip> {
-  return new Promise<EdgeClip>((resolve, reject) => {
-    const ws = new WebSocket(WS_URL);
-    const audioChunks: BlobPart[] = [];
+/** Synthesizes text to MP3 bytes. `rate` and `pitch` are factors around 1. */
+export async function speakEdge(text: string, voice: EdgeVoice, rate = 1, pitch = 1): Promise<ArrayBuffer> {
+  const url = `${WS_URL}?TrustedClientToken=${TOKEN}&Sec-MS-GEC=${await secMsGec()}&Sec-MS-GEC-Version=${GEC_VERSION}&ConnectionId=${connectionId()}`;
+  return new Promise<ArrayBuffer>((resolve, reject) => {
+    const ws = new WebSocket(url);
+    ws.binaryType = 'arraybuffer';
+    const chunks: Uint8Array[] = [];
     let settled = false;
     const timer = window.setTimeout(() => finish(new Error('Edge TTS timed out')), 30000);
 
@@ -59,42 +72,34 @@ export async function speakEdge(text: string, voiceId: string, rate = 1): Promis
       if (settled) return;
       settled = true;
       clearTimeout(timer);
-      try { ws.close(); } catch {}
+      try { ws.close(); } catch { /* already closed */ }
       if (error) return reject(error);
-      const blob = new Blob(audioChunks, { type: 'audio/mpeg' });
-      resolve({ blob, duration: 0 });
+      const size = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+      if (!size) return reject(new Error('Edge TTS returned no audio'));
+      const audio = new Uint8Array(size);
+      let at = 0;
+      for (const chunk of chunks) {
+        audio.set(chunk, at);
+        at += chunk.length;
+      }
+      resolve(audio.buffer);
     }
 
     ws.onopen = () => {
-      const config = 'Content-Type:application/json; charset=utf-8\r\n\r\n';
-      const ssmlText = ssml(text, voiceId, rate);
-      const request = `X-Timestamp:${new Date().toUTCString()}\r\nX-RequestId:${uuid()}\r\nPath:synthesize\r\n\r\n`;
-      ws.send(config + request + ssmlText);
+      const timestamp = new Date().toString();
+      ws.send(`X-Timestamp:${timestamp}\r\nContent-Type:application/json; charset=utf-8\r\nPath:speech.config\r\n\r\n{"context":{"synthesis":{"audio":{"metadataoptions":{"sentenceBoundaryEnabled":"false","wordBoundaryEnabled":"false"},"outputFormat":"audio-24khz-48kbitrate-mono-mp3"}}}}`);
+      ws.send(`X-RequestId:${connectionId()}\r\nContent-Type:application/ssml+xml\r\nX-Timestamp:${timestamp}Z\r\nPath:ssml\r\n\r\n${ssml(text, voice, rate, pitch)}`);
     };
-
     ws.onmessage = (event: MessageEvent) => {
-      if (typeof event.data === 'string') return;
-      audioChunks.push(event.data);
+      if (typeof event.data === 'string') {
+        if (event.data.includes('Path:turn.end')) finish(null);
+        return;
+      }
+      const frame = new Uint8Array(event.data as ArrayBuffer);
+      const headerLength = (frame[0] << 8) | frame[1];
+      chunks.push(frame.subarray(2 + headerLength));
     };
-
-    ws.onclose = () => finish(null);
+    ws.onclose = () => finish(new Error('Edge TTS closed the connection'));
     ws.onerror = () => finish(new Error('Edge TTS connection failed'));
   });
-}
-
-/** Decodes an MP3 blob into seconds using the browser's audio engine. */
-export async function blobDuration(blob: Blob): Promise<number> {
-  if (typeof window === 'undefined' || !('Audio' in window)) return 0;
-  const url = URL.createObjectURL(blob);
-  try {
-    return await new Promise<number>((resolve, reject) => {
-      const audio = new Audio();
-      audio.preload = 'metadata';
-      audio.addEventListener('loadedmetadata', () => resolve(isFinite(audio.duration) ? audio.duration : 0));
-      audio.addEventListener('error', () => reject(new Error('audio decode failed')));
-      audio.src = url;
-    });
-  } finally {
-    URL.revokeObjectURL(url);
-  }
 }

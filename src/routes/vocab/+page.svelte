@@ -58,7 +58,7 @@
   const definitions = $derived(wordDefinitions[settings.lang]);
   // Natural word audio only plays when the learner chose the neural voices; every other setup keeps
   // the browser voice and sees no loading screen.
-  const naturalMode = $derived(settings.voiceQuality === 'natural' && naturalSupported());
+  const naturalMode = $derived(settings.clipVoices && naturalSupported());
   const bankKey = $derived(wordBankStateKey(settings.lang, settings.vocabularyLevel));
   const bankDone = $derived(wordBankState.done[bankKey] ?? 0);
   const bankTotal = $derived(wordBankState.total[bankKey] ?? words.length);
@@ -68,6 +68,8 @@
       : bankTotal ? bankDone / bankTotal : 0
   );
   const bankVoice = $derived(naturalNarratorVoice(settings.lang));
+  // While the voice model downloads, its own estimate says how much longer the wait is.
+  const bankEta = $derived(naturalState.remaining[settings.lang] ?? 0);
 
   let section = $state<string[]>([]);
   let queue = $state<string[]>([]);
@@ -355,6 +357,7 @@
       done={bankDone}
       total={bankTotal}
       voice={bankVoice}
+      eta={bankEta}
       oncontinue={skipAudioPrep}
     />
   {:else if repairMode && repairDone}

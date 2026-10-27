@@ -84,7 +84,7 @@
   // A finished session now ends on a recap; replaying or starting the next one is a choice.
   let sessionDone = $state(false);
 
-  const standardMode = $derived(settings.voiceQuality !== 'natural');
+  const standardMode = $derived(!settings.clipVoices);
   const download = $derived(Math.round((naturalState.progress[settings.lang] ?? 0) * 100));
   const downloadMegabytes = $derived(Math.round(naturalState.downloaded[settings.lang] ?? 0));
   const downloadTotalMegabytes = $derived(Math.round(naturalState.total[settings.lang] ?? naturalMegabytes(settings.lang)));
@@ -1030,6 +1030,7 @@
         done={bankDone}
         total={bankTotal}
         voice={bankVoice}
+        eta={downloadRemaining ?? 0}
         oncontinue={cancelWordBank}
       />
     {:else if phase === 'generating'}

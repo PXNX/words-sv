@@ -4,6 +4,7 @@ import { accentShape, animals, moodShape, priority, profiles, sharedPitch, type 
 import { speechChunks } from './speech';
 import { settings, type NaturalModel } from '#lib/state/settings.svelte.js';
 import { loadRecordedVoice, useRecordedVoices } from '#lib/voice/recordedVoices.js';
+import { listEdgeVoices, speakEdge, type EdgeVoice } from '#lib/voice/edgeTts.js';
 
 /*
  * Natural story voices: Piper neural voices generated on the learner's device (see
@@ -229,7 +230,8 @@ const preparation = new Map<Language, Promise<void>>();
 
 /** Downloads (once) and loads the voice models of a language, reporting progress in `naturalState`. */
 export function prepareNatural(language: Language): Promise<void> {
-  if (!naturalSupported()) return Promise.resolve();
+  // Edge voices are rendered by Microsoft's service; there is nothing to download first.
+  if (!naturalSupported() || settings.voiceQuality === 'edge') return Promise.resolve();
   if (naturalState.status[language] === 'ready' && naturalState.model[language] === settings.naturalModel) return Promise.resolve();
   const running = preparation.get(language);
   if (running) return running;
@@ -277,6 +279,7 @@ async function loadNatural(language: Language) {
 }
 
 export function naturalReady(language: Language) {
+  if (settings.voiceQuality === 'edge') return naturalSupported();
   return naturalState.status[language] === 'ready' && naturalState.model[language] === settings.naturalModel;
 }
 
@@ -377,7 +380,7 @@ export function clipFromPcm(samples: Int16Array, sampleRate: number, playbackRat
 
 /** Speaks a sentence in the speaker's natural voice; resolves with audio ready to play. */
 export function synthesizeNatural(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number): Promise<NaturalClip> {
-  const key = `${settings.naturalModel}|${language}|${baseRate}|${speaker}|${mood}|${cast.join()}|${text}`;
+  const key = `${settings.voiceQuality}|${settings.clipVoiceKey}|${language}|${baseRate}|${speaker}|${mood}|${cast.join()}|${text}`;
   const cached = renderedAudio.get(key);
   if (cached) return cached;
   const task = renderNatural(text, speaker, mood, cast, language, baseRate);
@@ -390,9 +393,10 @@ export function synthesizeNatural(text: string, speaker: Speaker, mood: Mood, ca
 
 async function renderNatural(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number): Promise<NaturalClip> {
   // Pre-recorded clips (one MP3 per character, generated offline) play back instantly and never
-  // need the Piper worker. They take priority over on-device synthesis.
+  // need the Piper worker. A clip only holds the character's reference sentence, so every other
+  // line is still synthesized on the device.
   if (useRecordedVoices() && speaker !== 'announcer') {
-    const buffer = await loadRecordedVoice(speaker);
+    const buffer = await loadRecordedVoice(speaker, text);
     if (buffer) return { buffer, playbackRate: 1, volume: 1 };
   }
   const chunks = speechChunks(text);
@@ -405,6 +409,7 @@ async function renderNatural(text: string, speaker: Speaker, mood: Mood, cast: S
 }
 
 async function synthesizeChunk(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number): Promise<NaturalClip> {
+  if (settings.voiceQuality === 'edge') return synthesizeEdge(text, speaker, mood, cast, language, baseRate);
   const profile = profiles[speaker];
   const { voice, shared, borrowed } = castNatural(cast, language).get(speaker) ?? castNatural([speaker], language).get(speaker)!;
   const shape = moodShape[mood];
@@ -421,6 +426,49 @@ async function synthesizeChunk(text: string, speaker: Speaker, mood: Mood, cast:
   const buffer = audio().createBuffer(1, pcm.length, reply.sampleRate!);
   buffer.copyToChannel(pcm as Float32Array<ArrayBuffer>, 0);
   return { buffer, playbackRate, volume: Math.min(1, profile.volume * shape.volume) };
+}
+
+// Edge voices: the locale each language prefers, then its regional variants (de-AT, de-CH), which
+// give the cast more distinct people.
+const edgeLocales: Record<Language, string> = { de: 'de-DE', en: 'en-GB', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', pt: 'pt-BR', uk: 'uk-UA' };
+type EdgeCasting = Map<Speaker, { voice: EdgeVoice; shared: boolean }>;
+let edgeCached: { key: string; casting: EdgeCasting } | null = null;
+
+// Same idea as castNatural: the narrator first, then each character takes the least used voice of
+// their gender, so voices are only shared once every one of them has a speaker.
+async function castEdge(cast: Speaker[], language: Language): Promise<EdgeCasting> {
+  const speakers = priority.filter((speaker) => speaker === 'narrator' || cast.includes(speaker));
+  const key = `${language}|${speakers.join()}`;
+  if (edgeCached?.key === key) return edgeCached.casting;
+  const primary = edgeLocales[language] ?? language;
+  const all = (await listEdgeVoices())
+    .filter((voice) => voice.locale.toLowerCase().startsWith(`${language}-`))
+    .sort((left, right) => Number(right.locale === primary) - Number(left.locale === primary));
+  if (!all.length) throw new Error(`no Edge voices for ${language}`);
+  const uses = new Map<EdgeVoice, number>();
+  const casting: EdgeCasting = new Map();
+  for (const speaker of speakers) {
+    const own = all.filter((voice) => voice.gender === profiles[speaker].gender);
+    const pool = own.length ? own : all;
+    const voice = pool.reduce((best, candidate) => ((uses.get(candidate) ?? 0) < (uses.get(best) ?? 0) ? candidate : best));
+    uses.set(voice, (uses.get(voice) ?? 0) + 1);
+    casting.set(speaker, { voice, shared: false });
+  }
+  for (const entry of casting.values()) entry.shared = (uses.get(entry.voice) ?? 0) > 1;
+  edgeCached = { key, casting };
+  return casting;
+}
+
+async function synthesizeEdge(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number): Promise<NaturalClip> {
+  const profile = profiles[speaker];
+  const { voice, shared } = (await castEdge(cast, language)).get(speaker) ?? (await castEdge([speaker], language)).get(speaker)!;
+  const shape = moodShape[mood];
+  const accent = accentShape(profile.dialect, settings.dialects);
+  const pitch = animals.includes(speaker) ? Math.min(1.4, Math.max(0.75, profile.pitch)) : (shared ? sharedPitch(profile.pitch) : 1) * (profile.natural?.pitch ?? 1) * accent.pitch;
+  const rate = Math.max(0.85, Math.min(1.15, baseRate * (profile.natural?.rate ?? profile.rate) * shape.rate * accent.rate));
+  const mp3 = await speakEdge(text, voice, rate, pitch);
+  const buffer = await audio().decodeAudioData(mp3);
+  return { buffer, playbackRate: 1, volume: Math.min(1, profile.volume * shape.volume) };
 }
 
 /** Renders clips one after another into a single buffer, with optional silence before and after each. */

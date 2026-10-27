@@ -84,7 +84,7 @@
   let speechToken = 0;
   let stopNatural: () => void = () => {};
 
-  const canPlay = $derived(speechSupported || (settings.voiceQuality === 'natural' && naturalAvailable));
+  const canPlay = $derived(speechSupported || (settings.clipVoices && naturalAvailable));
   const candidates = $derived([...new Set(words.map((word) => word.toLocaleUpperCase()).filter((word) => Boolean(wordMetadata[settings.lang][word]))) ]);
   const spelling = $derived(currentWord ? wordMetadata[settings.lang][currentWord]?.spelling ?? currentWord : '');
   const definition = $derived(currentWord ? wordDefinitions[settings.lang][currentWord] ?? null : null);
@@ -118,7 +118,7 @@
       speaking = false;
       if (listening && matchState !== 'correct' && !recognition) startRecognition();
     };
-    if (settings.voiceQuality === 'natural' && naturalAvailable) {
+    if (settings.clipVoices && naturalAvailable) {
       await prepareNatural(settings.lang);
       if (token !== speechToken) return;
       if (naturalReady(settings.lang)) {
@@ -389,7 +389,7 @@
   });
   $effect(() => {
     // A new language needs its natural voice model, if that quality is selected.
-    if (settings.voiceQuality === 'natural') void prepareNatural(settings.lang);
+    if (settings.clipVoices) void prepareNatural(settings.lang);
   });
   $effect(() => {
     // Restart listening for every new word so the learner never has to press a button.

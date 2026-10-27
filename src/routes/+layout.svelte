@@ -40,7 +40,7 @@ import StartupLoader from '#lib/StartupLoader.svelte';
 		const language = settings.lang;
 		if (language === previousLanguage) return;
 		previousLanguage = language;
-		if (settings.voiceQuality === 'natural') void prepareNatural(language);
+		if (settings.clipVoices) void prepareNatural(language);
 	});
 
 	onNavigate((navigation) => {

@@ -4,18 +4,20 @@
   import type { VocabularyLevel } from '#lib/data/vocabulary.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
 
-  let { level, label, progress, done, total, voice, oncontinue }: {
+  let { level, label, progress, done, total, voice, eta = 0, oncontinue }: {
     level: VocabularyLevel;
     label: string;
     progress: number;
     done: number;
     total: number;
     voice: string;
+    eta?: number;
     oncontinue?: () => void;
   } = $props();
   const percent = $derived(Math.round(Math.min(1, Math.max(0, progress)) * 100));
   const progressLabel = $derived(total > 0 ? m.word_bank_progress({ done: String(done), total: String(total) }, { locale: settings.interfaceLocale }) : '');
   const voiceLabel = $derived(voice ? m.story_loader_voice({ voice }, { locale: settings.interfaceLocale }) : '');
+  const etaLabel = $derived(eta > 0 ? m.story_loader_eta({ seconds: String(Math.ceil(eta)) }, { locale: settings.interfaceLocale }) : '');
   const continueLabel = $derived(m.word_bank_continue({}, { locale: settings.interfaceLocale }));
 </script>
 
@@ -37,6 +39,9 @@
       <p class="word-bank-hint" dir="auto">{m.word_bank_hint({}, { locale: settings.interfaceLocale })}</p>
       {#if voiceLabel}
         <p class="word-bank-voice" dir="auto">{voiceLabel}</p>
+      {/if}
+      {#if etaLabel}
+        <p class="word-bank-voice" dir="auto">{etaLabel}</p>
       {/if}
       <span class="word-bank-wave" aria-hidden="true">{#each [0, 1, 2, 3, 4] as bar (bar)}<i style={`--bar:${bar}`}></i>{/each}</span>
       {#if oncontinue && total > 0 && done < total}
