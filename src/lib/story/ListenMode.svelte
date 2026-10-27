@@ -81,7 +81,7 @@
   let sounds = $state<SavedSound[]>([]);
   let lastSoundAt = -1;
   let liveToken = 0;
-  // A finished session now ends on a recap; replaying or starting the next one is a choice.
+  // A finished session ends on a recap; between saved audios the player carries on by itself.
   let sessionDone = $state(false);
 
   const standardMode = $derived(!settings.clipVoices);
