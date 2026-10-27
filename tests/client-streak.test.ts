@@ -11,7 +11,7 @@ globalThis.localStorage = {
 	length: 0
 } as Storage;
 
-const { applyLocalEvent, ALLTAG_GOAL, dateKey, modeDone, previousDate, readStreak, repairCandidate, repairStreak, dismissRepair, lilithMood } = await import('../src/lib/clientStreak.js');
+const { applyLocalEvent, ALLTAG_GOAL, FREEZE_EVERY, MAX_FREEZES, rewardReady, dateKey, modeDone, previousDate, readStreak, repairCandidate, repairStreak, dismissRepair, lilithMood } = await import('../src/lib/clientStreak.js');
 
 const NOW = new Date('2026-10-26T12:00:00Z');
 const TODAY = dateKey(NOW);
@@ -99,6 +99,49 @@ describe('every game mode counts toward the streak', () => {
 		expect(alltag.qualified).toBe(true);
 		expect(alltag.streakCount).toBe(1);
 		expect(modeDone(alltag, 'alltag')).toBe(true);
+	});
+});
+
+describe('daily reward', () => {
+	beforeEach(() => store.clear());
+
+	const qualified = (overrides: Partial<ClientStreak> = {}): ClientStreak => ({ ...readStreak(NOW), qualified: true, lastQualifiedDay: TODAY, ...overrides });
+
+	test('a reward only waits once today is qualified', () => {
+		expect(rewardReady({ ...readStreak(NOW), qualified: false })).toBe(false);
+		expect(rewardReady(qualified())).toBe(true);
+	});
+
+	test('collecting adds one ember and only once a day', () => {
+		const once = applyLocalEvent(qualified({ embers: 2 }), 'reward_collected', NOW);
+		expect(once.embers).toBe(3);
+		expect(once.rewardCollected).toBe(true);
+		expect(applyLocalEvent(once, 'reward_collected', NOW).embers).toBe(3);
+	});
+
+	test('a full set of embers forges a freeze', () => {
+		const forged = applyLocalEvent(qualified({ embers: FREEZE_EVERY - 1, freezes: 0 }), 'reward_collected', NOW);
+		expect(forged.freezes).toBe(1);
+		expect(forged.embers).toBe(0);
+	});
+
+	test('embers stay full while every freeze slot is stocked', () => {
+		const full = applyLocalEvent(qualified({ embers: FREEZE_EVERY - 1, freezes: MAX_FREEZES }), 'reward_collected', NOW);
+		expect(full.freezes).toBe(MAX_FREEZES);
+		expect(full.embers).toBe(FREEZE_EVERY);
+	});
+
+	test('qualifying no longer hands out freezes by itself', () => {
+		const state = applyLocalEvent({ ...readStreak(NOW), qualified: false, qualifiedDays: FREEZE_EVERY - 1, freezes: 0 }, 'wordle_completed', NOW);
+		expect(state.qualified).toBe(true);
+		expect(state.freezes).toBe(0);
+	});
+
+	test('an old save keeps its progress toward the next freeze and a new day resets the claim', () => {
+		seed({ qualifiedDays: 40, rewardCollected: true });
+		const state = readStreak(NOW);
+		expect(state.embers).toBe(40 % FREEZE_EVERY);
+		expect(state.rewardCollected).toBe(false);
 	});
 });
 

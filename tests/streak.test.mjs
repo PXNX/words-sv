@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createRemindersEndpoint, cronAuthorized } from '../api/cron/reminders.mjs';
-import { applyStreakEvent, reminderTypes, streakSummary, ALLTAG_GOAL, GRAMMAR_GOAL, PRONUNCIATION_GOAL, VOCABULARY_GOAL } from '../api/_lib/streak.mjs';
+import { applyStreakEvent, collectReward, reminderTypes, streakSummary, ALLTAG_GOAL, GRAMMAR_GOAL, PRONUNCIATION_GOAL, VOCABULARY_GOAL } from '../api/_lib/streak.mjs';
 
 function responseCapture() {
 	const result = { statusCode: 200, body: null };
@@ -107,4 +107,22 @@ test('external cron handler rejects absent credentials and accepts the configure
 	const good = responseCapture();
 	await handler({ method: 'GET', headers: { authorization: `Bearer ${secret}` } }, good);
 	assert.deepEqual(good.result, { statusCode: 200, body: { ok: true, attempted: 0, delivered: 0 } });
+});
+
+test('collecting the daily reward adds an ember once and a full set forges a freeze', () => {
+	const now = new Date('2026-08-26T12:00:00Z');
+	let state = applyStreakEvent({ day_key: '2026-08-26', streak_count: 0, last_qualified_day: null, qualified_days: 6, freezes: 0 }, 'UTC', 'wordle_completed', now);
+	assert.equal(state.freezes, 0);
+	assert.equal(state.embers, 6);
+	state = collectReward(state);
+	assert.equal(state.freezes, 1);
+	assert.equal(state.embers, 0);
+	assert.equal(state.rewardCollected, true);
+	assert.deepEqual(collectReward(state), state);
+});
+
+test('an unqualified day has no reward to collect', () => {
+	const state = applyStreakEvent({ day_key: '2026-08-26', streak_count: 0 }, 'UTC', 'reward_collected', new Date('2026-08-26T12:00:00Z'));
+	assert.equal(state.rewardCollected, false);
+	assert.equal(state.embers, 0);
 });

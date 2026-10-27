@@ -1,6 +1,6 @@
 import { getDatabase } from '../_lib/database.mjs';
 import { isMethod, readJson, respond } from '../_lib/http.mjs';
-import { applyStreakEvent, isSupportedTimeZone, normalizeReminderLocale, normalizeVocabularyGoal, stateForToday, streakSummary } from '../_lib/streak.mjs';
+import { applyStreakEvent, collectReward, isSupportedTimeZone, normalizeReminderLocale, normalizeVocabularyGoal, stateForToday, streakSummary } from '../_lib/streak.mjs';
 
 const events = new Set([
 	'sync',
@@ -14,9 +14,29 @@ const events = new Set([
 	'listen_completed',
 	'pronunciation_practised',
 	'hangman_completed',
-	'alltag_correct'
+	'alltag_correct',
+	'reward_collected'
 ]);
 const validDeviceId = (value) => typeof value === 'string' && /^[a-zA-Z0-9_-]{16,64}$/.test(value);
+
+const COLUMNS = ['device_id', 'timezone', 'locale', 'day_key', 'vocab_correct', 'circle_completed', 'definitions_completed', 'wordle_completed', 'reading_completed', 'story_completed', 'grammar_correct', 'listen_completed', 'pronunciation_attempts', 'hangman_completed', 'alltag_correct', 'current_qualified', 'last_qualified_day', 'streak_count', 'best_streak', 'vocabulary_goal', 'freezes', 'qualified_days', 'reward_collected', 'embers'];
+const UPSERT = `INSERT INTO wordcircle_streak_devices (${COLUMNS.join(', ')})
+	VALUES (${COLUMNS.map(() => '?').join(', ')})
+	ON DUPLICATE KEY UPDATE ${COLUMNS.slice(1).map((column) => `${column} = VALUES(${column})`).join(', ')}`;
+// Databases created before the daily reward get its columns on first use, so a deploy never
+// breaks streak syncing while the migration in database-schema.sql is still pending.
+const REWARD_MIGRATION = 'ALTER TABLE wordcircle_streak_devices ADD COLUMN reward_collected TINYINT(1) NOT NULL DEFAULT 0, ADD COLUMN embers TINYINT UNSIGNED NULL';
+
+async function upsert(db, row) {
+	const values = COLUMNS.map((column) => row[column]);
+	try {
+		await db.execute(UPSERT, values);
+	} catch (error) {
+		if (error?.code !== 'ER_BAD_FIELD_ERROR') throw error;
+		await db.execute(REWARD_MIGRATION).catch((migrationError) => { if (migrationError?.code !== 'ER_DUP_FIELDNAME') throw migrationError; });
+		await db.execute(UPSERT, values);
+	}
+}
 
 function counter(value, max = 999) {
 	const number = Number(value);
@@ -57,64 +77,38 @@ export default async function streakProgress(req, res) {
 				merged.streakCount = Math.max(merged.streakCount, counter(snapshot.streakCount, 100000));
 			}
 		}
-		const next = applyStreakEvent(merged, timeZone, event);
+		let next = applyStreakEvent(merged, timeZone, event);
+		// An ember collected offline is collected here too; collecting is idempotent per day.
+		if (snapshot?.rewardCollected && snapshot.dateKey === next.dateKey) next = collectReward(next);
 		const bestStreak = Math.max(counter(rows[0]?.best_streak), counter(snapshot?.bestStreak, 100000), next.bestStreak, next.streakCount);
-		await db.execute(
-			`INSERT INTO wordcircle_streak_devices (device_id, timezone, locale, day_key, vocab_correct, circle_completed, definitions_completed, wordle_completed, reading_completed, story_completed, grammar_correct, listen_completed, pronunciation_attempts, hangman_completed, alltag_correct, current_qualified, last_qualified_day, streak_count, best_streak, vocabulary_goal, freezes, qualified_days)
-			 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-			 ON DUPLICATE KEY UPDATE timezone = VALUES(timezone), locale = VALUES(locale), day_key = VALUES(day_key), vocab_correct = VALUES(vocab_correct), circle_completed = VALUES(circle_completed), definitions_completed = VALUES(definitions_completed), wordle_completed = VALUES(wordle_completed), reading_completed = VALUES(reading_completed), story_completed = VALUES(story_completed), grammar_correct = VALUES(grammar_correct), listen_completed = VALUES(listen_completed), pronunciation_attempts = VALUES(pronunciation_attempts), hangman_completed = VALUES(hangman_completed), alltag_correct = VALUES(alltag_correct), current_qualified = VALUES(current_qualified), last_qualified_day = VALUES(last_qualified_day), streak_count = VALUES(streak_count), best_streak = VALUES(best_streak), vocabulary_goal = VALUES(vocabulary_goal), freezes = VALUES(freezes), qualified_days = VALUES(qualified_days)`,
-			[
-				deviceId,
-				timeZone,
-				reminderLocale,
-				next.dateKey,
-				next.vocabCorrect,
-				next.circleCompleted ? 1 : 0,
-				next.definitionsCompleted ? 1 : 0,
-				next.wordleCompleted ? 1 : 0,
-				next.readingCompleted ? 1 : 0,
-				next.storyCompleted ? 1 : 0,
-				next.grammarCorrect,
-				next.listenCompleted ? 1 : 0,
-				next.pronunciationAttempts,
-				next.hangmanCompleted ? 1 : 0,
-				next.alltagCorrect,
-				next.qualified ? 1 : 0,
-				next.lastQualifiedDay,
-				next.streakCount,
-				bestStreak,
-				next.vocabularyGoal,
-				next.freezes,
-				next.qualifiedDays
-			]
-		);
-		return respond(res, 200, {
-			ok: true,
-			streak: streakSummary(
-				{
-					day_key: next.dateKey,
-					vocab_correct: next.vocabCorrect,
-					circle_completed: next.circleCompleted,
-					definitions_completed: next.definitionsCompleted,
-					wordle_completed: next.wordleCompleted,
-					reading_completed: next.readingCompleted,
-					story_completed: next.storyCompleted,
-					grammar_correct: next.grammarCorrect,
-					listen_completed: next.listenCompleted,
-					pronunciation_attempts: next.pronunciationAttempts,
-					hangman_completed: next.hangmanCompleted,
-					alltag_correct: next.alltagCorrect,
-					current_qualified: next.qualified,
-					last_qualified_day: next.lastQualifiedDay,
-					streak_count: next.streakCount,
-					best_streak: bestStreak,
-					vocabulary_goal: next.vocabularyGoal,
-					freezes: next.freezes,
-					qualified_days: next.qualifiedDays
-				},
-				timeZone
-			)
-		});
+		const row = {
+			device_id: deviceId,
+			timezone: timeZone,
+			locale: reminderLocale,
+			day_key: next.dateKey,
+			vocab_correct: next.vocabCorrect,
+			circle_completed: next.circleCompleted ? 1 : 0,
+			definitions_completed: next.definitionsCompleted ? 1 : 0,
+			wordle_completed: next.wordleCompleted ? 1 : 0,
+			reading_completed: next.readingCompleted ? 1 : 0,
+			story_completed: next.storyCompleted ? 1 : 0,
+			grammar_correct: next.grammarCorrect,
+			listen_completed: next.listenCompleted ? 1 : 0,
+			pronunciation_attempts: next.pronunciationAttempts,
+			hangman_completed: next.hangmanCompleted ? 1 : 0,
+			alltag_correct: next.alltagCorrect,
+			current_qualified: next.qualified ? 1 : 0,
+			last_qualified_day: next.lastQualifiedDay,
+			streak_count: next.streakCount,
+			best_streak: bestStreak,
+			vocabulary_goal: next.vocabularyGoal,
+			freezes: next.freezes,
+			qualified_days: next.qualifiedDays,
+			reward_collected: next.rewardCollected ? 1 : 0,
+			embers: next.embers
+		};
+		await upsert(db, row);
+		return respond(res, 200, { ok: true, streak: streakSummary(row, timeZone) });
 	} catch (error) {
 		return respond(res, 503, { ok: false, error: error instanceof Error ? error.message : 'streak_unavailable' });
 	}

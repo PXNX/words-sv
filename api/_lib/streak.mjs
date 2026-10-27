@@ -55,6 +55,12 @@ function numberField(value, fallback = 0) {
 	return Number.isSafeInteger(number) && number >= 0 ? number : fallback;
 }
 
+// Rows from before the daily reward keep their progress toward the next freeze.
+function embersField(stored) {
+	const embers = stored?.embers;
+	return embers === undefined || embers === null ? numberField(stored?.qualified_days ?? stored?.qualifiedDays) % FREEZE_EVERY : Math.min(FREEZE_EVERY, numberField(embers));
+}
+
 export function minutesUntilNextLocalDate(timeZone, now = new Date()) {
 	const currentKey = dateKeyFor(timeZone, now);
 	const start = now.getTime();
@@ -94,7 +100,9 @@ export function stateForToday(stored, timeZone, now = new Date()) {
 			lastQualifiedDay: stored?.last_qualified_day ?? stored?.lastQualifiedDay ?? null,
 			vocabularyGoal,
 			freezes: Math.min(MAX_FREEZES, numberField(stored?.freezes)),
-			qualifiedDays: numberField(stored?.qualified_days ?? stored?.qualifiedDays)
+			qualifiedDays: numberField(stored?.qualified_days ?? stored?.qualifiedDays),
+			rewardCollected: Boolean(stored?.reward_collected ?? stored?.rewardCollected),
+			embers: embersField(stored)
 		};
 	}
 	let lastQualifiedDay = stored?.last_qualified_day ?? stored?.lastQualifiedDay ?? null;
@@ -122,7 +130,9 @@ export function stateForToday(stored, timeZone, now = new Date()) {
 		lastQualifiedDay,
 		vocabularyGoal,
 		freezes,
-		qualifiedDays: numberField(stored?.qualified_days ?? stored?.qualifiedDays)
+		qualifiedDays: numberField(stored?.qualified_days ?? stored?.qualifiedDays),
+		rewardCollected: false,
+		embers: embersField(stored)
 	};
 }
 
@@ -152,10 +162,21 @@ function settleQualification(state) {
 		return next;
 	}
 	next.qualifiedDays = state.qualifiedDays + 1;
-	if (next.qualifiedDays % FREEZE_EVERY === 0) next.freezes = Math.min(MAX_FREEZES, state.freezes + 1);
 	next.streakCount = state.lastQualifiedDay === previousDateKey(state.dateKey) ? state.streakCount + 1 : 1;
 	next.lastQualifiedDay = state.dateKey;
 	next.bestStreak = Math.max(state.bestStreak ?? 0, next.streakCount);
+	return next;
+}
+
+/** Collects today's ember once; a full set turns into a freeze as soon as there is room for one.
+ * @param {any} state */
+export function collectReward(state) {
+	if (!state.qualified || state.rewardCollected) return state;
+	const next = { ...state, rewardCollected: true, embers: Math.min(FREEZE_EVERY, state.embers + 1) };
+	if (next.embers >= FREEZE_EVERY && next.freezes < MAX_FREEZES) {
+		next.freezes += 1;
+		next.embers = 0;
+	}
 	return next;
 }
 
@@ -172,6 +193,7 @@ export function applyStreakEvent(stored, timeZone, event, now = new Date()) {
 	if (event === 'pronunciation_practised') state.pronunciationAttempts += 1;
 	if (event === 'hangman_completed') state.hangmanCompleted = true;
 	if (event === 'alltag_correct') state.alltagCorrect += 1;
+	if (event === 'reward_collected') return collectReward(state);
 	return settleQualification(state);
 }
 
