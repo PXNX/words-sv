@@ -5,6 +5,8 @@ import { recordActivity, type ActivityKind } from '#lib/progress/activity.js';
 import { publishReminderState } from '#lib/pwaReminders.js';
 import { reminderExtras } from '#lib/reminders/reminderSnapshot.js';
 import type { Locale } from '#lib/paraglide/runtime.js';
+import { parseAvatar, type Avatar } from '#lib/profile/avatar.js';
+import { setKumarStandIn } from '#lib/story/standIn.js';
 
 const ACTIVITY_BY_EVENT: Partial<Record<StreakEvent, ActivityKind>> = {
   vocab_correct: 'vocab',
@@ -19,9 +21,11 @@ const ACTIVITY_BY_EVENT: Partial<Record<StreakEvent, ActivityKind>> = {
 export type Theme = 'light' | 'dark';
 export type InterfaceLocale = Locale;
 export type WordleLength = 3 | 4 | 5 | 6 | 7;
-// Story voices: the browser's own ('standard'), neural voices generated on the device ('natural'),
-// or the MiniMax cloud API ('minimax'), which needs an API key but gives the most natural speech.
-export type VoiceQuality = 'standard' | 'natural' | 'minimax';
+// Story voices, one per way of playing speech described in tts.md: the browser's own ('standard'),
+// Piper neural voices generated on the device ('natural'), pre-recorded Piper clips with live Piper
+// for every other line ('recorded'), or Microsoft's free Edge neural voices over the network ('edge').
+export type VoiceQuality = 'standard' | 'natural' | 'recorded' | 'edge';
+export const voiceQualities: readonly VoiceQuality[] = ['standard', 'natural', 'recorded', 'edge'];
 // Natural voice packs. Both run on the device; the high packs are larger and take longer to load.
 export type NaturalModel = 'standard' | 'high';
 
@@ -42,7 +46,6 @@ const VIBRATION_KEY = 'wordcircle-vibration';
 const SOUND_KEY = 'wordcircle-sound';
 const VOICE_QUALITY_KEY = 'wordcircle-voice-quality-v1';
 const NATURAL_MODEL_KEY = 'wordcircle-natural-model-v1';
-const MINIMAX_KEY = 'wordcircle-minimax-api-key-v1';
 const DIALECTS_KEY = 'wordcircle-dialects-v1';
 const BACKWARD_WORDS_KEY = 'wordcircle-backward-words-v1';
 const VOCABULARY_LEVEL_KEY = 'wordcircle-vocabulary-level-v1';
@@ -52,6 +55,7 @@ const INTERFACE_LOCALE_KEY = 'wordcircle-interface-locale-v1';
 const ROUND_TOTAL_KEY = 'wordcircle-completed-rounds-v1';
 const WORDLE_LENGTH_KEY = 'wordcircle-wordle-length-v1';
 const FIRST_NAME_KEY = 'wordcircle-first-name-v1';
+const AVATAR_KEY = 'wordcircle-avatar-v1';
 export const FIRST_NAME_MAX_LENGTH = 30;
 
 function isInterfaceLocale(value: unknown): value is InterfaceLocale {
@@ -86,6 +90,11 @@ function readCompletedRounds() {
   const value = Number(localStorage.getItem(ROUND_TOTAL_KEY));
   return Number.isSafeInteger(value) && value >= 0 ? value : 0;
 }
+function readVoiceQuality(): VoiceQuality {
+  if (typeof localStorage === 'undefined') return 'standard';
+  const value = localStorage.getItem(VOICE_QUALITY_KEY);
+  return voiceQualities.find((quality) => quality === value) ?? 'standard';
+}
 function readNaturalModel(): NaturalModel {
   if (typeof localStorage === 'undefined') return 'high';
   return localStorage.getItem(NATURAL_MODEL_KEY) === 'standard' ? 'standard' : 'high';
@@ -100,9 +109,8 @@ class SettingsStore {
     theme = $state<Theme>(typeof localStorage !== 'undefined' && localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light');
     vibration = $state(typeof localStorage === 'undefined' || localStorage.getItem(VIBRATION_KEY) !== 'off');
     sound = $state(typeof localStorage === 'undefined' || localStorage.getItem(SOUND_KEY) !== 'off');
-    voiceQuality = $state<VoiceQuality>(typeof localStorage !== 'undefined' && localStorage.getItem(VOICE_QUALITY_KEY) === 'natural' ? 'natural' : 'standard');
+    voiceQuality = $state<VoiceQuality>(readVoiceQuality());
     naturalModel = $state<NaturalModel>(readNaturalModel());
-    minimaxKey = $state<string>(typeof localStorage !== 'undefined' ? localStorage.getItem(MINIMAX_KEY) ?? '' : '');
     dialects = $state(typeof localStorage === 'undefined' || localStorage.getItem(DIALECTS_KEY) !== 'off');
     lang = $state<Language>(readLanguage());
     interfaceLocale = $state<InterfaceLocale>(readInterfaceLocale());
@@ -113,11 +121,14 @@ class SettingsStore {
     wordleLength = $state<WordleLength>(readWordleLength());
     streak = $state<ClientStreak>(readStreak());
     firstName = $state(typeof localStorage === 'undefined' ? '' : localStorage.getItem(FIRST_NAME_KEY) ?? '');
+    // The learner's own story character; null until they have made one in the intro or on the profile page.
+    avatar = $state<Avatar | null>(parseAvatar(typeof localStorage === 'undefined' ? null : localStorage.getItem(AVATAR_KEY)));
 
     constructor() {
       // Fetch the learner's vocabulary in the background so game modes that need it don't
       // block on the first render. Other languages stay out of the initial bundle entirely.
       void warmLanguage(this.lang).then(refreshHintableBaseWords);
+      this.castLearner();
     }
 
   hasStoredInterfaceLocale() {
@@ -134,6 +145,14 @@ class SettingsStore {
     this.vibration = next;
     localStorage.setItem(VIBRATION_KEY, next ? 'on' : 'off');
   }
+  // Every voice except the browser's own is played as rendered audio clips.
+  get clipVoices() {
+    return this.voiceQuality !== 'standard';
+  }
+  // Which voices rendered clips belong to, so caches never mix Edge audio with Piper audio.
+  get clipVoiceKey() {
+    return this.voiceQuality === 'edge' ? 'edge' : this.naturalModel;
+  }
   setVoiceQuality(next: VoiceQuality) {
     this.voiceQuality = next;
     localStorage.setItem(VOICE_QUALITY_KEY, next);
@@ -141,11 +160,6 @@ class SettingsStore {
   setNaturalModel(next: NaturalModel) {
     this.naturalModel = next;
     localStorage.setItem(NATURAL_MODEL_KEY, next);
-  }
-  setMinimaxKey(next: string) {
-    this.minimaxKey = next;
-    localStorage.setItem(MINIMAX_KEY, next);
-    try { import('#lib/voice/minimax.js').then(({ setMinimaxApiKey }) => setMinimaxApiKey(next)); } catch {}
   }
   setDialects(next: boolean) {
     this.dialects = next;
@@ -185,6 +199,16 @@ class SettingsStore {
     if (!name) return;
     this.firstName = name;
     localStorage.setItem(FIRST_NAME_KEY, name);
+    this.castLearner();
+  }
+  setAvatar(next: Avatar) {
+    this.avatar = { ...next };
+    localStorage.setItem(AVATAR_KEY, JSON.stringify(next));
+    this.castLearner();
+  }
+  // With a character of their own and a name, the learner plays Kumar's part in the stories.
+  private castLearner() {
+    setKumarStandIn(this.avatar ? this.firstName : null);
   }
   setWordleLength(next: WordleLength) {
     this.wordleLength = next;

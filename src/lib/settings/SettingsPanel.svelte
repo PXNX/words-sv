@@ -1,10 +1,10 @@
 <script lang="ts">
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
-  import { settings, interfaceLocales, FIRST_NAME_MAX_LENGTH, type WordleLength } from '#lib/state/settings.svelte.js';
+  import { settings, interfaceLocales, type WordleLength } from '#lib/state/settings.svelte.js';
   import { playableLanguages, vocabularyLevels, isLanguage, type VocabularyLevel } from '#lib/data/vocabulary.js';
   import { disablePush, enablePush, pushEnabled, pushSupported } from './pushClient';
-  import { naturalMegabytes, naturalState, naturalSupported, prepareNatural } from '#lib/story/naturalVoices.svelte.js';
+  import { naturalMegabytes, naturalReady, naturalState, naturalSupported, playNatural, prepareNatural, synthesizeNatural } from '#lib/story/naturalVoices.svelte.js';
   import { onMount } from 'svelte';
   import SelectMenu from './SelectMenu.svelte';
   import IconClose from '~icons/material-symbols/close-rounded';
@@ -43,8 +43,13 @@
     storiesGroupHint: m.stories_group_hint({}, { locale: settings.interfaceLocale }),
     voiceStandard: m.voice_quality_standard({}, { locale: settings.interfaceLocale }),
     voiceNatural: m.voice_quality_natural({}, { locale: settings.interfaceLocale }),
-    voiceEdge: 'Microsoft Edge',
-    voiceEdgeHint: 'Free, no API key — 300+ neural voices, needs internet',
+    voiceRecorded: 'Recorded',
+    voiceRecordedHint: "Pre-recorded Piper clips for each character's reference sentence; every other line is generated on your device like Natural.",
+    voiceEdge: 'Edge',
+    voiceEdgeHint: 'Microsoft Edge neural voices. Free and no download, but needs internet; if the service refuses, stories fall back to the standard voice.',
+    voiceTest: 'Test voice',
+    voiceTesting: 'Playing…',
+    voiceTestFailed: 'This voice could not speak right now; stories would use the standard voice instead.',
     voiceStandardHint: m.voice_quality_standard_hint({}, { locale: settings.interfaceLocale }),
     voiceFailed: m.voice_quality_failed({}, { locale: settings.interfaceLocale }),
     voiceModel: 'Voice model',
@@ -58,8 +63,7 @@
     notificationsDenied: m.notifications_denied({}, { locale: settings.interfaceLocale }),
     notificationsUnavailable: m.notifications_unavailable({}, { locale: settings.interfaceLocale }),
     notificationsHint: m.streak_reminder_hint({}, { locale: settings.interfaceLocale }),
-    telegramShare: m.telegram_share({}, { locale: settings.interfaceLocale }),
-    firstName: m.onboarding_name_label({}, { locale: settings.interfaceLocale })
+    telegramShare: m.telegram_share({}, { locale: settings.interfaceLocale })
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   const voiceStatus = $derived(naturalState.status[settings.lang] ?? 'idle');
@@ -83,19 +87,79 @@
   });
   // Under the voice choice: how big the natural voices are, how far they have downloaded, or that they failed.
   const voiceNote = $derived(
-    settings.voiceQuality !== 'natural' ? labels.voiceStandardHint
+    settings.voiceQuality === 'standard' ? labels.voiceStandardHint
+      : settings.voiceQuality === 'edge' ? labels.voiceEdgeHint
       : voiceStatus === 'loading' ? `${m.voice_quality_loading({ percent: String(voicePercent) }, { locale: settings.interfaceLocale })} · ${voiceDownloaded} / ${voiceTotal} MB${voiceEta ? ` · ${voiceEta}` : ''}`
       : voiceStatus === 'failed' ? labels.voiceFailed
+      : settings.voiceQuality === 'recorded' ? labels.voiceRecordedHint
       : m.voice_quality_natural_hint({ size: String(naturalMegabytes(settings.lang)) }, { locale: settings.interfaceLocale })
   );
+  // Whether the chosen voice runs on Piper, which has a model choice and a download to show.
+  const piperVoices = $derived(settings.voiceQuality === 'natural' || settings.voiceQuality === 'recorded');
   let voicesSupported = $state(false);
+  $effect(() => () => stopVoiceTest());
   function selectVoiceQuality(next: typeof settings.voiceQuality) {
+    stopVoiceTest();
     settings.setVoiceQuality(next);
-    if (next === 'natural') void prepareNatural(settings.lang);
+    if (next !== 'standard') void prepareNatural(settings.lang);
   }
   function selectNaturalModel(next: typeof settings.naturalModel) {
+    stopVoiceTest();
     settings.setNaturalModel(next);
-    if (settings.voiceQuality === 'natural') void prepareNatural(settings.lang);
+    if (piperVoices) void prepareNatural(settings.lang);
+  }
+  // A short sample in the chosen voice, so the voices can be compared without opening a story.
+  const voiceSamples: Record<typeof settings.lang, string> = {
+    de: 'Guten Morgen! Heute gehen wir zusammen auf den Markt und kaufen frisches Brot.',
+    en: 'Good morning! Today we are going to the market together to buy fresh bread.',
+    fr: "Bonjour ! Aujourd'hui, nous allons ensemble au marché pour acheter du pain frais.",
+    it: 'Buongiorno! Oggi andiamo insieme al mercato a comprare il pane fresco.',
+    es: '¡Buenos días! Hoy vamos juntos al mercado a comprar pan fresco.',
+    pt: 'Bom dia! Hoje vamos juntos ao mercado comprar pão fresco.',
+    uk: 'Доброго ранку! Сьогодні ми разом підемо на ринок по свіжий хліб.'
+  };
+  let voiceTesting = $state(false);
+  let voiceTestFailed = $state(false);
+  let voiceTestToken = 0;
+  let stopVoiceSample: () => void = () => {};
+  function stopVoiceTest() {
+    voiceTestToken += 1;
+    stopVoiceSample();
+    stopVoiceSample = () => {};
+    voiceTesting = false;
+  }
+  async function testVoice() {
+    stopVoiceTest();
+    const token = voiceTestToken;
+    const language = settings.lang;
+    const sample = voiceSamples[language];
+    voiceTesting = true;
+    voiceTestFailed = false;
+    try {
+      if (!settings.clipVoices) {
+        const utterance = new SpeechSynthesisUtterance(sample);
+        utterance.lang = language;
+        stopVoiceSample = () => window.speechSynthesis.cancel();
+        await new Promise<void>((resolve, reject) => {
+          utterance.onend = () => resolve();
+          utterance.onerror = (event) => (event.error === 'canceled' || event.error === 'interrupted' ? resolve() : reject(new Error(event.error)));
+          window.speechSynthesis.speak(utterance);
+        });
+      } else {
+        await prepareNatural(language);
+        if (token !== voiceTestToken) return;
+        if (!naturalReady(language)) throw new Error('voices not ready');
+        const clip = await synthesizeNatural(sample, 'narrator', 'neutral', ['narrator'], language, 1);
+        if (token !== voiceTestToken) return;
+        const playing = playNatural(clip);
+        stopVoiceSample = playing.stop;
+        await Promise.race([playing.done, new Promise((resolve) => setTimeout(resolve, playing.seconds * 1000 + 250))]);
+      }
+    } catch {
+      if (token === voiceTestToken) voiceTestFailed = true;
+    } finally {
+      if (token === voiceTestToken) voiceTesting = false;
+    }
   }
   const telegramHref = $derived(
     settings.interfaceLocale === 'fa' ? 'https://t.me/yasamanabedin' : settings.interfaceLocale === 'de' || settings.interfaceLocale === 'en' ? 'https://t.me/deutschstunde1' : null
@@ -112,11 +176,6 @@
   }
   function selectVocabularyLevel(level: VocabularyLevel) {
     settings.setVocabularyLevel(level);
-  }
-  function saveFirstName(event: Event) {
-    const input = event.currentTarget as HTMLInputElement;
-    settings.setFirstName(input.value);
-    input.value = settings.firstName;
   }
   function selectWordleLength(next: string) {
     const value = Number(next);
@@ -203,7 +262,6 @@
 
   <section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play" aria-labelledby="content-settings-heading">
     <h2 id="content-settings-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.contentGroup}</h2>
-    <label class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.firstName}</span><input class="max-w-[9.6rem] min-h-[2rem] px-[.5rem] field-play text-[#172a45] text-[.7rem] font-extrabold normal-case tracking-normal outline-0 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2" type="text" autocomplete="given-name" autocapitalize="words" maxlength={FIRST_NAME_MAX_LENGTH} aria-label={labels.firstName} value={settings.firstName} onchange={saveFirstName} /></label>
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.gameLanguage}</span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={settings.lang} options={languageOptions} label={labels.gameLanguage} onchange={selectLanguage} /></div>
     <div class="flex items-start justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.vocabulary}</span><div class="seg-play">{#each vocabularyLevels as level}<button class={`min-h-[1.65rem] min-w-[1.65rem] px-[.32rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.vocabularyLevel === level ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} onclick={() => selectVocabularyLevel(level)}>{level.toUpperCase()}</button>{/each}</div></div>
     {#if settings.vocabularyLevel !== 'a1'}<div class="flex items-center justify-between gap-4 mt-[.25rem] pt-[.35rem] border-t-0 text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.includeLower}</span><input aria-label={labels.includeLower} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.includeLowerVocabulary} onchange={(event) => settings.setIncludeLowerVocabulary((event.currentTarget as HTMLInputElement).checked)} /></div>{/if}
@@ -224,12 +282,12 @@
     <h2 id="voice-settings-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.storiesGroup}</h2>
     <p class="m-0 mt-[.35rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{labels.storiesGroupHint}</p>
     {#if voicesSupported}
-      <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.voiceQuality}</span><div class="seg-play">{#each [['standard', labels.voiceStandard], ['natural', labels.voiceNatural], ['edge', labels.voiceEdge]] as const as [quality, label]}<button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.voiceQuality === quality ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} aria-pressed={settings.voiceQuality === quality} onclick={() => selectVoiceQuality(quality)}>{label}</button>{/each}</div></div>
-      {#if settings.voiceQuality === 'natural'}
+      <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.voiceQuality}</span><div class="seg-play">{#each [['standard', labels.voiceStandard], ['natural', labels.voiceNatural], ['recorded', labels.voiceRecorded], ['edge', labels.voiceEdge]] as const as [quality, label]}<button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.voiceQuality === quality ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} aria-pressed={settings.voiceQuality === quality} onclick={() => selectVoiceQuality(quality)}>{label}</button>{/each}</div></div>
+      {#if piperVoices}
         <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.voiceModel}</span><div class="seg-play">{#each [['standard', labels.voiceModelStandard], ['high', labels.voiceModelHigh]] as const as [model, label]}<button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.naturalModel === model ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} aria-pressed={settings.naturalModel === model} onclick={() => selectNaturalModel(model)}>{label}</button>{/each}</div></div>
         <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{labels.voiceModelHint}</p>
       {/if}
-      {#if settings.voiceQuality === 'natural' && voiceStatus === 'loading'}
+      {#if piperVoices && voiceStatus === 'loading'}
         <div class="mt-[.55rem]" aria-live="polite">
           <div class="flex items-center gap-[.45rem] text-base-content/70 text-[.58rem] font-bold leading-[1.35]">
             <span class="voice-pulse" aria-hidden="true">{#each [0, 1, 2, 3] as bar}<i style={`--i: ${bar}`}></i>{/each}</span>
@@ -242,6 +300,7 @@
       {:else}
         <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]" aria-live="polite">{voiceNote}</p>
       {/if}
+      <div class="flex items-center justify-between gap-4 mt-[.55rem]"><button class="min-h-[1.65rem] px-[.7rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold tracking-[.06em] uppercase bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45] disabled:opacity-60" disabled={piperVoices && voiceStatus === 'loading'} onclick={() => (voiceTesting ? stopVoiceTest() : testVoice())}><IconVolume class="w-[.78rem] h-[.78rem]" />{voiceTesting ? labels.voiceTesting : labels.voiceTest}</button>{#if voiceTestFailed}<span class="text-base-content/60 text-[.58rem] font-bold leading-[1.35]" aria-live="polite">{labels.voiceTestFailed}</span>{/if}</div>
       <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.dialects}</span><input aria-label={labels.dialects} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.dialects} onchange={(event) => settings.setDialects((event.currentTarget as HTMLInputElement).checked)} /></div>
       <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{labels.dialectsHint}</p>
     {/if}

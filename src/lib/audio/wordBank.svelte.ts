@@ -32,11 +32,11 @@ export const wordBankState = $state<{
 }>({ status: {}, done: {}, total: {} });
 
 export function wordBankStateKey(language: Language, level: VocabularyLevel) {
-	return `${settings.naturalModel}|${language}|${level}`;
+	return `${settings.clipVoiceKey}|${language}|${level}`;
 }
 
 function wordAudioKey(language: Language, word: string) {
-	return `${settings.naturalModel}|${language}|${word}`;
+	return `${settings.clipVoiceKey}|${language}|${word}`;
 }
 
 // Decoded clips are only kept for the words that were played lately: a full level would otherwise
@@ -70,10 +70,11 @@ async function loadKnown(language: Language) {
 		for (const key of keys) {
 			if (key.startsWith(prefix)) known.add(key);
 		}
-		// Audio of an older voice model is dead weight; drop it while the keys are at hand.
+		// Audio of an older Piper model is dead weight; drop it while the keys are at hand. Edge audio
+		// stays, so switching voices back and forth to compare them doesn't throw work away.
 		const stale = keys.filter((key) => {
 			const [model, entryLanguage] = key.split('|');
-			return entryLanguage === language && model !== settings.naturalModel;
+			return entryLanguage === language && model !== 'edge' && model !== settings.naturalModel;
 		});
 		if (stale.length) await deleteWordAudio(stale);
 	})();
@@ -86,7 +87,7 @@ async function loadKnown(language: Language) {
 }
 
 function signatureFor(language: Language) {
-	return `${settings.naturalModel}|${language}`;
+	return `${settings.clipVoiceKey}|${language}`;
 }
 
 let generation = 0;

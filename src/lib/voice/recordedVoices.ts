@@ -39,13 +39,18 @@ export function recordedVoicesSupported() {
   return typeof window !== 'undefined' && 'AudioContext' in window;
 }
 
-/** Loads a character's clip into an AudioBuffer (cached). Returns null if none exists. */
-export async function loadRecordedVoice(character: string): Promise<AudioBuffer | null> {
+function sameText(left: string, right: string) {
+  const plain = (text: string) => text.toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+  return plain(left) === plain(right);
+}
+
+/** Loads a character's clip into an AudioBuffer (cached). Returns null if none exists or it says something else. */
+export async function loadRecordedVoice(character: string, text: string): Promise<AudioBuffer | null> {
   if (!recordedVoicesSupported()) return null;
+  await loadMeta();
+  if (!meta || !meta[character] || !sameText(meta[character].text, text)) return null;
   const cached = buffers.get(character);
   if (cached) return cached;
-  await loadMeta();
-  if (!meta || !meta[character]) return null;
   try {
     const response = await fetch(`/voices/${character}.mp3`, { cache: 'force-cache' });
     if (!response.ok) return null;
@@ -83,5 +88,5 @@ export function playRecorded(clip: RecordedClip, volume = 1) {
 
 /** Whether the story should use pre-recorded clips instead of synthesizing on the fly. */
 export function useRecordedVoices() {
-  return settings.voiceQuality === 'natural' && recordedVoicesSupported();
+  return settings.voiceQuality === 'recorded' && recordedVoicesSupported();
 }
