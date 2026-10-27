@@ -14,7 +14,7 @@
   import { listAudioSessions, loadAudioBlob, saveAudioSession, updateAudioSessionPosition, type SavedAudio, type SavedSound, type SavedStoryStart } from './audioLibrary';
   import { generateStory, hasMissedWords } from './generated';
   import { recordActivity } from '#lib/progress/activity.js';
-  import { playSoundEffect, soundEffectSeconds, type SoundEffect } from '#lib/sounds.js';
+  import { playChime, playSoundEffect, soundEffectSeconds, type SoundEffect } from '#lib/sounds.js';
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
   import IconHeadphones from '~icons/material-symbols/headphones-rounded';
@@ -29,6 +29,7 @@
   const BEAT_GAP = 0.6;
   const SINGLE_WORD_QUESTION_GAP = 1.4;
   const STORY_GAP = 1.4;
+  const NEXT_AUDIO_DELAY = 1.4;
   const QUESTION_WORD_LIMIT = 170;
   const QUESTION_COUNT = 5;
   const levelRates: Record<string, number> = { a1: 0.9, a2: 0.95, b1: 1.03, b2: 1.07, c1: 1.11, c2: 1.15 };
@@ -130,19 +131,6 @@
       ?? visibleHistory[0];
   }
 
-  let audioContextRef: AudioContext | null = null;
-
-  function ensureAudioContext() {
-    if (typeof window === 'undefined') return null;
-    if (!audioContextRef) {
-      const legacy = window as typeof window & { webkitAudioContext?: typeof AudioContext };
-      const Ctor = window.AudioContext ?? legacy.webkitAudioContext;
-      if (!Ctor) return null;
-      audioContextRef = new Ctor();
-    }
-    if (audioContextRef.state === 'suspended') void audioContextRef.resume();
-    return audioContextRef;
-  }
   function playSfx(sfx: any) {
     if (!soundEnabled || !sfx) return;
     try { playSoundEffect(true, sfx); } catch {}
@@ -156,23 +144,6 @@
   function cancelStandardSpeech() {
     liveToken += 1;
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel();
-  }
-  function playChime() {
-    try {
-      const ctx = ensureAudioContext();
-      if (!ctx || !soundEnabled) return;
-      const t = ctx.currentTime;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.frequency.setValueAtTime(880, t);
-      osc.frequency.exponentialRampToValueAtTime(1320, t + 0.12);
-      gain.gain.setValueAtTime(0.0001, t);
-      gain.gain.exponentialRampToValueAtTime(0.08, t + 0.01);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.25);
-      osc.connect(gain).connect(ctx.destination);
-      osc.start(t);
-      osc.stop(t + 0.28);
-    } catch {}
   }
   function segmentIndexAt(session: LiveSession, at: number) {
     let index = 0;
@@ -269,6 +240,13 @@
     playing = false;
     saveListenProgress(true);
   }
+  // The clip that follows the current one: the player works through the saved audios like a
+  // playlist and only settles on the recap after the last one.
+  function nextSession(): SavedAudio | null {
+    if (!currentId) return null;
+    const index = visibleHistory.findIndex((session) => session.id === currentId);
+    return index >= 0 ? visibleHistory[index + 1] ?? null : null;
+  }
   function finishSession() {
     if (sessionDone) return;
     sessionDone = true;
@@ -276,9 +254,18 @@
     lastSoundAt = duration;
     clearListenProgress();
     flushPosition();
-    playChime();
     recordActivity('listen');
     void settings.recordStreak('listen_completed');
+    playChime(soundEnabled);
+    // Let the chime ring out, then hand over to the next audio. Without a next one the recap stays.
+    const next = nextSession();
+    if (!next) return;
+    const token = generation;
+    void wait(NEXT_AUDIO_DELAY * 1000).then(() => {
+      if (token !== generation || !sessionDone) return;
+      sessionDone = false;
+      void openSession(next);
+    });
   }
   // Replays the session the learner just heard instead of drawing a new story.
   function replaySession() {

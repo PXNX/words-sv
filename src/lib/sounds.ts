@@ -49,7 +49,7 @@ export function playErrorSound(enabled: boolean, kind: ErrorSound) {
  * Story sound effects, synthesized with Web Audio so they need no asset downloads and work offline.
  * Kept deliberately soft: they colour a scene for learners, they should never startle.
  */
-export type SoundEffect = 'purr' | 'meow' | 'glass' | 'brakes' | 'doorbell' | 'knock' | 'rain' | 'bark' | 'tweet' | 'moo' | 'neigh' | 'trumpet' | 'hiss' | 'hum' | 'airplane' | 'waves' | 'gong' | 'fuse' | 'wind';
+export type SoundEffect = 'purr' | 'meow' | 'glass' | 'brakes' | 'doorbell' | 'knock' | 'rain' | 'bark' | 'tweet' | 'moo' | 'neigh' | 'trumpet' | 'hiss' | 'hum' | 'airplane' | 'waves' | 'gong' | 'fuse' | 'wind' | 'pop';
 
 let effectContext: AudioContext | null = null;
 
@@ -276,6 +276,21 @@ function bell(context: AudioContext, at: number, frequency: number) {
     tone.start(at);
     tone.stop(at + 1.35);
   }
+}
+
+// A short, round "pop": a piece of the avatar snapping into place.
+function pop(context: AudioContext, start: number) {
+  const blip = context.createOscillator();
+  blip.type = 'sine';
+  blip.frequency.setValueAtTime(420, start);
+  blip.frequency.exponentialRampToValueAtTime(760, start + 0.06);
+  const gain = context.createGain();
+  gain.gain.setValueAtTime(0.0001, start);
+  gain.gain.exponentialRampToValueAtTime(0.22, start + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.12);
+  blip.connect(gain).connect(context.destination);
+  blip.start(start);
+  blip.stop(start + 0.14);
 }
 
 function knock(context: AudioContext, start: number) {
@@ -530,16 +545,43 @@ const effects: Record<SoundEffect, (context: AudioContext, start: number) => voi
   gong,
   fuse,
   wind,
+  pop,
 };
 
 // How long each effect rings, tail included, so story speech can wait for it to end.
-export const soundEffectSeconds: Record<SoundEffect, number> = { purr: 2.45, meow: 0.85, glass: 1.1, brakes: 1.45, doorbell: 1.85, knock: 0.6, rain: 3.65, bark: 0.65, tweet: 0.55, moo: 1.4, neigh: 1.4, trumpet: 1.05, hiss: 1.25, hum: 1.25, airplane: 4.55, waves: 3.4, gong: 2.25, fuse: 1.2, wind: 3.4 };
+export const soundEffectSeconds: Record<SoundEffect, number> = { purr: 2.45, meow: 0.85, glass: 1.1, brakes: 1.45, doorbell: 1.85, knock: 0.6, rain: 3.65, bark: 0.65, tweet: 0.55, moo: 1.4, neigh: 1.4, trumpet: 1.05, hiss: 1.25, hum: 1.25, airplane: 4.55, waves: 3.4, gong: 2.25, fuse: 1.2, wind: 3.4, pop: 0.15 };
 
 export function playSoundEffect(enabled: boolean, effect: SoundEffect) {
   if (!enabled) return;
   try {
     const context = audioContext();
     if (context) effects[effect](context, context.currentTime + 0.02);
+  } catch { /* Audio is optional and must never block play. */ }
+}
+
+// One soft, quickly fading note: the building block for the interface's little chimes.
+function softNote(context: AudioContext, at: number, frequency: number, length: number, level: number, type: OscillatorType = 'triangle') {
+  const oscillator = context.createOscillator();
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, at);
+  const gain = context.createGain();
+  gain.gain.setValueAtTime(0.0001, at);
+  gain.gain.exponentialRampToValueAtTime(level, at + 0.012);
+  gain.gain.exponentialRampToValueAtTime(0.0001, at + length);
+  oscillator.connect(gain).connect(context.destination);
+  oscillator.start(at);
+  oscillator.stop(at + length + 0.02);
+}
+
+// A small rising chime that closes one audio and hands over to the next one.
+export function playChime(enabled: boolean) {
+  if (!enabled) return;
+  try {
+    const context = audioContext();
+    if (!context) return;
+    const start = context.currentTime + 0.02;
+    softNote(context, start, 880, 0.16, 0.06);
+    softNote(context, start + 0.12, 1318.51, 0.3, 0.05);
   } catch { /* Audio is optional and must never block play. */ }
 }
 
