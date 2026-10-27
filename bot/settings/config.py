@@ -9,6 +9,7 @@ load_dotenv()
 TOKEN: Final[str] = getenv("TELEGRAM")
 CONTAINER: Final[bool] = str(getenv("CONTAINER", "False")).lower() == "true"
 ADMINS: Final[List[int]] = loads(getenv("ADMINS", "[]"))
+RES_PATH: Final[str] = getenv("RES_PATH", "./res")
 
 # SQLite file for the donation ledger; inside the container it lives in the bind-mounted bot/ folder.
 DB_PATH: Final[str] = getenv("DB_PATH", "data/donations.db")

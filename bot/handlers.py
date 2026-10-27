@@ -7,6 +7,7 @@ from telegram.ext import Application, CallbackQueryHandler, CommandHandler, Cont
 
 from donations import CURRENCY, TIERS, build_payload, check_checkout, parse_payload
 from settings.config import ADMINS, MINIAPP_URL, WORDS_URL
+from bot_profile import set_cmd
 from store import connect, record_donation
 from texts import lang_of, t
 
@@ -97,3 +98,4 @@ def register_handlers(app: Application):
     app.add_handler(CommandHandler(["bedingungen", "terms"], _legal("legal_terms")))
     app.add_handler(CommandHandler(["datenschutz", "privacy"], _legal("legal_privacy")))
     app.add_handler(CommandHandler("impressum", _legal("legal_imprint")))
+    app.add_handler(CommandHandler("set_cmd", set_cmd, filters.Chat(ADMINS)))
