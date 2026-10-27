@@ -345,5 +345,14 @@
   "achievement_streak_3": "۳ روز پیاپی",
   "achievement_streak_7": "۷ روز پیاپی",
   "achievement_mastered_50": "تسلط بر ۵۰ واژه",
-  "achievement_all_rounder": "امتحان همه حالت‌ها"
+  "achievement_all_rounder": "امتحان همه حالت‌ها",
+  "telegram_reminders": "یادآور تلگرام",
+  "telegram_reminders_hint": "پیامی از @word_circle_bot، ۲ ساعت پیش از پایان زنجیره‌ات.",
+  "telegram_reminders_waiting": "در تلگرام روی «Start» بزن تا یادآور روشن شود.",
+  "invite_title": "دعوت از دوستان",
+  "invite_hint": "برای هر بازیکن تازه‌ای که ربات WordCircle را با لینک تو شروع کند، {embers} اخگر می‌گیری.",
+  "invite_share": "اشتراک لینک دعوت",
+  "invite_copied": "لینک کپی شد",
+  "invite_count": "{count} دوست دعوت شده",
+  "invite_share_text": "با من در WordCircle واژه یاد بگیر!"
 }

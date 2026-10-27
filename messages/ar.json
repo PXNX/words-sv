@@ -345,5 +345,14 @@
   "achievement_streak_3": "3 أيام متتالية",
   "achievement_streak_7": "7 أيام متتالية",
   "achievement_mastered_50": "إتقان 50 كلمة",
-  "achievement_all_rounder": "تجربة كل الأوضاع"
+  "achievement_all_rounder": "تجربة كل الأوضاع",
+  "telegram_reminders": "تذكير تيليغرام",
+  "telegram_reminders_hint": "رسالة من @word_circle_bot قبل ساعتين من انتهاء سلسلتك.",
+  "telegram_reminders_waiting": "اضغط «ابدأ» في تيليغرام لتفعيل التذكير.",
+  "invite_title": "ادعُ أصدقاءك",
+  "invite_hint": "مقابل كل لاعب جديد يبدأ بوت WordCircle عبر رابطك، تحصل على {embers} جمرات.",
+  "invite_share": "شارك رابط الدعوة",
+  "invite_copied": "تم نسخ الرابط",
+  "invite_count": "دعوت {count} أصدقاء",
+  "invite_share_text": "تعلّم الكلمات معي في WordCircle!"
 }

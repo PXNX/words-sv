@@ -345,5 +345,14 @@
   "achievement_streak_3": "3 dias seguidos",
   "achievement_streak_7": "7 dias seguidos",
   "achievement_mastered_50": "50 palavras dominadas",
-  "achievement_all_rounder": "Todos os modos experimentados"
+  "achievement_all_rounder": "Todos os modos experimentados",
+  "telegram_reminders": "Lembrete no Telegram",
+  "telegram_reminders_hint": "Uma mensagem do @word_circle_bot 2 horas antes de sua sequência acabar.",
+  "telegram_reminders_waiting": "Toque em “Iniciar” no Telegram para ativar o lembrete.",
+  "invite_title": "Convidar amigos",
+  "invite_hint": "Para cada novo jogador que iniciar o bot do WordCircle com seu link, você ganha {embers} brasas.",
+  "invite_share": "Compartilhar convite",
+  "invite_copied": "Link copiado",
+  "invite_count": "{count} amigos convidados",
+  "invite_share_text": "Aprenda palavras comigo no WordCircle!"
 }

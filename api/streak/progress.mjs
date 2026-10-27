@@ -52,6 +52,7 @@ export default async function streakProgress(req, res) {
 		const [rows] = await db.execute('SELECT * FROM wordcircle_streak_devices WHERE device_id = ? LIMIT 1', [deviceId]);
 		const reminderLocale = normalizeReminderLocale(locale ?? rows[0]?.locale);
 		const merged = stateForToday(rows[0], timeZone, new Date());
+		const inviteFreezes = counter(rows[0]?.invite_freezes, 2);
 		// A device that played offline sends its snapshot along, so the server never loses progress and
 		// never awards the same day twice.
 		if (snapshot && typeof snapshot === 'object' && snapshot.dateKey === merged.dateKey) {
@@ -67,8 +68,9 @@ export default async function streakProgress(req, res) {
 			merged.storyCompleted = merged.storyCompleted || Boolean(snapshot.storyCompleted);
 			merged.listenCompleted = merged.listenCompleted || Boolean(snapshot.listenCompleted);
 			merged.hangmanCompleted = merged.hangmanCompleted || Boolean(snapshot.hangmanCompleted);
-			// The device is the only place that knows when a freeze was consumed, so take the lower count.
-			merged.freezes = Math.min(merged.freezes, counter(snapshot.freezes, 2));
+			// The device is the only place that knows when a freeze was consumed, so take the lower count;
+			// freezes forged from invite embers (see /api/telegram/start) are new to it and come on top.
+			merged.freezes = Math.min(merged.freezes, counter(snapshot.freezes, 2) + inviteFreezes);
 			merged.qualifiedDays = Math.max(merged.qualifiedDays, counter(snapshot.qualifiedDays, 100000));
 			// A repaired streak arrives as an already-qualified snapshot; keep the restored count.
 			if (snapshot.qualified && snapshot.lastQualifiedDay === merged.dateKey) {
@@ -108,6 +110,8 @@ export default async function streakProgress(req, res) {
 			embers: next.embers
 		};
 		await upsert(db, row);
+		// The device takes this answer as its new state, so it now counts the invite freezes itself.
+		if (inviteFreezes > 0) await db.execute('UPDATE wordcircle_streak_devices SET invite_freezes = 0 WHERE device_id = ?', [deviceId]);
 		return respond(res, 200, { ok: true, streak: streakSummary(row, timeZone) });
 	} catch (error) {
 		return respond(res, 503, { ok: false, error: error instanceof Error ? error.message : 'streak_unavailable' });

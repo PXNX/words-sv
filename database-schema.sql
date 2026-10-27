@@ -69,6 +69,31 @@ CREATE TABLE IF NOT EXISTS wordcircle_push_subscriptions (
   CONSTRAINT wordcircle_push_subscriptions_device_fk FOREIGN KEY (device_id) REFERENCES wordcircle_streak_devices(device_id) ON DELETE CASCADE
 );
 
+-- Telegram: a player's link to @word_circle_bot (streak reminders) and their invite code. Created on
+-- first use by api/_lib/telegram.mjs, which also adds the column below.
+-- ALTER TABLE wordcircle_streak_devices ADD COLUMN invite_freezes TINYINT UNSIGNED NOT NULL DEFAULT 0;
+CREATE TABLE IF NOT EXISTS wordcircle_telegram_links (
+  device_id VARCHAR(64) NOT NULL PRIMARY KEY,
+  invite_code VARCHAR(24) NOT NULL UNIQUE,
+  link_code VARCHAR(24) NULL UNIQUE,
+  chat_id BIGINT NULL,
+  telegram_user_id BIGINT NULL,
+  reminders TINYINT(1) NOT NULL DEFAULT 0,
+  last_reminded_day CHAR(10) NULL,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX wordcircle_telegram_links_user_idx (telegram_user_id),
+  CONSTRAINT wordcircle_telegram_links_device_fk FOREIGN KEY (device_id) REFERENCES wordcircle_streak_devices(device_id) ON DELETE CASCADE
+);
+
+-- Every Telegram user counts once as an invited player.
+CREATE TABLE IF NOT EXISTS wordcircle_telegram_invites (
+  telegram_user_id BIGINT NOT NULL PRIMARY KEY,
+  inviter_device_id VARCHAR(64) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX wordcircle_telegram_invites_inviter_idx (inviter_device_id),
+  CONSTRAINT wordcircle_telegram_invites_device_fk FOREIGN KEY (inviter_device_id) REFERENCES wordcircle_streak_devices(device_id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS wordcircle_reminder_deliveries (
   device_id VARCHAR(64) NOT NULL,
   delivery_date CHAR(10) NOT NULL,

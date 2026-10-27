@@ -4,6 +4,7 @@
   import { settings, interfaceLocales, type WordleLength } from '#lib/state/settings.svelte.js';
   import { playableLanguages, vocabularyLevels, isLanguage, type VocabularyLevel } from '#lib/data/vocabulary.js';
   import { disablePush, enablePush, pushEnabled, pushSupported } from './pushClient';
+  import { openTelegramLink, telegramDevice, type TelegramStatus } from './telegramClient';
   import { naturalMegabytes, naturalReady, naturalState, naturalSupported, playNatural, prepareNatural, synthesizeNatural } from '#lib/story/naturalVoices.svelte.js';
   import { onMount } from 'svelte';
   import SelectMenu from './SelectMenu.svelte';
@@ -69,7 +70,16 @@
     telegramShare: m.telegram_share({}, { locale: settings.interfaceLocale }),
     profileTitle: m.profile_title({}, { locale: settings.interfaceLocale }),
     profileEdit: m.profile_edit({}, { locale: settings.interfaceLocale }),
-    profileNameEmpty: m.profile_name_empty({}, { locale: settings.interfaceLocale })
+    profileNameEmpty: m.profile_name_empty({}, { locale: settings.interfaceLocale }),
+    telegramReminders: m.telegram_reminders({}, { locale: settings.interfaceLocale }),
+    telegramRemindersHint: m.telegram_reminders_hint({}, { locale: settings.interfaceLocale }),
+    telegramRemindersWaiting: m.telegram_reminders_waiting({}, { locale: settings.interfaceLocale }),
+    inviteTitle: m.invite_title({}, { locale: settings.interfaceLocale }),
+    inviteHint: (embers: number) => m.invite_hint({ embers }, { locale: settings.interfaceLocale }),
+    inviteShare: m.invite_share({}, { locale: settings.interfaceLocale }),
+    inviteCopied: m.invite_copied({}, { locale: settings.interfaceLocale }),
+    inviteCount: (count: number) => m.invite_count({ count }, { locale: settings.interfaceLocale }),
+    inviteShareText: m.invite_share_text({}, { locale: settings.interfaceLocale })
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   const voiceStatus = $derived(naturalState.status[settings.lang] ?? 'idle');
@@ -208,6 +218,44 @@
     }
   }
 
+  // Telegram reminders and the invite link only show once the server answered (not under `vite dev`).
+  let telegram = $state<TelegramStatus | null>(null);
+  let telegramBusy = $state(false);
+  // Between opening the bot and pressing Start there; coming back to the app checks again.
+  let telegramWaiting = $state(false);
+  let inviteCopied = $state(false);
+  function refreshTelegram() {
+    void telegramDevice('status').then((status) => {
+      telegram = status;
+      if (status.reminders) telegramWaiting = false;
+    }).catch(() => undefined);
+  }
+  async function toggleTelegram(toggle: HTMLInputElement) {
+    const next = toggle.checked;
+    telegramBusy = true;
+    try {
+      const status = await telegramDevice(next ? 'connect' : 'disconnect');
+      telegram = status;
+      telegramWaiting = next && !status.reminders;
+      if (telegramWaiting && status.connectUrl) openTelegramLink(status.connectUrl);
+    } catch {
+      toggle.checked = !next;
+    } finally {
+      telegramBusy = false;
+    }
+  }
+  async function shareInvite() {
+    const url = telegram?.inviteUrl;
+    if (!url) return;
+    if (navigator.share) {
+      navigator.share({ text: labels.inviteShareText, url }).catch(() => {});
+      return;
+    }
+    await navigator.clipboard?.writeText(`${labels.inviteShareText} ${url}`).catch(() => undefined);
+    inviteCopied = true;
+    setTimeout(() => (inviteCopied = false), 2000);
+  }
+
   const explanations: Record<'wordleLength' | 'backwards', string> = {
     wordleLength:
       'Wordle length sets how many letters the target word has. Shorter words are quicker to solve, longer words give you more combinations to think through.',
@@ -252,10 +300,11 @@
   onMount(() => {
     void pushEnabled().then((enabled) => (notificationsEnabled = enabled));
     voicesSupported = naturalSupported();
+    refreshTelegram();
   });
 </script>
 
-<svelte:window onkeydown={(event) => { if (event.key === 'Escape') closeExplanation(); }} />
+<svelte:window onkeydown={(event) => { if (event.key === 'Escape') closeExplanation(); }} onfocus={() => { if (telegramWaiting) refreshTelegram(); }} />
 
 <aside class="flex-1 min-h-0 m-0 px-[clamp(1rem,5vw,2rem)] pb-[clamp(1rem,5vw,2rem)] pt-[clamp(2.9rem,10vw,3.6rem)] overflow-y-auto border-0 bg-transparent animate-[drop-in_.2s_cubic-bezier(.23,1,.32,1)]" aria-label={labels.settingsHint} dir={interfaceDirection} lang={settings.interfaceLocale}>
   <div class="flex items-center justify-center gap-3 text-base-content">
@@ -294,7 +343,18 @@
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.notifications}</span><input aria-label={labels.notifications} type="checkbox" class="toggle toggle-sm toggle-primary" checked={notificationsEnabled} disabled={notificationBusy} onchange={(event) => toggleNotifications((event.currentTarget as HTMLInputElement).checked)} /></div>
     <p class="m-0 mt-[.35rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{labels.notificationsHint}</p>
     {#if notificationMessage}<p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{notificationMessage}</p>{/if}
+    {#if telegram}
+      <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.35rem]"><IconTelegram aria-hidden="true" class="w-[.9rem] h-[.9rem]" />{labels.telegramReminders}</span><input aria-label={labels.telegramReminders} type="checkbox" class="toggle toggle-sm toggle-primary" checked={telegram.reminders} disabled={telegramBusy} onchange={(event) => toggleTelegram(event.currentTarget as HTMLInputElement)} /></div>
+      <p class="m-0 mt-[.35rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]" aria-live="polite">{telegramWaiting ? labels.telegramRemindersWaiting : labels.telegramRemindersHint}</p>
+    {/if}
   </section>
+  {#if telegram?.inviteUrl}
+    <section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play" aria-labelledby="invite-heading">
+      <h2 id="invite-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.inviteTitle}</h2>
+      <p class="m-0 mt-[.35rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{labels.inviteHint(telegram.inviteEmbers)}</p>
+      <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>🔥 {labels.inviteCount(telegram.invited)}</span><button type="button" class="btn-play btn-play-sm flex-none gap-[.35rem] normal-case tracking-normal" onclick={shareInvite}><IconShare aria-hidden="true" class="w-[.85rem] h-[.85rem]" />{inviteCopied ? labels.inviteCopied : labels.inviteShare}</button></div>
+    </section>
+  {/if}
   <section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play" aria-labelledby="voice-settings-heading">
     <h2 id="voice-settings-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.storiesGroup}</h2>
     <p class="m-0 mt-[.35rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{labels.storiesGroupHint}</p>
