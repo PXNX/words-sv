@@ -349,5 +349,14 @@
   "achievement_streak_3": "3 Tage in Folge",
   "achievement_streak_7": "7 Tage in Folge",
   "achievement_mastered_50": "50 Wörter gemeistert",
-  "achievement_all_rounder": "Alle Modi ausprobiert"
+  "achievement_all_rounder": "Alle Modi ausprobiert",
+  "telegram_reminders": "Telegram-Erinnerung",
+  "telegram_reminders_hint": "Eine Nachricht von @word_circle_bot, 2 Stunden bevor deine Serie abläuft.",
+  "telegram_reminders_waiting": "Tippe in Telegram auf „Starten“, um die Erinnerung einzuschalten.",
+  "invite_title": "Freunde einladen",
+  "invite_hint": "Für jeden neuen Spieler, der den WordCircle-Bot über deinen Link startet, bekommst du {embers} Glut.",
+  "invite_share": "Einladungslink teilen",
+  "invite_copied": "Link kopiert",
+  "invite_count": "{count} Freunde eingeladen",
+  "invite_share_text": "Lern mit mir Wörter bei WordCircle!"
 }

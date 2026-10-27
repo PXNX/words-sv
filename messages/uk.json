@@ -344,5 +344,14 @@
   "achievement_streak_3": "3 дні поспіль",
   "achievement_streak_7": "7 днів поспіль",
   "achievement_mastered_50": "50 засвоєних слів",
-  "achievement_all_rounder": "Усі режими випробувано"
+  "achievement_all_rounder": "Усі режими випробувано",
+  "telegram_reminders": "Нагадування в Telegram",
+  "telegram_reminders_hint": "Повідомлення від @word_circle_bot за 2 години до того, як серія перерветься.",
+  "telegram_reminders_waiting": "Натисни «Почати» в Telegram, щоб увімкнути нагадування.",
+  "invite_title": "Запросити друзів",
+  "invite_hint": "За кожного нового гравця, який запустить бота WordCircle за твоїм посиланням, ти отримуєш {embers} жарини.",
+  "invite_share": "Поділитися посиланням",
+  "invite_copied": "Посилання скопійовано",
+  "invite_count": "Запрошено друзів: {count}",
+  "invite_share_text": "Вчи зі мною слова у WordCircle!"
 }

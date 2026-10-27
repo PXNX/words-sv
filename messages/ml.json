@@ -345,5 +345,14 @@
   "achievement_streak_3": "തുടർച്ചയായി 3 ദിവസം",
   "achievement_streak_7": "തുടർച്ചയായി 7 ദിവസം",
   "achievement_mastered_50": "50 വാക്കുകൾ കൈവശമാക്കി",
-  "achievement_all_rounder": "എല്ലാ മോഡുകളും പരീക്ഷിച്ചു"
+  "achievement_all_rounder": "എല്ലാ മോഡുകളും പരീക്ഷിച്ചു",
+  "telegram_reminders": "Telegram ഓർമ്മപ്പെടുത്തൽ",
+  "telegram_reminders_hint": "നിന്റെ പരമ്പര തീരുന്നതിന് 2 മണിക്കൂർ മുമ്പ് @word_circle_bot-ൽ നിന്ന് ഒരു സന്ദേശം.",
+  "telegram_reminders_waiting": "ഓർമ്മപ്പെടുത്തൽ ഓണാക്കാൻ Telegram-ൽ “Start” അമർത്തൂ.",
+  "invite_title": "സുഹൃത്തുക്കളെ ക്ഷണിക്കൂ",
+  "invite_hint": "നിന്റെ ലിങ്ക് വഴി WordCircle ബോട്ട് തുടങ്ങുന്ന ഓരോ പുതിയ കളിക്കാരനും നിനക്ക് {embers} കനലുകൾ കിട്ടും.",
+  "invite_share": "ക്ഷണ ലിങ്ക് പങ്കിടൂ",
+  "invite_copied": "ലിങ്ക് പകർത്തി",
+  "invite_count": "{count} സുഹൃത്തുക്കളെ ക്ഷണിച്ചു",
+  "invite_share_text": "WordCircle-ൽ എന്റെ കൂടെ വാക്കുകൾ പഠിക്കൂ!"
 }

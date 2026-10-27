@@ -3,6 +3,7 @@ import { getDatabase } from '../_lib/database.mjs';
 import { respond } from '../_lib/http.mjs';
 import { sendPush } from '../_lib/push.mjs';
 import { reminderNotification, reminderTypes } from '../_lib/streak.mjs';
+import { appUrl, htmlMessage, sendTelegram } from '../_lib/telegram.mjs';
 
 function constantTimeMatch(left, right) {
 	const leftValue = Buffer.from(left);
@@ -16,7 +17,38 @@ export function cronAuthorized(authorization, secret = process.env.CRON_SECRET ?
 	return Boolean(token) && constantTimeMatch(token, secret);
 }
 
-export function createRemindersEndpoint({ databaseProvider = getDatabase, pushSender = sendPush, now = () => new Date() } = {}) {
+// Players who linked the bot get a Telegram message when their streak is about to expire: once a
+// local day, in the last two hours before midnight. Telegram has its own once-a-day mark, so it
+// arrives whether or not a push reminder went out too.
+async function sendTelegramReminders(db, telegramSender, now) {
+	let rows;
+	try {
+		[rows] = await db.execute('SELECT d.*, t.chat_id FROM wordcircle_streak_devices d INNER JOIN wordcircle_telegram_links t ON t.device_id = d.device_id WHERE t.reminders = 1 AND t.chat_id IS NOT NULL');
+	} catch (error) {
+		// Nobody has linked Telegram yet: /api/telegram/device creates the table on first use.
+		if (error?.code === 'ER_NO_SUCH_TABLE') return { attempted: 0, delivered: 0 };
+		throw error;
+	}
+	let attempted = 0;
+	let delivered = 0;
+	for (const row of rows) {
+		const { summary, types } = reminderTypes(row, row.timezone, now);
+		if (!types.includes('deadline')) continue;
+		const [claim] = await db.execute('UPDATE wordcircle_telegram_links SET last_reminded_day = ? WHERE device_id = ? AND (last_reminded_day IS NULL OR last_reminded_day <> ?)', [summary.dateKey, row.device_id, summary.dateKey]);
+		if (claim?.affectedRows !== 1) continue;
+		attempted += 1;
+		try {
+			await telegramSender(row.chat_id, htmlMessage(reminderNotification('deadline', row.locale, summary.minutesRemaining)), appUrl());
+			delivered += 1;
+		} catch (error) {
+			// 403: the player blocked the bot or deleted the chat.
+			if (error?.statusCode === 403) await db.execute('UPDATE wordcircle_telegram_links SET reminders = 0 WHERE device_id = ?', [row.device_id]);
+		}
+	}
+	return { attempted, delivered };
+}
+
+export function createRemindersEndpoint({ databaseProvider = getDatabase, pushSender = sendPush, telegramSender = sendTelegram, now = () => new Date() } = {}) {
 	return async function remindersEndpoint(req, res) {
 	if (!['GET', 'POST'].includes(req.method ?? 'GET')) {
 		return respond(res, 405, { ok: false, error: 'method_not_allowed' });
@@ -48,7 +80,8 @@ export function createRemindersEndpoint({ databaseProvider = getDatabase, pushSe
 				}
 			}
 		}
-		return respond(res, 200, { ok: true, attempted, delivered });
+		const telegram = await sendTelegramReminders(db, telegramSender, now());
+		return respond(res, 200, { ok: true, attempted, delivered, telegram });
 	} catch (error) {
 		return respond(res, 503, { ok: false, error: error instanceof Error ? error.message : 'reminders_unavailable' });
 	}

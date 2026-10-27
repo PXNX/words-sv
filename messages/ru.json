@@ -345,5 +345,14 @@
   "achievement_streak_3": "3 дня подряд",
   "achievement_streak_7": "7 дней подряд",
   "achievement_mastered_50": "50 освоенных слов",
-  "achievement_all_rounder": "Все режимы испробованы"
+  "achievement_all_rounder": "Все режимы испробованы",
+  "telegram_reminders": "Напоминание в Telegram",
+  "telegram_reminders_hint": "Сообщение от @word_circle_bot за 2 часа до того, как серия прервётся.",
+  "telegram_reminders_waiting": "Нажми «Запустить» в Telegram, чтобы включить напоминание.",
+  "invite_title": "Пригласить друзей",
+  "invite_hint": "За каждого нового игрока, который запустит бота WordCircle по твоей ссылке, ты получаешь {embers} уголька.",
+  "invite_share": "Поделиться ссылкой",
+  "invite_copied": "Ссылка скопирована",
+  "invite_count": "Приглашено друзей: {count}",
+  "invite_share_text": "Учи со мной слова в WordCircle!"
 }

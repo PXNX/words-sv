@@ -345,5 +345,14 @@
   "achievement_streak_3": "लगातार 3 दिन",
   "achievement_streak_7": "लगातार 7 दिन",
   "achievement_mastered_50": "50 शब्दों में महारत",
-  "achievement_all_rounder": "हर मोड आज़माया"
+  "achievement_all_rounder": "हर मोड आज़माया",
+  "telegram_reminders": "Telegram रिमाइंडर",
+  "telegram_reminders_hint": "तुम्हारी लय टूटने से 2 घंटे पहले @word_circle_bot से एक संदेश।",
+  "telegram_reminders_waiting": "रिमाइंडर चालू करने के लिए Telegram में “Start” दबाओ।",
+  "invite_title": "दोस्तों को बुलाओ",
+  "invite_hint": "जो भी नया खिलाड़ी तुम्हारे लिंक से WordCircle बॉट शुरू करे, उसके लिए तुम्हें {embers} अंगारे मिलेंगे।",
+  "invite_share": "न्योता लिंक भेजो",
+  "invite_copied": "लिंक कॉपी हुआ",
+  "invite_count": "{count} दोस्तों को बुलाया",
+  "invite_share_text": "WordCircle पर मेरे साथ शब्द सीखो!"
 }

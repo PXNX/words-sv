@@ -349,5 +349,14 @@
   "achievement_streak_3": "3 days in a row",
   "achievement_streak_7": "7 days in a row",
   "achievement_mastered_50": "50 words mastered",
-  "achievement_all_rounder": "Tried every mode"
+  "achievement_all_rounder": "Tried every mode",
+  "telegram_reminders": "Telegram reminder",
+  "telegram_reminders_hint": "A message from @word_circle_bot 2 hours before your streak runs out.",
+  "telegram_reminders_waiting": "Tap “Start” in Telegram to turn the reminder on.",
+  "invite_title": "Invite friends",
+  "invite_hint": "For every new player who starts the WordCircle bot with your link, you get {embers} embers.",
+  "invite_share": "Share invite link",
+  "invite_copied": "Link copied",
+  "invite_count": "{count} friends invited",
+  "invite_share_text": "Learn words with me on WordCircle!"
 }
