@@ -7,7 +7,7 @@
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import type { Language } from '#lib/data/vocabulary.js';
-  import { playErrorSound, playSoundEffect, playSuccessSound, soundEffectSeconds, startCrackle, stopSoundEffects } from '#lib/sounds.js';
+  import { playBing, playErrorSound, playSoundEffect, playSuccessSound, soundEffectSeconds, startCrackle, stopSoundEffects } from '#lib/sounds.js';
   import { characterNames, fillName, moodFor, storiesFor, withDetails, withWeather, type CharacterId, type HeldItem, type Lights, type Mood, type Story, type StoryBeat } from './stories';
   import type { SoundEffect } from '#lib/sounds.js';
   import StoryAudioLoader from './StoryAudioLoader.svelte';
@@ -657,6 +657,8 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
     if (naturalReady(language) && settings.voiceQuality === 'natural') {
       try {
         await prepareStoryAudio(next, cast, language, token, from);
+        // The loader disappears at this point; a small bing says the clips are ready to hear.
+        if (from < next.beats.length && token === audioPreparation && thisRun === run && !left) playBing(settings.sound);
       } catch {}
     }
     return token === audioPreparation && thisRun === run && !left;

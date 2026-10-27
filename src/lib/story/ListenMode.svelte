@@ -14,7 +14,7 @@
   import { listAudioSessions, loadAudioBlob, saveAudioSession, updateAudioSessionPosition, type SavedAudio, type SavedSound, type SavedStoryStart } from './audioLibrary';
   import { generateStory, hasMissedWords } from './generated';
   import { recordActivity } from '#lib/progress/activity.js';
-  import { playChime, playSoundEffect, soundEffectSeconds, type SoundEffect } from '#lib/sounds.js';
+  import { playBing, playChime, playSoundEffect, soundEffectSeconds, type SoundEffect } from '#lib/sounds.js';
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
   import IconHeadphones from '~icons/material-symbols/headphones-rounded';
@@ -659,6 +659,7 @@
         eta = progress > 0 ? Math.max(0, elapsed / progress - elapsed) : null;
       });
       if (!generated || token !== generation) return;
+      playBing(soundEnabled);
       const { saved, blob } = generated;
       try {
         history = await listAudioSessions();
@@ -748,6 +749,7 @@
         if (token !== generation) return;
         progress = (alreadySaved + index + 1) / allStories.length;
       }
+      playBing(soundEnabled);
       progress = 1;
       eta = 0;
       const latest = latestForLanguage();
