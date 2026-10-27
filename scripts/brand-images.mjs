@@ -1,9 +1,9 @@
 // Mia, Tom and Lilith as on the home page, outside the app:
 // - brand/wordcircle-trio-512.svg/.png: a 512x512 picture for loading screens (transparent).
-// - brand/wordcircle-splash-512.svg/.png: the trio as a one-colour stencil traced into a single
-//   <path> (splash tooling accepts nothing else), kept inside the centre circle (2/3 of the width)
-//   that Android 12 splash screens and maskable icons never crop. Use it on #FFFDF7; the -light
-//   variant is the same path in #FFFDF7 for the navy #172A45 background.
+// - brand/wordcircle-splash-512.svg/.png: the Mini App loading-screen icon, shaped like Telegram's
+//   sample (https://telegram.org/resources/web-app-icon-sample.svg): a one-colour stencil traced into
+//   a single <path> with one outline, filling the 512 canvas, about 2 KB. Use it on #FFFDF7; the
+//   -light variant is the same path in #FFFDF7 for the navy #172A45 background.
 // - brand/telegram-description.png: the 640x360 picture BotFather shows above the bot's
 //   description (/setdescriptionpic); the Bot API has no method for it.
 //
@@ -56,12 +56,16 @@ function iconSvg() {
 `;
 }
 
-// Stencil colours: the face details become cut-outs, shading and blush disappear, and every solid
-// shape gets a white rim so overlapping shapes (hair over face, apron over shirt) stay apart.
+// The icon stencil keeps the file near the ~1 KB of Telegram's sample icon: each character is one
+// solid silhouette, and only the eyes and the humans' smiles are cut out. Everything finer
+// (shading, blush, brows, collar, apron, whiskers, Lilith's nose, mouth and inner ears) is dropped,
+// since every extra shape costs curves and none of it reads at icon size.
 // Groups pass their fill to unfilled children: navy groups are the humans' eyes.
-const CUT_OUT = new Set(['#7a5646', 'url(#lilith-eye)', '#fff', '#22160f', '#c86f7f']);
+const CUT_OUT = new Set(['url(#lilith-eye)']);
 const CUT_OUT_GROUPS = new Set(['#172a45']);
-const DROPPED = new Set(['#f19a8a', 'rgba(255,253,247,.3)', '#cdb497', 'url(#lilith-mask)', '#2e1f17', '#f4e9da', '#f8efe3', 'url(#arch-glow)']);
+const DROPPED = new Set(['#f19a8a', 'rgba(255,253,247,.3)', '#cdb497', 'url(#lilith-mask)', '#2e1f17', '#f4e9da', '#f8efe3', 'url(#arch-glow)', '#fff', '#7a5646', '#22160f', '#c86f7f']);
+// Lines kept: the humans' smiles (cut out) and the arch (solid).
+const KEPT_LINES = { '#7a2e2a': '#fff', '#172a45': '#000' };
 
 function stencil(markup) {
   return markup
@@ -70,27 +74,24 @@ function stencil(markup) {
     .replace(/<(circle|ellipse|rect|path)\b([^>]*?)\/>/g, (element, tag, attributes) => {
       const fill = /fill="([^"]+)"/.exec(attributes)?.[1];
       const stroke = /stroke="([^"]+)"/.exec(attributes)?.[1];
-      if (DROPPED.has(fill) || DROPPED.has(stroke)) return '';
+      if (DROPPED.has(fill)) return '';
       if (!fill && !stroke) return element;
       const rest = attributes.replace(/\s(fill|stroke|stroke-width|opacity)="[^"]*"/g, '');
-      // Lines (brows, mouths, whiskers, the collar) are drawn white on the solid shapes below.
-      if (fill === 'none' || (!fill && stroke)) {
+      if (fill === 'none' || !fill) {
+        const ink = KEPT_LINES[stroke];
+        if (!ink) return '';
         const width = Number(/stroke-width="([^"]+)"/.exec(attributes)?.[1] ?? 1);
-        const ink = stroke === '#172a45' ? '#000' : '#fff';
-        return `<${tag}${rest} fill="none" stroke="${ink}" stroke-width="${Math.max(width, 1.6)}"/>`;
+        return `<${tag}${rest} fill="none" stroke="${ink}" stroke-width="${Math.max(width, 2.4)}"/>`;
       }
-      if (CUT_OUT.has(fill)) return `<${tag}${rest} fill="#fff"/>`;
-      // The navy ground line is too thin for a rim.
-      if (fill === '#172a45') return `<${tag}${rest} fill="#000"/>`;
-      return `<${tag}${rest} fill="#000" stroke="#fff" stroke-width="1.6"/>`;
+      return `<${tag}${rest} fill="${CUT_OUT.has(fill) ? '#fff' : '#000'}"/>`;
     })
     .replace(/<g fill="([^"]+)"/g, (open, fill) => `<g fill="${CUT_OUT_GROUPS.has(fill) ? '#fff' : '#000'}"`)
     .replace(/<g fill="#[0-9a-f]+" opacity="[^"]*"/g, (open) => open.replace(/ opacity="[^"]*"/, ''));
 }
 
-// The trio's corners stay within a circle of radius 512/3: half-width * hypot(1, height/width) <= 170.
-const SPLASH_WIDTH = 300;
-const TRACE_SIZE = 2048;
+// Like Telegram's sample loading-screen icon, the drawing nearly fills the 512 canvas.
+const SPLASH_WIDTH = 448;
+const TRACE_SIZE = 1024;
 
 function splashStencilSvg() {
   const top = (512 - FAMILY.height * (SPLASH_WIDTH / FAMILY.width)) / 2;
@@ -141,20 +142,60 @@ function singleContour(d) {
     const clockwise = area(polygons[index]) > 0;
     return clockwise === (depth % 2 === 0) ? contour : reversed(contour);
   });
-  const format = (contour) => contour.segments.map((segment) => `${segment.command} ${segment.points.map((point) => point.join(' ')).join(', ')}`).join(' ');
-  const point = (contour) => contour.start.join(' ');
   const [first, ...rest] = oriented;
-  return `M ${point(first)} ${format(first)} ${rest.map((contour) => `L ${point(contour)} ${format(contour)} L ${point(first)}`).join(' ')} Z`;
+  const walk = [
+    ['M', [first.start]], ...first.segments.map((segment) => [segment.command, segment.points]),
+    ...rest.flatMap((contour) => [['L', [contour.start]], ...contour.segments.map((segment) => [segment.command, segment.points]), ['L', [first.start]]])
+  ];
+  return compact(walk, 512 / TRACE_SIZE);
+}
+
+// Writes the walk on the 512 canvas with relative commands in whole pixels, which is invisible at
+// icon size and keeps the file small. Offsets are taken from the rounded previous point, so rounding
+// never drifts.
+function compact(walk, scale) {
+  const round = (value) => Math.round(value * scale);
+  const number = (value, previous) => {
+    const text = String(Math.round(value * 10) / 10).replace(/^(-?)0\./, '$1.');
+    // A separator is only needed when the next number does not start with a sign or a dot after a decimal.
+    return previous === undefined || text.startsWith('-') || (text.startsWith('.') && previous.includes('.')) ? text : ` ${text}`;
+  };
+  let current = [0, 0];
+  let output = '';
+  let last = '';
+  for (const [command, points] of walk) {
+    const absolute = points.map(([x, y]) => [round(x), round(y)]);
+    // A cubic's points are all relative to where it starts; a polyline's (potrace writes corners as
+    // `L` with two points) are each relative to the point before.
+    const values = command === 'M' ? absolute[0]
+      : command === 'L' ? absolute.flatMap(([x, y], index) => {
+        const [fromX, fromY] = index === 0 ? current : absolute[index - 1];
+        return [x - fromX, y - fromY];
+      })
+      : absolute.flatMap(([x, y]) => [x - current[0], y - current[1]]);
+    const letter = command === 'M' ? 'M' : command.toLowerCase();
+    if (letter !== last || letter === 'M') output += letter;
+    let previous;
+    if (letter === last && letter !== 'M') previous = 'x';
+    for (const value of values) {
+      const text = number(value, previous);
+      output += text;
+      previous = text;
+    }
+    current = absolute.at(-1);
+    last = letter;
+  }
+  return `${output}Z`;
 }
 
 // Renders the stencil large and traces it into a single outline.
 async function splashSvg() {
   const bitmap = new Resvg(splashStencilSvg(), { fitTo: { mode: 'width', value: TRACE_SIZE } }).render().asPng();
-  const traced = await new Promise((resolve, reject) => potrace.trace(Buffer.from(bitmap), { threshold: 128, turdSize: 20, optTolerance: 0.3 }, (error, svg) => (error ? reject(error) : resolve(svg))));
+  const traced = await new Promise((resolve, reject) => potrace.trace(Buffer.from(bitmap), { threshold: 128, turdSize: 30, optTolerance: 1, alphaMax: 1.2 }, (error, svg) => (error ? reject(error) : resolve(svg))));
   const d = /\sd="([^"]+)"/.exec(traced)?.[1];
   if (!d) throw new Error('potrace returned no path');
   const outline = singleContour(d);
-  return (fill) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${TRACE_SIZE} ${TRACE_SIZE}" width="512" height="512"><path fill="${fill}" d="${outline}"/></svg>\n`;
+  return (fill) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="${fill}" d="${outline}"/></svg>\n`;
 }
 
 // A cream letter tile like the game boards', tilted by `angle` degrees.
