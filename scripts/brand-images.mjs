@@ -29,13 +29,14 @@ const FAMILY = { left: -9.6, width: 208.8, height: 99.2 };
 const character = (body, x, y, width, height) => `<svg x="${x}" y="${y}" width="${width}" height="${height}" viewBox="0 0 120 150">${body}</svg>`;
 const ARCH = 'M1 99.2V52.2A51.2 51.2 0 0 1 52.2 1H88.6A51.2 51.2 0 0 1 139.8 52.2V99.2';
 
-function family() {
+// `line` is the arch outline and ground line: navy on light backgrounds, cream on dark ones.
+function family(line = '#172a45') {
   return `<defs><radialGradient id="arch-glow" cx=".5" cy=".85" r=".7"><stop offset="0" stop-color="#f7e2b0"/><stop offset="1" stop-color="#fbf1da"/></radialGradient><clipPath id="arch-clip"><path d="${ARCH}Z"/></clipPath></defs>
 <path d="${ARCH}Z" fill="url(#arch-glow)"/>
 <g clip-path="url(#arch-clip)">${character(MIA, 10.8, 12.8, 64, 86.4)}${character(TOM, 60.4, 12.8, 64, 86.4)}</g>
-<path d="${ARCH}" fill="none" stroke="#172a45" stroke-width="2"/>
+<path d="${ARCH}" fill="none" stroke="${line}" stroke-width="2"/>
 ${character(LILITH, 119.2, 11.2, 70.4, 88)}
-<rect x="${FAMILY.left}" y="97.2" width="${FAMILY.width}" height="2" rx="1" fill="#172a45"/>`;
+<rect x="${FAMILY.left}" y="97.2" width="${FAMILY.width}" height="2" rx="1" fill="${line}"/>`;
 }
 
 function place(width, top, canvasWidth) {
@@ -63,13 +64,25 @@ function splashSvg() {
 `;
 }
 
+// A cream letter tile like the game boards', tilted by `angle` degrees.
+const tile = (letter, x, y, size, angle) => `<g transform="translate(${x} ${y}) rotate(${angle})"><rect x="${-size / 2 + 2.5}" y="${-size / 2 + 3}" width="${size}" height="${size}" rx="${size * 0.22}" fill="#0e1b2e" opacity=".45"/><rect x="${-size / 2}" y="${-size / 2}" width="${size}" height="${size}" rx="${size * 0.22}" fill="#fffdf7"/><text y="${size * 0.25}" text-anchor="middle" font-family="DM Serif Display" font-size="${size * 0.68}" fill="#172a45">${letter}</text></g>`;
+
+// Navy night with the logo's rings, a golden glow behind the trio and W-O-R-T tiles in the margins.
 function telegramSvg() {
-  const width = 420;
+  const width = 400;
+  const dots = [[150, 38, 3.2, '#e6a527'], [488, 30, 2.6, '#fffdf7'], [44, 160, 2.4, '#fffdf7'], [604, 182, 3, '#e6a527'], [112, 318, 2.6, '#c4522e'], [534, 330, 3.2, '#34824d'], [262, 22, 2, '#fffdf7'], [404, 344, 2, '#e6a527']];
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" width="640" height="360">
-<defs><radialGradient id="paper-glow" cx=".5" cy=".38" r=".5"><stop offset="0" stop-color="#e6a527" stop-opacity=".3"/><stop offset="1" stop-color="#e6a527" stop-opacity="0"/></radialGradient><pattern id="paper-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#172a45" stroke-opacity=".05" stroke-width="1"/></pattern></defs>
-<rect width="640" height="360" fill="#ede4d5"/><rect width="640" height="360" fill="url(#paper-grid)"/><rect width="640" height="360" fill="url(#paper-glow)"/>
-<g ${place(width, 34, 640)}>${family()}</g>
-<text x="320" y="318" text-anchor="middle" font-family="DM Serif Display" font-size="60" letter-spacing="-2.4" fill="#172a45">WordCircle</text>
+<defs><linearGradient id="night" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#21406a"/><stop offset=".55" stop-color="#172a45"/><stop offset="1" stop-color="#101e33"/></linearGradient><radialGradient id="glow" cx=".5" cy=".42" r=".42"><stop offset="0" stop-color="#e6a527" stop-opacity=".55"/><stop offset=".6" stop-color="#e6a527" stop-opacity=".12"/><stop offset="1" stop-color="#e6a527" stop-opacity="0"/></radialGradient><linearGradient id="title" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffdf7"/><stop offset="1" stop-color="#f3e6cc"/></linearGradient></defs>
+<rect width="640" height="360" fill="url(#night)"/>
+<circle cx="70" cy="58" r="118" fill="none" stroke="#e6a527" stroke-opacity=".14" stroke-width="30"/>
+<circle cx="70" cy="58" r="58" fill="none" stroke="#fffdf7" stroke-opacity=".06" stroke-width="14"/>
+<circle cx="590" cy="318" r="104" fill="none" stroke="#fffdf7" stroke-opacity=".07" stroke-width="24"/>
+<circle cx="590" cy="318" r="48" fill="none" stroke="#e6a527" stroke-opacity=".16" stroke-width="12"/>
+<ellipse cx="320" cy="150" rx="300" ry="170" fill="url(#glow)"/>
+${dots.map(([x, y, r, fill]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" opacity=".85"/>`).join('')}
+${tile('W', 56, 236, 46, -12)}${tile('O', 104, 290, 38, 9)}${tile('R', 584, 92, 44, 11)}${tile('T', 548, 146, 36, -8)}
+<g ${place(width, 40, 640)}>${family('#fffdf7')}</g>
+<text x="320" y="320" text-anchor="middle" font-family="DM Serif Display" font-size="60" letter-spacing="-2.4" fill="url(#title)">Word<tspan fill="#e6a527">Circle</tspan></text>
 </svg>`;
 }
 
