@@ -585,6 +585,19 @@ export function playChime(enabled: boolean) {
   } catch { /* Audio is optional and must never block play. */ }
 }
 
+// The "bing" that announces that a batch of clips has finished rendering.
+export function playBing(enabled: boolean) {
+  if (!enabled) return;
+  try {
+    const context = audioContext();
+    if (!context) return;
+    const start = context.currentTime + 0.02;
+    softNote(context, start, 987.77, 0.18, 0.09, 'sine');
+    softNote(context, start + 0.1, 1318.51, 0.5, 0.08, 'sine');
+    softNote(context, start + 0.1, 2637.02, 0.28, 0.02, 'sine');
+  } catch { /* Audio is optional and must never block play. */ }
+}
+
 // Cuts off every sound effect still playing, e.g. a purr when the learner leaves a story. The next
 // effect starts a fresh audio context.
 export function stopSoundEffects() {
