@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { addEmbers, bridgeAuthorized, parseStartPayload } from '../api/_lib/telegram.mjs';
+import { createHmac } from 'node:crypto';
+import { addEmbers, bridgeAuthorized, parseStartPayload, verifyInitData } from '../api/_lib/telegram.mjs';
 import { createStartEndpoint } from '../api/telegram/start.mjs';
 import { createRemindersEndpoint } from '../api/cron/reminders.mjs';
 
@@ -132,5 +133,31 @@ describe('telegram streak reminders', () => {
 		expect(sent[0][0]).toBe(11);
 		expect(sent[0][1]).toContain('91 minutes remain');
 		expect((await run('2026-10-27T23:30:00Z')).telegram).toEqual({ attempted: 0, delivered: 0 });
+	});
+});
+
+describe('telegram mini app', () => {
+	const token = '123456:test-bot-token';
+	function signed(fields, botToken = token) {
+		const params = new URLSearchParams(fields);
+		const checkString = [...params.entries()].map(([key, value]) => `${key}=${value}`).sort().join('\n');
+		const secret = createHmac('sha256', 'WebAppData').update(botToken).digest();
+		params.set('hash', createHmac('sha256', secret).update(checkString).digest('hex'));
+		return params.toString();
+	}
+	const now = Date.UTC(2026, 9, 27, 12);
+	const authDate = String(now / 1000 - 60);
+	const user = JSON.stringify({ id: 42, first_name: 'Anna', language_code: 'de', allows_write_to_pm: true });
+
+	it('accepts launch data signed with the bot token', () => {
+		expect(verifyInitData(signed({ auth_date: authDate, user, query_id: 'AAA' }), token, now)).toMatchObject({ id: 42, first_name: 'Anna' });
+	});
+
+	it('rejects forged, tampered and stale launch data', () => {
+		expect(verifyInitData(signed({ auth_date: authDate, user }, '999:other-bot'), token, now)).toBeNull();
+		expect(verifyInitData(signed({ auth_date: authDate, user }).replace('Anna', 'Eve'), token, now)).toBeNull();
+		expect(verifyInitData(signed({ auth_date: String(now / 1000 - 3 * 24 * 60 * 60), user }), token, now)).toBeNull();
+		expect(verifyInitData('user=%7B%22id%22%3A42%7D', token, now)).toBeNull();
+		expect(verifyInitData(signed({ auth_date: authDate, user }), '', now)).toBeNull();
 	});
 });

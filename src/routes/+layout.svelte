@@ -14,10 +14,15 @@ import StartupLoader from '#lib/StartupLoader.svelte';
 	import { autoUpdateOnStart } from '#lib/pwaUpdate.js';
 	import { prepareNatural } from '#lib/story/naturalVoices.svelte.js';
 	import { pageTitle } from '#lib/seo.js';
+	import { miniAppLaunch } from '#lib/telegramMiniApp.js';
+	import { adoptMiniAppProfile } from '#lib/settings/telegramClient.js';
 	import IconHome from '~icons/material-symbols/home-rounded';
 	let { children } = $props();
 	let hydrated = $state(false);
 	let previousLanguage = settings.lang;
+	// Inside Telegram the player's profile is taken over before any page asks for a name or language.
+	const telegramLaunch = typeof window === 'undefined' ? null : miniAppLaunch();
+	if (telegramLaunch) adoptMiniAppProfile(telegramLaunch);
 
 	const routePath = $derived(page.url.pathname.replace(/\/+$/, '') || '/');
 	const isHome = $derived(routePath === '/');

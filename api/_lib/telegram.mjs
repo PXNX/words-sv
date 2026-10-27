@@ -1,4 +1,4 @@
-import { randomBytes, timingSafeEqual } from 'node:crypto';
+import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 import { FREEZE_EVERY, MAX_FREEZES } from './streak.mjs';
 
 // @word_circle_bot (the ptb-words repo) polls for updates on its own server. It forwards `/start`
@@ -26,6 +26,27 @@ export function bridgeAuthorized(authorization, secret = process.env.TELEGRAM_BR
 	const token = Buffer.from(authorization.slice(7));
 	const expected = Buffer.from(secret);
 	return token.length === expected.length && timingSafeEqual(token, expected);
+}
+
+/** The Telegram user behind a Mini App launch, once Telegram's signature over `initData` checks out
+ * against the bot token; null for anything forged, unsigned or older than `maxAgeSeconds`. */
+export function verifyInitData(initData, token = process.env.TELEGRAM_BOT_TOKEN ?? '', now = Date.now(), maxAgeSeconds = 24 * 60 * 60) {
+	if (!token || typeof initData !== 'string' || initData.length > 4096) return null;
+	const params = new URLSearchParams(initData);
+	const hash = params.get('hash') ?? '';
+	params.delete('hash');
+	const checkString = [...params.entries()].map(([key, value]) => `${key}=${value}`).sort().join('\n');
+	const secret = createHmac('sha256', 'WebAppData').update(token).digest();
+	const expected = createHmac('sha256', secret).update(checkString).digest('hex');
+	if (hash.length !== expected.length || !timingSafeEqual(Buffer.from(hash), Buffer.from(expected))) return null;
+	const authDate = Number(params.get('auth_date'));
+	if (!Number.isFinite(authDate) || now / 1000 - authDate > maxAgeSeconds) return null;
+	try {
+		const user = JSON.parse(params.get('user') ?? '');
+		return Number.isSafeInteger(user?.id) && user.id > 0 ? user : null;
+	} catch {
+		return null;
+	}
 }
 
 /** `r_<code>` turns on reminders for the device that made the code; `i_<code>` is a player's invite. */
