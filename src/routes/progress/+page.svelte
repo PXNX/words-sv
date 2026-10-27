@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
-  import { settings } from '#lib/state/settings.svelte.js';
+  import { settings, FIRST_NAME_MAX_LENGTH } from '#lib/state/settings.svelte.js';
   import { playableLanguages, wordMetadata, type Language } from '#lib/data/vocabulary.js';
   import { readVocabularyProgressByLanguage } from '#lib/vocab/spacedRepetition.js';
   import { readGrammarProgressByLanguage } from '#lib/grammar/learning.js';
@@ -12,11 +12,17 @@
   import { readReviewLedger, type ReviewLedger } from '#lib/review/ledger.js';
   import { completedIds, countActivity, readActivity, type ActivityEvent } from '#lib/progress/activity.js';
   import { buildMilestones, buildWeeklyRecap, milestonePercent, nextMilestone, weekStartTimestamp, type MilestoneId } from '#lib/progress/milestones.js';
+  import { buildAchievements, unlockedCount, type AchievementId } from '#lib/progress/achievements.js';
   import IconExpand from '~icons/material-symbols/expand-more-rounded';
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
   import IconPending from '~icons/material-symbols/radio-button-unchecked-rounded';
   import IconFlame from '~icons/material-symbols/local-fire-department-rounded';
+  import IconEdit from '~icons/material-symbols/edit-rounded';
+  import IconClose from '~icons/material-symbols/close-rounded';
   import Companion from '#lib/story/Companion.svelte';
+  import StoryCharacter from '#lib/story/StoryCharacter.svelte';
+  import AvatarEditor from '#lib/profile/AvatarEditor.svelte';
+  import { defaultAvatar } from '#lib/profile/avatar.js';
   import type { Mood } from '#lib/story/stories.js';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
@@ -79,7 +85,31 @@
     streakRepairHint: (count: number, need: number) => m.streak_repair_hint({ count, need }, { locale: settings.interfaceLocale }),
     streakRepairCta: m.streak_repair_cta({}, { locale: settings.interfaceLocale }),
     streakRepairNone: m.streak_repair_none({}, { locale: settings.interfaceLocale }),
-    streakRestart: (count: number) => m.streak_restart({ count }, { locale: settings.interfaceLocale })
+    streakRestart: (count: number) => m.streak_restart({ count }, { locale: settings.interfaceLocale }),
+    profileTitle: m.profile_title({}, { locale: settings.interfaceLocale }),
+    profileHint: m.profile_hint({}, { locale: settings.interfaceLocale }),
+    profileEdit: m.profile_edit({}, { locale: settings.interfaceLocale }),
+    profileNameEdit: m.profile_name_edit({}, { locale: settings.interfaceLocale }),
+    profileNameSave: m.profile_name_save({}, { locale: settings.interfaceLocale }),
+    profileNameCancel: m.profile_name_cancel({}, { locale: settings.interfaceLocale }),
+    profileNameEmpty: m.profile_name_empty({}, { locale: settings.interfaceLocale }),
+    achievementsTitle: m.achievements_title({}, { locale: settings.interfaceLocale }),
+    achievementsUnlocked: (done: number, total: number) => m.achievements_unlocked({ done, total }, { locale: settings.interfaceLocale }),
+    achievementsNone: m.achievements_none({}, { locale: settings.interfaceLocale })
+  });
+
+  // Achievement names live here, so the pure model only deals with ids and numbers.
+  const achievementLabels = $derived<Record<AchievementId, string>>({
+    first_step: m.achievement_first_step({}, { locale: settings.interfaceLocale }),
+    vocab_100: m.achievement_vocab_100({}, { locale: settings.interfaceLocale }),
+    story_5: m.achievement_story_5({}, { locale: settings.interfaceLocale }),
+    reading_5: m.achievement_reading_5({}, { locale: settings.interfaceLocale }),
+    grammar_50: m.achievement_grammar_50({}, { locale: settings.interfaceLocale }),
+    perfect_10: m.achievement_perfect_10({}, { locale: settings.interfaceLocale }),
+    streak_3: m.achievement_streak_3({}, { locale: settings.interfaceLocale }),
+    streak_7: m.achievement_streak_7({}, { locale: settings.interfaceLocale }),
+    mastered_50: m.achievement_mastered_50({}, { locale: settings.interfaceLocale }),
+    all_rounder: m.achievement_all_rounder({}, { locale: settings.interfaceLocale })
   });
 
   // Milestone names live here, so the pure milestone model only deals with ids and numbers.
@@ -142,6 +172,10 @@
   let ledger = $state<ReviewLedger>({});
   let progressReady = $state(false);
   let shareNote = $state('');
+  // The name and the character are edited right here, not in the settings panel.
+  let editingName = $state(false);
+  let nameDraft = $state('');
+  let editingAvatar = $state(false);
 
   const textsRead = $derived(completedIds(activity, 'reading'));
   const a1TextIds = $derived(readingTextsFor(settings.lang, 'a1', false).map((text) => text.id));
@@ -157,6 +191,12 @@
     trickyCleared: countActivity(activity, 'tricky_cleared')
   }));
   const next = $derived(nextMilestone(milestones));
+  const achievements = $derived(buildAchievements({
+    activity,
+    bestStreak: settings.streak.bestStreak,
+    masteredWords
+  }));
+  const unlocked = $derived(unlockedCount(achievements));
   const weekly = $derived(buildWeeklyRecap({
     ledger,
     activity,
@@ -192,6 +232,23 @@
     return hours > 0 ? `${hours}h ${String(minutes % 60).padStart(2, '0')}m` : `${minutes}m`;
   }
 
+  function startNameEdit() {
+    nameDraft = settings.firstName;
+    editingName = true;
+  }
+  function submitName(event: SubmitEvent) {
+    event.preventDefault();
+    const name = nameDraft.trim();
+    if (!name) return;
+    settings.setFirstName(name);
+    nameDraft = settings.firstName;
+    editingName = false;
+  }
+  function cancelNameEdit() {
+    editingName = false;
+    nameDraft = settings.firstName;
+  }
+
   let streakTimer: number | null = null;
   let repairOffer = $state<StreakRepair | null>(null);
   function refreshStreak() {
@@ -202,6 +259,7 @@
   onMount(() => {
     activity = readActivity();
     ledger = readReviewLedger();
+    nameDraft = settings.firstName;
     progressReady = true;
     void refreshStreak();
     streakTimer = window.setInterval(() => void refreshStreak(), 30_000);
@@ -213,6 +271,34 @@
 
 <section class="flex-1 min-h-0 m-0 px-[clamp(1rem,5vw,2rem)] pb-[clamp(1rem,5vw,2rem)] pt-[clamp(2.9rem,10vw,3.6rem)] overflow-x-hidden overflow-y-auto bg-transparent" dir={interfaceDirection} lang={settings.interfaceLocale} aria-label={labels.title}>
   <h1 class="m-0 text-center text-base-content font-['DM_Serif_Display',serif] text-[clamp(1.6rem,7vw,2.2rem)] font-normal tracking-[-.03em] leading-none">{labels.title}</h1>
+
+  <!-- Profile: the learner's name and own story character, plus what they have unlocked -->
+  <section class="panel-play mt-[1.2rem] px-4 pt-[.9rem] pb-4" aria-labelledby="progress-profile-heading">
+    <div class="flex items-center gap-3">
+      <span class="progress-avatar" aria-hidden="true"><StoryCharacter id="kumar" avatar={settings.avatar ?? defaultAvatar} mood="happy" still /></span>
+      <div class="min-w-0 flex-1">
+        <h2 id="progress-profile-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.profileTitle}</h2>
+        {#if editingName}
+          <form class="mt-[.35rem] flex items-center gap-[.3rem]" onsubmit={submitName}>
+            <!-- svelte-ignore a11y_autofocus -->
+            <input class="progress-name-input" bind:value={nameDraft} type="text" autocomplete="given-name" autocapitalize="words" maxlength={FIRST_NAME_MAX_LENGTH} aria-label={labels.profileNameEdit} autofocus />
+            <button type="submit" class="progress-edit" aria-label={labels.profileNameSave} title={labels.profileNameSave}><IconCheck aria-hidden="true" /></button>
+            <button type="button" class="progress-edit" aria-label={labels.profileNameCancel} title={labels.profileNameCancel} onclick={cancelNameEdit}><IconClose aria-hidden="true" /></button>
+          </form>
+        {:else}
+          <div class="mt-[.2rem] flex items-center gap-[.35rem]">
+            <p class="progress-name">{settings.firstName || labels.profileNameEmpty}</p>
+            <button type="button" class="progress-edit" aria-label={labels.profileNameEdit} title={labels.profileNameEdit} onclick={startNameEdit}><IconEdit aria-hidden="true" /></button>
+          </div>
+        {/if}
+      </div>
+    </div>
+    <p class="m-0 mt-[.55rem] text-base-content/65 text-[.6rem] font-bold leading-[1.4]">{labels.profileHint}</p>
+    <button type="button" class="btn-play btn-play-soft btn-play-sm mt-[.6rem]" aria-expanded={editingAvatar} onclick={() => (editingAvatar = !editingAvatar)}>{labels.profileEdit}</button>
+    {#if editingAvatar}
+      <div class="mt-[.7rem]"><AvatarEditor value={settings.avatar ?? defaultAvatar} onchange={(next) => settings.setAvatar(next)} /></div>
+    {/if}
+  </section>
 
   <!-- Streak -->
   <section class="panel-play mt-[1.2rem] px-4 pt-[.9rem] pb-4" aria-labelledby="progress-streak-heading">
@@ -301,6 +387,24 @@
         </li>
       {/each}
     </ul>
+  </section>
+
+  <!-- Achievements: badges earned from real practice. -->
+  <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4" aria-labelledby="progress-achievements-heading">
+    <div class="flex items-baseline justify-between gap-3">
+      <h2 id="progress-achievements-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.achievementsTitle}</h2>
+      <span class="text-base-content/55 text-[.58rem] font-extrabold tabular-nums">{labels.achievementsUnlocked(unlocked, achievements.length)}</span>
+    </div>
+    <ul class="achievement-grid">
+      {#each achievements as achievement (achievement.id)}
+        <li class="achievement" class:done={achievement.done}>
+          <span class="achievement-icon" aria-hidden="true">{#if achievement.done}<IconCheck />{:else}<IconPending />{/if}</span>
+          <span class="achievement-label">{achievementLabels[achievement.id]}</span>
+          <span class="achievement-progress tabular-nums">{achievement.value}/{achievement.target}</span>
+        </li>
+      {/each}
+    </ul>
+    {#if unlocked === 0}<p class="m-0 mt-[.5rem] text-base-content/55 text-[.6rem] font-bold leading-[1.4]">{labels.achievementsNone}</p>{/if}
   </section>
 
   <!-- Weekly recap: what actually happened this week, not a guessed average. -->
@@ -404,4 +508,23 @@
   .progress-goal.active { border-color: #172a45; background: #172a45; color: #fffdf7; }
   .progress-goal:focus-visible { outline: 2px solid #e6a527; outline-offset: 2px; }
   :global(html.dark) .progress-goal.active { border-color: #e6a527; background: #e6a527; color: #172a45; }
+  .progress-avatar { display:grid;place-items:center;flex:none;width:4.4rem;height:5.4rem;border-radius:16px 11px 14px 12px / 12px 15px 11px 16px;background:radial-gradient(circle at 50% 85%,rgba(230,165,39,.32),transparent 60%),rgba(23,42,69,.05); }
+  .progress-avatar :global(.story-character) { width:3.6rem;height:4.5rem; }
+  .progress-name { margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--play-ink,#172a45);font-family:'DM Serif Display',serif;font-size:1.35rem;line-height:1.1; }
+  .progress-name-input { min-width:0;flex:1;min-height:2rem;padding:.15rem .5rem;border:2px solid var(--play-line);border-radius:.55rem;background:#fffdf7;color:#172a45;font-size:.78rem;font-weight:800;outline:0; }
+  .progress-edit { display:grid;place-items:center;flex:none;width:1.7rem;height:1.7rem;padding:0;border:1.5px solid var(--play-line);border-radius:999px;background:transparent;color:var(--play-ink,#172a45);cursor:pointer; }
+  .progress-edit :global(svg) { width:1rem;height:1rem; }
+  .progress-edit:focus-visible,.progress-name-input:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
+  .achievement-grid { margin:.6rem 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(8.5rem,1fr));gap:.35rem; }
+  .achievement { display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:.35rem;align-items:center;padding:.4rem .5rem;border:1.5px solid var(--play-line);border-radius:.6rem;opacity:.55; }
+  .achievement.done { opacity:1;background:rgba(230,165,39,.12);border-color:#e6a527; }
+  .achievement-icon { grid-row:1 / span 2;display:grid;place-items:center;color:var(--play-ink,#172a45); }
+  .achievement-icon :global(svg) { width:1.15rem;height:1.15rem; }
+  .achievement.done .achievement-icon { color:#34824d; }
+  .achievement-label { color:var(--play-ink,#172a45);font-size:.62rem;font-weight:800;line-height:1.25; }
+  .achievement-progress { color:var(--play-ink,#172a45);opacity:.55;font-size:.55rem;font-weight:800; }
+  :global(html.dark) .progress-avatar { background:radial-gradient(circle at 50% 85%,rgba(230,165,39,.28),transparent 60%),rgba(11,22,38,.35); }
+  :global(html.dark) .progress-name-input { border-color:#0b1626;background:#2b4a70;color:#fffdf7; }
+  :global(html.dark) .achievement { border-color:rgba(255,253,247,.2); }
+  :global(html.dark) .achievement.done { border-color:#e6a527;background:rgba(230,165,39,.16); }
 </style>

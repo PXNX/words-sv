@@ -2,6 +2,7 @@ import type { Language, VocabularyLevel } from '#lib/data/vocabulary.js';
 import { vocabularyLevels } from '#lib/data/vocabulary.js';
 import type { SoundEffect } from '#lib/sounds.js';
 import { german, germanStories } from './germanStories';
+import { kumarStandIn } from './standIn';
 
 export type Text = Record<Language, string>;
 export type CharacterId = 'crow' | 'seagull' | 'ludwig' | 'deer' | 'fox' | 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello' | 'lilith' | 'hans' | 'albert' | 'sabine' | 'enzo' | 'jana' | 'becker' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake' | 'ali' | 'robert' | 'fritz' | 'tobias' | 'selma' | 'kumar' | 'simon' | 'banker' | 'wirt';
@@ -66,6 +67,11 @@ function same(text: string): Text {
 // The colours a ball on stage can have.
 export const ballColours = { red: '#d64b45', blue: '#3d6fd1', yellow: '#e8b923', green: '#3f9a4f' };
 
+// Kumar's name in every language, unless the learner's own character plays his part.
+function playedByLearner(names: Text): Text {
+  return new Proxy(names, { get: (target, key) => (typeof key === 'string' && key in target && kumarStandIn()) || Reflect.get(target, key) });
+}
+
 export const characterNames: Record<CharacterId, Text> = {
   mia: { de: 'Mia', en: 'Mia', fr: 'Mia', it: 'Mia', es: 'Mia', pt: 'Mia', uk: 'Мія' },
   leo: { de: 'Leo', en: 'Leo', fr: 'Léo', it: 'Leo', es: 'Leo', pt: 'Léo', uk: 'Лео' },
@@ -98,7 +104,7 @@ export const characterNames: Record<CharacterId, Text> = {
   fritz: { de: 'Bauer Fritz', en: 'Farmer Fritz', fr: 'Fermier Fritz', it: 'Contadino Fritz', es: 'Granjero Fritz', pt: 'Fazendeiro Fritz', uk: 'Фермер Фріц' },
   tobias: { de: 'Tobias', en: 'Tobias', fr: 'Tobias', it: 'Tobias', es: 'Tobias', pt: 'Tobias', uk: 'Тобіас' },
   selma: { de: 'Selma', en: 'Selma', fr: 'Selma', it: 'Selma', es: 'Selma', pt: 'Selma', uk: 'Сельма' },
-  kumar: { de: 'Kumar', en: 'Kumar', fr: 'Kumar', it: 'Kumar', es: 'Kumar', pt: 'Kumar', uk: 'Кумар' },
+  kumar: playedByLearner({ de: 'Kumar', en: 'Kumar', fr: 'Kumar', it: 'Kumar', es: 'Kumar', pt: 'Kumar', uk: 'Кумар' }),
   simon: { de: 'Simon', en: 'Simon', fr: 'Simon', it: 'Simon', es: 'Simon', pt: 'Simon', uk: 'Сімон' },
   banker: { de: 'Herr Bäuerle', en: 'Mr Bäuerle', fr: 'M. Bäuerle', it: 'Sig. Bäuerle', es: 'Sr. Bäuerle', pt: 'Sr. Bäuerle', uk: 'Пан Баєрле' },
   wirt: { de: 'Der Wirt', en: 'The innkeeper', fr: "L'aubergiste", it: "L'oste", es: 'El tabernero', pt: 'O estalajadeiro', uk: 'Шинкар' }
@@ -808,7 +814,14 @@ export function moodFor(beat: Extract<StoryBeat, { kind: 'line' }>): Mood {
 }
 
 export function fillName(text: string, name: string) {
-  return text.replaceAll('{name}', name);
+  const filled = text.replaceAll('{name}', name);
+  const learner = kumarStandIn();
+  return learner ? playKumar(filled, learner) : filled;
+}
+// The learner's own character takes Kumar's part: "Herr Kumar" and "Kumar" become their first name,
+// "Kumars" its genitive (with an apostrophe after a final s, ß, x or z, as German writes it).
+function playKumar(text: string, learner: string) {
+  return text.replace(/(?:Herrn? )?(?:Kumar|Кумар)(s?)(?!\p{L})/gu, (_, genitive: string) => genitive ? `${learner}${/[sßxz]$/i.test(learner) ? '’' : 's'}` : learner);
 }
 
 const outdoorScenes: SceneId[] = ['frankfurt', 'cologne', 'munich', 'hamburg', 'berlin', 'cliffs', 'mainau', 'lindau', 'castle', 'alps', 'forest', 'park', 'station', 'square', 'beergarden', 'farm', 'zoo', 'beach', 'airport'];
