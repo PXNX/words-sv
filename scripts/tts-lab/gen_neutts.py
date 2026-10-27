@@ -1,6 +1,8 @@
 """NeuTTS: Air for English, Nano for German, French and Spanish. Voices are cloned from a
 reference clip plus its transcript: the samples Neuphonic ships for that language, and the
-Supertonic presets of the same language (run gen_supertonic.py first) to get a wider cast."""
+Supertonic presets of the same language (run gen_supertonic.py first) to get a wider cast.
+
+All Neuphonic repos are gated: accept the terms on Hugging Face and run `hf auth login` first."""
 import torch
 import soundfile as sf
 from neutts import NeuTTS
@@ -13,7 +15,11 @@ REPO = LAB / "neutts-repo" / "samples"
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 for lang, backbone in BACKBONES.items():
-    tts = NeuTTS(backbone_repo=backbone, backbone_device=device, codec_repo="neuphonic/neucodec", codec_device=device)
+    try:
+        tts = NeuTTS(backbone_repo=backbone, backbone_device=device, codec_repo="neuphonic/neucodec", codec_device=device)
+    except OSError as error:
+        print("neutts skip", lang, error.__class__.__name__, str(error).splitlines()[0], flush=True)
+        continue
     refs = {name: (REPO / f"{name}.wav", (REPO / f"{name}.txt").read_text(encoding="utf-8").strip()) for name in SAMPLES[lang]}
     # The last test sentence is the reference, so the clone never just repeats its own prompt.
     for preset in PRESETS:
