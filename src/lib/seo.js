@@ -108,6 +108,30 @@ export const pages = {
 		kicker: 'Hören',
 		icon: 'headphones-rounded'
 	},
+	'/repeat': {
+		title: 'Wiederholen',
+		description: 'Alle fälligen Wörter aus Vokabeln, Grammatik, Lesen und Aussprache in einer gemischten Wiederholung.',
+		kicker: 'Wiederholung',
+		icon: 'replay-rounded'
+	},
+	'/impressum': {
+		title: 'Impressum',
+		description: 'Anbieterkennzeichnung von WordCircle nach § 5 DDG.',
+		kicker: 'Rechtliches',
+		icon: 'gavel-rounded'
+	},
+	'/datenschutz': {
+		title: 'Datenschutz',
+		description: 'Welche Daten WordCircle, der Telegram-Bot und die Mini-App verarbeiten und welche Rechte du hast.',
+		kicker: 'Rechtliches',
+		icon: 'shield-person-rounded'
+	},
+	'/bedingungen': {
+		title: 'Nutzungs- und Spendenbedingungen',
+		description: 'Bedingungen für WordCircle und freiwillige Spenden mit Telegram Stars – ohne Rückerstattung.',
+		kicker: 'Rechtliches',
+		icon: 'description-rounded'
+	},
 	'/progress': {
 		title: 'Dein Fortschritt',
 		description: 'Deine tägliche Serie und dein Lernfortschritt auf einen Blick.',
