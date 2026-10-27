@@ -21,6 +21,9 @@ CREATE TABLE IF NOT EXISTS wordcircle_streak_devices (
   vocabulary_goal TINYINT UNSIGNED NOT NULL DEFAULT 8,
   freezes TINYINT UNSIGNED NOT NULL DEFAULT 0,
   qualified_days INT UNSIGNED NOT NULL DEFAULT 0,
+  reward_collected TINYINT(1) NOT NULL DEFAULT 0,
+  -- NULL until the first collection; read as qualified_days % 7 so old progress carries over.
+  embers TINYINT UNSIGNED NULL,
   last_seen_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX wordcircle_streak_devices_last_qualified_idx (last_qualified_day)
 );
@@ -47,6 +50,12 @@ CREATE TABLE IF NOT EXISTS wordcircle_streak_devices (
 --   ADD COLUMN definitions_completed TINYINT(1) NOT NULL DEFAULT 0,
 --   ADD COLUMN hangman_completed TINYINT(1) NOT NULL DEFAULT 0,
 --   ADD COLUMN alltag_correct INT UNSIGNED NOT NULL DEFAULT 0;
+
+-- Migration for the collectable daily reward. api/streak/progress.mjs also runs this on its own
+-- the first time it meets a database without these columns.
+-- ALTER TABLE wordcircle_streak_devices
+--   ADD COLUMN reward_collected TINYINT(1) NOT NULL DEFAULT 0,
+--   ADD COLUMN embers TINYINT UNSIGNED NULL;
 
 CREATE TABLE IF NOT EXISTS wordcircle_push_subscriptions (
   endpoint_hash CHAR(64) NOT NULL PRIMARY KEY,

@@ -12,7 +12,8 @@ export type StreakEvent =
 	| 'listen_completed'
 	| 'pronunciation_practised'
 	| 'hangman_completed'
-	| 'alltag_correct';
+	| 'alltag_correct'
+	| 'reward_collected';
 
 export type StreakMode = 'vocab' | 'circle' | 'definitions' | 'wordle' | 'reading' | 'story' | 'grammar' | 'listen' | 'pronunciation' | 'hangman' | 'alltag';
 
@@ -37,8 +38,11 @@ export type ClientStreak = {
 	minutesRemaining: number;
 	// One earned freeze bridges a single missed day, so a long streak does not vanish overnight.
 	freezes: number;
-	// Every qualified day counts toward the next freeze.
+	// Every qualified day counts toward the streak history.
 	qualifiedDays: number;
+	// Finishing today's challenge unlocks one ember; collecting FREEZE_EVERY embers forges a freeze.
+	rewardCollected: boolean;
+	embers: number;
 };
 
 export const VOCABULARY_GOALS = [5, 8, 12] as const;
@@ -108,13 +112,20 @@ function defaultState(now = new Date()): ClientStreak {
 		vocabularyGoal: readDailyGoal(),
 		minutesRemaining: minutesLeft(now),
 		freezes: 0,
-		qualifiedDays: 0
+		qualifiedDays: 0,
+		rewardCollected: false,
+		embers: 0
 	};
 }
 
 function numberField(value: unknown, fallback = 0) {
 	const number = Number(value);
 	return Number.isSafeInteger(number) && number >= 0 ? number : fallback;
+}
+
+// Devices from before the daily reward keep their progress toward the next freeze.
+function embersField(saved: Partial<ClientStreak>) {
+	return saved.embers === undefined ? numberField(saved.qualifiedDays) % FREEZE_EVERY : Math.min(FREEZE_EVERY, numberField(saved.embers));
 }
 
 function rememberRepair(dateKeyValue: string, saved: Partial<ClientStreak>) {
@@ -157,7 +168,8 @@ export function readStreak(now = new Date()) {
 				bestStreak: Math.max(numberField(saved.bestStreak), streakCount),
 				lastQualifiedDay,
 				freezes,
-				qualifiedDays: numberField(saved.qualifiedDays)
+				qualifiedDays: numberField(saved.qualifiedDays),
+				embers: embersField(saved)
 			};
 		}
 		return {
@@ -179,7 +191,9 @@ export function readStreak(now = new Date()) {
 			vocabularyGoal: goal,
 			minutesRemaining: minutesLeft(now),
 			freezes: Math.min(MAX_FREEZES, numberField(saved.freezes)),
-			qualifiedDays: numberField(saved.qualifiedDays)
+			qualifiedDays: numberField(saved.qualifiedDays),
+			rewardCollected: Boolean(saved.rewardCollected),
+			embers: embersField(saved)
 		};
 	} catch { return defaultState(now); }
 }
@@ -215,10 +229,26 @@ function settleQualification(state: ClientStreak, force = false): ClientStreak {
 		return next;
 	}
 	next.qualifiedDays = state.qualifiedDays + 1;
-	if (next.qualifiedDays % FREEZE_EVERY === 0) next.freezes = Math.min(MAX_FREEZES, state.freezes + 1);
 	next.streakCount = state.lastQualifiedDay === previousDate(state.dateKey) ? state.streakCount + 1 : 1;
 	next.lastQualifiedDay = state.dateKey;
 	next.bestStreak = Math.max(state.bestStreak, next.streakCount);
+	return next;
+}
+
+/** Whether today's challenge is done and its ember still waits to be collected. */
+export function rewardReady(state: ClientStreak): boolean {
+	return state.qualified && !state.rewardCollected;
+}
+
+/* Collects today's ember once. A full set of embers turns into a freeze as soon as there is room
+   for one, so embers collected while both freezes are stocked are not lost. */
+export function collectReward(state: ClientStreak): ClientStreak {
+	if (!rewardReady(state)) return state;
+	const next = { ...state, rewardCollected: true, embers: Math.min(FREEZE_EVERY, state.embers + 1) };
+	if (next.embers >= FREEZE_EVERY && next.freezes < MAX_FREEZES) {
+		next.freezes += 1;
+		next.embers = 0;
+	}
 	return next;
 }
 
@@ -237,6 +267,7 @@ export function applyLocalEvent(current: ClientStreak, event: StreakEvent, now =
 	if (event === 'pronunciation_practised') next.pronunciationAttempts += 1;
 	if (event === 'hangman_completed') next.hangmanCompleted = true;
 	if (event === 'alltag_correct') next.alltagCorrect += 1;
+	if (event === 'reward_collected') return writeStreak(collectReward(next));
 	return writeStreak(settleQualification(next));
 }
 
