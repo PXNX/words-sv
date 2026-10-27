@@ -115,3 +115,47 @@ finishes the table can be refined and the character-to-speaker mapping re-valida
 | `src/lib/story/StoryMode.svelte` | Treats recorded voices as ready instantly |
 | `scripts/build-character-voices.ts` | Edge TTS build script (endpoint broken) |
 | `scripts/build-neutts-voices.ts` | NeuTTS Air build script (needs Python/llama-cpp) |
+## Engine comparison (2026-10-27, `scripts/tts-lab/`)
+
+The lab renders the same three sentences per language with every engine into `C:\dev\tts-lab\out`
+(outside the repo), then `evaluate.py` scores each clip:
+
+- **Intelligible**: Whisper large-v3-turbo transcribes the clip with the language forced; mean
+  character error rate (CER) ≤ 10 %.
+- **Distinct**: ECAPA speaker embedding per voice; two voices with cosine similarity ≥ 0.55 count
+  as the same person. The engine's score is the largest set of intelligible, mutually distinct voices.
+
+Setup: `uv venv --python 3.12` in `C:\dev\tts-lab`, torch cu128, `voxcpm`, `neutts[onnx]`,
+`supertonic`, `omnivoice`, `piper-tts`, `faster-whisper`, `speechbrain`; `torchao<0.14` (newer
+versions break torchtune, which neucodec imports). Run `gen_*.py`, then `evaluate.py`, which writes
+`report.html` (with audio players) and `report.json`.
+
+Distinct intelligible voices per language:
+
+| Language | Supertonic 3 | OmniVoice | Piper (current app) | VoxCPM2 |
+| --- | --- | --- | --- | --- |
+| de | **7** | 3 | 1 | 3 of 3 rendered |
+| en | **9** | 4 | 5 | – |
+| fr | **6** | 3 | 1 | – |
+| it | **6** | 4 | 3 | – |
+| es | **7** | 4 | 2 | – |
+| pt | **8** | 4 | 0 | – |
+| uk | **5** | 2 | 3 | not supported |
+
+Findings:
+
+- **Supertonic 3 wins every language**: near-zero CER and 5–9 distinct presets (M1–M5, F1–F5). It is
+  also the lightest (99M parameters, ONNX on the CPU, runs in the browser via onnxruntime-web).
+- **Piper MLS garbles the first sentence of a two-sentence line** ("Guten Morgen!" becomes about
+  3 s of unintelligible sound), so all eight MLS speakers sit around 19 % CER. Thorsten is fine.
+- **OmniVoice** is intelligible but its designed voices are not distinct outside English (the German
+  women are 0.72–0.78 similar); its voice design is trained on Chinese and English only.
+- **VoxCPM2** is clean and its voices are very distinct, but the "middle-aged male" narrator came out
+  at 190 Hz, so it does not follow the description reliably. On the CPU it took about 13 minutes per
+  clip (the 2B model does not fit next to other GPU users on the 6 GB RTX 3060), so only 9 German clips
+  exist; rerun `gen_voxcpm.py` on a free GPU to finish (it resumes).
+- **NeuTTS** (Air, Nano German/French/Spanish, and the neucodec codec) is gated on Hugging Face:
+  accept the terms and run `hf auth login`, then rerun `gen_neutts.py`.
+
+Recommendation: pre-generate story clips with Supertonic 3, matching presets to characters by
+measured pitch, and serve them through the "Recorded" voice option.
