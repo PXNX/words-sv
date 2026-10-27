@@ -241,11 +241,13 @@
     saveListenProgress(true);
   }
   // The clip that follows the current one: the player works through the saved audios like a
-  // playlist and only settles on the recap after the last one.
+  // playlist and only settles on the recap after the last one. Creation order, not the history's
+  // "last played" order, so saving the position of the clip that just ended cannot reshuffle it.
   function nextSession(): SavedAudio | null {
     if (!currentId) return null;
-    const index = visibleHistory.findIndex((session) => session.id === currentId);
-    return index >= 0 ? visibleHistory[index + 1] ?? null : null;
+    const playlist = [...visibleHistory].sort((left, right) => right.createdAt - left.createdAt);
+    const index = playlist.findIndex((session) => session.id === currentId);
+    return index >= 0 ? playlist[index + 1] ?? null : null;
   }
   function finishSession() {
     if (sessionDone) return;
