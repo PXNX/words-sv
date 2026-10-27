@@ -105,12 +105,37 @@ tests/build, a focused commit and a push to `main`.
 - [x] Fall back to the browser voice whenever a clip is still missing.
 - [x] Drop clips of an older voice model and cap decoded buffers in memory.
 
+## 8. A learner profile that belongs to the player (M)
+
+- [x] Move the first name out of the settings panel onto `/progress`, with a small edit button
+  (save / cancel, empty state asks for the name).
+- [x] Give the learner their own story character: face, eyes, nose, skin, hair style and colour,
+  shirt style and colour, plus one accessory, all from a fixed storybook palette.
+- [x] Draw the character with the same `StoryCharacter` component as the cast, so the preview and
+  the stories match.
+- [x] Let the learner's character take Kumar's part in the stories, under the learner's own name,
+  once both a name and an avatar exist; stories without Kumar keep their own cast.
+- [x] Add ten achievements on `/progress` (first step, 100 words, 5 stories, 5 texts, 50 grammar
+  tasks, 10 perfect pronunciations, 3- and 7-day streaks, 50 mastered words, every mode tried).
+- [x] Keep achievements a pure model over the activity log, best streak and mastered words.
+- [x] Localise all new labels in the nine interface locales.
+
+## 9. Voice loading and installed-app chrome (S)
+
+- [x] Show an ETA on the word-bank loading screen in `/vocab` and `/listen`, fed by the voice
+  download's own remaining-time estimate.
+- [x] Run the installed app fullscreen (`display: fullscreen` with `standalone` as fallback), so
+  no URL bar is shown.
+- [x] Remove the duplicate manifest link from `app.html`.
+
 ## Verification checklist
 
 - [x] Vitest suites for new pure helpers (streak, Today card, ledger, milestones, Lilith moods,
   word-bank ordering and spoken forms).
 - [x] `npm run build` exits 0.
-- [x] `npm run check` stays at the known baseline (69 errors / 6 warnings).
+- [x] `npm run check` adds no new errors: it reports 76 errors / 6 warnings, of which 7 come
+  from the earlier voice-provider modules (CDN URL imports and the missing
+  `src/lib/data/neutts-voices.json`); the rest is the pre-existing baseline.
 - [x] Touched Vitest suites pass; only the pre-existing cron endpoint fails without `CRON_SECRET`,
   and the legacy `node --test` suites still fail on old imports (`src/lib/modes.js`).
 - [x] Each phase committed separately and pushed to `main`; `out.js` stays untracked.
