@@ -1,5 +1,7 @@
 // Mia, Tom and Lilith as on the home page, outside the app:
 // - static/icons/wordcircle-trio-512.svg: a 512x512 picture for loading screens (transparent).
+// - static/icons/wordcircle-splash-512.svg/.png: the same on the splash background, kept inside the
+//   centre circle (2/3 of the width) that Android 12 splash screens and maskable icons never crop.
 // - build/brand/telegram-description.png: the 640x360 picture BotFather shows above the bot's
 //   description (/setdescriptionpic); the Bot API has no method for it.
 //
@@ -50,6 +52,17 @@ function iconSvg() {
 `;
 }
 
+function splashSvg() {
+  // The trio's corners stay within a circle of radius 512/3: half-width * hypot(1, height/width) <= 170.
+  const width = 300;
+  const top = (512 - FAMILY.height * (width / FAMILY.width)) / 2;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="WordCircle">
+<rect width="512" height="512" fill="#fffdf7"/>
+<g ${place(width, top, 512)}>${family()}</g>
+</svg>
+`;
+}
+
 function telegramSvg() {
   const width = 420;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" width="640" height="360">
@@ -67,6 +80,8 @@ async function serifFont(dir) {
 }
 
 await writeFile(join(root, 'static/icons/wordcircle-trio-512.svg'), iconSvg());
+await writeFile(join(root, 'static/icons/wordcircle-splash-512.svg'), splashSvg());
+await writeFile(join(root, 'static/icons/wordcircle-splash-512.png'), new Resvg(splashSvg()).render().asPng());
 const outDir = join(root, 'build/brand');
 await mkdir(outDir, { recursive: true });
 const fontDir = await mkdtemp(join(tmpdir(), 'brand-fonts-'));
@@ -78,4 +93,4 @@ try {
 } finally {
   await rm(fontDir, { recursive: true, force: true });
 }
-console.log('wrote static/icons/wordcircle-trio-512.svg and build/brand/telegram-description.png');
+console.log('wrote static/icons/wordcircle-{trio,splash}-512.* and build/brand/telegram-description.png');
