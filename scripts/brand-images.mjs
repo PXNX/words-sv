@@ -1,8 +1,8 @@
 // Mia, Tom and Lilith as on the home page, outside the app:
-// - static/icons/wordcircle-trio-512.svg: a 512x512 picture for loading screens (transparent).
+// - static/icons/wordcircle-trio-512.svg/.png: a 512x512 picture for loading screens (transparent).
 // - static/icons/wordcircle-splash-512.svg/.png: the same on the splash background, kept inside the
 //   centre circle (2/3 of the width) that Android 12 splash screens and maskable icons never crop.
-// - build/brand/telegram-description.png: the 640x360 picture BotFather shows above the bot's
+// - brand/telegram-description.png: the 640x360 picture BotFather shows above the bot's
 //   description (/setdescriptionpic); the Bot API has no method for it.
 //
 // The characters are StoryCharacter's rendered markup in its resting pose (captured from the home
@@ -95,15 +95,15 @@ async function serifFont(dir) {
 await writeFile(join(root, 'static/icons/wordcircle-trio-512.svg'), iconSvg());
 await writeFile(join(root, 'static/icons/wordcircle-splash-512.svg'), splashSvg());
 await writeFile(join(root, 'static/icons/wordcircle-splash-512.png'), new Resvg(splashSvg()).render().asPng());
-const outDir = join(root, 'build/brand');
+await writeFile(join(root, 'static/icons/wordcircle-trio-512.png'), new Resvg(iconSvg()).render().asPng());
+// The Telegram picture is not part of the web app, so it stays out of static/.
+const outDir = join(root, 'brand');
 await mkdir(outDir, { recursive: true });
 const fontDir = await mkdtemp(join(tmpdir(), 'brand-fonts-'));
 try {
   const png = new Resvg(telegramSvg(), { font: { fontFiles: [await serifFont(fontDir)], loadSystemFonts: false, defaultFontFamily: 'DM Serif Display' } }).render().asPng();
   await writeFile(join(outDir, 'telegram-description.png'), png);
-  // A preview of the icon, to check it without a browser.
-  await writeFile(join(outDir, 'wordcircle-trio-512.png'), new Resvg(iconSvg()).render().asPng());
 } finally {
   await rm(fontDir, { recursive: true, force: true });
 }
-console.log('wrote static/icons/wordcircle-{trio,splash}-512.* and build/brand/telegram-description.png');
+console.log('wrote static/icons/wordcircle-{trio,splash}-512.{svg,png} and brand/telegram-description.png');
