@@ -882,7 +882,10 @@ export function withWeather(story: Story): Story {
   const choices = story.weathers ?? weathers;
   const weather = choices[Math.floor(Math.random() * choices.length)];
   const lines = weatherLines[weather];
-  const beat: StoryBeat = { kind: 'narration', text: outdoorScenes.includes(story.scene) ? lines.outdoor : lines.indoor, sfx: weather === 'rainy' ? 'rain' : undefined };
+  const outdoor = outdoorScenes.includes(story.scene);
+  // A blue sky carries birdsong. The beach always paints a sunset instead, so it stays quiet.
+  const sfx: SoundEffect | undefined = weather === 'rainy' ? 'rain' : weather === 'sunny' && story.scene !== 'beach' ? 'tweet' : undefined;
+  const beat: StoryBeat = { kind: 'narration', text: outdoor ? lines.outdoor : lines.indoor, sfx };
   const at = story.beats[0]?.kind === 'narration' ? 1 : 0;
   return { ...story, weather, beats: [...story.beats.slice(0, at), beat, ...story.beats.slice(at)] };
 }
