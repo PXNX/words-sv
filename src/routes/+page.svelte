@@ -17,6 +17,8 @@
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings, interfaceLocales, FIRST_NAME_MAX_LENGTH } from '#lib/state/settings.svelte.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
+  import AvatarEditor from '#lib/profile/AvatarEditor.svelte';
+  import { randomAvatar } from '#lib/profile/avatar.js';
   import InstallAppHint from '#lib/InstallAppHint.svelte';
   import UpdateAppHint from '#lib/UpdateAppHint.svelte';
   import SelectMenu from '#lib/settings/SelectMenu.svelte';
@@ -58,6 +60,10 @@
   let nameDraft = $state('');
   // Existing users who finished the language step before names existed still get asked once.
   const needsName = $derived(!rootOnboarding && !settings.firstName);
+  // Right after the name, new learners put together their own character (existing learners find it
+  // on the progress page instead). It starts as a random roll so there is something to play with.
+  let pickingLook = $state(false);
+  let lookDraft = $state(randomAvatar());
 
   const labels = $derived({
     settings: m.settings({}, { locale: settings.interfaceLocale }),
@@ -113,6 +119,8 @@
     nameLabel: m.onboarding_name_label({}, { locale: settings.interfaceLocale }),
     namePlaceholder: m.onboarding_name_placeholder({}, { locale: settings.interfaceLocale }),
     nameHint: m.onboarding_name_hint({}, { locale: settings.interfaceLocale }),
+    avatarTitle: m.avatar_title({}, { locale: settings.interfaceLocale }),
+    avatarHint: m.avatar_hint({}, { locale: settings.interfaceLocale }),
     continue: m.continue({}, { locale: settings.interfaceLocale }),
     homeCast: m.home_cast({}, { locale: settings.interfaceLocale }),
     petLilith: m.pet_lilith({}, { locale: settings.interfaceLocale }),
@@ -152,6 +160,12 @@
   function submitName(event: SubmitEvent) {
     event.preventDefault();
     settings.setFirstName(nameDraft);
+    if (!settings.avatar) pickingLook = true;
+  }
+  function submitLook(event: SubmitEvent) {
+    event.preventDefault();
+    settings.setAvatar(lookDraft);
+    pickingLook = false;
   }
   const interfaceOptions = interfaceLocales.map((locale) => ({ value: locale.code as string, label: locale.label }));
   function selectOnboardingInterfaceLocale(value: string) {
@@ -301,6 +315,13 @@
       </label>
       <span>{labels.nameHint}</span>
       <button type="submit" class="btn-play btn-play-ink home-name-submit" disabled={!nameDraft.trim()}>{labels.continue}</button>
+    </form>
+  {:else if pickingLook}
+    <form class="home-onboarding" onsubmit={submitLook}>
+      <h1>{labels.avatarTitle}</h1>
+      <span>{labels.avatarHint}</span>
+      <AvatarEditor value={lookDraft} onchange={(next) => (lookDraft = next)} />
+      <button type="submit" class="btn-play btn-play-ink home-name-submit">{labels.continue}</button>
     </form>
   {:else}
     <UpdateAppHint />

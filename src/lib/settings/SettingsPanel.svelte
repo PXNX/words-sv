@@ -7,6 +7,9 @@
   import { naturalMegabytes, naturalReady, naturalState, naturalSupported, playNatural, prepareNatural, synthesizeNatural } from '#lib/story/naturalVoices.svelte.js';
   import { onMount } from 'svelte';
   import SelectMenu from './SelectMenu.svelte';
+  import StoryCharacter from '#lib/story/StoryCharacter.svelte';
+  import { defaultAvatar } from '#lib/profile/avatar.js';
+  import IconChevronRight from '~icons/material-symbols/chevron-right-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
   import IconDark from '~icons/material-symbols/dark-mode-rounded';
   import IconGithub from '~icons/fa6-brands/github';
@@ -63,7 +66,10 @@
     notificationsDenied: m.notifications_denied({}, { locale: settings.interfaceLocale }),
     notificationsUnavailable: m.notifications_unavailable({}, { locale: settings.interfaceLocale }),
     notificationsHint: m.streak_reminder_hint({}, { locale: settings.interfaceLocale }),
-    telegramShare: m.telegram_share({}, { locale: settings.interfaceLocale })
+    telegramShare: m.telegram_share({}, { locale: settings.interfaceLocale }),
+    profileTitle: m.profile_title({}, { locale: settings.interfaceLocale }),
+    profileEdit: m.profile_edit({}, { locale: settings.interfaceLocale }),
+    profileNameEmpty: m.profile_name_empty({}, { locale: settings.interfaceLocale })
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   const voiceStatus = $derived(naturalState.status[settings.lang] ?? 'idle');
@@ -260,6 +266,17 @@
     <strong class="block font-['DM_Serif_Display',serif] text-[clamp(1.45rem,6vw,2rem)] font-normal tracking-[-.04em] leading-[.9]">WordCircle</strong>
   </div>
 
+  <!-- The learner themselves: their own story character and name, edited on the progress page -->
+  <a class="settings-me mt-[1.35rem] px-[.8rem] py-[.6rem] panel-play flex items-center gap-3 text-base-content no-underline" href="/progress">
+    <span class="settings-me-avatar" aria-hidden="true"><StoryCharacter id="kumar" avatar={settings.avatar ?? defaultAvatar} mood="happy" /></span>
+    <span class="min-w-0 flex-1">
+      <span class="block text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.profileTitle}</span>
+      <strong class="block truncate font-['DM_Serif_Display',serif] text-[1.35rem] font-normal tracking-[-.02em] leading-[1.1]">{settings.firstName || labels.profileNameEmpty}</strong>
+      <span class="block text-base-content/60 text-[.6rem] font-bold">{labels.profileEdit}</span>
+    </span>
+    <IconChevronRight aria-hidden="true" class="w-[1.2rem] h-[1.2rem] flex-none rtl:rotate-180" />
+  </a>
+
   <section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play" aria-labelledby="content-settings-heading">
     <h2 id="content-settings-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.contentGroup}</h2>
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.gameLanguage}</span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={settings.lang} options={languageOptions} label={labels.gameLanguage} onchange={selectLanguage} /></div>
@@ -346,6 +363,12 @@
 {/if}
 
 <style>
+  .settings-me { transition:transform .15s cubic-bezier(.34,1.56,.64,1); }
+  .settings-me:hover { transform:translateY(-2px) rotate(-.4deg); }
+  .settings-me:active { transform:scale(.98); }
+  .settings-me-avatar { display:block;flex:none;width:3.6rem;height:4.5rem;margin-block:-.2rem -.6rem; }
+  .settings-me-avatar :global(.story-character) { width:100%;height:100%; }
+  @media (prefers-reduced-motion:reduce) { .settings-me { transition:none; } }
   @keyframes sheet-up {
     from {
       opacity: 0;
