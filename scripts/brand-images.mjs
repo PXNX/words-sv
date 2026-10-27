@@ -97,13 +97,64 @@ function splashStencilSvg() {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"><rect width="512" height="512" fill="#fff"/><g ${place(SPLASH_WIDTH, top, 512)}>${stencil(family())}</g></svg>`;
 }
 
-// Renders the stencil large and traces it; potrace returns one compound <path>.
+// Potrace draws every outline and hole as its own subpath (one `M` each), and splash tooling
+// counts those as separate paths. Each contour ends where it starts, so all of them can hang off
+// the first one's start point A: line out to the contour, around it, and back to A. Every bridge is
+// drawn there and back along the same line, which adds no area under either fill rule.
+// Contours are also turned so that outlines and holes wind in opposite directions by nesting depth,
+// which makes the shape fill the same under nonzero as under evenodd, for tools that ignore fill-rule.
+function singleContour(d) {
+  const contours = d.trim().split(/(?=M)/).map((part) => {
+    const [, x, y, body] = /^M\s*([-\d.]+)[ ,]+([-\d.]+)\s*([\s\S]*?)\s*Z?\s*$/.exec(part.trim()) ?? [];
+    if (body === undefined) throw new Error(`unexpected subpath: ${part.slice(0, 40)}`);
+    // Segments as [command, ...points]; potrace only writes absolute L and C.
+    const segments = [...body.matchAll(/([LC])([^LC]*)/g)].map(([, command, numbers]) => {
+      const values = numbers.trim().split(/[ ,]+/).map(Number);
+      const points = [];
+      for (let index = 0; index < values.length; index += 2) points.push([values[index], values[index + 1]]);
+      return { command, points };
+    });
+    return { start: [Number(x), Number(y)], segments };
+  });
+  // The polygon through every point approximates each contour well enough for area and containment.
+  const polygon = (contour) => [contour.start, ...contour.segments.flatMap((segment) => segment.points)];
+  const area = (points) => points.reduce((sum, [x1, y1], index) => {
+    const [x2, y2] = points[(index + 1) % points.length];
+    return sum + x1 * y2 - x2 * y1;
+  }, 0) / 2;
+  const inside = ([x, y], points) => points.reduce((hit, [x1, y1], index) => {
+    const [x2, y2] = points[(index + 1) % points.length];
+    return (y1 > y) !== (y2 > y) && x < ((x2 - x1) * (y - y1)) / (y2 - y1) + x1 ? !hit : hit;
+  }, false);
+  const reversed = (contour) => {
+    // Walk the segments backwards: each one now ends where it used to start.
+    const ends = [contour.start, ...contour.segments.map((segment) => segment.points.at(-1))];
+    const segments = contour.segments.map((segment, index) => ({
+      command: segment.command,
+      points: [...segment.points.slice(0, -1).reverse(), ends[index]]
+    })).reverse();
+    return { start: contour.start, segments };
+  };
+  const polygons = contours.map(polygon);
+  const oriented = contours.map((contour, index) => {
+    const depth = polygons.filter((other, otherIndex) => otherIndex !== index && inside(contour.start, other)).length;
+    const clockwise = area(polygons[index]) > 0;
+    return clockwise === (depth % 2 === 0) ? contour : reversed(contour);
+  });
+  const format = (contour) => contour.segments.map((segment) => `${segment.command} ${segment.points.map((point) => point.join(' ')).join(', ')}`).join(' ');
+  const point = (contour) => contour.start.join(' ');
+  const [first, ...rest] = oriented;
+  return `M ${point(first)} ${format(first)} ${rest.map((contour) => `L ${point(contour)} ${format(contour)} L ${point(first)}`).join(' ')} Z`;
+}
+
+// Renders the stencil large and traces it into a single outline.
 async function splashSvg() {
   const bitmap = new Resvg(splashStencilSvg(), { fitTo: { mode: 'width', value: TRACE_SIZE } }).render().asPng();
   const traced = await new Promise((resolve, reject) => potrace.trace(Buffer.from(bitmap), { threshold: 128, turdSize: 20, optTolerance: 0.3 }, (error, svg) => (error ? reject(error) : resolve(svg))));
   const d = /\sd="([^"]+)"/.exec(traced)?.[1];
   if (!d) throw new Error('potrace returned no path');
-  return (fill) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${TRACE_SIZE} ${TRACE_SIZE}" width="512" height="512"><path fill="${fill}" fill-rule="evenodd" d="${d}"/></svg>\n`;
+  const outline = singleContour(d);
+  return (fill) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${TRACE_SIZE} ${TRACE_SIZE}" width="512" height="512"><path fill="${fill}" d="${outline}"/></svg>\n`;
 }
 
 // A cream letter tile like the game boards', tilted by `angle` degrees.
