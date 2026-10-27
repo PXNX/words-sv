@@ -1,6 +1,6 @@
 // Mia, Tom and Lilith as on the home page, outside the app:
-// - static/icons/wordcircle-trio-512.svg/.png: a 512x512 picture for loading screens (transparent).
-// - static/icons/wordcircle-splash-512.svg/.png: the same on the splash background, kept inside the
+// - brand/wordcircle-trio-512.svg/.png: a 512x512 picture for loading screens (transparent).
+// - brand/wordcircle-splash-512.svg/.png: the same on the splash background, kept inside the
 //   centre circle (2/3 of the width) that Android 12 splash screens and maskable icons never crop.
 // - brand/telegram-description.png: the 640x360 picture BotFather shows above the bot's
 //   description (/setdescriptionpic); the Bot API has no method for it.
@@ -92,13 +92,13 @@ async function serifFont(dir) {
   return ttf;
 }
 
-await writeFile(join(root, 'static/icons/wordcircle-trio-512.svg'), iconSvg());
-await writeFile(join(root, 'static/icons/wordcircle-splash-512.svg'), splashSvg());
-await writeFile(join(root, 'static/icons/wordcircle-splash-512.png'), new Resvg(splashSvg()).render().asPng());
-await writeFile(join(root, 'static/icons/wordcircle-trio-512.png'), new Resvg(iconSvg()).render().asPng());
-// The Telegram picture is not part of the web app, so it stays out of static/.
+// None of these are served by the web app, so they live in brand/ rather than static/.
 const outDir = join(root, 'brand');
 await mkdir(outDir, { recursive: true });
+await writeFile(join(outDir, 'wordcircle-trio-512.svg'), iconSvg());
+await writeFile(join(outDir, 'wordcircle-trio-512.png'), new Resvg(iconSvg()).render().asPng());
+await writeFile(join(outDir, 'wordcircle-splash-512.svg'), splashSvg());
+await writeFile(join(outDir, 'wordcircle-splash-512.png'), new Resvg(splashSvg()).render().asPng());
 const fontDir = await mkdtemp(join(tmpdir(), 'brand-fonts-'));
 try {
   const png = new Resvg(telegramSvg(), { font: { fontFiles: [await serifFont(fontDir)], loadSystemFonts: false, defaultFontFamily: 'DM Serif Display' } }).render().asPng();
@@ -106,4 +106,4 @@ try {
 } finally {
   await rm(fontDir, { recursive: true, force: true });
 }
-console.log('wrote static/icons/wordcircle-{trio,splash}-512.{svg,png} and brand/telegram-description.png');
+console.log('wrote brand/wordcircle-{trio,splash}-512.{svg,png} and brand/telegram-description.png');
