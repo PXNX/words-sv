@@ -60,7 +60,7 @@
   let audioUrl = $state('');
   let currentId = $state('');
   let history = $state<SavedAudio[]>([]);
-  let audio: HTMLAudioElement | null = null;
+  let audio = $state<HTMLAudioElement | null>(null);
   let duration = $state(0);
   let position = $state(0);
   let playing = $state(false);
@@ -932,10 +932,20 @@
     const whole = Math.max(0, Math.round(seconds));
     return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, '0')}`;
   }
+  // The scene animation and the play button follow the audio element itself, so they stay in step
+  // whether the learner tapped play, a media key started it or the browser stopped it on its own.
   $effect(() => {
-    if (!audio || liveSession) return;
-    // Make the animated view follow currently playing audio
-    playing = !audio.paused;
+    const element = audio;
+    if (!element) return;
+    const sync = () => {
+      if (!liveSession) playing = !element.paused;
+    };
+    sync();
+    const events = ['play', 'playing', 'pause', 'ended', 'emptied', 'waiting'] as const;
+    for (const event of events) element.addEventListener(event, sync);
+    return () => {
+      for (const event of events) element.removeEventListener(event, sync);
+    };
   });
   function settingsFingerprint() {
     return `${settings.lang}|${settings.vocabularyLevel}|${settings.includeLowerVocabulary}|${settings.voiceQuality}|${settings.naturalModel}`;
