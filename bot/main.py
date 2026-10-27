@@ -9,12 +9,12 @@ from datetime import datetime
 from os import makedirs, path
 from typing import Final
 
-from telegram import BotCommand, BotCommandScopeDefault, MenuButtonWebApp, Update, WebAppInfo
+from telegram import BotCommand, BotCommandScopeChat, BotCommandScopeDefault, MenuButtonWebApp, Update, WebAppInfo
 from telegram.ext import Application, ApplicationBuilder, Defaults
 from telegram.constants import ParseMode
 
 from handlers import register_handlers
-from settings.config import CONTAINER, TOKEN, WORDS_URL
+from settings.config import ADMINS, CONTAINER, TOKEN, WORDS_URL
 
 
 def add_logging():
@@ -66,6 +66,13 @@ async def post_init(application: Application) -> None:
     await bot.delete_webhook(drop_pending_updates=False)
     await bot.set_my_commands(COMMANDS["en"], scope=BotCommandScopeDefault())
     await bot.set_my_commands(COMMANDS["de"], scope=BotCommandScopeDefault(), language_code="de")
+    # Admins additionally see /set_cmd in their own chat's menu; it is never advertised publicly.
+    admin_commands = COMMANDS["de"] + [BotCommand("set_cmd", "Profilbild, Name und Beschreibung setzen")]
+    for admin_id in ADMINS:
+        try:
+            await bot.set_my_commands(admin_commands, scope=BotCommandScopeChat(admin_id))
+        except Exception as e:
+            logging.warning(f"[main] Could not set command menu for admin {admin_id}: {e}")
     await bot.set_chat_menu_button(menu_button=MenuButtonWebApp("WordCircle", WebAppInfo(WORDS_URL)))
     logging.info("[main] Commands and menu button set")
 

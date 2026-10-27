@@ -4,7 +4,8 @@ Telegram bot [@word_circle_bot](https://t.me/word_circle_bot) for the WordCircle
 ([words-sv](https://words-sv.vercel.app)).
 
 - Opens WordCircle as a Mini App (menu button and `/start`).
-- Takes **voluntary Telegram Stars donations** (`/spenden`, `/donate`). A donation unlocks nothing
+- Takes **voluntary Telegram Stars donations** (`/spenden`, `/donate`, or the deep link
+  `https://t.me/word_circle_bot?start=donate`). A donation unlocks nothing
   and is **never refunded**; `/paysupport` explains this, as Telegram requires for Stars payments.
 - Links the legal pages that live in WordCircle: `/bedingungen`, `/datenschutz`, `/impressum`.
 - `/set_cmd` (admins only) sets the profile photo (`bot/res/img/profile.jpg`), name, description and short description in German and English.
@@ -45,6 +46,9 @@ systemctl --user daemon-reload && systemctl --user start ptb-words
 Updates: push, then `ssh nyx@mn "cd ~/projects/ptb-words && gh repo sync && systemctl --user restart ptb-words"`.
 
 ## Deploy the Mini App on Telegram Serverless
+
+Serverless is still behind a waitlist for this bot. Until it is enabled, `MINIAPP_URL` stays empty,
+`/start` shows only the WordCircle button and donations run through the bot chat.
 
 1. @BotFather → the bot → enable **Serverless** and copy the CLI token (`app<id>:<secret>`).
 2. `cd miniapp && npm install && npx tgcloud login` (or set `TGCLOUD_TOKEN`).

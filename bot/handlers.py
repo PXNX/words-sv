@@ -19,6 +19,10 @@ def _lang(update: Update) -> str:
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # t.me/word_circle_bot?start=donate jumps straight to the tiers, e.g. from the WordCircle app.
+    if context.args and context.args[0] == "donate":
+        await donate(update, context)
+        return
     lang = _lang(update)
     rows = [[InlineKeyboardButton(t(lang, "open_app"), web_app=WebAppInfo(WORDS_URL))]]
     if MINIAPP_URL:
