@@ -776,6 +776,33 @@
       }
     }
   }
+  // Safari (iOS especially) only lets an audio element start inside the tap that began it, but the saved clip loads after that tap.
+  // Playing and pausing a silent clip right away unlocks the element so the real clip can start on its own.
+  let silentClip: string | undefined;
+  function silentWavUrl() {
+    const bytes = new Uint8Array(46);
+    const view = new DataView(bytes.buffer);
+    bytes.set(new TextEncoder().encode('RIFF'), 0);
+    view.setUint32(4, 38, true);
+    bytes.set(new TextEncoder().encode('WAVEfmt '), 8);
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true);
+    view.setUint16(22, 1, true);
+    view.setUint32(24, 8000, true);
+    view.setUint32(28, 16000, true);
+    view.setUint16(32, 2, true);
+    view.setUint16(34, 16, true);
+    bytes.set(new TextEncoder().encode('data'), 36);
+    view.setUint32(40, 2, true);
+    return URL.createObjectURL(new Blob([bytes], { type: 'audio/wav' }));
+  }
+  function unlockAudio() {
+    if (!audio) return;
+    silentClip ??= silentWavUrl();
+    audio.src = silentClip;
+    void audio.play().catch(() => {});
+    audio.pause();
+  }
   async function openSession(session: SavedAudio) {
     if (currentId === session.id && phase === 'ready') {
       if (audio?.paused) void audio.play().catch(() => (playing = false));
@@ -784,6 +811,7 @@
     flushPosition();
     const token = ++generation;
     clearAudio();
+    unlockAudio();
     phase = 'loading';
     error = '';
     let blob: Blob | undefined;
