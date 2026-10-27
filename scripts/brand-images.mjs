@@ -2,7 +2,8 @@
 // - brand/wordcircle-trio-512.svg/.png: a 512x512 picture for loading screens (transparent).
 // - brand/wordcircle-splash-512.svg/.png: the trio as a one-colour stencil traced into a single
 //   <path> (splash tooling accepts nothing else), kept inside the centre circle (2/3 of the width)
-//   that Android 12 splash screens and maskable icons never crop. Use it on #FFFDF7.
+//   that Android 12 splash screens and maskable icons never crop. Use it on #FFFDF7; the -light
+//   variant is the same path in #FFFDF7 for the navy #172A45 background.
 // - brand/telegram-description.png: the 640x360 picture BotFather shows above the bot's
 //   description (/setdescriptionpic); the Bot API has no method for it.
 //
@@ -102,7 +103,7 @@ async function splashSvg() {
   const traced = await new Promise((resolve, reject) => potrace.trace(Buffer.from(bitmap), { threshold: 128, turdSize: 20, optTolerance: 0.3 }, (error, svg) => (error ? reject(error) : resolve(svg))));
   const d = /\sd="([^"]+)"/.exec(traced)?.[1];
   if (!d) throw new Error('potrace returned no path');
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${TRACE_SIZE} ${TRACE_SIZE}" width="512" height="512"><path fill="#172A45" fill-rule="evenodd" d="${d}"/></svg>\n`;
+  return (fill) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${TRACE_SIZE} ${TRACE_SIZE}" width="512" height="512"><path fill="${fill}" fill-rule="evenodd" d="${d}"/></svg>\n`;
 }
 
 // A cream letter tile like the game boards', tilted by `angle` degrees.
@@ -138,9 +139,12 @@ const outDir = join(root, 'brand');
 await mkdir(outDir, { recursive: true });
 await writeFile(join(outDir, 'wordcircle-trio-512.svg'), iconSvg());
 await writeFile(join(outDir, 'wordcircle-trio-512.png'), new Resvg(iconSvg()).render().asPng());
+// The same path in navy for light splash screens and in cream for dark ones.
 const splash = await splashSvg();
-await writeFile(join(outDir, 'wordcircle-splash-512.svg'), splash);
-await writeFile(join(outDir, 'wordcircle-splash-512.png'), new Resvg(splash, { background: '#fffdf7' }).render().asPng());
+for (const [name, fill, background] of [['wordcircle-splash-512', '#172A45', '#fffdf7'], ['wordcircle-splash-512-light', '#FFFDF7', '#172a45']]) {
+  await writeFile(join(outDir, `${name}.svg`), splash(fill));
+  await writeFile(join(outDir, `${name}.png`), new Resvg(splash(fill), { background }).render().asPng());
+}
 const fontDir = await mkdtemp(join(tmpdir(), 'brand-fonts-'));
 try {
   const png = new Resvg(telegramSvg(), { font: { fontFiles: [await serifFont(fontDir)], loadSystemFonts: false, defaultFontFamily: 'DM Serif Display' } }).render().asPng();
@@ -148,4 +152,4 @@ try {
 } finally {
   await rm(fontDir, { recursive: true, force: true });
 }
-console.log('wrote brand/wordcircle-{trio,splash}-512.{svg,png} and brand/telegram-description.png');
+console.log('wrote brand/wordcircle-trio-512, wordcircle-splash-512(-light) (.svg/.png) and brand/telegram-description.png');
