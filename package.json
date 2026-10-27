@@ -25,6 +25,7 @@
     "@sveltejs/vite-plugin-svelte": "^7.3.1",
     "@tailwindcss/vite": "^4.3.3",
     "daisyui": "^5.7.50",
+    "potrace": "^2.1.8",
     "svelte": "^5.57.2",
     "svelte-check": "^4.7.7",
     "tailwindcss": "^4.3.3",

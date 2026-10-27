@@ -1,7 +1,8 @@
 // Mia, Tom and Lilith as on the home page, outside the app:
 // - brand/wordcircle-trio-512.svg/.png: a 512x512 picture for loading screens (transparent).
-// - brand/wordcircle-splash-512.svg/.png: the same on the splash background, kept inside the
-//   centre circle (2/3 of the width) that Android 12 splash screens and maskable icons never crop.
+// - brand/wordcircle-splash-512.svg/.png: the trio as a one-colour stencil traced into a single
+//   <path> (splash tooling accepts nothing else), kept inside the centre circle (2/3 of the width)
+//   that Android 12 splash screens and maskable icons never crop. Use it on #FFFDF7.
 // - brand/telegram-description.png: the 640x360 picture BotFather shows above the bot's
 //   description (/setdescriptionpic); the Bot API has no method for it.
 //
@@ -12,6 +13,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Resvg } from '@resvg/resvg-js';
+import potrace from 'potrace';
 import { decompress } from 'wawoff2';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -53,15 +55,54 @@ function iconSvg() {
 `;
 }
 
-function splashSvg() {
-  // The trio's corners stay within a circle of radius 512/3: half-width * hypot(1, height/width) <= 170.
-  const width = 300;
-  const top = (512 - FAMILY.height * (width / FAMILY.width)) / 2;
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="WordCircle">
-<rect width="512" height="512" fill="#fffdf7"/>
-<g ${place(width, top, 512)}>${family()}</g>
-</svg>
-`;
+// Stencil colours: the face details become cut-outs, shading and blush disappear, and every solid
+// shape gets a white rim so overlapping shapes (hair over face, apron over shirt) stay apart.
+// Groups pass their fill to unfilled children: navy groups are the humans' eyes.
+const CUT_OUT = new Set(['#7a5646', 'url(#lilith-eye)', '#fff', '#22160f', '#c86f7f']);
+const CUT_OUT_GROUPS = new Set(['#172a45']);
+const DROPPED = new Set(['#f19a8a', 'rgba(255,253,247,.3)', '#cdb497', 'url(#lilith-mask)', '#2e1f17', '#f4e9da', '#f8efe3', 'url(#arch-glow)']);
+
+function stencil(markup) {
+  return markup
+    .replace(/<defs>[\s\S]*?<\/defs>/g, '')
+    .replace(/<g fill="([^"]+)"[^>]*>[\s\S]*?<\/g>/g, (group, fill) => (DROPPED.has(fill) ? '' : group))
+    .replace(/<(circle|ellipse|rect|path)\b([^>]*?)\/>/g, (element, tag, attributes) => {
+      const fill = /fill="([^"]+)"/.exec(attributes)?.[1];
+      const stroke = /stroke="([^"]+)"/.exec(attributes)?.[1];
+      if (DROPPED.has(fill) || DROPPED.has(stroke)) return '';
+      if (!fill && !stroke) return element;
+      const rest = attributes.replace(/\s(fill|stroke|stroke-width|opacity)="[^"]*"/g, '');
+      // Lines (brows, mouths, whiskers, the collar) are drawn white on the solid shapes below.
+      if (fill === 'none' || (!fill && stroke)) {
+        const width = Number(/stroke-width="([^"]+)"/.exec(attributes)?.[1] ?? 1);
+        const ink = stroke === '#172a45' ? '#000' : '#fff';
+        return `<${tag}${rest} fill="none" stroke="${ink}" stroke-width="${Math.max(width, 1.6)}"/>`;
+      }
+      if (CUT_OUT.has(fill)) return `<${tag}${rest} fill="#fff"/>`;
+      // The navy ground line is too thin for a rim.
+      if (fill === '#172a45') return `<${tag}${rest} fill="#000"/>`;
+      return `<${tag}${rest} fill="#000" stroke="#fff" stroke-width="1.6"/>`;
+    })
+    .replace(/<g fill="([^"]+)"/g, (open, fill) => `<g fill="${CUT_OUT_GROUPS.has(fill) ? '#fff' : '#000'}"`)
+    .replace(/<g fill="#[0-9a-f]+" opacity="[^"]*"/g, (open) => open.replace(/ opacity="[^"]*"/, ''));
+}
+
+// The trio's corners stay within a circle of radius 512/3: half-width * hypot(1, height/width) <= 170.
+const SPLASH_WIDTH = 300;
+const TRACE_SIZE = 2048;
+
+function splashStencilSvg() {
+  const top = (512 - FAMILY.height * (SPLASH_WIDTH / FAMILY.width)) / 2;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"><rect width="512" height="512" fill="#fff"/><g ${place(SPLASH_WIDTH, top, 512)}>${stencil(family())}</g></svg>`;
+}
+
+// Renders the stencil large and traces it; potrace returns one compound <path>.
+async function splashSvg() {
+  const bitmap = new Resvg(splashStencilSvg(), { fitTo: { mode: 'width', value: TRACE_SIZE } }).render().asPng();
+  const traced = await new Promise((resolve, reject) => potrace.trace(Buffer.from(bitmap), { threshold: 128, turdSize: 20, optTolerance: 0.3 }, (error, svg) => (error ? reject(error) : resolve(svg))));
+  const d = /\sd="([^"]+)"/.exec(traced)?.[1];
+  if (!d) throw new Error('potrace returned no path');
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${TRACE_SIZE} ${TRACE_SIZE}" width="512" height="512"><path fill="#172A45" fill-rule="evenodd" d="${d}"/></svg>\n`;
 }
 
 // A cream letter tile like the game boards', tilted by `angle` degrees.
@@ -97,8 +138,9 @@ const outDir = join(root, 'brand');
 await mkdir(outDir, { recursive: true });
 await writeFile(join(outDir, 'wordcircle-trio-512.svg'), iconSvg());
 await writeFile(join(outDir, 'wordcircle-trio-512.png'), new Resvg(iconSvg()).render().asPng());
-await writeFile(join(outDir, 'wordcircle-splash-512.svg'), splashSvg());
-await writeFile(join(outDir, 'wordcircle-splash-512.png'), new Resvg(splashSvg()).render().asPng());
+const splash = await splashSvg();
+await writeFile(join(outDir, 'wordcircle-splash-512.svg'), splash);
+await writeFile(join(outDir, 'wordcircle-splash-512.png'), new Resvg(splash, { background: '#fffdf7' }).render().asPng());
 const fontDir = await mkdtemp(join(tmpdir(), 'brand-fonts-'));
 try {
   const png = new Resvg(telegramSvg(), { font: { fontFiles: [await serifFont(fontDir)], loadSystemFonts: false, defaultFontFamily: 'DM Serif Display' } }).render().asPng();
