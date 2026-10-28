@@ -1,9 +1,9 @@
 // Mia, Tom and Lilith as on the home page, outside the app:
 // - brand/wordcircle-trio-512.svg/.png: a 512x512 picture for loading screens (transparent).
 // - brand/wordcircle-splash-512.svg/.png: the Mini App loading-screen icon, shaped like Telegram's
-//   sample (https://telegram.org/resources/web-app-icon-sample.svg): a one-colour stencil traced into
-//   a single <path> with one outline, filling the 512 canvas, about 2 KB. Use it on #FFFDF7; the
-//   -light variant is the same path in #FFFDF7 for the navy #172A45 background.
+//   sample (https://telegram.org/resources/web-app-icon-sample.svg): the logo's circles in one colour,
+//   traced into a single <path> with one outline. Use it on #FFFDF7; the -light variant is the same
+//   path in #FFFDF7 for the navy #172A45 background.
 // - brand/telegram-description.png: the 640x360 picture BotFather shows above the bot's
 //   description (/setdescriptionpic); the Bot API has no method for it.
 //
@@ -56,46 +56,20 @@ function iconSvg() {
 `;
 }
 
-// The icon stencil keeps the file near the ~1 KB of Telegram's sample icon: each character is one
-// solid silhouette, and only the eyes and the humans' smiles are cut out. Everything finer
-// (shading, blush, brows, collar, apron, whiskers, Lilith's nose, mouth and inner ears) is dropped,
-// since every extra shape costs curves and none of it reads at icon size.
-// Groups pass their fill to unfilled children: navy groups are the humans' eyes.
-const CUT_OUT = new Set(['url(#lilith-eye)']);
-const CUT_OUT_GROUPS = new Set(['#172a45']);
-const DROPPED = new Set(['#f19a8a', 'rgba(255,253,247,.3)', '#cdb497', 'url(#lilith-mask)', '#2e1f17', '#f4e9da', '#f8efe3', 'url(#arch-glow)', '#fff', '#7a5646', '#22160f', '#c86f7f']);
-// Lines kept: the humans' smiles (cut out) and the arch (solid).
-const KEPT_LINES = { '#7a2e2a': '#fff', '#172a45': '#000' };
-
-function stencil(markup) {
-  return markup
-    .replace(/<defs>[\s\S]*?<\/defs>/g, '')
-    .replace(/<g fill="([^"]+)"[^>]*>[\s\S]*?<\/g>/g, (group, fill) => (DROPPED.has(fill) ? '' : group))
-    .replace(/<(circle|ellipse|rect|path)\b([^>]*?)\/>/g, (element, tag, attributes) => {
-      const fill = /fill="([^"]+)"/.exec(attributes)?.[1];
-      const stroke = /stroke="([^"]+)"/.exec(attributes)?.[1];
-      if (DROPPED.has(fill)) return '';
-      if (!fill && !stroke) return element;
-      const rest = attributes.replace(/\s(fill|stroke|stroke-width|opacity)="[^"]*"/g, '');
-      if (fill === 'none' || !fill) {
-        const ink = KEPT_LINES[stroke];
-        if (!ink) return '';
-        const width = Number(/stroke-width="([^"]+)"/.exec(attributes)?.[1] ?? 1);
-        return `<${tag}${rest} fill="none" stroke="${ink}" stroke-width="${Math.max(width, 2.4)}"/>`;
-      }
-      return `<${tag}${rest} fill="${CUT_OUT.has(fill) ? '#fff' : '#000'}"/>`;
-    })
-    .replace(/<g fill="([^"]+)"/g, (open, fill) => `<g fill="${CUT_OUT_GROUPS.has(fill) ? '#fff' : '#000'}"`)
-    .replace(/<g fill="#[0-9a-f]+" opacity="[^"]*"/g, (open) => open.replace(/ opacity="[^"]*"/, ''));
-}
-
-// Like Telegram's sample loading-screen icon, the drawing nearly fills the 512 canvas.
-const SPLASH_WIDTH = 448;
+// The splash icon is just the circles of the app logo (static/icons/wordcircle-512.svg): the big
+// ring, the small ring and their two dots, in one colour. Where the small ring crosses the big one a
+// gap keeps them apart (as the logo's second colour does) and opens the big ring into a C. Same
+// geometry as the logo otherwise, so the drawing fills the 512 canvas the way Telegram's sample
+// icon does.
 const TRACE_SIZE = 1024;
+const RING_GAP = 22;
 
 function splashStencilSvg() {
-  const top = (512 - FAMILY.height * (SPLASH_WIDTH / FAMILY.width)) / 2;
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"><rect width="512" height="512" fill="#fff"/><g ${place(SPLASH_WIDTH, top, 512)}>${stencil(family())}</g></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"><rect width="512" height="512" fill="#fff"/>
+<circle cx="256" cy="256" r="153" fill="none" stroke="#000" stroke-width="56"/>
+<circle cx="317" cy="270" r="${101 + RING_GAP}" fill="#fff"/>
+<circle cx="317" cy="270" r="81" fill="none" stroke="#000" stroke-width="40"/>
+<circle cx="187" cy="256" r="24" fill="#000"/><circle cx="317" cy="270" r="19" fill="#000"/></svg>`;
 }
 
 // Potrace draws every outline and hole as its own subpath (one `M` each), and splash tooling
