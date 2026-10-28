@@ -14,7 +14,7 @@ import StartupLoader from '#lib/StartupLoader.svelte';
 	import { autoUpdateOnStart } from '#lib/pwaUpdate.js';
 	import { prepareNatural } from '#lib/story/naturalVoices.svelte.js';
 	import { pageTitle } from '#lib/seo.js';
-	import { miniAppLaunch } from '#lib/telegramMiniApp.js';
+	import { loadTelegramWebApp, miniAppLaunch } from '#lib/telegramMiniApp.js';
 	import { adoptMiniAppProfile } from '#lib/settings/telegramClient.js';
 	import IconHome from '~icons/material-symbols/home-rounded';
 	let { children } = $props();
@@ -22,7 +22,10 @@ import StartupLoader from '#lib/StartupLoader.svelte';
 	let previousLanguage = settings.lang;
 	// Inside Telegram the player's profile is taken over before any page asks for a name or language.
 	const telegramLaunch = typeof window === 'undefined' ? null : miniAppLaunch();
-	if (telegramLaunch) adoptMiniAppProfile(telegramLaunch);
+	if (telegramLaunch) {
+		adoptMiniAppProfile(telegramLaunch);
+		loadTelegramWebApp();
+	}
 
 	const routePath = $derived(page.url.pathname.replace(/\/+$/, '') || '/');
 	const isHome = $derived(routePath === '/');
@@ -129,9 +132,14 @@ onMount(() => {
 	@media (prefers-reduced-motion:reduce) { :global(html[data-nav-direction]::view-transition-old(root)) { animation:.12s ease-out both vt-fade-out; } :global(html[data-nav-direction]::view-transition-new(root)) { animation:.12s ease-out both vt-fade-in; } }
 	@keyframes -global-vt-fade-out { to { opacity:0; } }
 	@keyframes -global-vt-fade-in { from { opacity:0; } }
+	/* In Telegram's fullscreen mode its status bar and close/menu buttons sit on top of the page; the frame
+	   starts below them (variables from telegram-web-app.js, unset and 0 everywhere else). The shell takes the
+	   paper's colour so the strip behind Telegram's buttons looks like part of the page. */
+	:global(:root) { --tg-inset-top:calc(var(--tg-safe-area-inset-top,0px) + var(--tg-content-safe-area-inset-top,0px));--tg-inset-bottom:calc(var(--tg-safe-area-inset-bottom,0px) + var(--tg-content-safe-area-inset-bottom,0px)); }
 	.portrait-content { width:100%;min-height:100svh; }
-	:global(.game-shell) { min-height:100svh;padding:0;display:flex;align-items:stretch;justify-content:center; }
-	.game-paper { position:relative;isolation:isolate;box-sizing:border-box;overflow:hidden;width:100%;height:100svh;min-height:0;padding:0;display:flex;flex-direction:column;justify-content:center;border:0;background-color:#ede4d5;background-image:radial-gradient(circle at 50% 15%,rgba(230,165,39,.18),transparent 34%),linear-gradient(rgba(23,42,69,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.018) 1px,transparent 1px);background-size:auto,24px 24px,24px 24px;box-shadow:none; }
+	:global(.game-shell) { box-sizing:border-box;min-height:100svh;padding:var(--tg-inset-top) 0 var(--tg-inset-bottom);display:flex;align-items:stretch;justify-content:center;background-color:#ede4d5; }
+	:global(html.dark .game-shell) { background-color:#213a5d; }
+	.game-paper { position:relative;isolation:isolate;box-sizing:border-box;overflow:hidden;width:100%;height:calc(100svh - var(--tg-inset-top) - var(--tg-inset-bottom));min-height:0;padding:0;display:flex;flex-direction:column;justify-content:center;border:0;background-color:#ede4d5;background-image:radial-gradient(circle at 50% 15%,rgba(230,165,39,.18),transparent 34%),linear-gradient(rgba(23,42,69,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.018) 1px,transparent 1px);background-size:auto,24px 24px,24px 24px;box-shadow:none; }
 	.game-paper::before { display:none; }
 	.home-trigger { position:absolute;z-index:105;top:.62rem;left:.62rem; }.home-trigger :global(svg) { width:1rem;height:1rem; }
 	:global(html.dark) .game-paper { background-color:#213a5d; }
@@ -139,8 +147,9 @@ onMount(() => {
 	   around it gets a framed paper sheet: wider for the home menu, medium for lists, game-sized otherwise. */
 	@media (min-width:700px) and (min-height:560px) {
 		:global(html.dark body) { background-color:#172a45;background-image:none; }
-		:global(.game-shell) { padding:clamp(.75rem,2.2vw,1.75rem); }
-		.game-paper { --paper-width:640px;width:min(100%,var(--paper-width));height:calc(100svh - 2 * clamp(.75rem,2.2vw,1.75rem));border:1px solid rgba(23,42,69,.17);border-radius:1.5rem;box-shadow:0 24px 70px rgba(30,33,44,.13),0 2px 0 rgba(23,42,69,.08); }
+		:global(.game-shell) { padding:calc(clamp(.75rem,2.2vw,1.75rem) + var(--tg-inset-top)) clamp(.75rem,2.2vw,1.75rem) calc(clamp(.75rem,2.2vw,1.75rem) + var(--tg-inset-bottom));background-color:transparent; }
+		:global(html.dark .game-shell) { background-color:transparent; }
+		.game-paper { --paper-width:640px;width:min(100%,var(--paper-width));height:calc(100svh - 2 * clamp(.75rem,2.2vw,1.75rem) - var(--tg-inset-top) - var(--tg-inset-bottom));border:1px solid rgba(23,42,69,.17);border-radius:1.5rem;box-shadow:0 24px 70px rgba(30,33,44,.13),0 2px 0 rgba(23,42,69,.08); }
 		.game-paper.paper-list { --paper-width:760px; }
 		.game-paper.paper-wide { --paper-width:1000px; }
 		.game-paper::before { content:'';display:block;position:absolute;z-index:-1;inset:8px;border:1px solid rgba(23,42,69,.13);border-radius:1.1rem;pointer-events:none; }
