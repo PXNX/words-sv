@@ -2794,6 +2794,181 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was müssen sie haben?'), options: [german('Eine Absicht'), german('Einen Abschluss'), german('Einen Apparat')] },
       { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Einen Besuch'), german('Einen Bericht'), german('Einen Apparat')] }
     ]
-  }
+  },
 
+  {
+    id: 'b2-airport-extra',
+    level: 'b2',
+    scene: 'airport',
+    cast: ['tom', 'oma'],
+    languages: ['de'],
+    title: german('Am Flughafen'),
+    beats: [
+      { kind: 'narration', text: german('Tom und Oma sind am Flughafen. Es gibt einen Abflug und eine Abfertigung.') },
+      { kind: 'line', speaker: 'tom', text: german('Hallo {name}! Ich habe einen Anschluss und eine Abteilung.') },
+      { kind: 'line', speaker: 'oma', text: german('Gut. Ich habe einen Abflug und einen Absender.') },
+      { kind: 'reply', to: 'tom', options: [german('Ich bin ein Anschluss.'), german('Ich bin ein Abflug.'), german('Ich habe einen Absender.')] },
+      { kind: 'line', speaker: 'oma', text: german('Danke! Wir müssen einen Bericht schreiben und einen Abschluss machen.') },
+      { kind: 'question', prompt: german('Was hat Tom?'), options: [german('Anschluss und Abteilung'), german('Abflug und Absender'), german('Apparat und Auto')] },
+      { kind: 'question', prompt: german('Was hat Oma?'), options: [german('Abflug und Absender'), german('Anschluss und Abteilung'), german('Band und Baby')] },
+      { kind: 'question', prompt: german('Was müssen sie schreiben?'), options: [german('Einen Bericht'), german('Ein Blatt'), german('Ein Band')] },
+      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Einen Abschluss'), german('Einen Apparat'), german('Einen Abfall')] }
+    ]
+  },
+  {
+    id: 'b2-conference-extra',
+    level: 'b2',
+    scene: 'office',
+    cast: ['kim', 'leo'],
+    languages: ['de'],
+    title: german('Die Konferenz'),
+    beats: [
+      { kind: 'narration', text: german('Kim und Leo sind auf einer Konferenz. Sie diskutieren eine Änderung.') },
+      { kind: 'line', speaker: 'kim', text: german('Hallo {name}! Ich habe einen Ansatz und einen Anteil.') },
+      { kind: 'line', speaker: 'leo', text: german('Gut. Ich habe eine Ansicht und einen Aufbau.') },
+      { kind: 'reply', to: 'kim', options: [german('Ich bin ein Ansatz.'), german('Ich bin ein Anteil.'), german('Ich habe einen Aufbau.')] },
+      { kind: 'line', speaker: 'leo', text: german('Danke! Wir müssen einen Ausdruck finden und eine Analyse machen.') },
+      { kind: 'question', prompt: german('Was hat Kim?'), options: [german('Ansatz und Anteil'), german('Ansicht und Aufbau'), german('Apparat und Auto')] },
+      { kind: 'question', prompt: german('Was hat Leo?'), options: [german('Ansicht und Aufbau'), german('Ansatz und Anteil'), german('Band und Baby')] },
+      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Analyse'), german('Abschluss'), german('Apparat')] },
+      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Ausdruck'), german('Einen Abflug'), german('Einen Apparat')] }
+    ]
+  },
+  {
+    id: 'b2-environment-extra',
+    level: 'b2',
+    scene: 'park',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Die Umwelt'),
+    beats: [
+      { kind: 'narration', text: german('Mia und Tom sprechen über Umwelt. Sie haben einen Absatz und einen Ausdruck.') },
+      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Ich habe einen Absatz und einen Ausdruck.') },
+      { kind: 'line', speaker: 'tom', text: german('Gut. Ich habe einen Ansatz und einen Aufbau.') },
+      { kind: 'reply', to: 'mia', options: [german('Ich bin ein Absatz.'), german('Ich bin ein Ausdruck.'), german('Ich habe einen Aufbau.')] },
+      { kind: 'line', speaker: 'tom', text: german('Danke! Wir müssen einen Bericht schreiben und einen Abschluss machen.') },
+      { kind: 'question', prompt: german('Was hat Mia?'), options: [german('Absatz und Ausdruck'), german('Ansatz und Aufbau'), german('Apparat und Auto')] },
+      { kind: 'question', prompt: german('Was hat Tom?'), options: [german('Ansatz und Aufbau'), german('Absatz und Ausdruck'), german('Band und Baby')] },
+      { kind: 'question', prompt: german('Was müssen sie schreiben?'), options: [german('Einen Bericht'), german('Ein Blatt'), german('Ein Band')] },
+      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Einen Abschluss'), german('Einen Apparat'), german('Einen Abfall')] }
+    ]
+  },
+  {
+    id: 'b2-police-extra',
+    level: 'b2',
+    scene: 'office',
+    cast: ['kim', 'leo'],
+    languages: ['de'],
+    title: german('Die Polizei'),
+    beats: [
+      { kind: 'narration', text: german('Kim und Leo sprechen mit der Polizei. Es gibt einen Absender und einen Abfall.') },
+      { kind: 'line', speaker: 'kim', text: german('Hallo {name}! Ich habe einen Absender und einen Abflug.') },
+      { kind: 'line', speaker: 'leo', text: german('Gut. Ich habe einen Anschluss und einen Bericht.') },
+      { kind: 'reply', to: 'kim', options: [german('Ich bin ein Absender.'), german('Ich bin ein Abflug.'), german('Ich habe einen Anschluss.')] },
+      { kind: 'line', speaker: 'leo', text: german('Danke! Wir müssen einen Abschluss machen und einen Ausdruck finden.') },
+      { kind: 'question', prompt: german('Was hat Kim?'), options: [german('Absender und Abflug'), german('Anschluss und Bericht'), german('Apparat und Auto')] },
+      { kind: 'question', prompt: german('Was hat Leo?'), options: [german('Anschluss und Bericht'), german('Absender und Abflug'), german('Band und Baby')] },
+      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Einen Abschluss'), german('Einen Apparat'), german('Einen Abfall')] },
+      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Ausdruck'), german('Einen Abflug'), german('Einen Apparat')] }
+    ]
+  },
+  {
+    id: 'b2-favourite-food-extra',
+    level: 'b2',
+    scene: 'cafe',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Lieblingsessen'),
+    beats: [
+      { kind: 'narration', text: german('Mia und Tom sprechen über Essen. Sie haben einen Absatz und einen Ausdruck.') },
+      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Ich habe einen Absatz und einen Ausdruck.') },
+      { kind: 'line', speaker: 'tom', text: german('Gut. Ich habe einen Ansatz und einen Aufbau.') },
+      { kind: 'reply', to: 'mia', options: [german('Ich bin ein Absatz.'), german('Ich bin ein Ausdruck.'), german('Ich habe einen Aufbau.')] },
+      { kind: 'line', speaker: 'tom', text: german('Danke! Wir müssen einen Bericht schreiben und einen Abschluss machen.') },
+      { kind: 'question', prompt: german('Was hat Mia?'), options: [german('Absatz und Ausdruck'), german('Ansatz und Aufbau'), german('Apparat und Auto')] },
+      { kind: 'question', prompt: german('Was hat Tom?'), options: [german('Ansatz und Aufbau'), german('Absatz und Ausdruck'), german('Band und Baby')] },
+      { kind: 'question', prompt: german('Was müssen sie schreiben?'), options: [german('Einen Bericht'), german('Ein Blatt'), german('Ein Band')] },
+      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Einen Abschluss'), german('Einen Apparat'), german('Einen Abfall')] }
+    ]
+  },
+  {
+    id: 'a1-extra1',
+    level: 'a1',
+    scene: 'office',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Der Anfang'),
+    beats: [
+      { kind: 'narration', text: german('Es ist der Anfang des Tages. Tom muss arbeiten und hat ein Apartment. Er ist nicht arbeitslos.') },
+      { kind: 'line', speaker: 'mia', text: german('Ich muss dieses Formular ausfüllen und auf eine Antwort warten.') },
+      { kind: 'line', speaker: 'tom', text: german('Achtung! Bitte anziehen und die Lampe anmachen.') },
+      { kind: 'narration', text: german('Der Automat gibt Auskunft und der Ausgang ist automatisch.') },
+      { kind: 'question', prompt: german('Was muss Mia ausfüllen?'), options: [german('Ein Formular'), german('Ein Auto'), german('Ein Brot')] },
+      { kind: 'question', prompt: german('Was ist der Anfang?'), options: [german('Der Tag'), german('Der Abend'), german('Die Nacht')] }
+    ]
+  },
+  {
+    id: 'a1-extra2',
+    level: 'a1',
+    scene: 'town',
+    cast: ['kim', 'leo'],
+    languages: ['de'],
+    title: german('Die Bank und die Bahn'),
+    beats: [
+      { kind: 'narration', text: german('Kim geht zur Bank. Der Beamte gibt Auskunft. Bald fährt die Bahn ab.') },
+      { kind: 'line', speaker: 'kim', text: german('Ich muss meinen Beruf angeben und ein Formular benutzen.') },
+      { kind: 'line', speaker: 'leo', text: german('Das Beispiel zeigt, wie beide bei der Bahnsteig warten.') },
+      { kind: 'narration', text: german('Ein Baby spielt und badet nicht. Kim hat einen bekannten Beruf.') },
+      { kind: 'question', prompt: german('Wo wartet Kim?'), options: [german('Am Bahnsteig'), german('In der Bank'), german('Zu Hause')] },
+      { kind: 'question', prompt: german('Was bedeutet der Beamte?'), options: [german('Ein Angestellter'), german('Ein Auto'), german('Ein Baby')] }
+    ]
+  },
+  {
+    id: 'a1-extra3',
+    level: 'a1',
+    scene: 'shop',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Der Automat'),
+    beats: [
+      { kind: 'narration', text: german('Tom sieht den Automat. Er muss aussteigen und hat eine Aussage gemacht.') },
+      { kind: 'line', speaker: 'mia', text: german('Der Automat sieht gut aus und die Autobahn ist bekannt.') },
+      { kind: 'line', speaker: 'tom', text: german('Ich muss die Lampe ausmachen und dann ausziehen.') },
+      { kind: 'narration', text: german('Der berühmte Mann hat begonnen und beendet. Er hat sich bedankt.') },
+      { kind: 'question', prompt: german('Was muss Tom ausmachen?'), options: [german('Die Lampe'), german('Das Auto'), german('Das Fenster')] },
+      { kind: 'question', prompt: german('Wie sieht der Automat aus?'), options: [german('Gut'), german('Schlecht'), german('Alt')] }
+    ]
+  },
+  {
+    id: 'a1-extra4',
+    level: 'a1',
+    scene: 'market',
+    cast: ['kim', 'leo'],
+    languages: ['de'],
+    title: german('Der Markt'),
+    beats: [
+      { kind: 'narration', text: german('Kim geht zum Markt. Es gibt ein Beispiel für eine Aktion. Die Abfahrt ist bald.') },
+      { kind: 'line', speaker: 'kim', text: german('Ich habe einen neuen Beruf und muss arbeiten.') },
+      { kind: 'line', speaker: 'leo', text: german('Das Baby spielt und badet nicht. Der Beamte hilft.') },
+      { kind: 'narration', text: german('Der Automat gibt Auskunft und der Ausgang ist automatisch.') },
+      { kind: 'question', prompt: german('Was gibt es am Markt?'), options: [german('Aktion'), german('Auto'), german('Bahn')] },
+      { kind: 'question', prompt: german('Wer hilft?'), options: [german('Der Beamte'), german('Das Baby'), german('Die Bahn')] }
+    ]
+  },
+  {
+    id: 'a1-extra5',
+    level: 'a1',
+    scene: 'factory',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Die Arbeit'),
+    beats: [
+      { kind: 'narration', text: german('Mia und Tom arbeiten in einer Fabrik. Tom hat einen Beruf und Mia hat ein Apartment.') },
+      { kind: 'line', speaker: 'mia', text: german('Ich muss eine Aussage machen und auf Antwort warten.') },
+      { kind: 'line', speaker: 'tom', text: german('Achtung! Bitte anziehen und die Tür anmachen.') },
+      { kind: 'narration', text: german('Der Automat gibt Auskunft und der Ausgang ist automatisch. Abfahrt bald.') },
+      { kind: 'question', prompt: german('Was hat Mia?'), options: [german('Ein Apartment'), german('Ein Auto'), german('Einen Beruf')] },
+      { kind: 'question', prompt: german('Was muss Tom tun?'), options: [german('Anziehen'), german('Ausziehen'), german('Arbeiten')] }
+    ]
+  }
 ];
