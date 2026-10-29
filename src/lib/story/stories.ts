@@ -1214,6 +1214,74 @@ export const stories: Story[] = [
       ] }
     ]
   },
+  {
+    id: 'c2-lohnen',
+    level: 'c2',
+    scene: 'office',
+    cast: ['mia', 'kim'],
+    title: { de: 'Es lohnt sich', en: 'It is worth it', fr: 'Cela vaut la peine', it: 'Vale la pena', es: 'Vale la pena', pt: 'Vale a pena', uk: 'Це того варте' },
+    beats: [
+      { kind: 'narration', text: { de: 'Der Stand des Projekts zeigt, dass es sich lohnt, aktiv zu bleiben.', en: 'The status of the project shows that it is worth staying active.', fr: 'L\'état du projet montre que cela vaut la peine de rester actif.', it: 'Lo stato del progetto mostra che vale la pena rimanere attivi.', es: 'El estado del proyecto muestra que vale la pena mantenerse activo.', pt: 'O estado do projeto mostra que vale a pena permanecer ativo.', uk: 'Стан проєкту показує, що варто залишатися активним.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Der Einsatz lohnt sich enorm. Der Stand ist nicht wertlos.', en: 'The effort is enormously worthwhile. The status is not worthless.', fr: 'L\'effort vaut énormément la peine. L\'état n\'est pas sans valeur.', it: 'Lo sforzo vale enormemente la pena. Lo stato non è senza valore.', es: 'El esfuerzo vale enormemente la pena. El estado no es sin valor.', pt: 'O esforço vale enormemente a pena. O estado não é sem valor.', uk: 'Зусилля того варте величезно. Стан не безцінний.' } },
+      { kind: 'line', speaker: 'kim', text: { de: 'Wir sind autonom und aktiv. Der Stand wird sich ändern.', en: 'We are autonomous and active. The status will change.', fr: 'Nous sommes autonomes et actifs. L\'état va changer.', it: 'Siamo autonomi e attivi. Lo stato cambierà.', es: 'Somos autónomos y activos. El estado cambiará.', pt: 'Somos autônomos e ativos. O estado vai mudar.', uk: 'Ми автономні й активні. Стан зміниться.' } },
+      { kind: 'question', prompt: { de: 'Was zeigt der Stand?', en: 'What does the status show?', fr: 'Que montre l\'état ?', it: 'Cosa mostra lo stato?', es: '¿Qué muestra el estado?', pt: 'O que o estado mostra?', uk: 'Що показує стан?' }, options: [
+        { de: 'Es lohnt sich', en: 'It is worth it', fr: 'Cela vaut la peine', it: 'Vale la pena', es: 'Vale la pena', pt: 'Vale a pena', uk: 'Це того варте' },
+        { de: 'Es ist wertlos', en: 'It is worthless', fr: 'C\'est sans valeur', it: 'È senza valore', es: 'Es sin valor', pt: 'É sem valor', uk: 'Це безцінне' },
+        { de: 'Es ist kaputt', en: 'It is broken', fr: 'C\'est cassé', it: 'È rotto', es: 'Está roto', pt: 'Está quebrado', uk: 'Зламано' }
+      ] }
+    ]
+  },
+  {
+    id: 'c2-stand',
+    level: 'c2',
+    scene: 'square',
+    cast: ['mia', 'leo'],
+    title: { de: 'Der Stand', en: 'The status', fr: 'L\'état', it: 'Lo stato', es: 'El estado', pt: 'O estado', uk: 'Стан' },
+    beats: [
+      { kind: 'narration', text: { de: 'Der Stand der Stadt zeigt einen enormen Wandel. Es lohnt sich, aktiv zu sein.', en: 'The status of the city shows an enormous change. It is worth being active.', fr: 'L\'état de la ville montre un changement énorme. Cela vaut la peine d\'être actif.', it: 'Lo stato della città mostra un cambiamento enorme. Vale la pena essere attivi.', es: 'El estado de la ciudad muestra un cambio enorme. Vale la pena ser activo.', pt: 'O estado da cidade mostra uma mudança enorme. Vale a pena ser ativo.', uk: 'Стан міста показує величезну зміну. Варто бути активним.' } },
+      { kind: 'line', speaker: 'leo', text: { de: 'Der Stand ist nicht wertlos. Wir können autonom handeln.', en: 'The status is not worthless. We can act autonomously.', fr: 'L\'état n\'est pas sans valeur. Nous pouvons agir de manière autonome.', it: 'Lo stato non è senza valore. Possiamo agire autonomamente.', es: 'El estado no es sin valor. Podemos actuar autónomamente.', pt: 'O estado não é sem valor. Podemos agir autonomamente.', uk: 'Стан не безцінний. Ми можемо діяти автономно.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Ja, es lohnt sich enorm, wenn wir die Einheit wahren.', en: 'Yes, it is enormously worthwhile if we preserve unity.', fr: 'Oui, cela vaut la peine si nous préservons l\'unité.', it: 'Sì, vale enormemente la pena se preserviamo l\'unità.', es: 'Sí, vale enormemente la pena si preservamos la unidad.', pt: 'Sim, vale enormemente a pena se preservarmos a unidade.', uk: 'Так, це величезно того варте, якщо збережемо єдність.' } },
+      { kind: 'question', prompt: { de: 'Ist der Stand wertlos?', en: 'Is the status worthless?', fr: 'L\'état est-il sans valeur ?', it: 'Lo stato è senza valore?', es: '¿El estado es sin valor?', pt: 'O estado é sem valor?', uk: 'Чи є стан безцінним?' }, options: [
+        { de: 'Nein, es lohnt sich', en: 'No, it is worth it', fr: 'Non, cela vaut la peine', it: 'No, vale la pena', es: 'No, vale la pena', pt: 'Não, vale a pena', uk: 'Ні, це того варте' },
+        { de: 'Ja, vollkommen', en: 'Yes, completely', fr: 'Oui, complètement', it: 'Sì, completamente', es: 'Sí, completamente', pt: 'Sim, completamente', uk: 'Так, повністю' },
+        { de: 'Es ist kaputt', en: 'It is broken', fr: 'C\'est cassé', it: 'È rotto', es: 'Está roto', pt: 'Está quebrado', uk: 'Зламано' }
+      ] }
+    ]
+  },
+  {
+    id: 'c2-wertlos',
+    level: 'c2',
+    scene: 'attic',
+    cast: ['leo', 'om'],
+    title: { de: 'Wertlos?', en: 'Worthless?', fr: 'Sans valeur ?', it: 'Senza valore?', es: '¿Sin valor?', pt: 'Sem valor?', uk: 'Безцінний?' },
+    beats: [
+      { kind: 'narration', text: { de: 'Leo findet ein altes Buch. Es scheint wertlos, aber der Stand zeigt einen enormen Wert.', en: 'Leo finds an old book. It seems worthless, but the status shows an enormous value.', fr: 'Léo trouve un vieux livre. Il semble sans valeur, mais l\'état montre une valeur énorme.', it: 'Leo trova un libro vecchio. Sembra senza valore, ma lo stato mostra un valore enorme.', es: 'Leo encuentra un libro viejo. Parece sin valor, pero el estado muestra un valor enorme.', pt: 'O Léo encontra um livro antigo. Parece sem valor, mas o estado mostra um valor enorme.', uk: 'Лео знаходить стару книгу. Здається безцінною, але стан показує величезну цінність.' } },
+      { kind: 'line', speaker: 'leo', text: { de: 'Es ist nicht wertlos. Der Stand des Buches lohnt sich enorm.', en: 'It is not worthless. The status of the book is enormously worthwhile.', fr: 'Ce n\'est pas sans valeur. L\'état du livre vaut énormément la peine.', it: 'Non è senza valore. Lo stato del libro vale enormemente la pena.', es: 'No es sin valor. El estado del libro vale enormemente la pena.', pt: 'Não é sem valor. O estado do livro vale enormemente a pena.', uk: 'Це не безцінне. Стан книги величезно того варте.' } },
+      { kind: 'line', speaker: 'om', text: { de: 'Du hast recht. Es lohnt sich, autonom zu handeln und aktiv zu bleiben.', en: 'You are right. It is worth acting autonomously and staying active.', fr: 'Tu as raison. Cela vaut la peine d\'agir de manière autonome et de rester actif.', it: 'Hai ragione. Vale la pena agire autonomamente e rimanere attivi.', es: 'Tienes razón. Vale la pena actuar autónomamente y mantenerse activo.', pt: 'Você está certo. Vale a pena agir autonomamente e permanecer ativo.', uk: 'Ти правий. Варто діяти автономно й залишатися активним.' } },
+      { kind: 'question', prompt: { de: 'Ist das Buch wertlos?', en: 'Is the book worthless?', fr: 'Le livre est-il sans valeur ?', it: 'Il libro è senza valore?', es: '¿El libro es sin valor?', pt: 'O livro é sem valor?', uk: 'Чи книга безцінна?' }, options: [
+        { de: 'Nein, es lohnt sich', en: 'No, it is worth it', fr: 'Non, cela vaut la peine', it: 'No, vale la pena', es: 'No, vale la pena', pt: 'Não, vale a pena', uk: 'Ні, це того варте' },
+        { de: 'Ja, es ist kaputt', en: 'Yes, it is broken', fr: 'Oui, il est cassé', it: 'Sì, è rotto', es: 'Sí, está roto', pt: 'Sim, está quebrado', uk: 'Так, зламано' },
+        { de: 'Es ist wertlos', en: 'It is worthless', fr: 'C\'est sans valeur', it: 'È senza valore', es: 'Es sin valor', pt: 'É sem valor', uk: 'Воно безцінне' }
+      ] }
+    ]
+  },
+  {
+    id: 'c2-lohnen2',
+    level: 'c2',
+    scene: 'beach',
+    cast: ['mia', 'leo', 'om'],
+    title: { de: 'Es lohnt sich', en: 'It pays off', fr: 'Cela vaut la peine', it: 'Vale la pena', es: 'Vale la pena', pt: 'Vale a pena', uk: 'Це того варте' },
+    beats: [
+      { kind: 'narration', text: { de: 'Der Stand der Natur zeigt einen enormen Wandel. Es lohnt sich, aktiv und autonom zu sein.', en: 'The status of nature shows an enormous change. It is worth being active and autonomous.', fr: 'L\'état de la nature montre un changement énorme. Cela vaut la peine d\'être actif et autonome.', it: 'Lo stato della natura mostra un cambiamento enorme. Vale la pena essere attivi e autonomi.', es: 'El estado de la naturaleza muestra un cambio enorme. Vale la pena ser activo y autónomo.', pt: 'O estado da natureza mostra uma mudança enorme. Vale a pena ser ativo e autônomo.', uk: 'Стан природи показує величезну зміну. Варто бути активним і автономним.' } },
+      { kind: 'line', speaker: 'om', text: { de: 'Nichts ist wertlos. Die Einheit der Natur lohnt sich enorm.', en: 'Nothing is worthless. The unity of nature is enormously worthwhile.', fr: 'Rien n\'est sans valeur. L\'unité de la nature vaut énormément la peine.', it: 'Niente è senza valore. L\'unità della natura vale enormemente la pena.', es: 'Nada es sin valor. La unidad de la naturaleza vale enormemente la pena.', pt: 'Nada é sem valor. A unidade da natureza vale enormemente a pena.', uk: 'Нічого безцінного. Єдність природи величезно того варте.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Der Einsatz lohnt sich. Wir sind aktiv und nicht abhängig.', en: 'The effort is worth it. We are active and not dependent.', fr: 'L\'effort vaut la peine. Nous sommes actifs et non dépendants.', it: 'Lo sforzo vale la pena. Siamo attivi e non dipendenti.', es: 'El esfuerzo vale la pena. Somos activos y no dependientes.', pt: 'O esforço vale a pena. Somos ativos e não dependentes.', uk: 'Зусилля того варте. Ми активні й не залежні.' } },
+      { kind: 'question', prompt: { de: 'Was lohnt sich?', en: 'What is worth it?', fr: 'Qu\'est-ce qui vaut la peine ?', it: 'Cosa vale la pena?', es: '¿Qué vale la pena?', pt: 'O que vale a pena?', uk: 'Що того варте?' }, options: [
+        { de: 'Der Einsatz', en: 'The effort', fr: 'L\'effort', it: 'Lo sforzo', es: 'El esfuerzo', pt: 'O esforço', uk: 'Зусилля' },
+        { de: 'Der Abfall', en: 'The waste', fr: 'Le déchet', it: 'Il rifiuto', es: 'El residuo', pt: 'O lixo', uk: 'Відходи' },
+        { de: 'Der Krieg', en: 'The war', fr: 'La guerre', it: 'La guerra', es: 'La guerra', pt: 'A guerra', uk: 'Війна' }
+      ] }
+    ]
+  },
   ...germanStories
 ];
 
