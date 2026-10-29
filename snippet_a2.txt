@@ -1,0 +1,80 @@
+  {
+    id: 'a2-extra1',
+    level: 'a2',
+    scene: 'office',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Extra A2 1'),
+    beats: [
+      { kind: 'narration', text: german('abschließen und Ahnung und ändern und anzeigen und ärgern.') },
+      { kind: 'line', speaker: 'mia', text: german('auspacken ist wichtig und aussprechen ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('austragen und beachten sind da.') },
+      { kind: 'narration', text: german('bedanken und beeilt.') },
+      { kind: 'question', prompt: german('Was ist beenden?'), options: [german('begonnen'), german('begründen'), german('Bekannte')] },
+      { kind: 'question', prompt: german('Wer hat beenden?'), options: [german('begonnen'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'a2-extra2',
+    level: 'a2',
+    scene: 'town',
+    cast: ['kim', 'leo'],
+    languages: ['de'],
+    title: german('Extra A2 2'),
+    beats: [
+      { kind: 'narration', text: german('beraten und berichten und berühmt und beschrieben und bestanden.') },
+      { kind: 'line', speaker: 'mia', text: german('beworben ist wichtig und Biologie ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('Chefin und Ding sind da.') },
+      { kind: 'narration', text: german('direkt und Disko.') },
+      { kind: 'question', prompt: german('Was ist diskutieren?'), options: [german('Dollar'), german('dringend'), german('dumm')] },
+      { kind: 'question', prompt: german('Wer hat diskutieren?'), options: [german('Dollar'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'a2-extra3',
+    level: 'a2',
+    scene: 'shop',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Extra A2 3'),
+    beats: [
+      { kind: 'narration', text: german('dünn und E-Book und eigen und Einkaufszentrum und einpacken.') },
+      { kind: 'line', speaker: 'mia', text: german('einverstanden ist wichtig und einziehen ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('empfohlen und entschuldigt sind da.') },
+      { kind: 'narration', text: german('Erfolg und erinnern.') },
+      { kind: 'question', prompt: german('Was ist erinnert?'), options: [german('ernst'), german('erreichen'), german('Fach')] },
+      { kind: 'question', prompt: german('Wer hat erinnert?'), options: [german('ernst'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'a2-extra4',
+    level: 'a2',
+    scene: 'market',
+    cast: ['kim', 'leo'],
+    languages: ['de'],
+    title: german('Extra A2 4'),
+    beats: [
+      { kind: 'narration', text: german('Fahrplan und Fan und faul und Feier und Feiertag.') },
+      { kind: 'line', speaker: 'mia', text: german('fern ist wichtig und Fest ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('fit und fleißig sind da.') },
+      { kind: 'narration', text: german('Flug und Fluss.') },
+      { kind: 'question', prompt: german('Was ist fotografieren?'), options: [german('frisch'), german('fühlen'), german('Führerschein')] },
+      { kind: 'question', prompt: german('Wer hat fotografieren?'), options: [german('frisch'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'a2-extra5',
+    level: 'a2',
+    scene: 'park',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Extra A2 5'),
+    beats: [
+      { kind: 'narration', text: german('Fundsachen und Gabel und Gesicht und grüßen und Hals.') },
+      { kind: 'line', speaker: 'mia', text: german('hängen ist wichtig und hässlich ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('Haushalt und Hemd sind da.') },
+      { kind: 'narration', text: german('Herbst und herstellen.') },
+      { kind: 'question', prompt: german('Was ist hoffen?'), options: [german('Homepage'), german('Idee'), german('Interesse')] },
+      { kind: 'question', prompt: german('Wer hat hoffen?'), options: [german('Homepage'), german('Anderes'), german('Nichts')] }
+    ]
+  }

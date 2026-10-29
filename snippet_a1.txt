@@ -1,0 +1,80 @@
+  {
+    id: 'a1-extra1',
+    level: 'a1',
+    scene: 'office',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Der Anfang'),
+    beats: [
+      { kind: 'narration', text: german('Es ist der Anfang des Tages. Tom muss arbeiten und hat ein Apartment. Er ist nicht arbeitslos.') },
+      { kind: 'line', speaker: 'mia', text: german('Ich muss dieses Formular ausfüllen und auf eine Antwort warten.') },
+      { kind: 'line', speaker: 'tom', text: german('Achtung! Bitte anziehen und die Lampe anmachen.') },
+      { kind: 'narration', text: german('Der Automat gibt Auskunft und der Ausgang ist automatisch.') },
+      { kind: 'question', prompt: german('Was muss Mia ausfüllen?'), options: [german('Ein Formular'), german('Ein Auto'), german('Ein Brot')] },
+      { kind: 'question', prompt: german('Was ist der Anfang?'), options: [german('Der Tag'), german('Der Abend'), german('Die Nacht')] }
+    ]
+  },
+  {
+    id: 'a1-extra2',
+    level: 'a1',
+    scene: 'town',
+    cast: ['kim', 'leo'],
+    languages: ['de'],
+    title: german('Die Bank und die Bahn'),
+    beats: [
+      { kind: 'narration', text: german('Kim geht zur Bank. Der Beamte gibt Auskunft. Bald fährt die Bahn ab.') },
+      { kind: 'line', speaker: 'kim', text: german('Ich muss meinen Beruf angeben und ein Formular benutzen.') },
+      { kind: 'line', speaker: 'leo', text: german('Das Beispiel zeigt, wie beide bei der Bahnsteig warten.') },
+      { kind: 'narration', text: german('Ein Baby spielt und badet nicht. Kim hat einen bekannten Beruf.') },
+      { kind: 'question', prompt: german('Wo wartet Kim?'), options: [german('Am Bahnsteig'), german('In der Bank'), german('Zu Hause')] },
+      { kind: 'question', prompt: german('Was bedeutet der Beamte?'), options: [german('Ein Angestellter'), german('Ein Auto'), german('Ein Baby')] }
+    ]
+  },
+  {
+    id: 'a1-extra3',
+    level: 'a1',
+    scene: 'shop',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Der Automat'),
+    beats: [
+      { kind: 'narration', text: german('Tom sieht den Automat. Er muss aussteigen und hat eine Aussage gemacht.') },
+      { kind: 'line', speaker: 'mia', text: german('Der Automat sieht gut aus und die Autobahn ist bekannt.') },
+      { kind: 'line', speaker: 'tom', text: german('Ich muss die Lampe ausmachen und dann ausziehen.') },
+      { kind: 'narration', text: german('Der berühmte Mann hat begonnen und beendet. Er hat sich bedankt.') },
+      { kind: 'question', prompt: german('Was muss Tom ausmachen?'), options: [german('Die Lampe'), german('Das Auto'), german('Das Fenster')] },
+      { kind: 'question', prompt: german('Wie sieht der Automat aus?'), options: [german('Gut'), german('Schlecht'), german('Alt')] }
+    ]
+  },
+  {
+    id: 'a1-extra4',
+    level: 'a1',
+    scene: 'market',
+    cast: ['kim', 'leo'],
+    languages: ['de'],
+    title: german('Der Markt'),
+    beats: [
+      { kind: 'narration', text: german('Kim geht zum Markt. Es gibt ein Beispiel für eine Aktion. Die Abfahrt ist bald.') },
+      { kind: 'line', speaker: 'kim', text: german('Ich habe einen neuen Beruf und muss arbeiten.') },
+      { kind: 'line', speaker: 'leo', text: german('Das Baby spielt und badet nicht. Der Beamte hilft.') },
+      { kind: 'narration', text: german('Der Automat gibt Auskunft und der Ausgang ist automatisch.') },
+      { kind: 'question', prompt: german('Was gibt es am Markt?'), options: [german('Aktion'), german('Auto'), german('Bahn')] },
+      { kind: 'question', prompt: german('Wer hilft?'), options: [german('Der Beamte'), german('Das Baby'), german('Die Bahn')] }
+    ]
+  },
+  {
+    id: 'a1-extra5',
+    level: 'a1',
+    scene: 'factory',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Die Arbeit'),
+    beats: [
+      { kind: 'narration', text: german('Mia und Tom arbeiten in einer Fabrik. Tom hat einen Beruf und Mia hat ein Apartment.') },
+      { kind: 'line', speaker: 'mia', text: german('Ich muss eine Aussage machen und auf Antwort warten.') },
+      { kind: 'line', speaker: 'tom', text: german('Achtung! Bitte anziehen und die Tür anmachen.') },
+      { kind: 'narration', text: german('Der Automat gibt Auskunft und der Ausgang ist automatisch. Abfahrt bald.') },
+      { kind: 'question', prompt: german('Was hat Mia?'), options: [german('Ein Apartment'), german('Ein Auto'), german('Einen Beruf')] },
+      { kind: 'question', prompt: german('Was muss Tom tun?'), options: [german('Anziehen'), german('Ausziehen'), german('Arbeiten')] }
+    ]
+  }

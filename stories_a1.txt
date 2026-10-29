@@ -1,0 +1,95 @@
+  {
+    id: 'a1-wohnung',
+    level: 'a1',
+    scene: 'flat',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Die neue Wohnung'),
+    beats: [
+      { kind: 'narration', text: german('Mia und Tom sind umgezogen. Ich habe die neue Adresse. Der Eingang ist neben dem Appartement.') },
+      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Die Ankunft ist morgen. Ich muss das Paket abholen.') },
+      { kind: 'line', speaker: 'tom', text: german('Gut. Ich rufe die Vermieterin an. Ich muss auch eine Anmeldung machen.') },
+      { kind: 'reply', to: 'mia', options: [german('Ja, ich habe die Adresse.'), german('Nein, ich bin ein Paket.'), german('Ich habe kein Auge.')] },
+      { kind: 'line', speaker: 'mia', text: german('Danke! Wir beginnen mit dem Ausflug und schauen uns den Eingang an.') },
+      { kind: 'question', prompt: german('Was muss Mia abholen?'), options: [german('Ein Paket'), german('Ein Auto'), german('Eine Katze')] },
+      { kind: 'question', prompt: german('Wen ruft Tom an?'), options: [german('Die Vermieterin'), german('Ein Arzt'), german('Ein Hund')] },
+      { kind: 'question', prompt: german('Was muss Tom machen?'), options: [german('Anmeldung'), german('Abflug'), german('Ausland')] },
+      { kind: 'question', prompt: german('Was schauen sie sich an?'), options: [german('Den Eingang'), german('Den Absender'), german('Die Anzeige')] }
+    ]
+  },
+  {
+    id: 'a1-busreise',
+    level: 'a1',
+    scene: 'station',
+    cast: ['leo', 'kim'],
+    languages: ['de'],
+    title: german('Mit dem Bus'),
+    beats: [
+      { kind: 'narration', text: german('Leo und Kim fahren mit dem Bus. Die Abfahrt ist um neun Uhr. Die Ankunft ist um elf.') },
+      { kind: 'line', speaker: 'leo', text: german('Ich habe eine Frage: Wie viel kostet der Anschluss?') },
+      { kind: 'line', speaker: 'kim', text: german('Zwei Euro. Ich muss auch ein Angebot annehmen.') },
+      { kind: 'reply', to: 'leo', options: [german('Ich nehme es.'), german('Ich bin ein Angebot.'), german('Ich habe keine Aufgabe.')] },
+      { kind: 'line', speaker: 'kim', text: german('Gut. Wir starten und schauen aus dem Fenster. Ich schon alles.') },
+      { kind: 'question', prompt: german('Wann ist die Abfahrt?'), options: [german('Um neun Uhr'), german('Um elf Uhr'), german('Um sieben Uhr')] },
+      { kind: 'question', prompt: german('Wann ist die Ankunft?'), options: [german('Um elf Uhr'), german('Um neun Uhr'), german('Um drei Uhr')] },
+      { kind: 'question', prompt: german('Was kostet der Anschluss?'), options: [german('Zwei Euro'), german('Fünf Euro'), german('Ein Euro')] },
+      { kind: 'question', prompt: german('Was muss Kim annehmen?'), options: [german('Ein Angebot'), german('Eine Abfahrt'), german('Ein Abflug')] }
+    ]
+  },
+  {
+    id: 'a1-buerostart',
+    level: 'a1',
+    scene: 'office',
+    cast: ['tom', 'mia'],
+    languages: ['de'],
+    title: german('Neuer Arbeitsplatz'),
+    beats: [
+      { kind: 'narration', text: german('Tom hat einen neuen Arbeitsplatz. Er beginnt morgen. Er hat schon eine Aufgabe.') },
+      { kind: 'line', speaker: 'tom', text: german('Hallo {name}! Ich arbeite heute. Ich muss aufstehen und anfangen.') },
+      { kind: 'line', speaker: 'mia', text: german('Gut. Ich bieten dir einen Appetit an. Ich habe einen Apfel.') },
+      { kind: 'reply', to: 'tom', options: [german('Danke, ich habe Appetit.'), german('Ich bin ein Apfel.'), german('Ich habe kein Auge.')] },
+      { kind: 'line', speaker: 'tom', text: german('Danke! Ich muss meine Augen auf die Arbeit richten. Ich habe keine Anzeige.') },
+      { kind: 'question', prompt: german('Was hat Tom bekommen?'), options: [german('Eine Aufgabe'), german('Ein Auto'), german('Ein Absender')] },
+      { kind: 'question', prompt: german('Wen bietet Mia an?'), options: [german('Tom'), german('Ein Hund'), german('Eine Katze')] },
+      { kind: 'question', prompt: german('Was muss Tom tun?'), options: [german('Anfangen'), german('Abfliegen'), german('Ankommen')] },
+      { kind: 'question', prompt: german('Was hat Tom nicht?'), options: [german('Eine Anzeige'), german('Einen Abflug'), german('Eine Ankunft')] }
+    ]
+  },
+  {
+    id: 'a1-freund',
+    level: 'a1',
+    scene: 'park',
+    cast: ['mia', 'leo'],
+    languages: ['de'],
+    title: german('Der alte Freund'),
+    beats: [
+      { kind: 'narration', text: german('Mia trifft ihren alten Freund. Er ist allein und hat einen alten Hut.') },
+      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Wie geht es dir? Ich sehe dich nicht mehr.') },
+      { kind: 'line', speaker: 'leo', text: german('Gut. Ich habe einen neuen Appetit und einen neuen Alter.') },
+      { kind: 'reply', to: 'mia', options: [german('Ich bin auch alt.'), german('Ich habe einen Hut.'), german('Ich biete an.')] },
+      { kind: 'line', speaker: 'leo', text: german('Danke! Ich habe auch eine Aufgabe: Ich muss aufstehen und einen Anruf machen.') },
+      { kind: 'question', prompt: german('Was hat Leo?'), options: [german('Einen alten Hut'), german('Ein Auto'), german('Eine Katze')] },
+      { kind: 'question', prompt: german('Was hat Leo auch?'), options: [german('Appetit'), german('Abflug'), german('Ausland')] },
+      { kind: 'question', prompt: german('Was muss Leo tun?'), options: [german('Anrufen'), german('Abfliegen'), german('Ankommen')] },
+      { kind: 'question', prompt: german('Wie ist Leo?'), options: [german('Allein'), german('Mit Familie'), german('Im Auto')] }
+    ]
+  },
+  {
+    id: 'a1-reise',
+    level: 'a1',
+    scene: 'airport',
+    cast: ['kim', 'tom'],
+    languages: ['de'],
+    title: german('Die Reise beginnt'),
+    beats: [
+      { kind: 'narration', text: german('Kim und Tom fahren ins Ausland. Die Abfahrt ist morgen. Die Ankunft ist am Freitag.') },
+      { kind: 'line', speaker: 'kim', text: german('Hallo {name}! Ich habe eine Adresse und einen Absender.') },
+      { kind: 'line', speaker: 'tom', text: german('Gut. Ich habe einen Ausflug geplant. Ich muss einen Anschluss buchen.') },
+      { kind: 'reply', to: 'kim', options: [german('Ich habe einen Abflug.'), german('Ich bin ein Anschluss.'), german('Ich habe einen Appetit.')] },
+      { kind: 'line', speaker: 'tom', text: german('Danke! Wir starten und schauen auf die Anzeige.') },
+      { kind: 'question', prompt: german('Wo fahren sie hin?'), options: [german('Ins Ausland'), german('In den Zoo'), german('In die Bäckerei')] },
+      { kind: 'question', prompt: german('Was hat Kim?'), options: [german('Eine Adresse'), german('Ein Auto'), german('Ein Haus')] },
+      { kind: 'question', prompt: german('Was hat Tom geplant?'), options: [german('Einen Ausflug'), german('Ein Abflug'), german('Ein Angebot')] },
+      { kind: 'question', prompt: german('Was schauen sie sich an?'), options: [german('Die Anzeige'), german('Die Abfahrt'), german('Die Ankunft')] }
+    ]
+  }

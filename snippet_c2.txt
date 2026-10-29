@@ -1,0 +1,80 @@
+  {
+    id: 'c2-extra1',
+    level: 'c2',
+    scene: 'office',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Extra C2 1'),
+    beats: [
+      { kind: 'narration', text: german('löhnen und wertlos.') },
+      { kind: 'line', speaker: 'mia', text: german('undefined ist wichtig und undefined ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('undefined und undefined sind da.') },
+      { kind: 'narration', text: german('undefined und undefined.') },
+      { kind: 'question', prompt: german('Was ist Wort?'), options: [german('Option'), german('Option'), german('Option')] },
+      { kind: 'question', prompt: german('Wer hat Wort?'), options: [german('Option'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'c2-extra2',
+    level: 'c2',
+    scene: 'town',
+    cast: ['kim', 'leo'],
+    languages: ['de'],
+    title: german('Extra C2 2'),
+    beats: [
+      { kind: 'narration', text: german('.') },
+      { kind: 'line', speaker: 'mia', text: german('undefined ist wichtig und undefined ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('undefined und undefined sind da.') },
+      { kind: 'narration', text: german('undefined und undefined.') },
+      { kind: 'question', prompt: german('Was ist Wort?'), options: [german('Option'), german('Option'), german('Option')] },
+      { kind: 'question', prompt: german('Wer hat Wort?'), options: [german('Option'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'c2-extra3',
+    level: 'c2',
+    scene: 'shop',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Extra C2 3'),
+    beats: [
+      { kind: 'narration', text: german('.') },
+      { kind: 'line', speaker: 'mia', text: german('undefined ist wichtig und undefined ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('undefined und undefined sind da.') },
+      { kind: 'narration', text: german('undefined und undefined.') },
+      { kind: 'question', prompt: german('Was ist Wort?'), options: [german('Option'), german('Option'), german('Option')] },
+      { kind: 'question', prompt: german('Wer hat Wort?'), options: [german('Option'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'c2-extra4',
+    level: 'c2',
+    scene: 'market',
+    cast: ['kim', 'leo'],
+    languages: ['de'],
+    title: german('Extra C2 4'),
+    beats: [
+      { kind: 'narration', text: german('.') },
+      { kind: 'line', speaker: 'mia', text: german('undefined ist wichtig und undefined ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('undefined und undefined sind da.') },
+      { kind: 'narration', text: german('undefined und undefined.') },
+      { kind: 'question', prompt: german('Was ist Wort?'), options: [german('Option'), german('Option'), german('Option')] },
+      { kind: 'question', prompt: german('Wer hat Wort?'), options: [german('Option'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'c2-extra5',
+    level: 'c2',
+    scene: 'park',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Extra C2 5'),
+    beats: [
+      { kind: 'narration', text: german('.') },
+      { kind: 'line', speaker: 'mia', text: german('undefined ist wichtig und undefined ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('undefined und undefined sind da.') },
+      { kind: 'narration', text: german('undefined und undefined.') },
+      { kind: 'question', prompt: german('Was ist Wort?'), options: [german('Option'), german('Option'), german('Option')] },
+      { kind: 'question', prompt: german('Wer hat Wort?'), options: [german('Option'), german('Anderes'), german('Nichts')] }
+    ]
+  }

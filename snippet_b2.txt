@@ -1,0 +1,80 @@
+  {
+    id: 'b2-extra1',
+    level: 'b2',
+    scene: 'office',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Extra B2 1'),
+    beats: [
+      { kind: 'narration', text: german('abhängen und Absatz und Abschluß und abstrakt und abwerten.') },
+      { kind: 'line', speaker: 'mia', text: german('ähnlich ist wichtig und aktiv ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('Analyse und anführen sind da.') },
+      { kind: 'narration', text: german('Anhänger und anordnen.') },
+      { kind: 'question', prompt: german('Was ist anpassen?'), options: [german('Ansatz'), german('Ansicht'), german('Anteil')] },
+      { kind: 'question', prompt: german('Wer hat anpassen?'), options: [german('Ansatz'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'b2-extra2',
+    level: 'b2',
+    scene: 'town',
+    cast: ['kim', 'leo'],
+    languages: ['de'],
+    title: german('Extra B2 2'),
+    beats: [
+      { kind: 'narration', text: german('anwesend und Anzahl und arabisch und Argument und asozial.') },
+      { kind: 'line', speaker: 'mia', text: german('Aufbau ist wichtig und Aufsatz ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('Ausdruck und Äußerung sind da.') },
+      { kind: 'narration', text: german('Autorin und Bachelor.') },
+      { kind: 'question', prompt: german('Was ist basieren?'), options: [german('Basis'), german('befassen'), german('befinden')] },
+      { kind: 'question', prompt: german('Wer hat basieren?'), options: [german('Basis'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'b2-extra3',
+    level: 'b2',
+    scene: 'shop',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Extra B2 3'),
+    beats: [
+      { kind: 'narration', text: german('befreien und begabt und begehen und beklagen und Bemühung.') },
+      { kind: 'line', speaker: 'mia', text: german('Benehmen ist wichtig und bereit ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('bereiten und Betracht sind da.') },
+      { kind: 'narration', text: german('bewahren und Beweis.') },
+      { kind: 'question', prompt: german('Was ist bewerten?'), options: [german('bewirken'), german('beziehen'), german('Bezug')] },
+      { kind: 'question', prompt: german('Wer hat bewerten?'), options: [german('bewirken'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'b2-extra4',
+    level: 'b2',
+    scene: 'market',
+    cast: ['kim', 'leo'],
+    languages: ['de'],
+    title: german('Extra B2 4'),
+    beats: [
+      { kind: 'narration', text: german('bilden und Blut und Code und Dach und Diagramm.') },
+      { kind: 'line', speaker: 'mia', text: german('Dilemma ist wichtig und dominant ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('Dozent und Drittel sind da.') },
+      { kind: 'narration', text: german('drohen und Drohung.') },
+      { kind: 'question', prompt: german('Was ist Ebene?'), options: [german('ehemalig'), german('einbauen'), german('eingehen')] },
+      { kind: 'question', prompt: german('Wer hat Ebene?'), options: [german('ehemalig'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'b2-extra5',
+    level: 'b2',
+    scene: 'park',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Extra B2 5'),
+    beats: [
+      { kind: 'narration', text: german('einigen und einsam und einzelne und einzig und Element.') },
+      { kind: 'line', speaker: 'mia', text: german('Empathie ist wichtig und Endung ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('eng und enstehen sind da.') },
+      { kind: 'narration', text: german('Epoche und erheben.') },
+      { kind: 'question', prompt: german('Was ist Erlebnis?'), options: [german('erleiden'), german('erlernen'), german('erregen')] },
+      { kind: 'question', prompt: german('Wer hat Erlebnis?'), options: [german('erleiden'), german('Anderes'), german('Nichts')] }
+    ]
+  }
