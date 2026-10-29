@@ -3065,7 +3065,7 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Ausdruck'), german('Einen Abschluss'), german('Einen Apparat')] },
       { kind: 'question', prompt: german('Was müssen sie analysieren?'), options: [german('Eine Funktion'), german('Einen Abschluss'), german('Einen Abfall')] }
     ]
-  }
+  },
 
   {
     id: 'c2-ethics-extra',
