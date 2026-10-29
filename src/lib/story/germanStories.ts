@@ -2507,9 +2507,7 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was befürchtet Sabine?'), options: [german('Ein demokratisches Defizit durch weitreichende Richterentscheidungen'), german('Zu viele Wahlen'), german('Zu wenig Klimaschutz')] },
       { kind: 'question', prompt: german('Was ist laut Becker die eigentliche Lehre?'), options: [german('Verfassungsrecht ersetzt keine Debatte, es zwingt zu ihr'), german('Gerichte sollten alle Gesetze schreiben'), german('Debatten sind überflüssig')] }
     ]
-  }
-];
-
+  },
   {
     id: 'a1-wohnung',
     level: 'a1',
@@ -2603,6 +2601,102 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was hat Kim?'), options: [german('Eine Adresse'), german('Ein Auto'), german('Ein Haus')] },
       { kind: 'question', prompt: german('Was hat Tom geplant?'), options: [german('Einen Ausflug'), german('Ein Abflug'), german('Ein Angebot')] },
       { kind: 'question', prompt: german('Was schauen sie sich an?'), options: [german('Die Anzeige'), german('Die Abfahrt'), german('Die Ankunft')] }
+    ]
+  }
+
+  {
+    id: 'a2-ampel',
+    level: 'a2',
+    scene: 'park',
+    cast: ['mia', 'leo'],
+    languages: ['de'],
+    title: german('An der Ampel'),
+    beats: [
+      { kind: 'narration', text: german('Mia und Leo stehen an einer Ampel. Sie wollen einen Berg besuchen.') },
+      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Ich muss mich beeilen. Ich habe eine Bewerbung.') },
+      { kind: 'line', speaker: 'leo', text: german('Gut. Ich muss auch eine Bescheid schreiben. Ich habe einen Autor gesehen.') },
+      { kind: 'reply', to: 'mia', options: [german('Ich bin ein Autor.'), german('Ich habe eine Bewerbung.'), german('Ich bin ein Babysitter.')] },
+      { kind: 'line', speaker: 'leo', text: german('Danke! Wir können einen Berg besteigen und einen Apparat ansehen.') },
+      { kind: 'question', prompt: german('Was hat Mia?'), options: [german('Eine Bewerbung'), german('Ein Berg'), german('Ein Babysitter')] },
+      { kind: 'question', prompt: german('Was muss Leo schreiben?'), options: [german('Einen Bescheid'), german('Einen Berg'), german('Ein Blatt')] },
+      { kind: 'question', prompt: german('Was sehen sie?'), options: [german('Einen Apparat'), german('Einen Autor'), german('Eine Ampel')] },
+      { kind: 'question', prompt: german('Was können sie tun?'), options: [german('Einen Berg besteigen'), german('Einen Apparat bauen'), german('Ein Blatt basteln')] }
+    ]
+  },
+  {
+    id: 'a2-bakery-shop',
+    level: 'a2',
+    scene: 'bakery',
+    cast: ['kim', 'tom'],
+    languages: ['de'],
+    title: german('Im Café'),
+    beats: [
+      { kind: 'narration', text: german('Kim und Tom sitzen in einer Cafeteria. Sie denken über ein neues Band nach.') },
+      { kind: 'line', speaker: 'kim', text: german('Ich muss ein Angebot beantworten. Ich habe einen Club angekündigt.') },
+      { kind: 'line', speaker: 'tom', text: german('Gut. Ich muss auch eine Datei öffnen und einen Bericht schreiben.') },
+      { kind: 'reply', to: 'kim', options: [german('Ich habe eine Datei.'), german('Ich bin ein Band.'), german('Ich bin ein Club.')] },
+      { kind: 'line', speaker: 'tom', text: german('Danke! Wir müssen Beobachten und bestätigen, dass wir bestehen.') },
+      { kind: 'question', prompt: german('Was denkt Kim?'), options: [german('Ein Band'), german('Ein Berg'), german('Ein Apparat')] },
+      { kind: 'question', prompt: german('Was muss Kim beantworten?'), options: [german('Ein Angebot'), german('Ein Band'), german('Ein Baby')] },
+      { kind: 'question', prompt: german('Was muss Tom öffnen?'), options: [german('Eine Datei'), german('Ein Band'), german('Ein Blatt')] },
+      { kind: 'question', prompt: german('Was müssen sie tun?'), options: [german('Beobachten'), german('Bauen'), german('Backen')] }
+    ]
+  },
+  {
+    id: 'a2-berg',
+    level: 'a2',
+    scene: 'alps',
+    cast: ['leo', 'mia'],
+    languages: ['de'],
+    title: german('Der Berg'),
+    beats: [
+      { kind: 'narration', text: german('Mia und Leo gehen auf einen Berg. Es ist blond und dick im Wald.') },
+      { kind: 'line', speaker: 'leo', text: german('Hallo {name}! Ich habe einen Besuch und einen Bekannten.') },
+      { kind: 'line', speaker: 'mia', text: german('Gut. Ich muss einen Berg besteigen und einen Blätter sehen.') },
+      { kind: 'reply', to: 'leo', options: [german('Ich habe einen Berg.'), german('Ich bin ein Blatt.'), german('Ich bin dick.')] },
+      { kind: 'line', speaker: 'mia', text: german('Danke! Wir müssen auch eine Brücke buchen und einen Club treffen.') },
+      { kind: 'question', prompt: german('Was ist dick?'), options: [german('Der Wald'), german('Der Berg'), german('Das Blatt')] },
+      { kind: 'question', prompt: german('Was hat Leo?'), options: [german('Einen Besuch'), german('Ein Band'), german('Ein Baby')] },
+      { kind: 'question', prompt: german('Was sehen sie?'), options: [german('Blätter'), german('Berge'), german('Brücken')] },
+      { kind: 'question', prompt: german('Was müssen sie buchen?'), options: [german('Eine Brücke'), german('Ein Band'), german('Ein Baby')] }
+    ]
+  },
+  {
+    id: 'a2-buch',
+    level: 'a2',
+    scene: 'library',
+    cast: ['tom', 'kim'],
+    languages: ['de'],
+    title: german('Das Buch'),
+    beats: [
+      { kind: 'narration', text: german('Tom und Kim sind in einer Bibliothek. Sie suchen einen Autor und ein Blatt.') },
+      { kind: 'line', speaker: 'tom', text: german('Ich muss einen Bericht beschreiben. Ich habe einen Apparat gesehen.') },
+      { kind: 'line', speaker: 'kim', text: german('Gut. Ich muss auch eine Datei denken und einen Band öffnen.') },
+      { kind: 'reply', to: 'tom', options: [german('Ich habe eine Datei.'), german('Ich bin ein Band.'), german('Ich bin ein Autor.')] },
+      { kind: 'line', speaker: 'kim', text: german('Danke! Wir müssen einen Bericht beginnen und einen Besuch machen.') },
+      { kind: 'question', prompt: german('Was suchen sie?'), options: [german('Einen Autor'), german('Einen Berg'), german('Ein Baby')] },
+      { kind: 'question', prompt: german('Was muss Tom beschreiben?'), options: [german('Einen Bericht'), german('Ein Band'), german('Ein Blatt')] },
+      { kind: 'question', prompt: german('Was sieht Kim?'), options: [german('Einen Apparat'), german('Einen Autor'), german('Ein Blatt')] },
+      { kind: 'question', prompt: german('Was muss Kim denken?'), options: [german('Über eine Datei'), german('Über einen Berg'), german('Über einen Band')] }
+    ]
+  },
+  {
+    id: 'a2-fleamarket',
+    level: 'a2',
+    scene: 'square',
+    cast: ['mia', 'leo'],
+    languages: ['de'],
+    title: german('Der Flohmarkt'),
+    beats: [
+      { kind: 'narration', text: german('Mia und Leo sind auf einem Flohmarkt. Sie sehen einen Babysitter und einen Band.') },
+      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Ich habe einen Apparat und eine Datei.') },
+      { kind: 'line', speaker: 'leo', text: german('Gut. Ich muss einen Bericht beginnen und einen Besuch machen.') },
+      { kind: 'reply', to: 'mia', options: [german('Ich habe einen Apparat.'), german('Ich bin ein Band.'), german('Ich bin ein Babysitter.')] },
+      { kind: 'line', speaker: 'mia', text: german('Danke! Wir müssen ein Angebot beantworten und einen Club sehen.') },
+      { kind: 'question', prompt: german('Was hat Mia?'), options: [german('Einen Apparat'), german('Einen Berg'), german('Ein Baby')] },
+      { kind: 'question', prompt: german('Was muss Leo beginnen?'), options: [german('Einen Bericht'), german('Ein Band'), german('Ein Blatt')] },
+      { kind: 'question', prompt: german('Was sehen sie?'), options: [german('Einen Babysitter'), german('Einen Autor'), german('Ein Band')] },
+      { kind: 'question', prompt: german('Was müssen sie beantworten?'), options: [german('Ein Angebot'), german('Ein Apparat'), german('Ein Band')] }
     ]
   }
 
