@@ -1045,6 +1045,91 @@ export const stories: Story[] = [
       ] }
     ]
   },
+  {
+    id: 'b2-abschlus',
+    level: 'b2',
+    scene: 'office',
+    cast: ['mia', 'kim'],
+    title: { de: 'Der Abschluß', en: 'The conclusion', fr: 'La conclusion', it: 'La conclusione', es: 'La conclusión', pt: 'A conclusão', uk: 'Завершення' },
+    beats: [
+      { kind: 'narration', text: { de: 'Mia und Kim erreichen den Abschluß des Projekts. Die Analyse zeigt, dass das Ergebnis aktiv und ähnlich dem Plan ist.', en: 'Mia and Kim reach the conclusion of the project. The analysis shows that the result is active and similar to the plan.', fr: 'Mia et Kim atteignent la conclusion du projet. L\'analyse montre que le résultat est actif et similaire au plan.', it: 'Mia e Kim raggiungono la conclusione del progetto. L\'analisi mostra che il risultato è attivo e simile al piano.', es: 'Mia y Kim alcanzan la conclusión del proyecto. El análisis muestra que el resultado es activo y similar al plan.', pt: 'A Mia e Kim alcançam a conclusão do projeto. A análise mostra que o resultado é ativo e similar ao plano.', uk: 'Мія й Кім досягають завершення проєкту. Аналіз показує, що результат активний і схожий на план.' } },
+      { kind: 'line', speaker: 'kim', text: { de: 'Der Absatz des Berichts ist abstrakt, aber die Anwendung funktioniert.', en: 'The paragraph of the report is abstract, but the application works.', fr: 'Le paragraphe du rapport est abstrait, mais l\'application fonctionne.', it: 'Il paragrafo del rapporto è astratto, ma l\'applicazione funziona.', es: 'El párrafo del informe es abstracto, pero la aplicación funciona.', pt: 'O parágrafo do relatório é abstrato, mas a aplicação funciona.', uk: 'Абзац звіту абстрактний, але застосунок працює.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Wir müssen nicht abhängen. Wir sind ähnlich stark und aktiv.', en: 'We must not depend. We are similarly strong and active.', fr: 'Nous ne devons pas dépendre. Nous sommes pareillement forts et actifs.', it: 'Non dobbiamo dipendere. Siamo ugualmente forti e attivi.', es: 'No debemos depender. Somos igualmente fuertes y activos.', pt: 'Não devemos depender. Somos igualmente fortes e ativos.', uk: 'Ми не маємо залежати. Ми однаково сильні й активні.' } },
+      { kind: 'question', prompt: { de: 'Was zeigt die Analyse?', en: 'What does the analysis show?', fr: 'Que montre l\'analyse ?', it: 'Cosa mostra l\'analisi?', es: '¿Qué muestra el análisis?', pt: 'O que a análise mostra?', uk: 'Що показує аналіз?' }, options: [
+        { de: 'Das Ergebnis ist aktiv', en: 'The result is active', fr: 'Le résultat est actif', it: 'Il risultato è attivo', es: 'El resultado es activo', pt: 'O resultado é ativo', uk: 'Результат активний' },
+        { de: 'Der Bericht ist lang', en: 'The report is long', fr: 'Le rapport est long', it: 'Il rapporto è lungo', es: 'El informe es largo', pt: 'O relatório é longo', uk: 'Звіт довгий' },
+        { de: 'Die Anwendung ist kaputt', en: 'The application is broken', fr: 'L\'application est cassée', it: 'L\'applicazione è rotta', es: 'La aplicación está rota', pt: 'A aplicação está quebrada', uk: 'Застосунок зламаний' }
+      ] }
+    ]
+  },
+  {
+    id: 'b2-abhangen',
+    level: 'b2',
+    scene: 'cafe',
+    cast: ['mia', 'tom'],
+    title: { de: 'Abhängen', en: 'To depend', fr: 'Dépendre', it: 'Dipendere', es: 'Depender', pt: 'Depender', uk: 'Залежати' },
+    beats: [
+      { kind: 'narration', text: { de: 'Mia erklärt Tom, dass man nicht von anderen abhängen sollte. Der Anlass ist ein Gespräch über Unabhängigkeit.', en: 'Mia explains to Tom that one should not depend on others. The occasion is a conversation about independence.', fr: 'Mia explique à Tom qu\'il ne faut pas dépendre des autres. L\'occasion est une conversation sur l\'indépendance.', it: 'Mia spiega a Tom che non si dovrebbe dipendere dagli altri. L\'occasione è una conversazione sull\'indipendenza.', es: 'Mia explica a Tom que no se debe depender de los demás. La ocasión es una conversación sobre la independencia.', pt: 'A Mia explica ao Tom que não se deve depender dos outros. A ocasião é uma conversa sobre independência.', uk: 'Мія пояснює Тому, що не слід залежати від інших. Привід — розмова про незалежність.' } },
+      { kind: 'line', speaker: 'tom', text: { de: 'Ich verstehe. Ich werde aktiv und ähnlich stark. Ich hänge nicht mehr ab.', en: 'I understand. I will be active and similarly strong. I no longer depend.', fr: 'Je comprends. Je serai actif et pareillement fort. Je ne dépendrai plus.', it: 'Capisco. Sarò attivo e ugualmente forte. Non dipenderò più.', es: 'Entiendo. Seré activo e igualmente fuerte. Ya no dependeré.', pt: 'Entendo. Vou ser ativo e igualmente forte. Não vou mais depender.', uk: 'Розумію. Буду активним і однаково сильним. Більше не залежатиму.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Der Abschluß unserer Diskussion ist klar. Wir sind unabhängig.', en: 'The conclusion of our discussion is clear. We are independent.', fr: 'La conclusion de notre discussion est claire. Nous sommes indépendants.', it: 'La conclusione della nostra discussione è chiara. Siamo indipendenti.', es: 'La conclusión de nuestra discusión es clara. Somos independientes.', pt: 'A conclusão da nossa conversa é clara. Somos independentes.', uk: 'Завершення нашої розмови ясне. Ми незалежні.' } },
+      { kind: 'question', prompt: { de: 'Wovon sollte man nicht abhängen?', en: 'What should one not depend on?', fr: 'De quoi ne doit-on pas dépendre ?', it: 'Da cosa non si dovrebbe dipendere?', es: '¿De qué no se debe depender?', pt: 'Do que não se deve depender?', uk: 'Від чого не слід залежати?' }, options: [
+        { de: 'Von anderen', en: 'Others', fr: 'Des autres', it: 'Dagli altri', es: 'De los demás', pt: 'Dos outros', uk: 'Від інших' },
+        { de: 'Von sich selbst', en: 'Oneself', fr: 'De soi', it: 'Da se stessi', es: 'De uno mismo', pt: 'De si mesmo', uk: 'Від себе' },
+        { de: 'Von der Schule', en: 'The school', fr: 'L\'école', it: 'La scuola', es: 'La escuela', pt: 'A escola', uk: 'Школа' }
+      ] }
+    ]
+  },
+  {
+    id: 'b2-absatz',
+    level: 'b2',
+    scene: 'library',
+    cast: ['mia', 'kim'],
+    title: { de: 'Der Absatz', en: 'The paragraph', fr: 'Le paragraphe', it: 'Il paragrafo', es: 'El párrafo', pt: 'O parágrafo', uk: 'Абзац' },
+    beats: [
+      { kind: 'narration', text: { de: 'Mia liest einen Absatz. Der Anlass für das Lesen ist ein Artikel über Unabhängigkeit.', en: 'Mia reads a paragraph. The occasion for reading is an article about independence.', fr: 'Mia lit un paragraphe. L\'occasion de la lecture est un article sur l\'indépendance.', it: 'Mia legge un paragrafo. L\'occasione della lettura è un articolo sull\'indipendenza.', es: 'Mia lee un párrafo. La ocasión para leer es un artículo sobre la independencia.', pt: 'A Mia lê um parágrafo. A ocasião para ler é um artigo sobre independência.', uk: 'Мія читає абзац. Привід для читання — стаття про незалежність.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Der Absatz zeigt, dass wir aktiv sein müssen und nicht abhängen.', en: 'The paragraph shows that we must be active and not depend.', fr: 'Le paragraphe montre que nous devons être actifs et ne pas dépendre.', it: 'Il paragrafo mostra che dobbiamo essere attivi e non dipendere.', es: 'El párrafo muestra que debemos ser activos y no depender.', pt: 'O parágrafo mostra que devemos ser ativos e não depender.', uk: 'Абзац показує, що ми маємо бути активними й не залежати.' } },
+      { kind: 'line', speaker: 'kim', text: { de: 'Die Analyse des Textes ist ähnlich zu unserem Plan. Der Abschluß ist positiv.', en: 'The analysis of the text is similar to our plan. The conclusion is positive.', fr: 'L\'analyse du texte est similaire à notre plan. La conclusion est positive.', it: 'L\'analisi del testo è simile al nostro piano. La conclusione è positiva.', es: 'El análisis del texto es similar a nuestro plan. La conclusión es positiva.', pt: 'A análise do texto é similar ao nosso plano. A conclusão é positiva.', uk: 'Аналіз тексту схожий на наш план. Завершення позитивне.' } },
+      { kind: 'question', prompt: { de: 'Was liest Mia?', en: 'What does Mia read?', fr: 'Que lit Mia ?', it: 'Cosa legge Mia?', es: '¿Qué lee Mia?', pt: 'O que a Mia lê?', uk: 'Що читає Мія?' }, options: [
+        { de: 'Einen Absatz', en: 'A paragraph', fr: 'Un paragraphe', it: 'Un paragrafo', es: 'Un párrafo', pt: 'Um parágrafo', uk: 'Абзац' },
+        { de: 'Ein Buch', en: 'A book', fr: 'Un livre', it: 'Un libro', es: 'Un libro', pt: 'Um livro', uk: 'Книгу' },
+        { de: 'Ein Bild', en: 'A picture', fr: 'Une image', it: 'Un\'immagine', es: 'Una imagen', pt: 'Uma imagem', uk: 'Зображення' }
+      ] }
+    ]
+  },
+  {
+    id: 'b2-analyse',
+    level: 'b2',
+    scene: 'office',
+    cast: ['mia', 'tom'],
+    title: { de: 'Die Analyse', en: 'The analysis', fr: 'L\'analyse', it: 'L\'analisi', es: 'El análisis', pt: 'A análise', uk: 'Аналіз' },
+    beats: [
+      { kind: 'narration', text: { de: 'Mia führt eine Analyse durch. Der Anlass ist ein Bericht über Abhängigkeit und Unabhängigkeit.', en: 'Mia conducts an analysis. The occasion is a report on dependence and independence.', fr: 'Mia effectue une analyse. L\'occasion est un rapport sur la dépendance et l\'indépendance.', it: 'Mia conduce un\'analisi. L\'occasione è un rapporto sulla dipendenza e l\'indipendenza.', es: 'Mia realiza un análisis. La ocasión es un informe sobre dependencia e independencia.', pt: 'A Mia realiza uma análise. A ocasião é um relatório sobre dependência e independência.', uk: 'Мія проводить аналіз. Привід — звіт про залежність і незалежність.' } },
+      { kind: 'line', speaker: 'tom', text: { de: 'Die Analyse zeigt, dass wir aktiv sein müssen. Der Absatz erklärt es.', en: 'The analysis shows that we must be active. The paragraph explains it.', fr: 'L\'analyse montre que nous devons être actifs. Le paragraphe l\'explique.', it: 'L\'analisi mostra che dobbiamo essere attivi. Il paragrafo lo spiega.', es: 'El análisis muestra que debemos ser activos. El párrafo lo explica.', pt: 'A análise mostra que devemos ser ativos. O parágrafo explica.', uk: 'Аналіз показує, що ми маємо бути активними. Абзац це пояснює.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Genau. Wir müssen nicht abhängen, sondern ähnlich stark bleiben.', en: 'Exactly. We must not depend, but remain similarly strong.', fr: 'Exactement. Nous ne devons pas dépendre, mais rester pareillement forts.', it: 'Esatto. Non dobbiamo dipendere, ma restare ugualmente forti.', es: 'Exacto. No debemos depender, sino permanecer igualmente fuertes.', pt: 'Exato. Não devemos depender, mas permanecer igualmente fortes.', uk: 'Точно. Ми не маємо залежати, а залишатися однаково сильними.' } },
+      { kind: 'question', prompt: { de: 'Worum geht der Bericht?', en: 'What is the report about?', fr: 'De quoi parle le rapport ?', it: 'Di cosa parla il rapporto?', es: '¿De qué trata el informe?', pt: 'Sobre o que é o relatório?', uk: 'Про що звіт?' }, options: [
+        { de: 'Abhängigkeit und Unabhängigkeit', en: 'Dependence and independence', fr: 'Dépendance et indépendance', it: 'Dipendenza e indipendenza', es: 'Dependencia e independencia', pt: 'Dependência e independência', uk: 'Залежність і незалежність' },
+        { de: 'Sport', en: 'Sport', fr: 'Le sport', it: 'Lo sport', es: 'El deporte', pt: 'O esporte', uk: 'Спорт' },
+        { de: 'Essen', en: 'Food', fr: 'La nourriture', it: 'Il cibo', es: 'La comida', pt: 'A comida', uk: 'Їжа' }
+      ] }
+    ]
+  },
+  {
+    id: 'b2-abschlus',
+    level: 'b2',
+    scene: 'square',
+    cast: ['mia', 'kim'],
+    title: { de: 'Der letzte Abschluß', en: 'The final conclusion', fr: 'La conclusion finale', it: 'La conclusione finale', es: 'La conclusión final', pt: 'A conclusão final', uk: 'Останнє завершення' },
+    beats: [
+      { kind: 'narration', text: { de: 'Der Abschluß des Tages ist erreicht. Die Analyse war aktiv und ähnlich perfekt.', en: 'The conclusion of the day is reached. The analysis was active and similarly perfect.', fr: 'La conclusion de la journée est atteinte. L\'analyse était active et pareillement parfaite.', it: 'La conclusione della giornata è raggiunta. L\'analisi era attiva e ugualmente perfetta.', es: 'La conclusión del día se ha alcanzado. El análisis fue activo y igualmente perfecto.', pt: 'A conclusão do dia foi alcançada. A análise foi ativa e igualmente perfeita.', uk: 'Завершення дня досягнуто. Аналіз був активний і однаково досконалий.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Wir müssen nicht mehr abhängen. Der Absatz und die Anwendung sind abgeschlossen.', en: 'We must no longer depend. The paragraph and the application are completed.', fr: 'Nous ne devons plus dépendre. Le paragraphe et l\'application sont terminés.', it: 'Non dobbiamo più dipendere. Il paragrafo e l\'applicazione sono completati.', es: 'Ya no debemos depender. El párrafo y la aplicación están completados.', pt: 'Não precisamos mais depender. O parágrafo e a aplicação estão concluídos.', uk: 'Ми більше не маємо залежати. Абзац і застосунок завершено.' } },
+      { kind: 'line', speaker: 'kim', text: { de: 'Die Anwendung des Plans war ähnlich effektiv. Wir sind aktiv und unabhängig.', en: 'The application of the plan was similarly effective. We are active and independent.', fr: 'L\'application du plan était pareillement efficace. Nous sommes actifs et indépendants.', it: 'L\'applicazione del piano era ugualmente efficace. Siamo attivi e indipendenti.', es: 'La aplicación del plan fue igualmente efectiva. Somos activos e independientes.', pt: 'A aplicação do plano foi igualmente eficaz. Somos ativos e independentes.', uk: 'Застосунок плану був однаково ефективним. Ми активні й незалежні.' } },
+      { kind: 'question', prompt: { de: 'Was ist abgeschlossen?', en: 'What is completed?', fr: 'Qu\'est-ce qui est terminé ?', it: 'Cosa è completato?', es: '¿Qué está completado?', pt: 'O que está concluído?', uk: 'Що завершено?' }, options: [
+        { de: 'Der Absatz und die Anwendung', en: 'The paragraph and the application', fr: 'Le paragraphe et l\'application', it: 'Il paragrafo e l\'applicazione', es: 'El párrafo y la aplicación', pt: 'O parágrafo e a aplicação', uk: 'Абзац і застосунок' },
+        { de: 'Der Abfall', en: 'The waste', fr: 'Le déchet', it: 'Il rifiuto', es: 'El residuo', pt: 'O lixo', uk: 'Відходи' },
+        { de: 'Der Abitur', en: 'The Abitur', fr: 'Le bac', it: 'L\'esame', es: 'El Abitur', pt: 'O Abitur', uk: 'Абітур' }
+      ] }
+    ]
+  },
   ...germanStories
 ];
 
