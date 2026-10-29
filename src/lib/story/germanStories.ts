@@ -2602,7 +2602,7 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was hat Tom geplant?'), options: [german('Einen Ausflug'), german('Ein Abflug'), german('Ein Angebot')] },
       { kind: 'question', prompt: german('Was schauen sie sich an?'), options: [german('Die Anzeige'), german('Die Abfahrt'), german('Die Ankunft')] }
     ]
-  }
+  },
 
   {
     id: 'a2-ampel',
@@ -3161,7 +3161,7 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Kontrast'), german('Einen Abschluss'), german('Einen Apparat')] },
       { kind: 'question', prompt: german('Was müssen sie analysieren?'), options: [german('Eine Handlung'), german('Einen Apparat'), german('Ein Auto')] }
     ]
-  }
+  },
 
   {
     id: 'a2-extra1',
@@ -3242,7 +3242,7 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was ist hoffen?'), options: [german('Homepage'), german('Idee'), german('Interesse')] },
       { kind: 'question', prompt: german('Wer hat hoffen?'), options: [german('Homepage'), german('Anderes'), german('Nichts')] }
     ]
-  }
+  },
 
   {
     id: 'b1-extra1',
@@ -3323,7 +3323,7 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was ist behandeln?'), options: [german('behaupten'), german('Behörde'), german('beißen')] },
       { kind: 'question', prompt: german('Wer hat behandeln?'), options: [german('behaupten'), german('Anderes'), german('Nichts')] }
     ]
-  }
+  },
 
   {
     id: 'b2-extra1',
@@ -3404,7 +3404,7 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was ist Erlebnis?'), options: [german('erleiden'), german('erlernen'), german('erregen')] },
       { kind: 'question', prompt: german('Wer hat Erlebnis?'), options: [german('erleiden'), german('Anderes'), german('Nichts')] }
     ]
-  }
+  },
 
   {
     id: 'c1-extra1',
@@ -3485,7 +3485,7 @@ export const germanStories: Story[] = [
       { kind: 'question', prompt: german('Was ist Wort?'), options: [german('Option'), german('Option'), german('Option')] },
       { kind: 'question', prompt: german('Wer hat Wort?'), options: [german('Option'), german('Anderes'), german('Nichts')] }
     ]
-  }
+  },
 
   {
     id: 'c2-extra1',
