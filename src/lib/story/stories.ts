@@ -775,6 +775,108 @@ export const stories: Story[] = [
       ] }
     ]
   },
+  {
+    id: 'a1-abfahrt',
+    level: 'a1',
+    scene: 'station',
+    cast: ['mia', 'tom'],
+    title: { de: 'Die Abfahrt', en: 'The departure', fr: 'Le départ', it: 'La partenza', es: 'La salida', pt: 'A partida', uk: 'Відправлення' },
+    beats: [
+      { kind: 'narration', text: { de: 'Mia wartet am Bahnhof. Die Abfahrt ist um zehn Uhr. Tom holt sie ab.', en: 'Mia is waiting at the station. The departure is at ten o\'clock. Tom picks her up.', fr: 'Mia attend à la gare. Le départ est à dix heures. Tom vient la chercher.', it: 'Mia aspetta in stazione. La partenza è alle dieci. Tom la va a prendere.', es: 'Mia espera en la estación. La salida es a las diez. Tom la recoge.', pt: 'A Mia espera na estação. A partida é às dez. O Tom vem buscá-la.', uk: 'Мія чекає на вокзалі. Відправлення о десятій. Том її забирає.' } },
+      { kind: 'line', speaker: 'tom', text: { de: 'Hallo Mia! Ich bin der Absender des Briefes. Ich hole dich ab.', en: 'Hi Mia! I am the sender of the letter. I am picking you up.', fr: 'Salut Mia ! Je suis l\'expéditeur de la lettre. Je viens te chercher.', it: 'Ciao Mia! Sono il mittente della lettera. Ti vengo a prendere.', es: '¡Hola Mia! Soy el remitente de la carta. Te recogemos.', pt: 'Oi, Mia! Eu sou o remetente da carta. Vou te buscar.', uk: 'Привіт, Міє! Я відправник листа. Забираю тебе.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Danke! Ich habe die Adresse geschrieben. Achtung, der Zug fährt ab!', en: 'Thanks! I wrote the address. Attention, the train is leaving!', fr: 'Merci ! J\'ai écrit l\'adresse. Attention, le train part !', it: 'Grazie! Ho scritto l\'indirizzo. Attenzione, il treno parte!', es: '¡Gracias! Escribí la dirección. ¡Atención, el tren sale!', pt: 'Obrigada! Escrevi o endereço. Atenção, o trem está saindo!', uk: 'Дякую! Написала адресу. Увага, потяг від\'їжджає!' } },
+      { kind: 'question', prompt: { de: 'Was ist die Abfahrt?', en: 'What is the departure?', fr: 'Qu\'est-ce que le départ ?', it: 'Che cos\'è la partenza?', es: '¿Qué es la salida?', pt: 'O que é a partida?', uk: 'Що таке відправлення?' }, options: [
+        { de: 'Um zehn Uhr', en: 'At ten o\'clock', fr: 'À dix heures', it: 'Alle dieci', es: 'A las diez', pt: 'Às dez', uk: 'О десятій' },
+        { de: 'Um elf Uhr', en: 'At eleven o\'clock', fr: 'À onze heures', it: 'Alle undici', es: 'A las once', pt: 'Às onze', uk: 'О одинадцятій' },
+        { de: 'Um neun Uhr', en: 'At nine o\'clock', fr: 'À neuf heures', it: 'Alle nove', es: 'A las nueve', pt: 'Às nove', uk: 'О дев\'ятій' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wer holt Mia ab?', en: 'Who picks Mia up?', fr: 'Qui vient chercher Mia ?', it: 'Chi va a prendere Mia?', es: '¿Quién recoge a Mia?', pt: 'Quem busca a Mia?', uk: 'Хто забирає Мію?' }, options: [
+        { de: 'Tom', en: 'Tom', fr: 'Tom', it: 'Tom', es: 'Tom', pt: 'Tom', uk: 'Том' },
+        { de: 'Leo', en: 'Leo', fr: 'Léo', it: 'Leo', es: 'Leo', pt: 'Léo', uk: 'Лео' },
+        { de: 'Oma', en: 'Grandma', fr: 'Mamie', it: 'Nonna', es: 'Abuela', pt: 'Vovó', uk: 'Бабуся' }
+      ] }
+    ]
+  },
+  {
+    id: 'a1-alone',
+    level: 'a1',
+    scene: 'home',
+    cast: ['mia', 'lilith'],
+    title: { de: 'Allein zu Hause', en: 'Alone at home', fr: 'Seul à la maison', it: 'Solo a casa', es: 'Solo en casa', pt: 'Só em casa', uk: 'Наодинці вдома' },
+    beats: [
+      { kind: 'narration', text: { de: 'Mia ist allein zu Hause. Die Katze Lilith sitzt auf dem Sofa. Mia liest ein altes Buch.', en: 'Mia is alone at home. The cat Lilith is sitting on the sofa. Mia is reading an old book.', fr: 'Mia est seule à la maison. La chatte Lilith est sur le canapé. Mia lit un vieux livre.', it: 'Mia è sola a casa. La gatta Lilith è sul divano. Mia legge un libro vecchio.', es: 'Mia está sola en casa. La gata Lilith está en el sofá. Mia lee un libro viejo.', pt: 'A Mia está só em casa. A gata Lilith está no sofá. A Mia lê um livro antigo.', uk: 'Мія наодинці вдома. Кішка Ліліт сидить на дивані. Мія читає стару книгу.' } },
+      { kind: 'line', speaker: 'lilith', sfx: 'meow', text: { de: 'Miau! Miau!', en: 'Meow! Meow!', fr: 'Miaou ! Miaou !', it: 'Miao! Miao!', es: '¡Miau! ¡Miau!', pt: 'Miau! Miau!', uk: 'Няв! Няв!' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Hallo Lilith! Du bist allein? Ich auch. Ich bin alt und müde, aber ich liebe das Lesen.', en: 'Hi Lilith! You are alone too? Me too. I am old and tired, but I love reading.', fr: 'Salut Lilith ! Tu es seule aussi ? Moi aussi. Je suis vieille et fatiguée, mais j\'aime lire.', it: 'Ciao Lilith! Sei sola anche tu? Anche io. Sono vecchia e stanca, ma amo leggere.', es: '¡Hola Lilith! ¿Tú también estás sola? Yo también. Soy vieja y cansada, pero me encanta leer.', pt: 'Oi, Lilith! Você também está só? Eu também. Sou velha e cansada, mas amo ler.', uk: 'Привіт, Ліліт! Ти теж наодинці? Я теж. Я стара і втомлена, але люблю читати.' } },
+      { kind: 'question', prompt: { de: 'Wie fühlt sich Mia?', en: 'How does Mia feel?', fr: 'Comment se sent Mia ?', it: 'Come si sente Mia?', es: '¿Cómo se siente Mia?', pt: 'Como a Mia se sente?', uk: 'Як почувається Мія?' }, options: [
+        { de: 'Alt und müde', en: 'Old and tired', fr: 'Vieille et fatiguée', it: 'Vecchia e stanca', es: 'Vieja y cansada', pt: 'Velha e cansada', uk: 'Стара й втомлена' },
+        { de: 'Jung und glücklich', en: 'Young and happy', fr: 'Jeune et heureuse', it: 'Giovane e felice', es: 'Joven y feliz', pt: 'Jovem e feliz', uk: 'Молода й щаслива' },
+        { de: 'Wütend und allein', en: 'Angry and alone', fr: 'En colère et seule', it: 'Arrabbiata e sola', es: 'Enfadada y sola', pt: 'Brava e só', uk: 'Зла й наодинці' }
+      ] },
+      { kind: 'line', speaker: 'mia', text: { de: 'Der Anfang des Buches ist sehr interessant. Ich werde es weiterlesen.', en: 'The beginning of the book is very interesting. I will read on.', fr: 'Le début du livre est très intéressant. Je vais continuer à lire.', it: 'L\'inizio del libro è molto interessante. Continuerò a leggere.', es: 'El principio del libro es muy interesante. Seguiré leyendo.', pt: 'O começo do livro é muito interessante. Vou continuar lendo.', uk: 'Початок книги дуже цікавий. Продовжу читати.' } }
+    ]
+  },
+  {
+    id: 'a1-antwort',
+    level: 'a1',
+    scene: 'cafe',
+    cast: ['mia', 'tom'],
+    title: { de: 'Die Antwort', en: 'The answer', fr: 'La réponse', it: 'La risposta', es: 'La respuesta', pt: 'A resposta', uk: 'Відповідь' },
+    beats: [
+      { kind: 'narration', text: { de: 'Tom fragt Mia eine Frage. Mia antwortet freundlich. Sie bietet ihm einen Kaffee an.', en: 'Tom asks Mia a question. Mia answers kindly. She offers him a coffee.', fr: 'Tom pose une question à Mia. Mia répond gentiment. Elle lui offre un café.', it: 'Tom fa una domanda a Mia. Mia risponde gentilmente. Le offre un caffè.', es: 'Tom le hace una pregunta a Mia. Mia responde amablemente. Le ofrece un café.', pt: 'O Tom faz uma pergunta à Mia. A Mia responde gentilmente. Ela oferece um café.', uk: 'Том ставить питання Мії. Мія відповідає доброзичливо. Пропонує ему каву.' } },
+      { kind: 'line', speaker: 'tom', text: { de: 'Mia, kannst du mir antworten? Wo ist das Café?', en: 'Mia, can you answer me? Where is the café?', fr: 'Mia, peux-tu me répondre ? Où est le café ?', it: 'Mia, puoi rispondermi? Dov\'è il caffè?', es: 'Mia, ¿puedes responderme? ¿Dónde está el café?', pt: 'Mia, você pode me responder? Onde está o café?', uk: 'Міє, ти можеш відповісти мені? Де кав\'ярня?' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Ja! Ich biete dir einen Kaffee an. Die Adresse ist neben dem Park.', en: 'Yes! I offer you a coffee. The address is next to the park.', fr: 'Oui ! Je t\'offre un café. L\'adresse est à côté du parc.', it: 'Sì! Ti offro un caffè. L\'indirizzo è accanto al parco.', es: '¡Sí! Te ofrezco un café. La dirección está junto al parque.', pt: 'Sim! Te ofereço um café. O endereço é ao lado do parque.', uk: 'Так! Пропоную тобі каву. Адреса біля парку.' } },
+      { kind: 'question', prompt: { de: 'Was bietet Mia an?', en: 'What does Mia offer?', fr: 'Que propose Mia ?', it: 'Cosa offre Mia?', es: '¿Qué ofrece Mia?', pt: 'O que a Mia oferece?', uk: 'Що пропонує Мія?' }, options: [
+        { de: 'Einen Kaffee', en: 'A coffee', fr: 'Un café', it: 'Un caffè', es: 'Un café', pt: 'Um café', uk: 'Каву' },
+        { de: 'Ein Buch', en: 'A book', fr: 'Un livre', it: 'Un libro', es: 'Un libro', pt: 'Um livro', uk: 'Книгу' },
+        { de: 'Die Adresse', en: 'The address', fr: 'L\'adresse', it: 'L\'indirizzo', es: 'La dirección', pt: 'O endereço', uk: 'Адресу' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wie antwortet Mia?', en: 'How does Mia answer?', fr: 'Comment Mia répond-elle ?', it: 'Come risponde Mia?', es: '¿Cómo responde Mia?', pt: 'Como a Mia responde?', uk: 'Як відповідає Мія?' }, options: [
+        { de: 'Freundlich', en: 'Kindly', fr: 'Gentiment', it: 'Gentilmente', es: 'Amablemente', pt: 'Gentilmente', uk: 'Доброзичливо' },
+        { de: 'Wütend', en: 'Angry', fr: 'En colère', it: 'Arrabbiata', es: 'Enfadada', pt: 'Brava', uk: 'Зло' },
+        { de: 'Leise', en: 'Quietly', fr: 'Silencieusement', it: 'Silenziosamente', es: 'En voz baja', pt: 'Baixinho', uk: 'Тихо' }
+      ] }
+    ]
+  },
+  {
+    id: 'a1-arzt',
+    level: 'a1',
+    scene: 'home',
+    cast: ['mia', 'oma'],
+    title: { de: 'Beim Arzt', en: 'At the doctor', fr: 'Chez le médecin', it: 'Dal medico', es: 'En el médico', pt: 'No médico', uk: 'У лікаря' },
+    beats: [
+      { kind: 'narration', text: { de: 'Mia geht zum Arzt. Es ist ein alter Tag, und sie hat Achtung vor dem Arzt.', en: 'Mia goes to the doctor. It is an old day, and she respects the doctor.', fr: 'Mia va chez le médecin. C\'est un vieux jour, et elle respecte le médecin.', it: 'Mia va dal medico. È un giorno vecchio, e lei rispetta il medico.', es: 'Mia va al médico. Es un día viejo, y ella respeta al médico.', pt: 'A Mia vai ao médico. É um dia antigo, e ela respeita o médico.', uk: 'Мія йде до лікаря. Це старий день, і вона поважає лікаря.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Guten Tag, ich bin allein gekommen. Ich arbeite viel und bin müde.', en: 'Good day, I came alone. I work a lot and am tired.', fr: 'Bonjour, je suis venue seule. Je travaille beaucoup et je suis fatiguée.', it: 'Buongiorno, sono venuta sola. Lavoro molto e sono stanca.', es: 'Buenos días, vine sola. Trabajo mucho y estoy cansada.', pt: 'Bom dia, vim sozinha. Trabalho muito e estou cansada.', uk: 'Добрий день, прийшла наодинці. Багато працюю й втомлена.' } },
+      { kind: 'line', speaker: 'oma', text: { de: 'Ich empfehle dir, weniger zu arbeiten. Du bist alt und musst auf dich achten.', en: 'I recommend you work less. You are old and must take care of yourself.', fr: 'Je te recommande de moins travailler. Tu es vieille et tu dois te protéger.', it: 'Ti consiglio di lavorare meno. Sei vecchia e devi prenderti cura di te.', es: 'Te recomiendo trabajar menos. Eres vieja y debes cuidarte.', pt: 'Recomendo que trabalhe menos. Você é velha e deve se cuidar.', uk: 'Рекомендую працювати менше. Ти стара й маєш піклуватися про себе.' } },
+      { kind: 'question', prompt: { de: 'Warum ist Mia beim Arzt?', en: 'Why is Mia at the doctor?', fr: 'Pourquoi Mia est-elle chez le médecin ?', it: 'Perché Mia è dal medico?', es: '¿Por qué está Mia en el médico?', pt: 'Por que a Mia está no médico?', uk: 'Чому Мія у лікаря?' }, options: [
+        { de: 'Sie arbeitet zu viel', en: 'She works too much', fr: 'Elle travaille trop', it: 'Lavorava troppo', es: 'Trabaja mucho', pt: 'Trabalha muito', uk: 'Багато працює' },
+        { de: 'Sie hat Hunger', en: 'She is hungry', fr: 'Elle a faim', it: 'Ha fame', es: 'Tiene hambre', pt: 'Está com fome', uk: 'Голодна' },
+        { de: 'Sie liest ein Buch', en: 'She is reading a book', fr: 'Elle lit un livre', it: 'Legge un libro', es: 'Lee un libro', pt: 'Lê um livro', uk: 'Читає книгу' }
+      ] },
+      { kind: 'line', speaker: 'mia', text: { de: 'Danke, ich werde auf mich achten. Der Anfang zur Gesundheit ist wichtig.', en: 'Thanks, I will take care of myself. The beginning to health is important.', fr: 'Merci, je vais me protéger. Le début de la santé est important.', it: 'Grazie, mi prenderò cura di me. L\'inizio della salute è importante.', es: 'Gracias, me cuidaré. El principio de la salud es importante.', pt: 'Obrigada, vou me cuidar. O começo da saúde é importante.', uk: 'Дякую, піклуватимуся про себе. Початок здоров’я важливий.' } }
+    ]
+  },
+  {
+    id: 'a1-abflug',
+    level: 'a1',
+    scene: 'airport',
+    cast: ['mia', 'leo'],
+    title: { de: 'Der Abflug', en: 'The flight', fr: 'Le vol', it: 'Il volo', es: 'El vuelo', pt: 'O voo', uk: 'Політ' },
+    beats: [
+      { kind: 'narration', text: { de: 'Mia und Leo sind am Flughafen. Der Abflug ist um zwölf Uhr. Mia hat die Adresse der Familie geschrieben.', en: 'Mia and Leo are at the airport. The flight is at twelve o\'clock. Mia has written the family\'s address.', fr: 'Mia et Léo sont à l\'aéroport. Le vol est à midi. Mia a écrit l\'adresse de la famille.', it: 'Mia e Leo sono all\'aeroporto. Il volo è a mezzogiorno. Mia ha scritto l\'indirizzo della famiglia.', es: 'Mia y Leo están en el aeropuerto. El vuelo es a las doce. Mia ha escrito la dirección de la familia.', pt: 'A Mia e o Léo estão no aeroporto. O voo é ao meio-dia. A Mia escreveu o endereço da família.', uk: 'Мія і Лео в аеропорту. Політ о дванадцятій. Мія написала адресу родини.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Hallo Leo! Ich biete dir ein Geschenk an. Es ist für deine Abfahrt.', en: 'Hi Leo! I offer you a gift. It is for your departure.', fr: 'Salut Léo ! Je t\'offre un cadeau. C\'est pour ton départ.', it: 'Ciao Leo! Ti offro un regalo. È per la tua partenza.', es: '¡Hola Leo! Te ofrezco un regalo. Es para tu salida.', pt: 'Oi, Léo! Te ofereço um presente. É para a sua partida.', uk: 'Привіт, Лео! Пропоную тобі подарунок. Це для твого відправлення.' } },
+      { kind: 'line', speaker: 'leo', text: { de: 'Danke Mia! Ich bin allein, aber ich habe Achtung vor dem Abflug.', en: 'Thanks Mia! I am alone, but I respect the flight.', fr: 'Merci Mia ! Je suis seul, mais j\'ai du respect pour le vol.', it: 'Grazie Mia! Sono solo, ma ho rispetto per il volo.', es: 'Gracias Mia! Estoy solo, pero respeto el vuelo.', pt: 'Obrigada Mia! Estou só, mas respeito o voo.', uk: 'Дякую, Міє! Я наодинці, але поважаю політ.' } },
+      { kind: 'question', prompt: { de: 'Was bietet Mia an?', en: 'What does Mia offer?', fr: 'Que propose Mia ?', it: 'Cosa offre Mia?', es: '¿Qué ofrece Mia?', pt: 'O que a Mia oferece?', uk: 'Що пропонує Мія?' }, options: [
+        { de: 'Ein Geschenk', en: 'A gift', fr: 'Un cadeau', it: 'Un regalo', es: 'Un regalo', pt: 'Um presente', uk: 'Подарунок' },
+        { de: 'Einen Kaffee', en: 'A coffee', fr: 'Un café', it: 'Un caffè', es: 'Un café', pt: 'Um café', uk: 'Каву' },
+        { de: 'Die Adresse', en: 'The address', fr: 'L\'adresse', it: 'L\'indirizzo', es: 'La dirección', pt: 'O endereço', uk: 'Адресу' }
+      ] },
+      { kind: 'question', prompt: { de: 'Wer ist allein?', en: 'Who is alone?', fr: 'Qui est seul ?', it: 'Chi è solo?', es: '¿Quién está solo?', pt: 'Quem está só?', uk: 'Хто наодинці?' }, options: [
+        { de: 'Leo', en: 'Leo', fr: 'Léo', it: 'Leo', es: 'Leo', pt: 'Léo', uk: 'Лео' },
+        { de: 'Mia', en: 'Mia', fr: 'Mia', it: 'Mia', es: 'Mia', pt: 'Mia', uk: 'Мія' },
+        { de: 'Tom', en: 'Tom', fr: 'Tom', it: 'Tom', es: 'Tom', pt: 'Tom', uk: 'Том' }
+      ] }
+    ]
+  },
   ...germanStories
 ];
 
