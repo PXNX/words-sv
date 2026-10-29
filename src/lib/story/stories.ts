@@ -962,6 +962,89 @@ export const stories: Story[] = [
       ] }
     ]
   },
+  {
+    id: 'b1-abitur',
+    level: 'b1',
+    scene: 'school',
+    cast: ['mia', 'leo'],
+    title: { de: 'Das Abitur', en: 'The Abitur', fr: 'Le baccalauréat', it: 'L\'esame di maturità', es: 'El Abitur', pt: 'O Abitur', uk: 'Абітур' },
+    beats: [
+      { kind: 'narration', text: { de: 'Mia bereitet sich auf das Abitur vor. Das Abenteuer des Lernens beginnt.', en: 'Mia is preparing for the Abitur. The adventure of learning begins.', fr: 'Mia se prépare au baccalauréat. L\'aventure de l\'apprentissage commence.', it: 'Mia si prepara all\'esame di maturità. L\'avventura dell\'apprendimento inizia.', es: 'Mia se prepara para el Abitur. La aventura del aprendizaje comienza.', pt: 'A Mia se prepara para o Abitur. A aventura da aprendizagem começa.', uk: 'Мія готується до абітур. Пригода навчання починається.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Leo, ich muss das Abitur bestehen. Ich habe Angst, aber ich bin nicht abhängig vom Glück.', en: 'Leo, I must pass the Abitur. I am afraid, but I am not dependent on luck.', fr: 'Léo, je dois réussir le bac. J\'ai peur, mais je ne dépends pas de la chance.', it: 'Leo, devo passare l\'esame di maturità. Ho paura, ma non dipendo dalla fortuna.', es: 'Leo, debo pasar el Abitur. Tengo miedo, pero no dependo de la suerte.', pt: 'Léo, eu preciso passar no Abitur. Tenho medo, mas não dependo da sorte.', uk: 'Лео, я маю здати абітур. Боюся, але не залежу від удачі.' } },
+      { kind: 'line', speaker: 'leo', text: { de: 'Du kannst es schaffen. Sieh dir die Abbildung an. Das Argument ist klar.', en: 'You can do it. Look at the diagram. The argument is clear.', fr: 'Tu peux y arriver. Regarde le diagramme. L\'argument est clair.', it: 'Puoi farcela. Guarda il diagramma. L\'argomento è chiaro.', es: 'Puedes lograrlo. Mira el diagrama. El argumento es claro.', pt: 'Você consegue. Olhe o diagrama. O argumento é claro.', uk: 'Ти можеш. Глянь на схему. Аргумент ясний.' } },
+      { kind: 'question', prompt: { de: 'Wovon ist Mia abhängig?', en: 'What is Mia dependent on?', fr: 'Mia dépend de quoi ?', it: 'Di cosa dipende Mia?', es: '¿De qué depende Mia?', pt: 'Do que a Mia depende?', uk: 'Від чого залежить Мія?' }, options: [
+        { de: 'Vom Glück', en: 'Luck', fr: 'La chance', it: 'La fortuna', es: 'La suerte', pt: 'A sorte', uk: 'Від удачі' },
+        { de: 'Vom Abitur', en: 'The Abitur', fr: 'Le bac', it: 'L\'esame', es: 'El Abitur', pt: 'O Abitur', uk: 'Абітур' },
+        { de: 'Von der Schule', en: 'The school', fr: 'L\'école', it: 'La scuola', es: 'La escuela', pt: 'A escola', uk: 'Школа' }
+      ] }
+    ]
+  },
+  {
+    id: 'b1-abfall',
+    level: 'b1',
+    scene: 'park',
+    cast: ['mia', 'om'],
+    title: { de: 'Der Abfall', en: 'The waste', fr: 'Le déchet', it: 'Il rifiuto', es: 'El residuo', pt: 'O lixo', uk: 'Відходи' },
+    beats: [
+      { kind: 'narration', text: { de: 'Im Park gibt es viel Abfall. Mia zeigt Oma, wie man Abfall abnimmt und recycelt.', en: 'There is a lot of waste in the park. Mia shows Grandma how to remove waste and recycle.', fr: 'Il y a beaucoup de déchets au parc. Mia montre à Mamie comment retirer les déchets et recycler.', it: 'C\'è molto rifiuto nel parco. Mia mostra alla nonna come rimuovere il rifiuto e riciclare.', es: 'Hay mucho residuo en el parque. Mia muestra a la abuela cómo quitar residuo y reciclar.', pt: 'Há muito lixo no parque. A Mia mostra à vovó como remover lixo e reciclar.', uk: 'У парку багато відходів. Мія показує бабусі, як прибирати відходи й переробляти.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Oma, wir müssen Abfall abnehmen. Die Abbildung auf dem Schild zeigt es.', en: 'Grandma, we must remove waste. The diagram on the sign shows it.', fr: 'Mamie, nous devons retirer les déchets. L\'illustration sur le panneau le montre.', it: 'Nonna, dobbiamo rimuovere il rifiuto. L\'illustrazione sul cartello lo mostra.', es: 'Abuela, debemos quitar residuo. La ilustración en el letrero lo muestra.', pt: 'Vovó, precisamos remover o lixo. A ilustração no cartaz mostra.', uk: 'Бабусю, треба прибирати відходи. Ілюстрація на табличці показує.' } },
+      { kind: 'line', speaker: 'om', text: { de: 'Gut. Ich werde den Abfall abnehmen und dann den Anfang der Arbeit machen.', en: 'Good. I will remove the waste and then start the work.', fr: 'Bien. Je vais retirer les déchets et commencer le travail.', it: 'Bene. Rimuoverò il rifiuto e inizierò il lavoro.', es: 'Bien. Quitaré el residuo y comenzaré el trabajo.', pt: 'Bom. Vou remover o lixo e começar o trabalho.', uk: 'Добре. Приберу відходи й почну роботу.' } },
+      { kind: 'question', prompt: { de: 'Was zeigt die Abbildung?', en: 'What does the diagram show?', fr: 'Que montre l\'illustration ?', it: 'Cosa mostra l\'illustrazione?', es: '¿Qué muestra la ilustración?', pt: 'O que a ilustração mostra?', uk: 'Що показує ілюстрація?' }, options: [
+        { de: 'Abfall abnehmen', en: 'Remove waste', fr: 'Retirer les déchets', it: 'Rimuovere rifiuto', es: 'Quitar residuo', pt: 'Remover lixo', uk: 'Прибирати відходи' },
+        { de: 'Essen', en: 'Food', fr: 'La nourriture', it: 'Il cibo', es: 'La comida', pt: 'A comida', uk: 'Їжа' },
+        { de: 'Spielen', en: 'Play', fr: 'Jouer', it: 'Giocare', es: 'Jugar', pt: 'Brincar', uk: 'Грати' }
+      ] }
+    ]
+  },
+  {
+    id: 'b1-architektur',
+    level: 'b1',
+    scene: 'office',
+    cast: ['mia', 'kim'],
+    title: { de: 'Die Architektur', en: 'The architecture', fr: 'L\'architecture', it: 'L\'architettura', es: 'La arquitectura', pt: 'A arquitetura', uk: 'Архітектура' },
+    beats: [
+      { kind: 'narration', text: { de: 'Mia arbeitet in einem Architekturbüro. Sie zeigt Kim eine Abbildung des neuen Hauses.', en: 'Mia works at an architecture firm. She shows Kim a diagram of the new house.', fr: 'Mia travaille dans un cabinet d\'architectes. Elle montre à Kim un diagramme de la nouvelle maison.', it: 'Mia lavora in uno studio di architettura. Mostra a Kim un diagramma della nuova casa.', es: 'Mia trabaja en un estudio de arquitectura. Le muestra a Kim un diagrama de la nueva casa.', pt: 'A Mia trabalha num escritório de arquitetura. Mostra à Kim um diagrama da casa nova.', uk: 'Мія працює в архітектурному бюро. Показує Кім схему нового будинку.' } },
+      { kind: 'line', speaker: 'kim', text: { de: 'Wunderschön! Das Argument für das Design ist klar. Ich werde den Abfall abnehmen.', en: 'Beautiful! The argument for the design is clear. I will remove the waste.', fr: 'Magnifique ! L\'argument pour le design est clair. Je vais retirer les déchets.', it: 'Bellissimo! L\'argomento per il design è chiaro. Rimuoverò il rifiuto.', es: '¡Hermoso! El argumento para el diseño es claro. Quitaré el residuo.', pt: 'Lindo! O argumento para o design é claro. Vou remover o lixo.', uk: 'Чудово! Аргумент на користь дизайну ясний. Приберу відходи.' } },
+      { kind: 'question', prompt: { de: 'Was zeigt die Abbildung?', en: 'What does the diagram show?', fr: 'Que montre le diagramme ?', it: 'Cosa mostra il diagramma?', es: '¿Qué muestra el diagrama?', pt: 'O que o diagrama mostra?', uk: 'Що показує схема?' }, options: [
+        { de: 'Ein neues Haus', en: 'A new house', fr: 'Une nouvelle maison', it: 'Una nuova casa', es: 'Una casa nueva', pt: 'Uma casa nova', uk: 'Новий будинок' },
+        { de: 'Ein Auto', en: 'A car', fr: 'Une voiture', it: 'Un\'auto', es: 'Un coche', pt: 'Um carro', uk: 'Автомобіль' },
+        { de: 'Ein Buch', en: 'A book', fr: 'Un livre', it: 'Un libro', es: 'Un libro', pt: 'Um livro', uk: 'Книга' }
+      ] }
+    ]
+  },
+  {
+    id: 'b1-adventure',
+    level: 'b1',
+    scene: 'forest',
+    cast: ['mia', 'leo', 'om'],
+    title: { de: 'Das Abenteuer', en: 'The adventure', fr: 'L\'aventure', it: 'L\'avventura', es: 'La aventura', pt: 'A aventura', uk: 'Пригода' },
+    beats: [
+      { kind: 'narration', text: { de: 'Mia und Leo gehen in den Wald. Es ist ein Abenteuer. Oma wartet auf den Anfang der Rückkehr.', en: 'Mia and Leo go into the forest. It is an adventure. Grandma waits for the beginning of the return.', fr: 'Mia et Léo vont dans la forêt. C\'est une aventure. Mamie attend le début du retour.', it: 'Mia e Leo vanno nel bosco. È un\'avventura. La nonna aspetta l\'inizio del ritorno.', es: 'Mia y Leo van al bosque. Es una aventura. Abuela espera el principio del regreso.', pt: 'A Mia e o Léo vão para a floresta. É uma aventura. A vovó espera o começo do retorno.', uk: 'Мія й Лео йдуть у ліс. Це пригода. Бабуся чекає на початок повернення.' } },
+      { kind: 'line', speaker: 'leo', text: { de: 'Ich habe Angst. Wir müssen das Abenteuer abschließen.', en: 'I am afraid. We must complete the adventure.', fr: 'J\'ai peur. Nous devons terminer l\'aventure.', it: 'Ho paura. Dobbiamo completare l\'avventura.', es: 'Tengo miedo. Debemos completar la aventura.', pt: 'Tenho medo. Devemos completar a aventura.', uk: 'Я боюся. Ми маємо завершити пригоду.' } },
+      { kind: 'line', speaker: 'om', text: { de: 'Ich werde den Abfall abnehmen und euch helfen. Der Anfang des Weges ist da.', en: 'I will remove waste and help you. The beginning of the path is there.', fr: 'Je vais retirer les déchets et vous aider. Le début du chemin est là.', it: 'Rimuoverò il rifiuto e vi aiuterò. L\'inizio del sentiero è lì.', es: 'Quitaré el residuo y os ayudaré. El principio del camino está allí.', pt: 'Vou remover o lixo e ajudar vocês. O começo do caminho está lá.', uk: 'Приберу відходи й допоможу. Початок стежки там.' } },
+      { kind: 'question', prompt: { de: 'Was ist das Abenteuer?', en: 'What is the adventure?', fr: 'Qu\'est-ce que l\'aventure ?', it: 'Che cos\'è l\'avventura?', es: '¿Qué es la aventura?', pt: 'O que é a aventura?', uk: 'Що таке пригода?' }, options: [
+        { de: 'Ein Waldspaziergang', en: 'A walk in the forest', fr: 'Une promenade dans la forêt', it: 'Una passeggiata nel bosco', es: 'Un paseo por el bosque', pt: 'Uma caminhada na floresta', uk: 'Прогулянка в лісі' },
+        { de: 'Ein Buch', en: 'A book', fr: 'Un livre', it: 'Un libro', es: 'Un libro', pt: 'Um livro', uk: 'Книга' },
+        { de: 'Ein Auto', en: 'A car', fr: 'Une voiture', it: 'Un\'auto', es: 'Un coche', pt: 'Um carro', uk: 'Автомобіль' }
+      ] }
+    ]
+  },
+  {
+    id: 'b1-abbildung',
+    level: 'b1',
+    scene: 'library',
+    cast: ['mia', 'kim'],
+    title: { de: 'Die Abbildung', en: 'The diagram', fr: 'Le diagramme', it: 'Il diagramma', es: 'El diagrama', pt: 'O diagrama', uk: 'Схема' },
+    beats: [
+      { kind: 'narration', text: { de: 'In der Bibliothek zeigt Mia eine Abbildung. Kim muss das Argument verstehen.', en: 'In the library Mia shows a diagram. Kim must understand the argument.', fr: 'Dans la bibliothèque, Mia montre un diagramme. Kim doit comprendre l\'argument.', it: 'Nella biblioteca Mia mostra un diagramma. Kim deve capire l\'argomento.', es: 'En la biblioteca Mia muestra un diagrama. Kim debe entender el argumento.', pt: 'Na biblioteca a Mia mostra um diagrama. Kim precisa entender o argumento.', uk: 'У бібліотеці Мія показує схему. Кім має зрозуміти аргумент.' } },
+      { kind: 'line', speaker: 'kim', text: { de: 'Die Abbildung zeigt den Anfang des Projekts. Wir werden es abschließen.', en: 'The diagram shows the beginning of the project. We will complete it.', fr: 'Le diagramme montre le début du projet. Nous le terminerons.', it: 'Il diagramma mostra l\'inizio del progetto. Lo completeremo.', es: 'El diagrama muestra el principio del proyecto. Lo completaremos.', pt: 'O diagrama mostra o começo do projeto. Vamos completá-lo.', uk: 'Схема показує початок проєкту. Завершимо його.' } },
+      { kind: 'question', prompt: { de: 'Was zeigt die Abbildung?', en: 'What does the diagram show?', fr: 'Que montre le diagramme ?', it: 'Cosa mostra il diagramma?', es: '¿Qué muestra el diagrama?', pt: 'O que o diagrama mostra?', uk: 'Що показує схема?' }, options: [
+        { de: 'Den Anfang', en: 'The beginning', fr: 'Le début', it: 'L\'inizio', es: 'El principio', pt: 'O começo', uk: 'Початок' },
+        { de: 'Das Ende', en: 'The end', fr: 'La fin', it: 'La fine', es: 'El final', pt: 'O fim', uk: 'Кінець' },
+        { de: 'Den Abfall', en: 'The waste', fr: 'Le déchet', it: 'Il rifiuto', es: 'El residuo', pt: 'O lixo', uk: 'Відходи' }
+      ] }
+    ]
+  },
   ...germanStories
 ];
 
