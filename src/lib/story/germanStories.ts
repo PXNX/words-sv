@@ -3244,4 +3244,85 @@ export const germanStories: Story[] = [
     ]
   }
 
+  {
+    id: 'b1-extra1',
+    level: 'b1',
+    scene: 'office',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Extra B1 1'),
+    beats: [
+      { kind: 'narration', text: german('Abbildung und Abenteuer und Abfall und Abfalleimer und abhängig.') },
+      { kind: 'line', speaker: 'mia', text: german('Abitur ist wichtig und abonnieren ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('Abschluss und Abschnitt sind da.') },
+      { kind: 'narration', text: german('Absenderin und Absicht.') },
+      { kind: 'question', prompt: german('Was ist Abteilung?'), options: [german('Aktion'), german('Aktivität'), german('akzeptieren')] },
+      { kind: 'question', prompt: german('Wer hat Abteilung?'), options: [german('Aktion'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'b1-extra2',
+    level: 'b1',
+    scene: 'town',
+    cast: ['kim', 'leo'],
+    languages: ['de'],
+    title: german('Extra B1 2'),
+    beats: [
+      { kind: 'narration', text: german('Alarm und Alltag und Alphabet und Altenheim und Alternative.') },
+      { kind: 'line', speaker: 'mia', text: german('Altersheim ist wichtig und Amt ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('analysieren und Änderung sind da.') },
+      { kind: 'narration', text: german('Angabe und angeben.') },
+      { kind: 'question', prompt: german('Was ist Anlage?'), options: [german('Anleitung'), german('Annonce'), german('Anspruch')] },
+      { kind: 'question', prompt: german('Wer hat Anlage?'), options: [german('Anleitung'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'b1-extra3',
+    level: 'b1',
+    scene: 'shop',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Extra B1 3'),
+    beats: [
+      { kind: 'narration', text: german('Apotheke und Arbeiter und Arbeiterin und Arbeitsstelle und Art.') },
+      { kind: 'line', speaker: 'mia', text: german('Asyl ist wichtig und atmen ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('Aufenthalt und Aufforderung sind da.') },
+      { kind: 'narration', text: german('auflösen und Aufnahme.') },
+      { kind: 'question', prompt: german('Was ist aufschreiben?'), options: [german('Auftrag'), german('Augenblick'), german('Ausbildung')] },
+      { kind: 'question', prompt: german('Wer hat aufschreiben?'), options: [german('Auftrag'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'b1-extra4',
+    level: 'b1',
+    scene: 'market',
+    cast: ['kim', 'leo'],
+    languages: ['de'],
+    title: german('Extra B1 4'),
+    beats: [
+      { kind: 'narration', text: german('Ausfahrt und Ausgabe und Aushilfe und Ausländerin und Ausnahme.') },
+      { kind: 'line', speaker: 'mia', text: german('außen ist wichtig und Aussicht ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('Auswahl und Ballett sind da.') },
+      { kind: 'narration', text: german('Bankleitzahl und Bart.') },
+      { kind: 'question', prompt: german('Was ist Basketball?'), options: [german('Batterie'), german('Bauernhof'), german('beantragen')] },
+      { kind: 'question', prompt: german('Wer hat Basketball?'), options: [german('Batterie'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'b1-extra5',
+    level: 'b1',
+    scene: 'park',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Extra B1 5'),
+    beats: [
+      { kind: 'narration', text: german('Bedarf und Bedeutung und bedienen und Bedienungsanleitung und Bedingung.') },
+      { kind: 'line', speaker: 'mia', text: german('beeinflussen ist wichtig und begegnen ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('Beginn und Begründung sind da.') },
+      { kind: 'narration', text: german('begrüßen und behalten.') },
+      { kind: 'question', prompt: german('Was ist behandeln?'), options: [german('behaupten'), german('Behörde'), german('beißen')] },
+      { kind: 'question', prompt: german('Wer hat behandeln?'), options: [german('behaupten'), german('Anderes'), german('Nichts')] }
+    ]
+  }
+
 ];
