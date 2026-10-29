@@ -877,6 +877,91 @@ export const stories: Story[] = [
       ] }
     ]
   },
+  {
+    id: 'a2-abschlus',
+    level: 'a2',
+    scene: 'office',
+    cast: ['mia', 'kim'],
+    title: { de: 'Der Abschluss', en: 'The completion', fr: 'L\'achèvement', it: 'Il completamento', es: 'La finalización', pt: 'A conclusão', uk: 'Завершення' },
+    beats: [
+      { kind: 'narration', text: { de: 'Mia muss ein Projekt abschließen. Es ist Abend, und sie hat Angst vor dem Termin.', en: 'Mia must complete a project. It is evening and she is afraid of the deadline.', fr: 'Mia doit terminer un projet. C\'est le soir et elle a peur de l\'échéance.', it: 'Mia deve completare un progetto. È sera e ha paura della scadenza.', es: 'Mia debe completar un proyecto. Es de noche y tiene miedo del plazo.', pt: 'A Mia deve terminar um projeto. É noite e ela tem medo do prazo.', uk: 'Мія має завершити проєкт. Вечір, і вона боїться дедлайну.' } },
+      { kind: 'line', speaker: 'kim', text: { de: 'Mia, sieh dir das an! Du musst den Apparat prüfen.', en: 'Mia, look at this! You must check the device.', fr: 'Mia, regarde ça ! Tu dois vérifier l\'appareil.', it: 'Mia, guarda questo! Devi controllare l\'apparecchio.', es: 'Mia, mira esto! Debes revisar el aparato.', pt: 'Mia, olha isso! Você precisa verificar o aparelho.', uk: 'Міє, глянь на це! Треба перевірити пристрій.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Ich werde es ändern und den Anzug anziehen. Dann abschließen.', en: 'I will change it and put on the suit. Then complete.', fr: 'Je vais le changer et mettre le costume. Ensuite terminer.', it: 'Lo cambierò e metterò l\'abito. Poi completare.', es: 'Lo cambiaré y me pondré el traje. Luego completar.', pt: 'Vou mudar e colocar o terno. Depois completar.', uk: 'Зміню й одягну костюм. Потім завершити.' } },
+      { kind: 'question', prompt: { de: 'Was muss Mia abschließen?', en: 'What must Mia complete?', fr: 'Que doit Mia terminer ?', it: 'Cosa deve completare Mia?', es: '¿Qué debe completar Mia?', pt: 'O que a Mia deve completar?', uk: 'Що має завершити Мія?' }, options: [
+        { de: 'Ein Projekt', en: 'A project', fr: 'Un projet', it: 'Un progetto', es: 'Un proyecto', pt: 'Um projeto', uk: 'Проєкт' },
+        { de: 'Ein Buch', en: 'A book', fr: 'Un livre', it: 'Un libro', es: 'Un libro', pt: 'Um livro', uk: 'Книгу' },
+        { de: 'Ein Kleid', en: 'A dress', fr: 'Une robe', it: 'Un vestito', es: 'Un vestido', pt: 'Um vestido', uk: 'Сукню' }
+      ] }
+    ]
+  },
+  {
+    id: 'a2-angst',
+    level: 'a2',
+    scene: 'park',
+    cast: ['mia', 'leo'],
+    title: { de: 'Angst im Park', en: 'Fear in the park', fr: 'Peur au parc', it: 'Paura nel parco', es: 'Miedo en el parque', pt: 'Medo no parque', uk: 'Страх у парку' },
+    beats: [
+      { kind: 'narration', text: { de: 'Leo hat Angst im Park. Die Ampel zeigt rot. Mia zeigt ihm, was er ansehen soll.', en: 'Leo is afraid in the park. The traffic light is red. Mia shows him what to look at.', fr: 'Léo a peur au parc. L\'ampoule est rouge. Mia lui montre quoi regarder.', it: 'Leo ha paura nel parco. Il semaforo è rosso. Mia gli mostra cosa guardare.', es: 'Leo tiene miedo en el parque. El semáforo es rojo. Mia le muestra qué mirar.', pt: 'O Léo tem medo no parque. O semáforo está vermelho. A Mia mostra o que ele deve olhar.', uk: 'Лео боїться в парку. Світлофор червоний. Мія показує, що йому бачити.' } },
+      { kind: 'line', speaker: 'leo', text: { de: 'Ich habe Angst. Ich sehe die Ampel und ändere meine Meinung.', en: 'I am afraid. I see the traffic light and change my mind.', fr: 'J\'ai peur. Je vois l\'ampoule et change d\'avis.', it: 'Ho paura. Vedo il semaforo e cambio opinione.', es: 'Tengo miedo. Veo el semáforo y cambio de opinión.', pt: 'Tenho medo. Vejo o semáforo e mudo de ideia.', uk: 'Я боюся. Бачу світлофор і зміню думку.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Keine Angst! Sieh dir den Baum an. Der Anfang des Weges ist dort.', en: 'No fear! Look at the tree. The beginning of the path is there.', fr: 'Pas de peur ! Regarde l\'arbre. Le début du chemin est là.', it: 'Nessuna paura! Guarda l\'albero. L\'inizio del sentiero è lì.', es: '¡Sin miedo! Mira el árbol. El principio del camino está allí.', pt: 'Sem medo! Olha a árvore. O começo do caminho está lá.', uk: 'Не бійся! Глянь на дерево. Початок стежки там.' } },
+      { kind: 'question', prompt: { de: 'Was zeigt die Ampel?', en: 'What does the traffic light show?', fr: 'Que montre l\'ampoule ?', it: 'Cosa mostra il semaforo?', es: '¿Qué muestra el semáforo?', pt: 'O que o semáforo mostra?', uk: 'Що показує світлофор?' }, options: [
+        { de: 'Rot', en: 'Red', fr: 'Rouge', it: 'Rosso', es: 'Rojo', pt: 'Vermelho', uk: 'Червоний' },
+        { de: 'Grün', en: 'Green', fr: 'Vert', it: 'Verde', es: 'Verde', pt: 'Verde', uk: 'Зелений' },
+        { de: 'Gelb', en: 'Yellow', fr: 'Jaune', it: 'Giallo', es: 'Amarillo', pt: 'Amarelo', uk: 'Жовтий' }
+      ] }
+    ]
+  },
+  {
+    id: 'a2-app',
+    level: 'a2',
+    scene: 'home',
+    cast: ['mia', 'tom'],
+    title: { de: 'Der Apparat', en: 'The device', fr: 'L\'appareil', it: 'L\'apparecchio', es: 'El aparato', pt: 'O aparelho', uk: 'Пристрій' },
+    beats: [
+      { kind: 'narration', text: { de: 'Tom zeigt Mia einen Apparat. Sie müssen ihn ansehen und anzeigen, wie er funktioniert.', en: 'Tom shows Mia a device. They must look at it and show how it works.', fr: 'Tom montre à Mia un appareil. Ils doivent le regarder et montrer comment cela fonctionne.', it: 'Tom mostra a Mia un apparecchio. Devono guardarlo e mostrare come funziona.', es: 'Tom le muestra a Mia un aparato. Deben mirarlo y mostrar cómo funciona.', pt: 'O Tom mostra à Mia um aparelho. Eles precisam olhar e mostrar como funciona.', uk: 'Том показує Мії пристрій. Вони мають глянути й показати, як він працює.' } },
+      { kind: 'line', speaker: 'tom', text: { de: 'Sieh dir das an! Der Apparat kann anzeigen, ob der Anfang richtig ist.', en: 'Look at this! The device can show whether the beginning is correct.', fr: 'Regarde ça ! L\'appareil peut montrer si le début est correct.', it: 'Guarda questo! L\'apparecchio può mostrare se l\'inizio è corretto.', es: 'Mira esto! El aparato puede mostrar si el principio es correcto.', pt: 'Olha isso! O aparelho pode mostrar se o começo está correto.', uk: 'Глянь на це! Пристрій може показати, чи початок правильний.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Ja, ich ändere die Einstellungen. Der Abend wird besser.', en: 'Yes, I change the settings. The evening will be better.', fr: 'Oui, je change les paramètres. La soirée sera meilleure.', it: 'Sì, cambio le impostazioni. La sera sarà migliore.', es: 'Sí, cambio la configuración. La noche será mejor.', pt: 'Sim, mudo as configurações. A noite será melhor.', uk: 'Так, зміню налаштування. Вечір буде кращим.' } },
+      { kind: 'question', prompt: { de: 'Was zeigt der Apparat an?', en: 'What does the device show?', fr: 'Que montre l\'appareil ?', it: 'Cosa mostra l\'apparecchio?', es: '¿Qué muestra el aparato?', pt: 'O que o aparelho mostra?', uk: 'Що показує пристрій?' }, options: [
+        { de: 'Den Anfang', en: 'The beginning', fr: 'Le début', it: 'L\'inizio', es: 'El principio', pt: 'O começo', uk: 'Початок' },
+        { de: 'Die Ampel', en: 'The traffic light', fr: 'Le feu', it: 'Il semaforo', es: 'El semáforo', pt: 'O semáforo', uk: 'Світлофор' },
+        { de: 'Den Anzug', en: 'The suit', fr: 'Le costume', it: 'L\'abito', es: 'El traje', pt: 'O terno', uk: 'Костюм' }
+      ] }
+    ]
+  },
+  {
+    id: 'a2-anzug',
+    level: 'a2',
+    scene: 'office',
+    cast: ['mia', 'kim'],
+    title: { de: 'Der Anzug', en: 'The suit', fr: 'Le costume', it: 'L\'abito', es: 'El traje', pt: 'O terno', uk: 'Костюм' },
+    beats: [
+      { kind: 'narration', text: { de: 'Mia muss einen Anzug anziehen. Sie hat Angst, weil sie ihn nicht ansehen kann.', en: 'Mia must wear a suit. She is afraid because she cannot look at it.', fr: 'Mia doit mettre un costume. Elle a peur parce qu\'elle ne peut pas le regarder.', it: 'Mia deve indossare un abito. Ha paura perché non può guardarlo.', es: 'Mia debe ponerse un traje. Tiene miedo porque no puede mirarlo.', pt: 'A Mia precisa vestir um terno. Ela tem medo porque não pode olhar.', uk: 'Мія має одягнути костюм. Вона боїться, бо не може його бачити.' } },
+      { kind: 'line', speaker: 'kim', text: { de: 'Sieh dir den Anzug an. Er ist alt, aber er funktioniert.', en: 'Look at the suit. It is old, but it works.', fr: 'Regarde le costume. Il est vieux, mais il fonctionne.', it: 'Guarda l\'abito. È vecchio, ma funziona.', es: 'Mira el traje. Es viejo, pero funciona.', pt: 'Olha o terno. É antigo, mas funciona.', uk: 'Глянь на костюм. Він старий, але працює.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Ich werde ihn ändern und den Abend abschließen.', en: 'I will change it and complete the evening.', fr: 'Je vais le changer et terminer la soirée.', it: 'Lo cambierò e completare la sera.', es: 'Lo cambiaré y completar la noche.', pt: 'Vou mudá-lo e completar a noite.', uk: 'Зміню його й завершити вечір.' } },
+      { kind: 'question', prompt: { de: 'Warum hat Mia Angst?', en: 'Why is Mia afraid?', fr: 'Pourquoi Mia a-t-elle peur ?', it: 'Perché Mia ha paura?', es: '¿Por qué tiene miedo Mia?', pt: 'Por que a Mia tem medo?', uk: 'Чому Мія боїться?' }, options: [
+        { de: 'Sie kann den Anzug nicht ansehen', en: 'She cannot look at the suit', fr: 'Elle ne peut pas regarder le costume', it: 'Non può guardare l\'abito', es: 'No puede mirar el traje', pt: 'Não pode olhar o terno', uk: 'Не може бачити костюм' },
+        { de: 'Der Apparat ist kaputt', en: 'The device is broken', fr: 'L\'appareil est cassé', it: 'L\'apparecchio è rotto', es: 'El aparato está roto', pt: 'O aparelho está quebrado', uk: 'Пристрій зламаний' },
+        { de: 'Der Abend ist lang', en: 'The evening is long', fr: 'La soirée est longue', it: 'La sera è lunga', es: 'La noche es larga', pt: 'A noite é longa', uk: 'Вечір довгий' }
+      ] }
+    ]
+  },
+  {
+    id: 'a2-ampel',
+    level: 'a2',
+    scene: 'station',
+    cast: ['mia', 'leo'],
+    title: { de: 'Die Ampel', en: 'The traffic light', fr: 'Le feu', it: 'Il semaforo', es: 'El semáforo', pt: 'O semáforo', uk: 'Світлофор' },
+    beats: [
+      { kind: 'narration', text: { de: 'Die Ampel zeigt rot. Leo und Mia müssen warten, bis sie sich ändern kann.', en: 'The traffic light is red. Leo and Mia must wait until it can change.', fr: 'Le feu est rouge. Léo et Mia doivent attendre qu\'il change.', it: 'Il semaforo è rosso. Leo e Mia devono aspettare che cambi.', es: 'El semáforo es rojo. Leo y Mia deben esperar a que cambie.', pt: 'O semáforo está vermelho. O Léo e a Mia precisam esperar até mudar.', uk: 'Світлофор червоний. Лео й Мія мають чекати, поки він зміниться.' } },
+      { kind: 'line', speaker: 'leo', text: { de: 'Ich habe Angst, wenn die Ampel rot bleibt. Ich sehe den Apparat nicht.', en: 'I am afraid when the traffic light stays red. I do not see the device.', fr: 'J\'ai peur quand le feu reste rouge. Je ne vois pas l\'appareil.', it: 'Ho paura quando il semaforo resta rosso. Non vedo l\'apparecchio.', es: 'Tengo miedo cuando el semáforo se queda rojo. No veo el aparato.', pt: 'Tenho medo quando o semáforo fica vermelho. Não vejo o aparelho.', uk: 'Я боюся, коли світлофор залишається червоним. Не бачу пристрою.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Der Anfang des Tages war schwer, aber wir ändern es. Sieh dir den Baum an!', en: 'The beginning of the day was hard, but we change it. Look at the tree!', fr: 'Le début de la journée était difficile, mais nous changeons. Regarde l\'arbre !', it: 'L\'inizio della giornata era difficile, ma cambiamo. Guarda l\'albero!', es: 'El principio del día fue difícil, pero lo cambiamos. ¡Mira el árbol!', pt: 'O começo do dia foi difícil, mas vamos mudar. Olha a árvore!', uk: 'Початок дня був важким, але змінюємо. Глянь на дерево!' } },
+      { kind: 'question', prompt: { de: 'Was zeigt die Ampel?', en: 'What does the traffic light show?', fr: 'Que montre le feu ?', it: 'Cosa mostra il semaforo?', es: '¿Qué muestra el semáforo?', pt: 'O que o semáforo mostra?', uk: 'Що показує світлофор?' }, options: [
+        { de: 'Rot', en: 'Red', fr: 'Rouge', it: 'Rosso', es: 'Rojo', pt: 'Vermelho', uk: 'Червоний' },
+        { de: 'Grün', en: 'Green', fr: 'Vert', it: 'Verde', es: 'Verde', pt: 'Verde', uk: 'Зелений' },
+        { de: 'Blau', en: 'Blue', fr: 'Bleu', it: 'Blu', es: 'Azul', pt: 'Azul', uk: 'Синій' }
+      ] }
+    ]
+  },
   ...germanStories
 ];
 
