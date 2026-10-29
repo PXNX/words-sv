@@ -3406,4 +3406,85 @@ export const germanStories: Story[] = [
     ]
   }
 
+  {
+    id: 'c1-extra1',
+    level: 'c1',
+    scene: 'office',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Extra C1 1'),
+    beats: [
+      { kind: 'narration', text: german('Anwalt und ausüben und autonom und binden und brutal.') },
+      { kind: 'line', speaker: 'mia', text: german('Dativ ist wichtig und Einheit ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('Einsatz und enorm sind da.') },
+      { kind: 'narration', text: german('erörtern und erwähnt.') },
+      { kind: 'question', prompt: german('Was ist erwecken?'), options: [german('erweisen'), german('erzielen'), german('ethisch')] },
+      { kind: 'question', prompt: german('Wer hat erwecken?'), options: [german('erweisen'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'c1-extra2',
+    level: 'c1',
+    scene: 'town',
+    cast: ['kim', 'leo'],
+    languages: ['de'],
+    title: german('Extra C1 2'),
+    beats: [
+      { kind: 'narration', text: german('fehlend und Funktion und Gebilde und gerecht und gesamt.') },
+      { kind: 'line', speaker: 'mia', text: german('gewaltig ist wichtig und Handlung ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('heftig und hektisch sind da.') },
+      { kind: 'narration', text: german('Jura und Kasus.') },
+      { kind: 'question', prompt: german('Was ist Kluft?'), options: [german('konstant'), german('Kontrast'), german('kritisch')] },
+      { kind: 'question', prompt: german('Wer hat Kluft?'), options: [german('konstant'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'c1-extra3',
+    level: 'c1',
+    scene: 'shop',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Extra C1 3'),
+    beats: [
+      { kind: 'narration', text: german('künftig und landen und Last und lebende und neigen.') },
+      { kind: 'line', speaker: 'mia', text: german('Neuzeit ist wichtig und paradox ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('Partei und passiv sind da.') },
+      { kind: 'narration', text: german('Patient und Poesie.') },
+      { kind: 'question', prompt: german('Was ist poetisch?'), options: [german('Rache'), german('Raucher'), german('Regelung')] },
+      { kind: 'question', prompt: german('Wer hat poetisch?'), options: [german('Rache'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'c1-extra4',
+    level: 'c1',
+    scene: 'market',
+    cast: ['kim', 'leo'],
+    languages: ['de'],
+    title: german('Extra C1 4'),
+    beats: [
+      { kind: 'narration', text: german('rein und richten und senken und Single und strafen.') },
+      { kind: 'line', speaker: 'mia', text: german('Strömung ist wichtig und Teilung ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('tödlich und töten sind da.') },
+      { kind: 'narration', text: german('trauen und unfähig.') },
+      { kind: 'question', prompt: german('Was ist Unrecht?'), options: [german('Wandel'), german('Wende'), german('Wohnraum')] },
+      { kind: 'question', prompt: german('Wer hat Unrecht?'), options: [german('Wandel'), german('Anderes'), german('Nichts')] }
+    ]
+  },
+  {
+    id: 'c1-extra5',
+    level: 'c1',
+    scene: 'park',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Extra C1 5'),
+    beats: [
+      { kind: 'narration', text: german('.') },
+      { kind: 'line', speaker: 'mia', text: german('undefined ist wichtig und undefined ist neu.') },
+      { kind: 'line', speaker: 'tom', text: german('undefined und undefined sind da.') },
+      { kind: 'narration', text: german('undefined und undefined.') },
+      { kind: 'question', prompt: german('Was ist Wort?'), options: [german('Option'), german('Option'), german('Option')] },
+      { kind: 'question', prompt: german('Wer hat Wort?'), options: [german('Option'), german('Anderes'), german('Nichts')] }
+    ]
+  }
+
 ];
