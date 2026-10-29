@@ -2934,7 +2934,7 @@ export const germanStories: Story[] = [
       { kind: 'narration', text: german('Tom sieht den Automat. Er muss aussteigen und hat eine Aussage gemacht.') },
       { kind: 'line', speaker: 'mia', text: german('Der Automat sieht gut aus und die Autobahn ist bekannt.') },
       { kind: 'line', speaker: 'tom', text: german('Ich muss die Lampe ausmachen und dann ausziehen.') },
-      { kind: 'narration', text: german('Der berühmte Mann hat begonnen und beendet. Er hat sich bedankt.') },
+      { kind: 'narration', text: german('Der berühmte Mann hat begonnen, beendet und bestanden. Er hat sich bedankt.') },
       { kind: 'question', prompt: german('Was muss Tom ausmachen?'), options: [german('Die Lampe'), german('Das Auto'), german('Das Fenster')] },
       { kind: 'question', prompt: german('Wie sieht der Automat aus?'), options: [german('Gut'), german('Schlecht'), german('Alt')] }
     ]
