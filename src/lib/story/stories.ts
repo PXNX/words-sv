@@ -1130,6 +1130,90 @@ export const stories: Story[] = [
       ] }
     ]
   },
+  {
+    id: 'c1-anwalt',
+    level: 'c1',
+    scene: 'office',
+    cast: ['mia', 'kim'],
+    title: { de: 'Der Anwalt', en: 'The lawyer', fr: 'L\'avocat', it: 'L\'avvocato', es: 'El abogado', pt: 'O advogado', uk: 'Адвокат' },
+    beats: [
+      { kind: 'narration', text: { de: 'Mia spricht mit einem Anwalt. Es ist ein kritischer Moment, und der Anwalt ist autonom.', en: 'Mia talks to a lawyer. It is a critical moment and the lawyer is autonomous.', fr: 'Mia parle avec un avocat. C\'est un moment critique et l\'avocat est autonome.', it: 'Mia parla con un avvocato. È un momento critico e l\'avvocato è autonomo.', es: 'Mia habla con un abogado. Es un momento crítico y el abogado es autónomo.', pt: 'A Mia fala com um advogado. É um momento crítico e o advogado é autônomo.', uk: 'Мія говорить з адвокатом. Це критичний момент, і адвокат автономний.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Ich brauche einen Anwalt für ein juristisches Problem. Der Einsatz der Einheit ist enorm.', en: 'I need a lawyer for a legal problem. The deployment of the unit is enormous.', fr: 'J\'ai besoin d\'un avocat pour un problème juridique. Le déploiement de l\'unité est énorme.', it: 'Ho bisogno di un avvocato per un problema giuridico. Il dispiegamento dell\'unità è enorme.', es: 'Necesito un abogado para un problema jurídico. El despliegue de la unidad es enorme.', pt: 'Preciso de um advogado para um problema jurídico. O emprego da unidade é enorme.', uk: 'Мені потрібен адвокат для юридичної проблеми. Застосування одиниці величезне.' } },
+      { kind: 'line', speaker: 'kim', text: { de: 'Der Anwalt kann es erörtern. Die Handlung ist gerecht und konstant.', en: 'The lawyer can discuss it. The action is just and constant.', fr: 'L\'avocat peut en discuter. L\'action est juste et constante.', it: 'L\'avvocato può discuterne. L\'azione è giusta e costante.', es: 'El abogado puede discutirlo. La acción es justa y constante.', pt: 'O advogado pode discutir. A ação é justa e constante.', uk: 'Адвокат може обговорити. Дія справедлива й постійна.' } },
+      { kind: 'question', prompt: { de: 'Was ist der Anwalt?', en: 'What is the lawyer?', fr: 'Qu\'est-ce que l\'avocat ?', it: 'Che cos\'è l\'avvocato?', es: '¿Qué es el abogado?', pt: 'O que é o advogado?', uk: 'Хто такий адвокат?' }, options: [
+        { de: 'Ein juristischer Experte', en: 'A legal expert', fr: 'Un expert juridique', it: 'Un esperto giuridico', es: 'Un experto jurídico', pt: 'Um especialista jurídico', uk: 'Юридичний експерт' },
+        { de: 'Ein Arzt', en: 'A doctor', fr: 'Un médecin', it: 'Un medico', es: 'Un médico', pt: 'Um médico', uk: 'Лікар' },
+        { de: 'Ein Lehrer', en: 'A teacher', fr: 'Un enseignant', it: 'Un insegnante', es: 'Un profesor', pt: 'Um professor', uk: 'Вчитель' }
+      ] }
+    ]
+  },
+  {
+    id: 'c1-dativ',
+    level: 'c1',
+    scene: 'library',
+    cast: ['mia', 'om'],
+    title: { de: 'Der Dativ', en: 'The dative', fr: 'Le datif', it: 'Il dativo', es: 'El dativo', pt: 'O dativo', uk: 'Датив' },
+    beats: [
+      { kind: 'narration', text: { de: 'Mia lernt den Dativ. Es ist ein grammatischer Kasus, der ein Objekt bezeichnet.', en: 'Mia is learning the dative. It is a grammatical case that denotes an object.', fr: 'Mia apprend le datif. C\'est un cas grammatical qui désigne un objet.', it: 'Mia sta imparando il dativo. È un caso grammaticale che denota un oggetto.', es: 'Mia aprende el dativo. Es un caso gramatical que denota un objeto.', pt: 'A Mia está aprendendo o dativo. É um caso gramatical que denota um objeto.', uk: 'Мія вивчає датив. Це граматичний відмінок, що позначає об’єкт.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Oma, der Dativ ist kritischer als der Nominativ. Die Einheit der Sprache ist enorm.', en: 'Grandma, the dative is more critical than the nominative. The unity of language is enormous.', fr: 'Mamie, le datif est plus critique que le nominatif. L\'unité de la langue est énorme.', it: 'Nonna, il dativo è più critico del nominativo. L\'unità della lingua è enorme.', es: 'Abuela, el dativo es más crítico que el nominativo. La unidad del idioma es enorme.', pt: 'Vovó, o dativo é mais crítico que o nominativo. A unidade da língua é enorme.', uk: 'Бабусю, датив критичніший за називний. Єдність мови величезна.' } },
+      { kind: 'line', speaker: 'om', text: { de: 'Ja, die Handlung des Lernens ist gerecht und konstant. Ich werde es erklären.', en: 'Yes, the action of learning is just and constant. I will explain it.', fr: 'Oui, l\'action d\'apprendre est juste et constante. Je vais expliquer.', it: 'Sì, l\'azione di imparare è giusta e costante. Lo spiegherò.', es: 'Sí, la acción de aprender es justa y constante. Lo explicaré.', pt: 'Sim, a ação de aprender é justa e constante. Vou explicar.', uk: 'Так, дія навчання справедлива й постійна. Поясню.' } },
+      { kind: 'question', prompt: { de: 'Was bezeichnet der Dativ?', en: 'What does the dative denote?', fr: 'Que désigne le datif ?', it: 'Cosa denota il dativo?', es: '¿Qué denota el dativo?', pt: 'O que o dativo denota?', uk: 'Що позначає датив?' }, options: [
+        { de: 'Ein Objekt', en: 'An object', fr: 'Un objet', it: 'Un oggetto', es: 'Un objeto', pt: 'Um objeto', uk: 'Об\'єкт' },
+        { de: 'Ein Verb', en: 'A verb', fr: 'Un verbe', it: 'Un verbo', es: 'Un verbo', pt: 'Um verbo', uk: 'Дієслово' },
+        { de: 'Ein Adjektiv', en: 'An adjective', fr: 'Un adjectif', it: 'Un aggettivo', es: 'Un adjetivo', pt: 'Um adjetivo', uk: 'Прикметник' }
+      ] }
+    ]
+  },
+  {
+    id: 'c1-autonom',
+    level: 'c1',
+    scene: 'flat',
+    cast: ['mia', 'leo'],
+    title: { de: 'Autonom', en: 'Autonomous', fr: 'Autonome', it: 'Autonomo', es: 'Autónomo', pt: 'Autônomo', uk: 'Автономний' },
+    beats: [
+      { kind: 'narration', text: { de: 'Leo will autonom sein. Er erörtert sein Leben und trifft eine kritische Entscheidung.', en: 'Leo wants to be autonomous. He discusses his life and makes a critical decision.', fr: 'Léo veut être autonome. Il discute sa vie et prend une décision critique.', it: 'Leo vuole essere autonomo. Discute la sua vita e prende una decisione critica.', es: 'Leo quiere ser autónomo. Discute su vida y toma una decisión crítica.', pt: 'O Léo quer ser autônomo. Discute a vida dele e toma uma decisão crítica.', uk: 'Лео хоче бути автономним. Обговорює своє життя й приймає критичне рішення.' } },
+      { kind: 'line', speaker: 'leo', text: { de: 'Ich bin autonom. Ich werde die Handlung selbst ausüben und nicht abhängen.', en: 'I am autonomous. I will perform the action myself and not depend.', fr: 'Je suis autonome. Je vais effectuer l\'action moi-même et ne pas dépendre.', it: 'Sono autonomo. Effettuerò l\'azione da solo e non dipenderò.', es: 'Soy autónomo. Realizaré la acción por mí mismo y no dependeré.', pt: 'Sou autônomo. Vou realizar a ação sozinho e não vou depender.', uk: 'Я автономний. Виконуватиму дію сам і не залежатиму.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Gut. Die Einheit deiner Entscheidung ist enorm. Du bist aktiv.', en: 'Good. The unity of your decision is enormous. You are active.', fr: 'Bien. L\'unité de ta décision est énorme. Tu es actif.', it: 'Bene. L\'unità della tua decisione è enorme. Sei attivo.', es: 'Bien. La unidad de tu decisión es enorme. Eres activo.', pt: 'Bom. A unidade da sua decisão é enorme. Você é ativo.', uk: 'Добре. Єдність твого рішення величезна. Ти активний.' } },
+      { kind: 'question', prompt: { de: 'Was will Leo sein?', en: 'What does Leo want to be?', fr: 'Que veut être Léo ?', it: 'Cosa vuole essere Leo?', es: '¿Qué quiere ser Leo?', pt: 'O que o Léo quer ser?', uk: 'Чим хоче бути Лео?' }, options: [
+        { de: 'Autonom', en: 'Autonomous', fr: 'Autonome', it: 'Autonomo', es: 'Autónomo', pt: 'Autônomo', uk: 'Автономним' },
+        { de: 'Passiv', en: 'Passive', fr: 'Passif', it: 'Passivo', es: 'Pasivo', pt: 'Passivo', uk: 'Пасивним' },
+        { de: 'Abhängig', en: 'Dependent', fr: 'Dépendant', it: 'Dipendente', es: 'Dependiente', pt: 'Dependente', uk: 'Залежним' }
+      ] }
+    ]
+  },
+  {
+    id: 'c1-kasus',
+    level: 'c1',
+    scene: 'station',
+    cast: ['mia', 'kim'],
+    title: { de: 'Der Kasus', en: 'The case', fr: 'Le cas', it: 'Il caso', es: 'El caso', pt: 'O caso', uk: 'Відмінок' },
+    beats: [
+      { kind: 'narration', text: { de: 'Kim erklärt den Kasus. Der Dativ und der Nominativ sind kritisch für die Handlung.', en: 'Kim explains the case. The dative and nominative are critical for the action.', fr: 'Kim explique le cas. Le datif et le nominatif sont critiques pour l\'action.', it: 'Kim spiega il caso. Il dativo e il nominativo sono critici per l\'azione.', es: 'Kim explica el caso. El dativo y el nominativo son críticos para la acción.', pt: 'A Kim explica o caso. O dativo e o nominativo são críticos para a ação.', uk: 'Кім пояснює відмінок. Датив і називний критичні для дії.' } },
+      { kind: 'line', speaker: 'kim', text: { de: 'Der Kasus zeigt die Rolle. Der Einsatz der Einheit ist enorm und konstant.', en: 'The case shows the role. The deployment of the unit is enormous and constant.', fr: 'Le cas montre le rôle. Le déploiement de l\'unité est énorme et constant.', it: 'Il caso mostra il ruolo. Il dispiegamento dell\'unità è enorme e costante.', es: 'El caso muestra el papel. El despliegue de la unidad es enorme y constante.', pt: 'O caso mostra o papel. O emprego da unidade é enorme e constante.', uk: 'Відмінок показує роль. Застосування одиниці величезне й постійне.' } },
+      { kind: 'line', speaker: 'mia', text: { de: 'Ich verstehe. Die Anwendung des Kasus ist ähnlich wie beim Dativ.', en: 'I understand. The application of the case is similar to the dative.', fr: 'Je comprends. L\'application du cas est similaire au datif.', it: 'Capisco. L\'applicazione del caso è simile al dativo.', es: 'Entiendo. La aplicación del caso es similar al dativo.', pt: 'Entendo. A aplicação do caso é similar ao dativo.', uk: 'Розумію. Застосування відмінка схоже на датив.' } },
+      { kind: 'question', prompt: { de: 'Was zeigt der Kasus?', en: 'What does the case show?', fr: 'Que montre le cas ?', it: 'Cosa mostra il caso?', es: '¿Qué muestra el caso?', pt: 'O que o caso mostra?', uk: 'Що показує відмінок?' }, options: [
+        { de: 'Die Rolle im Satz', en: 'The role in the sentence', fr: 'Le rôle dans la phrase', it: 'Il ruolo nella frase', es: 'El papel en la oración', pt: 'O papel na frase', uk: 'Роль у реченні' },
+        { de: 'Die Farbe', en: 'The color', fr: 'La couleur', it: 'Il colore', es: 'El color', pt: 'A cor', uk: 'Колір' },
+        { de: 'Die Größe', en: 'The size', fr: 'La taille', it: 'La dimensione', es: 'El tamaño', pt: 'O tamanho', uk: 'Розмір' }
+      ] }
+    ]
+  },
+  {
+    id: 'c1-jura',
+    level: 'c1',
+    scene: 'square',
+    cast: ['mia', 'om'],
+    title: { de: 'Jura', en: 'Law', fr: 'Le droit', it: 'Il diritto', es: 'El derecho', pt: 'O direito', uk: 'Право' },
+    beats: [
+      { kind: 'narration', text: { de: 'Mia studiert Jura. Es ist ein kritischer Weg. Der Einsatz der Einheit ist enorm.', en: 'Mia studies law. It is a critical path. The deployment of the unit is enormous.', fr: 'Mia étudie le droit. C\'est un chemin critique. Le déploiement de l\'unité est énorme.', it: 'Mia studia diritto. È un percorso critico. Il dispiegamento dell\'unità è enorme.', es: 'Mia estudia derecho. Es un camino crítico. El despliegue de la unidad es enorme.', pt: 'A Mia estuda direito. É um caminho crítico. O emprego da unidade é enorme.', uk: 'Мія вивчає право. Це критичний шлях. Застосування одиниці величезне.' } },
+      { kind: 'line', speaker: 'om', text: { de: 'Das Prinzip der Einheit ist konstant. Die Anwendung der Regelung ist gerecht.', en: 'The principle of unity is constant. The application of the regulation is just.', fr: 'Le principe de l\'unité est constant. L\'application de la réglementation est juste.', it: 'Il principio dell\'unità è costante. L\'applicazione della regolamentazione è giusta.', es: 'El principio de la unidad es constante. La aplicación de la regulación es justa.', pt: 'O princípio da unidade é constante. A aplicação da regulamentação é justa.', uk: 'Принцип єдності постійний. Застосування регулювання справедливе.' } },
+      { kind: 'question', prompt: { de: 'Was studiert Mia?', en: 'What does Mia study?', fr: 'Que étudie Mia ?', it: 'Cosa studia Mia?', es: '¿Qué estudia Mia?', pt: 'O que a Mia estuda?', uk: 'Що вивчає Мія?' }, options: [
+        { de: 'Jura', en: 'Law', fr: 'Le droit', it: 'Il diritto', es: 'El derecho', pt: 'O direito', uk: 'Право' },
+        { de: 'Medizin', en: 'Medicine', fr: 'La médecine', it: 'La medicina', es: 'La medicina', pt: 'A medicina', uk: 'Медицина' },
+        { de: 'Architektur', en: 'Architecture', fr: 'L\'architecture', it: 'L\'architettura', es: 'La arquitectura', pt: 'A arquitetura', uk: 'Архітектура' }
+      ] }
+    ]
+  },
   ...germanStories
 ];
 
