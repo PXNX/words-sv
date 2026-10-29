@@ -1,0 +1,95 @@
+  {
+    id: 'c1-democracy-extra',
+    level: 'c1',
+    scene: 'square',
+    cast: ['sim', 'jana'],
+    languages: ['de'],
+    title: german('Demokratie'),
+    beats: [
+      { kind: 'narration', text: german('Sim und Jana diskutieren Demokratie. Sie sprechen über eine Funktion und einen Einsatz.') },
+      { kind: 'line', speaker: 'sim', text: german('Hallo {name}! Ich sehe eine Funktion und einen Einsatz.') },
+      { kind: 'line', speaker: 'jana', text: german('Gut. Ich sehe eine Einheit und eine Handlung.') },
+      { kind: 'reply', to: 'sim', options: [german('Ich bin eine Funktion.'), german('Ich bin ein Einsatz.'), german('Ich habe eine Einheit.')] },
+      { kind: 'line', speaker: 'jana', text: german('Danke! Wir müssen eine Handlung analysieren und einen Kontrast finden.') },
+      { kind: 'question', prompt: german('Was sieht Sim?'), options: [german('Funktion und Einsatz'), german('Einheit und Handlung'), german('Apparat und Auto')] },
+      { kind: 'question', prompt: german('Was sieht Jana?'), options: [german('Einheit und Handlung'), german('Funktion und Einsatz'), german('Band und Baby')] },
+      { kind: 'question', prompt: german('Was müssen sie analysieren?'), options: [german('Eine Handlung'), german('Einen Apparat'), german('Ein Auto')] },
+      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Kontrast'), german('Einen Abschluss'), german('Einen Apparat')] }
+    ]
+  },
+  {
+    id: 'c1-social-media-extra',
+    level: 'c1',
+    scene: 'cafe',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Social Media'),
+    beats: [
+      { kind: 'narration', text: german('Mia und Tom diskutieren Social Media. Sie haben eine Ansicht und einen Ausdruck.') },
+      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Ich habe eine Ansicht und einen Ausdruck.') },
+      { kind: 'line', speaker: 'tom', text: german('Gut. Ich habe einen Einsatz und eine Einheit.') },
+      { kind: 'reply', to: 'mia', options: [german('Ich bin eine Ansicht.'), german('Ich bin ein Ausdruck.'), german('Ich habe einen Einsatz.')] },
+      { kind: 'line', speaker: 'tom', text: german('Danke! Wir müssen eine Analyse machen und einen Kontrast finden.') },
+      { kind: 'question', prompt: german('Was hat Mia?'), options: [german('Ansicht und Ausdruck'), german('Einsatz und Einheit'), german('Apparat und Auto')] },
+      { kind: 'question', prompt: german('Was hat Tom?'), options: [german('Einsatz und Einheit'), german('Ansicht und Ausdruck'), german('Band und Baby')] },
+      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Analyse'), german('Abschluss'), german('Apparat')] },
+      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Kontrast'), german('Einen Abschluss'), german('Einen Apparat')] }
+    ]
+  },
+  {
+    id: 'c1-workshop-extra',
+    level: 'c1',
+    scene: 'office',
+    cast: ['sim', 'jana'],
+    languages: ['de'],
+    title: german('Workshop'),
+    beats: [
+      { kind: 'narration', text: german('Sim und Jana sind in einem Workshop. Sie haben eine Funktion und einen Einsatz.') },
+      { kind: 'line', speaker: 'sim', text: german('Hallo {name}! Ich sehe eine Funktion und einen Einsatz.') },
+      { kind: 'line', speaker: 'jana', text: german('Gut. Ich sehe eine Einheit und eine Handlung.') },
+      { kind: 'reply', to: 'sim', options: [german('Ich bin eine Funktion.'), german('Ich bin ein Einsatz.'), german('Ich habe eine Einheit.')] },
+      { kind: 'line', speaker: 'jana', text: german('Danke! Wir müssen eine Handlung analysieren und einen Kontrast finden.') },
+      { kind: 'question', prompt: german('Was sieht Sim?'), options: [german('Funktion und Einsatz'), german('Einheit und Handlung'), german('Apparat und Auto')] },
+      { kind: 'question', prompt: german('Was sieht Jana?'), options: [german('Einheit und Handlung'), german('Funktion und Einsatz'), german('Band und Baby')] },
+      { kind: 'question', prompt: german('Was müssen sie analysieren?'), options: [german('Eine Handlung'), german('Einen Apparat'), german('Ein Auto')] },
+      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Kontrast'), german('Einen Abschluss'), german('Einen Apparat')] }
+    ]
+  },
+  {
+    id: 'c1-climate-extra',
+    level: 'c1',
+    scene: 'park',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Klima'),
+    beats: [
+      { kind: 'narration', text: german('Mia und Tom sprechen über Klima. Sie haben einen Kontrast und eine Funktion.') },
+      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Ich sehe einen Kontrast und eine Funktion.') },
+      { kind: 'line', speaker: 'tom', text: german('Gut. Ich sehe einen Einsatz und eine Einheit.') },
+      { kind: 'reply', to: 'mia', options: [german('Ich bin ein Kontrast.'), german('Ich bin eine Funktion.'), german('Ich habe einen Einsatz.')] },
+      { kind: 'line', speaker: 'tom', text: german('Danke! Wir müssen eine Analyse machen und einen Kontrast finden.') },
+      { kind: 'question', prompt: german('Was sieht Mia?'), options: [german('Kontrast und Funktion'), german('Einsatz und Einheit'), german('Apparat und Auto')] },
+      { kind: 'question', prompt: german('Was sieht Tom?'), options: [german('Einsatz und Einheit'), german('Kontrast und Funktion'), german('Band und Baby')] },
+      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Analyse'), german('Abschluss'), german('Apparat')] },
+      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Kontrast'), german('Einen Abschluss'), german('Einen Apparat')] }
+    ]
+  },
+  {
+    id: 'c1-science-extra',
+    level: 'c1',
+    scene: 'library',
+    cast: ['sim', 'jana'],
+    languages: ['de'],
+    title: german('Wissenschaft'),
+    beats: [
+      { kind: 'narration', text: german('Sim und Jana diskutieren Wissenschaft. Sie haben eine Einheit und einen Einsatz.') },
+      { kind: 'line', speaker: 'sim', text: german('Hallo {name}! Ich sehe eine Einheit und einen Einsatz.') },
+      { kind: 'line', speaker: 'jana', text: german('Gut. Ich sehe eine Handlung und einen Kontrast.') },
+      { kind: 'reply', to: 'sim', options: [german('Ich bin eine Einheit.'), german('Ich bin ein Einsatz.'), german('Ich habe eine Handlung.')] },
+      { kind: 'line', speaker: 'jana', text: german('Danke! Wir müssen einen Ausdruck finden und eine Funktion analysieren.') },
+      { kind: 'question', prompt: german('Was sieht Sim?'), options: [german('Einheit und Einsatz'), german('Handlung und Kontrast'), german('Apparat und Auto')] },
+      { kind: 'question', prompt: german('Was sieht Jana?'), options: [german('Handlung und Kontrast'), german('Einheit und Einsatz'), german('Band und Baby')] },
+      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Ausdruck'), german('Einen Abschluss'), german('Einen Apparat')] },
+      { kind: 'question', prompt: german('Was müssen sie analysieren?'), options: [german('Eine Funktion'), german('Einen Abschluss'), german('Einen Abfall')] }
+    ]
+  }

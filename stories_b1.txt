@@ -1,0 +1,95 @@
+  {
+    id: 'b1-job-interview-extra',
+    level: 'b1',
+    scene: 'office',
+    cast: ['albert', 'jana'],
+    languages: ['de'],
+    title: german('Das Vorstellungsgespräch'),
+    beats: [
+      { kind: 'narration', text: german('Albert hat ein Vorstellungsgespräch. Er hat einen Abschluss und eine Ausbildung.') },
+      { kind: 'line', speaker: 'jana', text: german('Hallo {name}! Ich habe Ihre Bewerbung und Ihr Zeugnis gesehen.') },
+      { kind: 'line', speaker: 'albert', text: german('Danke. Ich habe einen Abschluss in Biologie und eine Ausbildung als Arbeiter.') },
+      { kind: 'reply', to: 'jana', options: [german('Ich bin ein Abschluss.'), german('Ich bin ein Arbeiter.'), german('Ich habe eine Ausbildung.')] },
+      { kind: 'line', speaker: 'jana', text: german('Gut. Wir brauchen jemanden mit Erfahrung. Haben Sie eine Absicht?') },
+      { kind: 'question', prompt: german('Was hat Albert?'), options: [german('Einen Abschluss'), german('Ein Auto'), german('Ein Berg')] },
+      { kind: 'question', prompt: german('Was hat Jana gesehen?'), options: [german('Bewerbung und Zeugnis'), german('Berg und Blatt'), german('Auto und Ampel')] },
+      { kind: 'question', prompt: german('Was ist Alberts Fach?'), options: [german('Biologie'), german('Band'), german('Backen')] },
+      { kind: 'question', prompt: german('Was braucht das Unternehmen?'), options: [german('Erfahrung'), german('Ein Auto'), german('Ein Apparat')] }
+    ]
+  },
+  {
+    id: 'b1-car-repair-extra',
+    level: 'b1',
+    scene: 'workshop',
+    cast: ['kim', 'tom'],
+    languages: ['de'],
+    title: german('Die Autoreparatur'),
+    beats: [
+      { kind: 'narration', text: german('Kim und Tom sind in einer Werkstatt. Sie haben einen Auftrag und einen Abfall.') },
+      { kind: 'line', speaker: 'kim', text: german('Hallo {name}! Ich habe einen Auftrag und einen Abfall.') },
+      { kind: 'line', speaker: 'tom', text: german('Gut. Ich habe einen Apparat und eine Absicht.') },
+      { kind: 'reply', to: 'kim', options: [german('Ich habe einen Abfall.'), german('Ich bin ein Auftrag.'), german('Ich bin ein Auto.')] },
+      { kind: 'line', speaker: 'tom', text: german('Danke! Wir müssen einen Bericht schreiben und einen Abschluss machen.') },
+      { kind: 'question', prompt: german('Was haben sie?'), options: [german('Auftrag und Abfall'), german('Apparat und Auto'), german('Abschluss und Apparat')] },
+      { kind: 'question', prompt: german('Was muss Tom schreiben?'), options: [german('Einen Bericht'), german('Ein Blatt'), german('Ein Band')] },
+      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Einen Abschluss'), german('Einen Apparat'), german('Einen Abfall')] },
+      { kind: 'question', prompt: german('Was hat Tom auch?'), options: [german('Eine Absicht'), german('Einen Abschluss'), german('Ein Auto')] }
+    ]
+  },
+  {
+    id: 'b1-music-extra',
+    level: 'b1',
+    scene: 'park',
+    cast: ['mia', 'leo'],
+    languages: ['de'],
+    title: german('Musik im Park'),
+    beats: [
+      { kind: 'narration', text: german('Mia und Leo hören Musik. Sie haben einen Autor und einen Band.') },
+      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Ich habe einen Autor und einen Apparat.') },
+      { kind: 'line', speaker: 'leo', text: german('Ich habe einen Abschluss und einen Bericht.') },
+      { kind: 'reply', to: 'mia', options: [german('Ich bin ein Autor.'), german('Ich bin ein Band.'), german('Ich habe einen Bericht.')] },
+      { kind: 'line', speaker: 'leo', text: german('Gut. Wir müssen einen Besuch machen und einen Bekannten treffen.') },
+      { kind: 'question', prompt: german('Was hat Mia?'), options: [german('Autor und Apparat'), german('Berg und Auto'), german('Band und Baby')] },
+      { kind: 'question', prompt: german('Was hat Leo?'), options: [german('Abschluss und Bericht'), german('Apparat und Auto'), german('Abschluss und Apparat')] },
+      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Einen Besuch'), german('Einen Abschluss'), german('Einen Apparat')] },
+      { kind: 'question', prompt: german('Wen müssen sie treffen?'), options: [german('Einen Bekannten'), german('Einen Autor'), german('Einen Babysitter')] }
+    ]
+  },
+  {
+    id: 'b1-pets-extra',
+    level: 'b1',
+    scene: 'home',
+    cast: ['mia', 'tom'],
+    languages: ['de'],
+    title: german('Haustiere'),
+    beats: [
+      { kind: 'narration', text: german('Mia und Tom haben Haustiere. Sie haben einen Hund und einen Vogel.') },
+      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Ich habe einen Hund und einen Apparat.') },
+      { kind: 'line', speaker: 'tom', text: german('Ich habe einen Abschluss und einen Bericht.') },
+      { kind: 'reply', to: 'mia', options: [german('Ich bin ein Hund.'), german('Ich bin ein Apparat.'), german('Ich habe einen Abschluss.')] },
+      { kind: 'line', speaker: 'tom', text: german('Gut. Wir müssen einen Besuch machen und einen Bekannten treffen.') },
+      { kind: 'question', prompt: german('Was hat Mia?'), options: [german('Hund und Apparat'), german('Berg und Auto'), german('Band und Baby')] },
+      { kind: 'question', prompt: german('Was hat Tom?'), options: [german('Abschluss und Bericht'), german('Apparat und Auto'), german('Hund und Band')] },
+      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Einen Besuch'), german('Einen Abschluss'), german('Einen Apparat')] },
+      { kind: 'question', prompt: german('Wen müssen sie treffen?'), options: [german('Einen Bekannten'), german('Einen Hund'), german('Einen Autor')] }
+    ]
+  },
+  {
+    id: 'b1-tagesschau-extra',
+    level: 'b1',
+    scene: 'office',
+    cast: ['kim', 'leo'],
+    languages: ['de'],
+    title: german('Die Nachrichten'),
+    beats: [
+      { kind: 'narration', text: german('Kim und Leo schauen Nachrichten. Sie sehen einen Bericht und einen Autor.') },
+      { kind: 'line', speaker: 'kim', text: german('Hallo {name}! Ich habe einen Bericht und einen Abschluss.') },
+      { kind: 'line', speaker: 'leo', text: german('Ich habe einen Apparat und einen Auftrag.') },
+      { kind: 'reply', to: 'kim', options: [german('Ich bin ein Bericht.'), german('Ich bin ein Apparat.'), german('Ich habe einen Auftrag.')] },
+      { kind: 'line', speaker: 'leo', text: german('Gut. Wir müssen eine Absicht haben und einen Besuch machen.') },
+      { kind: 'question', prompt: german('Was hat Kim?'), options: [german('Bericht und Abschluss'), german('Apparat und Auto'), german('Band und Baby')] },
+      { kind: 'question', prompt: german('Was hat Leo?'), options: [german('Apparat und Auftrag'), german('Berg und Auto'), german('Abschluss und Apparat')] },
+      { kind: 'question', prompt: german('Was müssen sie haben?'), options: [german('Eine Absicht'), german('Einen Abschluss'), german('Einen Apparat')] },
+      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Einen Besuch'), german('Einen Bericht'), german('Einen Apparat')] }
+    ]
+  }
