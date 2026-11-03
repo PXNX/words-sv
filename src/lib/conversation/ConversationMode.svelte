@@ -7,6 +7,7 @@
   import { pronounceable } from '#lib/story/speech.js';
   import { naturalReady, naturalSupported, playNatural, prepareNatural, synthesizeNatural } from '#lib/story/naturalVoices.svelte.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
+  import { voiceEngines } from '#lib/voice/engines.js';
   import { chatMessages, cleanReply, pickTargetWords, usedWords, type Turn } from './conversation.js';
   import { checkLocalModel, generateReply, interruptReply, loadLocalModel, localModel, MODEL_MEGABYTES } from './localModel.svelte.js';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
@@ -101,9 +102,9 @@
   function speechLocale() {
     return ({ de: 'de-DE', en: 'en-US', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', pt: 'pt-PT', uk: 'uk-UA' } as Record<string, string>)[lang] ?? lang;
   }
-  // Only voices rendered on the device: the Edge quality setting uses Microsoft's service.
+  // Only voices rendered on the device: the Edge setting uses Microsoft's service (see voice/engines.ts).
   function naturalVoiceUsable() {
-    return settings.clipVoices && settings.voiceQuality !== 'edge' && naturalSupported();
+    return settings.clipVoices && voiceEngines[settings.voiceQuality].onDevice && naturalSupported();
   }
 
   async function scrollToEnd() {

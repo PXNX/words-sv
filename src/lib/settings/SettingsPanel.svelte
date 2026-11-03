@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { speaksLanguage } from '#lib/voice/engines.js';
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings, interfaceLocales, type WordleLength } from '#lib/state/settings.svelte.js';
@@ -47,6 +48,7 @@
     storiesGroupHint: m.stories_group_hint({}, { locale: settings.interfaceLocale }),
     voiceStandard: m.voice_quality_standard({}, { locale: settings.interfaceLocale }),
     voiceNatural: m.voice_quality_natural({}, { locale: settings.interfaceLocale }),
+    voiceSupertonic: m.voice_quality_supertonic({}, { locale: settings.interfaceLocale }),
     voiceRecorded: 'Recorded',
     voiceRecordedHint: "Pre-recorded Piper clips for each character's reference sentence; every other line is generated on your device like Natural.",
     voiceEdge: 'Edge',
@@ -108,6 +110,9 @@
       : voiceStatus === 'loading' ? `${m.voice_quality_loading({ percent: String(voicePercent) }, { locale: settings.interfaceLocale })} · ${voiceDownloaded} / ${voiceTotal} MB${voiceEta ? ` · ${voiceEta}` : ''}`
       : voiceStatus === 'failed' ? labels.voiceFailed
       : settings.voiceQuality === 'recorded' ? labels.voiceRecordedHint
+      : settings.voiceQuality === 'supertonic' ? (speaksLanguage('supertonic', settings.lang)
+        ? m.voice_quality_supertonic_hint({ size: String(naturalMegabytes(settings.lang)) }, { locale: settings.interfaceLocale })
+        : m.voice_quality_supertonic_fallback({}, { locale: settings.interfaceLocale }))
       : m.voice_quality_natural_hint({ size: String(naturalMegabytes(settings.lang)) }, { locale: settings.interfaceLocale })
   );
   // Whether the chosen voice runs on Piper, which has a model choice and a download to show.
@@ -359,7 +364,7 @@
     <h2 id="voice-settings-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.storiesGroup}</h2>
     <p class="m-0 mt-[.35rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{labels.storiesGroupHint}</p>
     {#if voicesSupported}
-      <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.voiceQuality}</span><div class="seg-play">{#each [['standard', labels.voiceStandard], ['natural', labels.voiceNatural], ['recorded', labels.voiceRecorded], ['edge', labels.voiceEdge]] as const as [quality, label]}<button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.voiceQuality === quality ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} aria-pressed={settings.voiceQuality === quality} onclick={() => selectVoiceQuality(quality)}>{label}</button>{/each}</div></div>
+      <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.voiceQuality}</span><div class="seg-play">{#each [['standard', labels.voiceStandard], ['natural', labels.voiceNatural], ['recorded', labels.voiceRecorded], ['supertonic', labels.voiceSupertonic], ['edge', labels.voiceEdge]] as const as [quality, label]}<button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.voiceQuality === quality ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} aria-pressed={settings.voiceQuality === quality} onclick={() => selectVoiceQuality(quality)}>{label}</button>{/each}</div></div>
       {#if piperVoices}
         <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.voiceModel}</span><div class="seg-play">{#each [['standard', labels.voiceModelStandard], ['high', labels.voiceModelHigh]] as const as [model, label]}<button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.naturalModel === model ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} aria-pressed={settings.naturalModel === model} onclick={() => selectNaturalModel(model)}>{label}</button>{/each}</div></div>
         <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{labels.voiceModelHint}</p>

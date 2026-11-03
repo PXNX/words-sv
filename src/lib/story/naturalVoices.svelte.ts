@@ -5,8 +5,15 @@ import { speechChunks } from './speech';
 import { settings, type NaturalModel } from '#lib/state/settings.svelte.js';
 import { loadRecordedVoice, useRecordedVoices } from '#lib/voice/recordedVoices.js';
 import { listEdgeVoices, speakEdge, type EdgeVoice } from '#lib/voice/edgeTts.js';
+import { engineFor, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
+import { prepareSupertonic, speakSupertonic, SUPERTONIC_VOICES } from '#lib/voice/supertonic.js';
+import { createPriorityQueue, type Priority } from '#lib/audio/priorityQueue.js';
 
 /*
+ * The one entry point for rendered speech: every mode calls synthesizeNatural / playNatural, and the
+ * engine picked in the settings (see voice/engines.ts) does the work: Piper by default, Supertonic
+ * or Edge when chosen. What follows describes Piper, the default and the fallback for every language.
+ *
  * Natural story voices: Piper neural voices generated on the learner's device (see
  * static/voices/piper-worker.js). Each language has one or more voice models, some of them with
  * several speakers, and every character gets a speaker of their own.
@@ -151,7 +158,17 @@ function modelsOf(language: Language, model: NaturalModel = settings.naturalMode
   return [...new Set([...(narrator ? [narrator] : []), ...female, ...male].map((voice) => voice.model))];
 }
 
+/** The engine that renders `language` with the current settings (Supertonic falls back to Piper). */
+export function activeEngine(language: Language): VoiceEngineId {
+  return engineFor(settings.voiceQuality, language);
+}
+// What a language's loaded voices belong to, so switching engine or Piper pack loads them again.
+function voicesKey(language: Language) {
+  return activeEngine(language) === 'supertonic' ? 'supertonic' : settings.naturalModel;
+}
+
 export function naturalMegabytes(language: Language, model: NaturalModel = settings.naturalModel) {
+  if (activeEngine(language) === 'supertonic') return voiceEngines.supertonic.megabytes ?? 0;
   return RUNTIME_MEGABYTES + modelsOf(language, model).reduce((sum, name) => sum + modelMegabytes[name], 0);
 }
 
@@ -185,7 +202,8 @@ type Status = 'idle' | 'loading' | 'ready' | 'failed';
 /** How far each language's natural voices are: the settings show it, and stories use them once ready. */
 export const naturalState = $state<{
   status: Partial<Record<Language, Status>>;
-  model: Partial<Record<Language, NaturalModel>>;
+  // The voices loaded for each language: a Piper pack ('standard' / 'high') or 'supertonic'.
+  model: Partial<Record<Language, string>>;
   progress: Partial<Record<Language, number>>;
   downloaded: Partial<Record<Language, number>>;
   total: Partial<Record<Language, number>>;
@@ -204,40 +222,15 @@ function restartWorker() {
   worker = null;
   for (const answer of pending.values()) answer({ type: 'error', message: 'restarted' });
   pending.clear();
-  speaking = 0;
-  for (const queued of [...speakQueue.foreground, ...speakQueue.background]) queued.reject(new Error('restarted'));
-  speakQueue.foreground = [];
-  speakQueue.background = [];
+  speakQueue.clear('restarted');
 }
 
-/*
- * Sentences are rendered one at a time, and what the learner is waiting for goes first: a line the
- * open mode wants to say right now ('foreground') jumps ahead of anything rendered in the background
- * (the word bank, a listening story being prepared while the learner plays something else).
- */
-export type SpeechPriority = 'foreground' | 'background';
-type QueuedSpeech = { message: Record<string, unknown>; timeoutMs: number; resolve: (reply: Reply & { type: 'done' }) => void; reject: (error: Error) => void };
-const speakQueue: Record<SpeechPriority, QueuedSpeech[]> = { foreground: [], background: [] };
-let speaking = 0;
-
-function pumpSpeech() {
-  if (speaking > 0) return;
-  const next = speakQueue.foreground.shift() ?? speakQueue.background.shift();
-  if (!next) return;
-  speaking += 1;
-  request(next.message, undefined, next.timeoutMs)
-    .then(next.resolve, next.reject)
-    .finally(() => {
-      speaking = Math.max(0, speaking - 1);
-      pumpSpeech();
-    });
-}
+// Sentences are rendered one at a time, foreground first (see audio/priorityQueue.ts).
+export type SpeechPriority = Priority;
+const speakQueue = createPriorityQueue();
 
 function requestSpeech(message: Record<string, unknown>, timeoutMs: number, priority: SpeechPriority) {
-  return new Promise<Reply & { type: 'done' }>((resolve, reject) => {
-    speakQueue[priority].push({ message, timeoutMs, resolve, reject });
-    pumpSpeech();
-  });
+  return speakQueue.push(() => request(message, undefined, timeoutMs), priority);
 }
 
 function request(message: Record<string, unknown>, onProgress?: (loaded: number, total: number) => void, timeoutMs = 0) {
@@ -266,7 +259,7 @@ const preparation = new Map<Language, Promise<void>>();
 export function prepareNatural(language: Language): Promise<void> {
   // Edge voices are rendered by Microsoft's service; there is nothing to download first.
   if (!naturalSupported() || settings.voiceQuality === 'edge') return Promise.resolve();
-  if (naturalState.status[language] === 'ready' && naturalState.model[language] === settings.naturalModel) return Promise.resolve();
+  if (naturalState.status[language] === 'ready' && naturalState.model[language] === voicesKey(language)) return Promise.resolve();
   const running = preparation.get(language);
   if (running) return running;
   const task = loadNatural(language).finally(() => preparation.delete(language));
@@ -275,6 +268,7 @@ export function prepareNatural(language: Language): Promise<void> {
 }
 
 async function loadNatural(language: Language) {
+  if (activeEngine(language) === 'supertonic') return loadSupertonic(language);
   const model = settings.naturalModel;
   const models = modelsOf(language, model);
   const totalMegabytes = naturalMegabytes(language, model);
@@ -312,9 +306,35 @@ async function loadNatural(language: Language) {
   }
 }
 
+async function loadSupertonic(language: Language) {
+  const totalMegabytes = voiceEngines.supertonic.megabytes ?? 0;
+  naturalState.status[language] = 'loading';
+  naturalState.model[language] = 'supertonic';
+  naturalState.progress[language] = 0;
+  naturalState.downloaded[language] = 0;
+  naturalState.total[language] = totalMegabytes;
+  naturalState.remaining[language] = null;
+  const startedAt = performance.now();
+  try {
+    await prepareSupertonic((loaded, total) => {
+      const fraction = total ? loaded / total : 0;
+      naturalState.progress[language] = fraction;
+      naturalState.downloaded[language] = Math.min(totalMegabytes, loaded / 1_000_000);
+      const elapsed = (performance.now() - startedAt) / 1000;
+      if (fraction >= 0.02 && elapsed >= 0.8) naturalState.remaining[language] = Math.max(0, elapsed / fraction - elapsed);
+    });
+    naturalState.downloaded[language] = totalMegabytes;
+    naturalState.remaining[language] = 0;
+    naturalState.status[language] = 'ready';
+  } catch {
+    naturalState.remaining[language] = null;
+    naturalState.status[language] = 'failed';
+  }
+}
+
 export function naturalReady(language: Language) {
   if (settings.voiceQuality === 'edge') return naturalSupported();
-  return naturalState.status[language] === 'ready' && naturalState.model[language] === settings.naturalModel;
+  return naturalState.status[language] === 'ready' && naturalState.model[language] === voicesKey(language);
 }
 
 type Casting = Map<Speaker, { voice: NaturalVoice; shared: boolean; borrowed: boolean }>;
@@ -444,6 +464,7 @@ async function renderNatural(text: string, speaker: Speaker, mood: Mood, cast: S
 
 async function synthesizeChunk(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number, priority: SpeechPriority): Promise<NaturalClip> {
   if (settings.voiceQuality === 'edge') return synthesizeEdge(text, speaker, mood, cast, language, baseRate);
+  if (activeEngine(language) === 'supertonic') return synthesizeSupertonic(text, speaker, mood, cast, language, baseRate, priority);
   const profile = profiles[speaker];
   const { voice, shared, borrowed } = castNatural(cast, language).get(speaker) ?? castNatural([speaker], language).get(speaker)!;
   const shape = moodShape[mood];
@@ -503,6 +524,34 @@ async function synthesizeEdge(text: string, speaker: Speaker, mood: Mood, cast: 
   const mp3 = await speakEdge(text, voice, rate, pitch);
   const buffer = await audio().decodeAudioData(mp3);
   return { buffer, playbackRate: 1, volume: Math.min(1, profile.volume * shape.volume) };
+}
+
+// Supertonic has five female and five male voices: the narrator and the cast take turns through
+// them in casting order, so the main characters never share one.
+function castSupertonic(cast: Speaker[]): Map<Speaker, string> {
+  const speakers = priority.filter((speaker) => speaker === 'narrator' || cast.includes(speaker));
+  const next = { female: 0, male: 0 };
+  const casting = new Map<Speaker, string>();
+  for (const speaker of speakers) {
+    const gender = profiles[speaker].gender;
+    const pool = SUPERTONIC_VOICES[gender];
+    casting.set(speaker, pool[next[gender]++ % pool.length]);
+  }
+  return casting;
+}
+
+async function synthesizeSupertonic(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number, priority: SpeechPriority): Promise<NaturalClip> {
+  const profile = profiles[speaker];
+  const voice = castSupertonic(cast).get(speaker) ?? castSupertonic([speaker]).get(speaker)!;
+  const shape = moodShape[mood];
+  const accent = accentShape(profile.dialect, settings.dialects);
+  const speed = Math.max(0.8, Math.min(1.2, baseRate * (profile.natural?.rate ?? profile.rate) * shape.rate * accent.rate));
+  // Pitch is shifted on playback, like Piper's shared voices; animals keep their cartoon pitch.
+  const playbackRate = animals.includes(speaker) ? Math.min(1.4, Math.max(0.75, profile.pitch)) : (profile.natural?.pitch ?? 1) * accent.pitch;
+  const { pcm, sampleRate } = await speakSupertonic(text, language, voice, speed, priority);
+  const buffer = audio().createBuffer(1, pcm.length, sampleRate);
+  buffer.copyToChannel(pcm as Float32Array<ArrayBuffer>, 0);
+  return { buffer, playbackRate, volume: Math.min(1, profile.volume * shape.volume) };
 }
 
 /** Renders clips one after another into a single buffer, with optional silence before and after each. */
