@@ -12,6 +12,7 @@ import { warmLanguage, refreshHintableBaseWords } from '#lib/data/vocabulary.js'
 import StartupLoader from '#lib/StartupLoader.svelte';
 import CosmeticUnlockToast from '#lib/profile/CosmeticUnlockToast.svelte';
 import BackgroundJobsBadge from '#lib/audio/BackgroundJobsBadge.svelte';
+import { haptic } from '#lib/haptics.js';
 	import { pwaInstall } from '#lib/pwaInstall.svelte.js';
 	import { autoUpdateOnStart } from '#lib/pwaUpdate.js';
 	import { prepareNatural } from '#lib/story/naturalVoices.svelte.js';
@@ -86,6 +87,12 @@ onMount(() => {
 		// this no-op listener enables the app-wide button press-down animations on touch devices.
 		const enableActiveStates = () => {};
 		document.addEventListener('touchstart', enableActiveStates, { passive: true });
+		// Every game button and card answers a press with a light tick (haptics.ts; off in the settings).
+		const tickOnPress = (event: PointerEvent) => {
+			const target = event.target instanceof Element ? event.target.closest("button:not(:disabled), .btn-play, .card-play, [role='radio'], [role='tab']") : null;
+			if (target) haptic('tap');
+		};
+		document.addEventListener('pointerdown', tickOnPress, { passive: true });
 		const orientation = screen.orientation as ScreenOrientation & { lock?: (type: 'portrait') => Promise<void> };
 		void orientation?.lock?.('portrait').catch(() => undefined);
 		return () => {
@@ -94,6 +101,7 @@ onMount(() => {
 			document.removeEventListener('gestureend', blockGesture);
 			document.removeEventListener('touchmove', blockPinch);
 			document.removeEventListener('touchstart', enableActiveStates);
+			document.removeEventListener('pointerdown', tickOnPress);
 		};
 	});
 </script>

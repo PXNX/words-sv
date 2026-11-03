@@ -143,6 +143,7 @@ class SettingsStore {
   setVibration(next: boolean) {
     this.vibration = next;
     localStorage.setItem(VIBRATION_KEY, next ? 'on' : 'off');
+    if (next) void import('#lib/haptics.js').then(({ haptic }) => haptic('success', true));
   }
   // Every voice except the browser's own is played as rendered audio clips.
   get clipVoices() {

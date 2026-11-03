@@ -236,7 +236,6 @@ import { page } from '$app/state';
     } else {
       wrong = { ...wrong, [item.id]: { ...currentWrong, [index]: [...(currentWrong[index] ?? []), option] } };
       if (settings.sound) playErrorSound(settings.sound, 'vocab');
-      if (settings.vibration && 'vibrate' in navigator) navigator.vibrate(60);
     }
   }
 
