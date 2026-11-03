@@ -24,5 +24,7 @@ export default defineConfig({
       emitTsDeclarations: true
     })
   ],
+  // The on-device conversation model runs in a module worker (src/lib/conversation/llm.worker.ts).
+  worker: { format: 'es' },
   server: { host: '0.0.0.0', allowedHosts: true }
 });
