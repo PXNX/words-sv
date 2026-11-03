@@ -401,5 +401,7 @@
   "cosmetic_hint_story": "Beende eine Geschichte mit allen Fragen beim ersten Versuch richtig.",
   "cosmetic_hint_reading": "Beantworte alle Fragen eines Lesetexts ohne Fehler.",
   "cosmetic_hint_listen": "Höre 3 Geschichten komplett bis zum Ende.",
-  "cosmetic_hint_conversation": "Benutze in einem Gespräch alle fünf Wörter der Runde selbst."
+  "cosmetic_hint_conversation": "Benutze in einem Gespräch alle fünf Wörter der Runde selbst.",
+  "background_working": "{label} läuft im Hintergrund … {percent}%",
+  "background_ready": "{label}: fertig – jetzt anhören"
 }

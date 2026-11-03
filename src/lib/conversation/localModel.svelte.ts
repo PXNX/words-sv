@@ -1,5 +1,6 @@
 import type { ChatMessage } from './conversation.js';
 import type { WorkerReply, WorkerRequest } from './llm.worker.js';
+import { runJob } from '#lib/audio/backgroundJobs.svelte.js';
 
 /*
  * The conversation partner's brain: a small multilingual chat model that runs entirely on the
@@ -90,11 +91,15 @@ export function loadLocalModel(): Promise<void> {
     localModel.status = 'loading';
     localModel.progress = 0;
     try {
-      await request({ type: 'load', model: modelId }, (reply) => {
+      // A background job, so the download keeps going (and shows in the corner badge) while the
+      // learner plays something else.
+      const model = modelId;
+      await runJob(`conversation-model|${model}`, 'Lilith', '/conversation', (control) => request({ type: 'load', model }, (reply) => {
         if (reply.type !== 'progress') return;
         localModel.progress = reply.progress;
         localModel.text = reply.text;
-      });
+        control.progress({ done: Math.round(reply.progress * 100), total: 100 });
+      }));
       localModel.status = 'ready';
       localModel.cached = true;
     } catch (error) {

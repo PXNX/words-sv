@@ -300,7 +300,8 @@
     speechSupported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
     if (!speechSupported) {
       if (!naturalMode) speechStatus = labels.speechUnavailable;
-      return () => { cancelSpeech(); cancelWordBank(); };
+      // The word bank keeps rendering in the background after leaving (see wordBank.svelte.ts).
+      return () => { cancelSpeech(); };
     }
     const refreshVoices = () => {
       voices = window.speechSynthesis.getVoices();
@@ -311,7 +312,6 @@
     return () => {
       window.speechSynthesis.removeEventListener('voiceschanged', refreshVoices);
       cancelSpeech();
-      cancelWordBank();
     };
   });
 
