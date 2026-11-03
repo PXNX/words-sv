@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { onMount, tick, untrack } from 'svelte';
   import { flip } from 'svelte/animate';
   import { fly } from 'svelte/transition';
@@ -313,6 +314,8 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
     }
   }
   function markCompleted(id: string) {
+    // Every question right on the first try, in any story (replays too), earns the story reward.
+    if (interactiveIndices.length > 0 && firstTry === interactiveIndices.length) unlockCosmetic('story');
     const completed = readCompleted();
     if (!completed.includes(id)) {
       localStorage.setItem(COMPLETED_KEY, JSON.stringify([...completed, id]));

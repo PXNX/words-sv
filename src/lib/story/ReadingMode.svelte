@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { onMount, tick } from 'svelte';
 import { page } from '$app/state';
   import { goto } from '$app/navigation';
@@ -227,6 +228,8 @@ import { page } from '$app/state';
       // Every question answered ends the text, which is one of the ways to qualify the day.
       if (item.questions.length > 0 && item.questions.every((_, questionIndex) => nextSolved[questionIndex])) {
         recordActivity('reading', { id: item.id });
+        // No wrong option picked in the whole text: the reading reward.
+        if (Object.values(currentWrong).every((options) => options.length === 0)) unlockCosmetic('reading');
         void settings.recordStreak('reading_completed');
       }
       if (settings.sound) playSuccessSound(settings.sound, 'vocab');

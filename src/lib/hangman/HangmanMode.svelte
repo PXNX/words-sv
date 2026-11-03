@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { fade } from 'svelte/transition';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
@@ -58,6 +59,7 @@
     if (!finished || !target || recordedCompletion === target) return;
     recordedCompletion = target;
     void settings.recordStreak('hangman_completed');
+    if (won && wrongGuesses === 0) unlockCosmetic('hangman');
   });
 
   $effect(() => {

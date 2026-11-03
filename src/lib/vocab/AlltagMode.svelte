@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { recordAnswer } from '#lib/profile/cosmetics.svelte.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
@@ -38,6 +39,7 @@
   function choose(value: string) {
     if (answer) return;
     answer = value;
+    recordAnswer('alltag', value === (numberReverse ? current.word : current.meaning));
     if (value === (numberReverse ? current.word : current.meaning)) void settings.recordStreak('alltag_correct');
   }
   function next() { answer = null; index = (index + 1) % items.length; resetChoices(); }

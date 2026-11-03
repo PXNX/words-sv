@@ -10,6 +10,7 @@ import { m } from '#lib/paraglide/messages.js';
 import { settings } from '#lib/state/settings.svelte.js';
 import { warmLanguage, refreshHintableBaseWords } from '#lib/data/vocabulary.js';
 import StartupLoader from '#lib/StartupLoader.svelte';
+import CosmeticUnlockToast from '#lib/profile/CosmeticUnlockToast.svelte';
 	import { pwaInstall } from '#lib/pwaInstall.svelte.js';
 	import { autoUpdateOnStart } from '#lib/pwaUpdate.js';
 	import { prepareNatural } from '#lib/story/naturalVoices.svelte.js';
@@ -116,6 +117,7 @@ onMount(() => {
 				{@render children()}
 			</section>
 		</main>
+		<CosmeticUnlockToast />
 	{/if}
 </div>
 

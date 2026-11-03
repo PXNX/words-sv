@@ -384,5 +384,22 @@
   "conversation_you": "You",
   "conversation_partner": "Lilith",
   "conversation_no_recognition": "Your browser cannot recognise speech – you can still type your answers.",
-  "conversation_cloud_recognition": "Note: this browser’s speech recognition may not run on the device."
+  "conversation_cloud_recognition": "Note: this browser’s speech recognition may not run on the device.",
+  "cosmetic_locked": "Locked",
+  "cosmetic_unlocked_title": "New look unlocked!",
+  "cosmetic_unlocked_body": "Brilliant play – your character has a new piece.",
+  "cosmetic_try_on": "Try it on",
+  "cosmetic_close": "Close",
+  "cosmetic_hint_vocab": "Answer 15 Word Quiz questions in a row right on the first try.",
+  "cosmetic_hint_circle": "Solve a crossword without a hint in under 2 minutes.",
+  "cosmetic_hint_definitions": "Solve a definitions round without a hint in under 2 minutes.",
+  "cosmetic_hint_wordle": "Guess a Wordle word in 3 tries or fewer.",
+  "cosmetic_hint_hangman": "Win a Hangman round without a single wrong letter.",
+  "cosmetic_hint_pronunciation": "Pronounce 10 words in a row right on the first try.",
+  "cosmetic_hint_alltag": "Answer 20 everyday questions in a row correctly.",
+  "cosmetic_hint_grammar": "Answer 15 grammar tasks in a row correctly.",
+  "cosmetic_hint_story": "Finish a story with every question right on the first try.",
+  "cosmetic_hint_reading": "Answer every question of a reading text without a mistake.",
+  "cosmetic_hint_listen": "Listen to 3 stories all the way to the end.",
+  "cosmetic_hint_conversation": "Use all five words of a conversation round yourself."
 }

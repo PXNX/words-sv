@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { recordAnswer } from '#lib/profile/cosmetics.svelte.js';
   import { untrack } from 'svelte';
   import { page } from '$app/state';
   import { playSuccessSound, playErrorSound } from '#lib/sounds.js';
@@ -175,6 +176,7 @@
       const answer = next.map((item) => orderWords[item]).join(' ');
       const target = orderSentences[Number(currentKey.split(':')[1]) % orderSentences.length].join(' ');
       answerStatus = answer === target ? 'correct' : 'wrong';
+      recordAnswer('grammar', answerStatus === 'correct');
       if (answerStatus === 'correct') { playSuccessSound(settings.sound, 'grammar'); void settings.recordStreak('grammar_correct'); }
       else { playErrorSound(settings.sound, 'grammar'); queue = [...queue, currentKey]; }
       reviewProgress = updateReviewProgress(reviewProgress, currentKey, answerStatus === 'correct');
@@ -190,6 +192,7 @@
     const correct = chosen === prompt.correct;
     selectedChoice = chosen;
     answerStatus = correct ? 'correct' : 'wrong';
+    recordAnswer('grammar', correct);
     reviewProgress = updateReviewProgress(reviewProgress, currentKey, correct);
     persistProgress();
     recordReview(settings.lang, currentKey, correct, 'grammar');
