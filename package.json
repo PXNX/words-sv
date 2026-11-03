@@ -37,6 +37,7 @@
     "wawoff2": "^2.0.1"
   },
   "dependencies": {
+    "@mlc-ai/web-llm": "0.2.86",
     "mysql2": "^3.24.6",
     "web-push": "^3.6.7"
   },
