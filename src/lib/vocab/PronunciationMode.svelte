@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { recordAnswer } from '#lib/profile/cosmetics.svelte.js';
   import { onMount, untrack } from 'svelte';
   import { settings } from '#lib/state/settings.svelte.js';
   import { wordDefinitions, wordMetadata } from '#lib/data/vocabulary.js';
@@ -246,6 +247,7 @@
     matchState = attempt.matched ? 'correct' : 'incorrect';
     correction = attempt.matched || !heardIpa ? null : ipaDiff(heardIpa, ipa);
     if (heard) void settings.recordStreak('pronunciation_practised');
+    if (heard) recordAnswer('pronunciation', attempt.matched);
     savePronunciationProgress();
     // A heard attempt lands in the shared ledger; a miss also joins the hard-words list that
     // stories and the Repeat hub draw from.

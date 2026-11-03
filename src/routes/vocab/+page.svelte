@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { recordAnswer } from '#lib/profile/cosmetics.svelte.js';
   import { onMount, untrack } from 'svelte';
   import { playSuccessSound, playErrorSound } from '#lib/sounds.js';
   import { settings } from '#lib/state/settings.svelte.js';
@@ -225,6 +226,8 @@
     selectedChoice = chosenWord;
     answerStatus = correct ? 'correct' : 'wrong';
     if (firstAttempt) attempted = [...attempted, word];
+    // Only first attempts count towards the reward's run; a repeated card is practice.
+    if (firstAttempt && !repairMode) recordAnswer('vocab', correct);
     if (correct) {
       if (firstAttempt) {
         firstTry = [...firstTry, word];

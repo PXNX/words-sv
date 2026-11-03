@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { LISTEN_TARGET, unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { onMount, tick, untrack } from 'svelte';
   import { goto } from '$app/navigation';
   import { m } from '#lib/paraglide/messages.js';
@@ -13,7 +14,7 @@
   import { applyVoice, profiles, type Dialect, type Speaker } from './voices';
   import { listAudioSessions, loadAudioBlob, saveAudioSession, updateAudioSessionPosition, type SavedAudio, type SavedSound, type SavedStoryStart } from './audioLibrary';
   import { generateStory, hasMissedWords } from './generated';
-  import { recordActivity } from '#lib/progress/activity.js';
+  import { countActivity, recordActivity } from '#lib/progress/activity.js';
   import { playBing, playChime, playSoundEffect, soundEffectSeconds, type SoundEffect } from '#lib/sounds.js';
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
@@ -256,7 +257,8 @@
     lastSoundAt = duration;
     clearListenProgress();
     flushPosition();
-    recordActivity('listen');
+    const events = recordActivity('listen');
+    if (countActivity(events, 'listen') >= LISTEN_TARGET) unlockCosmetic('listen');
     void settings.recordStreak('listen_completed');
     playChime(soundEnabled);
     // Let the chime ring out, then hand over to the next audio. Without a next one the recap stays.

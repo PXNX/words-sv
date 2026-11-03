@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { goto } from '$app/navigation';
   import { browser } from '$app/env';
   import WordleMode from '#lib/wordle/WordleMode.svelte';
@@ -34,5 +35,8 @@
   labels={labels}
   practice={practice}
   onGreen={() => playSuccessSound(settings.sound, 'wordle')}
-  onWin={() => void settings.recordStreak('wordle_completed')}
+  onWin={(attempts) => {
+    void settings.recordStreak('wordle_completed');
+    if (!practice && attempts <= 3) unlockCosmetic('wordle');
+  }}
 />

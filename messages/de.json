@@ -384,5 +384,22 @@
   "conversation_you": "Du",
   "conversation_partner": "Lilith",
   "conversation_no_recognition": "Dein Browser kann keine Sprache erkennen – du kannst deine Antworten aber tippen.",
-  "conversation_cloud_recognition": "Hinweis: Die Spracherkennung dieses Browsers läuft eventuell nicht auf dem Gerät."
+  "conversation_cloud_recognition": "Hinweis: Die Spracherkennung dieses Browsers läuft eventuell nicht auf dem Gerät.",
+  "cosmetic_locked": "Gesperrt",
+  "cosmetic_unlocked_title": "Neuer Look freigeschaltet!",
+  "cosmetic_unlocked_body": "Richtig stark gespielt – dein Charakter hat ein neues Teil.",
+  "cosmetic_try_on": "Gleich anprobieren",
+  "cosmetic_close": "Schließen",
+  "cosmetic_hint_vocab": "Beantworte im Word Quiz 15 Fragen hintereinander beim ersten Versuch richtig.",
+  "cosmetic_hint_circle": "Löse ein Kreuzworträtsel ohne Tipp in unter 2 Minuten.",
+  "cosmetic_hint_definitions": "Löse eine Definitionen-Runde ohne Tipp in unter 2 Minuten.",
+  "cosmetic_hint_wordle": "Errate ein Wordle-Wort in höchstens 3 Versuchen.",
+  "cosmetic_hint_hangman": "Gewinne eine Hangman-Runde ohne einen einzigen falschen Buchstaben.",
+  "cosmetic_hint_pronunciation": "Sprich 10 Wörter hintereinander auf Anhieb richtig aus.",
+  "cosmetic_hint_alltag": "Beantworte im Alltag-Modus 20 Fragen hintereinander richtig.",
+  "cosmetic_hint_grammar": "Beantworte 15 Grammatikaufgaben hintereinander richtig.",
+  "cosmetic_hint_story": "Beende eine Geschichte mit allen Fragen beim ersten Versuch richtig.",
+  "cosmetic_hint_reading": "Beantworte alle Fragen eines Lesetexts ohne Fehler.",
+  "cosmetic_hint_listen": "Höre 3 Geschichten komplett bis zum Ende.",
+  "cosmetic_hint_conversation": "Benutze in einem Gespräch alle fünf Wörter der Runde selbst."
 }

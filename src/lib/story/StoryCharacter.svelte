@@ -71,7 +71,10 @@
     return {
       skin: own.skin, hair: own.hair, hairStyle: own.hairStyle, top: own.top, face: own.face, eyes: own.eyes, nose: own.nose,
       outfit: own.shirt === 'stripes' || own.shirt === 'checked' ? 'plain' : own.shirt, checked: own.shirt === 'checked', striped: own.shirt === 'stripes',
-      glasses: extra === 'glasses', shades: extra === 'shades', beard: extra === 'beard', moustache: extra === 'moustache', stubble: extra === 'stubble', headphones: extra === 'headphones', hat: extra === 'crown' ? 'crown' : undefined
+      glasses: extra === 'glasses', shades: extra === 'shades', beard: extra === 'beard', stubble: extra === 'stubble', headphones: extra === 'headphones',
+      moustache: extra === 'kaiser' ? 'kaiser' : extra === 'moustache', monocle: extra === 'monocle', pencil: extra === 'pencil',
+      // Reward hats (cosmetics.svelte.ts) are drawn like the cast's.
+      hat: extra === 'crown' || extra === 'tyrolean' || extra === 'toque' || extra === 'straw' ? extra : undefined
     };
   }
   const own = $derived(avatar ?? (id === 'kumar' ? settings.avatar : null));

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { pwaInstall } from '#lib/pwaInstall.svelte.js';
@@ -145,6 +146,9 @@
   let tutorialPractice = $state(isPractice);
   let idleHintReady = $state(false);
   let revealedHintWord = $state<string | null>(null);
+  // A round solved without the idle hint, and quickly, earns the mode's cosmetic reward.
+  let hintUsed = false;
+  const FAST_ROUND_MS = 2 * 60 * 1000;
   let idleHintTimer: number | null = null;
   let explainOpen = $state(false);
   let loadingNextRound = $state(false);
@@ -250,6 +254,7 @@
     const target = candidates.length > 0 ? candidates[Math.floor(randomSeed() % candidates.length)] : null;
     if (!target) return;
     revealedHintWord = target;
+    hintUsed = true;
     scheduleIdleHint(true);
   }
   function revealCellDefinition(row: number, col: number) {
@@ -280,6 +285,7 @@
     celebration = false;
     startedAt = Date.now();
     completedDuration = null;
+    hintUsed = false;
     scheduleIdleHint();
   }
   function completeTutorial() {
@@ -308,6 +314,7 @@
       if (!tutorialPractice) {
         settings.recordRoundCompleted();
         void settings.recordStreak(showDefinitions ? 'definitions_completed' : 'circle_completed');
+        if (!hintUsed && completedDuration <= FAST_ROUND_MS) unlockCosmetic(showDefinitions ? 'definitions' : 'circle');
       }
       celebration = true;
     }

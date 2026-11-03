@@ -28,7 +28,7 @@
     return value === 'de' || value === 'en';
   }
 
-  let { words, level, language, wordLength = 5, labels, practice = false, onGreen = () => {}, onWin = () => {} }: { words: string[]; level: string; language: string; wordLength?: number; labels: Labels; practice?: boolean; onGreen?: () => void; onWin?: () => void } = $props();
+  let { words, level, language, wordLength = 5, labels, practice = false, onGreen = () => {}, onWin = () => {} }: { words: string[]; level: string; language: string; wordLength?: number; labels: Labels; practice?: boolean; onGreen?: () => void; onWin?: (attempts: number) => void } = $props();
 
   let target = $state('');
   let guess = $state('');
@@ -105,7 +105,7 @@
     if (marks.some((mark) => mark === 'correct')) onGreen();
     if (normalized === target) {
       notice = labels.win;
-      onWin();
+      onWin(entries.length);
     } else notice = '';
   }
 

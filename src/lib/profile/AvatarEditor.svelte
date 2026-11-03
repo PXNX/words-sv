@@ -10,7 +10,9 @@
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import type { Mood } from '#lib/story/stories.js';
   import { avatarChoices, avatarParts, randomAvatar, type Avatar, type AvatarPart } from './avatar.js';
+  import { cosmeticState, isLocked, rewardFor, type CosmeticMode } from './cosmetics.svelte.js';
   import IconCasino from '~icons/material-symbols/casino-rounded';
+  import IconLock from '~icons/material-symbols/lock-rounded';
 
   let { value, onchange }: { value: Avatar; onchange: (next: Avatar) => void } = $props();
 
@@ -27,6 +29,23 @@
     extra: m.avatar_extra({}, locale)
   });
   const randomLabel = $derived(m.avatar_random({}, locale));
+  const lockedLabel = $derived(m.cosmetic_locked({}, locale));
+  // How each reward is earned, shown when a locked one is tapped.
+  const rewardHints = $derived<Record<CosmeticMode, string>>({
+    vocab: m.cosmetic_hint_vocab({}, locale),
+    circle: m.cosmetic_hint_circle({}, locale),
+    definitions: m.cosmetic_hint_definitions({}, locale),
+    wordle: m.cosmetic_hint_wordle({}, locale),
+    hangman: m.cosmetic_hint_hangman({}, locale),
+    pronunciation: m.cosmetic_hint_pronunciation({}, locale),
+    alltag: m.cosmetic_hint_alltag({}, locale),
+    grammar: m.cosmetic_hint_grammar({}, locale),
+    story: m.cosmetic_hint_story({}, locale),
+    reading: m.cosmetic_hint_reading({}, locale),
+    listen: m.cosmetic_hint_listen({}, locale),
+    conversation: m.cosmetic_hint_conversation({}, locale)
+  });
+  let lockedHint = $state<CosmeticMode | null>(null);
   // Colours are picked from swatches; the rest from small previews of the character, zoomed in on
   // the head for everything but the top.
   const colourParts: AvatarPart[] = ['skin', 'hair', 'top'];
@@ -48,13 +67,20 @@
   $effect(() => () => window.clearTimeout(moodTimer));
 
   function choose(choice: string) {
+    if (isLocked(part, choice, cosmeticState.unlocked)) {
+      lockedHint = rewardFor(part, choice);
+      playSoundEffect(settings.sound, 'pop');
+      react('curious');
+      return;
+    }
+    lockedHint = null;
     if (value[part] === choice) return;
     onchange({ ...value, [part]: choice });
     playSoundEffect(settings.sound, 'pop');
     react(part === 'extra' || part === 'hairStyle' ? 'surprised' : part === 'nose' ? 'laughing' : 'curious');
   }
   function roll() {
-    onchange(randomAvatar());
+    onchange(randomAvatar(cosmeticState.unlocked));
     playSoundEffect(settings.sound, 'pop');
     rolling = false;
     requestAnimationFrame(() => (rolling = true));
@@ -69,21 +95,24 @@
   </div>
   <div class="avatar-parts" role="tablist">
     {#each avatarParts as key (key)}
-      <button type="button" role="tab" class="avatar-part" class:active={part === key} aria-selected={part === key} onclick={() => (part = key)}>{partLabels[key]}</button>
+      <button type="button" role="tab" class="avatar-part" class:active={part === key} aria-selected={part === key} onclick={() => { part = key; lockedHint = null; }}>{partLabels[key]}</button>
     {/each}
   </div>
   <div class="avatar-choices" class:swatches={colourParts.includes(part)} role="radiogroup" aria-label={partLabels[part]}>
     {#each avatarChoices[part] as choice, index (choice)}
       {@const picked = value[part] === choice}
+      {@const locked = isLocked(part, choice, cosmeticState.unlocked)}
       {#if colourParts.includes(part)}
-        <button type="button" role="radio" class="avatar-swatch" class:picked aria-checked={picked} aria-label={`${partLabels[part]} ${index + 1}`} style:--swatch={choice} onclick={() => choose(choice)}></button>
+        <button type="button" role="radio" class="avatar-swatch" class:picked class:locked aria-checked={picked} aria-label={locked ? `${partLabels[part]} ${index + 1}: ${lockedLabel}` : `${partLabels[part]} ${index + 1}`} style:--swatch={choice} onclick={() => choose(choice)}>{#if locked}<IconLock class="avatar-lock" aria-hidden="true" />{/if}</button>
       {:else}
-        <button type="button" role="radio" class="avatar-tile" class:picked class:zoom={!bodyParts.includes(part)} aria-checked={picked} aria-label={`${partLabels[part]} ${index + 1}`} onclick={() => choose(choice)}>
+        <button type="button" role="radio" class="avatar-tile" class:picked class:locked class:zoom={!bodyParts.includes(part)} aria-checked={picked} aria-label={locked ? `${partLabels[part]} ${index + 1}: ${lockedLabel}` : `${partLabels[part]} ${index + 1}`} onclick={() => choose(choice)}>
           <StoryCharacter id="kumar" avatar={{ ...value, [part]: choice }} still />
+          {#if locked}<IconLock class="avatar-lock" aria-hidden="true" />{/if}
         </button>
       {/if}
     {/each}
   </div>
+  {#if lockedHint}<p class="avatar-locked-hint" role="status"><IconLock aria-hidden="true" /> {rewardHints[lockedHint]}</p>{/if}
 </div>
 
 <style>
@@ -107,6 +136,13 @@
   .avatar-tile.picked { border-color:#172a45;background:#fbe6b5;box-shadow:2px 2px 0 #172a45; }
   .avatar-swatch { width:2.3rem;height:2.3rem;padding:0;border:2px solid rgba(23,42,69,.3);border-radius:50%;background:var(--swatch);cursor:pointer;transition:transform .15s cubic-bezier(.34,1.56,.64,1); }
   .avatar-swatch.picked { border-color:#172a45;box-shadow:0 0 0 3px #fffdf7,0 0 0 5px #172a45;transform:scale(1.08); }
+  .avatar-tile.locked :global(.story-character) { filter:grayscale(1);opacity:.45; }
+  .avatar-swatch.locked { position:relative;opacity:.55;display:grid;place-items:center; }
+  .avatar-choices :global(.avatar-lock) { position:absolute;right:.2rem;bottom:.2rem;width:.95rem;height:.95rem;color:#172a45; }
+  .avatar-swatch.locked :global(.avatar-lock) { position:static;color:#fffdf7;filter:drop-shadow(0 0 1px #172a45); }
+  .avatar-locked-hint { display:flex;align-items:flex-start;gap:.35rem;margin:0;padding:.5rem .65rem;border-radius:12px;background:rgba(230,165,39,.18);font-size:.72rem;font-weight:800;line-height:1.35; }
+  .avatar-locked-hint :global(svg) { flex:none;width:.95rem;height:.95rem;margin-top:.05rem; }
+  :global(html.dark) .avatar-choices :global(.avatar-lock) { color:#fffdf7; }
   .avatar-tile:hover,.avatar-swatch:hover { transform:translateY(-2px) rotate(-2deg); }
   .avatar-tile:active,.avatar-swatch:active { transform:scale(.92); }
   .avatar-part:focus-visible,.avatar-tile:focus-visible,.avatar-swatch:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }

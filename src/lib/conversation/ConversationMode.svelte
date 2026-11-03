@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { onMount, tick } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
@@ -88,6 +89,10 @@
 
   const lang = $derived(settings.lang);
   const used = $derived(usedWords(turns, targetWords, spellingOf, lang));
+  // Using every word of the round yourself earns the conversation reward.
+  $effect(() => {
+    if (targetWords.length > 0 && used.length === targetWords.length) unlockCosmetic('conversation');
+  });
   const loadingPercent = $derived(Math.round(localModel.progress * 100));
 
   function spellingOf(word: string) {
