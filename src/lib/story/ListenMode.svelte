@@ -15,6 +15,8 @@
   import { listAudioSessions, loadAudioBlob, saveAudioSession, updateAudioSessionPosition, type SavedAudio, type SavedSound, type SavedStoryStart } from './audioLibrary';
   import { generateStory, hasMissedWords } from './generated';
   import { countActivity, recordActivity } from '#lib/progress/activity.js';
+  import { wavBlob } from '#lib/audio/wav.js';
+  import { cancelJobsExcept, runJob, type JobControl, type JobProgress } from '#lib/audio/backgroundJobs.svelte.js';
   import { playBing, playChime, playSoundEffect, soundEffectSeconds, type SoundEffect } from '#lib/sounds.js';
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
@@ -477,31 +479,6 @@
     }
     return { story, segments, starts, sounds: timedSounds, duration: at };
   }
-  function wavBlob(buffer: AudioBuffer) {
-    const samples = buffer.getChannelData(0);
-    const view = new DataView(new ArrayBuffer(44 + samples.length * 2));
-    const write = (offset: number, value: string) => {
-      for (let index = 0; index < value.length; index += 1) view.setUint8(offset + index, value.charCodeAt(index));
-    };
-    write(0, 'RIFF');
-    view.setUint32(4, 36 + samples.length * 2, true);
-    write(8, 'WAVE');
-    write(12, 'fmt ');
-    view.setUint32(16, 16, true);
-    view.setUint16(20, 1, true);
-    view.setUint16(22, 1, true);
-    view.setUint32(24, buffer.sampleRate, true);
-    view.setUint32(28, buffer.sampleRate * 2, true);
-    view.setUint16(32, 2, true);
-    view.setUint16(34, 16, true);
-    write(36, 'data');
-    view.setUint32(40, samples.length * 2, true);
-    for (let index = 0; index < samples.length; index += 1) {
-      const sample = Math.max(-1, Math.min(1, samples[index]));
-      view.setInt16(44 + index * 2, sample < 0 ? sample * 0x8000 : sample * 0x7fff, true);
-    }
-    return new Blob([view.buffer], { type: 'audio/wav' });
-  }
   function newSessionId() {
     if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) return crypto.randomUUID();
     return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -555,7 +532,11 @@
   function storiesForLevel() {
     return [...new Map(storiesFor(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary).map((story) => [story.id, story])).values()];
   }
-  async function generateNaturalStory(raw: Story, token: number, onSegment?: (done: number, total: number) => void) {
+  // Runs inside a background job (see startSession/startBatch): it keeps rendering after the page
+  // is closed, so it only checks the job's own cancel flag, never this component's `generation`.
+  async function generateNaturalStory(raw: Story, control: JobControl, onSegment?: (done: number, total: number) => void) {
+    const language = settings.lang;
+    const level = settings.vocabularyLevel;
     const story = withWeather(withDetails(raw));
     const segments = segmentsForStory(story);
     if (wordCount(raw) < QUESTION_WORD_LIMIT) segments.push(...questionSegments(story));
@@ -563,13 +544,13 @@
     const gaps: number[] = [];
     const leads: number[] = [];
     const timedSounds: SavedSound[] = [];
-    const rate = (levelRates[settings.vocabularyLevel] ?? 1) * (naturalLevelPace[settings.vocabularyLevel] ?? 1);
+    const rate = (levelRates[level] ?? 1) * (naturalLevelPace[level] ?? 1);
     let at = 0;
     for (const [index, segment] of segments.entries()) {
-      if (token !== generation) return null;
+      if (control.cancelled()) return null;
       if (segment.sound) timedSounds.push({ at, effect: segment.sound });
-      const clip = await synthesizeNatural(pronounceable(segment.text, settings.lang).text, segment.speaker, segment.mood, story.cast, settings.lang, rate);
-      if (token !== generation) return null;
+      const clip = await synthesizeNatural(pronounceable(segment.text, language).text, segment.speaker, segment.mood, story.cast, language, rate, 'background');
+      if (control.cancelled()) return null;
       clips.push(clip);
       gaps.push(segment.gap);
       leads.push(segment.soundLead);
@@ -577,16 +558,16 @@
       onSegment?.(index + 1, segments.length);
     }
     const buffer = await combineNatural(clips, gaps, leads);
-    if (token !== generation) return null;
-    const blob = wavBlob(buffer);
+    if (control.cancelled()) return null;
+    const blob = await wavBlob(buffer);
     const now = Date.now();
-    const savedStarts: SavedStoryStart[] = [{ at: 0, title: story.title[settings.lang] }];
+    const savedStarts: SavedStoryStart[] = [{ at: 0, title: story.title[language] }];
     const saved: SavedAudio = {
       id: newSessionId(),
       createdAt: now,
       updatedAt: now,
-      language: settings.lang,
-      level: settings.vocabularyLevel,
+      language,
+      level,
       duration: buffer.duration,
       position: 0,
       storyCount: 1,
@@ -655,13 +636,15 @@
     generatingScene = shaped.scene;
     generatingWeather = shaped.weather;
     try {
-      const generated = await generateNaturalStory(raw, token, (partDone, partTotal) => {
-        done = partDone;
-        total = partTotal;
-        progress = partTotal ? partDone / partTotal : 0;
+      const onProgress = (update: JobProgress) => {
+        if (token !== generation) return;
+        done = update.done;
+        total = update.total;
+        progress = update.total ? update.done / update.total : 0;
         const elapsed = (performance.now() - startedAt) / 1000;
         eta = progress > 0 ? Math.max(0, elapsed / progress - elapsed) : null;
-      });
+      };
+      const generated = await runJob(`listen|${storyKey(raw)}`, generatingTitle, '/listen', (control) => generateNaturalStory(raw, control, (partDone, partTotal) => control.progress({ done: partDone, total: partTotal, detail: generatingTitle })), onProgress);
       if (!generated || token !== generation) return;
       playBing(soundEnabled);
       const { saved, blob } = generated;
@@ -728,31 +711,47 @@
     phase = 'generating';
     const alreadySaved = allStories.length - missing.length;
     const startedAt = performance.now();
-    try {
-      for (const [index, raw] of missing.entries()) {
-        if (token !== generation) return;
-        const story = withWeather(withDetails(raw));
-        generatingTitle = story.title[settings.lang];
-        generatingScene = story.scene;
-        generatingWeather = story.weather;
-        batchIndex = alreadySaved + index + 1;
-        const generated = await generateNaturalStory(raw, token, (partDone, partTotal) => {
-          done = partDone;
-          total = partTotal;
-          const part = partTotal ? partDone / partTotal : 0;
-          progress = (alreadySaved + index + part) / allStories.length;
-          const elapsed = (performance.now() - startedAt) / 1000;
-          eta = progress > 0 ? Math.max(0, elapsed / progress - elapsed) : null;
-        });
-        if (!generated || token !== generation) return;
-        try {
-          history = await listAudioSessions();
-        } catch {
-          mergeHistory(generated.saved);
-        }
-        if (token !== generation) return;
-        progress = (alreadySaved + index + 1) / allStories.length;
+    const shownTitles = new Map(missing.map((raw) => [raw.title[settings.lang], withWeather(withDetails(raw))]));
+    let shownStep = -1;
+    // Progress of the whole level: `step` is the story being rendered, `done`/`total` its segments.
+    const onProgress = (update: JobProgress) => {
+      if (token !== generation) return;
+      const step = update.step ?? 0;
+      const shown = update.detail ? shownTitles.get(update.detail) : undefined;
+      if (shown) {
+        generatingTitle = shown.title[settings.lang];
+        generatingScene = shown.scene;
+        generatingWeather = shown.weather;
       }
+      batchIndex = alreadySaved + step + 1;
+      done = update.done;
+      total = update.total;
+      const part = update.total ? update.done / update.total : 0;
+      progress = (alreadySaved + step + part) / allStories.length;
+      const elapsed = (performance.now() - startedAt) / 1000;
+      eta = progress > 0 ? Math.max(0, elapsed / progress - elapsed) : null;
+      // A finished story shows up in the library right away.
+      if (step !== shownStep) {
+        shownStep = step;
+        void listAudioSessions().then((saved) => { if (token === generation) history = saved; }).catch(() => {});
+      }
+    };
+    try {
+      const batchKey = `listen-batch|${settings.lang}|${settings.vocabularyLevel}|${settings.includeLowerVocabulary}`;
+      cancelJobsExcept('listen-batch|', batchKey);
+      await runJob(batchKey, labels.listen, '/listen', async (control) => {
+        for (const [index, raw] of missing.entries()) {
+          if (control.cancelled()) return;
+          const title = raw.title[settings.lang];
+          control.progress({ done: 0, total: 0, step: index, steps: missing.length, detail: title });
+          const generated = await generateNaturalStory(raw, control, (partDone, partTotal) => control.progress({ done: partDone, total: partTotal, step: index, steps: missing.length, detail: title }));
+          if (!generated) return;
+        }
+      }, onProgress);
+      if (token !== generation) return;
+      try {
+        history = await listAudioSessions();
+      } catch {}
       playBing(soundEnabled);
       progress = 1;
       eta = 0;
@@ -999,7 +998,6 @@
       saveListenProgress(true);
       generation += 1;
       wordRun += 1;
-      cancelWordBank();
       cancelStandardSpeech();
       audio?.pause();
       if (audioUrl) URL.revokeObjectURL(audioUrl);

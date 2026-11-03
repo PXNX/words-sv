@@ -401,5 +401,7 @@
   "cosmetic_hint_story": "Finish a story with every question right on the first try.",
   "cosmetic_hint_reading": "Answer every question of a reading text without a mistake.",
   "cosmetic_hint_listen": "Listen to 3 stories all the way to the end.",
-  "cosmetic_hint_conversation": "Use all five words of a conversation round yourself."
+  "cosmetic_hint_conversation": "Use all five words of a conversation round yourself.",
+  "background_working": "{label} running in the background … {percent}%",
+  "background_ready": "{label}: ready – listen now"
 }

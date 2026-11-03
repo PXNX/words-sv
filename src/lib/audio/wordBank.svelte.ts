@@ -92,7 +92,10 @@ function signatureFor(language: Language) {
 
 let generation = 0;
 
-/** Stops the running generation (navigation, the loader's "continue", a language change). */
+/**
+ * Stops the running generation (the loader's "continue", a language change). Leaving a mode does not
+ * stop it: the bank keeps filling in the background while the learner plays something else.
+ */
 export function cancelWordBank() {
 	generation += 1;
 	for (const [key, status] of Object.entries(wordBankState.status)) {
@@ -162,7 +165,8 @@ export async function prepareWordBank(language: Language, level: VocabularyLevel
 			const audioKey = wordAudioKey(language, word);
 			if (known.has(audioKey)) continue;
 			try {
-				const clip = await synthesizeNaturalOnce(spokenWord(language, word), 'narrator', 'neutral', ['narrator'], language, 1);
+				// Background priority: a line the open mode wants to say right now is never stuck behind the bank.
+				const clip = await synthesizeNaturalOnce(spokenWord(language, word), 'narrator', 'neutral', ['narrator'], language, 1, 'background');
 				if (!owned()) return generated;
 				await writeWordAudio(audioKey, { ...clipToStored(clip), savedAt: Date.now() } satisfies StoredWordAudio);
 				known.add(audioKey);

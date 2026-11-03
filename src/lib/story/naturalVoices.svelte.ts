@@ -204,6 +204,40 @@ function restartWorker() {
   worker = null;
   for (const answer of pending.values()) answer({ type: 'error', message: 'restarted' });
   pending.clear();
+  speaking = 0;
+  for (const queued of [...speakQueue.foreground, ...speakQueue.background]) queued.reject(new Error('restarted'));
+  speakQueue.foreground = [];
+  speakQueue.background = [];
+}
+
+/*
+ * Sentences are rendered one at a time, and what the learner is waiting for goes first: a line the
+ * open mode wants to say right now ('foreground') jumps ahead of anything rendered in the background
+ * (the word bank, a listening story being prepared while the learner plays something else).
+ */
+export type SpeechPriority = 'foreground' | 'background';
+type QueuedSpeech = { message: Record<string, unknown>; timeoutMs: number; resolve: (reply: Reply & { type: 'done' }) => void; reject: (error: Error) => void };
+const speakQueue: Record<SpeechPriority, QueuedSpeech[]> = { foreground: [], background: [] };
+let speaking = 0;
+
+function pumpSpeech() {
+  if (speaking > 0) return;
+  const next = speakQueue.foreground.shift() ?? speakQueue.background.shift();
+  if (!next) return;
+  speaking += 1;
+  request(next.message, undefined, next.timeoutMs)
+    .then(next.resolve, next.reject)
+    .finally(() => {
+      speaking = Math.max(0, speaking - 1);
+      pumpSpeech();
+    });
+}
+
+function requestSpeech(message: Record<string, unknown>, timeoutMs: number, priority: SpeechPriority) {
+  return new Promise<Reply & { type: 'done' }>((resolve, reject) => {
+    speakQueue[priority].push({ message, timeoutMs, resolve, reject });
+    pumpSpeech();
+  });
 }
 
 function request(message: Record<string, unknown>, onProgress?: (loaded: number, total: number) => void, timeoutMs = 0) {
@@ -356,8 +390,8 @@ export function clearNaturalAudio() {
 }
 
 /** Renders a line without keeping it in the story cache: the word bank stores its own clips. */
-export function synthesizeNaturalOnce(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number): Promise<NaturalClip> {
-  return renderNatural(text, speaker, mood, cast, language, baseRate);
+export function synthesizeNaturalOnce(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number, priority: SpeechPriority = 'foreground'): Promise<NaturalClip> {
+  return renderNatural(text, speaker, mood, cast, language, baseRate, priority);
 }
 
 /** Copies a rendered clip into compact 16-bit PCM for persistent storage. */
@@ -379,11 +413,11 @@ export function clipFromPcm(samples: Int16Array, sampleRate: number, playbackRat
 }
 
 /** Speaks a sentence in the speaker's natural voice; resolves with audio ready to play. */
-export function synthesizeNatural(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number): Promise<NaturalClip> {
+export function synthesizeNatural(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number, priority: SpeechPriority = 'foreground'): Promise<NaturalClip> {
   const key = `${settings.voiceQuality}|${settings.clipVoiceKey}|${language}|${baseRate}|${speaker}|${mood}|${cast.join()}|${text}`;
   const cached = renderedAudio.get(key);
   if (cached) return cached;
-  const task = renderNatural(text, speaker, mood, cast, language, baseRate);
+  const task = renderNatural(text, speaker, mood, cast, language, baseRate, priority);
   renderedAudio.set(key, task);
   void task.catch(() => {
     if (renderedAudio.get(key) === task) renderedAudio.delete(key);
@@ -391,7 +425,7 @@ export function synthesizeNatural(text: string, speaker: Speaker, mood: Mood, ca
   return task;
 }
 
-async function renderNatural(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number): Promise<NaturalClip> {
+async function renderNatural(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number, priority: SpeechPriority): Promise<NaturalClip> {
   // Pre-recorded clips (one MP3 per character, generated offline) play back instantly and never
   // need the Piper worker. A clip only holds the character's reference sentence, so every other
   // line is still synthesized on the device.
@@ -400,15 +434,15 @@ async function renderNatural(text: string, speaker: Speaker, mood: Mood, cast: S
     if (buffer) return { buffer, playbackRate: 1, volume: 1 };
   }
   const chunks = speechChunks(text);
-  if (chunks.length < 2) return synthesizeChunk(text, speaker, mood, cast, language, baseRate);
+  if (chunks.length < 2) return synthesizeChunk(text, speaker, mood, cast, language, baseRate, priority);
   const clips: NaturalClip[] = [];
-  for (const chunk of chunks) clips.push(await synthesizeChunk(chunk, speaker, mood, cast, language, baseRate));
+  for (const chunk of chunks) clips.push(await synthesizeChunk(chunk, speaker, mood, cast, language, baseRate, priority));
   const gaps = clips.map((_, index) => (index === clips.length - 1 ? 0 : THINKING_BREAK));
   const buffer = await combineNatural(clips, gaps);
   return { buffer, playbackRate: 1, volume: 1 };
 }
 
-async function synthesizeChunk(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number): Promise<NaturalClip> {
+async function synthesizeChunk(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number, priority: SpeechPriority): Promise<NaturalClip> {
   if (settings.voiceQuality === 'edge') return synthesizeEdge(text, speaker, mood, cast, language, baseRate);
   const profile = profiles[speaker];
   const { voice, shared, borrowed } = castNatural(cast, language).get(speaker) ?? castNatural([speaker], language).get(speaker)!;
@@ -421,7 +455,7 @@ async function synthesizeChunk(text: string, speaker: Speaker, mood: Mood, cast:
   const ownPitch = animals.includes(speaker) ? Math.min(1.4, Math.max(0.75, profile.pitch)) : (shared ? sharedPitch(profile.pitch) : 1) * agePitch * accent.pitch;
   const playbackRate = ownPitch * (borrowed ? Math.min(1.08, Math.max(0.95, 1 + (borrowedPitch[profile.gender] - 1) * 0.3)) : 1);
   const rate = Math.max(0.85, Math.min(1.15, baseRate * (profile.natural?.rate ?? profile.rate) * shape.rate * accent.rate));
-  const reply = await request({ type: 'speak', model: voice.model, text, speaker: voice.speaker ?? 0, lengthScale: Math.max(0.85, Math.min(1.15, playbackRate / rate)) }, undefined, SPEAK_TIMEOUT_MS);
+  const reply = await requestSpeech({ type: 'speak', model: voice.model, text, speaker: voice.speaker ?? 0, lengthScale: Math.max(0.85, Math.min(1.15, playbackRate / rate)) }, SPEAK_TIMEOUT_MS, priority);
   const pcm = reply.pcm!;
   const buffer = audio().createBuffer(1, pcm.length, reply.sampleRate!);
   buffer.copyToChannel(pcm as Float32Array<ArrayBuffer>, 0);
