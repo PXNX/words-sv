@@ -23,7 +23,9 @@ const pages = routes
 	.filter((route) => route.page && !route.id.includes('['))
 	.map((route) => pageKey(route.id.replace(/\/\([^)]+\)/g, '') || SHELL))
 	.filter((page) => page !== SHELL);
-const precached = new Set([...immutable, ...assets].map(({ path }) => pathnameOf(path)));
+// The conversation model's worker (WebLLM, ~6 MB) is left out: most learners never open that mode,
+// and it needs a network connection for its model download anyway.
+const precached = new Set([...immutable, ...assets].map(({ path }) => pathnameOf(path)).filter((path) => !/\/llm\.worker-[^/]+\.js$/.test(path)));
 
 self.addEventListener('install', (event) => {
 	event.waitUntil(
