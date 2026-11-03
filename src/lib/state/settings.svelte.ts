@@ -1,4 +1,5 @@
 import { requiresCumulativePool } from '#lib/circle/engine.js';
+import { voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
 import { wordPools, isLanguage, isVocabularyLevel, type Language, type VocabularyLevel, warmLanguage, refreshHintableBaseWords } from '#lib/data/vocabulary.js';
 import { normalizeVocabularyGoal, dateKey, readStreak, repairCandidate, repairStreak as repairStoredStreak, syncStreak, syncStreakGoal, type ClientStreak, type StreakRepair, type StreakEvent } from '#lib/clientStreak.js';
 import { recordActivity, type ActivityKind } from '#lib/progress/activity.js';
@@ -21,11 +22,9 @@ const ACTIVITY_BY_EVENT: Partial<Record<StreakEvent, ActivityKind>> = {
 export type Theme = 'light' | 'dark';
 export type InterfaceLocale = Locale;
 export type WordleLength = 3 | 4 | 5 | 6 | 7;
-// Story voices, one per way of playing speech described in tts.md: the browser's own ('standard'),
-// Piper neural voices generated on the device ('natural'), pre-recorded Piper clips with live Piper
-// for every other line ('recorded'), or Microsoft's free Edge neural voices over the network ('edge').
-export type VoiceQuality = 'standard' | 'natural' | 'recorded' | 'edge';
-export const voiceQualities: readonly VoiceQuality[] = ['standard', 'natural', 'recorded', 'edge'];
+// Story voices: one engine from voice/engines.ts, which describes each of them.
+export type VoiceQuality = VoiceEngineId;
+export const voiceQualities: readonly VoiceQuality[] = voiceEngineIds;
 // Natural voice packs. Both run on the device; the high packs are larger and take longer to load.
 export type NaturalModel = 'standard' | 'high';
 
@@ -147,11 +146,11 @@ class SettingsStore {
   }
   // Every voice except the browser's own is played as rendered audio clips.
   get clipVoices() {
-    return this.voiceQuality !== 'standard';
+    return voiceEngines[this.voiceQuality].clips;
   }
-  // Which voices rendered clips belong to, so caches never mix Edge audio with Piper audio.
+  // Which voices rendered clips belong to, so caches never mix one engine's audio with another's.
   get clipVoiceKey() {
-    return this.voiceQuality === 'edge' ? 'edge' : this.naturalModel;
+    return this.voiceQuality === 'edge' || this.voiceQuality === 'supertonic' ? this.voiceQuality : this.naturalModel;
   }
   setVoiceQuality(next: VoiceQuality) {
     this.voiceQuality = next;

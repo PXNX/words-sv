@@ -403,5 +403,8 @@
   "cosmetic_hint_listen": "Listen to 3 stories all the way to the end.",
   "cosmetic_hint_conversation": "Use all five words of a conversation round yourself.",
   "background_working": "{label} running in the background … {percent}%",
-  "background_ready": "{label}: ready – listen now"
+  "background_ready": "{label}: ready – listen now",
+  "voice_quality_supertonic": "Supertonic",
+  "voice_quality_supertonic_hint": "Supertonic 2: very natural voices generated on your device. Downloaded once (about {size} MB).",
+  "voice_quality_supertonic_fallback": "Supertonic does not speak this language (only English, Spanish, Portuguese and French), so the natural Piper voices are used here."
 }
