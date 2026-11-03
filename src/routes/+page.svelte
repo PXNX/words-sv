@@ -49,6 +49,7 @@
   import IconMenuBook from '~icons/material-symbols/menu-book-rounded';
   import IconHeadphones from '~icons/material-symbols/headphones-rounded';
   import IconExplore from '~icons/material-symbols/explore-rounded';
+  import IconForum from '~icons/material-symbols/forum-rounded';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
 
@@ -75,6 +76,8 @@
     homeDefinitions: m.home_definitions({}, { locale: settings.interfaceLocale }),
     homeHangman: m.home_hangman({}, { locale: settings.interfaceLocale }),
     homePronunciation: m.home_pronunciation({}, { locale: settings.interfaceLocale }),
+    conversation: m.mode_conversation({}, { locale: settings.interfaceLocale }),
+    homeConversation: m.home_conversation({}, { locale: settings.interfaceLocale }),
     homeAlltag: m.home_alltag({}, { locale: settings.interfaceLocale }),
     homeFalseFriends: m.home_false_friends({}, { locale: settings.interfaceLocale }),
     homeDetermine: m.home_determine({}, { locale: settings.interfaceLocale }),
@@ -397,6 +400,7 @@
     <div class="home-games">
       <a class="card-play {streakClass('vocab')}" href="/vocab"><span class="home-icon" aria-hidden="true"><IconQuiz /></span><h2>{labels.wordQuiz}</h2><p>{labels.homeVocab}</p>{#if wordDue > 0}<span class="home-due-badge">{labels.repeatDue(wordDue)}</span>{/if}<TodayBadge done={modeDone(settings.streak, 'vocab')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
       <a class="card-play {streakClass('pronunciation')}" href="/pronunciation"><span class="home-icon" aria-hidden="true"><IconMic /></span><h2>{labels.pronunciation}</h2><p>{labels.homePronunciation}</p><TodayBadge done={modeDone(settings.streak, 'pronunciation')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
+      <a class="card-play {streakClass(null)}" href="/conversation"><span class="home-icon" aria-hidden="true"><IconForum /></span><h2>{labels.conversation}</h2><p>{labels.homeConversation}</p></a>
       <a class="card-play {streakClass('alltag')}" href="/alltag"><span class="home-icon" aria-hidden="true"><IconEmoji /></span><h2>{labels.alltag}</h2><p>{labels.homeAlltag}</p><TodayBadge done={modeDone(settings.streak, 'alltag')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
       <a class="card-play {streakClass('grammar')}" href="/grammar?mode=falsefriends"><span class="home-icon" aria-hidden="true"><IconSwapHoriz /></span><h2>{labels.grammarFalseFriends}</h2><p>{labels.homeFalseFriends}</p><TodayBadge done={modeDone(settings.streak, 'grammar')} pendingLabel={labels.streakCountsToday} doneLabel={labels.streakModeDone} /></a>
     </div>

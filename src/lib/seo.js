@@ -108,6 +108,12 @@ export const pages = {
 		kicker: 'Hören',
 		icon: 'headphones-rounded'
 	},
+	'/conversation': {
+		title: 'Gespräch',
+		description: 'Sprich laut mit einem Gesprächspartner, der komplett auf deinem Gerät läuft, und übe Wörter deines Levels.',
+		kicker: 'Sprechen',
+		icon: 'forum-rounded'
+	},
 	'/repeat': {
 		title: 'Wiederholen',
 		description: 'Alle fälligen Wörter aus Vokabeln, Grammatik, Lesen und Aussprache in einer gemischten Wiederholung.',
