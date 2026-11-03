@@ -1,3 +1,4 @@
+import { haptic } from '#lib/haptics.js';
 export type SuccessSound = 'circle' | 'wordle' | 'vocab' | 'grammar' | 'pronunciation';
 export type ErrorSound = 'vocab' | 'grammar';
 
@@ -37,12 +38,15 @@ function playNotes(enabled: boolean, notes: number[]) {
   } catch { /* Audio is optional and must never block play. */ }
 }
 
+// Answer sounds come with their haptic (haptics.ts), which follows its own setting, not `enabled`.
 export function playSuccessSound(enabled: boolean, kind: SuccessSound) {
   playNotes(enabled, successNoteSets[kind]);
+  haptic('success');
 }
 
 export function playErrorSound(enabled: boolean, kind: ErrorSound) {
   playNotes(enabled, errorNoteSets[kind]);
+  haptic('error');
 }
 
 /*

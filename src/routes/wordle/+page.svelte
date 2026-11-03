@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { haptic } from '#lib/haptics.js';
   import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { goto } from '$app/navigation';
   import { browser } from '$app/env';
@@ -37,6 +38,7 @@
   onGreen={() => playSuccessSound(settings.sound, 'wordle')}
   onWin={(attempts) => {
     void settings.recordStreak('wordle_completed');
+    haptic('win');
     if (!practice && attempts <= 3) unlockCosmetic('wordle');
   }}
 />

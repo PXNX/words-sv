@@ -3,6 +3,7 @@
   character already wearing it, with a way to the character editor on the progress page.
 -->
 <script lang="ts">
+  import { haptic } from '#lib/haptics.js';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { playSoundEffect } from '#lib/sounds.js';
@@ -18,6 +19,7 @@
   $effect(() => {
     if (!reward) return;
     playSoundEffect(settings.sound, 'pop');
+    haptic('unlock');
     const timer = window.setTimeout(dismissUnlock, 8000);
     return () => window.clearTimeout(timer);
   });

@@ -509,7 +509,6 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
     wrong = { ...wrong, [index]: [...(wrong[index] ?? []), option] };
     if (settings.sound) cancelSpeech();
     playErrorSound(settings.sound, 'vocab');
-    if (settings.vibration && 'vibrate' in navigator) navigator.vibrate(60);
   }
   // A right answer carries the story on by itself: after the chime, whoever asked pronounces the
   // practised word, then the next beat follows (unless the learner already moved on).

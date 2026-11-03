@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { haptic } from '#lib/haptics.js';
   import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { fade } from 'svelte/transition';
   import { m } from '#lib/paraglide/messages.js';
@@ -59,6 +60,7 @@
     if (!finished || !target || recordedCompletion === target) return;
     recordedCompletion = target;
     void settings.recordStreak('hangman_completed');
+    haptic(won ? 'win' : 'error');
     if (won && wrongGuesses === 0) unlockCosmetic('hangman');
   });
 

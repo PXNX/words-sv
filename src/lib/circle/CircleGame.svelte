@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { haptic } from '#lib/haptics.js';
   import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
@@ -267,9 +268,6 @@
     idleHintReady = false;
     scheduleIdleHint(true);
   }
-  function buzz(pattern: number | number[]) {
-    if (settings.vibration && typeof navigator !== 'undefined' && 'vibrate' in navigator) navigator.vibrate(pattern);
-  }
   function newRound(resetCount = false) {
     if (resetCount) roundNumber = 0;
     const nextRound = buildRound(withDefinitionsOnly(selectedPool(wordPools[settings.lang], settings.vocabularyLevel, settings.includeLowerVocabulary)), randomSeed(), recentBaseWords, settings.allowBackwardWords, hintableBaseWords, showDefinitions ? 3 : 0);
@@ -307,7 +305,8 @@
     const completed = solvedWords.length + 1 === currentRound.words.length;
     solvedWords = [...solvedWords, word];
     feedback = 'correct';
-    buzz(completed ? [24, 28, 40, 28, 70] : [16, 20, 26]);
+    // A found word already buzzes with its success sound; the last one gets the win rhythm.
+    if (completed) haptic('win');
     playSuccessSound(settings.sound, 'circle');
     if (completed) {
       completedDuration = Math.max(0, Date.now() - startedAt);
@@ -331,13 +330,13 @@
       feedbackWord = next;
       feedback = 'wrong';
       shakeGrid = true;
-      buzz([18, 18, 18]);
+      haptic('error');
       window.setTimeout(() => (shakeGrid = false), 280);
       typedWord = '';
       return;
     }
     typedWord = next;
-    buzz(7);
+    haptic('tap');
     const match = currentRound.words.find((word) => word === next && !solvedSet.has(word));
     if (match) { submitWord(match); typedWord = ''; }
   }
@@ -379,7 +378,7 @@
     feedbackWord = '';
     explainOpen = false;
     selectedPath = [...selectedPath, index];
-    buzz(7);
+    haptic('tap');
   }
   function startSwipe(event: PointerEvent, knownIndex = -1) {
     if (celebration) return;
@@ -415,7 +414,7 @@
       feedbackWord = word;
       feedback = 'wrong';
       shakeGrid = true;
-      buzz([18, 18, 18]);
+      haptic('error');
       window.setTimeout(() => (shakeGrid = false), 280);
     }
     selectedPath = [];
