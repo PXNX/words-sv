@@ -615,3 +615,10 @@ export function playNatural(clip: NaturalClip, volume = 1) {
     stop: () => { try { source.stop(); } catch { /* already over */ } }
   };
 }
+
+/** Stops the voice engines and forgets every loaded voice (their files are being deleted). */
+export function unloadNaturalVoices() {
+  restartWorker();
+  for (const language of Object.keys(naturalState.status) as Language[]) naturalState.status[language] = 'idle';
+  renderedAudio.clear();
+}

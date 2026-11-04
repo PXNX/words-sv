@@ -80,3 +80,8 @@ export async function speakVoxCPM(text: string, speaker: string, priority: Prior
   const reply = await queue.push(() => request({ type: 'speak', text, seed: voiceSeed(speaker) }, undefined, SPEAK_TIMEOUT_MS), priority);
   return { pcm: reply.pcm!, sampleRate: reply.sampleRate! };
 }
+
+/** Stops the engine and forgets the loaded model (its files are being deleted). */
+export function unloadVoxCPM() {
+  restart();
+}

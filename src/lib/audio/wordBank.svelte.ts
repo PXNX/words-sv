@@ -196,3 +196,12 @@ function clipToStored(clip: NaturalClip): StoredWordAudio {
 	const { samples, sampleRate, playbackRate, volume } = pcmFromClip(clip);
 	return { samples, sampleRate, playbackRate, volume, savedAt: 0 };
 }
+
+/** Forgets which words were rendered (their stored audio was just deleted in the settings). */
+export function forgetWordAudio() {
+	cancelWordBank();
+	known.clear();
+	memory.clear();
+	knownSignature = '';
+	for (const key of Object.keys(wordBankState.done)) wordBankState.done[key] = 0;
+}

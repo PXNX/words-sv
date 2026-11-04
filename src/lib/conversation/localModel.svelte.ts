@@ -78,7 +78,10 @@ export async function checkLocalModel(): Promise<void> {
     localModel.status = 'unsupported';
     return;
   }
-  localModel.cached = await request({ type: 'cached', model: modelId }).then((reply) => Boolean(reply.cached), () => false);
+  // Without WebLLM's cache nothing can be downloaded yet: answer without fetching the 6 MB worker,
+  // which matters on a slow connection (the settings ask this every time they open).
+  const anyCache = typeof caches !== 'undefined' && (await caches.has('webllm/model').catch(() => false));
+  localModel.cached = anyCache && (await request({ type: 'cached', model: modelId }).then((reply) => Boolean(reply.cached), () => false));
   if (localModel.status === 'checking') localModel.status = 'idle';
 }
 
@@ -133,4 +136,17 @@ export async function generateReply(messages: ChatMessage[], onText: (text: stri
 /** Stops a reply that is still being generated. */
 export function interruptReply() {
   if (worker && localModel.status === 'ready') void request({ type: 'interrupt' }).catch(() => undefined);
+}
+
+/** Stops the model and marks it as not downloaded (its files are being deleted). */
+export function unloadLocalModel() {
+  worker?.terminate();
+  worker = null;
+  for (const answer of listeners.values()) answer({ id: -1, type: 'error', message: 'unloaded' });
+  listeners.clear();
+  loading = null;
+  localModel.status = 'idle';
+  localModel.cached = false;
+  localModel.progress = 0;
+  localModel.bytesPerSecond = 0;
 }
