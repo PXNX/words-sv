@@ -27,6 +27,11 @@ const pages = routes
 // ~20 MB ONNX runtime) are left out: most learners never pick them, and their models need a network
 // connection for the first download anyway. They are fetched when first used.
 const ON_DEMAND = [/\/(llm|supertonic|voxcpm)\.worker-[^/]+\.js$/, /\/workers\/assets\/ort-[^/]+\.wasm$/];
+// Kept across versions (hashed names), and pruned on activation to what this build still uses.
+const ON_DEMAND_CACHE = 'wordcircle-on-demand';
+const onDemandPaths = new Set(immutable.map(({ path }) => pathnameOf(path)).filter((path) => ON_DEMAND.some((pattern) => pattern.test(path))));
+// How long a navigation waits for the network before showing the cached page.
+const NAVIGATION_TIMEOUT_MS = 3500;
 const precached = new Set([...immutable, ...assets].map(({ path }) => pathnameOf(path)).filter((path) => !ON_DEMAND.some((pattern) => pattern.test(path))));
 
 self.addEventListener('install', (event) => {
@@ -51,7 +56,10 @@ self.addEventListener('activate', (event) => {
 	event.waitUntil(
 		(async () => {
 			// Only old builds go; the natural story voices (static/voices/piper-worker.js) keep their own cache.
-			for (const key of await caches.keys()) if (key.startsWith('wordcircle-') && key !== CACHE) await caches.delete(key);
+			for (const key of await caches.keys()) if (key.startsWith('wordcircle-') && key !== CACHE && key !== ON_DEMAND_CACHE) await caches.delete(key);
+			// On-demand files survive updates, but only the ones this build still references.
+			const onDemand = await caches.open(ON_DEMAND_CACHE);
+			for (const request of await onDemand.keys()) if (!onDemandPaths.has(new URL(request.url).pathname)) await onDemand.delete(request);
 			await self.clients.claim();
 		})()
 	);
@@ -72,20 +80,35 @@ self.addEventListener('fetch', (event) => {
 			//
 			// Navigations are different: they must show the latest deployment even while the previous
 			// worker is still active. The HTML is therefore fetched from the network first and only falls
-			// back to this build's cached page (or the app shell) when offline. Newer HTML references
+			// back to this build's cached page (or the app shell) when offline or too slow. Newer HTML references
 			// hashed assets that are not in this build's cache, so those are fetched normally as well.
 			if (request.mode === 'navigate') {
-				try {
-					return await fetch(request);
-				} catch (error) {
-					const fallback = await cache.match(pageKey(url.pathname)) ?? await cache.match(SHELL);
-					if (fallback) return fallback;
-					throw error;
-				}
+				// A bad connection is worse than none: it can hang for half a minute. After a few seconds
+				// the cached page is shown, and the network answer still refreshes the cache for next time.
+				const cached = await cache.match(pageKey(url.pathname)) ?? await cache.match(SHELL);
+				const network = fetch(request).then((response) => {
+					if (response.ok) void cache.put(pageKey(url.pathname), response.clone()).catch(() => undefined);
+					return response;
+				});
+				if (!cached) return network;
+				return Promise.race([
+					network.catch(() => cached),
+					new Promise<Response>((resolve) => setTimeout(() => resolve(cached), NAVIGATION_TIMEOUT_MS))
+				]);
 			}
 			if (precached.has(url.pathname)) {
 				const cached = await cache.match(url.pathname);
 				if (cached) return cached;
+			}
+			// Files fetched on demand (model workers, the ONNX runtime) are hashed and never change:
+			// once fetched they are kept in their own cache, so they open offline afterwards too.
+			if (ON_DEMAND.some((pattern) => pattern.test(url.pathname))) {
+				const onDemand = await caches.open(ON_DEMAND_CACHE);
+				const kept = await onDemand.match(url.pathname);
+				if (kept) return kept;
+				const response = await fetch(request);
+				if (response.ok) void onDemand.put(url.pathname, response.clone()).catch(() => undefined);
+				return response;
 			}
 			try {
 				return await fetch(request);
