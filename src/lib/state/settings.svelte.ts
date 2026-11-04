@@ -151,7 +151,7 @@ class SettingsStore {
   }
   // Which voices rendered clips belong to, so caches never mix one engine's audio with another's.
   get clipVoiceKey() {
-    return this.voiceQuality === 'edge' || this.voiceQuality === 'supertonic' ? this.voiceQuality : this.naturalModel;
+    return this.voiceQuality === 'edge' || this.voiceQuality === 'supertonic' || this.voiceQuality === 'voxcpm' ? this.voiceQuality : this.naturalModel;
   }
   setVoiceQuality(next: VoiceQuality) {
     this.voiceQuality = next;

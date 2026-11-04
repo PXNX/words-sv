@@ -74,7 +74,7 @@ async function loadKnown(language: Language) {
 		// stays, so switching voices back and forth to compare them doesn't throw work away.
 		const stale = keys.filter((key) => {
 			const [model, entryLanguage] = key.split('|');
-			return entryLanguage === language && model !== 'edge' && model !== 'supertonic' && model !== settings.naturalModel;
+			return entryLanguage === language && model !== 'edge' && model !== 'supertonic' && model !== 'voxcpm' && model !== settings.naturalModel;
 		});
 		if (stale.length) await deleteWordAudio(stale);
 	})();

@@ -8,14 +8,16 @@
  *   natural    – Piper neural voices, generated on the device in static/voices/piper-worker.js.
  *   recorded   – pre-recorded Piper clips for the cast's reference lines, live Piper for the rest.
  *   supertonic – Supertonic 2 (Supertone), generated on the device in voice/supertonic.worker.ts.
+ *   voxcpm     – VoxCPM2 (OpenBMB), generated on the device in voice/voxcpm.worker.ts. Experimental:
+ *                WebGPU only, ~1.6 GB, slow on phones.
  *   edge       – Microsoft's Edge neural voices over the network (the only engine that is not local).
  *
- * Not wired in: voice/omnivoice.ts, voice/voxcpm.ts and voice/neutts.ts are sketches without a
- * working inference loop (see their headers); they stay out of the registry until they produce speech.
+ * Not wired in: OmniVoice (its browser weights are CC-BY-NC, non-commercial) and NeuTTS Air (no
+ * browser runtime; GGUF only). See docs/voice-engines.md.
  */
 import type { Language } from '#lib/data/vocabulary.js';
 
-export type VoiceEngineId = 'standard' | 'natural' | 'recorded' | 'supertonic' | 'edge';
+export type VoiceEngineId = 'standard' | 'natural' | 'recorded' | 'supertonic' | 'voxcpm' | 'edge';
 
 export type VoiceEngine = {
   id: VoiceEngineId;
@@ -28,6 +30,8 @@ export type VoiceEngine = {
   fallback: VoiceEngineId;
   // Rough one-time download, for the settings hint (Piper's depends on the language, see naturalMegabytes).
   megabytes?: number;
+  // Needs WebGPU; without it the fallback speaks instead.
+  webgpu?: boolean;
 };
 
 export const voiceEngines: Record<VoiceEngineId, VoiceEngine> = {
@@ -35,6 +39,7 @@ export const voiceEngines: Record<VoiceEngineId, VoiceEngine> = {
   natural: { id: 'natural', onDevice: true, clips: true, languages: 'all', fallback: 'standard' },
   recorded: { id: 'recorded', onDevice: true, clips: true, languages: 'all', fallback: 'natural' },
   supertonic: { id: 'supertonic', onDevice: true, clips: true, languages: ['en', 'es', 'pt', 'fr'], fallback: 'natural', megabytes: 260 },
+  voxcpm: { id: 'voxcpm', onDevice: true, clips: true, languages: 'all', fallback: 'natural', megabytes: 1600, webgpu: true },
   edge: { id: 'edge', onDevice: false, clips: true, languages: 'all', fallback: 'natural' }
 };
 export const voiceEngineIds = Object.keys(voiceEngines) as VoiceEngineId[];
@@ -44,10 +49,20 @@ export function speaksLanguage(engine: VoiceEngineId, language: Language): boole
   return languages === 'all' || languages.includes(language);
 }
 
-/** The engine that actually speaks `language` when `chosen` is selected. */
-export function engineFor(chosen: VoiceEngineId, language: Language): VoiceEngineId {
+export type DeviceAbilities = { webgpu: boolean };
+
+export function deviceAbilities(): DeviceAbilities {
+  return { webgpu: typeof navigator !== 'undefined' && 'gpu' in navigator };
+}
+
+function usable(engine: VoiceEngineId, language: Language, device: DeviceAbilities) {
+  return speaksLanguage(engine, language) && (!voiceEngines[engine].webgpu || device.webgpu);
+}
+
+/** The engine that actually speaks `language` when `chosen` is selected, on this device. */
+export function engineFor(chosen: VoiceEngineId, language: Language, device: DeviceAbilities = deviceAbilities()): VoiceEngineId {
   let engine = chosen;
-  // Fallbacks form a short chain that ends at an engine speaking every language.
-  for (let hops = 0; hops < voiceEngineIds.length && !speaksLanguage(engine, language); hops += 1) engine = voiceEngines[engine].fallback;
+  // Fallbacks form a short chain that ends at an engine every device can run in every language.
+  for (let hops = 0; hops < voiceEngineIds.length && !usable(engine, language, device); hops += 1) engine = voiceEngines[engine].fallback;
   return engine;
 }
