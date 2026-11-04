@@ -1,3 +1,4 @@
+process.chdir(require('path').join(__dirname, '..', '..'));
 const fs = require('fs');
 const filePath = process.argv[2];
 let content = fs.readFileSync(filePath, 'utf8');

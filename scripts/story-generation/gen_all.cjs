@@ -1,3 +1,4 @@
+process.chdir(require('path').join(__dirname, '..', '..'));
 const fs = require('fs');
 const unused = require('./unused_words.json');
 
@@ -34,7 +35,7 @@ function makeSnippet(level, count=5) {
     if(i<count-1) out += ',\n';
     else out += '\n';
   });
-  fs.writeFileSync(`snippet_${level}.txt`, out);
+  fs.writeFileSync(require('path').join(__dirname, `snippet_${level}.txt`), out);
   console.log(`${level}: ${count} stories, words used per story ~${stories[0].beats.length*2}`);
 }
 

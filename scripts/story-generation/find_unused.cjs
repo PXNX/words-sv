@@ -1,3 +1,4 @@
+process.chdir(require('path').join(__dirname, '..', '..'));
 const fs = require('fs');
 const content = fs.readFileSync('src/lib/story/germanStories.ts', 'utf8');
 const vocabDir = 'src/lib/data';

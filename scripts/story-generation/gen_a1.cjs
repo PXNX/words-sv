@@ -1,3 +1,4 @@
+process.chdir(require('path').join(__dirname, '..', '..'));
 const fs = require('fs');
 const unused = require('./unused_words.json');
 const words = unused.a1;

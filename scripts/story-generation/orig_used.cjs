@@ -1,5 +1,6 @@
+process.chdir(require('path').join(__dirname, '..', '..'));
 const fs = require('fs');
-const original = fs.readFileSync('original_germanStories.ts', 'utf8');
+const original = fs.readFileSync(require('path').join(__dirname, 'original_germanStories.ts'), 'utf8');
 const levels = ['a1','a2','b1','b2','c1','c2'];
 const vocabDir = 'src/lib/data';
 
