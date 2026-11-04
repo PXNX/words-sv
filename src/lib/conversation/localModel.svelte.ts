@@ -1,6 +1,7 @@
 import type { ChatMessage } from './conversation.js';
 import type { WorkerReply, WorkerRequest } from './llm.worker.js';
 import { runJob } from '#lib/audio/backgroundJobs.svelte.js';
+import { createSpeedMeter } from '#lib/offline/downloadSpeed.js';
 
 /*
  * The conversation partner's brain: a small multilingual chat model that runs entirely on the
@@ -16,9 +17,11 @@ const MODEL_F32 = 'Qwen2.5-1.5B-Instruct-q4f32_1-MLC';
 export const MODEL_MEGABYTES = 900;
 
 type Status = 'idle' | 'checking' | 'unsupported' | 'loading' | 'ready' | 'failed';
-export const localModel = $state<{ status: Status; progress: number; text: string; cached: boolean }>({
-  status: 'idle', progress: 0, text: '', cached: false
+// `bytesPerSecond` is the current download speed, measured from WebLLM's "… MB fetched" reports.
+export const localModel = $state<{ status: Status; progress: number; text: string; cached: boolean; bytesPerSecond: number }>({
+  status: 'idle', progress: 0, text: '', cached: false, bytesPerSecond: 0
 });
+const speed = createSpeedMeter();
 
 type Listener = (reply: WorkerReply) => void;
 let worker: Worker | null = null;
@@ -98,6 +101,9 @@ export function loadLocalModel(): Promise<void> {
         if (reply.type !== 'progress') return;
         localModel.progress = reply.progress;
         localModel.text = reply.text;
+        // WebLLM reports "123MB fetched" (MiB) while downloading, "MB loaded" when reading its cache.
+        const fetched = /(\d+)MB fetched/.exec(reply.text);
+        if (fetched) localModel.bytesPerSecond = speed.sample(Number(fetched[1]) * 1024 * 1024);
         control.progress({ done: Math.round(reply.progress * 100), total: 100 });
       }));
       localModel.status = 'ready';
