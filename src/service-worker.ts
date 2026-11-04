@@ -23,10 +23,10 @@ const pages = routes
 	.filter((route) => route.page && !route.id.includes('['))
 	.map((route) => pageKey(route.id.replace(/\/\([^)]+\)/g, '') || SHELL))
 	.filter((page) => page !== SHELL);
-// The on-device model engines (WebLLM for the conversation partner, ~6 MB; Supertonic with its
+// The on-device model engines (WebLLM for the conversation partner, ~6 MB; Supertonic and VoxCPM with their
 // ~20 MB ONNX runtime) are left out: most learners never pick them, and their models need a network
 // connection for the first download anyway. They are fetched when first used.
-const ON_DEMAND = [/\/(llm|supertonic)\.worker-[^/]+\.js$/, /\/workers\/assets\/ort-[^/]+\.wasm$/];
+const ON_DEMAND = [/\/(llm|supertonic|voxcpm)\.worker-[^/]+\.js$/, /\/workers\/assets\/ort-[^/]+\.wasm$/];
 const precached = new Set([...immutable, ...assets].map(({ path }) => pathnameOf(path)).filter((path) => !ON_DEMAND.some((pattern) => pattern.test(path))));
 
 self.addEventListener('install', (event) => {

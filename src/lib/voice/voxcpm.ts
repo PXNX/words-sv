@@ -1,81 +1,82 @@
 /*
- * VoxCPM2 (OpenBMB) — tokenizer-free TTS, 2B parameters, 30 languages, 48 kHz output.
- *
- * Runs entirely in the browser via WebGPU (or WebAssembly fallback). The model is a
- * MiniCPM-4 backbone driving a diffusion autoregressive architecture: it writes continuous audio
- * latents, four frames at a time, with no audio tokens. Voice design is done through a natural
- * language description, so the story cast gets a voice from a prompt like "warm older woman"
- * rather than a fixed speaker ID.
- *
- * The ONNX export (danyalmalik/VoxCPM2-ONNX-WebGPU on Hugging Face) splits the model into six
- * graphs — text embed, base LM, residual LM, bridge, feature encoder, DiT step and VAE decoder —
- * all quantized to 4-bit. The full stack is about 3 GB, cached in IndexedDB after the first
- * download. It is free and open (Apache 2.0), but a sentence takes a moment to synthesize.
+ * VoxCPM2 (OpenBMB) — 2B-parameter text-to-speech for 30 languages at 48 kHz, run on the learner's
+ * device in voxcpm.worker.ts (WebGPU only). Experimental: ~1.6 GB download, slow on phones, and
+ * the model picks its own voice, which the worker keeps steadier with a per-character noise seed.
+ * naturalVoices.svelte.ts uses it when the settings pick "VoxCPM" (see engines.ts).
  */
-const MODEL_BASE = 'https://huggingface.co/danyalmalik/VoxCPM2-ONNX-WebGPU/resolve/main/onnx';
-const VOICES = ['zh', 'en', 'ja', 'ko', 'de', 'fr', 'es', 'it', 'pt', 'ru', 'ar', 'hi', 'bn', 'ta', 'te', 'ml', 'fa', 'tr', 'nl', 'pl', 'sv', 'uk', 'cs', 'el', 'he', 'id', 'th', 'vi', 'ms', 'ca'];
+import { createPriorityQueue, type Priority } from '#lib/audio/priorityQueue.js';
+import type { VoxReply, VoxRequest } from './voxcpm.worker.js';
 
-let ready = false;
-let session: any = null;
+const SPEAK_TIMEOUT_MS = 180_000;
+
+let worker: Worker | null = null;
+let nextId = 0;
+const pending = new Map<number, (reply: VoxReply) => void>();
+const queue = createPriorityQueue();
+let loading: Promise<void> | null = null;
+let loaded = false;
+
+function ensureWorker() {
+  worker ??= (() => {
+    const created = new Worker(new URL('./voxcpm.worker.ts', import.meta.url), { type: 'module' });
+    created.addEventListener('message', ({ data }: MessageEvent<VoxReply>) => pending.get(data.id)?.(data));
+    return created;
+  })();
+  return worker;
+}
+
+function restart() {
+  worker?.terminate();
+  worker = null;
+  loaded = false;
+  for (const answer of pending.values()) answer({ id: -1, type: 'error', message: 'restarted' });
+  pending.clear();
+  queue.clear('restarted');
+}
+
+type Request = VoxRequest extends infer R ? R extends { id: number } ? Omit<R, 'id'> : never : never;
+function request(message: Request, onProgress?: (loaded: number, total: number) => void, timeoutMs = 0) {
+  const id = ++nextId;
+  return new Promise<VoxReply & { type: 'done' }>((resolve, reject) => {
+    const timer = timeoutMs ? setTimeout(restart, timeoutMs) : 0;
+    pending.set(id, (reply) => {
+      if (reply.type === 'progress') return onProgress?.(reply.loaded, reply.total);
+      clearTimeout(timer);
+      pending.delete(id);
+      if (reply.type === 'error') reject(new Error(reply.message));
+      else resolve(reply);
+    });
+    ensureWorker().postMessage({ id, ...message });
+  });
+}
 
 export function voxcpmSupported() {
-  return typeof window !== 'undefined' && 'WebGPU' in window;
+  return typeof navigator !== 'undefined' && 'gpu' in navigator && typeof Worker !== 'undefined';
 }
 
-export async function prepareVoxCPM(): Promise<void> {
-  if (ready) return;
-  const { InferenceSession } = await import('https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/ort.min.js');
-  const [textEmbed, baseLm, residualLm, bridge, featEncoder, ditStep, vaeDecoder] = await Promise.all(
-    ['text_embed_q4', 'base_lm_q4', 'residual_lm_q4', 'bridge_q4', 'feat_encoder_q4', 'dit_step_q4', 'vae_decoder_q4c8']
-      .map((name) => InferenceSession.create(`${MODEL_BASE}/${name}.onnx`, { executionProviders: ['webgpu'] }))
-  );
-  session = { textEmbed, baseLm, residualLm, bridge, featEncoder, ditStep, vaeDecoder };
-  ready = true;
+export function voxcpmReady() {
+  return loaded;
 }
 
-export async function speakVoxCPM(text: string, voice: string): Promise<{ blob: Blob; duration: number }> {
-  if (!session) await prepareVoxCPM();
-  // The full generation loop: tokenize, run the base LM, iterate diffusion steps, decode the
-  // latent through the VAE. This is a faithful port of the reference inference loop.
-  const s = session!;
-  const ids = new BigInt64Array([BigInt(101)]); // audio start token
-  const textEmbeds = await s.textEmbed.run({ ids });
-  const raw = await s.baseLm.run({ inputs_embeds: textEmbeds.embeds });
-  const bridgeOut = await s.bridge.run({ hidden: raw.hidden, feat_embed: raw.hidden, audio_mask: new Float32Array([0]) });
-  const resOut = await s.residualLm.run({ inputs_embeds: bridgeOut.residual_input });
-  // Diffusion loop — 10 timesteps, CFG 2.0
-  const patches: Float32Array[] = [];
-  let prev = new Float32Array(64 * 4);
-  for (let i = 0; i < 10; i++) {
-    const x = new Float32Array(64 * 4);
-    for (let j = 0; j < x.length; j++) x[j] = Math.random();
-    const t = new Float32Array([1 - i / 10]);
-    const step = await s.ditStep.run({ x, lm_hidden: resOut.hidden, residual_hidden: resOut.hidden, cond: prev, t, cfg_value: new Float32Array([2.0]) });
-    patches.push(step.v);
-    prev = step.v;
-  }
-  const latent = new Float32Array(64 * 4 * patches.length);
-  patches.forEach((p, i) => latent.set(p, i * 64 * 4));
-  const audio = await s.vaeDecoder.run({ latents: latent });
-  // Encode to MP3
-  const blob = await encodeBlob(audio.audio, 48000);
-  return { blob, duration: 0 };
+/** Downloads (resumably, once) and loads the graphs; `onProgress` gets bytes loaded and total. */
+export function prepareVoxCPM(onProgress?: (loaded: number, total: number) => void): Promise<void> {
+  if (loaded) return Promise.resolve();
+  loading ??= request({ type: 'load' }, onProgress)
+    .then(() => { loaded = true; })
+    .finally(() => { loading = null; });
+  return loading;
 }
 
-async function encodeBlob(pcm: Float32Array, sampleRate: number): Promise<Blob> {
-  const { lamejs } = await import('https://cdn.jsdelivr.net/npm/lamejs@1.2.1/src/js/lame.js');
-  const encoder = new lamejs.LameEncoder('mp3', 1, sampleRate, 128);
-  const mp3Chunks: BlobPart[] = [];
-  const chunkSize = 1152;
-  for (let i = 0; i < pcm.length; i += chunkSize) {
-    const chunk = pcm.subarray(i, i + chunkSize);
-    const mp3 = encoder.encodeBuffer(chunk);
-    if (mp3.length) mp3Chunks.push(mp3);
-  }
-  mp3Chunks.push(encoder.flush());
-  return new Blob(mp3Chunks, { type: 'audio/mpeg' });
+/** A stable number for a speaker, so each character keeps drawing the same noise. */
+export function voiceSeed(name: string) {
+  let hash = 2166136261;
+  for (const char of name) hash = Math.imul(hash ^ char.charCodeAt(0), 16777619);
+  return hash >>> 0;
 }
 
-export function voxcpmVoices() {
-  return VOICES;
+/** Speaks `text`; resolves with mono PCM at 48 kHz. */
+export async function speakVoxCPM(text: string, speaker: string, priority: Priority = 'foreground') {
+  await prepareVoxCPM();
+  const reply = await queue.push(() => request({ type: 'speak', text, seed: voiceSeed(speaker) }, undefined, SPEAK_TIMEOUT_MS), priority);
+  return { pcm: reply.pcm!, sampleRate: reply.sampleRate! };
 }

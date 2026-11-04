@@ -4,10 +4,15 @@ import { createPriorityQueue } from '../src/lib/audio/priorityQueue.js';
 
 describe('voice engines', () => {
   it('falls back to Piper where Supertonic cannot speak the language', () => {
-    expect(engineFor('supertonic', 'fr')).toBe('supertonic');
+    expect(engineFor('supertonic', 'fr', { webgpu: false })).toBe('supertonic');
     expect(engineFor('supertonic', 'de')).toBe('natural');
     expect(engineFor('natural', 'uk')).toBe('natural');
     expect(speaksLanguage('supertonic', 'it')).toBe(false);
+  });
+
+  it('uses VoxCPM only where WebGPU is available', () => {
+    expect(engineFor('voxcpm', 'de', { webgpu: true })).toBe('voxcpm');
+    expect(engineFor('voxcpm', 'de', { webgpu: false })).toBe('natural');
   });
 
   it('marks only Edge as leaving the device', () => {
