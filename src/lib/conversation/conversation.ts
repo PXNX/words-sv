@@ -37,12 +37,33 @@ export function pickTargetWords(pool: readonly string[], count = TARGET_WORD_COU
   return unique.slice(0, count);
 }
 
-export function systemPrompt(language: Language, level: VocabularyLevel, targetWords: readonly string[], learnerName = ''): string {
+/** Who the model plays (see partners.ts); optional, so the prompt also works without a character. */
+export type PromptPartner = { name: string; background: string; storyTitle: string; memory: readonly string[] };
+
+export type PromptSetup = {
+  language: Language;
+  level: VocabularyLevel;
+  // The round's words, which the learner should hear and use.
+  targetWords: readonly string[];
+  // A sample of the level's word list: the vocabulary the model should prefer in general.
+  levelWords?: readonly string[];
+  learnerName?: string;
+  partner?: PromptPartner | null;
+};
+
+export const LEVEL_WORD_SAMPLE = 40;
+
+export function systemPrompt({ language, level, targetWords, levelWords = [], learnerName = '', partner = null }: PromptSetup): string {
   const name = languageNames[language];
   return [
-    `You are a friendly conversation partner helping someone practise ${name}. Speak only ${name}, never any other language.`,
+    partner
+      ? `You are ${partner.name}, ${partner.background}. Stay in character and talk like this person would, warmly and with a little humour. You are chatting with someone who is practising ${name}.`
+      : `You are a friendly conversation partner helping someone practise ${name}.`,
+    `Speak only ${name}, never any other language.`,
     levelStyle[level],
+    partner && partner.memory.length ? `You both remember this moment from the story "${partner.storyTitle}": ${partner.memory.join(' ')} You may bring it up.` : '',
     `This conversation practises these words: ${targetWords.join(', ')}. Build the topic around them and use one or two of them naturally in each reply, so the learner hears them and gets chances to use them too.`,
+    levelWords.length ? `Otherwise prefer simple, common words like these from the learner's level: ${levelWords.join(', ')}. Avoid rare or advanced words.` : '',
     'Reply with one to three sentences and end with a question that keeps the conversation going.',
     'If the learner made a mistake, first repeat their sentence correctly in a few words, then continue. Do not explain grammar.',
     'This is a spoken conversation: no lists, no emojis, no markdown, no translations.',
@@ -52,16 +73,16 @@ export function systemPrompt(language: Language, level: VocabularyLevel, targetW
 
 // Asks the model for the very first line. It is not part of the transcript.
 export function openingRequest(language: Language): string {
-  return `Start the conversation in ${languageNames[language]}: greet me briefly and ask me a first question about one of the words.`;
+  return `Start the conversation in ${languageNames[language]}: greet me briefly, in character, and ask me a first question about one of the words.`;
 }
 
 /** The messages to send for the partner's next reply. */
-export function chatMessages(language: Language, level: VocabularyLevel, targetWords: readonly string[], turns: readonly Turn[], learnerName = ''): ChatMessage[] {
+export function chatMessages(setup: PromptSetup, turns: readonly Turn[]): ChatMessage[] {
   const recent = turns.slice(-HISTORY_TURNS);
-  const messages: ChatMessage[] = [{ role: 'system', content: systemPrompt(language, level, targetWords, learnerName) }];
+  const messages: ChatMessage[] = [{ role: 'system', content: systemPrompt(setup) }];
   // Chat models expect the user to speak first; when the history starts with the partner (or was
   // cut so it does), the hidden opening request stands in front of it.
-  if (recent[0]?.speaker !== 'learner') messages.push({ role: 'user', content: openingRequest(language) });
+  if (recent[0]?.speaker !== 'learner') messages.push({ role: 'user', content: openingRequest(setup.language) });
   for (const turn of recent) messages.push({ role: turn.speaker === 'learner' ? 'user' : 'assistant', content: turn.text });
   return messages;
 }

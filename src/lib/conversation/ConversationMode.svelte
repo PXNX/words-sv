@@ -1,21 +1,35 @@
+<!--
+  The conversation mode: the learner talks out loud with a member of the story cast, met in one of
+  their stories, while an on-device model (localModel.svelte.ts) plays the character. Every round
+  brings someone new and five words of the learner's level (from the settings) to use. Speech in
+  is the browser's recogniser (on the device where it can), speech out the voices chosen in the
+  settings (naturalVoices.svelte.ts), and every line can be heard again from the transcript.
+-->
 <script lang="ts">
-  import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { onMount, tick } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { loadLevel, vocabularyLevels, wordMetadata, type VocabularyLevel } from '#lib/data/vocabulary.js';
+  import { loadLevel, wordMetadata } from '#lib/data/vocabulary.js';
   import { pronounceable } from '#lib/story/speech.js';
   import { naturalReady, naturalSupported, playNatural, prepareNatural, synthesizeNatural } from '#lib/story/naturalVoices.svelte.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
+  import StoryScene from '#lib/story/StoryScene.svelte';
+  import type { Mood } from '#lib/story/stories.js';
+  import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
+  import { haptic } from '#lib/haptics.js';
+  import { formatSpeed } from '#lib/offline/downloadSpeed.js';
   import { voiceEngines } from '#lib/voice/engines.js';
-  import { chatMessages, cleanReply, pickTargetWords, usedWords, type Turn } from './conversation.js';
+  import { chatMessages, cleanReply, LEVEL_WORD_SAMPLE, pickTargetWords, usedWords, type Turn } from './conversation.js';
+  import { pickPartner, type Partner } from './partners.js';
   import { checkLocalModel, generateReply, interruptReply, loadLocalModel, localModel, MODEL_MEGABYTES } from './localModel.svelte.js';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconMic from '~icons/material-symbols/mic-rounded';
   import IconStop from '~icons/material-symbols/stop-rounded';
   import IconSend from '~icons/material-symbols/send-rounded';
-  import IconRefresh from '~icons/material-symbols/refresh-rounded';
-  import IconCheck from '~icons/material-symbols/check-rounded';
+  import IconCasino from '~icons/material-symbols/casino-rounded';
+  import IconKeyboard from '~icons/material-symbols/keyboard-rounded';
+  import IconHandsFree from '~icons/material-symbols/all-inclusive-rounded';
+  import IconStar from '~icons/material-symbols/star-rounded';
   import IconLock from '~icons/material-symbols/lock-rounded';
 
   type RecognitionResult = ArrayLike<{ transcript: string }> & { isFinal: boolean };
@@ -44,38 +58,44 @@
     title: m.conversation_title({}, { locale }),
     intro: m.conversation_intro({}, { locale }),
     privacy: m.conversation_privacy({}, { locale }),
-    level: m.conversation_level({}, { locale }),
+    meet: m.conversation_meet({}, { locale }),
+    fromStory: (title: string) => m.conversation_from_story({ title }, { locale }),
     download: m.conversation_download({ mb: String(MODEL_MEGABYTES) }, { locale }),
     start: m.conversation_start({}, { locale }),
     loading: m.conversation_loading({}, { locale }),
     unsupported: m.conversation_unsupported({}, { locale }),
     failed: m.conversation_failed({}, { locale }),
     words: m.conversation_words({}, { locale }),
+    wordsUsed: (count: number, total: number) => m.conversation_words_used({ count: String(count), total: String(total) }, { locale }),
     listening: m.conversation_listening({}, { locale }),
-    thinking: m.conversation_thinking({}, { locale }),
-    speaking: m.conversation_speaking({}, { locale }),
+    thinking: (name: string) => m.conversation_thinking({ name }, { locale }),
+    speaking: (name: string) => m.conversation_speaking({ name }, { locale }),
     tapToTalk: m.conversation_tap_to_talk({}, { locale }),
     stop: m.conversation_stop({}, { locale }),
     typePlaceholder: m.conversation_type_placeholder({}, { locale }),
+    type: m.conversation_type({}, { locale }),
     send: m.conversation_send({}, { locale }),
     replay: m.conversation_replay({}, { locale }),
-    newRound: m.conversation_new_round({}, { locale }),
+    newPartner: m.conversation_new_partner({}, { locale }),
     handsFree: m.conversation_hands_free({}, { locale }),
     you: m.conversation_you({}, { locale }),
-    partner: m.conversation_partner({}, { locale }),
     noRecognition: m.conversation_no_recognition({}, { locale }),
     cloudRecognition: m.conversation_cloud_recognition({}, { locale })
   });
 
-  let level = $state<VocabularyLevel>(settings.vocabularyLevel);
+  let partner = $state<Partner | null>(null);
   let targetWords = $state<string[]>([]);
+  let levelWords: string[] = [];
   let turns = $state<Turn[]>([]);
   let phase = $state<Phase>('setup');
   let draftReply = $state('');
   let liveHeard = $state('');
   let typed = $state('');
+  let typing = $state(false);
   let handsFree = $state(true);
   let playingTurn = $state<number | null>(null);
+  // A short burst of joy on the partner's face when the learner uses one of the words.
+  let cheer = $state(false);
   let recognitionCtor: RecognitionCtor | null = null;
   let recognitionSupported = $state(false);
   // Chrome can recognise speech on the device; elsewhere the browser's recogniser may use a server.
@@ -89,12 +109,25 @@
   let roundToken = 0;
 
   const lang = $derived(settings.lang);
+  // Always the level from the settings: the conversation practises what the learner is learning.
+  const level = $derived(settings.vocabularyLevel);
   const used = $derived(usedWords(turns, targetWords, spellingOf, lang));
-  // Using every word of the round yourself earns the conversation reward.
-  $effect(() => {
-    if (targetWords.length > 0 && used.length === targetWords.length) unlockCosmetic('conversation');
-  });
   const loadingPercent = $derived(Math.round(localModel.progress * 100));
+  const downloadSpeed = $derived(formatSpeed(localModel.bytesPerSecond, locale));
+  const partnerMood = $derived<Mood>(cheer ? 'laughing' : phase === 'speaking' ? 'happy' : phase === 'listening' ? 'curious' : phase === 'thinking' ? 'sleepy' : 'neutral');
+
+  // Every word the learner uses gets a cheer; all of them earn the conversation reward.
+  let cheeredFor = 0;
+  $effect(() => {
+    const count = used.length;
+    if (count <= cheeredFor) { cheeredFor = count; return; }
+    cheeredFor = count;
+    cheer = true;
+    haptic('success');
+    const timer = window.setTimeout(() => (cheer = false), 1400);
+    if (targetWords.length > 0 && count === targetWords.length) unlockCosmetic('conversation');
+    return () => window.clearTimeout(timer);
+  });
 
   function spellingOf(word: string) {
     return wordMetadata[lang][word]?.spelling ?? word;
@@ -120,16 +153,17 @@
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel();
   }
 
-  /** Speaks `text`; resolves when it is over (or was stopped). */
+  /** Speaks `text` in the partner's voice; resolves when it is over (or was stopped). */
   async function speak(text: string, turnIndex: number | null, rate = 1): Promise<void> {
     stopAudio();
     const token = audioToken;
     playingTurn = turnIndex;
+    const voice = partner?.id ?? 'lilith';
     if (naturalVoiceUsable()) {
       await prepareNatural(lang);
       if (token !== audioToken) return;
       if (naturalReady(lang)) {
-        const clip = await synthesizeNatural(pronounceable(text, lang).text, 'lilith', 'neutral', ['lilith'], lang, rate).catch(() => null);
+        const clip = await synthesizeNatural(pronounceable(text, lang).text, voice, 'neutral', [voice], lang, rate).catch(() => null);
         if (token !== audioToken) return;
         if (clip) {
           const playing = playNatural(clip);
@@ -145,7 +179,7 @@
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = speechLocale();
       utterance.rate = rate * .95;
-      utterance.voice = voices.find((voice) => voice.lang.toLowerCase().startsWith(lang) && voice.localService) ?? voices.find((voice) => voice.lang.toLowerCase().startsWith(lang)) ?? null;
+      utterance.voice = voices.find((entry) => entry.lang.toLowerCase().startsWith(lang) && entry.localService) ?? voices.find((entry) => entry.lang.toLowerCase().startsWith(lang)) ?? null;
       utterance.onend = () => resolve();
       utterance.onerror = () => resolve();
       window.speechSynthesis.speak(utterance);
@@ -213,8 +247,9 @@
     draftReply = '';
     void scrollToEnd();
     let reply = '';
+    const setup = { language: lang, level, targetWords: targetWords.map(spellingOf), levelWords, learnerName: settings.firstName, partner };
     try {
-      reply = cleanReply(await generateReply(chatMessages(lang, level, targetWords.map(spellingOf), turns, settings.firstName), (text) => {
+      reply = cleanReply(await generateReply(chatMessages(setup, turns), (text) => {
         if (token === roundToken) { draftReply = cleanReply(text); void scrollToEnd(); }
       }));
     } catch (error) {
@@ -230,7 +265,7 @@
     // The learner may have interrupted the reply by tapping the mic: then they are already talking.
     if (token !== roundToken || phase !== 'speaking') return;
     phase = 'waiting';
-    if (handsFree && recognitionSupported) startListening();
+    if (handsFree && recognitionSupported && !typing) startListening();
   }
 
   async function submit(text: string) {
@@ -243,27 +278,38 @@
     await partnerTurn();
   }
 
+  // The next partner is drawn ahead of time, so the start screen can introduce them.
+  function drawPartner() {
+    partner = pickPartner(lang, level, settings.includeLowerVocabulary, settings.firstName, partner?.id ?? null) ?? partner;
+  }
+
   async function startRound() {
     roundToken += 1;
     stopListening();
     stopAudio();
     interruptReply();
+    if (!partner) drawPartner();
     await loadLocalModel();
     if (localModel.status !== 'ready') return;
     const entries = await loadLevel(lang, level);
     const pool = Object.keys(entries).map((word) => word.toLocaleUpperCase()).filter((word) => /\p{L}{3,}/u.test(word));
     targetWords = pickTargetWords(pool);
+    // A sample of the level's own word list, which the model is asked to prefer in general.
+    levelWords = pickTargetWords(pool.filter((word) => !targetWords.includes(word)), LEVEL_WORD_SAMPLE).map(spellingOf);
     turns = [];
+    cheeredFor = 0;
     await partnerTurn();
   }
 
-  function endRound() {
+  // Someone new, with new words: straight into the next conversation.
+  function newPartner() {
     roundToken += 1;
     interruptReply();
     stopListening();
     stopAudio();
     draftReply = '';
-    phase = 'setup';
+    drawPartner();
+    void startRound();
   }
 
   function speakWord(word: string) {
@@ -271,10 +317,17 @@
     void speak(spellingOf(word), null, .85);
   }
 
+  function toggleMic() {
+    if (phase === 'listening') stopListening();
+    else if (phase === 'speaking') { stopAudio(); phase = 'waiting'; startListening(); }
+    else startListening();
+  }
+
   async function detectRecognition() {
     const globalWindow = window as unknown as { SpeechRecognition?: RecognitionCtor; webkitSpeechRecognition?: RecognitionCtor };
     recognitionCtor = globalWindow.SpeechRecognition ?? globalWindow.webkitSpeechRecognition ?? null;
     recognitionSupported = Boolean(recognitionCtor);
+    typing = !recognitionSupported;
     if (!recognitionCtor?.available) return;
     const options = { langs: [speechLocale()], processLocally: true };
     try {
@@ -287,6 +340,7 @@
   }
 
   onMount(() => {
+    drawPartner();
     void checkLocalModel();
     void detectRecognition();
     const refreshVoices = () => (voices = window.speechSynthesis.getVoices());
@@ -304,123 +358,191 @@
   });
 </script>
 
-<section class="conversation" aria-label={labels.title}>
+<section class="talk" aria-label={labels.title}>
   {#if phase === 'setup'}
-    <article class="conversation-card conversation-setup">
-      <span class="conversation-avatar" aria-hidden="true"><StoryCharacter id="lilith" mood="happy" /></span>
-      <h1>{labels.title}</h1>
-      <p>{labels.intro}</p>
-      <p class="conversation-privacy"><IconLock aria-hidden="true" /> {labels.privacy}</p>
-      <label class="conversation-level">
-        <span>{labels.level}</span>
-        <select bind:value={level}>
-          {#each vocabularyLevels as option (option)}<option value={option}>{option.toUpperCase()}</option>{/each}
-        </select>
-      </label>
-      {#if localModel.status === 'unsupported'}
-        <p class="conversation-error">{labels.unsupported}</p>
-      {:else if localModel.status === 'loading'}
-        <div class="conversation-progress" role="progressbar" aria-label={labels.loading} aria-valuemin="0" aria-valuemax="100" aria-valuenow={loadingPercent}><span style:width={`${loadingPercent}%`}></span></div>
-        <p class="conversation-hint">{labels.loading} {loadingPercent}%</p>
+    <article class="talk-intro">
+      {#if partner}
+        <div class="talk-stage" aria-hidden="true">
+          <span class="talk-stage-scene"><StoryScene scene={partner.scene} /></span>
+          <span class="talk-stage-character bob"><StoryCharacter id={partner.id} mood="happy" /></span>
+        </div>
+        <p class="talk-kicker">{labels.meet}</p>
+        <h1>{partner.name}</h1>
+        <p class="talk-story">{labels.fromStory(partner.storyTitle)}</p>
       {:else}
-        {#if localModel.status === 'failed'}<p class="conversation-error">{labels.failed}</p>{/if}
-        <button type="button" class="btn-play btn-play-go" onclick={startRound} disabled={localModel.status === 'checking'}>{localModel.cached || localModel.status === 'ready' ? labels.start : labels.download}</button>
+        <h1>{labels.title}</h1>
       {/if}
-      {#if !recognitionSupported}<p class="conversation-hint">{labels.noRecognition}</p>{/if}
+      <p class="talk-text">{labels.intro}</p>
+      <span class="talk-level">Level {level.toUpperCase()}</span>
+      {#if localModel.status === 'unsupported'}
+        <p class="talk-error">{labels.unsupported}</p>
+      {:else if localModel.status === 'loading'}
+        <div class="talk-progress" role="progressbar" aria-label={labels.loading} aria-valuemin="0" aria-valuemax="100" aria-valuenow={loadingPercent}><span style:width={`${loadingPercent}%`}></span></div>
+        <p class="talk-hint">{labels.loading} {loadingPercent}%{#if downloadSpeed} · {downloadSpeed}{/if}</p>
+      {:else}
+        {#if localModel.status === 'failed'}<p class="talk-error">{labels.failed}</p>{/if}
+        <div class="talk-intro-actions">
+          <button type="button" class="btn-play btn-play-soft btn-play-round" onclick={drawPartner} aria-label={labels.newPartner} title={labels.newPartner}><IconCasino aria-hidden="true" /></button>
+          <button type="button" class="btn-play btn-play-go" onclick={startRound} disabled={localModel.status === 'checking'}>{localModel.cached || localModel.status === 'ready' ? labels.start : labels.download}</button>
+        </div>
+      {/if}
+      <p class="talk-privacy"><IconLock aria-hidden="true" /> {labels.privacy}</p>
+      {#if !recognitionSupported}<p class="talk-hint">{labels.noRecognition}</p>{/if}
     </article>
   {:else}
-    <header class="conversation-words" aria-label={labels.words}>
-      <span class="conversation-words-label">{labels.words} · {level.toUpperCase()}</span>
-      <ul>
-        {#each targetWords as word (word)}
-          <li><button type="button" class="conversation-word" class:used={used.includes(word)} onclick={() => speakWord(word)} lang={lang}>{#if used.includes(word)}<IconCheck aria-hidden="true" />{/if}{spellingOf(word)}</button></li>
-        {/each}
-      </ul>
+    <header class="talk-header">
+      {#if partner}
+        <span class="talk-header-scene" aria-hidden="true"><StoryScene scene={partner.scene} /></span>
+        <span class="talk-header-character" class:cheer aria-hidden="true"><StoryCharacter id={partner.id} mood={partnerMood} /></span>
+        <div class="talk-header-text">
+          <strong>{partner.name}</strong>
+          <span>{phase === 'thinking' ? labels.thinking(partner.name) : phase === 'speaking' ? labels.speaking(partner.name) : phase === 'listening' ? labels.listening : labels.tapToTalk}</span>
+        </div>
+      {/if}
+      <button type="button" class="btn-play btn-play-round talk-new" onclick={newPartner} aria-label={labels.newPartner} title={labels.newPartner}><IconCasino aria-hidden="true" /></button>
     </header>
 
-    <ol class="conversation-transcript" aria-live="polite">
+    <section class="talk-words" aria-label={labels.words}>
+      <div class="talk-words-head">
+        <span>{labels.words} · {level.toUpperCase()}</span>
+        <span class="talk-words-count">{labels.wordsUsed(used.length, targetWords.length)}</span>
+      </div>
+      <ul>
+        {#each targetWords as word (word)}
+          <li><button type="button" class="talk-word" class:used={used.includes(word)} onclick={() => speakWord(word)} lang={lang}>{#if used.includes(word)}<IconStar aria-hidden="true" />{/if}{spellingOf(word)}</button></li>
+        {/each}
+      </ul>
+    </section>
+
+    <ol class="talk-transcript" aria-live="polite">
       {#each turns as turn, index (index)}
-        <li class="conversation-turn" class:learner={turn.speaker === 'learner'}>
-          <span class="conversation-speaker">{turn.speaker === 'learner' ? labels.you : labels.partner}</span>
-          <div class="conversation-bubble">
+        <li class="talk-turn" class:mine={turn.speaker === 'learner'}>
+          {#if turn.speaker === 'partner' && partner}<span class="talk-face" aria-hidden="true"><StoryCharacter id={partner.id} mood="happy" still /></span>{/if}
+          <div class="talk-bubble" class:playing={playingTurn === index}>
+            <span class="talk-who">{turn.speaker === 'learner' ? labels.you : partner?.name}</span>
             <p lang={lang} dir="auto">{turn.text}</p>
-            <button type="button" class="btn-play btn-play-round btn-play-sm conversation-replay" class:btn-play-sun={playingTurn === index} onclick={() => (playingTurn === index ? stopAudio() : replay(index))} aria-label={labels.replay}><IconVolume aria-hidden="true" /></button>
           </div>
+          <button type="button" class="talk-replay" class:playing={playingTurn === index} onclick={() => (playingTurn === index ? stopAudio() : replay(index))} aria-label={labels.replay}><IconVolume aria-hidden="true" /></button>
         </li>
       {/each}
       {#if phase === 'thinking'}
-        <li class="conversation-turn"><span class="conversation-speaker">{labels.partner}</span><div class="conversation-bubble"><p lang={lang} dir="auto">{draftReply || '…'}</p></div></li>
+        <li class="talk-turn">
+          {#if partner}<span class="talk-face" aria-hidden="true"><StoryCharacter id={partner.id} mood="curious" still /></span>{/if}
+          <div class="talk-bubble"><span class="talk-who">{partner?.name}</span>{#if draftReply}<p lang={lang} dir="auto">{draftReply}</p>{:else}<p class="talk-dots" aria-hidden="true"><span></span><span></span><span></span></p>{/if}</div>
+        </li>
       {/if}
       {#if liveHeard}
-        <li class="conversation-turn learner"><span class="conversation-speaker">{labels.you}</span><div class="conversation-bubble live"><p lang={lang} dir="auto">{liveHeard}</p></div></li>
+        <li class="talk-turn mine"><div class="talk-bubble live"><span class="talk-who">{labels.you}</span><p lang={lang} dir="auto">{liveHeard}</p></div></li>
       {/if}
-      <li class="conversation-end" bind:this={transcriptEnd} aria-hidden="true"></li>
+      <li class="talk-end" bind:this={transcriptEnd} aria-hidden="true"></li>
     </ol>
 
-    <footer class="conversation-controls">
-      <p class="conversation-status" aria-live="polite">
-        {#if phase === 'thinking'}{labels.thinking}{:else if phase === 'speaking'}{labels.speaking}{:else if phase === 'listening'}<span class="listening-dot" aria-hidden="true"></span>{labels.listening}{:else if recognitionSupported}{labels.tapToTalk}{/if}
-      </p>
-      {#if recognitionSupported && !recognitionLocal}<p class="conversation-hint">{labels.cloudRecognition}</p>{/if}
-      <div class="conversation-buttons">
-        <button type="button" class="btn-play btn-play-soft btn-play-round" onclick={endRound} aria-label={labels.newRound} title={labels.newRound}><IconRefresh aria-hidden="true" /></button>
+    <footer class="talk-controls">
+      {#if recognitionSupported && !recognitionLocal}<p class="talk-hint">{labels.cloudRecognition}</p>{/if}
+      {#if typing}
+        <form class="talk-type" onsubmit={(event) => { event.preventDefault(); void submit(typed); }}>
+          <input type="text" bind:value={typed} placeholder={labels.typePlaceholder} lang={lang} autocomplete="off" disabled={phase === 'thinking'} />
+          <button type="submit" class="btn-play btn-play-round btn-play-go" disabled={!typed.trim() || phase === 'thinking'} aria-label={labels.send}><IconSend aria-hidden="true" /></button>
+        </form>
+      {/if}
+      <div class="talk-buttons">
+        <button type="button" class="talk-toggle" class:on={handsFree} aria-pressed={handsFree} onclick={() => (handsFree = !handsFree)} title={labels.handsFree}><IconHandsFree aria-hidden="true" /><span>{labels.handsFree}</span></button>
         {#if recognitionSupported}
-          <button type="button" class="btn-play conversation-mic" class:btn-play-sun={phase === 'listening'} class:btn-play-ink={phase !== 'listening'} disabled={phase === 'thinking'} onclick={() => {
-            if (phase === 'listening') stopListening();
-            else if (phase === 'speaking') { stopAudio(); phase = 'waiting'; startListening(); }
-            else startListening();
-          }} aria-label={phase === 'listening' ? labels.stop : labels.tapToTalk}>{#if phase === 'listening'}<IconStop aria-hidden="true" />{:else}<IconMic aria-hidden="true" />{/if}</button>
+          <button type="button" class="talk-mic" class:listening={phase === 'listening'} disabled={phase === 'thinking'} onclick={toggleMic} aria-label={phase === 'listening' ? labels.stop : labels.tapToTalk}>{#if phase === 'listening'}<IconStop aria-hidden="true" />{:else}<IconMic aria-hidden="true" />{/if}</button>
         {/if}
-        <label class="conversation-hands-free"><input type="checkbox" bind:checked={handsFree} /> {labels.handsFree}</label>
+        <button type="button" class="talk-toggle" class:on={typing} aria-pressed={typing} onclick={() => { typing = !typing; if (typing) stopListening(); }} title={labels.type}><IconKeyboard aria-hidden="true" /><span>{labels.type}</span></button>
       </div>
-      <form class="conversation-type" onsubmit={(event) => { event.preventDefault(); void submit(typed); }}>
-        <input type="text" bind:value={typed} placeholder={labels.typePlaceholder} lang={lang} autocomplete="off" disabled={phase === 'thinking'} />
-        <button type="submit" class="btn-play btn-play-round" disabled={!typed.trim() || phase === 'thinking'} aria-label={labels.send}><IconSend aria-hidden="true" /></button>
-      </form>
     </footer>
   {/if}
 </section>
 
 <style>
-  .conversation { flex:1;min-height:0;display:flex;flex-direction:column;gap:.75rem;padding:clamp(1rem,4vw,2rem);overflow-y:auto;background:#ede4d5; }
-  :global(html.dark) .conversation { background:#213a5d; }
-  .conversation-card { width:min(100%,28rem);margin:auto;display:grid;justify-items:center;gap:.85rem;padding:clamp(1.4rem,7vw,2.2rem);border-radius:1rem;border:1px solid var(--color-neutral);background:var(--color-neutral-content);box-shadow:0 12px 30px rgba(23,42,69,.12);text-align:center; }
-  .conversation-card h1 { margin:0;font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(1.6rem,7vw,2.2rem);line-height:1; }
-  .conversation-card p { margin:0;font-size:.85rem;line-height:1.45; }
-  .conversation-avatar { width:5rem;height:5rem;display:block; }
-  .conversation-privacy { display:flex;align-items:center;gap:.35rem;font-weight:700;opacity:.75; }
-  .conversation-level { display:flex;align-items:center;gap:.5rem;font-weight:800;font-size:.8rem; }
-  .conversation-level select { padding:.3rem .6rem;border-radius:.5rem;border:1px solid rgba(23,42,69,.3);background:transparent;font-weight:800; }
-  .conversation-error { color:#b54442;font-weight:700; }
-  .conversation-hint { font-size:.72rem !important;opacity:.7;text-align:center;margin:0; }
-  .conversation-progress { width:100%;height:.55rem;border-radius:999px;background:rgba(23,42,69,.12);overflow:hidden; }
-  .conversation-progress span { display:block;height:100%;background:#34824d;transition:width .2s ease; }
+  .talk { flex:1;min-height:0;display:flex;flex-direction:column;gap:.7rem;padding:clamp(.9rem,4vw,1.6rem);overflow-y:auto;background:linear-gradient(180deg,#f3ead9,#ede4d5);color:#172a45; }
+  :global(html.dark) .talk { background:linear-gradient(180deg,#213a5d,#172a45);color:#fffdf7; }
 
-  .conversation-words { width:min(100%,40rem);margin:0 auto;display:grid;gap:.4rem; }
-  .conversation-words-label { font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.7; }
-  .conversation-words ul { display:flex;flex-wrap:wrap;gap:.4rem;margin:0;padding:0;list-style:none; }
-  .conversation-word { display:inline-flex;align-items:center;gap:.2rem;padding:.25rem .65rem;border-radius:999px;border:1px solid rgba(23,42,69,.3);background:var(--color-neutral-content);font-weight:800;font-size:.8rem; }
-  .conversation-word.used { border-color:#34824d;background:rgba(52,130,77,.15);color:#34824d; }
+  /* Start screen: meet today's partner. */
+  .talk-intro { width:min(100%,26rem);margin:auto;display:grid;justify-items:center;gap:.6rem;padding:1.2rem 1.2rem 1.4rem;border:2px solid #172a45;border-radius:22px 16px 20px 17px / 17px 20px 16px 22px;background:#fffdf7;box-shadow:4px 4px 0 #172a45;text-align:center; }
+  :global(html.dark) .talk-intro { background:#2b4a70;border-color:#0b1626;box-shadow:4px 4px 0 #0b1626; }
+  .talk-stage { position:relative;width:100%;height:10rem;overflow:hidden;border-radius:16px; }
+  .talk-stage-scene,.talk-header-scene { position:absolute;inset:0; }
+  .talk-stage-scene :global(svg),.talk-header-scene :global(svg) { width:100%;height:100%; }
+  .talk-stage-character { position:absolute;left:50%;bottom:-.4rem;width:6.4rem;height:8rem;translate:-50% 0; }
+  .talk-stage-character :global(.story-character),.talk-header-character :global(.story-character),.talk-face :global(.story-character) { width:100%;height:100%; }
+  .bob { animation:talk-bob 2.4s ease-in-out infinite; }
+  .talk-kicker { margin:0;font-size:.62rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#a45e38; }
+  .talk-intro h1 { margin:0;font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(1.9rem,8vw,2.5rem);line-height:1; }
+  .talk-story { margin:0;font-size:.78rem;font-style:italic;opacity:.75; }
+  .talk-text { margin:0;font-size:.82rem;line-height:1.45; }
+  .talk-level { padding:.2rem .65rem;border-radius:999px;background:#172a45;color:#fffdf7;font-size:.62rem;font-weight:900;letter-spacing:.1em; }
+  :global(html.dark) .talk-level { background:#e6a527;color:#172a45; }
+  .talk-intro-actions { display:flex;align-items:center;gap:.6rem; }
+  .talk-privacy { display:flex;align-items:center;gap:.3rem;margin:0;font-size:.68rem;font-weight:800;opacity:.65; }
+  .talk-privacy :global(svg) { width:.85rem;height:.85rem; }
+  .talk-error { margin:0;color:#b54442;font-size:.8rem;font-weight:800; }
+  .talk-hint { margin:0;font-size:.7rem;font-weight:700;opacity:.7;text-align:center; }
+  .talk-progress { width:100%;height:.6rem;border-radius:999px;background:rgba(23,42,69,.12);overflow:hidden; }
+  .talk-progress span { display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#34824d,#6fcf8e);transition:width .25s ease; }
 
-  .conversation-transcript { width:min(100%,40rem);margin:0 auto;flex:1;display:flex;flex-direction:column;gap:.7rem;padding:0;list-style:none; }
-  .conversation-turn { display:grid;gap:.2rem;justify-items:start;max-width:85%; }
-  .conversation-turn.learner { align-self:flex-end;justify-items:end; }
-  .conversation-speaker { font-size:.62rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;opacity:.6; }
-  .conversation-bubble { display:flex;align-items:flex-start;gap:.5rem;padding:.6rem .75rem;border-radius:1rem 1rem 1rem .3rem;border:1px solid var(--color-neutral);background:var(--color-neutral-content);box-shadow:0 4px 12px rgba(23,42,69,.08); }
-  .learner .conversation-bubble { border-radius:1rem 1rem .3rem 1rem;background:#fbe9c4;color:#172a45; }
-  .conversation-bubble.live { opacity:.65;border-style:dashed; }
-  .conversation-bubble p { margin:0;font-size:.95rem;line-height:1.45; }
-  .conversation-replay { flex:none; }
-  .conversation-end { height:1px; }
+  /* In conversation: the partner on stage, the words to use, the transcript. */
+  .talk-header { position:relative;width:min(100%,40rem);margin:0 auto;display:flex;align-items:flex-end;gap:.7rem;min-height:6.2rem;padding:.6rem .7rem 0;overflow:hidden;border:2px solid #172a45;border-radius:18px;box-shadow:3px 3px 0 #172a45; }
+  :global(html.dark) .talk-header { border-color:#0b1626;box-shadow:3px 3px 0 #0b1626; }
+  .talk-header-character { position:relative;flex:none;width:4.6rem;height:5.8rem;transition:scale .3s cubic-bezier(.34,1.56,.64,1); }
+  .talk-header-character.cheer { scale:1.12;animation:talk-hop .5s cubic-bezier(.34,1.56,.64,1); }
+  .talk-header-text { position:relative;flex:1;min-width:0;display:grid;gap:.1rem;align-self:center;padding:.4rem .65rem;border-radius:12px;background:rgba(255,253,247,.88);color:#172a45; }
+  .talk-header-text strong { font-family:'DM Serif Display',serif;font-size:1.15rem;font-weight:400; }
+  .talk-header-text span { font-size:.7rem;font-weight:800;opacity:.75; }
+  .talk-new { position:relative;align-self:center; }
 
-  .conversation-controls { position:sticky;bottom:0;width:min(100%,40rem);margin:0 auto;display:grid;gap:.5rem;justify-items:center;padding-top:.5rem;background:inherit; }
-  .conversation-status { margin:0;min-height:1.2rem;display:flex;align-items:center;gap:.4rem;font-size:.8rem;font-weight:800; }
-  .conversation-buttons { display:flex;align-items:center;gap:.9rem; }
-  .conversation-mic { width:4rem;height:4rem;min-height:0;padding:0;border-radius:50%; }
-  .conversation-mic :global(svg) { width:1.8rem;height:1.8rem; }
-  .conversation-hands-free { display:flex;align-items:center;gap:.3rem;font-size:.72rem;font-weight:800; }
-  .conversation-type { width:100%;display:flex;gap:.5rem; }
-  .conversation-type input { flex:1;min-width:0;padding:.55rem .8rem;border-radius:999px;border:1px solid rgba(23,42,69,.3);background:var(--color-neutral-content);font-size:.9rem; }
-  .listening-dot { width:.5rem;height:.5rem;border-radius:50%;background:#4a72c9;animation:listening-pulse 1.1s ease-in-out infinite; }
-  @keyframes listening-pulse { 0%,100% { opacity:.35;scale:.8; } 50% { opacity:1;scale:1.15; } }
+  .talk-words { width:min(100%,40rem);margin:0 auto;display:grid;gap:.4rem; }
+  .talk-words-head { display:flex;justify-content:space-between;gap:.5rem;font-size:.62rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;opacity:.75; }
+  .talk-words-count { color:#34824d; }
+  .talk-words ul { display:flex;flex-wrap:wrap;gap:.4rem;margin:0;padding:0;list-style:none; }
+  .talk-word { display:inline-flex;align-items:center;gap:.2rem;padding:.3rem .7rem;border:2px dashed rgba(23,42,69,.35);border-radius:999px;background:#fffdf7;color:#172a45;font-size:.82rem;font-weight:800;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
+  .talk-word:active { transform:scale(.94); }
+  .talk-word.used { border:2px solid #34824d;background:#e3f3e7;color:#23663a;animation:talk-pop .45s cubic-bezier(.34,1.56,.64,1); }
+  .talk-word :global(svg) { width:.95rem;height:.95rem;color:#e6a527; }
+
+  .talk-transcript { width:min(100%,40rem);margin:0 auto;flex:1;display:flex;flex-direction:column;gap:.75rem;padding:0;list-style:none; }
+  .talk-turn { display:flex;align-items:flex-end;gap:.4rem;max-width:88%;animation:talk-in .3s ease-out; }
+  .talk-turn.mine { align-self:flex-end;flex-direction:row-reverse; }
+  .talk-face { flex:none;width:2.2rem;height:2.6rem;overflow:hidden; }
+  .talk-bubble { display:grid;gap:.15rem;padding:.55rem .8rem;border:2px solid #172a45;border-radius:16px 16px 16px 4px;background:#fffdf7;color:#172a45;box-shadow:2px 2px 0 #172a45;transition:background .2s ease; }
+  .mine .talk-bubble { border-radius:16px 16px 4px 16px;background:#fbe6b5; }
+  .talk-bubble.playing { background:#e3f3e7; }
+  .talk-bubble.live { opacity:.7;border-style:dashed;box-shadow:none; }
+  .talk-who { font-size:.58rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;opacity:.55; }
+  .talk-bubble p { margin:0;font-size:.95rem;line-height:1.45; }
+  .talk-replay { flex:none;display:grid;place-items:center;width:1.9rem;height:1.9rem;padding:0;border:2px solid #172a45;border-radius:50%;background:#fffdf7;color:#172a45;cursor:pointer;transition:transform .15s ease; }
+  .talk-replay:active { transform:scale(.9); }
+  .talk-replay.playing { background:#e6a527; }
+  .talk-replay :global(svg) { width:.95rem;height:.95rem; }
+  .talk-dots { display:flex;gap:.25rem;padding:.3rem 0; }
+  .talk-dots span { width:.45rem;height:.45rem;border-radius:50%;background:#172a45;opacity:.4;animation:talk-dot 1s ease-in-out infinite; }
+  .talk-dots span:nth-child(2) { animation-delay:.15s; }
+  .talk-dots span:nth-child(3) { animation-delay:.3s; }
+  .talk-end { height:1px; }
+
+  .talk-controls { position:sticky;bottom:0;width:min(100%,40rem);margin:0 auto;display:grid;gap:.55rem;justify-items:center;padding:.5rem 0 .2rem;background:inherit; }
+  .talk-buttons { display:flex;align-items:center;justify-content:center;gap:1rem; }
+  .talk-mic { position:relative;display:grid;place-items:center;width:4.4rem;height:4.4rem;padding:0;border:3px solid #172a45;border-radius:50%;background:#e6a527;color:#172a45;box-shadow:3px 3px 0 #172a45;cursor:pointer;transition:transform .15s ease,background .2s ease; }
+  .talk-mic :global(svg) { width:2rem;height:2rem; }
+  .talk-mic:active { transform:scale(.93); }
+  .talk-mic:disabled { opacity:.5;cursor:wait; }
+  .talk-mic.listening { background:#d64b45;color:#fffdf7; }
+  .talk-mic.listening::after { content:'';position:absolute;inset:-9px;border:3px solid #d64b45;border-radius:50%;animation:talk-ring 1.2s ease-out infinite; }
+  .talk-toggle { display:grid;justify-items:center;gap:.1rem;width:4rem;padding:.35rem 0;border:2px solid transparent;border-radius:14px;background:transparent;color:inherit;font-size:.56rem;font-weight:900;letter-spacing:.04em;text-transform:uppercase;opacity:.55;cursor:pointer; }
+  .talk-toggle :global(svg) { width:1.25rem;height:1.25rem; }
+  .talk-toggle.on { opacity:1;border-color:#172a45;background:#fffdf7;color:#172a45; }
+  .talk-type { width:100%;display:flex;gap:.5rem; }
+  .talk-type input { flex:1;min-width:0;padding:.6rem .9rem;border:2px solid #172a45;border-radius:999px;background:#fffdf7;color:#172a45;font-size:.92rem; }
+
+  :global(html.dark) .talk-word,:global(html.dark) .talk-bubble,:global(html.dark) .talk-replay,:global(html.dark) .talk-type input,:global(html.dark) .talk-toggle.on { border-color:#0b1626; }
+
+  @keyframes talk-bob { 0%,100% { translate:-50% 0; } 50% { translate:-50% -.35rem; } }
+  @keyframes talk-hop { 0% { translate:0 0; } 40% { translate:0 -.6rem; } 100% { translate:0 0; } }
+  @keyframes talk-pop { 0% { scale:1; } 45% { scale:1.18; } 100% { scale:1; } }
+  @keyframes talk-in { from { opacity:0;translate:0 .4rem; } to { opacity:1;translate:0 0; } }
+  @keyframes talk-dot { 0%,100% { translate:0 0;opacity:.35; } 50% { translate:0 -.25rem;opacity:.9; } }
+  @keyframes talk-ring { from { opacity:.8;scale:.9; } to { opacity:0;scale:1.35; } }
+  @media (prefers-reduced-motion:reduce) { .bob,.talk-header-character.cheer,.talk-word.used,.talk-turn,.talk-dots span,.talk-mic.listening::after { animation:none; } }
 </style>

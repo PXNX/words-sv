@@ -9,23 +9,33 @@ describe('conversation mode', () => {
   });
 
   it('tells the model the language, level and words', () => {
-    const prompt = systemPrompt('de', 'a1', ['Hund', 'Katze'], 'Felix');
+    const prompt = systemPrompt({ language: 'de', level: 'a1', targetWords: ['Hund', 'Katze'], learnerName: 'Felix' });
     expect(prompt).toContain('Speak only German');
     expect(prompt).toContain('A1');
     expect(prompt).toContain('Hund, Katze');
     expect(prompt).toContain('Felix');
   });
 
+  it('plays the partner with their background, story memory and the level vocabulary', () => {
+    const prompt = systemPrompt({
+      language: 'de', level: 'a2', targetWords: ['Kuchen'], levelWords: ['Haus', 'Brot'],
+      partner: { name: 'Oma', background: 'a warm grandmother who bakes cakes', storyTitle: 'Im Garten', memory: ['Oma ist im Garten.'] }
+    });
+    expect(prompt).toContain('You are Oma, a warm grandmother who bakes cakes');
+    expect(prompt).toContain('"Im Garten": Oma ist im Garten.');
+    expect(prompt).toContain('Haus, Brot');
+  });
+
   it('starts the history with a hidden opening request and maps speakers to roles', () => {
     const turns: Turn[] = [{ speaker: 'partner', text: 'Hallo!' }, { speaker: 'learner', text: 'Hallo.' }];
-    const messages = chatMessages('de', 'a1', ['Hund'], turns);
+    const messages = chatMessages({ language: 'de', level: 'a1', targetWords: ['Hund'] }, turns);
     expect(messages.map((message) => message.role)).toEqual(['system', 'user', 'assistant', 'user']);
-    expect(chatMessages('de', 'a1', ['Hund'], []).map((message) => message.role)).toEqual(['system', 'user']);
+    expect(chatMessages({ language: 'de', level: 'a1', targetWords: ['Hund'] }, []).map((message) => message.role)).toEqual(['system', 'user']);
   });
 
   it('keeps only the most recent turns', () => {
     const turns: Turn[] = Array.from({ length: 30 }, (_, index) => ({ speaker: index % 2 ? 'learner' : 'partner', text: `turn ${index}` }));
-    const messages = chatMessages('de', 'a1', ['Hund'], turns);
+    const messages = chatMessages({ language: 'de', level: 'a1', targetWords: ['Hund'] }, turns);
     expect(messages.filter((message) => message.role !== 'system' && message.content.startsWith('turn'))).toHaveLength(HISTORY_TURNS);
     expect(messages.at(-1)?.content).toBe('turn 29');
   });
