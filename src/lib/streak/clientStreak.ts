@@ -1,4 +1,4 @@
-import { publishReminderState, reminderLocale } from './pwaReminders.js';
+import { publishReminderState, reminderLocale } from '../pwa/pwaReminders.js';
 
 export type StreakEvent =
 	| 'sync'

@@ -3,10 +3,10 @@
   character already wearing it, with a way to the character editor on the progress page.
 -->
 <script lang="ts">
-  import { haptic } from '#lib/haptics.js';
+  import { haptic } from '#lib/feedback/haptics.js';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { playSoundEffect } from '#lib/sounds.js';
+  import { playSoundEffect } from '#lib/feedback/sounds.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import { defaultAvatar } from './avatar.js';
   import { cosmetics, cosmeticState, dismissUnlock } from './cosmetics.svelte.js';

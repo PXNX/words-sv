@@ -5,7 +5,7 @@
  */
 import type { Language, VocabularyLevel } from '#lib/data/vocabulary.js';
 import { dueReviewCount } from '#lib/review/ledger.js';
-import type { ReminderExtras } from '#lib/pwaReminders.js';
+import type { ReminderExtras } from '#lib/pwa/pwaReminders.js';
 
 const READING_PROGRESS_KEY = 'wordcircle-reading-progress-v1';
 

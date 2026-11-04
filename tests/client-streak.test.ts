@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from 'vitest';
-import type { ClientStreak } from '../src/lib/clientStreak.js';
+import type { ClientStreak } from '../src/lib/streak/clientStreak.js';
 
 const store = new Map<string, string>();
 globalThis.localStorage = {
@@ -11,7 +11,7 @@ globalThis.localStorage = {
 	length: 0
 } as Storage;
 
-const { applyLocalEvent, ALLTAG_GOAL, FREEZE_EVERY, MAX_FREEZES, rewardReady, dateKey, modeDone, previousDate, readStreak, repairCandidate, repairStreak, dismissRepair, lilithMood } = await import('../src/lib/clientStreak.js');
+const { applyLocalEvent, ALLTAG_GOAL, FREEZE_EVERY, MAX_FREEZES, rewardReady, dateKey, modeDone, previousDate, readStreak, repairCandidate, repairStreak, dismissRepair, lilithMood } = await import('../src/lib/streak/clientStreak.js');
 
 const NOW = new Date('2026-10-26T12:00:00Z');
 const TODAY = dateKey(NOW);

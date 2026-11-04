@@ -6,7 +6,7 @@ import { page } from '$app/state';
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { playErrorSound, playSuccessSound } from '#lib/sounds.js';
+  import { playErrorSound, playSuccessSound } from '#lib/feedback/sounds.js';
   import { readingCatalog } from './readingCatalog';
   import { isCorrectAnswer, readingParagraphs } from './prose';
   import {
@@ -23,7 +23,7 @@ import { page } from '$app/state';
   import { clearMissedWord, readMissedWords, recordMissedWord } from './missedWords';
   import { recordActivity } from '#lib/progress/activity.js';
   import { clearWordRepeat, markWordForRepeat } from '#lib/vocab/spacedRepetition.js';
-  import { wiktionaryUrl } from '#lib/wiktionary.js';
+  import { wiktionaryUrl } from '#lib/vocab/wiktionary.js';
   import IconMenuBook from '~icons/material-symbols/menu-book-rounded';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';

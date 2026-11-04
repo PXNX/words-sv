@@ -8,7 +8,7 @@
   import { updated } from '$app/state';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { takeOverUpdate } from '#lib/pwaUpdate.js';
+  import { takeOverUpdate } from '#lib/pwa/pwaUpdate.js';
   import IconRefresh from '~icons/material-symbols/refresh-rounded';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
 

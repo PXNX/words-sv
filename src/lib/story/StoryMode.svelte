@@ -8,9 +8,9 @@
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import type { Language } from '#lib/data/vocabulary.js';
-  import { playBing, playErrorSound, playSoundEffect, playSuccessSound, soundEffectSeconds, startCrackle, stopSoundEffects } from '#lib/sounds.js';
+  import { playBing, playErrorSound, playSoundEffect, playSuccessSound, soundEffectSeconds, startCrackle, stopSoundEffects } from '#lib/feedback/sounds.js';
   import { characterNames, fillName, moodFor, storiesFor, withDetails, withWeather, type CharacterId, type HeldItem, type Lights, type Mood, type Story, type StoryBeat } from './stories';
-  import type { SoundEffect } from '#lib/sounds.js';
+  import type { SoundEffect } from '#lib/feedback/sounds.js';
   import StoryAudioLoader from './StoryAudioLoader.svelte';
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';

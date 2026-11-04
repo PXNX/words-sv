@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { haptic } from '#lib/haptics.js';
+  import { haptic } from '#lib/feedback/haptics.js';
   import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { pwaInstall } from '#lib/pwaInstall.svelte.js';
-  import { playSuccessSound } from '#lib/sounds.js';
+  import { pwaInstall } from '#lib/pwa/pwaInstall.svelte.js';
+  import { playSuccessSound } from '#lib/feedback/sounds.js';
   import { hintableBaseWords, wordDefinitions, wordMetadata, wordPools, type Language } from '#lib/data/vocabulary.js';
-  import { wiktionaryUrl } from '#lib/wiktionary.js';
+  import { wiktionaryUrl } from '#lib/vocab/wiktionary.js';
   import {
     buildRound, cellKey, gridFromPlacements, isPlacement, placementCells, randomSeed, roundFromStoredGame, selectedPool,
     type Placement, type Round, type StoredGame

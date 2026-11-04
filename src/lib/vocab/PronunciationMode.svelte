@@ -5,11 +5,11 @@
   import { wordDefinitions, wordMetadata } from '#lib/data/vocabulary.js';
   import { transcribeToIpa } from '#lib/vocab/ipa.js';
   import { evaluateAttempt, ipaDiff, type CorrectionSegment } from '#lib/vocab/speechMatch.js';
-  import { wiktionaryUrl } from '#lib/wiktionary.js';
+  import { wiktionaryUrl } from '#lib/vocab/wiktionary.js';
   import { recordReview } from '#lib/review/ledger.js';
   import { recordActivity } from '#lib/progress/activity.js';
   import { recordMissedWord } from '#lib/story/missedWords.js';
-  import { playSuccessSound } from '#lib/sounds.js';
+  import { playSuccessSound } from '#lib/feedback/sounds.js';
   import { pronounceable } from '#lib/story/speech.js';
   import { naturalReady, naturalSupported, playNatural, prepareNatural, synthesizeNatural } from '#lib/story/naturalVoices.svelte.js';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';

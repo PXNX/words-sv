@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { haptic } from '#lib/haptics.js';
+  import { haptic } from '#lib/feedback/haptics.js';
   import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { fade } from 'svelte/transition';
   import { m } from '#lib/paraglide/messages.js';

@@ -9,7 +9,7 @@
 import { self } from '$app/service-worker';
 import { assets, immutable, routes } from '$app/manifest';
 import { version } from '$app/env';
-import { dueReminderTypes, markReminderDelivered, readReminderState, reminderNotification, wasReminderDelivered, PERIODIC_SYNC_TAG } from './lib/pwaReminders.js';
+import { dueReminderTypes, markReminderDelivered, readReminderState, reminderNotification, wasReminderDelivered, PERIODIC_SYNC_TAG } from './lib/pwa/pwaReminders.js';
 
 const CACHE = `wordcircle-${version}`;
 // The app shell: routes without a prerendered page of their own render from it.

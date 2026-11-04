@@ -1,7 +1,7 @@
 <script lang="ts">
   import { recordAnswer } from '#lib/profile/cosmetics.svelte.js';
   import { onMount, untrack } from 'svelte';
-  import { playSuccessSound, playErrorSound } from '#lib/sounds.js';
+  import { playSuccessSound, playErrorSound } from '#lib/feedback/sounds.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { spokenWord, wordPools, wordDefinitions } from '#lib/data/vocabulary.js';
   import { m } from '#lib/paraglide/messages.js';
@@ -12,7 +12,7 @@
   import WordBankLoader from '#lib/audio/WordBankLoader.svelte';
   import { cancelWordBank, hasWordAudio, playWordClip, prepareWordBank, wordBankState, wordBankStateKey } from '#lib/audio/wordBank.svelte.js';
   import { VOCABULARY_REVIEW_STORAGE_PREFIX, markWordForRepeat, updateReviewProgress } from '#lib/vocab/spacedRepetition.js';
-  import { REPAIR_WORDS } from '#lib/clientStreak.js';
+  import { REPAIR_WORDS } from '#lib/streak/clientStreak.js';
   import { dueReviewEntries, recordReview } from '#lib/review/ledger.js';
   import { page } from '$app/state';
   import IconCheck from '~icons/material-symbols/check-rounded';

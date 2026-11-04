@@ -7,7 +7,7 @@
   import { readVocabularyProgressByLanguage } from '#lib/vocab/spacedRepetition.js';
   import { readGrammarProgressByLanguage } from '#lib/grammar/learning.js';
   import { readMissedWords } from '#lib/story/missedWords.js';
-  import { GRAMMAR_GOAL, PRONUNCIATION_GOAL, REPAIR_WORDS, VOCABULARY_GOALS, lilithFace, lilithMood, modeDone, type StreakRepair } from '#lib/clientStreak.js';
+  import { GRAMMAR_GOAL, PRONUNCIATION_GOAL, REPAIR_WORDS, VOCABULARY_GOALS, lilithFace, lilithMood, modeDone, type StreakRepair } from '#lib/streak/clientStreak.js';
   import { readingTextsFor } from '#lib/story/readingTexts.js';
   import { readReviewLedger, type ReviewLedger } from '#lib/review/ledger.js';
   import { completedIds, countActivity, readActivity, type ActivityEvent } from '#lib/progress/activity.js';
