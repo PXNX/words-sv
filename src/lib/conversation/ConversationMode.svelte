@@ -21,7 +21,7 @@
   import { voiceEngines } from '#lib/voice/engines.js';
   import { chatMessages, cleanReply, LEVEL_WORD_SAMPLE, pickTargetWords, usedWords, type Turn } from './conversation.js';
   import { pickPartner, type Partner } from './partners.js';
-  import { checkLocalModel, generateReply, interruptReply, loadLocalModel, localModel, MODEL_MEGABYTES } from './localModel.svelte.js';
+  import { checkLocalModel, chosenModel, generateReply, interruptReply, loadLocalModel, localModel } from './localModel.svelte.js';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconMic from '~icons/material-symbols/mic-rounded';
   import IconStop from '~icons/material-symbols/stop-rounded';
@@ -60,7 +60,9 @@
     privacy: m.conversation_privacy({}, { locale }),
     meet: m.conversation_meet({}, { locale }),
     fromStory: (title: string) => m.conversation_from_story({ title }, { locale }),
-    download: m.conversation_download({ mb: String(MODEL_MEGABYTES) }, { locale }),
+    download: m.conversation_download({ mb: String(chosenModel().downloadMB) }, { locale }),
+    model: (name: string) => m.conversation_model({ name }, { locale }),
+    changeModel: m.conversation_change_model({}, { locale }),
     start: m.conversation_start({}, { locale }),
     loading: m.conversation_loading({}, { locale }),
     unsupported: m.conversation_unsupported({}, { locale }),
@@ -374,6 +376,7 @@
       {/if}
       <p class="talk-text">{labels.intro}</p>
       <span class="talk-level">Level {level.toUpperCase()}</span>
+      <p class="talk-model">{labels.model(chosenModel().label)} · <a href="/settings">{labels.changeModel}</a></p>
       {#if localModel.status === 'unsupported'}
         <p class="talk-error">{labels.unsupported}</p>
       {:else if localModel.status === 'loading'}
@@ -397,6 +400,7 @@
         <div class="talk-header-text">
           <strong>{partner.name}</strong>
           <span>{phase === 'thinking' ? labels.thinking(partner.name) : phase === 'speaking' ? labels.speaking(partner.name) : phase === 'listening' ? labels.listening : labels.tapToTalk}</span>
+          {#if localModel.tokensPerSecond}<span class="talk-speed" title={chosenModel().label}>{Math.round(localModel.tokensPerSecond)} tok/s</span>{/if}
         </div>
       {/if}
       <button type="button" class="btn-play btn-play-round talk-new" onclick={newPartner} aria-label={labels.newPartner} title={labels.newPartner}><IconCasino aria-hidden="true" /></button>
@@ -475,6 +479,9 @@
   .talk-text { margin:0;font-size:.82rem;line-height:1.45; }
   .talk-level { padding:.2rem .65rem;border-radius:999px;background:#172a45;color:#fffdf7;font-size:.62rem;font-weight:900;letter-spacing:.1em; }
   :global(html.dark) .talk-level { background:#e6a527;color:#172a45; }
+  .talk-model { margin:0;font-size:.68rem;font-weight:800;opacity:.7; }
+  .talk-model a { color:#a45e38;text-decoration:underline;text-underline-offset:2px; }
+  .talk-speed { font-size:.58rem !important;font-weight:900;letter-spacing:.04em;opacity:.45 !important;font-variant-numeric:tabular-nums; }
   .talk-intro-actions { display:flex;align-items:center;gap:.6rem; }
   .talk-privacy { display:flex;align-items:center;gap:.3rem;margin:0;font-size:.68rem;font-weight:800;opacity:.65; }
   .talk-privacy :global(svg) { width:.85rem;height:.85rem; }

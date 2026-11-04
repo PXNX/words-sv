@@ -32,14 +32,16 @@ export type VoiceEngine = {
   megabytes?: number;
   // Needs WebGPU; without it the fallback speaks instead.
   webgpu?: boolean;
+  // Rough memory (RAM or GPU) while loaded; Piper's scales with its download (see ModelManager).
+  memoryMB?: number;
 };
 
 export const voiceEngines: Record<VoiceEngineId, VoiceEngine> = {
   standard: { id: 'standard', onDevice: true, clips: false, languages: 'all', fallback: 'standard' },
   natural: { id: 'natural', onDevice: true, clips: true, languages: 'all', fallback: 'standard' },
   recorded: { id: 'recorded', onDevice: true, clips: true, languages: 'all', fallback: 'natural' },
-  supertonic: { id: 'supertonic', onDevice: true, clips: true, languages: ['en', 'es', 'pt', 'fr'], fallback: 'natural', megabytes: 260 },
-  voxcpm: { id: 'voxcpm', onDevice: true, clips: true, languages: 'all', fallback: 'natural', megabytes: 1600, webgpu: true },
+  supertonic: { id: 'supertonic', onDevice: true, clips: true, languages: ['en', 'es', 'pt', 'fr'], fallback: 'natural', megabytes: 260, memoryMB: 450 },
+  voxcpm: { id: 'voxcpm', onDevice: true, clips: true, languages: 'all', fallback: 'natural', megabytes: 1600, webgpu: true, memoryMB: 2300 },
   edge: { id: 'edge', onDevice: false, clips: true, languages: 'all', fallback: 'natural' }
 };
 export const voiceEngineIds = Object.keys(voiceEngines) as VoiceEngineId[];

@@ -1,4 +1,5 @@
 import { requiresCumulativePool } from '#lib/circle/engine.js';
+import { chatModel, DEFAULT_CHAT_MODEL, type ChatModelId } from '#lib/conversation/models.js';
 import { voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
 import { wordPools, isLanguage, isVocabularyLevel, type Language, type VocabularyLevel, warmLanguage, refreshHintableBaseWords } from '#lib/data/vocabulary.js';
 import { normalizeVocabularyGoal, dateKey, readStreak, repairCandidate, repairStreak as repairStoredStreak, syncStreak, syncStreakGoal, type ClientStreak, type StreakRepair, type StreakEvent } from '#lib/streak/clientStreak.js';
@@ -45,6 +46,7 @@ const VIBRATION_KEY = 'wordcircle-vibration';
 const SOUND_KEY = 'wordcircle-sound';
 const VOICE_QUALITY_KEY = 'wordcircle-voice-quality-v1';
 const NATURAL_MODEL_KEY = 'wordcircle-natural-model-v1';
+const CHAT_MODEL_KEY = 'wordcircle-chat-model-v1';
 const DIALECTS_KEY = 'wordcircle-dialects-v1';
 const BACKWARD_WORDS_KEY = 'wordcircle-backward-words-v1';
 const VOCABULARY_LEVEL_KEY = 'wordcircle-vocabulary-level-v1';
@@ -94,6 +96,11 @@ function readVoiceQuality(): VoiceQuality {
   const value = localStorage.getItem(VOICE_QUALITY_KEY);
   return voiceQualities.find((quality) => quality === value) ?? 'standard';
 }
+// The conversation partner's language model (conversation/models.ts).
+function readChatModel(): ChatModelId {
+  if (typeof localStorage === 'undefined') return DEFAULT_CHAT_MODEL;
+  return chatModel(localStorage.getItem(CHAT_MODEL_KEY)).id;
+}
 function readNaturalModel(): NaturalModel {
   if (typeof localStorage === 'undefined') return 'high';
   return localStorage.getItem(NATURAL_MODEL_KEY) === 'standard' ? 'standard' : 'high';
@@ -110,6 +117,7 @@ class SettingsStore {
     sound = $state(typeof localStorage === 'undefined' || localStorage.getItem(SOUND_KEY) !== 'off');
     voiceQuality = $state<VoiceQuality>(readVoiceQuality());
     naturalModel = $state<NaturalModel>(readNaturalModel());
+    chatModel = $state<ChatModelId>(readChatModel());
     dialects = $state(typeof localStorage === 'undefined' || localStorage.getItem(DIALECTS_KEY) !== 'off');
     lang = $state<Language>(readLanguage());
     interfaceLocale = $state<InterfaceLocale>(readInterfaceLocale());
@@ -156,6 +164,10 @@ class SettingsStore {
   setVoiceQuality(next: VoiceQuality) {
     this.voiceQuality = next;
     localStorage.setItem(VOICE_QUALITY_KEY, next);
+  }
+  setChatModel(next: ChatModelId) {
+    this.chatModel = next;
+    localStorage.setItem(CHAT_MODEL_KEY, next);
   }
   setNaturalModel(next: NaturalModel) {
     this.naturalModel = next;
