@@ -4,6 +4,7 @@
  * The older per-mode stores stay readable; this ledger is what the Repeat hub and the mixed
  * session read, so marked reading words, grammar answers and pronunciation results meet there.
  */
+import { schedule, type Grade } from './scheduler.js';
 export type ReviewSource = 'vocab' | 'reading' | 'grammar' | 'pronunciation' | 'story' | 'listening';
 
 export type ReviewEntry = {
@@ -12,6 +13,9 @@ export type ReviewEntry = {
 	lapses: number;
 	source: ReviewSource;
 	updatedAt: number;
+	// Scheduler memory (review/scheduler.ts); missing on entries written before it existed.
+	ease?: number;
+	intervalDays?: number;
 };
 
 export type ReviewLedger = Record<string, ReviewEntry>;
@@ -19,8 +23,6 @@ export type ReviewLedger = Record<string, ReviewEntry>;
 export const REVIEW_LEDGER_KEY = 'wordcircle-review-ledger-v1';
 export const REVIEW_SOURCES: ReviewSource[] = ['vocab', 'reading', 'grammar', 'pronunciation', 'story', 'listening'];
 
-const DAY_MS = 24 * 60 * 60 * 1000;
-const INTERVAL_DAYS = [1, 2, 4, 8, 16, 32];
 
 export function reviewKey(language: string, item: string): string {
 	return `${language}:${item.trim().toLocaleUpperCase()}`;
@@ -43,12 +45,16 @@ export function normalizeReviewEntry(value: unknown): ReviewEntry | null {
 	if (!value || typeof value !== 'object') return null;
 	const entry = value as Partial<ReviewEntry>;
 	const source = REVIEW_SOURCES.includes(entry.source as ReviewSource) ? (entry.source as ReviewSource) : 'vocab';
+	const ease = Number(entry.ease);
+	const intervalDays = Number(entry.intervalDays);
 	return {
 		repetitions: safeNumber(entry.repetitions),
 		dueAt: safeNumber(entry.dueAt),
 		lapses: safeNumber(entry.lapses),
 		source,
-		updatedAt: safeNumber(entry.updatedAt)
+		updatedAt: safeNumber(entry.updatedAt),
+		...(ease >= 1 && ease <= 5 ? { ease } : {}),
+		...(intervalDays >= 0 && intervalDays <= 3650 ? { intervalDays } : {})
 	};
 }
 
@@ -84,21 +90,19 @@ export function applyReview(
 	item: string,
 	correct: boolean,
 	source: ReviewSource,
-	now: number = Date.now()
+	now: number = Date.now(),
+	grade: Grade = correct ? 'good' : 'again'
 ): ReviewLedger {
 	const key = reviewKey(language, item);
 	const current = normalizeReviewEntry(ledger[key]) ?? { repetitions: 0, dueAt: 0, lapses: 0, source, updatedAt: 0 };
-	const repetitions = correct ? current.repetitions + 1 : 0;
-	const lapses = correct ? Math.max(0, current.lapses - 1) : current.lapses + 1;
-	const intervalDays = correct ? INTERVAL_DAYS[Math.min(repetitions - 1, INTERVAL_DAYS.length - 1)] : 1;
 	return {
 		...ledger,
-		[key]: { repetitions, lapses, dueAt: now + intervalDays * DAY_MS, source, updatedAt: now }
+		[key]: { ...schedule(current, grade, now, key), source, updatedAt: now }
 	};
 }
 
-export function recordReview(language: string, item: string, correct: boolean, source: ReviewSource, now: number = Date.now()): ReviewLedger {
-	const ledger = applyReview(readReviewLedger(), language, item, correct, source, now);
+export function recordReview(language: string, item: string, correct: boolean, source: ReviewSource, now: number = Date.now(), grade?: Grade): ReviewLedger {
+	const ledger = applyReview(readReviewLedger(), language, item, correct, source, now, grade);
 	writeReviewLedger(ledger);
 	return ledger;
 }
