@@ -74,3 +74,8 @@ export async function speakSupertonic(text: string, language: string, voice: str
   const reply = await queue.push(() => request({ type: 'speak', text, language, voice, speed }, undefined, SPEAK_TIMEOUT_MS), priority);
   return { pcm: reply.pcm!, sampleRate: reply.sampleRate! };
 }
+
+/** Stops the engine and forgets the loaded model (its files are being deleted). */
+export function unloadSupertonic() {
+  restart();
+}
