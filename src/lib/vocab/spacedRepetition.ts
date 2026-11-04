@@ -1,8 +1,6 @@
 import { vocabularyLevels, wordPools, type Language, type VocabularyLevel } from '#lib/data/vocabulary.js';
 import { clearReviewItem, markReviewItem, type ReviewSource } from '#lib/review/ledger.js';
-
-const DAY_MS = 24 * 60 * 60 * 1000;
-const INTERVAL_DAYS = [1, 2, 4, 8, 16, 32];
+import { schedule, type Grade } from '#lib/review/scheduler.js';
 
 export const VOCABULARY_REVIEW_STORAGE_PREFIX = 'wordcircle-vocabulary-review-v2';
 
@@ -12,7 +10,8 @@ export const MASTERY_THRESHOLD = 20;
 
 // `lapses` counts how often a word was rated as hard. It is the strongest sort key in
 // `prioritizeLearningWords`, so a word marked in reading (or answered wrong) keeps coming back.
-export type ReviewProgress = { repetitions: number; dueAt: number; lapses?: number };
+// `ease` and `intervalDays` are the scheduler's memory (review/scheduler.ts).
+export type ReviewProgress = { repetitions: number; dueAt: number; lapses?: number; ease?: number; intervalDays?: number };
 
 export function normalizeReviewProgress(value: unknown): ReviewProgress {
   if (!value || typeof value !== 'object') return { repetitions: 0, dueAt: 0, lapses: 0 };
@@ -20,22 +19,26 @@ export function normalizeReviewProgress(value: unknown): ReviewProgress {
   const repetitions = typeof progress.repetitions === 'number' && Number.isSafeInteger(progress.repetitions) && progress.repetitions >= 0 ? progress.repetitions : 0;
   const dueAt = typeof progress.dueAt === 'number' && Number.isSafeInteger(progress.dueAt) && progress.dueAt >= 0 ? progress.dueAt : 0;
   const lapses = typeof progress.lapses === 'number' && Number.isSafeInteger(progress.lapses) && progress.lapses >= 0 ? progress.lapses : 0;
+  const ease = Number(progress.ease);
+  const intervalDays = Number(progress.intervalDays);
   return {
     repetitions,
     dueAt,
-    lapses
+    lapses,
+    ...(ease >= 1 && ease <= 5 ? { ease } : {}),
+    ...(intervalDays >= 0 && intervalDays <= 3650 ? { intervalDays } : {})
   };
 }
 
-export function updateReviewProgress(progressByWord: Record<string, ReviewProgress>, word: string, correct: boolean, now: number = Date.now()): Record<string, ReviewProgress> {
+/**
+ * Schedules a word after an answer (review/scheduler.ts). Without a grade, right counts as
+ * "good" and wrong as "again"; the quiz passes a finer grade from how quickly it was answered.
+ */
+export function updateReviewProgress(progressByWord: Record<string, ReviewProgress>, word: string, correct: boolean, now: number = Date.now(), grade: Grade = correct ? 'good' : 'again'): Record<string, ReviewProgress> {
   const current = normalizeReviewProgress(progressByWord[word]);
-  const repetitions = correct ? current.repetitions + 1 : 0;
-  // A wrong answer adds weight; every right answer slowly earns part of it back.
-  const lapses = correct ? Math.max(0, (current.lapses ?? 0) - 1) : (current.lapses ?? 0) + 1;
-  const intervalDays = correct ? INTERVAL_DAYS[Math.min(repetitions - 1, INTERVAL_DAYS.length - 1)] : 1;
   return {
     ...progressByWord,
-    [word]: { repetitions, dueAt: now + intervalDays * DAY_MS, lapses }
+    [word]: schedule({ ...current, lapses: current.lapses ?? 0 }, grade, now, word)
   };
 }
 

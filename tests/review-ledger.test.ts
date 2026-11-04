@@ -10,13 +10,16 @@ describe('review ledger', () => {
 		expect(splitReviewKey('broken')).toBeNull();
 	});
 
-	test('a correct answer grows the interval and clears a lapse', () => {
+	test('a miss comes back within minutes; right answers grow the interval and clear the lapse', () => {
+		const day = 24 * 60 * 60 * 1000;
 		let ledger: ReviewLedger = applyReview({}, 'de', 'Wohnung', false, 'vocab', NOW);
-		expect(ledger['de:WOHNUNG']).toMatchObject({ repetitions: 0, lapses: 1, source: 'vocab', dueAt: NOW + 24 * 60 * 60 * 1000 });
+		expect(ledger['de:WOHNUNG']).toMatchObject({ repetitions: 0, lapses: 1, source: 'vocab', dueAt: NOW + 10 * 60 * 1000 });
 		ledger = applyReview(ledger, 'de', 'Wohnung', true, 'vocab', NOW + 1);
-		expect(ledger['de:WOHNUNG']).toMatchObject({ repetitions: 1, lapses: 0, dueAt: NOW + 1 + 24 * 60 * 60 * 1000 });
+		expect(ledger['de:WOHNUNG']).toMatchObject({ repetitions: 1, lapses: 0, dueAt: NOW + 1 + day });
 		ledger = applyReview(ledger, 'de', 'Wohnung', true, 'vocab', NOW + 2);
-		expect(ledger['de:WOHNUNG']).toMatchObject({ repetitions: 2, dueAt: NOW + 2 + 2 * 24 * 60 * 60 * 1000 });
+		expect(ledger['de:WOHNUNG']?.repetitions).toBe(2);
+		// Three days, with the scheduler's small per-word jitter.
+		expect(Math.abs(ledger['de:WOHNUNG']!.dueAt - (NOW + 2 + 3 * day))).toBeLessThanOrEqual(0.08 * 3 * day);
 	});
 
 	test('the source records the mode that last touched an item', () => {
