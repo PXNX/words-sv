@@ -110,8 +110,8 @@ export const pages = {
 	},
 	'/conversation': {
 		title: 'Gespräch',
-		description: 'Sprich laut mit einem Gesprächspartner, der komplett auf deinem Gerät läuft, und übe Wörter deines Levels.',
-		kicker: 'Sprechen',
+		description: 'Plaudere laut mit Figuren aus den Geschichten – komplett auf deinem Gerät – und übe Wörter deines Levels.',
+		kicker: 'Geschichten',
 		icon: 'forum-rounded'
 	},
 	'/repeat': {
