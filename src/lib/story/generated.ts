@@ -1,5 +1,5 @@
 import { playableLanguages, vocabularyLevels, wordDefinitions, wordMetadata, wordPools, type Language, type VocabularyLevel } from '#lib/data/vocabulary.js';
-import type { SoundEffect } from '#lib/sounds.js';
+import type { SoundEffect } from '#lib/feedback/sounds.js';
 import { MASTERY_THRESHOLD, VOCABULARY_REVIEW_STORAGE_PREFIX, normalizeReviewProgress, prioritizeLearningWords, type ReviewProgress } from '#lib/vocab/spacedRepetition.js';
 import { readMissedWords } from './missedWords';
 import type { CharacterId, HeldItem, Mood, Story, StoryBeat, StoryProp, Text } from './stories';

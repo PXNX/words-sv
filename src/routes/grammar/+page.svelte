@@ -2,7 +2,7 @@
   import { recordAnswer } from '#lib/profile/cosmetics.svelte.js';
   import { untrack } from 'svelte';
   import { page } from '$app/state';
-  import { playSuccessSound, playErrorSound } from '#lib/sounds.js';
+  import { playSuccessSound, playErrorSound } from '#lib/feedback/sounds.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { wordPools, wordMetadata } from '#lib/data/vocabulary.js';
   import { m } from '#lib/paraglide/messages.js';

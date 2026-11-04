@@ -19,12 +19,12 @@
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import AvatarEditor from '#lib/profile/AvatarEditor.svelte';
   import { randomAvatar } from '#lib/profile/avatar.js';
-  import InstallAppHint from '#lib/InstallAppHint.svelte';
-  import UpdateAppHint from '#lib/UpdateAppHint.svelte';
+  import InstallAppHint from '#lib/pwa/InstallAppHint.svelte';
+  import UpdateAppHint from '#lib/pwa/UpdateAppHint.svelte';
   import SelectMenu from '#lib/settings/SelectMenu.svelte';
-  import { playSoundEffect, playSuccessSound } from '#lib/sounds.js';
+  import { playSoundEffect, playSuccessSound } from '#lib/feedback/sounds.js';
   import { playableLanguages, type Language } from '#lib/data/vocabulary.js';
-  import { FREEZE_EVERY, REPAIR_WORDS, lilithFace, lilithMood, modeDone, rewardReady, syncStreak, type StreakMode, type StreakRepair } from '#lib/clientStreak.js';
+  import { FREEZE_EVERY, REPAIR_WORDS, lilithFace, lilithMood, modeDone, rewardReady, syncStreak, type StreakMode, type StreakRepair } from '#lib/streak/clientStreak.js';
   import TodayBadge from '#lib/streak/TodayBadge.svelte';
   import { buildTodayPlan, estimatedMinutes, type TodayPlan, type TodayReading } from '#lib/today/todayPlan.js';
   import { readingCatalog } from '#lib/story/readingCatalog.js';

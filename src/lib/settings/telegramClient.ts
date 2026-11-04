@@ -1,7 +1,7 @@
-import { deviceId, timeZone } from '#lib/clientStreak.js';
-import { reminderLocale } from '#lib/pwaReminders.js';
+import { deviceId, timeZone } from '#lib/streak/clientStreak.js';
+import { reminderLocale } from '#lib/pwa/pwaReminders.js';
 import { interfaceLocales, settings } from '#lib/state/settings.svelte.js';
-import type { MiniAppLaunch } from '#lib/telegramMiniApp.js';
+import type { MiniAppLaunch } from '#lib/settings/telegramMiniApp.js';
 
 // The player's link to @word_circle_bot: streak reminders in Telegram and their invite link.
 export type TelegramStatus = { reminders: boolean; connectUrl: string | null; inviteUrl: string | null; invited: number; inviteEmbers: number };

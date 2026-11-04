@@ -4,7 +4,7 @@
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import TutorialDialog from '#lib/TutorialDialog.svelte';
+  import TutorialDialog from '#lib/app/TutorialDialog.svelte';
   import { requestCirclePractice } from '#lib/circle/practice.js';
 
   const isDefinitionsMode = $derived(page.url.searchParams.get('mode') === 'definitions');

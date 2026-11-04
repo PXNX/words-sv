@@ -1,4 +1,4 @@
-import { deviceId, readStreak, timeZone } from '#lib/clientStreak.js';
+import { deviceId, readStreak, timeZone } from '#lib/streak/clientStreak.js';
 import { settings } from '#lib/state/settings.svelte.js';
 import { reminderExtras } from '#lib/reminders/reminderSnapshot.js';
 import {
@@ -9,7 +9,7 @@ import {
 	requestReminderCheck,
 	setReminderEnabled,
 	unregisterPeriodicReminders
-} from '#lib/pwaReminders.js';
+} from '#lib/pwa/pwaReminders.js';
 
 function decodeApplicationServerKey(value: string) {
 	const padding = '='.repeat((4 - value.length % 4) % 4);

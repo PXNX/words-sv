@@ -17,7 +17,7 @@
   import { countActivity, recordActivity } from '#lib/progress/activity.js';
   import { wavBlob } from '#lib/audio/wav.js';
   import { cancelJobsExcept, runJob, type JobControl, type JobProgress } from '#lib/audio/backgroundJobs.svelte.js';
-  import { playBing, playChime, playSoundEffect, soundEffectSeconds, type SoundEffect } from '#lib/sounds.js';
+  import { playBing, playChime, playSoundEffect, soundEffectSeconds, type SoundEffect } from '#lib/feedback/sounds.js';
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
   import IconHeadphones from '~icons/material-symbols/headphones-rounded';

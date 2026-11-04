@@ -1,4 +1,4 @@
-import type { Language } from './data/vocabulary';
+import type { Language } from '../data/vocabulary';
 
 const WIKTIONARY_HOSTS: Record<Language, string> = {
   de: 'https://de.wiktionary.org/wiki/',

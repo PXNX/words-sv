@@ -1,6 +1,6 @@
 import type { Language, VocabularyLevel } from '#lib/data/vocabulary.js';
 import { vocabularyLevels } from '#lib/data/vocabulary.js';
-import type { SoundEffect } from '#lib/sounds.js';
+import type { SoundEffect } from '#lib/feedback/sounds.js';
 import { german, germanStories } from './germanStories';
 import { kumarStandIn } from './standIn';
 

@@ -1,4 +1,4 @@
-import { haptic } from '#lib/haptics.js';
+import { haptic } from '#lib/feedback/haptics.js';
 export type SuccessSound = 'circle' | 'wordle' | 'vocab' | 'grammar' | 'pronunciation';
 export type ErrorSound = 'vocab' | 'grammar';
 

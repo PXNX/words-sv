@@ -16,7 +16,7 @@
   import StoryScene from '#lib/story/StoryScene.svelte';
   import type { Mood } from '#lib/story/stories.js';
   import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
-  import { haptic } from '#lib/haptics.js';
+  import { haptic } from '#lib/feedback/haptics.js';
   import { formatSpeed } from '#lib/offline/downloadSpeed.js';
   import { voiceEngines } from '#lib/voice/engines.js';
   import { chatMessages, cleanReply, LEVEL_WORD_SAMPLE, pickTargetWords, usedWords, type Turn } from './conversation.js';

@@ -19,7 +19,7 @@ const circlePageSource = await readFile(new URL('../src/routes/circle/+page.svel
 const wordleTutorialRouteSource = await readFile(new URL('../src/routes/wordle/tutorial/+page.svelte', import.meta.url), 'utf8');
 const wordlePageSource = await readFile(new URL('../src/routes/wordle/+page.svelte', import.meta.url), 'utf8');
 const layoutSource = await readFile(new URL('../src/routes/+layout.svelte', import.meta.url), 'utf8');
-const soundSource = await readFile(new URL('../src/lib/sounds.ts', import.meta.url), 'utf8');
+const soundSource = await readFile(new URL('../src/lib/feedback/sounds.ts', import.meta.url), 'utf8');
 const levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
 
 test('five-letter mode accepts only normalized five-letter vocabulary entries', () => {

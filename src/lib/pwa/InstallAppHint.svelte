@@ -6,7 +6,7 @@
 <script lang="ts">
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { pwaInstall } from '#lib/pwaInstall.svelte.js';
+  import { pwaInstall } from '#lib/pwa/pwaInstall.svelte.js';
   import IconDownload from '~icons/material-symbols/download-rounded';
   import IconClose from '~icons/material-symbols/cancel-rounded';
 

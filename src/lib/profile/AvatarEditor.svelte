@@ -6,7 +6,7 @@
 <script lang="ts">
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { playSoundEffect } from '#lib/sounds.js';
+  import { playSoundEffect } from '#lib/feedback/sounds.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import type { Mood } from '#lib/story/stories.js';
   import { avatarChoices, avatarParts, randomAvatar, type Avatar, type AvatarPart } from './avatar.js';

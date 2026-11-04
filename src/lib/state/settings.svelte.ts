@@ -1,9 +1,9 @@
 import { requiresCumulativePool } from '#lib/circle/engine.js';
 import { voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
 import { wordPools, isLanguage, isVocabularyLevel, type Language, type VocabularyLevel, warmLanguage, refreshHintableBaseWords } from '#lib/data/vocabulary.js';
-import { normalizeVocabularyGoal, dateKey, readStreak, repairCandidate, repairStreak as repairStoredStreak, syncStreak, syncStreakGoal, type ClientStreak, type StreakRepair, type StreakEvent } from '#lib/clientStreak.js';
+import { normalizeVocabularyGoal, dateKey, readStreak, repairCandidate, repairStreak as repairStoredStreak, syncStreak, syncStreakGoal, type ClientStreak, type StreakRepair, type StreakEvent } from '#lib/streak/clientStreak.js';
 import { recordActivity, type ActivityKind } from '#lib/progress/activity.js';
-import { publishReminderState } from '#lib/pwaReminders.js';
+import { publishReminderState } from '#lib/pwa/pwaReminders.js';
 import { reminderExtras } from '#lib/reminders/reminderSnapshot.js';
 import type { Locale } from '#lib/paraglide/runtime.js';
 import { parseAvatar, type Avatar } from '#lib/profile/avatar.js';
@@ -143,7 +143,7 @@ class SettingsStore {
   setVibration(next: boolean) {
     this.vibration = next;
     localStorage.setItem(VIBRATION_KEY, next ? 'on' : 'off');
-    if (next) void import('#lib/haptics.js').then(({ haptic }) => haptic('success', true));
+    if (next) void import('#lib/feedback/haptics.js').then(({ haptic }) => haptic('success', true));
   }
   // Every voice except the browser's own is played as rendered audio clips.
   get clipVoices() {

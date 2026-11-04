@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { haptic } from '#lib/haptics.js';
+  import { haptic } from '#lib/feedback/haptics.js';
   import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { goto } from '$app/navigation';
   import { browser } from '$app/env';
   import WordleMode from '#lib/wordle/WordleMode.svelte';
-  import { playSuccessSound } from '#lib/sounds.js';
+  import { playSuccessSound } from '#lib/feedback/sounds.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { wordPools } from '#lib/data/vocabulary.js';
   import { m } from '#lib/paraglide/messages.js';
