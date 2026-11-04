@@ -1,8 +1,10 @@
 import { playableLanguages, vocabularyLevels, wordDefinitions, wordMetadata, wordPools, type Language, type VocabularyLevel } from '#lib/data/vocabulary.js';
 import type { SoundEffect } from '#lib/feedback/sounds.js';
-import { MASTERY_THRESHOLD, VOCABULARY_REVIEW_STORAGE_PREFIX, normalizeReviewProgress, prioritizeLearningWords, type ReviewProgress } from '#lib/vocab/spacedRepetition.js';
+import { MASTERY_THRESHOLD, VOCABULARY_REVIEW_STORAGE_PREFIX, normalizeReviewProgress, type ReviewProgress } from '#lib/vocab/spacedRepetition.js';
 import { readMissedWords } from './missedWords';
-import type { CharacterId, HeldItem, Mood, Story, StoryBeat, StoryProp, Text } from './stories';
+import { ledgerEntriesFor, readReviewLedger } from '#lib/review/ledger.js';
+import { articleFocus, sampleWeighted, weakest, weakSpotWeights } from './weakSpots';
+import type { CharacterId, HeldItem, Mood, Story, StoryBeat, StoryProp, Text, Weather } from './stories';
 
 /*
  * Stories built on the fly around the learner's own words: first the words they recently got wrong
@@ -352,24 +354,30 @@ function readProgress(language: Language, level: VocabularyLevel): Record<string
   }
 }
 
-// Missed words first (most recent first), then due or unmastered words of the learner's levels;
-// among those, words with an explanation come first, so the evening can ask what they mean.
-function focusWords(language: Language, level: VocabularyLevel, includeLower: boolean): { words: string[]; missed: number } {
+// The evening's words, drawn by weakness (weakSpots.ts): words the learner missed anywhere, lapsed
+// or struggled with come up most, but the draw is random, so every evening practises a different
+// mix. Candidates are the missed words plus every word of the learner's levels not mastered yet;
+// words with an explanation weigh a little more, so the evening can ask what they mean.
+type Focus = { words: string[]; missed: number; weights: Map<string, number>; articleChance: number };
+function focusWords(language: Language, level: VocabularyLevel, includeLower: boolean, now = Date.now()): Focus {
   const known = wordMetadata[language] ?? {};
   const definitions = wordDefinitions[language] ?? {};
-  const missed = readMissedWords(language).map((entry) => entry.word).filter((word) => known[word]).slice(0, WORDS_PER_STORY);
-  const words = [...missed];
-  if (words.length < WORDS_PER_STORY) {
-    for (const candidateLevel of levelsFor(level, includeLower).reverse()) {
-      const progress = readProgress(language, candidateLevel);
-      const open = (wordPools[language]?.[candidateLevel] ?? []).filter((word) => known[word] && !words.includes(word) && normalizeReviewProgress(progress[word]).repetitions < MASTERY_THRESHOLD);
-      const explained = open.filter((word) => definitions[word]);
-      const unexplained = open.filter((word) => !definitions[word]);
-      words.push(...[...prioritizeLearningWords(shuffled(explained), progress), ...prioritizeLearningWords(shuffled(unexplained), progress)].slice(0, WORDS_PER_STORY - words.length));
-      if (words.length >= WORDS_PER_STORY) break;
+  const missedEntries = readMissedWords(language).filter((entry) => known[entry.word]);
+  const ledger = ledgerEntriesFor(readReviewLedger(), language);
+  const progress: Record<string, ReviewProgress> = {};
+  const candidates = new Set(missedEntries.map((entry) => entry.word));
+  for (const candidateLevel of levelsFor(level, includeLower)) {
+    const levelProgress = readProgress(language, candidateLevel);
+    Object.assign(progress, levelProgress);
+    for (const word of wordPools[language]?.[candidateLevel] ?? []) {
+      if (known[word] && normalizeReviewProgress(levelProgress[word]).repetitions < MASTERY_THRESHOLD) candidates.add(word);
     }
   }
-  return { words, missed: missed.length };
+  const weights = weakSpotWeights({ missed: missedEntries, ledger, progress }, now);
+  const weighted = new Map([...candidates].map((word) => [word, (weights.get(word) ?? 0) + (definitions[word] ? 0.3 : 0)]));
+  const words = sampleWeighted([...candidates], weighted, WORDS_PER_STORY);
+  const missedWords = new Set(missedEntries.map((entry) => entry.word));
+  return { words, missed: words.filter((word) => missedWords.has(word)).length, weights, articleChance: articleFocus(ledger) };
 }
 
 // Two other words of the same kind and similar length, so the right answer does not stand out.
@@ -390,7 +398,7 @@ function distractors(language: Language, level: VocabularyLevel, word: string, n
 // the meaning is asked: the meaning of the word, or the word for the meaning. Now and then a host asks
 // for a noun's article instead; a word without an explanation can only be heard and picked out.
 // Explaining and the article question belong to Mia and Tom; a guest asks straight out.
-function exerciseFor(language: Language, level: VocabularyLevel, word: string, text: Templates, speaker: 'mia' | 'tom' | Guest, direction: 'definition' | 'word'): StoryBeat[] {
+function exerciseFor(language: Language, level: VocabularyLevel, word: string, text: Templates, speaker: 'mia' | 'tom' | Guest, direction: 'definition' | 'word', articleChance = 0.2): StoryBeat[] {
   const metadata = wordMetadata[language][word];
   const spelling = metadata.spelling;
   const definition = wordDefinitions[language]?.[word];
@@ -398,7 +406,7 @@ function exerciseFor(language: Language, level: VocabularyLevel, word: string, t
   const host = speaker === 'mia' || speaker === 'tom';
   const canArticle = host && Boolean(text.articleAsk && article);
   const canMean = Boolean(definition) && distractors(language, level, word, true).length === 2;
-  const kind = canMean && !(canArticle && Math.random() < 0.2) ? direction : canArticle ? 'article' : 'hear';
+  const kind = canMean && !(canArticle && Math.random() < articleChance) ? direction : canArticle ? 'article' : 'hear';
 
   if (kind === 'definition') {
     const others = distractors(language, level, word, true);
@@ -454,15 +462,17 @@ function stepBeats(steps: Step[], recall?: (asker: 'mia' | 'tom') => StoryBeat):
   });
 }
 
+/** Whether there is something to practise: a missed word, or a word or grammar item not yet earned back. */
 export function hasMissedWords(language: Language) {
   const known = wordMetadata[language] ?? {};
-  return readMissedWords(language).some((entry) => known[entry.word]);
+  if (readMissedWords(language).some((entry) => known[entry.word])) return true;
+  return ledgerEntriesFor(readReviewLedger(), language).some(({ item, entry }) => entry.lapses > 0 && Boolean(known[item.includes(':') ? item.slice(item.indexOf(':') + 1) : item]));
 }
 
 export function generateStory(language: Language, level: VocabularyLevel, includeLower: boolean): Story | null {
   if (typeof localStorage === 'undefined') return null;
   const text = templates[language];
-  const { words, missed } = focusWords(language, level, includeLower);
+  const { words, missed, weights, articleChance } = focusWords(language, level, includeLower);
   if (words.length === 0) return null;
   const opening = pick(text.openings);
   const beats: StoryBeat[] = [
@@ -489,7 +499,7 @@ export function generateStory(language: Language, level: VocabularyLevel, includ
   words.forEach((word, index) => {
     const asker = guest && index === guestAfter ? guest : pick<'mia' | 'tom'>(['mia', 'tom']);
     const direction = index % 2 === 0 ? firstDirection : firstDirection === 'definition' ? 'word' : 'definition';
-    beats.push(...exerciseFor(language, level, word, text, asker, direction));
+    beats.push(...exerciseFor(language, level, word, text, asker, direction, articleChance));
     if (index === lilithAfter) beats.push({ kind: 'line', speaker: 'lilith', text: same(pick(text.lilithLines)), sfx: 'meow' });
     if (guest && visit && index === guestAfter) beats.push({ kind: 'line', speaker: guest, text: same(pick(visit.remarks)) });
     const event = events[eventAfter.indexOf(index)];
@@ -499,6 +509,10 @@ export function generateStory(language: Language, level: VocabularyLevel, includ
     if (exits && !event.steps?.some((step) => 'enters' in step && step.enters)) returns.push(beats.length);
     beats.push(...stepBeats(event.steps ?? [], (who) => recallFor(language, level, word, words, text, who)));
   });
+  // The weakest word of the evening is asked once more before the goodbye: retrieving it again after
+  // a gap is what makes it stick.
+  const hardest = weakest(words, weights);
+  if (hardest && text.retryQuestion && (weights.get(hardest) ?? 0) > 0) beats.push(recallFor(language, level, hardest, words, text, pick<'mia' | 'tom'>(['mia', 'tom'])));
   // Before saying goodbye, Mia asks about what happened, then the evening's loose ends come up.
   const recaps = events.flatMap((event) => (event.recap ? [event.recap] : []));
   if (recaps.length && text.recapIntro) {
@@ -510,5 +524,6 @@ export function generateStory(language: Language, level: VocabularyLevel, includ
     const back = beats.findIndex((beat, index) => index >= from && (beat.kind === 'narration' || beat.kind === 'line'));
     if (back !== -1) beats[back] = { ...beats[back], enters: ['lilith'] } as StoryBeat;
   }
-  return { id: `generated-${Date.now()}`, level, scene: 'home', cast: guest ? ['mia', 'tom', 'lilith', guest] : ['mia', 'tom', 'lilith'], title: same(pick(text.titles)), beats, generated: true };
+  const weathers: Weather[] = ['sunny', 'cloudy', 'rainy', 'snowy'];
+  return { id: `generated-${Date.now()}`, level, scene: 'home', cast: guest ? ['mia', 'tom', 'lilith', guest] : ['mia', 'tom', 'lilith'], title: same(pick(text.titles)), beats, generated: true, weathers, weather: pick(weathers) };
 }
