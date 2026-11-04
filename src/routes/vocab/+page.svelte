@@ -18,6 +18,10 @@
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
+  import GenderedWord from '#lib/learn/GenderedWord.svelte';
+  import SessionDots, { type DotState } from '#lib/learn/SessionDots.svelte';
+  import { gradeFromAnswer, type Grade } from '#lib/review/scheduler.js';
+  import type { ReviewProgress } from '#lib/vocab/spacedRepetition.js';
 
   type PromptKind = 'word' | 'audio';
   type AnswerStatus = 'correct' | 'wrong' | null;
@@ -84,7 +88,11 @@
   let selectedChoice = $state<string | null>(null);
   let sourceKey = $state('');
   let choiceKey = $state('');
-  let reviewProgress = $state<Record<string, { repetitions: number; dueAt: number }>>({});
+  let reviewProgress = $state<Record<string, ReviewProgress>>({});
+  // When the current card appeared, so the answer can be graded by how long it took.
+  let shownAt = 0;
+  // The word's schedule before this answer, so a rating button re-grades it instead of stacking.
+  let beforeAnswer: ReviewProgress | undefined;
   // A session now has an ending: after the second pass it stops and shows what to repeat,
   // instead of circling the same queue forever.
   let sessionDone = $state(false);
@@ -98,6 +106,8 @@
   let audioRun = 0;
   let naturalPlayback: { stop: () => void } | null = null;
   const canHear = $derived(speechSupported || naturalMode);
+  const dots = $derived<DotState[]>(queue.map((word, index) => index === position && !sessionDone ? 'current'
+    : index < position || sessionDone ? (firstTry.includes(word) ? 'right' : 'missed') : 'pending'));
 
   // `/vocab?due=1` is the Repeat hub's mixed session: only words that the shared ledger says are
   // due, drawn from reading marks, grammar answers, pronunciation and earlier vocabulary rounds.
@@ -212,6 +222,7 @@
   function resetPrompt() {
     answerStatus = null;
     selectedChoice = null;
+    shownAt = performance.now();
     if (!currentWord || !currentDefinition) { choiceWords = []; return; }
     promptKind = position % 2 === 0 ? 'word' : 'audio';
     choiceWords = definitionChoiceWords(currentWord, [...section, ...definitionWords], definitions, random);
@@ -240,9 +251,12 @@
     } else if (!tricky.includes(word)) {
       tricky = [...tricky, word];
     }
-    reviewProgress = updateReviewProgress(reviewProgress, word, correct);
+    // Quick and sure spaces the word further out, a long hesitation keeps it close (review/scheduler.ts).
+    const grade = gradeFromAnswer(correct, shownAt ? performance.now() - shownAt : null, firstAttempt);
+    beforeAnswer = reviewProgress[word];
+    reviewProgress = updateReviewProgress(reviewProgress, word, correct, Date.now(), grade);
     persistProgress();
-    recordReview(settings.lang, word, correct, 'vocab');
+    recordReview(settings.lang, word, correct, 'vocab', Date.now(), grade);
     if (correct) {
       playSuccessSound(settings.sound, 'vocab');
       // The repair reward qualifies the day itself; a normal event would race its sync.
@@ -259,12 +273,18 @@
   }
   // A correct answer can still feel shaky. The three buttons steer the next review without
   // punishing a learner who simply wants to move on.
+  function regrade(word: string, grade: Grade) {
+    const before = { ...reviewProgress };
+    if (beforeAnswer) before[word] = beforeAnswer;
+    else delete before[word];
+    reviewProgress = updateReviewProgress(before, word, grade !== 'again', Date.now(), grade);
+    persistProgress();
+  }
   function rateAnswer(kind: 'again' | 'hard' | 'good') {
     const word = currentWord;
     if (!word || answerStatus !== 'correct') return;
     if (kind === 'again') {
-      reviewProgress = updateReviewProgress(reviewProgress, word, false);
-      persistProgress();
+      regrade(word, 'again');
       recordReview(settings.lang, word, false, 'vocab');
       recordMissedWord(settings.lang, word);
       firstTry = firstTry.filter((item) => item !== word);
@@ -275,6 +295,7 @@
       // A lapse moves the word ahead of unseen material in the next session and in the Repeat hub.
       markWordForRepeat(settings.lang, word, Date.now(), 'vocab');
       reviewProgress = loadProgress();
+      regrade(word, 'hard');
       if (!tricky.includes(word)) tricky = [...tricky, word];
     }
     continueLearning();
@@ -290,6 +311,7 @@
   }
   function optionText(word: string) { return isDefinitionPrompt ? definitions[word] : displayWord(word); }
   function optionStateClasses(word: string) {
+    if (answerStatus === 'wrong' && word === currentWord) return 'bg-success text-[#fffdf7] learn-reveal';
     if (answerStatus !== null && word === currentWord) return 'bg-success text-[#fffdf7]';
     if (answerStatus === 'wrong' && word === selectedChoice) return 'border-accent bg-[#fff2e8] text-[#8e4322] shadow-none dark:bg-[#69332f] dark:text-[#fff7ed]';
     return '';
@@ -337,7 +359,7 @@
     <div class="text-center">
       <span class="text-accent text-[.58rem] font-extrabold tracking-[.14em] uppercase">{labels.section} · {settings.vocabularyLevel.toUpperCase()}</span>
       <h1 class="my-[.16rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,7vw,2.65rem)] font-normal leading-none">{labels.title}</h1>
-      {#if audioReady}<p class="m-0 text-base-content/60 text-[.65rem] font-extrabold">{sessionDone ? queue.length : Math.min(position + 1, queue.length)} / {queue.length || 6}</p>{/if}
+      {#if audioReady}<div class="mt-[.35rem] text-base-content/70"><SessionDots {dots} label={`${sessionDone ? queue.length : Math.min(position + 1, queue.length)} / ${queue.length || 6}`} /></div>{/if}
     </div>
     <Companion id="mia" mood={answerStatus === 'correct' ? 'happy' : answerStatus === 'wrong' ? 'sad' : sessionDone ? 'happy' : 'curious'} size="sm" />
   </header>
@@ -390,17 +412,23 @@
   {:else if !currentWord}
     <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{labels.unavailable}</div>
   {:else}
+    {#key `${position}|${sessionId}`}
     <article
-      class="w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center {promptKind === 'audio' ? 'bg-[linear-gradient(145deg,#fffdf7,#fff4d9)] dark:bg-[linear-gradient(145deg,#172a45,#294666)]' : ''}"
+      class="learn-card-in w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center {promptKind === 'audio' ? 'bg-[linear-gradient(145deg,#fffdf7,#fff4d9)] dark:bg-[linear-gradient(145deg,#172a45,#294666)]' : ''}"
+      class:learn-correct={answerStatus === 'correct'}
+      class:learn-wrong={answerStatus === 'wrong'}
     >
-      {#if promptKind === 'word'}
-        <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.9rem,9vw,3.2rem)] font-normal tracking-[.06em] leading-none" lang={settings.lang}>{currentDisplayWord}</p>
+      {#if promptKind === 'word' || answerStatus !== null}
+        <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.9rem,9vw,3.2rem)] font-normal tracking-[.06em] leading-none" class:learn-fade-in={promptKind === 'audio'}><GenderedWord word={currentWord} language={settings.lang} /></p>
+        {#if promptKind === 'audio'}<button class="btn-play btn-play-soft btn-play-sm" onclick={speak} disabled={!canHear}><IconVolume class="w-[1rem] h-[1rem]" aria-hidden="true" />{labels.listen}</button>{/if}
       {:else}
         <button class="btn-play btn-play-ink" onclick={speak} disabled={!canHear}><IconVolume class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />{labels.listen}</button>
         <p class="m-0 text-accent text-[.62rem] font-extrabold leading-[1.35]">{labels.audioPrompt}</p>
       {/if}
       {#if speechStatus && promptKind === 'audio'}<p class="m-0 text-accent text-[.62rem] font-extrabold leading-[1.35]">{speechStatus}</p>{/if}
+      {#if answerStatus !== null && !isDefinitionPrompt && currentDefinition}<p class="learn-fade-in m-0 max-w-[22rem] text-base-content/65 text-[.72rem] font-bold leading-[1.4]">{currentDefinition}</p>{/if}
     </article>
+    {/key}
     {#if choiceWords.length >= 3}
       <section class="w-[min(100%,28rem)] grid gap-[.55rem]" aria-label={isDefinitionPrompt ? labels.chooseDefinition : labels.chooseWord}>
         <p class="m-0 text-accent text-[.6rem] font-black tracking-[.1em] text-center uppercase">{isDefinitionPrompt ? labels.chooseDefinition : labels.chooseWord}</p>

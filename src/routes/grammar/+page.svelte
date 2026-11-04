@@ -16,6 +16,8 @@
   import { buildVerbPrompt, buildVerbPropertyPrompt, verbConjugations } from '#lib/grammar/verbs.js';
   import { buildFalseFriendPrompt, falseFriendPairs } from '#lib/grammar/falseFriends.js';
   import IconCheck from '~icons/material-symbols/check-rounded';
+  import { gradeFromAnswer } from '#lib/review/scheduler.js';
+  import { insertLearningRepeat } from '#lib/vocab/learning.js';
   import IconClose from '~icons/material-symbols/close-rounded';
 
   type AnswerStatus = 'correct' | 'wrong' | null;
@@ -88,6 +90,15 @@
   let section = $state<string[]>([]);
   let queue = $state<string[]>([]);
   let position = $state(0);
+  // When the current prompt appeared, so the answer can be graded by how long it took.
+  let shownAt = 0;
+  // A missed item comes back a few prompts later, not at the very end: spaced, but still fresh.
+  function requeue(key: string) {
+    queue = insertLearningRepeat(queue, position, key);
+  }
+  function gradeNow(correct: boolean) {
+    return gradeFromAnswer(correct, shownAt ? performance.now() - shownAt : null, queue.indexOf(currentKey) === position && !queue.slice(0, position).includes(currentKey));
+  }
   let answerStatus = $state<AnswerStatus>(null);
   let selectedChoice = $state<string | null>(null);
   let prompt = $state<GrammarPrompt | null>(null);
@@ -164,6 +175,7 @@
   function resetPrompt() {
     answerStatus = null;
     selectedChoice = null;
+    shownAt = performance.now();
     selectedOrder = [];
     if (grammarMode === 'order') orderWords = shuffled(orderSentences[Number(currentKey.split(':')[1]) % orderSentences.length], random);
     prompt = currentKey ? buildPromptForKey(currentKey) : null;
@@ -178,10 +190,11 @@
       answerStatus = answer === target ? 'correct' : 'wrong';
       recordAnswer('grammar', answerStatus === 'correct');
       if (answerStatus === 'correct') { playSuccessSound(settings.sound, 'grammar'); void settings.recordStreak('grammar_correct'); }
-      else { playErrorSound(settings.sound, 'grammar'); queue = [...queue, currentKey]; }
-      reviewProgress = updateReviewProgress(reviewProgress, currentKey, answerStatus === 'correct');
+      else { playErrorSound(settings.sound, 'grammar'); requeue(currentKey); }
+      const grade = gradeNow(answerStatus === 'correct');
+      reviewProgress = updateReviewProgress(reviewProgress, currentKey, answerStatus === 'correct', Date.now(), grade);
       persistProgress();
-      recordReview(settings.lang, currentKey, answerStatus === 'correct', 'grammar');
+      recordReview(settings.lang, currentKey, answerStatus === 'correct', 'grammar', Date.now(), grade);
     }
   }
   function resetOrder() { selectedOrder = []; answerStatus = null; }
@@ -193,11 +206,12 @@
     selectedChoice = chosen;
     answerStatus = correct ? 'correct' : 'wrong';
     recordAnswer('grammar', correct);
-    reviewProgress = updateReviewProgress(reviewProgress, currentKey, correct);
+    const grade = gradeNow(correct);
+    reviewProgress = updateReviewProgress(reviewProgress, currentKey, correct, Date.now(), grade);
     persistProgress();
-    recordReview(settings.lang, currentKey, correct, 'grammar');
+    recordReview(settings.lang, currentKey, correct, 'grammar', Date.now(), grade);
     if (correct) { playSuccessSound(settings.sound, 'grammar'); void settings.recordStreak('grammar_correct'); }
-    else { playErrorSound(settings.sound, 'grammar'); recordMissedGrammarWord(currentKey); queue = [...queue, currentKey]; }
+    else { playErrorSound(settings.sound, 'grammar'); recordMissedGrammarWord(currentKey); requeue(currentKey); }
   }
   // Word-based grammar prompts (noun:…, adj:…, verb:…, article:…) feed the story mode's practice list.
   function recordMissedGrammarWord(key: string) {
@@ -209,6 +223,7 @@
   }
   function optionStateClasses(choice: string) {
     if (!prompt) return '';
+    if (answerStatus === 'wrong' && choice === prompt.correct) return 'bg-success text-[#fffdf7] learn-reveal';
     if (answerStatus !== null && choice === prompt.correct) return 'bg-success text-[#fffdf7]';
     if (answerStatus === 'wrong' && choice === selectedChoice) return 'border-accent bg-[#fff2e8] text-[#8e4322] shadow-none dark:bg-[#69332f] dark:text-[#fff7ed]';
     return '';
@@ -249,10 +264,10 @@
     <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{labels.unavailable}</div>
   {:else}
     {#if grammarMode === 'order'}
-      <article class="w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center">
+      {#key position}<article class="learn-card-in w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center" class:learn-correct={answerStatus === 'correct'} class:learn-wrong={answerStatus === 'wrong'}>
         <p class="m-0 text-accent text-[.62rem] font-black tracking-[.08em] uppercase">Bringe die Wörter in die richtige Reihenfolge.</p>
         <p class="m-0 min-h-[2.2rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.35rem,6vw,2.1rem)] leading-[1.3]">{selectedOrder.length > 0 ? selectedOrder.map((index) => orderWords[index]).join(' ') : '…'}</p>
-      </article>
+      </article>{/key}
       <div class="w-[min(100%,28rem)] flex flex-wrap justify-center gap-[.45rem]">{#each orderWords as word, index}<button type="button" class="btn-play btn-play-choice min-h-[2.55rem] px-[.75rem] text-[.75rem] {selectedOrder.includes(index) ? 'border-neutral/30 bg-neutral/20 text-base-content/35 shadow-none' : ''}" onclick={() => chooseOrderWord(index)} disabled={selectedOrder.includes(index) || answerStatus !== null}>{word}</button>{/each}</div>
       {#if answerStatus === 'wrong'}
         <div class="flex items-center gap-[.35rem] text-error text-[.7rem] font-extrabold"><IconClose class="w-[1rem] h-[1rem]" aria-hidden="true" />Not quite. Try again.</div>
@@ -266,10 +281,10 @@
         </div>
       {/if}
     {:else}
-    <article class="w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center">
+    {#key position}<article class="learn-card-in w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center" class:learn-correct={answerStatus === 'correct'} class:learn-wrong={answerStatus === 'wrong'}>
             {#if prompt.question}<p class="m-0 text-accent text-[.62rem] font-black tracking-[.08em] uppercase">{prompt.question}</p>{/if}
             <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.55rem,7vw,2.6rem)] font-normal tracking-[.04em] leading-[1.3]" lang={settings.lang}>{#if prompt.before}{prompt.before}{/if}{#if prompt.question}{#if prompt.highlight && prompt.after.includes(prompt.highlight)}{@const highlightIndex = prompt.after.indexOf(prompt.highlight)}{prompt.after.slice(0, highlightIndex)}<mark class="bg-primary/25 text-accent px-[.15rem]">{prompt.highlight}</mark>{prompt.after.slice(highlightIndex + prompt.highlight.length)}{:else}{prompt.after}{/if}{:else}<span class="inline-block border-b-4 border-dotted border-accent text-accent px-[.3rem]">___</span> {prompt.after}{/if}</p>
-    </article>
+    </article>{/key}
     {#if prompt.choices.length >= 2}
       <section class="w-[min(100%,28rem)] grid gap-[.55rem]" aria-label={labels.chooseArticle}>
         <p class="m-0 text-accent text-[.6rem] font-black tracking-[.1em] text-center uppercase">{labels.chooseArticle}</p>
