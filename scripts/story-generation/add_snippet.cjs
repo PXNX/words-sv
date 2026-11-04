@@ -1,3 +1,4 @@
+process.chdir(require('path').join(__dirname, '..', '..'));
 const fs = require('fs');
 
 function snippet(story) {
@@ -69,7 +70,7 @@ const stories = [
 ];
 
 const snippetText = stories.map(snippet).join(',\n');
-fs.writeFileSync('snippet_a1.txt', snippetText);
+fs.writeFileSync(require('path').join(__dirname, 'snippet_a1.txt'), snippetText);
 console.log('a1 snippet written, stories:', stories.length);
 // count words per story roughly
 stories.forEach(s=>{

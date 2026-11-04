@@ -1,3 +1,4 @@
+process.chdir(require('path').join(__dirname, '..', '..'));
 const fs = require('fs');
 const unused = require('./unused_words.json');
 
@@ -18,5 +19,5 @@ function check(file, level) {
 }
 
 ['snippet_a2.txt','snippet_b1.txt','snippet_b2.txt','snippet_c1.txt','snippet_c2.txt'].forEach(f => {
-  check(f, f.replace('snippet_','').replace('.txt',''));
+  check(require('path').join(__dirname, f), f.replace('snippet_','').replace('.txt',''));
 });
