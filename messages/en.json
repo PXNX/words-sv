@@ -429,5 +429,18 @@
   "models_persisted": "Downloads are kept",
   "models_group_piper": "Piper voices",
   "models_group_word_audio": "Word audio",
-  "models_group_listening": "Listening stories"
+  "models_group_listening": "Listening stories",
+  "conversation_model": "Language model: {name}",
+  "conversation_change_model": "change",
+  "models_tier_small": "Small",
+  "models_tier_medium": "Medium",
+  "models_tier_large": "Large",
+  "models_facts": "Download {download} · memory while in use {memory}",
+  "models_best_for": "Best for {language}",
+  "models_may_not_fit": "May be too big for this device",
+  "models_in_use": "Loaded · using ~{memory} of GPU memory",
+  "models_device": "GPU: {gpu} · {f16} shaders",
+  "models_ram": "RAM {ram}",
+  "models_last_reply": "Last reply: {decode} tokens/s writing · {prefill} tokens/s reading · {tokens} tokens",
+  "models_page_memory": "App memory {memory}"
 }

@@ -1,26 +1,38 @@
 import type { ChatMessage } from './conversation.js';
-import type { WorkerReply, WorkerRequest } from './llm.worker.js';
+import type { GenerationStats, WorkerReply, WorkerRequest } from './llm.worker.js';
 import { runJob } from '#lib/audio/backgroundJobs.svelte.js';
 import { createSpeedMeter } from '#lib/offline/downloadSpeed.js';
+import { settings } from '#lib/state/settings.svelte.js';
+import { chatModel, chatModels, gpuNeedMB, webllmId, type ChatModel, type ChatModelId } from './models.js';
 
 /*
- * The conversation partner's brain: a small multilingual chat model that runs entirely on the
- * device through WebGPU (WebLLM, in llm.worker.ts). Nothing the learner says leaves the phone. The
- * model is downloaded once from Hugging Face and then kept in the browser's cache, like the story
- * voices.
+ * The conversation partner's brain: a chat model that runs entirely on the device through WebGPU
+ * (WebLLM, in llm.worker.ts). Nothing the learner says leaves the phone. Which model is picked in
+ * the settings (conversation/models.ts); each is downloaded once from Hugging Face and then kept in
+ * the browser's cache. This module also reports what the model costs: GPU memory, download size,
+ * and how fast it writes (tokens per second).
  */
 
-// Qwen 2.5 1.5B speaks all of the app's languages well enough for learner conversations and fits
-// in about 1.7 GB of GPU memory. The f32 build is for GPUs without 16-bit float shaders.
-const MODEL_F16 = 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC';
-const MODEL_F32 = 'Qwen2.5-1.5B-Instruct-q4f32_1-MLC';
-export const MODEL_MEGABYTES = 900;
-
 type Status = 'idle' | 'checking' | 'unsupported' | 'loading' | 'ready' | 'failed';
-// `bytesPerSecond` is the current download speed, measured from WebLLM's "… MB fetched" reports.
-export const localModel = $state<{ status: Status; progress: number; text: string; cached: boolean; bytesPerSecond: number }>({
-  status: 'idle', progress: 0, text: '', cached: false, bytesPerSecond: 0
-});
+export type DeviceInfo = { f16: boolean; gpu: string; maxBufferMB: number | null; deviceMemoryGB: number | null };
+
+export const localModel = $state<{
+  status: Status;
+  progress: number;
+  text: string;
+  // Whether the chosen model is downloaded; `downloaded` lists every catalog model that is.
+  cached: boolean;
+  downloaded: ChatModelId[];
+  // The model on the GPU right now, if any.
+  loaded: ChatModelId | null;
+  // Current download speed, measured from WebLLM's "… MB fetched" reports.
+  bytesPerSecond: number;
+  // Writing speed: live while a reply streams, then WebLLM's exact numbers for the finished reply.
+  tokensPerSecond: number;
+  lastStats: GenerationStats | null;
+  device: DeviceInfo | null;
+}>({ status: 'idle', progress: 0, text: '', cached: false, downloaded: [], loaded: null, bytesPerSecond: 0, tokensPerSecond: 0, lastStats: null, device: null });
+
 const speed = createSpeedMeter();
 
 type Listener = (reply: WorkerReply) => void;
@@ -28,7 +40,6 @@ let worker: Worker | null = null;
 let nextId = 0;
 const listeners = new Map<number, Listener>();
 let loading: Promise<void> | null = null;
-let modelId: string | null = null;
 
 function ensureWorker() {
   worker ??= (() => {
@@ -53,54 +64,80 @@ function request(message: Request, onUpdate?: Listener): Promise<WorkerReply & {
   });
 }
 
-type GpuNavigator = Navigator & { gpu?: { requestAdapter: () => Promise<{ features: Set<string> } | null> } };
+type GpuAdapter = { features: Set<string>; limits?: { maxBufferSize?: number }; info?: { vendor?: string; architecture?: string; description?: string } };
+type GpuNavigator = Navigator & { gpu?: { requestAdapter: () => Promise<GpuAdapter | null> }; deviceMemory?: number };
 
-/** Which model build this device can run, or null without WebGPU. */
-async function pickModel(): Promise<string | null> {
+/** What this device offers the models, or null without WebGPU. */
+async function detectDevice(): Promise<DeviceInfo | null> {
   if (typeof navigator === 'undefined') return null;
-  const gpu = (navigator as GpuNavigator).gpu;
-  if (!gpu) return null;
+  const nav = navigator as GpuNavigator;
+  if (!nav.gpu) return null;
   try {
-    const adapter = await gpu.requestAdapter();
+    const adapter = await nav.gpu.requestAdapter();
     if (!adapter) return null;
-    return adapter.features.has('shader-f16') ? MODEL_F16 : MODEL_F32;
+    const info = adapter.info ?? {};
+    return {
+      f16: adapter.features.has('shader-f16'),
+      gpu: [info.vendor, info.architecture || info.description].filter(Boolean).join(' ') || 'WebGPU',
+      maxBufferMB: adapter.limits?.maxBufferSize ? Math.round(adapter.limits.maxBufferSize / 1_048_576) : null,
+      deviceMemoryGB: typeof nav.deviceMemory === 'number' ? nav.deviceMemory : null
+    };
   } catch {
     return null;
   }
 }
 
-/** Checks WebGPU support and whether the model is already downloaded, without loading it. */
-export async function checkLocalModel(): Promise<void> {
-  if (localModel.status !== 'idle') return;
+/** The model picked in the settings. */
+export function chosenModel(): ChatModel {
+  return chatModel(settings.chatModel);
+}
+
+/** GPU memory the chosen build of `model` needs on this device. */
+export function modelGpuMB(model: ChatModel): number {
+  return gpuNeedMB(model, localModel.device?.f16 ?? true);
+}
+
+/** Checks WebGPU support and which models are downloaded, without loading any. */
+export async function checkLocalModel(force = false): Promise<void> {
+  if (localModel.status !== 'idle' && !force) return;
+  if (localModel.status === 'loading') return;
+  const previous = localModel.status;
   localModel.status = 'checking';
-  modelId = await pickModel();
-  if (!modelId) {
+  localModel.device ??= await detectDevice();
+  if (!localModel.device) {
     localModel.status = 'unsupported';
     return;
   }
-  // Without WebLLM's cache nothing can be downloaded yet: answer without fetching the 6 MB worker,
+  const f16 = localModel.device.f16;
+  // Without WebLLM's cache nothing is downloaded yet: answer without fetching the 6 MB worker,
   // which matters on a slow connection (the settings ask this every time they open).
   const anyCache = typeof caches !== 'undefined' && (await caches.has('webllm/model').catch(() => false));
-  localModel.cached = anyCache && (await request({ type: 'cached', model: modelId }).then((reply) => Boolean(reply.cached), () => false));
-  if (localModel.status === 'checking') localModel.status = 'idle';
+  const ids = chatModels.map((model) => webllmId(model, f16));
+  const cached = anyCache ? await request({ type: 'cached', models: ids }).then((reply) => reply.cached ?? [], () => []) : [];
+  localModel.downloaded = chatModels.filter((model) => cached.includes(webllmId(model, f16))).map((model) => model.id);
+  localModel.cached = localModel.downloaded.includes(chosenModel().id);
+  localModel.status = previous === 'ready' && localModel.loaded === chosenModel().id ? 'ready' : 'idle';
 }
 
-/** Downloads (once) and loads the model onto the GPU, reporting progress in `localModel`. */
+/** Downloads (once) and loads the chosen model onto the GPU, reporting progress in `localModel`. */
 export function loadLocalModel(): Promise<void> {
-  if (localModel.status === 'ready') return Promise.resolve();
+  const model = chosenModel();
+  if (localModel.status === 'ready' && localModel.loaded === model.id) return Promise.resolve();
   loading ??= (async () => {
-    modelId ??= await pickModel();
-    if (!modelId) {
+    localModel.device ??= await detectDevice();
+    if (!localModel.device) {
       localModel.status = 'unsupported';
       return;
     }
+    const id = webllmId(model, localModel.device.f16);
     localModel.status = 'loading';
     localModel.progress = 0;
+    localModel.bytesPerSecond = 0;
+    speed.reset();
     try {
       // A background job, so the download keeps going (and shows in the corner badge) while the
       // learner plays something else.
-      const model = modelId;
-      await runJob(`conversation-model|${model}`, 'Lilith', '/conversation', (control) => request({ type: 'load', model }, (reply) => {
+      await runJob(`conversation-model|${id}`, model.label, '/conversation', (control) => request({ type: 'load', model: id }, (reply) => {
         if (reply.type !== 'progress') return;
         localModel.progress = reply.progress;
         localModel.text = reply.text;
@@ -110,26 +147,50 @@ export function loadLocalModel(): Promise<void> {
         control.progress({ done: Math.round(reply.progress * 100), total: 100 });
       }));
       localModel.status = 'ready';
+      localModel.loaded = model.id;
       localModel.cached = true;
+      if (!localModel.downloaded.includes(model.id)) localModel.downloaded = [...localModel.downloaded, model.id];
     } catch (error) {
       console.error('Local model failed to load', error);
       // A failed load can leave the GPU in a bad state; the next try starts a fresh worker.
       worker?.terminate();
       worker = null;
+      localModel.loaded = null;
       localModel.status = 'failed';
     } finally {
       loading = null;
+      localModel.bytesPerSecond = 0;
     }
   })();
   return loading;
 }
 
+/** Picks another model in the settings; the next conversation loads it (freeing the old one). */
+export function chooseModel(id: ChatModelId) {
+  settings.setChatModel(id);
+  localModel.cached = localModel.downloaded.includes(id);
+  if (localModel.status === 'ready' && localModel.loaded !== id) localModel.status = 'idle';
+}
+
 /** Streams the model's reply; `onText` receives the reply so far after every new piece. */
 export async function generateReply(messages: ChatMessage[], onText: (text: string) => void): Promise<string> {
   if (localModel.status !== 'ready') throw new Error('model_not_loaded');
-  const reply = await request({ type: 'generate', messages }, (update) => {
-    if (update.type === 'token') onText(update.text);
+  const startedAt = performance.now();
+  let firstTokenAt = 0;
+  const reply = await request({ type: 'generate', messages, noThinking: Boolean(chosenModel().thinks) }, (update) => {
+    if (update.type !== 'token') return;
+    // Live speed: tokens since the first one, so the time spent reading the prompt does not count.
+    if (!firstTokenAt) firstTokenAt = performance.now();
+    const seconds = (performance.now() - firstTokenAt) / 1000;
+    if (seconds > 0.3) localModel.tokensPerSecond = (update.tokens - 1) / seconds;
+    onText(update.text);
   });
+  if (reply.stats) {
+    localModel.lastStats = reply.stats;
+    if (reply.stats.decodeTokensPerSecond) localModel.tokensPerSecond = reply.stats.decodeTokensPerSecond;
+  } else if (performance.now() - startedAt > 0) {
+    localModel.lastStats = null;
+  }
   return reply.text ?? '';
 }
 
@@ -138,7 +199,19 @@ export function interruptReply() {
   if (worker && localModel.status === 'ready') void request({ type: 'interrupt' }).catch(() => undefined);
 }
 
-/** Stops the model and marks it as not downloaded (its files are being deleted). */
+/** Deletes one downloaded model from the cache (unloading it first if it is on the GPU). */
+export async function deleteModel(id: ChatModelId) {
+  const f16 = localModel.device?.f16 ?? true;
+  await request({ type: 'delete', model: webllmId(chatModel(id), f16) }).catch(() => undefined);
+  localModel.downloaded = localModel.downloaded.filter((entry) => entry !== id);
+  if (localModel.loaded === id) {
+    localModel.loaded = null;
+    localModel.status = 'idle';
+  }
+  localModel.cached = localModel.downloaded.includes(chosenModel().id);
+}
+
+/** Stops the model and marks everything as not downloaded (all model files are being deleted). */
 export function unloadLocalModel() {
   worker?.terminate();
   worker = null;
@@ -147,6 +220,14 @@ export function unloadLocalModel() {
   loading = null;
   localModel.status = 'idle';
   localModel.cached = false;
+  localModel.downloaded = [];
+  localModel.loaded = null;
   localModel.progress = 0;
   localModel.bytesPerSecond = 0;
+}
+
+/** The page's own JavaScript memory (Chrome only); the models' GPU memory is in modelGpuMB. */
+export function pageMemoryMB(): number | null {
+  const memory = (performance as Performance & { memory?: { usedJSHeapSize: number } }).memory;
+  return memory ? Math.round(memory.usedJSHeapSize / 1_048_576) : null;
 }
