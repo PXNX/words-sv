@@ -7,6 +7,8 @@
     expectedLetter,
     disabled = false,
     ariaLabel,
+    markLabels,
+    removeLabel,
     onPress,
     onRemove
   }: {
@@ -15,6 +17,9 @@
     expectedLetter?: string;
     disabled?: boolean;
     ariaLabel: string;
+    /** Spoken after a used key's letter, e.g. "A, not in the word". */
+    markLabels?: Record<WordleMark, string>;
+    removeLabel?: string;
     onPress: (letter: string) => void;
     onRemove: () => void;
   } = $props();
@@ -32,6 +37,7 @@
     class:expected
     class:dimmed={guided && !expected}
     data-mark={marks[letter]}
+    aria-label={markLabels && marks[letter] ? `${letter}, ${markLabels[marks[letter]]}` : undefined}
     onclick={() => onPress(letter)}
     disabled={disabled && !guided}
   >{letter}</button>
@@ -45,7 +51,7 @@
   {/each}
   <div class="flex justify-center gap-[clamp(.15rem,.8cqw,.3rem)]">
     {#each layout.extras as letter}{@render key(letter, true)}{/each}
-    <button type="button" class="wordle-key remove" class:dimmed={guided} onclick={onRemove} disabled={disabled && !guided}>⌫</button>
+    <button type="button" class="wordle-key remove" class:dimmed={guided} aria-label={removeLabel} onclick={onRemove} disabled={disabled && !guided}>⌫</button>
   </div>
 </div>
 

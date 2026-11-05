@@ -18,8 +18,9 @@
 
   const labels = $derived({
     title: m.wordle_title({}, { locale: settings.interfaceLocale }),
-    subtitle: m.wordle_subtitle({}, { locale: settings.interfaceLocale }),
-    empty: m.wordle_empty({}, { locale: settings.interfaceLocale }),
+    // The original texts say "five letters"; other lengths get their own, so translated five-letter texts stay in use.
+    subtitle: settings.wordleLength === 5 ? m.wordle_subtitle({}, { locale: settings.interfaceLocale }) : m.wordle_subtitle_length({ length: settings.wordleLength }, { locale: settings.interfaceLocale }),
+    empty: settings.wordleLength === 5 ? m.wordle_empty({}, { locale: settings.interfaceLocale }) : m.wordle_empty_length({ length: settings.wordleLength }, { locale: settings.interfaceLocale }),
     input: m.wordle_input({}, { locale: settings.interfaceLocale }),
     win: m.wordle_win({}, { locale: settings.interfaceLocale }),
     invalid: m.wordle_invalid({}, { locale: settings.interfaceLocale }),

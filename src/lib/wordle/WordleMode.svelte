@@ -44,6 +44,8 @@
   let invalidTimer: ReturnType<typeof setTimeout> | undefined;
   // The row that was just checked flips tile by tile; restored rows show at once.
   let revealRow = $state(-1);
+  // Read out by screen readers after each checked row; the tiles alone would be five bare letters.
+  let announcement = $state('');
 
   const keyLetters = $derived(layoutLetters(keyboardLayoutFor(language)));
   const candidates = $derived(typeableWords(fiveLetterWords(words, wordLength), keyLetters));
@@ -62,9 +64,32 @@
   const practiceContinueLabel = $derived(m.tutorial_start({}, { locale: settings.interfaceLocale }));
   const alreadyTriedLabel = $derived(m.wordle_already_tried({}, { locale: settings.interfaceLocale }));
   const tooShortLabel = $derived(m.wordle_too_short({}, { locale: settings.interfaceLocale }));
-  const explanationDefinition = $derived(explanationWord ? wordDefinitions[language as keyof typeof wordDefinitions]?.[explanationWord] ?? null : null);
-  const explanationSpelling = $derived(explanationWord ? wordMetadata[language as keyof typeof wordMetadata]?.[explanationWord]?.spelling ?? explanationWord : '');
-  const explanationHref = $derived(explanationWord ? wiktionaryUrl(language as keyof typeof wordDefinitions, explanationSpelling) : '#');
+  const markLabels = $derived<Record<WordleMark, string>>({
+    correct: m.wordle_mark_correct({}, { locale: settings.interfaceLocale }),
+    present: m.wordle_mark_present({}, { locale: settings.interfaceLocale }),
+    absent: m.wordle_mark_absent({}, { locale: settings.interfaceLocale })
+  });
+  const noDefinitionLabel = $derived(m.wordle_no_definition({}, { locale: settings.interfaceLocale }));
+  const deleteLabel = $derived(m.wordle_delete({}, { locale: settings.interfaceLocale }));
+  const revealLabel = $derived(m.wordle_reveal({}, { locale: settings.interfaceLocale }));
+  const solvedLabel = $derived(m.wordle_solved_in({ attempts: entries.length, max: maxAttempts }, { locale: settings.interfaceLocale }));
+  const explanation = $derived(explanationWord ? wordInfo(explanationWord) : null);
+  // Once a round is over, the answer is shown with its article and meaning, won or lost.
+  const roundOver = $derived(won || exhausted);
+  const answer = $derived(roundOver && target ? wordInfo(target) : null);
+  // The result waits until the last row has finished turning over.
+  const revealDelay = $derived(`${(wordLength - 1) * 110 + 460}ms`);
+
+  function wordInfo(word: string) {
+    const key = language as keyof typeof wordDefinitions;
+    const metadata = wordMetadata[key]?.[word];
+    const spelling = metadata?.spelling ?? word;
+    return { spelling, article: metadata?.article ?? '', definition: wordDefinitions[key]?.[word] ?? null, href: wiktionaryUrl(key, spelling) };
+  }
+
+  function describeRow(entry: Entry): string {
+    return `${entry.word}: ${Array.from(entry.word).map((letter, index) => `${letter} ${markLabels[entry.marks[index]]}`).join(', ')}`;
+  }
 
   function start() {
     target = candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : '';
@@ -74,6 +99,7 @@
     explanationWord = null;
     invalid = false;
     revealRow = -1;
+    announcement = '';
     if (typeof localStorage !== 'undefined') localStorage.removeItem(WORDLE_STATE_KEY);
   }
 
@@ -137,10 +163,13 @@
     revealRow = entries.length - 1;
     guess = '';
     if (marks.some((mark) => mark === 'correct')) onGreen();
+    notice = '';
+    const row = describeRow(entries[entries.length - 1]);
     if (normalized === target) {
-      notice = labels.win;
+      announcement = `${row}. ${labels.win} ${solvedLabel}`;
       onWin(entries.length);
-    } else notice = '';
+    } else if (entries.length >= maxAttempts) announcement = `${row}. ${revealLabel} ${target}`;
+    else announcement = row;
   }
 
   function press(letter: string) {
@@ -268,16 +297,30 @@
     <div class="p-[1.25rem] border border-accent/42 bg-accent/8 text-accent text-[.75rem] font-extrabold text-center">{labels.empty}</div>
   {:else}
     <div class="grid content-center justify-items-center gap-[.65rem]">
-      <WordleGrid rows={maxAttempts} {wordLength} {entries} currentGuess={guess} {invalid} {revealRow} ariaLabel={labels.title} onExplain={(word) => (explanationWord = explanationWord === word ? null : word)} />
-      {#if explanationWord}<div class="note-play pop-in flex items-start gap-[.45rem] max-w-[min(100%,28rem)] p-[.55rem_.7rem] text-accent text-[.65rem] font-bold leading-[1.35]"><IconHelp class="w-[.9rem] h-[.9rem] flex-none mt-[.05rem]" aria-hidden="true" /><span>{explanationDefinition ?? 'No definition is available for this word yet.'}<a class="ml-1 font-extrabold underline underline-offset-2" href={explanationHref} target="_blank" rel="noreferrer">Wiktionary</a></span></div>{/if}
-      <p class:text-accent={!won} class:text-success={won} class="min-h-[1rem] m-0 text-[.68rem] font-extrabold text-center" role="status" aria-live="polite">{notice}</p>
-      {#if exhausted && !won}<p class="min-h-[1rem] m-0 text-accent text-[.68rem] font-extrabold text-center">{target}</p>{/if}
-      {#if won || exhausted}<button class="btn-play btn-play-go disabled:cursor-wait disabled:opacity-80" onclick={continueRound} disabled={loadingNextRound} aria-busy={loadingNextRound}>
-        {#if loadingNextRound}<IconProgressActivity class="w-[1rem] h-[1rem] animate-[startup-spin_1s_linear_infinite] motion-reduce:animate-none" aria-hidden="true" />{/if}
-        <span>{labels.again}</span>
-      </button>{/if}
+      <WordleGrid rows={maxAttempts} {wordLength} {entries} currentGuess={guess} {invalid} {revealRow} {markLabels} explainLabel={(word) => m.wordle_explain({ word }, { locale: settings.interfaceLocale })} ariaLabel={labels.title} onExplain={(word) => (explanationWord = explanationWord === word ? null : word)} />
+      {#if explanation}<div class="note-play pop-in flex items-start gap-[.45rem] max-w-[min(100%,28rem)] p-[.55rem_.7rem] text-accent text-[.65rem] font-bold leading-[1.35]"><IconHelp class="w-[.9rem] h-[.9rem] flex-none mt-[.05rem]" aria-hidden="true" /><span>{explanation.definition ?? noDefinitionLabel}<a class="ml-1 font-extrabold underline underline-offset-2" href={explanation.href} target="_blank" rel="noreferrer">Wiktionary</a></span></div>{/if}
+      <p class="min-h-[1rem] m-0 text-accent text-[.68rem] font-extrabold text-center" role="status" aria-live="polite">{notice}</p>
+      <p class="sr-only" aria-live="polite">{announcement}</p>
+      {#if answer}
+        <div class="wordle-result note-play grid justify-items-center gap-[.2rem] max-w-[min(100%,28rem)] p-[.6rem_.85rem] text-center" style:--reveal-delay={revealDelay}>
+          <p class="m-0 text-[.68rem] font-extrabold" class:text-success={won} class:text-accent={!won}>{won ? `${labels.win} ${solvedLabel}` : revealLabel}</p>
+          <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[1.35rem] leading-tight" lang={language}>{#if answer.article}<span class="text-base-content/60 text-[1rem]">{answer.article} </span>{/if}{answer.spelling}</p>
+          <p class="m-0 text-base-content/75 text-[.65rem] font-bold leading-[1.35]">{answer.definition ?? noDefinitionLabel}<a class="ml-1 font-extrabold text-accent underline underline-offset-2" href={answer.href} target="_blank" rel="noreferrer">Wiktionary</a></p>
+        </div>
+        <button class="wordle-result btn-play btn-play-go disabled:cursor-wait disabled:opacity-80" style:--reveal-delay={revealDelay} onclick={continueRound} disabled={loadingNextRound} aria-busy={loadingNextRound}>
+          {#if loadingNextRound}<IconProgressActivity class="w-[1rem] h-[1rem] animate-[startup-spin_1s_linear_infinite] motion-reduce:animate-none" aria-hidden="true" />{/if}
+          <span>{labels.again}</span>
+        </button>
+      {/if}
     </div>
 
-    <WordleKeyboard {language} marks={keyboardMarks} disabled={won || exhausted} ariaLabel={labels.input} onPress={press} onRemove={removeLetter} />
+    <WordleKeyboard {language} marks={keyboardMarks} disabled={roundOver} ariaLabel={labels.input} {markLabels} removeLabel={deleteLabel} onPress={press} onRemove={removeLetter} />
   {/if}
 </section>
+
+<style>
+  /* The answer and the next-word button arrive once the last row has turned over. */
+  .wordle-result { animation:wordle-result .32s cubic-bezier(.34,1.3,.64,1) backwards;animation-delay:var(--reveal-delay,0ms); }
+  @keyframes wordle-result { from { opacity:0;translate:0 .4rem; } }
+  @media (prefers-reduced-motion:reduce) { .wordle-result { animation:none; } }
+</style>
