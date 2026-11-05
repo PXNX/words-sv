@@ -42,6 +42,8 @@
   // Briefly true after a rejected guess, so the current row shakes.
   let invalid = $state(false);
   let invalidTimer: ReturnType<typeof setTimeout> | undefined;
+  // The row that was just checked flips tile by tile; restored rows show at once.
+  let revealRow = $state(-1);
 
   const keyLetters = $derived(layoutLetters(keyboardLayoutFor(language)));
   const candidates = $derived(typeableWords(fiveLetterWords(words, wordLength), keyLetters));
@@ -71,6 +73,7 @@
     notice = '';
     explanationWord = null;
     invalid = false;
+    revealRow = -1;
     if (typeof localStorage !== 'undefined') localStorage.removeItem(WORDLE_STATE_KEY);
   }
 
@@ -98,6 +101,7 @@
     guess = saved.guess;
     notice = '';
     invalid = false;
+    revealRow = -1;
   }
 
   /** Rejects the current row: a shake, a short buzz and a reason. The letters stay so one can be fixed. */
@@ -130,6 +134,7 @@
     }
     const marks = evaluateWordleGuess(target, normalized) as WordleMark[];
     entries = [...entries, { word: normalized, marks }];
+    revealRow = entries.length - 1;
     guess = '';
     if (marks.some((mark) => mark === 'correct')) onGreen();
     if (normalized === target) {
@@ -184,6 +189,7 @@
     if (nextGuess.length === 5) {
       const marks = evaluateWordleGuess(tutorialRound.target, nextGuess) as WordleMark[];
       entries = [...entries, { word: nextGuess, marks }];
+      revealRow = entries.length - 1;
       guess = '';
       practiceStep = practiceStep === 0 ? 1 : 2;
     }
@@ -247,7 +253,7 @@
 
   {#if practiceActive && tutorialRound}
     <div class="grid content-center justify-items-center gap-[.65rem]">
-      <WordleGrid rows={2} wordLength={5} {entries} currentGuess={practiceFinished ? '' : guess} ariaLabel={labels.title} compact />
+      <WordleGrid rows={2} wordLength={5} {entries} currentGuess={practiceFinished ? '' : guess} {revealRow} ariaLabel={labels.title} compact />
       {#if practiceFinished}
         <p class="min-h-[1rem] m-0 text-success text-[.68rem] font-extrabold text-center">{practiceCompleteLabel}</p>
         <button class="btn-play btn-play-go" onclick={finishPractice}>{practiceContinueLabel}</button>
@@ -262,7 +268,7 @@
     <div class="p-[1.25rem] border border-accent/42 bg-accent/8 text-accent text-[.75rem] font-extrabold text-center">{labels.empty}</div>
   {:else}
     <div class="grid content-center justify-items-center gap-[.65rem]">
-      <WordleGrid rows={maxAttempts} {wordLength} {entries} currentGuess={guess} {invalid} ariaLabel={labels.title} onExplain={(word) => (explanationWord = explanationWord === word ? null : word)} />
+      <WordleGrid rows={maxAttempts} {wordLength} {entries} currentGuess={guess} {invalid} {revealRow} ariaLabel={labels.title} onExplain={(word) => (explanationWord = explanationWord === word ? null : word)} />
       {#if explanationWord}<div class="note-play pop-in flex items-start gap-[.45rem] max-w-[min(100%,28rem)] p-[.55rem_.7rem] text-accent text-[.65rem] font-bold leading-[1.35]"><IconHelp class="w-[.9rem] h-[.9rem] flex-none mt-[.05rem]" aria-hidden="true" /><span>{explanationDefinition ?? 'No definition is available for this word yet.'}<a class="ml-1 font-extrabold underline underline-offset-2" href={explanationHref} target="_blank" rel="noreferrer">Wiktionary</a></span></div>{/if}
       <p class:text-accent={!won} class:text-success={won} class="min-h-[1rem] m-0 text-[.68rem] font-extrabold text-center" role="status" aria-live="polite">{notice}</p>
       {#if exhausted && !won}<p class="min-h-[1rem] m-0 text-accent text-[.68rem] font-extrabold text-center">{target}</p>{/if}
