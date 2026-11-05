@@ -426,7 +426,14 @@
     const point = pointFromEvent(event);
     if (!point) return;
     const index = nearestLetter(point);
-    if (index >= 0 && index !== selectedPath.at(-1)) chooseLetter(index);
+    if (index < 0 || index === selectedPath.at(-1)) return;
+    // Sliding back onto the previous letter takes the last one back, so a slip doesn't cost the whole word.
+    if (selectedPath.length > 1 && index === selectedPath.at(-2)) {
+      selectedPath = selectedPath.slice(0, -1);
+      haptic('tap');
+      return;
+    }
+    chooseLetter(index);
   }
   function endSwipe() {
     if (!isDragging) return;
