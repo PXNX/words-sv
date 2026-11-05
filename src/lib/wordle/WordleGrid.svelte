@@ -1,10 +1,12 @@
 <script lang="ts">
   import IconHelp from '~icons/material-symbols/question-mark-rounded';
+  import type { WordleMark } from './keyboardLayouts';
 
-  type WordleMark = 'correct' | 'present' | 'absent';
   type Entry = { word: string; marks: WordleMark[] };
 
   let { rows, wordLength = 5, entries, currentGuess = '', ariaLabel, compact = false, onExplain }: { rows: number; wordLength?: number; entries: Entry[]; currentGuess?: string; ariaLabel: string; compact?: boolean; onExplain?: (word: string) => void } = $props();
+
+  const guessLetters = $derived(Array.from(currentGuess));
 </script>
 
 <div
@@ -15,25 +17,26 @@
 >
   {#each Array(rows) as _, row}
     {@const entry = entries[row]}
+    {@const entryLetters = entry ? Array.from(entry.word) : []}
     <div class="flex items-center gap-[.35rem]">
       <div class="grid gap-[clamp(.2rem,1vw,.34rem)]" style={`grid-template-columns:repeat(${wordLength},minmax(0,clamp(1.6rem,${Math.min(10, 48 / wordLength)}vw,2.55rem)));`}>
       {#each Array(wordLength) as _, column}
-        {@const letter = entry?.word[column] ?? (row === entries.length ? currentGuess[column] : '')}
-        {@const mark = entry?.marks[column] ?? ''}
-        <span
-          class="grid aspect-square place-items-center rounded-[10px_7px_10px_8px] border-2 border-[rgba(23,42,69,.4)] bg-[#fffdf7] shadow-[0_2px_0_rgba(23,42,69,.22)] text-[clamp(.75rem,3.8vw,1.05rem)] font-black text-base-content dark:border-[rgba(255,253,247,.38)] dark:bg-[#172a45]"
-          class:border-success={mark === 'correct'}
-          class:bg-success={mark === 'correct'}
-          class:text-[#fffdf7]={mark === 'correct' || mark === 'absent'}
-          class:border-[#d39723]={mark === 'present'}
-          class:bg-primary={mark === 'present'}
-          class:text-primary-content={mark === 'present'}
-          class:border-[#69727a]={mark === 'absent'}
-          class:bg-[#69727a]={mark === 'absent'}
-        >{letter}</span>
+        {@const letter = entry ? entryLetters[column] ?? '' : row === entries.length ? guessLetters[column] ?? '' : ''}
+        <span class="wordle-tile" data-mark={entry?.marks[column] || undefined}>{letter}</span>
       {/each}
       </div>
       {#if entry && onExplain}<button type="button" class="btn-play btn-play-soft btn-play-round btn-play-sm flex-none" onclick={() => onExplain(entry.word)} aria-label={`Explain ${entry.word}`}><IconHelp class="w-[.95rem] h-[.95rem]" aria-hidden="true" /></button>{/if}
     </div>
   {/each}
 </div>
+
+<style>
+  /* Scoped instead of utilities: Tailwind's dark: variants sort after plain utilities, so the
+     neutral dark background used to win over the green/orange/grey marks in dark mode. */
+  .wordle-tile { display:grid;aspect-ratio:1;place-items:center;border:2px solid;border-radius:10px 7px 10px 8px;box-shadow:0 2px 0 rgba(23,42,69,.22);font-size:clamp(.75rem,3.8vw,1.05rem);font-weight:900; }
+  .wordle-tile:not([data-mark]) { border-color:rgba(23,42,69,.4);background:#fffdf7;color:var(--color-base-content); }
+  :global(html.dark) .wordle-tile:not([data-mark]) { border-color:rgba(255,253,247,.38);background:#172a45; }
+  .wordle-tile[data-mark='correct'] { border-color:var(--color-success);background:var(--color-success);color:#fffdf7; }
+  .wordle-tile[data-mark='present'] { border-color:#d39723;background:var(--color-primary);color:var(--color-primary-content); }
+  .wordle-tile[data-mark='absent'] { border-color:#69727a;background:#69727a;color:#fffdf7; }
+</style>

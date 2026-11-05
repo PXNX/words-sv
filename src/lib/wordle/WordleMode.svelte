@@ -1,7 +1,7 @@
 <script lang="ts">
   import { evaluateWordleGuess, fiveLetterWords, isValidWordleGuess, normalizePlayableWord } from './wordleWords';
   import { readWordleState, WORDLE_STATE_KEY, writeWordleState } from './wordleState';
-  import { keyboardMarksFrom, type WordleMark } from './keyboardLayouts';
+  import { keyboardLayoutFor, keyboardMarksFrom, layoutLetters, typeableWords, type WordleMark } from './keyboardLayouts';
   import WordleGrid from './WordleGrid.svelte';
   import WordleKeyboard from './WordleKeyboard.svelte';
   import { m } from '#lib/paraglide/messages.js';
@@ -39,7 +39,8 @@
   let loadingNextRound = $state(false);
   let explanationWord = $state<string | null>(null);
 
-  const candidates = $derived(fiveLetterWords(words, wordLength));
+  const keyLetters = $derived(layoutLetters(keyboardLayoutFor(language)));
+  const candidates = $derived(typeableWords(fiveLetterWords(words, wordLength), keyLetters));
   const won = $derived(entries.some((entry) => entry.word === target));
   const maxAttempts = $derived(wordLength + 1);
   const exhausted = $derived(entries.length >= maxAttempts && !won);

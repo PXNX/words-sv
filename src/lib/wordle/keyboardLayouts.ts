@@ -1,7 +1,7 @@
 export type KeyboardLayout = { rows: string[]; extras: string[] };
 
 export const keyboardLayouts: Record<string, KeyboardLayout> = {
-  de: { rows: ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'], extras: ['Ä', 'Ö', 'Ü', 'ẞ'] },
+  de: { rows: ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'], extras: ['Ä', 'Ö', 'Ü'] },
   en: { rows: ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'], extras: [] },
   fr: { rows: ['AZERTYUIOP', 'QSDFGHJKLM', 'WXCVBN'], extras: ['À', 'É', 'È', 'Ê', 'Ë', 'Î', 'Ï', 'Ô', 'Ù', 'Û', 'Ü', 'Ç', 'Œ'] },
   it: { rows: ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'], extras: ['À', 'È', 'É', 'Ì', 'Ò', 'Ù'] },
@@ -12,6 +12,34 @@ export const keyboardLayouts: Record<string, KeyboardLayout> = {
 
 export function keyboardLayoutFor(language: string): KeyboardLayout {
   return keyboardLayouts[language] ?? keyboardLayouts.en;
+}
+
+/** Every letter the on-screen keyboard can type. */
+export function layoutLetters(layout: KeyboardLayout): Set<string> {
+  return new Set([...layout.rows.join(''), ...layout.extras]);
+}
+
+/**
+ * Keeps only words the keyboard can actually type, so a round can never ask for a letter that has
+ * no key (e.g. CAFÉ on the German keys). German ß is uppercased to SS by the word normalisation,
+ * which is why the German keys have no ẞ: it could never be part of a playable word.
+ */
+export function typeableWords(words: string[], letters: ReadonlySet<string>): string[] {
+  return words.filter((word) => Array.from(word).every((letter) => letters.has(letter)));
+}
+
+export type PhysicalKey = { kind: 'letters'; value: string } | { kind: 'remove' } | { kind: 'enter' };
+
+/**
+ * Maps a physical keyboard's `KeyboardEvent.key` to a game action. Letters are uppercased the same
+ * way as guesses (so ß types SS) and only accepted when the layout has keys for them.
+ */
+export function physicalKeyAction(key: string, letters: ReadonlySet<string>): PhysicalKey | null {
+  if (key === 'Backspace') return { kind: 'remove' };
+  if (key === 'Enter') return { kind: 'enter' };
+  if (Array.from(key).length !== 1) return null;
+  const value = key.normalize('NFC').toLocaleUpperCase();
+  return Array.from(value).every((letter) => letters.has(letter)) ? { kind: 'letters', value } : null;
 }
 
 export type WordleMark = 'correct' | 'present' | 'absent';
