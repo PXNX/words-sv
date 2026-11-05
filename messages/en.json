@@ -78,6 +78,8 @@
   "wordle_invalid": "This word is not part of this level.",
   "wordle_win": "Well done!",
   "wordle_again": "New word",
+  "wordle_already_tried": "You already tried this word.",
+  "wordle_too_short": "Not enough letters yet.",
   "wordle_tutorial_title": "Wordle tutorial",
   "wordle_tutorial_explain": "Orange means the letter is in the word but belongs elsewhere. Green means it is in the correct position.",
   "wordle_tutorial_prompt": "Play the highlighted word:",

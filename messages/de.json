@@ -78,6 +78,8 @@
   "wordle_invalid": "Dieses Wort gehört nicht zu diesem Niveau.",
   "wordle_win": "Gut gemacht!",
   "wordle_again": "Neues Wort",
+  "wordle_already_tried": "Dieses Wort hast du schon versucht.",
+  "wordle_too_short": "Noch nicht genug Buchstaben.",
   "wordle_tutorial_title": "Wordle-Tutorial",
   "wordle_tutorial_explain": "Orange bedeutet: Der Buchstabe ist im Wort, steht aber an einer anderen Stelle. Grün bedeutet: Der Buchstabe steht an der richtigen Position.",
   "wordle_tutorial_prompt": "Spiele das hervorgehobene Wort:",
