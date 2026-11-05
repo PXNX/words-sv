@@ -1,12 +1,12 @@
 <!--
-  "Models & storage" in the settings: the one place to choose and download the models the app runs
-  on the device (the story voices of the engine picked above, and the conversation partner's
-  language model), with what each takes (download, disk, memory) and what is in use right now
+  "Models & storage" in the settings: the one place to choose and download every model the app runs
+  on the device (the story and listening voices, passed in as the `voices` snippet with their
+  controls, and the conversation partner's language model), with what each takes (download, disk, memory) and what is in use right now
   (GPU, page memory, writing speed), and to see and free the space everything takes up.
   Downloads run as background jobs, so the learner can leave the settings while they continue.
 -->
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, type Snippet } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { runJob } from '#lib/audio/backgroundJobs.svelte.js';
@@ -17,7 +17,7 @@
   import { unloadSupertonic } from '#lib/voice/supertonic.js';
   import { unloadVoxCPM } from '#lib/voice/voxcpm.js';
   import { voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
-  import { createSpeedMeter, formatSpeed } from '#lib/offline/downloadSpeed.js';
+  import { formatSpeed } from '#lib/offline/downloadSpeed.js';
   import { deleteGroup, formatBytes, groupBytes, groupStored, keepStoragePersistent, storageSummary, storedGroupIds, type StoredGroup } from '#lib/offline/storage.js';
   import IconDownload from '~icons/material-symbols/download-rounded';
   import IconDelete from '~icons/material-symbols/delete-rounded';
@@ -26,6 +26,8 @@
   import IconStar from '~icons/material-symbols/star-rounded';
   import IconWarning from '~icons/material-symbols/warning-rounded';
   import IconMemory from '~icons/material-symbols/memory-rounded';
+
+  let { voices }: { voices?: Snippet } = $props();
 
   const locale = $derived(settings.interfaceLocale);
   const engineNames: Record<VoiceEngineId, () => string> = {
@@ -53,16 +55,8 @@
   const engine = $derived(activeEngine(lang));
   const voiceDownloadable = $derived(voiceEngines[engine].onDevice && voiceEngines[engine].clips);
   const voiceStatus = $derived(naturalReady(lang) ? 'ready' : naturalState.status[lang] ?? 'idle');
-  const voicePercent = $derived(Math.round((naturalState.progress[lang] ?? 0) * 100));
   // Piper's runtime memory grows with its voice files; the other engines have a fixed estimate.
   const voiceMemoryMB = $derived(voiceEngines[engine].memoryMB ?? Math.round(naturalMegabytes(lang) * 1.3));
-  let voiceSpeed = $state(0);
-  const voiceMeter = createSpeedMeter();
-  $effect(() => {
-    const megabytes = naturalState.downloaded[lang] ?? 0;
-    if (voiceStatus === 'loading') voiceSpeed = voiceMeter.sample(megabytes * 1_000_000);
-    else { voiceSpeed = 0; voiceMeter.reset(); }
-  });
 
   function downloadVoices() {
     const language = lang;
@@ -139,18 +133,17 @@
 
 <section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play models" aria-labelledby="models-heading">
   <h2 id="models-heading">{m.models_title({}, { locale })}</h2>
+  <p class="model-hint">{m.models_hint({}, { locale })}</p>
 
   <h3>{m.models_voices({ engine: engineNames[engine]() }, { locale })}</h3>
+  {@render voices?.()}
   <div class="model-row">
     <div class="model-text">
       {#if !voiceDownloadable}
         <span>{m.models_voices_none({}, { locale })}</span>
       {:else}
         <span class="model-facts">{m.models_facts({ download: `~${mb(naturalMegabytes(lang))}`, memory: `~${mb(voiceMemoryMB)}` }, { locale })}</span>
-        {#if voiceStatus === 'loading'}
-          <span class="model-progress"><span style:width={`${voicePercent}%`}></span></span>
-          <span>{voicePercent}%{#if voiceSpeed} · {formatSpeed(voiceSpeed, locale)}{/if}</span>
-        {:else if voiceStatus === 'ready'}
+        {#if voiceStatus === 'ready'}
           <span class="model-ok"><IconCheck aria-hidden="true" /> {m.models_downloaded({}, { locale })}</span>
         {/if}
       {/if}
@@ -233,7 +226,8 @@
 <style>
   .models h2 { margin:0 0 .3rem;font-family:'DM Serif Display',serif;font-size:1.15rem;font-weight:400; }
   .models h3 { margin:.95rem 0 .35rem;font-size:.62rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;opacity:.65; }
-  .model-row { display:flex;align-items:center;justify-content:space-between;gap:.8rem; }
+  .model-hint { margin:0 0 .2rem;font-size:.66rem;font-weight:700;opacity:.65;line-height:1.35; }
+  .model-row { margin-top:.55rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem; }
   .model-text { flex:1;min-width:0;display:grid;gap:.25rem;font-size:.72rem;font-weight:700; }
   .model-text > span { opacity:.8; }
   .model-facts { font-size:.66rem;font-weight:700;opacity:.7;font-variant-numeric:tabular-nums; }
