@@ -102,3 +102,13 @@ CREATE TABLE IF NOT EXISTS wordcircle_reminder_deliveries (
   PRIMARY KEY (device_id, delivery_date),
   CONSTRAINT wordcircle_reminder_deliveries_device_fk FOREIGN KEY (device_id) REFERENCES wordcircle_streak_devices(device_id) ON DELETE CASCADE
 );
+
+-- Progress saved to a player's Telegram account: one JSON snapshot of the app's storage per Telegram
+-- user, written compare-and-set on `revision`. Created on first use by api/progress/sync.mjs.
+CREATE TABLE IF NOT EXISTS wordcircle_progress_snapshots (
+  telegram_user_id BIGINT NOT NULL PRIMARY KEY,
+  revision INT UNSIGNED NOT NULL DEFAULT 0,
+  snapshot MEDIUMTEXT NOT NULL,
+  updated_by_device VARCHAR(64) NULL,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
