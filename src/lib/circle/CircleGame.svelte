@@ -12,6 +12,7 @@
     type Placement, type Round, type StoredGame
   } from './engine';
   import WordleKeyboard from '#lib/wordle/WordleKeyboard.svelte';
+  import { keyboardLayoutFor } from '#lib/wordle/keyboardLayouts';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
   import IconClose from '~icons/material-symbols/cancel-rounded';
@@ -76,11 +77,21 @@
   const GAME_STORAGE_KEY = 'wordcircle-active-round-v1';
   const ROUND_HISTORY_KEY = 'wordcircle-recent-base-words-v1';
 
+  // Definitions mode is played on the on-screen keyboard, so a word with a letter that has no key
+  // there (e.g. CAFÉ on the German keys) could never be typed and would leave the round unsolvable.
+  function isTypeable(word: string): boolean {
+    const layout = keyboardLayoutFor(settings.lang);
+    const keys = new Set([...layout.rows.join(''), ...layout.extras]);
+    return [...word.trim().normalize('NFC').toUpperCase()].every((letter) => keys.has(letter));
+  }
   // In definitions mode, tapping any crossword square should reveal a real definition — so only
   // build rounds out of words that actually have one, otherwise crossing words (usually short
   // filler words like articles or conjunctions) end up in the grid with nothing to show.
+  function isDefinitionsWord(word: string): boolean {
+    return Boolean(wordDefinitions[settings.lang][word]) && isTypeable(word);
+  }
   function withDefinitionsOnly(pool: string[]): string[] {
-    return showDefinitions ? pool.filter((word) => Boolean(wordDefinitions[settings.lang][word])) : pool;
+    return showDefinitions ? pool.filter(isDefinitionsWord) : pool;
   }
 
   function readRecentBases(): string[] {
@@ -121,7 +132,7 @@
   // /circle and /circle/definitions share the same saved-round storage key, so a round begun in
   // regular Circle mode (or before this mode existed) can be full of words with no definition.
   // Only resume a stored round in definitions mode if every one of its words actually has one.
-  const initialGame = storedGame && showDefinitions && !storedGame.words.every((word) => Boolean(wordDefinitions[settings.lang][word])) ? null : storedGame;
+  const initialGame = storedGame && showDefinitions && !storedGame.words.every(isDefinitionsWord) ? null : storedGame;
   const initialRecentBases = readRecentBases();
   const isPractice = Boolean(startingPracticeLanguage);
   const initialRound: Round = startingPracticeLanguage
