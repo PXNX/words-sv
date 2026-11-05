@@ -4,7 +4,7 @@
 
   type Entry = { word: string; marks: WordleMark[] };
 
-  let { rows, wordLength = 5, entries, currentGuess = '', ariaLabel, compact = false, onExplain }: { rows: number; wordLength?: number; entries: Entry[]; currentGuess?: string; ariaLabel: string; compact?: boolean; onExplain?: (word: string) => void } = $props();
+  let { rows, wordLength = 5, entries, currentGuess = '', ariaLabel, compact = false, invalid = false, onExplain }: { rows: number; wordLength?: number; entries: Entry[]; currentGuess?: string; ariaLabel: string; compact?: boolean; invalid?: boolean; onExplain?: (word: string) => void } = $props();
 
   const guessLetters = $derived(Array.from(currentGuess));
 </script>
@@ -19,7 +19,7 @@
     {@const entry = entries[row]}
     {@const entryLetters = entry ? Array.from(entry.word) : []}
     <div class="flex items-center gap-[.35rem]">
-      <div class="grid gap-[clamp(.2rem,1vw,.34rem)]" style={`grid-template-columns:repeat(${wordLength},minmax(0,clamp(1.6rem,${Math.min(10, 48 / wordLength)}vw,2.55rem)));`}>
+      <div class="grid gap-[clamp(.2rem,1vw,.34rem)]" class:wordle-shake={invalid && row === entries.length} style={`grid-template-columns:repeat(${wordLength},minmax(0,clamp(1.6rem,${Math.min(10, 48 / wordLength)}vw,2.55rem)));`}>
       {#each Array(wordLength) as _, column}
         {@const letter = entry ? entryLetters[column] ?? '' : row === entries.length ? guessLetters[column] ?? '' : ''}
         <span class="wordle-tile" data-mark={entry?.marks[column] || undefined}>{letter}</span>
@@ -39,4 +39,8 @@
   .wordle-tile[data-mark='correct'] { border-color:var(--color-success);background:var(--color-success);color:#fffdf7; }
   .wordle-tile[data-mark='present'] { border-color:#d39723;background:var(--color-primary);color:var(--color-primary-content); }
   .wordle-tile[data-mark='absent'] { border-color:#69727a;background:#69727a;color:#fffdf7; }
+  .wordle-shake { animation:wordle-shake .42s cubic-bezier(.36,.07,.19,.97); }
+  .wordle-shake .wordle-tile:not([data-mark]) { border-color:var(--color-accent); }
+  @keyframes wordle-shake { 15%,55% { translate:-5px 0; } 35%,75% { translate:5px 0; } 0%,100% { translate:0 0; } }
+  @media (prefers-reduced-motion:reduce) { .wordle-shake { animation:none; } }
 </style>
