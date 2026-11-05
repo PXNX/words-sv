@@ -3,7 +3,7 @@ import { chatModel, chatModels, isRecommended, likelyFits, recommendedFor, webll
 
 describe('chat models', () => {
   it('falls back to the default model for unknown ids', () => {
-    expect(chatModel('nonsense').id).toBe('qwen2.5-1.5b');
+    expect(chatModel('nonsense').id).toBe('qwen3.5-2b');
   });
 
   it('recommends a model per language and size that is strong in that language', () => {
@@ -18,13 +18,13 @@ describe('chat models', () => {
   });
 
   it('switches to the 32-bit build on GPUs without 16-bit shaders', () => {
-    const model = chatModel('gemma2-9b');
-    expect(webllmId(model, true)).toBe('gemma-2-9b-it-q4f16_1-MLC');
-    expect(webllmId(model, false)).toBe('gemma-2-9b-it-q4f32_1-MLC');
+    const model = chatModel('qwen3.5-9b');
+    expect(webllmId(model, true)).toBe('Qwen3.5-9B-q4f16_1-MLC');
+    expect(webllmId(model, false)).toBe('Qwen3.5-9B-q4f32_1-MLC');
   });
 
   it('warns about models that need more memory than a small device has', () => {
-    const large = chatModel('gemma2-9b');
+    const large = chatModel('qwen3.5-9b');
     expect(likelyFits(large, true, 4, 1024)).toBe(false);
     // 8 GB is the most a browser reports, so it cannot rule a model out.
     expect(likelyFits(large, true, 8, 1024)).toBe(true);

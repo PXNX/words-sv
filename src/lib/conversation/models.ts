@@ -9,7 +9,7 @@
  */
 import type { Language } from '#lib/data/vocabulary.js';
 
-export type ChatModelId = 'qwen2.5-1.5b' | 'qwen3-1.7b' | 'gemma2-2b' | 'qwen2.5-3b' | 'llama3.2-3b' | 'qwen3-4b' | 'llama3.1-8b' | 'qwen3-8b' | 'gemma2-9b';
+export type ChatModelId = 'qwen3.5-2b' | 'gemma4-e2b' | 'qwen3.5-4b' | 'qwen3.5-9b';
 export type ChatModelSize = 'small' | 'medium' | 'large';
 
 export type ChatModel = {
@@ -23,23 +23,20 @@ export type ChatModel = {
   gpuMBf32: number;
   // Languages it writes especially well (from the model's documented language support).
   strongIn: readonly Language[];
-  // Qwen 3 thinks out loud unless told not to; a conversation partner should answer right away.
+  // Qwen 3.5 can think out loud before answering; a conversation partner should answer right away.
   thinks?: boolean;
 };
 
+// A short list of current models, one or two per size: Qwen 3.5 covers every size and all our
+// languages (201 trained), Gemma 4 E2B writes the Western European languages especially naturally.
 export const chatModels: readonly ChatModel[] = [
-  { id: 'qwen2.5-1.5b', label: 'Qwen 2.5 · 1.5B', size: 'small', webllm: 'Qwen2.5-1.5B-Instruct-q4f16_1-MLC', downloadMB: 880, gpuMB: 1630, gpuMBf32: 1889, strongIn: ['en', 'de', 'fr', 'es', 'pt', 'it'] },
-  { id: 'qwen3-1.7b', label: 'Qwen 3 · 1.7B', size: 'small', webllm: 'Qwen3-1.7B-q4f16_1-MLC', downloadMB: 984, gpuMB: 2037, gpuMBf32: 2635, strongIn: ['uk', 'en', 'de', 'fr', 'es', 'pt', 'it'], thinks: true },
-  { id: 'gemma2-2b', label: 'Gemma 2 · 2B', size: 'small', webllm: 'gemma-2-2b-it-q4f16_1-MLC', downloadMB: 1493, gpuMB: 1895, gpuMBf32: 2509, strongIn: ['de', 'fr', 'it', 'es', 'pt', 'en'] },
-  { id: 'qwen2.5-3b', label: 'Qwen 2.5 · 3B', size: 'medium', webllm: 'Qwen2.5-3B-Instruct-q4f16_1-MLC', downloadMB: 1748, gpuMB: 2505, gpuMBf32: 2893, strongIn: ['en', 'de', 'fr', 'es', 'pt', 'it'] },
-  { id: 'llama3.2-3b', label: 'Llama 3.2 · 3B', size: 'medium', webllm: 'Llama-3.2-3B-Instruct-q4f16_1-MLC', downloadMB: 1817, gpuMB: 2264, gpuMBf32: 2952, strongIn: ['en', 'de', 'fr', 'it', 'es', 'pt'] },
-  { id: 'qwen3-4b', label: 'Qwen 3 · 4B', size: 'medium', webllm: 'Qwen3-4B-q4f16_1-MLC', downloadMB: 2279, gpuMB: 3432, gpuMBf32: 4328, strongIn: ['uk', 'en', 'de', 'fr', 'es', 'pt', 'it'], thinks: true },
-  { id: 'llama3.1-8b', label: 'Llama 3.1 · 8B', size: 'large', webllm: 'Llama-3.1-8B-Instruct-q4f16_1-MLC', downloadMB: 4527, gpuMB: 5001, gpuMBf32: 6101, strongIn: ['en', 'de', 'fr', 'it', 'es', 'pt'] },
-  { id: 'qwen3-8b', label: 'Qwen 3 · 8B', size: 'large', webllm: 'Qwen3-8B-q4f16_1-MLC', downloadMB: 4624, gpuMB: 5696, gpuMBf32: 6853, strongIn: ['uk', 'en', 'de', 'fr', 'es', 'pt', 'it'], thinks: true },
-  { id: 'gemma2-9b', label: 'Gemma 2 · 9B', size: 'large', webllm: 'gemma-2-9b-it-q4f16_1-MLC', downloadMB: 5222, gpuMB: 6422, gpuMBf32: 8383, strongIn: ['de', 'fr', 'it', 'es', 'pt', 'en'] }
+  { id: 'qwen3.5-2b', label: 'Qwen 3.5 · 2B', size: 'small', webllm: 'Qwen3.5-2B-q4f16_1-MLC', downloadMB: 1083, gpuMB: 2245, gpuMBf32: 2592, strongIn: ['uk', 'en', 'de', 'fr', 'es', 'pt', 'it'], thinks: true },
+  { id: 'gemma4-e2b', label: 'Gemma 4 · E2B', size: 'medium', webllm: 'gemma-4-E2B-it-q4f16_1-MLC', downloadMB: 2831, gpuMB: 3387, gpuMBf32: 3863, strongIn: ['de', 'fr', 'it', 'es', 'pt', 'en', 'uk'] },
+  { id: 'qwen3.5-4b', label: 'Qwen 3.5 · 4B', size: 'medium', webllm: 'Qwen3.5-4B-q4f16_1-MLC', downloadMB: 2390, gpuMB: 3868, gpuMBf32: 4680, strongIn: ['uk', 'en', 'de', 'fr', 'es', 'pt', 'it'], thinks: true },
+  { id: 'qwen3.5-9b', label: 'Qwen 3.5 · 9B', size: 'large', webllm: 'Qwen3.5-9B-q4f16_1-MLC', downloadMB: 5061, gpuMB: 6433, gpuMBf32: 7545, strongIn: ['uk', 'en', 'de', 'fr', 'es', 'pt', 'it'], thinks: true }
 ];
 
-export const DEFAULT_CHAT_MODEL: ChatModelId = 'qwen2.5-1.5b';
+export const DEFAULT_CHAT_MODEL: ChatModelId = 'qwen3.5-2b';
 
 export function chatModel(id: ChatModelId | string | null | undefined): ChatModel {
   return chatModels.find((model) => model.id === id) ?? chatModels.find((model) => model.id === DEFAULT_CHAT_MODEL)!;
@@ -54,17 +51,12 @@ export function gpuNeedMB(model: ChatModel, f16: boolean): number {
   return f16 ? model.gpuMB : model.gpuMBf32;
 }
 
-// Per language and size: the model that writes that language best. Gemma 2 is strongest across
-// the Western European languages, Llama for English, and Qwen 3 the only one here that lists
-// Ukrainian among its trained languages.
+// Per language and size: the model that writes that language best. Gemma 4 is the most natural in
+// the Western European languages and English; Qwen 3.5 is stronger in Ukrainian.
+const western = { small: 'qwen3.5-2b', medium: 'gemma4-e2b', large: 'qwen3.5-9b' } as const;
 const best: Record<Language, Record<ChatModelSize, ChatModelId>> = {
-  de: { small: 'gemma2-2b', medium: 'llama3.2-3b', large: 'gemma2-9b' },
-  fr: { small: 'gemma2-2b', medium: 'llama3.2-3b', large: 'gemma2-9b' },
-  it: { small: 'gemma2-2b', medium: 'llama3.2-3b', large: 'gemma2-9b' },
-  es: { small: 'gemma2-2b', medium: 'llama3.2-3b', large: 'gemma2-9b' },
-  pt: { small: 'gemma2-2b', medium: 'llama3.2-3b', large: 'gemma2-9b' },
-  en: { small: 'qwen2.5-1.5b', medium: 'llama3.2-3b', large: 'llama3.1-8b' },
-  uk: { small: 'qwen3-1.7b', medium: 'qwen3-4b', large: 'qwen3-8b' }
+  de: western, fr: western, it: western, es: western, pt: western, en: western,
+  uk: { small: 'qwen3.5-2b', medium: 'qwen3.5-4b', large: 'qwen3.5-9b' }
 };
 
 export function recommendedFor(language: Language, size: ChatModelSize): ChatModel {
