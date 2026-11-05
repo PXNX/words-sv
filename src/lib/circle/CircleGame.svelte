@@ -138,7 +138,7 @@
   let isDragging = $state(false);
   let circleEl = $state<SVGSVGElement>();
   let solvedWords = $state<string[]>(initialGame?.solvedWords ?? []);
-  let feedback = $state<'correct' | 'wrong' | null>(null);
+  let feedback = $state<'correct' | 'wrong' | 'repeat' | null>(null);
   let feedbackWord = $state('');
   let shakeGrid = $state(false);
   let celebration = $state(!isPractice && initialGame ? initialGame.solvedWords.length === initialGame.words.length : false);
@@ -153,6 +153,9 @@
   let idleHintTimer: number | null = null;
   let explainOpen = $state(false);
   let loadingNextRound = $state(false);
+  // A word the player finds a second time briefly lights up in the grid instead of counting as a miss.
+  let foundAgainWord = $state<string | null>(null);
+  let foundAgainTimer: number | null = null;
 
   const labels = $derived({
     hint: showDefinitions ? m.type_hint({}, { locale: settings.interfaceLocale }) : m.hint({}, { locale: settings.interfaceLocale }),
@@ -166,7 +169,8 @@
     tracePrompt: showDefinitions ? m.type_prompt({}, { locale: settings.interfaceLocale }) : m.trace_prompt({}, { locale: settings.interfaceLocale }),
     traceActive: showDefinitions ? m.type_active({}, { locale: settings.interfaceLocale }) : m.trace_active({}, { locale: settings.interfaceLocale }),
     tutorial: m.tutorial({}, { locale: settings.interfaceLocale }),
-    idleHint: m.idle_hint({}, { locale: settings.interfaceLocale })
+    idleHint: m.idle_hint({}, { locale: settings.interfaceLocale }),
+    alreadyFound: m.circle_already_found({}, { locale: settings.interfaceLocale })
   });
 
   const installable = $derived(pwaInstall.canInstall);
@@ -187,6 +191,10 @@
   const hintedCells = $derived.by(() => {
     if (!revealedHintWord) return new Set<string>();
     const placement = grid.placements.find((entry) => entry.word === revealedHintWord);
+    return new Set((placement ? placementCells(placement) : []).map((point) => cellKey(point.row, point.col)));
+  });
+  const foundAgainCells = $derived.by(() => {
+    const placement = foundAgainWord ? grid.placements.find((entry) => entry.word === foundAgainWord) : undefined;
     return new Set((placement ? placementCells(placement) : []).map((point) => cellKey(point.row, point.col)));
   });
   const solvedCells = $derived.by(() => {
@@ -321,6 +329,17 @@
       celebration = true;
     }
   }
+  function noteAlreadyFound(word: string) {
+    feedbackWord = word;
+    feedback = 'repeat';
+    haptic('select');
+    foundAgainWord = word;
+    if (foundAgainTimer !== null) window.clearTimeout(foundAgainTimer);
+    foundAgainTimer = window.setTimeout(() => {
+      foundAgainWord = null;
+      foundAgainTimer = null;
+    }, 650);
+  }
   function pressLetter(letter: string) {
     if (celebration || typedWord.length >= maxWordLength) return;
     noteGameInput();
@@ -341,7 +360,13 @@
     typedWord = next;
     haptic('tap');
     const match = currentRound.words.find((word) => word === next && !solvedSet.has(word));
-    if (match) { submitWord(match); typedWord = ''; }
+    if (match) { submitWord(match); typedWord = ''; return; }
+    // Retyped a word that is already in the grid and leads nowhere new: say so and start over,
+    // rather than leaving the input stuck on it until the next letter flags a miss.
+    if (solvedSet.has(next) && !currentRound.words.some((word) => !solvedSet.has(word) && word.startsWith(next))) {
+      noteAlreadyFound(next);
+      typedWord = '';
+    }
   }
   function removeTypedLetter() {
     if (celebration || !typedWord) return;
@@ -413,6 +438,8 @@
     const word = activeWord;
     if (currentRound.words.includes(word) && !solvedSet.has(word)) {
       submitWord(word);
+    } else if (solvedSet.has(word)) {
+      noteAlreadyFound(word);
     } else {
       feedbackWord = word;
       feedback = 'wrong';
@@ -464,6 +491,7 @@
           {@const hinted = hintedCells.has(cellKey(row, col)) && !solved}
           {@const typingLetter = typingCells.get(cellKey(row, col))}
           {@const typing = typingLetter !== undefined && !solved}
+          {@const foundAgain = solved && foundAgainCells.has(cellKey(row, col))}
           {#if cell}<div
             class="aspect-square min-w-0 grid place-items-center rounded-[4px] border border-[#172a45] bg-[#fffdf7] text-[#172a45] text-[clamp(.62rem,2.6vw,.92rem)] font-extrabold leading-none uppercase [transition:background_.18s_ease,color_.18s_ease,transform_.18s_cubic-bezier(.23,1,.32,1)]"
             class:border-l-4={isWordStart(row, col, 'across')}
@@ -483,6 +511,7 @@
             class:bg-primary={solved}
             class:scale-[.965]={solved}
             class:animate-[solve-cell_.32s_cubic-bezier(.23,1,.32,1)]={solved}
+            class:found-again={foundAgain}
             class:cursor-pointer={showDefinitions}
             role={showDefinitions ? 'button' : undefined}
             tabindex={showDefinitions ? 0 : undefined}
@@ -522,7 +551,7 @@
       {:else if explainOpen && feedback === 'correct'}
         <span class="max-w-[min(32rem,74vw)] text-accent font-['DM_Sans'] text-[clamp(.63rem,2.5vw,.78rem)] font-bold tracking-[.01em] leading-[1.35] text-center">{feedbackDefinition}<a class="ml-1 text-primary font-extrabold underline decoration-2 underline-offset-2 whitespace-nowrap" href={feedbackWiktionaryHref} target="_blank" rel="noreferrer">{labels.readMore}</a></span>
       {:else if previewWord}
-        <span class={feedback === 'correct' ? 'text-[#3f7a50]' : ''}>{previewWord}</span>{#if feedback === 'correct'}<IconCheck class="w-[1.45rem] h-[1.45rem]" aria-label="Correct" />{#if feedbackDefinition}<button type="button" class="btn-play btn-play-soft btn-play-round btn-play-sm w-[1.45rem]! h-[1.45rem]! tracking-normal" onclick={() => (explainOpen = true)} aria-label={`${labels.explain}: ${feedbackSpelling}`}><IconHelp class="w-[.85rem] h-[.85rem]" aria-hidden="true" /></button>{:else}<a class="btn-play btn-play-soft btn-play-round btn-play-sm w-[1.45rem]! h-[1.45rem]! tracking-normal" href={feedbackWiktionaryHref} target="_blank" rel="noreferrer" aria-label={`${labels.explain}: ${feedbackSpelling}`}><IconHelp class="w-[.85rem] h-[.85rem]" aria-hidden="true" /><span class="sr-only">{labels.explain}</span></a>{/if}{:else if feedback === 'wrong'}<IconClose class="w-[1.45rem] h-[1.45rem]" aria-label="Incorrect" />{/if}
+        <span class={feedback === 'correct' ? 'text-[#3f7a50]' : feedback === 'repeat' ? 'opacity-60' : ''}>{previewWord}</span>{#if feedback === 'correct'}<IconCheck class="w-[1.45rem] h-[1.45rem]" aria-label="Correct" />{#if feedbackDefinition}<button type="button" class="btn-play btn-play-soft btn-play-round btn-play-sm w-[1.45rem]! h-[1.45rem]! tracking-normal" onclick={() => (explainOpen = true)} aria-label={`${labels.explain}: ${feedbackSpelling}`}><IconHelp class="w-[.85rem] h-[.85rem]" aria-hidden="true" /></button>{:else}<a class="btn-play btn-play-soft btn-play-round btn-play-sm w-[1.45rem]! h-[1.45rem]! tracking-normal" href={feedbackWiktionaryHref} target="_blank" rel="noreferrer" aria-label={`${labels.explain}: ${feedbackSpelling}`}><IconHelp class="w-[.85rem] h-[.85rem]" aria-hidden="true" /><span class="sr-only">{labels.explain}</span></a>{/if}{:else if feedback === 'wrong'}<IconClose class="w-[1.45rem] h-[1.45rem]" aria-label="Incorrect" />{:else if feedback === 'repeat'}<small class="rounded-full border border-[rgba(23,42,69,.2)] px-[.5rem] py-[.18rem] text-accent font-['DM_Sans'] text-[.58rem] font-extrabold tracking-[.07em] uppercase dark:border-[rgba(255,253,247,.25)]">{labels.alreadyFound}</small>{/if}
       {:else if showDefinitions}
         {coreReadout}
       {/if}
@@ -558,3 +587,9 @@
     </svg>
   </div>
 {/if}
+
+<style>
+  /* A word found a second time pops briefly in the grid; the cell's own transitions ease it back. */
+  .found-again { background: #f7e2b0; transform: scale(1.06); }
+  @media (prefers-reduced-motion: reduce) { .found-again { transform: scale(.965); } }
+</style>
