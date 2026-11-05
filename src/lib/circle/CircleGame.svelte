@@ -449,6 +449,9 @@
   function endSwipe() {
     if (!isDragging) return;
     isDragging = false;
+    submitSelection();
+  }
+  function submitSelection() {
     if (selectedPath.length < 2) {
       selectedPath = [];
       return;
@@ -466,6 +469,56 @@
       window.setTimeout(() => (shakeGrid = false), 280);
     }
     selectedPath = [];
+  }
+  function clearInput() {
+    selectedPath = [];
+    typedWord = '';
+  }
+  /**
+   * Physical keyboard play. Definitions mode types like the on-screen keys; the wheel takes a
+   * letter key as the next unused bubble with that letter, Enter submits, Backspace takes one
+   * back and Escape clears.
+   */
+  function handleKeydown(event: KeyboardEvent) {
+    if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey || celebration || isDragging) return;
+    const target = event.target instanceof Element ? event.target : null;
+    if (target?.closest('input, textarea, select, [contenteditable="true"], dialog')) return;
+    // Enter and Space on a focused button or link belong to that control.
+    if ((event.key === 'Enter' || event.key === ' ') && target?.closest('button, a')) return;
+    if (event.key === 'Escape') {
+      if (!selectedPath.length && !typedWord) return;
+      event.preventDefault();
+      clearInput();
+      return;
+    }
+    if (event.key === 'Backspace') {
+      event.preventDefault();
+      if (showDefinitions) removeTypedLetter();
+      else if (selectedPath.length) {
+        noteGameInput();
+        selectedPath = selectedPath.slice(0, -1);
+      }
+      return;
+    }
+    if (event.key === 'Enter') {
+      if (showDefinitions) return;
+      event.preventDefault();
+      submitSelection();
+      return;
+    }
+    if ([...event.key].length !== 1) return;
+    const letters = [...event.key.normalize('NFC').toUpperCase()];
+    if (!letters.every((letter) => /^\p{L}$/u.test(letter))) return;
+    event.preventDefault();
+    if (showDefinitions) {
+      // ß arrives as SS, matching how round words are uppercased.
+      for (const letter of letters) pressLetter(letter);
+      return;
+    }
+    for (const letter of letters) {
+      const index = circleLetters.findIndex((entry, position) => entry === letter && !selectedPath.includes(position));
+      if (index >= 0) chooseLetter(index);
+    }
   }
   function pathPoints() {
     return selectedPath.map((index) => {
@@ -494,7 +547,7 @@
   }
 </script>
 
-<svelte:window onpointerup={endSwipe} onpointercancel={endSwipe} />
+<svelte:window onpointerup={endSwipe} onpointercancel={endSwipe} onkeydown={handleKeydown} />
 
 <div
   class="relative min-h-[120px] min-[580px]:min-h-[150px] flex-1 grid place-items-stretch mt-0 p-[clamp(.35rem,1.6vw,.7rem)] bg-[#ede4d5] bg-[image:linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:24px_24px] border-t-0 border-b-2 border-b-[rgba(23,42,69,.45)] [transition:transform_.16s_cubic-bezier(.23,1,.32,1)] dark:bg-[#213a5d] dark:border-b-primary {shakeGrid ? 'animate-[shake_.28s_cubic-bezier(.23,1,.32,1)]' : ''}"
@@ -598,7 +651,7 @@
       {#each circleLetters as letter, index (index)}
         {@const active = selectedPath.includes(index)}
         {@const point = position(index, circleLetters.length, active ? LETTER_BUBBLE_OUTWARD : 0)}
-        <g transform={`translate(${point.x} ${point.y})`} class="[cursor:crosshair] transition-transform duration-[220ms] ease-[cubic-bezier(.34,1.56,.64,1)] motion-reduce:transition-none" role="button" tabindex="0" aria-label={`Letter ${letter}`} onpointerdown={(event) => { event.stopPropagation(); startSwipe(event, index); }} onkeydown={(event) => { if (event.key === 'Enter' || event.key === ' ') chooseLetter(index); }}>
+        <g transform={`translate(${point.x} ${point.y})`} class="[cursor:crosshair] transition-transform duration-[220ms] ease-[cubic-bezier(.34,1.56,.64,1)] motion-reduce:transition-none" role="button" tabindex="0" aria-label={`Letter ${letter}`} onpointerdown={(event) => { event.stopPropagation(); startSwipe(event, index); }} onkeydown={(event) => { if (event.key !== 'Enter' && event.key !== ' ') return; event.preventDefault(); if (event.key === 'Enter' && selectedPath.includes(index)) submitSelection(); else chooseLetter(index); }}>
           <circle r="30" class="[transform-box:fill-box] [transform-origin:center] [transition:transform_.18s_cubic-bezier(.34,1.56,.64,1),fill_.18s_ease,stroke_.18s_ease] motion-reduce:transition-none {active ? 'fill-primary stroke-[#c98220] scale-[1.066667] dark:stroke-primary' : 'fill-[#fffdf7] stroke-[#172a45] [stroke-width:2] dark:fill-[#172a45] dark:stroke-[#fffdf7]'}"></circle><text text-anchor="middle" dominant-baseline="central" class="fill-[#172a45] font-['DM_Sans'] text-[20px] font-extrabold pointer-events-none">{letter}</text>
         </g>
       {/each}
