@@ -18,7 +18,7 @@
   import IconDownload from '~icons/material-symbols/download-rounded';
   import IconHelp from '~icons/material-symbols/question-mark-rounded';
   import IconProgressActivity from '~icons/material-symbols/progress-activity';
-  import { tick } from 'svelte';
+  import { tick, untrack } from 'svelte';
 
   const CIRCLE_TUTORIAL_STATE_KEY = 'wordcircle-tutorial-state-v1';
 
@@ -229,7 +229,8 @@
     solvedWords.length;
     celebration;
     tutorialPractice;
-    scheduleIdleHint();
+    // Keep a revealed hint across solves of other words; submitWord drops it once its own word is found.
+    untrack(() => scheduleIdleHint(true));
     return () => clearIdleHintTimer();
   });
   function clearIdleHintTimer() {
@@ -248,7 +249,8 @@
     }, 60_000);
   }
   function noteGameInput() {
-    scheduleIdleHint();
+    // Restart the idle timer but keep any hint on screen: the player is usually acting on it.
+    scheduleIdleHint(true);
   }
   function showIdleHint() {
     const candidates = currentRound.words.filter((word) => !solvedSet.has(word) && Boolean(wordDefinitions[settings.lang][word]));
@@ -304,6 +306,7 @@
     feedbackWord = word;
     const completed = solvedWords.length + 1 === currentRound.words.length;
     solvedWords = [...solvedWords, word];
+    if (revealedHintWord === word) revealedHintWord = null;
     feedback = 'correct';
     // A found word already buzzes with its success sound; the last one gets the win rhythm.
     if (completed) haptic('win');
@@ -514,7 +517,7 @@
       class:text-base-content={previewWord.length > 0 && feedback !== 'wrong' && !(feedback === 'correct' && !explainOpen)}
       class:text-error={feedback === 'wrong'}
     >
-      {#if hintDefinition}
+      {#if hintDefinition && !previewWord}
         <span class="max-w-[min(32rem,74vw)] text-accent font-['DM_Sans'] text-[clamp(.63rem,2.5vw,.78rem)] font-bold tracking-[.01em] leading-[1.35] text-center">{hintDefinition}</span>
       {:else if explainOpen && feedback === 'correct'}
         <span class="max-w-[min(32rem,74vw)] text-accent font-['DM_Sans'] text-[clamp(.63rem,2.5vw,.78rem)] font-bold tracking-[.01em] leading-[1.35] text-center">{feedbackDefinition}<a class="ml-1 text-primary font-extrabold underline decoration-2 underline-offset-2 whitespace-nowrap" href={feedbackWiktionaryHref} target="_blank" rel="noreferrer">{labels.readMore}</a></span>
@@ -524,6 +527,7 @@
         {coreReadout}
       {/if}
     </div>
+    {#if hintDefinition && previewWord && !(explainOpen && feedback === 'correct')}<p class="mx-auto mt-[.15rem] max-w-[min(32rem,74vw)] truncate text-accent font-['DM_Sans'] text-[clamp(.58rem,2.2vw,.7rem)] font-bold leading-[1.3]">{hintDefinition}</p>{/if}
     {#if tutorialPractice}<p class="flex items-center justify-center gap-[.5rem] mt-[.2rem] text-accent font-['DM_Sans'] text-[.54rem] font-extrabold tracking-[.07em] uppercase"><span>{labels.tutorial}</span><b class="text-base-content text-[.58rem] tracking-[.11em]">{tutorialHint}</b></p>{/if}
     {#if installable && !previewWord}
       <button class="btn-play btn-play-ink btn-play-sm absolute z-[5] bottom-[.25rem] left-1/2 -translate-x-1/2 gap-[.42rem] min-h-[1.75rem] py-[.22rem] px-[.62rem] normal-case tracking-normal text-left" onclick={() => void pwaInstall.install()}>
