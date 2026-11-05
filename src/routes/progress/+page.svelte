@@ -22,6 +22,7 @@
   import Companion from '#lib/story/Companion.svelte';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import AvatarEditor from '#lib/profile/AvatarEditor.svelte';
+  import SyncHint from '#lib/sync/SyncHint.svelte';
   import { defaultAvatar } from '#lib/profile/avatar.js';
   import type { Mood } from '#lib/story/stories.js';
 
@@ -299,6 +300,9 @@
       <div class="mt-[.7rem]"><AvatarEditor value={settings.avatar ?? defaultAvatar} onchange={(next) => settings.setAvatar(next)} /></div>
     {/if}
   </section>
+
+  <!-- Not linked to Telegram yet: an invitation to save the progress there. -->
+  <div class="mt-4"><SyncHint /></div>
 
   <!-- Streak -->
   <section class="panel-play mt-[1.2rem] px-4 pt-[.9rem] pb-4" aria-labelledby="progress-streak-heading">

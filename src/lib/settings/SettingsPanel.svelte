@@ -7,6 +7,8 @@
   import { playableLanguages, vocabularyLevels, isLanguage, type VocabularyLevel } from '#lib/data/vocabulary.js';
   import { disablePush, enablePush, pushEnabled, pushSupported } from './pushClient';
   import { openTelegramLink, telegramDevice, type TelegramStatus } from './telegramClient';
+  import { cloudSync, noteLinked } from '#lib/sync/cloudSync.svelte.js';
+  import IconCloud from '~icons/material-symbols/cloud-done-rounded';
   import { naturalMegabytes, naturalReady, naturalState, naturalSupported, playNatural, prepareNatural, synthesizeNatural } from '#lib/story/naturalVoices.svelte.js';
   import { onMount } from 'svelte';
   import SelectMenu from './SelectMenu.svelte';
@@ -232,9 +234,14 @@
   // Between opening the bot and pressing Start there; coming back to the app checks again.
   let telegramWaiting = $state(false);
   let inviteCopied = $state(false);
+  function savedTime(at: number) {
+    const sameDay = new Date(at).toDateString() === new Date().toDateString();
+    return new Intl.DateTimeFormat(settings.interfaceLocale, sameDay ? { hour: '2-digit', minute: '2-digit' } : { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(at);
+  }
   function refreshTelegram() {
     void telegramDevice('status').then((status) => {
       telegram = status;
+      noteLinked(status.linked);
       if (status.reminders) telegramWaiting = false;
     }).catch(() => undefined);
   }
@@ -244,6 +251,7 @@
     try {
       const status = await telegramDevice(next ? 'connect' : 'disconnect');
       telegram = status;
+      noteLinked(status.linked);
       telegramWaiting = next && !status.reminders;
       if (telegramWaiting && status.connectUrl) openTelegramLink(status.connectUrl);
     } catch {
@@ -354,6 +362,12 @@
     {#if telegram}
       <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.35rem]"><IconTelegram aria-hidden="true" class="w-[.9rem] h-[.9rem]" />{labels.telegramReminders}</span><input aria-label={labels.telegramReminders} type="checkbox" class="toggle toggle-sm toggle-primary" checked={telegram.reminders} disabled={telegramBusy} onchange={(event) => toggleTelegram(event.currentTarget as HTMLInputElement)} /></div>
       <p class="m-0 mt-[.35rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]" aria-live="polite">{telegramWaiting ? labels.telegramRemindersWaiting : labels.telegramRemindersHint}</p>
+      <!-- Linked: progress is saved to the Telegram account; otherwise say that connecting saves it. -->
+      {#if telegram.linked}
+        <p class="m-0 mt-[.45rem] inline-flex items-center gap-[.3rem] text-[#2a6fa8] dark:text-[#9cc8ec] text-[.58rem] font-extrabold leading-[1.35]"><IconCloud aria-hidden="true" class="w-[.85rem] h-[.85rem] flex-none" />{cloudSync.savedAt ? m.sync_saved_at({ time: savedTime(cloudSync.savedAt) }, { locale: settings.interfaceLocale }) : m.sync_saved({}, { locale: settings.interfaceLocale })}</p>
+      {:else}
+        <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{m.sync_hint({}, { locale: settings.interfaceLocale })}</p>
+      {/if}
     {/if}
   </section>
   {#if telegram?.inviteUrl}
