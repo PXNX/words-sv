@@ -37,11 +37,13 @@ export function createDeviceEndpoint({ databaseProvider = getDatabase } = {}) {
 			} else if (action === 'disconnect') {
 				await db.execute('UPDATE wordcircle_telegram_links SET reminders = 0, link_code = NULL WHERE device_id = ?', [deviceId]);
 			}
-			const [[link]] = await db.execute('SELECT invite_code, chat_id, reminders FROM wordcircle_telegram_links WHERE device_id = ? LIMIT 1', [deviceId]);
+			const [[link]] = await db.execute('SELECT invite_code, chat_id, telegram_user_id, reminders FROM wordcircle_telegram_links WHERE device_id = ? LIMIT 1', [deviceId]);
 			const [[invites]] = await db.execute('SELECT COUNT(*) AS count FROM wordcircle_telegram_invites WHERE inviter_device_id = ?', [deviceId]);
 			return respond(res, 200, {
 				ok: true,
 				reminders: Boolean(link?.reminders && link?.chat_id),
+				// Linked to a Telegram account: progress is saved there (api/progress/sync.mjs).
+				linked: Boolean(link?.telegram_user_id),
 				connectUrl,
 				inviteUrl: link ? startLink(`i_${link.invite_code}`) : null,
 				invited: Number(invites?.count ?? 0),
