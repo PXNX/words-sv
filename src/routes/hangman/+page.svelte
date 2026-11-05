@@ -13,4 +13,4 @@
   const words = $derived(wordPools[settings.lang][settings.vocabularyLevel]);
 </script>
 
-<HangmanMode words={words} language={settings.lang} />
+<HangmanMode words={words} language={settings.lang} level={settings.vocabularyLevel} />
