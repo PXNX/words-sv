@@ -12,6 +12,7 @@ import { warmLanguage, refreshHintableBaseWords } from '#lib/data/vocabulary.js'
 import StartupLoader from '#lib/app/StartupLoader.svelte';
 import CosmeticUnlockToast from '#lib/profile/CosmeticUnlockToast.svelte';
 import StreakToast from '#lib/streak/StreakToast.svelte';
+import { startCloudSync } from '#lib/sync/cloudSync.svelte.js';
 import BackgroundJobsBadge from '#lib/audio/BackgroundJobsBadge.svelte';
 import { haptic } from '#lib/feedback/haptics.js';
 	import { pwaInstall } from '#lib/pwa/pwaInstall.svelte.js';
@@ -74,6 +75,8 @@ onMount(() => {
     void autoUpdateOnStart();
     void updated.check();
     pwaInstall.init();
+    // Linked to Telegram: merge with the account's progress, then keep saving it there.
+    startCloudSync();
     hydrated = true;
     // Fetch the learner's vocabulary in the background so game modes that need it don't
     // block on the first render. Other languages stay out of the bundle entirely.
