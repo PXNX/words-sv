@@ -41,5 +41,11 @@ Conventions:
 ## Committing
 
 - Commit your own changes yourself, feature by feature: as soon as one self-contained piece of work is done (a new module, a route, a wired-up UI, a test), commit it before starting the next. Do not collect a whole task into one big commit at the end, and do not leave finished work uncommitted.
-- Each commit should build on its own and have a message that says what that feature does.
+- Each commit should build on its own and have a message that says what that feature does, prefixed `feat(<mode>)`, `fix(<mode>)`, `chore(<mode>)`, `docs(<mode>)` or `refactor(<mode>)` (see `agents.md`).
 - The rules from "Concurrent sessions" still apply to every one of these commits.
+
+## Git workflow
+
+- Commit directly onto `main` and push to `origin/main` right after each commit, so `main` is never ahead of `origin`. Do not create feature branches or pull requests unless asked.
+- Only commit your own changes. Other work may be in progress in the same working tree, so stage files explicitly and leave unrelated changes alone.
+- The full agent rules are in `agents.md`.
