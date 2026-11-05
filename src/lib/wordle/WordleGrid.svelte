@@ -4,7 +4,13 @@
 
   type Entry = { word: string; marks: WordleMark[] };
 
-  let { rows, wordLength = 5, entries, currentGuess = '', ariaLabel, compact = false, invalid = false, revealRow = -1, onExplain }: { rows: number; wordLength?: number; entries: Entry[]; currentGuess?: string; ariaLabel: string; compact?: boolean; invalid?: boolean; revealRow?: number; onExplain?: (word: string) => void } = $props();
+  let { rows, wordLength = 5, entries, currentGuess = '', ariaLabel, compact = false, invalid = false, revealRow = -1, markLabels, explainLabel = (word) => word, onExplain }: { rows: number; wordLength?: number; entries: Entry[]; currentGuess?: string; ariaLabel: string; compact?: boolean; invalid?: boolean; revealRow?: number; markLabels?: Record<WordleMark, string>; explainLabel?: (word: string) => string; onExplain?: (word: string) => void } = $props();
+
+  /** "TASSE: T in the right place, A …" so a checked row reads as its result, not five bare letters. */
+  function describe(entry: Entry): string {
+    if (!markLabels) return entry.word;
+    return `${entry.word}: ${Array.from(entry.word).map((letter, index) => `${letter} ${markLabels[entry.marks[index]]}`).join(', ')}`;
+  }
 
   const guessLetters = $derived(Array.from(currentGuess));
 </script>
@@ -19,13 +25,13 @@
     {@const entry = entries[row]}
     {@const entryLetters = entry ? Array.from(entry.word) : []}
     <div class="flex items-center gap-[.35rem]">
-      <div class="grid gap-[clamp(.2rem,1vw,.34rem)]" class:wordle-shake={invalid && row === entries.length} style={`grid-template-columns:repeat(${wordLength},minmax(0,clamp(1.6rem,${Math.min(10, 48 / wordLength)}vw,2.55rem)));`}>
+      <div class="grid gap-[clamp(.2rem,1vw,.34rem)]" class:wordle-shake={invalid && row === entries.length} role={entry && markLabels ? 'img' : undefined} aria-label={entry && markLabels ? describe(entry) : undefined} style={`grid-template-columns:repeat(${wordLength},minmax(0,clamp(1.6rem,${Math.min(10, 48 / wordLength)}vw,2.55rem)));`}>
       {#each Array(wordLength) as _, column}
         {@const letter = entry ? entryLetters[column] ?? '' : row === entries.length ? guessLetters[column] ?? '' : ''}
         <span class="wordle-tile" class:filled={!entry && letter !== ''} class:reveal={row === revealRow} style:--i={column} data-mark={entry?.marks[column] || undefined}>{letter}</span>
       {/each}
       </div>
-      {#if entry && onExplain}<button type="button" class="btn-play btn-play-soft btn-play-round btn-play-sm flex-none" onclick={() => onExplain(entry.word)} aria-label={`Explain ${entry.word}`}><IconHelp class="w-[.95rem] h-[.95rem]" aria-hidden="true" /></button>{/if}
+      {#if entry && onExplain}<button type="button" class="btn-play btn-play-soft btn-play-round btn-play-sm flex-none" onclick={() => onExplain(entry.word)} aria-label={explainLabel(entry.word)}><IconHelp class="w-[.95rem] h-[.95rem]" aria-hidden="true" /></button>{/if}
     </div>
   {/each}
 </div>
