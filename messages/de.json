@@ -413,6 +413,7 @@
   "conversation_type": "Tippen",
   "conversation_new_partner": "Jemand Neues",
   "models_title": "Modelle & Speicher",
+  "models_hint": "Stimmen für Geschichten und Hörübungen und das Sprachmodell für Gespräche, alles direkt auf dem Gerät.",
   "models_voices": "Stimmen: {engine}",
   "models_voices_none": "Diese Stimmen brauchen keinen Download.",
   "models_conversation": "Gesprächspartner (Sprachmodell)",

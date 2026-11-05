@@ -413,6 +413,7 @@
   "conversation_type": "Type",
   "conversation_new_partner": "Someone new",
   "models_title": "Models & storage",
+  "models_hint": "Voices for stories and listening, and the language model for conversations, all running on your device.",
   "models_voices": "Voices: {engine}",
   "models_voices_none": "These voices need no download.",
   "models_conversation": "Conversation partner (language model)",
