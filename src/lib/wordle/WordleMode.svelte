@@ -1,10 +1,11 @@
 <script lang="ts">
   import { evaluateWordleGuess, fiveLetterWords, isValidWordleGuess, normalizePlayableWord } from './wordleWords';
   import { readWordleState, WORDLE_STATE_KEY, writeWordleState } from './wordleState';
-  import { keyboardLayoutFor, keyboardMarksFrom, layoutLetters, typeableWords, type WordleMark } from './keyboardLayouts';
+  import { keyboardLayoutFor, keyboardMarksFrom, layoutLetters, physicalKeyAction, typeableWords, type WordleMark } from './keyboardLayouts';
   import WordleGrid from './WordleGrid.svelte';
   import WordleKeyboard from './WordleKeyboard.svelte';
   import { m } from '#lib/paraglide/messages.js';
+  import { haptic } from '#lib/feedback/haptics.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { wordDefinitions, wordMetadata } from '#lib/data/vocabulary.js';
   import { wiktionaryUrl } from '#lib/vocab/wiktionary.js';
@@ -38,6 +39,9 @@
   let practiceStep = $state(0);
   let loadingNextRound = $state(false);
   let explanationWord = $state<string | null>(null);
+  // Briefly true after a rejected guess, so the current row shakes.
+  let invalid = $state(false);
+  let invalidTimer: ReturnType<typeof setTimeout> | undefined;
 
   const keyLetters = $derived(layoutLetters(keyboardLayoutFor(language)));
   const candidates = $derived(typeableWords(fiveLetterWords(words, wordLength), keyLetters));
@@ -54,6 +58,8 @@
   const practicePromptLabel = $derived(m.wordle_tutorial_prompt({}, { locale: settings.interfaceLocale }));
   const practiceCompleteLabel = $derived(m.wordle_tutorial_complete({}, { locale: settings.interfaceLocale }));
   const practiceContinueLabel = $derived(m.tutorial_start({}, { locale: settings.interfaceLocale }));
+  const alreadyTriedLabel = $derived(m.wordle_already_tried({}, { locale: settings.interfaceLocale }));
+  const tooShortLabel = $derived(m.wordle_too_short({}, { locale: settings.interfaceLocale }));
   const explanationDefinition = $derived(explanationWord ? wordDefinitions[language as keyof typeof wordDefinitions]?.[explanationWord] ?? null : null);
   const explanationSpelling = $derived(explanationWord ? wordMetadata[language as keyof typeof wordMetadata]?.[explanationWord]?.spelling ?? explanationWord : '');
   const explanationHref = $derived(explanationWord ? wiktionaryUrl(language as keyof typeof wordDefinitions, explanationSpelling) : '#');
@@ -64,6 +70,7 @@
     entries = [];
     notice = '';
     explanationWord = null;
+    invalid = false;
     if (typeof localStorage !== 'undefined') localStorage.removeItem(WORDLE_STATE_KEY);
   }
 
@@ -90,14 +97,35 @@
     entries = saved.entries;
     guess = saved.guess;
     notice = '';
+    invalid = false;
+  }
+
+  /** Rejects the current row: a shake, a short buzz and a reason. The letters stay so one can be fixed. */
+  function reject(message: string) {
+    notice = message;
+    haptic('error');
+    clearTimeout(invalidTimer);
+    invalid = false;
+    // Re-adding the class on the next frame restarts the shake for a repeated rejection.
+    requestAnimationFrame(() => {
+      invalid = true;
+      invalidTimer = setTimeout(() => (invalid = false), 450);
+    });
   }
 
   function submit() {
     const normalized = normalizePlayableWord(guess);
     if (won || exhausted) return;
-    if (!isValidWordleGuess(candidates, normalized, wordLength) || entries.some((entry) => entry.word === normalized)) {
-      notice = labels.invalid;
-      guess = '';
+    if (Array.from(normalized).length < wordLength) {
+      reject(tooShortLabel);
+      return;
+    }
+    if (entries.some((entry) => entry.word === normalized)) {
+      reject(alreadyTriedLabel);
+      return;
+    }
+    if (!isValidWordleGuess(candidates, normalized, wordLength)) {
+      reject(labels.invalid);
       return;
     }
     const marks = evaluateWordleGuess(target, normalized) as WordleMark[];
@@ -112,15 +140,39 @@
 
   function press(letter: string) {
     if (won || exhausted) return;
-    const nextGuess = normalizePlayableWord(`${guess}${letter}`).slice(0, wordLength);
+    const nextGuess = Array.from(normalizePlayableWord(`${guess}${letter}`)).slice(0, wordLength).join('');
     guess = nextGuess;
-    if (nextGuess.length === wordLength) submit();
+    if (Array.from(nextGuess).length === wordLength) submit();
     else notice = '';
   }
 
   function removeLetter() {
-    guess = guess.slice(0, -1);
+    guess = Array.from(guess).slice(0, -1).join('');
     notice = '';
+  }
+
+  // Typing on a physical keyboard: letters the layout has keys for, Backspace, and Enter to check a
+  // full row again or move on to the next word once the round is over.
+  function onKeydown(event: KeyboardEvent) {
+    if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey) return;
+    const target = event.target as HTMLElement | null;
+    if (target?.closest('input, textarea, select, [contenteditable="true"]')) return;
+    const action = physicalKeyAction(event.key, keyLetters);
+    if (!action) return;
+    // A focused button handles its own Enter, except the on-screen keys, which would retype their letter.
+    if (action.kind === 'enter' && target?.closest('button, a') && !target.closest('.wordle-key')) return;
+    event.preventDefault();
+    if (practiceActive) {
+      if (action.kind === 'letters') for (const letter of Array.from(action.value)) practicePress(letter);
+      else if (action.kind === 'remove') practiceRemoveLetter();
+      else if (practiceFinished) finishPractice();
+      return;
+    }
+    if (candidates.length === 0) return;
+    if (action.kind === 'letters') for (const letter of Array.from(action.value)) press(letter);
+    else if (action.kind === 'remove') removeLetter();
+    else if (won || exhausted) void continueRound();
+    else submit();
   }
 
   function practicePress(letter: string) {
@@ -138,7 +190,7 @@
   }
 
   function practiceRemoveLetter() {
-    guess = guess.slice(0, -1);
+    guess = Array.from(guess).slice(0, -1).join('');
   }
 
   function finishPractice() {
@@ -178,6 +230,8 @@
   });
 </script>
 
+<svelte:window onkeydown={onKeydown} />
+
 <section
   class="flex-1 min-h-0 grid grid-rows-[auto_1fr_auto] content-stretch gap-[clamp(.75rem,2.8vw,1.2rem)] pt-[clamp(1.25rem,7svh,4rem)] px-[clamp(.8rem,3vw,1.25rem)] pb-[clamp(1rem,3vw,1.5rem)] overflow-x-hidden overflow-y-auto bg-[linear-gradient(180deg,rgba(237,228,213,.8),rgba(255,253,247,.65))] dark:bg-[linear-gradient(180deg,#213a5d,#172a45)]"
   aria-label={labels.title}
@@ -208,9 +262,9 @@
     <div class="p-[1.25rem] border border-accent/42 bg-accent/8 text-accent text-[.75rem] font-extrabold text-center">{labels.empty}</div>
   {:else}
     <div class="grid content-center justify-items-center gap-[.65rem]">
-      <WordleGrid rows={maxAttempts} {wordLength} {entries} currentGuess={guess} ariaLabel={labels.title} onExplain={(word) => (explanationWord = explanationWord === word ? null : word)} />
+      <WordleGrid rows={maxAttempts} {wordLength} {entries} currentGuess={guess} {invalid} ariaLabel={labels.title} onExplain={(word) => (explanationWord = explanationWord === word ? null : word)} />
       {#if explanationWord}<div class="note-play pop-in flex items-start gap-[.45rem] max-w-[min(100%,28rem)] p-[.55rem_.7rem] text-accent text-[.65rem] font-bold leading-[1.35]"><IconHelp class="w-[.9rem] h-[.9rem] flex-none mt-[.05rem]" aria-hidden="true" /><span>{explanationDefinition ?? 'No definition is available for this word yet.'}<a class="ml-1 font-extrabold underline underline-offset-2" href={explanationHref} target="_blank" rel="noreferrer">Wiktionary</a></span></div>{/if}
-      {#if notice}<p class:text-accent={!won} class:text-success={won} class="min-h-[1rem] m-0 text-[.68rem] font-extrabold text-center">{notice}</p>{/if}
+      <p class:text-accent={!won} class:text-success={won} class="min-h-[1rem] m-0 text-[.68rem] font-extrabold text-center" role="status" aria-live="polite">{notice}</p>
       {#if exhausted && !won}<p class="min-h-[1rem] m-0 text-accent text-[.68rem] font-extrabold text-center">{target}</p>{/if}
       {#if won || exhausted}<button class="btn-play btn-play-go disabled:cursor-wait disabled:opacity-80" onclick={continueRound} disabled={loadingNextRound} aria-busy={loadingNextRound}>
         {#if loadingNextRound}<IconProgressActivity class="w-[1rem] h-[1rem] animate-[startup-spin_1s_linear_infinite] motion-reduce:animate-none" aria-hidden="true" />{/if}
