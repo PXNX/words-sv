@@ -11,6 +11,7 @@ import { settings } from '#lib/state/settings.svelte.js';
 import { warmLanguage, refreshHintableBaseWords } from '#lib/data/vocabulary.js';
 import StartupLoader from '#lib/app/StartupLoader.svelte';
 import CosmeticUnlockToast from '#lib/profile/CosmeticUnlockToast.svelte';
+import StreakToast from '#lib/streak/StreakToast.svelte';
 import BackgroundJobsBadge from '#lib/audio/BackgroundJobsBadge.svelte';
 import { haptic } from '#lib/feedback/haptics.js';
 	import { pwaInstall } from '#lib/pwa/pwaInstall.svelte.js';
@@ -127,6 +128,7 @@ onMount(() => {
 			</section>
 		</main>
 		<CosmeticUnlockToast />
+		<StreakToast />
 		<BackgroundJobsBadge />
 	{/if}
 </div>
