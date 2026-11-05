@@ -26,8 +26,7 @@ const DEVICE_ONLY = new Set([
   'wordcircle-telegram-init-data-v1',
   'wordcircle-theme',
   'wordcircle-sound',
-  'wordcircle-vibration',
-  'wordcircle-sync-v1'
+  'wordcircle-vibration'
 ]);
 
 // Top-level numbers that only ever grow; other top-level numbers are settings (e.g. the goal).
@@ -37,7 +36,8 @@ const COUNTERS = new Set(['wordcircle-completed-rounds-v1']);
 const MAX_TIMELINE = 4000;
 
 export function isSyncedKey(key: string): boolean {
-  return key.startsWith(SYNC_PREFIX) && !DEVICE_ONLY.has(key);
+  // The sync's own bookkeeping (wordcircle-sync-…) stays on the device too.
+  return key.startsWith(SYNC_PREFIX) && !key.startsWith('wordcircle-sync-') && !DEVICE_ONLY.has(key);
 }
 
 /** The synced entries of a storage-like object. */

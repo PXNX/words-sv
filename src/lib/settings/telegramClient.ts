@@ -2,9 +2,19 @@ import { deviceId, timeZone } from '#lib/streak/clientStreak.js';
 import { reminderLocale } from '#lib/pwa/pwaReminders.js';
 import { interfaceLocales, settings } from '#lib/state/settings.svelte.js';
 import type { MiniAppLaunch } from '#lib/settings/telegramMiniApp.js';
+import { noteLinked } from '#lib/sync/cloudSync.svelte.js';
+
+// Connecting runs through the bot (a /start link), which links this device to the player's Telegram
+// account: reminders turn on and progress is saved there from then on.
+export async function connectTelegram(): Promise<TelegramStatus> {
+	const status = await telegramDevice('connect');
+	noteLinked(status.linked);
+	if (!status.reminders && status.connectUrl) openTelegramLink(status.connectUrl);
+	return status;
+}
 
 // The player's link to @word_circle_bot: streak reminders in Telegram and their invite link.
-export type TelegramStatus = { reminders: boolean; connectUrl: string | null; inviteUrl: string | null; invited: number; inviteEmbers: number };
+export type TelegramStatus = { reminders: boolean; linked: boolean; connectUrl: string | null; inviteUrl: string | null; invited: number; inviteEmbers: number };
 
 export async function telegramDevice(action: 'status' | 'connect' | 'disconnect' | 'miniapp', initData?: string): Promise<TelegramStatus> {
 	// The /api functions only exist on Vercel; under `vite dev` every call would just 404.
@@ -24,7 +34,8 @@ export function adoptMiniAppProfile(launch: MiniAppLaunch) {
 	const language = launch.user.language_code?.toLowerCase().split('-')[0];
 	const locale = interfaceLocales.find((entry) => entry.code === language);
 	if (locale && !settings.hasStoredInterfaceLocale()) settings.setInterfaceLocale(locale.code);
-	void telegramDevice('miniapp', launch.initData).catch(() => undefined);
+	// Linked now: the progress made so far moves to the Telegram account (sync/cloudSync.svelte.ts).
+	void telegramDevice('miniapp', launch.initData).then((status) => noteLinked(status.linked), () => undefined);
 }
 
 // Inside the Telegram Mini App, t.me links open in Telegram itself; elsewhere in a new tab or the app.
