@@ -12,7 +12,7 @@
     type Placement, type Round, type StoredGame
   } from './engine';
   import WordleKeyboard from '#lib/wordle/WordleKeyboard.svelte';
-  import { keyboardLayoutFor } from '#lib/wordle/keyboardLayouts';
+  import { keyboardLayoutFor } from '#lib/wordle/keyboardLayouts.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
   import IconClose from '~icons/material-symbols/cancel-rounded';
