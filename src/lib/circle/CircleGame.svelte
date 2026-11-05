@@ -181,7 +181,13 @@
     traceActive: showDefinitions ? m.type_active({}, { locale: settings.interfaceLocale }) : m.trace_active({}, { locale: settings.interfaceLocale }),
     tutorial: m.tutorial({}, { locale: settings.interfaceLocale }),
     idleHint: m.idle_hint({}, { locale: settings.interfaceLocale }),
-    alreadyFound: m.circle_already_found({}, { locale: settings.interfaceLocale })
+    alreadyFound: m.circle_already_found({}, { locale: settings.interfaceLocale }),
+    grid: m.circle_grid_label({}, { locale: settings.interfaceLocale }),
+    emptyCell: m.circle_cell_empty({}, { locale: settings.interfaceLocale }),
+    showDefinition: m.circle_cell_definition({}, { locale: settings.interfaceLocale }),
+    correct: m.circle_correct({}, { locale: settings.interfaceLocale }),
+    wrong: m.circle_wrong({}, { locale: settings.interfaceLocale }),
+    progress: m.circle_progress({ found: solvedWords.length, total: currentRound.words.length }, { locale: settings.interfaceLocale })
   });
 
   const installable = $derived(pwaInstall.canInstall);
@@ -550,10 +556,11 @@
 <svelte:window onpointerup={endSwipe} onpointercancel={endSwipe} onkeydown={handleKeydown} />
 
 <div
-  class="relative min-h-[120px] min-[580px]:min-h-[150px] flex-1 grid place-items-stretch mt-0 p-[clamp(.35rem,1.6vw,.7rem)] bg-[#ede4d5] bg-[image:linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:24px_24px] border-t-0 border-b-2 border-b-[rgba(23,42,69,.45)] [transition:transform_.16s_cubic-bezier(.23,1,.32,1)] dark:bg-[#213a5d] dark:border-b-primary {shakeGrid ? 'animate-[shake_.28s_cubic-bezier(.23,1,.32,1)]' : ''}"
-  aria-label="Crossword"
+  class="relative min-h-[120px] min-[580px]:min-h-[150px] flex-1 grid place-items-stretch mt-0 p-[clamp(.35rem,1.6vw,.7rem)] bg-[#ede4d5] bg-[image:linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:24px_24px] border-t-0 border-b-2 border-b-[rgba(23,42,69,.45)] [transition:transform_.16s_cubic-bezier(.23,1,.32,1)] dark:bg-[#213a5d] dark:border-b-primary motion-reduce:animate-none {shakeGrid ? 'animate-[shake_.28s_cubic-bezier(.23,1,.32,1)]' : ''}"
+  role="group"
+  aria-label={labels.grid}
 >
-  <div class="relative z-[1] min-w-0 min-h-0 overflow-auto grid place-items-center p-[clamp(.65rem,3vw,1.25rem)] rounded-[22px_14px_20px_15px/15px_20px_14px_22px] [overscroll-behavior:contain] [touch-action:pan-x_pan-y] border-2 border-[rgba(23,42,69,.16)] bg-[linear-gradient(90deg,rgba(255,253,247,.3),rgba(255,253,247,.08)_18%,rgba(255,253,247,.08)_82%,rgba(255,253,247,.3))] shadow-[inset_0_0_0_6px_rgba(255,253,247,.15)] outline-0 [scrollbar-color:rgba(23,42,69,.4)_transparent]" aria-label="Scrollable crossword grid">
+  <div class="relative z-[1] min-w-0 min-h-0 overflow-auto grid place-items-center p-[clamp(.65rem,3vw,1.25rem)] rounded-[22px_14px_20px_15px/15px_20px_14px_22px] [overscroll-behavior:contain] [touch-action:pan-x_pan-y] border-2 border-[rgba(23,42,69,.16)] bg-[linear-gradient(90deg,rgba(255,253,247,.3),rgba(255,253,247,.08)_18%,rgba(255,253,247,.08)_82%,rgba(255,253,247,.3))] shadow-[inset_0_0_0_6px_rgba(255,253,247,.15)] outline-0 [scrollbar-color:rgba(23,42,69,.4)_transparent]">
     <div class="relative grid w-max min-w-[calc(var(--cell-size)*3)] [--cell-size:clamp(1.85rem,8.2vw,2.4rem)]" style={`grid-template-columns: repeat(${grid.maxCol - grid.minCol + 1}, var(--cell-size));`}>
       {#each Array(grid.maxRow - grid.minRow + 1) as _, rowIndex}
         {#each Array(grid.maxCol - grid.minCol + 1) as _, colIndex}
@@ -564,7 +571,7 @@
           {@const typing = typingLetter !== undefined && !solved}
           {@const foundAgain = solved && foundAgainCells.has(cellKey(row, col))}
           {#if cell}<div
-            class="aspect-square min-w-0 grid place-items-center rounded-[4px] border border-[#172a45] bg-[#fffdf7] text-[#172a45] text-[clamp(.62rem,2.6vw,.92rem)] font-extrabold leading-none uppercase [transition:background_.18s_ease,color_.18s_ease,transform_.18s_cubic-bezier(.23,1,.32,1)]"
+            class="aspect-square min-w-0 grid place-items-center rounded-[4px] border border-[#172a45] bg-[#fffdf7] text-[#172a45] text-[clamp(.62rem,2.6vw,.92rem)] font-extrabold leading-none uppercase [transition:background_.18s_ease,color_.18s_ease,transform_.18s_cubic-bezier(.23,1,.32,1)] motion-reduce:animate-none"
             class:border-l-4={isWordStart(row, col, 'across')}
             class:border-r-4={isWordEnd(row, col, 'across')}
             class:border-t-4={isWordStart(row, col, 'down')}
@@ -588,7 +595,7 @@
             tabindex={showDefinitions ? 0 : undefined}
             onclick={showDefinitions ? () => revealCellDefinition(row, col) : undefined}
             onkeydown={showDefinitions ? (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); revealCellDefinition(row, col); } } : undefined}
-            aria-label={solved ? cell.letter : showDefinitions ? 'Show definition' : 'open cell'}
+            aria-label={solved ? cell.letter : showDefinitions ? labels.showDefinition : labels.emptyCell}
           >{solved ? cell.letter : typing ? typingLetter : ''}</div>{:else}<div class="aspect-square"></div>{/if}
         {/each}
       {/each}
@@ -622,7 +629,7 @@
       {:else if explainOpen && feedback === 'correct'}
         <span class="max-w-[min(32rem,74vw)] text-accent font-['DM_Sans'] text-[clamp(.63rem,2.5vw,.78rem)] font-bold tracking-[.01em] leading-[1.35] text-center">{feedbackDefinition}<a class="ml-1 text-primary font-extrabold underline decoration-2 underline-offset-2 whitespace-nowrap" href={feedbackWiktionaryHref} target="_blank" rel="noreferrer">{labels.readMore}</a></span>
       {:else if previewWord}
-        <span class={feedback === 'correct' ? 'text-[#3f7a50]' : feedback === 'repeat' ? 'opacity-60' : ''}>{previewWord}</span>{#if feedback === 'correct'}<IconCheck class="w-[1.45rem] h-[1.45rem]" aria-label="Correct" />{#if feedbackDefinition}<button type="button" class="btn-play btn-play-soft btn-play-round btn-play-sm w-[1.45rem]! h-[1.45rem]! tracking-normal" onclick={() => (explainOpen = true)} aria-label={`${labels.explain}: ${feedbackSpelling}`}><IconHelp class="w-[.85rem] h-[.85rem]" aria-hidden="true" /></button>{:else}<a class="btn-play btn-play-soft btn-play-round btn-play-sm w-[1.45rem]! h-[1.45rem]! tracking-normal" href={feedbackWiktionaryHref} target="_blank" rel="noreferrer" aria-label={`${labels.explain}: ${feedbackSpelling}`}><IconHelp class="w-[.85rem] h-[.85rem]" aria-hidden="true" /><span class="sr-only">{labels.explain}</span></a>{/if}{:else if feedback === 'wrong'}<IconClose class="w-[1.45rem] h-[1.45rem]" aria-label="Incorrect" />{:else if feedback === 'repeat'}<small class="rounded-full border border-[rgba(23,42,69,.2)] px-[.5rem] py-[.18rem] text-accent font-['DM_Sans'] text-[.58rem] font-extrabold tracking-[.07em] uppercase dark:border-[rgba(255,253,247,.25)]">{labels.alreadyFound}</small>{/if}
+        <span class={feedback === 'correct' ? 'text-[#3f7a50]' : feedback === 'repeat' ? 'opacity-60' : ''}>{previewWord}</span>{#if feedback === 'correct'}<IconCheck class="w-[1.45rem] h-[1.45rem]" aria-label={labels.correct} /><span class="sr-only">{labels.progress}</span>{#if feedbackDefinition}<button type="button" class="btn-play btn-play-soft btn-play-round btn-play-sm w-[1.45rem]! h-[1.45rem]! tracking-normal" onclick={() => (explainOpen = true)} aria-label={`${labels.explain}: ${feedbackSpelling}`}><IconHelp class="w-[.85rem] h-[.85rem]" aria-hidden="true" /></button>{:else}<a class="btn-play btn-play-soft btn-play-round btn-play-sm w-[1.45rem]! h-[1.45rem]! tracking-normal" href={feedbackWiktionaryHref} target="_blank" rel="noreferrer" aria-label={`${labels.explain}: ${feedbackSpelling}`}><IconHelp class="w-[.85rem] h-[.85rem]" aria-hidden="true" /><span class="sr-only">{labels.explain}</span></a>{/if}{:else if feedback === 'wrong'}<IconClose class="w-[1.45rem] h-[1.45rem]" aria-label={labels.wrong} />{:else if feedback === 'repeat'}<small class="rounded-full border border-[rgba(23,42,69,.2)] px-[.5rem] py-[.18rem] text-accent font-['DM_Sans'] text-[.58rem] font-extrabold tracking-[.07em] uppercase dark:border-[rgba(255,253,247,.25)]">{labels.alreadyFound}</small>{/if}
       {:else if showDefinitions}
         {coreReadout}
       {/if}
@@ -651,7 +658,7 @@
       {#each circleLetters as letter, index (index)}
         {@const active = selectedPath.includes(index)}
         {@const point = position(index, circleLetters.length, active ? LETTER_BUBBLE_OUTWARD : 0)}
-        <g transform={`translate(${point.x} ${point.y})`} class="[cursor:crosshair] transition-transform duration-[220ms] ease-[cubic-bezier(.34,1.56,.64,1)] motion-reduce:transition-none" role="button" tabindex="0" aria-label={`Letter ${letter}`} onpointerdown={(event) => { event.stopPropagation(); startSwipe(event, index); }} onkeydown={(event) => { if (event.key !== 'Enter' && event.key !== ' ') return; event.preventDefault(); if (event.key === 'Enter' && selectedPath.includes(index)) submitSelection(); else chooseLetter(index); }}>
+        <g transform={`translate(${point.x} ${point.y})`} class="[cursor:crosshair] transition-transform duration-[220ms] ease-[cubic-bezier(.34,1.56,.64,1)] motion-reduce:transition-none" role="button" tabindex="0" aria-label={m.circle_letter({ letter }, { locale: settings.interfaceLocale })} onpointerdown={(event) => { event.stopPropagation(); startSwipe(event, index); }} onkeydown={(event) => { if (event.key !== 'Enter' && event.key !== ' ') return; event.preventDefault(); if (event.key === 'Enter' && selectedPath.includes(index)) submitSelection(); else chooseLetter(index); }}>
           <circle r="30" class="[transform-box:fill-box] [transform-origin:center] [transition:transform_.18s_cubic-bezier(.34,1.56,.64,1),fill_.18s_ease,stroke_.18s_ease] motion-reduce:transition-none {active ? 'fill-primary stroke-[#c98220] scale-[1.066667] dark:stroke-primary' : 'fill-[#fffdf7] stroke-[#172a45] [stroke-width:2] dark:fill-[#172a45] dark:stroke-[#fffdf7]'}"></circle><text text-anchor="middle" dominant-baseline="central" class="fill-[#172a45] font-['DM_Sans'] text-[20px] font-extrabold pointer-events-none">{letter}</text>
         </g>
       {/each}
