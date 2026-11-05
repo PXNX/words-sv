@@ -39,6 +39,7 @@
   "content_group": "Content",
   "behavior_group": "App behavior",
   "idle_hint": "Hint",
+  "circle_already_found": "Already found",
   "mode": "Mode",
   "mode_crossword": "Circle",
   "mode_definitions": "Definitions",
