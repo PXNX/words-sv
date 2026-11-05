@@ -12,7 +12,7 @@
   import { runJob } from '#lib/audio/backgroundJobs.svelte.js';
   import { forgetWordAudio } from '#lib/audio/wordBank.svelte.js';
   import { activeEngine, naturalMegabytes, naturalReady, naturalState, prepareNatural, unloadNaturalVoices } from '#lib/story/naturalVoices.svelte.js';
-  import { checkLocalModel, chooseModel, deleteModel, loadLocalModel, localModel, modelGpuMB, pageMemoryMB, unloadLocalModel } from '#lib/conversation/localModel.svelte.js';
+  import { cancelModelDownload, checkLocalModel, chooseModel, deleteModel, downloadModelFiles, localModel, modelGpuMB, pageMemoryMB, unloadLocalModel } from '#lib/conversation/localModel.svelte.js';
   import { chatModels, isRecommended, likelyFits, type ChatModel } from '#lib/conversation/models.js';
   import { unloadSupertonic } from '#lib/voice/supertonic.js';
   import { unloadVoxCPM } from '#lib/voice/voxcpm.js';
@@ -26,6 +26,7 @@
   import IconStar from '~icons/material-symbols/star-rounded';
   import IconWarning from '~icons/material-symbols/warning-rounded';
   import IconMemory from '~icons/material-symbols/memory-rounded';
+  import IconClose from '~icons/material-symbols/close-rounded';
 
   let { voices }: { voices?: Snippet } = $props();
 
@@ -72,14 +73,16 @@
   function fits(model: ChatModel) {
     return likelyFits(model, f16, device?.deviceMemoryGB ?? null, device?.maxBufferMB ?? null);
   }
-  function modelState(model: ChatModel): 'loading' | 'loaded' | 'downloaded' | 'none' {
+  function modelState(model: ChatModel): 'downloading' | 'failed' | 'loading' | 'loaded' | 'downloaded' | 'none' {
+    const download = localModel.downloads[model.id];
+    if (download) return download.failed ? 'failed' : 'downloading';
     if (localModel.status === 'loading' && settings.chatModel === model.id) return 'loading';
     if (localModel.loaded === model.id && localModel.status === 'ready') return 'loaded';
     return localModel.downloaded.includes(model.id) ? 'downloaded' : 'none';
   }
+  // Downloads only (no GPU), so several can run side by side; the conversation loads the chosen one.
   function downloadModel(model: ChatModel) {
-    chooseModel(model.id);
-    void loadLocalModel().finally(refresh);
+    void downloadModelFiles(model.id).finally(refresh);
   }
   let confirmingModel = $state<string | null>(null);
   async function removeModel(model: ChatModel) {
@@ -160,6 +163,7 @@
     {#if device}
       <p class="model-device"><IconMemory aria-hidden="true" /> {m.models_device({ gpu: device.gpu, f16: device.f16 ? '16-bit' : '32-bit' }, { locale })}{#if device.deviceMemoryGB} · {m.models_ram({ ram: `${device.deviceMemoryGB}${device.deviceMemoryGB >= 8 ? '+' : ''} GB` }, { locale })}{/if}</p>
     {/if}
+    <p class="model-hint">{m.models_parallel_hint({}, { locale })}</p>
     <ul class="model-list" role="radiogroup" aria-label={m.models_conversation({}, { locale })}>
       {#each chatModels as model (model.id)}
         {@const state = modelState(model)}
@@ -169,7 +173,13 @@
             <span class="model-name">{model.label}{#if isRecommended(model, settings.lang)}<span class="model-best" title={m.models_best_for({ language: languageName }, { locale })}><IconStar aria-hidden="true" /> {m.models_best_for({ language: languageName }, { locale })}</span>{/if}</span>
             <span class="model-facts">{sizeNames[model.size]} · {m.models_facts({ download: mb(model.downloadMB), memory: mb(modelGpuMB(model)) }, { locale })}</span>
             {#if !fits(model)}<span class="model-warn"><IconWarning aria-hidden="true" /> {m.models_may_not_fit({}, { locale })}</span>{/if}
-            {#if state === 'loading'}
+            {#if state === 'downloading'}
+              {@const download = localModel.downloads[model.id]!}
+              <span class="model-progress"><span style:width={`${Math.max(2, Math.round(download.progress * 100))}%`}></span></span>
+              <span class="model-facts">{Math.round(download.progress * 100)}%{#if download.bytesPerSecond} · {formatSpeed(download.bytesPerSecond, locale)}{/if}</span>
+            {:else if state === 'failed'}
+              <span class="model-warn"><IconWarning aria-hidden="true" /> {m.models_download_failed({}, { locale })}</span>
+            {:else if state === 'loading'}
               <span class="model-progress"><span style:width={`${Math.round(localModel.progress * 100)}%`}></span></span>
               <span>{Math.round(localModel.progress * 100)}%{#if localModel.bytesPerSecond} · {formatSpeed(localModel.bytesPerSecond, locale)}{/if}</span>
             {:else if state === 'loaded'}
@@ -179,7 +189,9 @@
             {/if}
           </button>
           <div class="model-actions">
-            {#if state === 'none'}
+            {#if state === 'downloading'}
+              <button type="button" class="btn-play btn-play-sm btn-play-soft btn-play-round" onclick={() => cancelModelDownload(model.id)} aria-label={m.models_cancel({}, { locale })} title={m.models_cancel({}, { locale })}><IconClose aria-hidden="true" /></button>
+            {:else if state === 'none' || state === 'failed'}
               <button type="button" class="btn-play btn-play-sm btn-play-go btn-play-round" onclick={() => downloadModel(model)} aria-label={m.models_download({}, { locale })} title={m.models_download({}, { locale })}><IconDownload aria-hidden="true" /></button>
             {:else if state === 'downloaded' || state === 'loaded'}
               <button type="button" class="btn-play btn-play-sm btn-play-soft btn-play-round" class:confirm={confirmingModel === model.id} onclick={() => removeModel(model)} onblur={() => { if (confirmingModel === model.id) confirmingModel = null; }} aria-label={confirmingModel === model.id ? m.models_confirm({}, { locale }) : m.models_delete({}, { locale })} title={confirmingModel === model.id ? m.models_confirm({}, { locale }) : m.models_delete({}, { locale })}><IconDelete aria-hidden="true" /></button>

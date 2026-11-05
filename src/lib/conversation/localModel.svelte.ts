@@ -1,6 +1,6 @@
 import type { ChatMessage } from './conversation.js';
 import type { GenerationStats, WorkerReply, WorkerRequest } from './llm.worker.js';
-import { runJob } from '#lib/audio/backgroundJobs.svelte.js';
+import { cancelJob, runJob } from '#lib/audio/backgroundJobs.svelte.js';
 import { createSpeedMeter } from '#lib/offline/downloadSpeed.js';
 import { settings } from '#lib/state/settings.svelte.js';
 import { chatModel, chatModels, gpuNeedMB, webllmId, type ChatModel, type ChatModelId } from './models.js';
@@ -31,7 +31,12 @@ export const localModel = $state<{
   tokensPerSecond: number;
   lastStats: GenerationStats | null;
   device: DeviceInfo | null;
-}>({ status: 'idle', progress: 0, text: '', cached: false, downloaded: [], loaded: null, bytesPerSecond: 0, tokensPerSecond: 0, lastStats: null, device: null });
+  // Downloads running without loading (from the settings), several at once, per model.
+  downloads: Partial<Record<ChatModelId, ModelDownload>>;
+}>({ status: 'idle', progress: 0, text: '', cached: false, downloaded: [], loaded: null, bytesPerSecond: 0, tokensPerSecond: 0, lastStats: null, device: null, downloads: {} });
+
+export type ModelDownload = { progress: number; bytesPerSecond: number; failed?: boolean };
+const running = new Map<ChatModelId, Promise<void>>();
 
 const speed = createSpeedMeter();
 
@@ -131,8 +136,11 @@ export function loadLocalModel(): Promise<void> {
     }
     const id = webllmId(model, localModel.device.f16);
     localModel.status = 'loading';
+    // A download of this model already under way finishes first, so its files are not fetched twice
+    // (its progress shows here meanwhile, see downloadModelFiles).
     localModel.progress = 0;
     localModel.bytesPerSecond = 0;
+    await running.get(model.id)?.catch(() => undefined);
     speed.reset();
     try {
       // A background job, so the download keeps going (and shows in the corner badge) while the
@@ -163,6 +171,64 @@ export function loadLocalModel(): Promise<void> {
     }
   })();
   return loading;
+}
+
+/**
+ * Downloads a model into the cache without loading it onto the GPU, as a background job. Any number
+ * can run at once; each reports its own progress and speed in `localModel.downloads`.
+ */
+export function downloadModelFiles(modelId: ChatModelId): Promise<void> {
+  const existing = running.get(modelId);
+  if (existing) return existing;
+  const model = chatModel(modelId);
+  const task = (async () => {
+    localModel.device ??= await detectDevice();
+    if (!localModel.device) {
+      localModel.status = 'unsupported';
+      return;
+    }
+    const id = webllmId(model, localModel.device.f16);
+    const meter = createSpeedMeter();
+    localModel.downloads[modelId] = { progress: 0, bytesPerSecond: 0 };
+    try {
+      await runJob(`model-download|${id}`, model.label, '/settings', (control) => request({ type: 'download', model: id }, (reply) => {
+        if (reply.type !== 'progress') return;
+        const entry = localModel.downloads[modelId];
+        if (entry) {
+          entry.progress = reply.progress;
+          if (reply.bytes !== undefined) entry.bytesPerSecond = meter.sample(reply.bytes);
+          // The conversation may be waiting for this very download to load it.
+          if (localModel.status === 'loading' && chosenModel().id === modelId) {
+            localModel.progress = reply.progress;
+            localModel.bytesPerSecond = entry.bytesPerSecond;
+          }
+        }
+        control.progress({ done: Math.round(reply.progress * 100), total: 100 });
+      }));
+      delete localModel.downloads[modelId];
+      if (!localModel.downloaded.includes(modelId)) localModel.downloaded = [...localModel.downloaded, modelId];
+      localModel.cached = localModel.downloaded.includes(chosenModel().id);
+    } catch (error) {
+      const entry = localModel.downloads[modelId];
+      if (entry && !(error instanceof Error && /abort/i.test(error.message))) {
+        console.error('Model download failed', error);
+        entry.failed = true;
+        entry.bytesPerSecond = 0;
+      } else {
+        delete localModel.downloads[modelId];
+      }
+    }
+  })().finally(() => running.delete(modelId));
+  running.set(modelId, task);
+  return task;
+}
+
+/** Stops a running download; the files fetched so far stay, and the next download resumes from them. */
+export function cancelModelDownload(modelId: ChatModelId) {
+  const id = webllmId(chatModel(modelId), localModel.device?.f16 ?? true);
+  cancelJob(`model-download|${id}`);
+  void request({ type: 'cancel-download', model: id }).catch(() => undefined);
+  delete localModel.downloads[modelId];
 }
 
 /** Picks another model in the settings; the next conversation loads it (freeing the old one). */
@@ -201,6 +267,7 @@ export function interruptReply() {
 
 /** Deletes one downloaded model from the cache (unloading it first if it is on the GPU). */
 export async function deleteModel(id: ChatModelId) {
+  if (running.has(id)) cancelModelDownload(id);
   const f16 = localModel.device?.f16 ?? true;
   await request({ type: 'delete', model: webllmId(chatModel(id), f16) }).catch(() => undefined);
   localModel.downloaded = localModel.downloaded.filter((entry) => entry !== id);
@@ -221,6 +288,8 @@ export function unloadLocalModel() {
   localModel.status = 'idle';
   localModel.cached = false;
   localModel.downloaded = [];
+  localModel.downloads = {};
+  running.clear();
   localModel.loaded = null;
   localModel.progress = 0;
   localModel.bytesPerSecond = 0;
