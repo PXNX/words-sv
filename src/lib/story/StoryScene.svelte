@@ -1,7 +1,10 @@
 <script lang="ts">
   import type { SceneId, Weather } from './stories';
 
-  let { scene, weather = 'sunny' }: { scene: SceneId; weather?: Weather } = $props();
+  let { scene: requested, weather = 'sunny' }: { scene: SceneId; weather?: Weather } = $props();
+  // Some stories name places that have no drawing of their own (a market, a school, …): they get the
+  // closest scene instead of crashing the picture, and anything unknown falls back to home.
+  const aliases: Record<string, SceneId> = { market: 'square', town: 'square', shop: 'boutique', factory: 'workshop', school: 'library' };
 
   // Clip-path ids must be unique per instance.
   const uid = $props.id();
@@ -38,6 +41,7 @@
     frankfurt: { back: '#cfe6f2', floor: '#c4cbd3' },
     library: { back: '#e8e2d9', floor: '#b8a07e' }
   };
+  const scene = $derived<SceneId>(requested in palettes ? requested : aliases[requested] ?? 'home');
   const palette = $derived(palettes[scene]);
 
   // Where the weather shows: through the window indoors, across the whole sky outdoors.
