@@ -104,3 +104,12 @@ export async function isDownloaded(url: string, cacheName: string): Promise<bool
   for (let index = 0; index < Math.ceil(total / CHUNK_BYTES); index += 1) if (!(await cache.match(chunkKey(url, index)))) return false;
   return true;
 }
+
+/** Forgets everything stored for `url` (the whole file, its size and every chunk), e.g. after it turned out damaged. */
+export async function forgetDownload(url: string, cacheName: string): Promise<void> {
+  const cache = await caches.open(cacheName);
+  for (const request of await cache.keys()) {
+    const key = request.url;
+    if (key === url || key === `${url}#size` || key.startsWith(`${url}#chunk=`)) await cache.delete(request);
+  }
+}
