@@ -9,6 +9,7 @@
     ariaLabel,
     markLabels,
     removeLabel,
+    showRemove = true,
     onPress,
     onRemove
   }: {
@@ -20,6 +21,8 @@
     /** Spoken after a used key's letter, e.g. "A, not in the word". */
     markLabels?: Record<WordleMark, string>;
     removeLabel?: string;
+    /** Hangman has nothing to take back, so it hides the ⌫ key. */
+    showRemove?: boolean;
     onPress: (letter: string) => void;
     onRemove: () => void;
   } = $props();
@@ -51,7 +54,7 @@
   {/each}
   <div class="flex justify-center gap-[clamp(.15rem,.8cqw,.3rem)]">
     {#each layout.extras as letter}{@render key(letter, true)}{/each}
-    <button type="button" class="wordle-key remove" class:dimmed={guided} aria-label={removeLabel} onclick={onRemove} disabled={disabled && !guided}>⌫</button>
+    {#if showRemove}<button type="button" class="wordle-key remove" class:dimmed={guided} aria-label={removeLabel} onclick={onRemove} disabled={disabled && !guided}>⌫</button>{/if}
   </div>
 </div>
 
