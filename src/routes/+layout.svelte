@@ -13,6 +13,7 @@ import StartupLoader from '#lib/app/StartupLoader.svelte';
 import CosmeticUnlockToast from '#lib/profile/CosmeticUnlockToast.svelte';
 import StreakToast from '#lib/streak/StreakToast.svelte';
 import { startCloudSync } from '#lib/sync/cloudSync.svelte.js';
+import { probeWebGpu } from '#lib/voice/engines.js';
 import { checkAchievementRewards } from '#lib/profile/cosmetics.svelte.js';
 import { readVocabularyProgressByLanguage } from '#lib/vocab/spacedRepetition.js';
 import BackgroundJobsBadge from '#lib/audio/BackgroundJobsBadge.svelte';
@@ -84,6 +85,8 @@ $effect(() => {
 });
 
 onMount(() => {
+    // Whether WebGPU really has an adapter, so VoxCPM falls back to Piper where it cannot run.
+    void probeWebGpu();
     void autoUpdateOnStart();
     void updated.check();
     pwaInstall.init();

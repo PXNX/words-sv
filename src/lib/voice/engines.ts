@@ -53,8 +53,25 @@ export function speaksLanguage(engine: VoiceEngineId, language: Language): boole
 
 export type DeviceAbilities = { webgpu: boolean };
 
+// `navigator.gpu` existing is not enough: many browsers (Linux Chrome without a flag, for one) have
+// it but hand out no adapter. probeWebGpu() asks once at startup; until it answers, the API's
+// presence counts.
+let webgpuAdapter: boolean | null = null;
+
+/** Asks the browser for a WebGPU adapter once, so engines that need one can fall back in time. */
+export async function probeWebGpu(): Promise<boolean> {
+  if (webgpuAdapter !== null) return webgpuAdapter;
+  const gpu = typeof navigator === 'undefined' ? undefined : (navigator as Navigator & { gpu?: { requestAdapter: () => Promise<unknown> } }).gpu;
+  try {
+    webgpuAdapter = Boolean(gpu && (await gpu.requestAdapter()));
+  } catch {
+    webgpuAdapter = false;
+  }
+  return webgpuAdapter;
+}
+
 export function deviceAbilities(): DeviceAbilities {
-  return { webgpu: typeof navigator !== 'undefined' && 'gpu' in navigator };
+  return { webgpu: typeof navigator !== 'undefined' && 'gpu' in navigator && webgpuAdapter !== false };
 }
 
 function usable(engine: VoiceEngineId, language: Language, device: DeviceAbilities) {

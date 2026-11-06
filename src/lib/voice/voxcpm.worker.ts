@@ -20,7 +20,7 @@
 import * as ortWebgpu from 'onnxruntime-web/webgpu';
 import type { InferenceSession, Tensor } from 'onnxruntime-common';
 import { AutoTokenizer, type PreTrainedTokenizer } from '@huggingface/transformers';
-import { resumableDownload } from '#lib/offline/resumableDownload.js';
+import { forgetDownload, resumableDownload } from '#lib/offline/resumableDownload.js';
 
 // The WebGPU build, typed as the main package (same API).
 const ort = ortWebgpu as typeof import('onnxruntime-common');
@@ -50,6 +50,10 @@ const post = (reply: VoxReply, transfer: Transferable[] = []) => self.postMessag
 
 function load(id: number): Promise<Model> {
   model ??= (async () => {
+    // Without a GPU adapter ONNX Runtime would quietly run a 2B model on the CPU, far too slow to
+    // speak; say so before downloading 1.6 GB.
+    const gpu = (self.navigator as Navigator & { gpu?: { requestAdapter: () => Promise<unknown> } }).gpu;
+    if (!gpu || !(await gpu.requestAdapter().catch(() => null))) throw new Error('VoxCPM needs WebGPU, which this browser does not offer (no GPU adapter).');
     const tokenizer = await AutoTokenizer.from_pretrained(REPO);
     const sessions = {} as Record<Graph, InferenceSession>;
     // One progress bar over all graphs, weighted by their real size.
@@ -60,12 +64,25 @@ function load(id: number): Promise<Model> {
       for (const size of sizes.values()) { loaded += size.loaded; total += size.total; }
       post({ id, type: 'progress', loaded, total });
     };
+    const fetchGraph = (graph: Graph) => resumableDownload(`${BASE}/${graph}.onnx`, CACHE, (loaded, total) => {
+      sizes.set(graph, { loaded, total });
+      report();
+    });
     for (const graph of GRAPHS) {
-      const bytes = await resumableDownload(`${BASE}/${graph}.onnx`, CACHE, (loaded, total) => {
-        sizes.set(graph, { loaded, total });
-        report();
-      });
-      sessions[graph] = await ort.InferenceSession.create(bytes, { executionProviders: ['webgpu', 'wasm'] });
+      try {
+        sessions[graph] = await ort.InferenceSession.create(await fetchGraph(graph), { executionProviders: ['webgpu'] });
+      } catch (error) {
+        // A damaged piece in the cache (an interrupted write, an old partial download) makes the
+        // graph unreadable on every try: forget that file and download it once more.
+        if (!/protobuf|parse|invalid model|load model/i.test(String(error))) throw new Error(`VoxCPM: ${graph} could not be loaded: ${error instanceof Error ? error.message : error}`);
+        console.warn(`VoxCPM: ${graph} was damaged in the cache, downloading it again`, error);
+        await forgetDownload(`${BASE}/${graph}.onnx`, CACHE);
+        try {
+          sessions[graph] = await ort.InferenceSession.create(await fetchGraph(graph), { executionProviders: ['webgpu'] });
+        } catch (retry) {
+          throw new Error(`VoxCPM: ${graph} could not be loaded even after downloading it again: ${retry instanceof Error ? retry.message : retry}`);
+        }
+      }
     }
     return { sessions, tokenizer };
   })();
