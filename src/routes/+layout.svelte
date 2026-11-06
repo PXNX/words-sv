@@ -169,6 +169,8 @@ onMount(() => {
 		.game-paper { --paper-width:640px;width:min(100%,var(--paper-width));height:calc(100svh - 2 * clamp(.75rem,2.2vw,1.75rem) - var(--tg-inset-top) - var(--tg-inset-bottom));border:1px solid rgba(23,42,69,.17);border-radius:1.5rem;box-shadow:0 24px 70px rgba(30,33,44,.13),0 2px 0 rgba(23,42,69,.08); }
 		.game-paper.paper-list { --paper-width:760px; }
 		.game-paper.paper-wide { --paper-width:1000px; }
+		/* A landscape tablet has the width for the home page's two columns: use more of it. */
+		@media (orientation:landscape) and (min-width:1100px) { .game-paper.paper-wide { --paper-width:1240px; } }
 		.game-paper::before { content:'';display:block;position:absolute;z-index:-1;inset:8px;border:1px solid rgba(23,42,69,.13);border-radius:1.1rem;pointer-events:none; }
 		:global(html.dark) .game-paper { border-color:rgba(255,253,247,.18);box-shadow:0 24px 70px rgba(0,0,0,.35); }
 		:global(html.dark) .game-paper::before { border-color:rgba(255,253,247,.14); }
