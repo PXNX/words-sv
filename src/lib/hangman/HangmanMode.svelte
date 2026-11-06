@@ -143,12 +143,8 @@
 
 <svelte:window onkeydown={onKeydown} />
 
-<section class="flex-1 min-h-0 grid grid-rows-[auto_1fr_auto] content-stretch gap-[clamp(.75rem,2.8vw,1.2rem)] pt-[clamp(1.25rem,7svh,4rem)] px-[clamp(.8rem,3vw,1.25rem)] pb-[clamp(1rem,3vw,1.5rem)] overflow-x-hidden overflow-y-auto bg-[linear-gradient(180deg,rgba(237,228,213,.8),rgba(255,253,247,.65))] dark:bg-[linear-gradient(180deg,#213a5d,#172a45)]" aria-label={m.mode_hangman({}, { locale })}>
-  <header class="text-center">
-    <span class="text-accent text-[.58rem] font-extrabold tracking-[.14em]">{level.toUpperCase()}</span>
-    <h1 class="my-[.15rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.65rem,6vw,2.4rem)] font-normal leading-none">{m.mode_hangman({}, { locale })}</h1>
-    <p class="m-0 text-base-content/60 text-[.67rem] font-bold leading-[1.35]">{m.home_hangman({}, { locale })}</p>
-  </header>
+<section class="flex-1 min-h-0 grid grid-rows-[1fr_auto] content-stretch gap-[clamp(.75rem,2.8vw,1.2rem)] pt-[clamp(1.25rem,7svh,4rem)] px-[clamp(.8rem,3vw,1.25rem)] pb-[clamp(1rem,3vw,1.5rem)] overflow-x-hidden overflow-y-auto bg-[linear-gradient(180deg,rgba(237,228,213,.8),rgba(255,253,247,.65))] dark:bg-[linear-gradient(180deg,#213a5d,#172a45)]" aria-label={m.mode_hangman({}, { locale })}>
+  <h1 class="sr-only">{m.mode_hangman({}, { locale })}</h1>
 
   {#if candidates.length === 0}
     <div class="note-play p-[1.25rem] text-accent text-[.75rem] font-extrabold text-center">{m.hangman_empty({}, { locale })}</div>
@@ -171,11 +167,9 @@
         </svg>
         <span class="grid justify-items-start gap-[.3rem]">
           <Companion id="lilith" mood={lilithMood} line={lilithLine} />
-          <span class="grid gap-[.22rem]">
-            <span class="flex gap-[.22rem]" aria-hidden="true">
-              {#each Array(HANGMAN_LIVES) as _, index}<span class="hm-life" class:hm-life-spent={index >= triesLeft}></span>{/each}
-            </span>
-            <span class={triesLeft <= 2 ? 'text-error text-[.62rem] font-extrabold' : 'text-accent text-[.62rem] font-extrabold'}>{m.hangman_tries_left({ count: triesLeft }, { locale })}</span>
+          <!-- The dots are the tries left; the count is only spoken. -->
+          <span class="flex gap-[.22rem]" role="img" aria-label={m.hangman_tries_left({ count: triesLeft }, { locale })}>
+            {#each Array(HANGMAN_LIVES) as _, index}<span class="hm-life" class:hm-life-spent={index >= triesLeft}></span>{/each}
           </span>
         </span>
       </div>
@@ -202,7 +196,7 @@
       {/if}
     </div>
 
-    <WordleKeyboard {language} marks={keyboardMarks} disabled={finished} ariaLabel={m.hangman_keyboard({}, { locale })} onPress={press} onRemove={removeLetter} />
+    <WordleKeyboard {language} marks={keyboardMarks} disabled={finished} ariaLabel={m.hangman_keyboard({}, { locale })} onPress={press} onRemove={removeLetter} showRemove={false} />
   {/if}
 </section>
 
