@@ -46,20 +46,9 @@
     dark: m.dark({}, { locale: settings.interfaceLocale }),
     vibration: m.vibration({}, { locale: settings.interfaceLocale }),
     sound: 'Sound effects',
-    voiceQuality: m.voice_quality({}, { locale: settings.interfaceLocale }),
-    voiceStandard: m.voice_quality_standard({}, { locale: settings.interfaceLocale }),
-    voiceNatural: m.voice_quality_natural({}, { locale: settings.interfaceLocale }),
-    voiceSupertonic: m.voice_quality_supertonic({}, { locale: settings.interfaceLocale }),
-    voiceVoxcpm: m.voice_quality_voxcpm({}, { locale: settings.interfaceLocale }),
-    voiceRecorded: 'Recorded',
-    voiceRecordedHint: "Pre-recorded Piper clips for each character's reference sentence; every other line is generated on your device like Natural.",
-    voiceEdge: 'Edge',
-    voiceEdgeHint: 'Microsoft Edge neural voices. Free and no download, but needs internet; if the service refuses, stories fall back to the standard voice.',
     voiceTest: 'Test voice',
     voiceTesting: 'Playing…',
     voiceTestFailed: 'This voice could not speak right now; stories would use the standard voice instead.',
-    voiceStandardHint: m.voice_quality_standard_hint({}, { locale: settings.interfaceLocale }),
-    voiceFailed: m.voice_quality_failed({}, { locale: settings.interfaceLocale }),
     voiceModel: 'Voice model',
     voiceModelStandard: 'Standard',
     voiceModelHigh: 'High',
@@ -87,48 +76,10 @@
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   const voiceStatus = $derived(naturalState.status[settings.lang] ?? 'idle');
-  const voicePercent = $derived(Math.round((naturalState.progress[settings.lang] ?? 0) * 100));
-  const voiceDownloaded = $derived(Math.round(naturalState.downloaded[settings.lang] ?? 0));
-  const voiceTotal = $derived(Math.round(naturalState.total[settings.lang] ?? naturalMegabytes(settings.lang)));
-  function formatRemaining(seconds: number) {
-    const value = seconds < 60 ? Math.max(5, Math.ceil(seconds / 5) * 5) : Math.ceil(seconds / 60);
-    const unit = seconds < 60 ? 'second' : 'minute';
-    try {
-      return new Intl.NumberFormat(settings.interfaceLocale, { style: 'unit', unit, unitDisplay: 'short' }).format(value);
-    } catch {
-      return `${value} ${unit}`;
-    }
-  }
-  const voiceEta = $derived.by(() => {
-    const remaining = naturalState.remaining[settings.lang];
-    return typeof remaining === 'number' && remaining > 0
-      ? m.voice_quality_remaining({ time: formatRemaining(remaining) }, { locale: settings.interfaceLocale })
-      : '';
-  });
-  // Under the voice choice: how big the natural voices are, how far they have downloaded, or that they failed.
-  const voiceNote = $derived(
-    settings.voiceQuality === 'standard' ? labels.voiceStandardHint
-      : settings.voiceQuality === 'edge' ? labels.voiceEdgeHint
-      : voiceStatus === 'loading' ? `${m.voice_quality_loading({ percent: String(voicePercent) }, { locale: settings.interfaceLocale })} · ${voiceDownloaded} / ${voiceTotal} MB${voiceEta ? ` · ${voiceEta}` : ''}`
-      : voiceStatus === 'failed' ? labels.voiceFailed
-      : settings.voiceQuality === 'recorded' ? labels.voiceRecordedHint
-      : settings.voiceQuality === 'voxcpm' ? (deviceAbilities().webgpu
-        ? m.voice_quality_voxcpm_hint({ size: String(naturalMegabytes(settings.lang)) }, { locale: settings.interfaceLocale })
-        : m.voice_quality_voxcpm_fallback({}, { locale: settings.interfaceLocale }))
-      : settings.voiceQuality === 'supertonic' ? (speaksLanguage('supertonic', settings.lang)
-        ? m.voice_quality_supertonic_hint({ size: String(naturalMegabytes(settings.lang)) }, { locale: settings.interfaceLocale })
-        : m.voice_quality_supertonic_fallback({}, { locale: settings.interfaceLocale }))
-      : m.voice_quality_natural_hint({ size: String(naturalMegabytes(settings.lang)) }, { locale: settings.interfaceLocale })
-  );
   // Whether the chosen voice runs on Piper, which has a model choice and a download to show.
   const piperVoices = $derived(settings.voiceQuality === 'natural' || settings.voiceQuality === 'recorded');
   let voicesSupported = $state(false);
   $effect(() => () => stopVoiceTest());
-  function selectVoiceQuality(next: typeof settings.voiceQuality) {
-    stopVoiceTest();
-    settings.setVoiceQuality(next);
-    if (next !== 'standard') void prepareNatural(settings.lang);
-  }
   function selectNaturalModel(next: typeof settings.naturalModel) {
     stopVoiceTest();
     settings.setNaturalModel(next);
@@ -377,26 +328,12 @@
       <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>🔥 {labels.inviteCount(telegram.invited)}</span><button type="button" class="btn-play btn-play-sm flex-none gap-[.35rem] normal-case tracking-normal" onclick={shareInvite}><IconShare aria-hidden="true" class="w-[.85rem] h-[.85rem]" />{inviteCopied ? labels.inviteCopied : labels.inviteShare}</button></div>
     </section>
   {/if}
-  <ModelManager>
-    {#snippet voices()}
+  <ModelManager onvoicechange={stopVoiceTest}>
+    {#snippet voiceOptions()}
       {#if voicesSupported}
-        <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.voiceQuality}</span><div class="seg-play">{#each [['standard', labels.voiceStandard], ['natural', labels.voiceNatural], ['recorded', labels.voiceRecorded], ['supertonic', labels.voiceSupertonic], ['voxcpm', labels.voiceVoxcpm], ['edge', labels.voiceEdge]] as const as [quality, label]}<button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.voiceQuality === quality ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} aria-pressed={settings.voiceQuality === quality} onclick={() => selectVoiceQuality(quality)}>{label}</button>{/each}</div></div>
         {#if piperVoices}
           <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.voiceModel}</span><div class="seg-play">{#each [['standard', labels.voiceModelStandard], ['high', labels.voiceModelHigh]] as const as [model, label]}<button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.naturalModel === model ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} aria-pressed={settings.naturalModel === model} onclick={() => selectNaturalModel(model)}>{label}</button>{/each}</div></div>
           <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{labels.voiceModelHint}</p>
-        {/if}
-        {#if voiceStatus === 'loading' && settings.voiceQuality !== 'standard' && settings.voiceQuality !== 'edge'}
-          <div class="mt-[.55rem]" aria-live="polite">
-            <div class="flex items-center gap-[.45rem] text-base-content/70 text-[.58rem] font-bold leading-[1.35]">
-              <span class="voice-pulse" aria-hidden="true">{#each [0, 1, 2, 3] as bar}<i style={`--i: ${bar}`}></i>{/each}</span>
-              <span>{voiceNote}</span>
-            </div>
-            <div class="voice-track mt-[.35rem]" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={voicePercent} aria-label={voiceNote}>
-              <span class="voice-fill" style={`width: ${Math.max(voicePercent, 4)}%`}></span>
-            </div>
-          </div>
-        {:else}
-          <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]" aria-live="polite">{voiceNote}</p>
         {/if}
         <div class="flex items-center justify-between gap-4 mt-[.55rem]"><button class="min-h-[1.65rem] px-[.7rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold tracking-[.06em] uppercase bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45] disabled:opacity-60" disabled={piperVoices && voiceStatus === 'loading'} onclick={() => (voiceTesting ? stopVoiceTest() : testVoice())}><IconVolume class="w-[.78rem] h-[.78rem]" />{voiceTesting ? labels.voiceTesting : labels.voiceTest}</button>{#if voiceTestFailed}<span class="text-base-content/60 text-[.58rem] font-bold leading-[1.35]" aria-live="polite">{labels.voiceTestFailed}</span>{/if}</div>
         <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.dialects}</span><input aria-label={labels.dialects} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.dialects} onchange={(event) => settings.setDialects((event.currentTarget as HTMLInputElement).checked)} /></div>
@@ -463,69 +400,5 @@
   }
   .sheet-in {
     animation: sheet-up 0.28s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  .voice-pulse {
-    display: inline-flex;
-    align-items: flex-end;
-    gap: 2px;
-    height: .75rem;
-    flex: none;
-    color: #e6a527;
-  }
-  .voice-pulse i {
-    width: 2px;
-    height: 100%;
-    border-radius: 999px;
-    background: currentColor;
-    transform-origin: bottom;
-    animation: voice-bounce 0.9s ease-in-out infinite;
-    animation-delay: calc(var(--i) * -0.15s);
-  }
-  .voice-track {
-    height: .45rem;
-    overflow: hidden;
-    border: 2px solid rgba(23, 42, 69, 0.35);
-    border-radius: 999px;
-    background: rgba(23, 42, 69, 0.08);
-  }
-  .voice-fill {
-    position: relative;
-    display: block;
-    height: 100%;
-    overflow: hidden;
-    border-radius: 999px;
-    background: linear-gradient(90deg, #e6a527, #34824d);
-    transition: width 0.35s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  .voice-fill::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.55) 45%, transparent 70%);
-    transform: translateX(-100%);
-    animation: voice-shine 1.4s ease-in-out infinite;
-  }
-  :global(html.dark) .voice-pulse {
-    color: #e6a527;
-  }
-  :global(html.dark) .voice-track {
-    border-color: rgba(255, 253, 247, 0.3);
-    background: rgba(255, 253, 247, 0.12);
-  }
-  @keyframes voice-bounce {
-    0%, 100% { transform: scaleY(0.3); }
-    50% { transform: scaleY(1); }
-  }
-  @keyframes voice-shine {
-    to { transform: translateX(100%); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .voice-pulse i,
-    .voice-fill::after {
-      animation: none;
-    }
-    .voice-fill {
-      transition: none;
-    }
   }
 </style>
