@@ -294,6 +294,9 @@
       <button type="submit" class="btn-play btn-play-ink home-name-submit">{labels.continue}</button>
     </form>
   {:else}
+    <!-- Side, main and foot are invisible wrappers on phones (display: contents); a landscape tablet
+         turns them into a sticky left column (cast + daily card) beside the game groups. -->
+    <div class="home-side">
     <UpdateAppHint />
     <InstallAppHint />
     <header class="home-header">
@@ -327,6 +330,8 @@
         </a>
       {/each}
     </section>
+    </div>
+    <div class="home-main">
     <h2 class="home-group-heading">{labels.gamesGroup}</h2>
     <div class="home-games home-games--games">
       <div class="home-card-slot"><a class="card-play {streakClass('circle')}" href="/circle"><span class="home-icon" aria-hidden="true"><IconCrossword /></span><h2>{labels.modeCrossword}</h2><p>{labels.homeCircle}</p><TodayBadge done={modeDone(settings.streak, 'circle')} label={labels.streakModeDone} /></a><a class="btn-play btn-play-round btn-play-sm home-tutorial-link" href="/circle/tutorial" aria-label={labels.tutorial}><IconHelp aria-hidden="true" /></a></div>
@@ -354,8 +359,11 @@
       <a class="card-play {streakClass('grammar')}" href="/grammar?mode=determine"><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>{labels.grammarDetermine}</h2><p>{labels.homeDetermine}</p><TodayBadge done={modeDone(settings.streak, 'grammar')} label={labels.streakModeDone} /></a>
       <a class="card-play {streakClass('grammar')}" href="/grammar?mode=order"><span class="home-icon" aria-hidden="true"><IconSort /></span><h2>{labels.grammarOrder}</h2><p>{labels.homeOrder}</p><TodayBadge done={modeDone(settings.streak, 'grammar')} label={labels.streakModeDone} /></a>
     </div>
+    </div>
+    <div class="home-foot">
     <a class="btn-play btn-play-soft btn-play-sm home-settings-link" href="/settings"><IconSettings aria-hidden="true" /><span>{labels.settings}</span></a>
     <nav class="home-legal" aria-label={labels.legal}><a href="/impressum">{labels.imprint}</a><a href="/datenschutz">{labels.privacy}</a><a href="/bedingungen">{labels.terms}</a></nav>
+    </div>
   {/if}
 </section>
 
@@ -430,6 +438,19 @@
   }
   @media (min-width:760px) { .home-games { grid-template-columns:repeat(4,minmax(0,1fr)); } }
   @media (min-width:700px) and (min-height:560px) { .home-view { padding:clamp(1.5rem,3.5vw,2.75rem) clamp(1.5rem,4vw,3rem); } }
+  .home-side,.home-main,.home-foot { display:contents; }
+  /* Landscape tablets: the cast, title and daily card stay in a sticky column on the left while the
+     game groups fill the width on the right, as many cards per row as fit. */
+  @media (orientation:landscape) and (min-width:900px) and (min-height:560px) {
+    .home-view { grid-template-columns:minmax(17rem,22rem) minmax(0,1fr);grid-template-areas:'side main' 'foot main';grid-template-rows:max-content 1fr;align-content:start;column-gap:clamp(1.5rem,3.5vw,3rem);row-gap:1rem; }
+    .home-side { grid-area:side;position:sticky;top:0;display:grid;align-content:start;gap:1.1rem;padding-top:clamp(0rem,4vh,2rem); }
+    .home-main { grid-area:main;display:grid;align-content:start;gap:1.25rem;padding-top:.4rem; }
+    .home-foot { grid-area:foot;display:grid;align-content:start;justify-items:center;gap:1.1rem; }
+    .home-family { margin-top:0; }
+    .home-daily { width:100%;rotate:0deg; }
+    .home-games,.home-games--games { grid-template-columns:repeat(auto-fill,minmax(9.5rem,1fr)); }
+    .home-legal { margin-top:0; }
+  }
   :global(html.dark) .home-onboarding-field input { border-color:rgba(255,253,247,.4);background:#213a5d;color:#fffdf7; }
   :global(html.dark) .home-header h1,:global(html.dark) .home-onboarding h1,:global(html.dark) .home-games h2 { color:#fffdf7 !important;text-shadow:none; }
   :global(html.dark) .home-family-people { border-color:#0b1626;background:radial-gradient(circle at 50% 85%,#2b4a73,#213a5d 70%); }:global(html.dark) .home-family::after { background:#0b1626; }
