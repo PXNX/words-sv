@@ -22,7 +22,9 @@
   import Companion from '#lib/story/Companion.svelte';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import AvatarEditor from '#lib/profile/AvatarEditor.svelte';
-  import { checkAchievementRewards } from '#lib/profile/cosmetics.svelte.js';
+  import { checkAchievementRewards, cosmetics } from '#lib/profile/cosmetics.svelte.js';
+  import { dailyActivity, lifetimeTotals, modeShares } from '#lib/progress/statsView.js';
+  import type { ActivityKind } from '#lib/progress/activity.js';
   import SyncHint from '#lib/sync/SyncHint.svelte';
   import { defaultAvatar } from '#lib/profile/avatar.js';
   import type { Mood } from '#lib/story/stories.js';
@@ -199,6 +201,34 @@
     masteredWords
   }));
   const unlocked = $derived(unlockedCount(achievements));
+  // The week as bars (minutes per day), lifetime totals and the modes played most this week.
+  const week = $derived(dailyActivity(activity));
+  const weekMax = $derived(Math.max(1, ...week.map((day) => day.minutes)));
+  const totals = $derived(lifetimeTotals(activity));
+  const topModes = $derived(modeShares(activity, weekStartTimestamp()).slice(0, 4));
+  const dayName = $derived.by(() => {
+    const format = new Intl.DateTimeFormat(settings.interfaceLocale, { weekday: 'short' });
+    return (start: number) => format.format(start);
+  });
+  const minutesLabel = (count: number) => m.stats_minutes_short({ count }, { locale: settings.interfaceLocale });
+  const kindNames = $derived<Record<ActivityKind, string>>({
+    vocab: m.stats_vocab({}, { locale: settings.interfaceLocale }),
+    grammar: m.mode_grammar({}, { locale: settings.interfaceLocale }),
+    reading: m.reading_title({}, { locale: settings.interfaceLocale }),
+    story: m.story_title({}, { locale: settings.interfaceLocale }),
+    listen: m.story_listen({}, { locale: settings.interfaceLocale }),
+    pronunciation: m.mode_pronunciation({}, { locale: settings.interfaceLocale }),
+    circle: m.mode_crossword({}, { locale: settings.interfaceLocale }),
+    wordle: m.mode_wordle({}, { locale: settings.interfaceLocale }),
+    hangman: m.mode_hangman({}, { locale: settings.interfaceLocale }),
+    alltag: m.mode_alltag({}, { locale: settings.interfaceLocale }),
+    tricky_cleared: ''
+  });
+  // Each badge shows the learner's own character wearing the piece it brings.
+  function rewardLook(id: AchievementId) {
+    const item = cosmetics[`achievement_${id}`];
+    return { ...(settings.avatar ?? defaultAvatar), [item.part]: item.choice };
+  }
   // Finished badges hand out their character items, counting mastered words in every language.
   $effect(() => checkAchievementRewards({ bestStreak: settings.streak.bestStreak, masteredWords }));
   const weekly = $derived(buildWeeklyRecap({
@@ -368,6 +398,18 @@
     </dl>
   </section>
 
+  <!-- Overall: everything practised on this device (and in the saved progress), at a glance. -->
+  <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4" aria-labelledby="progress-overall-heading">
+    <h2 id="progress-overall-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{m.stats_overall({}, { locale: settings.interfaceLocale })}</h2>
+    <dl class="overall-grid">
+      <div><dd>{totals.minutes}</dd><dt>{m.stats_total_minutes({}, { locale: settings.interfaceLocale })}</dt></div>
+      <div><dd>{totals.daysPractised}</dd><dt>{m.stats_days_practised({}, { locale: settings.interfaceLocale })}</dt></div>
+      <div><dd>{totals.sessions}</dd><dt>{m.stats_sessions({}, { locale: settings.interfaceLocale })}</dt></div>
+      <div><dd>{masteredWords}</dd><dt>{labels.masteredWords}</dt></div>
+      <div><dd>{settings.streak.bestStreak}</dd><dt>{labels.streakBest}</dt></div>
+    </dl>
+  </section>
+
   <!-- Milestones: the nearest unfinished goal first, then the whole path. -->
   <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4" aria-labelledby="progress-milestones-heading">
     <h2 id="progress-milestones-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.milestonesTitle}</h2>
@@ -404,9 +446,10 @@
     </div>
     <ul class="achievement-grid">
       {#each achievements as achievement (achievement.id)}
-        <li class="achievement" class:done={achievement.done}>
-          <span class="achievement-icon" aria-hidden="true">{#if achievement.done}<IconCheck />{:else}<IconPending />{/if}</span>
-          <span class="achievement-label">{achievementLabels[achievement.id]}</span>
+        <li class="achievement" class:done={achievement.done} title={m.stats_reward_item({}, { locale: settings.interfaceLocale })}>
+          <span class="achievement-look" aria-hidden="true"><StoryCharacter id="kumar" avatar={rewardLook(achievement.id)} mood={achievement.done ? 'happy' : 'curious'} /></span>
+          <span class="achievement-label">{#if achievement.done}<IconCheck class="achievement-check" aria-hidden="true" />{/if}{achievementLabels[achievement.id]}</span>
+          <span class="achievement-meter" aria-hidden="true"><span style:width={`${Math.round((achievement.value / achievement.target) * 100)}%`}></span></span>
           <span class="achievement-progress tabular-nums">{achievement.value}/{achievement.target}</span>
         </li>
       {/each}
@@ -417,12 +460,37 @@
   <!-- Weekly recap: what actually happened this week, not a guessed average. -->
   <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4" aria-labelledby="progress-week-heading">
     <h2 id="progress-week-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.weekTitle}</h2>
+    <figure class="week-chart">
+      <figcaption>{m.stats_week_chart({}, { locale: settings.interfaceLocale })}</figcaption>
+      <!-- Bars carry minutes; only today and the busiest day get a number, the rest show it on hover. -->
+      <div class="week-bars" aria-hidden="true">
+        {#each week as day (day.start)}
+          <div class="week-bar" class:today={day.today} title={`${dayName(day.start)}: ${minutesLabel(day.minutes)}`}>
+            <span class="week-value tabular-nums">{#if day.minutes > 0 && (day.today || day.minutes === weekMax)}{day.minutes}{/if}</span>
+            <span class="week-fill" class:empty={day.minutes === 0} style:height={`${day.minutes > 0 ? Math.max(6, (day.minutes / weekMax) * 100) : 0}%`}></span>
+            <span class="week-day">{dayName(day.start)}</span>
+          </div>
+        {/each}
+      </div>
+      <table class="sr-only">
+        <caption>{m.stats_week_chart({}, { locale: settings.interfaceLocale })}</caption>
+        <tbody>{#each week as day (day.start)}<tr><th scope="row">{dayName(day.start)}</th><td>{minutesLabel(day.minutes)}</td></tr>{/each}</tbody>
+      </table>
+    </figure>
     <dl class="m-0 mt-[.6rem] grid grid-cols-2 gap-x-4 gap-y-[.55rem]">
       <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{weekly.wordsMastered}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekWords}</dt></div>
       <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{weekly.minutes}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekMinutes}</dt></div>
       <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{weekly.bestStreak}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekBestStreak}</dt></div>
       <div class="grid gap-[.1rem] min-w-0"><dd class="m-0 order-1 truncate text-base-content text-[.8rem] font-extrabold leading-[1.9]">{weekly.hardestWord ?? '—'}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekHardest}</dt></div>
     </dl>
+    {#if topModes.length > 0}
+      <p class="m-0 mt-[.7rem] text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{m.stats_most_played({}, { locale: settings.interfaceLocale })}</p>
+      <ul class="mode-shares">
+        {#each topModes as mode (mode.kind)}
+          <li><span class="mode-share-name">{kindNames[mode.kind]}</span><span class="mode-share-bar" aria-hidden="true"><span style:width={`${Math.round(mode.share * 100)}%`}></span></span><b class="tabular-nums">{mode.count}</b></li>
+        {/each}
+      </ul>
+    {/if}
     {#if weekly.wordsMastered === 0 && weekly.minutes === 0}
       <p class="m-0 mt-[.5rem] text-base-content/55 text-[.62rem] font-bold">{labels.weekEmpty}</p>
     {/if}
@@ -522,12 +590,39 @@
   .progress-edit { display:grid;place-items:center;flex:none;width:1.7rem;height:1.7rem;padding:0;border:1.5px solid var(--play-line);border-radius:999px;background:transparent;color:var(--play-ink,#172a45);cursor:pointer; }
   .progress-edit :global(svg) { width:1rem;height:1rem; }
   .progress-edit:focus-visible,.progress-name-input:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
-  .achievement-grid { margin:.6rem 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(8.5rem,1fr));gap:.35rem; }
-  .achievement { display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:.35rem;align-items:center;padding:.4rem .5rem;border:1.5px solid var(--play-line);border-radius:.6rem;opacity:.55; }
+  .overall-grid { margin:.6rem 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(6.5rem,1fr));gap:.55rem 1rem; }
+  .overall-grid div { display:grid;gap:.1rem; }
+  .overall-grid dd { order:1;margin:0;color:var(--play-ink,#172a45);font-family:'DM Serif Display',serif;font-size:1.5rem;line-height:1;font-variant-numeric:tabular-nums; }
+  .overall-grid dt { order:2;color:rgba(23,42,69,.6);font-size:.54rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }
+  .week-chart { margin:.7rem 0 .2rem; }
+  .week-chart figcaption { color:rgba(23,42,69,.6);font-size:.54rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }
+  .week-bars { display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.35rem;height:7rem;margin-top:.45rem;padding-bottom:1.1rem;position:relative;background:linear-gradient(rgba(23,42,69,.1),rgba(23,42,69,.1)) left bottom 1.1rem / 100% 1px no-repeat; }
+  .week-bar { position:relative;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-width:0;cursor:default; }
+  .week-fill { width:min(100%,1.6rem);border-radius:4px 4px 0 0;background:#e6a527;transition:height .45s cubic-bezier(.23,1,.32,1); }
+  .week-bar.today .week-fill { background:#c9832f; }
+  .week-value { margin-bottom:.15rem;color:var(--play-ink,#172a45);font-size:.56rem;font-weight:900;line-height:1; }
+  .week-day { position:absolute;bottom:-1.1rem;color:rgba(23,42,69,.55);font-size:.52rem;font-weight:800;white-space:nowrap; }
+  .week-bar.today .week-day { color:var(--play-ink,#172a45);font-weight:900; }
+  .mode-shares { margin:.35rem 0 0;padding:0;list-style:none;display:grid;gap:.3rem; }
+  .mode-shares li { display:grid;grid-template-columns:minmax(5rem,7.5rem) 1fr auto;align-items:center;gap:.5rem;font-size:.6rem;font-weight:800;color:var(--play-ink,#172a45); }
+  .mode-share-name { overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+  .mode-share-bar { height:.4rem;border-radius:999px;background:rgba(23,42,69,.08);overflow:hidden; }
+  .mode-share-bar span { display:block;height:100%;border-radius:inherit;background:#e6a527; }
+  .achievement-look { grid-row:1 / span 3;display:block;width:2.6rem;height:3.25rem; }
+  .achievement-look :global(.story-character) { width:100%;height:100%; }
+  .achievement-meter { display:block;height:.3rem;border-radius:999px;background:rgba(23,42,69,.1);overflow:hidden; }
+  .achievement-meter span { display:block;height:100%;border-radius:inherit;background:#e6a527; }
+  .achievement.done .achievement-meter span { background:#34824d; }
+  .achievement-label :global(.achievement-check) { width:.8rem;height:.8rem;margin-inline-end:.2rem;vertical-align:-.12rem;color:#34824d; }
+  @media (prefers-reduced-motion:reduce) { .week-fill { transition:none; } }
+  :global(html.dark) .overall-grid dd,:global(html.dark) .week-value,:global(html.dark) .week-bar.today .week-day,:global(html.dark) .mode-shares li { color:#fffdf7; }
+  :global(html.dark) .overall-grid dt,:global(html.dark) .week-chart figcaption,:global(html.dark) .week-day { color:rgba(255,253,247,.6); }
+  :global(html.dark) .week-bars { background-image:linear-gradient(rgba(255,253,247,.16),rgba(255,253,247,.16)); }
+  :global(html.dark) .mode-share-bar,:global(html.dark) .achievement-meter { background:rgba(255,253,247,.14); }
+  :global(html.dark) .week-bar.today .week-fill { background:#f0c06a; }
+  .achievement-grid { margin:.6rem 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(10.5rem,1fr));gap:.35rem; }
+  .achievement { display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto auto;column-gap:.45rem;row-gap:.2rem;align-items:center;padding:.4rem .5rem;border:1.5px solid var(--play-line);border-radius:.6rem;opacity:.7; }
   .achievement.done { opacity:1;background:rgba(230,165,39,.12);border-color:#e6a527; }
-  .achievement-icon { grid-row:1 / span 2;display:grid;place-items:center;color:var(--play-ink,#172a45); }
-  .achievement-icon :global(svg) { width:1.15rem;height:1.15rem; }
-  .achievement.done .achievement-icon { color:#34824d; }
   .achievement-label { color:var(--play-ink,#172a45);font-size:.62rem;font-weight:800;line-height:1.25; }
   .achievement-progress { color:var(--play-ink,#172a45);opacity:.55;font-size:.55rem;font-weight:800; }
   :global(html.dark) .progress-avatar { background:radial-gradient(circle at 50% 85%,rgba(230,165,39,.28),transparent 60%),rgba(11,22,38,.35); }
