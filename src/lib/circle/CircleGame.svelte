@@ -3,7 +3,6 @@
   import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { pwaInstall } from '#lib/pwa/pwaInstall.svelte.js';
   import { playSuccessSound } from '#lib/feedback/sounds.js';
   import { hintableBaseWords, wordDefinitions, wordMetadata, wordPools, type Language } from '#lib/data/vocabulary.js';
   import { wiktionaryUrl } from '#lib/vocab/wiktionary.js';
@@ -16,7 +15,6 @@
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
   import IconClose from '~icons/material-symbols/cancel-rounded';
-  import IconDownload from '~icons/material-symbols/download-rounded';
   import IconHelp from '~icons/material-symbols/question-mark-rounded';
   import IconProgressActivity from '~icons/material-symbols/progress-activity';
   import { tick, untrack } from 'svelte';
@@ -175,8 +173,6 @@
     continue: m.continue({}, { locale: settings.interfaceLocale }),
     explain: m.explain({}, { locale: settings.interfaceLocale }),
     readMore: m.read_more({}, { locale: settings.interfaceLocale }),
-    install: m.install({}, { locale: settings.interfaceLocale }),
-    installHint: m.install_hint({}, { locale: settings.interfaceLocale }),
     tracePrompt: showDefinitions ? m.type_prompt({}, { locale: settings.interfaceLocale }) : m.trace_prompt({}, { locale: settings.interfaceLocale }),
     traceActive: showDefinitions ? m.type_active({}, { locale: settings.interfaceLocale }) : m.trace_active({}, { locale: settings.interfaceLocale }),
     tutorial: m.tutorial({}, { locale: settings.interfaceLocale }),
@@ -190,7 +186,6 @@
     progress: m.circle_progress({ found: solvedWords.length, total: currentRound.words.length }, { locale: settings.interfaceLocale })
   });
 
-  const installable = $derived(pwaInstall.canInstall);
   const grid = $derived(currentRound.grid);
   const circleLetters = $derived(currentRound.letters);
   const solvedSet = $derived(new Set(solvedWords));
@@ -539,7 +534,7 @@
   function selectionAreaClasses() {
     if (celebration) return 'relative z-[55] flex items-center justify-center h-[70px] min-h-[70px] p-0 bg-[#fffdf7] dark:bg-[#172a45] max-[579px]:h-[54px] max-[579px]:min-h-[54px]';
     const base = 'relative z-[1] flex-none pt-[.75rem] pb-[.35rem] text-center bg-[#fffdf7] bg-[image:linear-gradient(90deg,transparent,rgba(23,42,69,.025)_22%,rgba(23,42,69,.025)_78%,transparent)] dark:bg-[#172a45] dark:bg-[image:linear-gradient(90deg,transparent,rgba(255,253,247,.04)_22%,rgba(255,253,247,.04)_78%,transparent)] max-[579px]:pt-[.45rem] max-[579px]:pb-[.1rem]';
-    const heights = installable && !previewWord ? 'min-h-[96px] max-[579px]:min-h-[70px]' : 'min-h-[70px] max-[579px]:min-h-[54px]';
+    const heights = 'min-h-[70px] max-[579px]:min-h-[54px]';
     return `${base} ${heights}`;
   }
   function inRange(row: number, col: number) {
@@ -636,12 +631,6 @@
     </div>
     {#if hintDefinition && previewWord && !(explainOpen && feedback === 'correct')}<p class="mx-auto mt-[.15rem] max-w-[min(32rem,74vw)] truncate text-accent font-['DM_Sans'] text-[clamp(.58rem,2.2vw,.7rem)] font-bold leading-[1.3]">{hintDefinition}</p>{/if}
     {#if tutorialPractice}<p class="flex items-center justify-center gap-[.5rem] mt-[.2rem] text-accent font-['DM_Sans'] text-[.54rem] font-extrabold tracking-[.07em] uppercase"><span>{labels.tutorial}</span><b class="text-base-content text-[.58rem] tracking-[.11em]">{tutorialHint}</b></p>{/if}
-    {#if installable && !previewWord}
-      <button class="btn-play btn-play-ink btn-play-sm absolute z-[5] bottom-[.25rem] left-1/2 -translate-x-1/2 gap-[.42rem] min-h-[1.75rem] py-[.22rem] px-[.62rem] normal-case tracking-normal text-left" onclick={() => void pwaInstall.install()}>
-        <IconDownload class="w-[1rem] h-[1rem] text-primary" aria-hidden="true" />
-        <span class="grid gap-[.02rem] leading-none whitespace-nowrap"><strong class="text-[.57rem] font-extrabold tracking-[.07em] uppercase">{labels.install}</strong><small class="text-[rgba(255,253,247,.72)] text-[.5rem] font-bold tracking-[.03em]">{labels.installHint}</small></span>
-      </button>
-    {/if}
   {/if}
 </div>
 
