@@ -11,8 +11,8 @@ CONTAINER: Final[bool] = str(getenv("CONTAINER", "False")).lower() == "true"
 ADMINS: Final[List[int]] = loads(getenv("ADMINS", "[]"))
 RES_PATH: Final[str] = getenv("RES_PATH", "./res")
 
-# SQLite file for the donation ledger; inside the container it lives in the bind-mounted bot/ folder.
-DB_PATH: Final[str] = getenv("DB_PATH", "data/donations.db")
+# PostgreSQL for the donation ledger, e.g. postgresql://user:password@host:5432/words
+DATABASE_URL: Final[str] = getenv("DATABASE_URL", "")
 
 # The WordCircle PWA, opened as the bot's Mini App from the menu button and /start.
 WORDS_URL: Final[str] = getenv("WORDS_URL", "https://words-sv.vercel.app")

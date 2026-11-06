@@ -3,6 +3,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "bot"))
 
+import os
+
 import pytest
 
 from donations import TIERS, build_payload, check_checkout, parse_payload
@@ -47,9 +49,18 @@ def test_tiers_are_sorted_and_positive():
     assert list(TIERS) == sorted(TIERS) and all(amount > 0 for amount in TIERS)
 
 
-def test_ledger_ignores_duplicate_deliveries():
-    connection = connect(":memory:")
-    assert record_donation(connection, "charge-1", 42, 50) is True
-    assert record_donation(connection, "charge-1", 42, 50) is False
-    record_donation(connection, "charge-2", 42, 25)
-    assert total_for(connection, 42) == 75
+@pytest.mark.asyncio
+async def test_ledger_ignores_duplicate_deliveries():
+    url = os.environ.get("TEST_DATABASE_URL")
+    if not url:
+        pytest.skip("TEST_DATABASE_URL is not set")
+    pool = await connect(url)
+    try:
+        async with pool.connection() as connection:
+            await connection.execute("DELETE FROM donations")
+        assert await record_donation(pool, "charge-1", 42, 50) is True
+        assert await record_donation(pool, "charge-1", 42, 50) is False
+        await record_donation(pool, "charge-2", 42, 25)
+        assert await total_for(pool, 42) == 75
+    finally:
+        await pool.close()

@@ -17,40 +17,29 @@ Telegram bot [@word_circle_bot](https://t.me/word_circle_bot) for the WordCircle
 | Path | What |
 | --- | --- |
 | `bot/` | python-telegram-bot app (long polling). Owns every update, including `pre_checkout_query` and `successful_payment`. |
-| `bot/data/donations.db` | SQLite donation ledger (git-ignored; kept for tax retention). |
+| `bot/store.py` | PostgreSQL donation ledger (`DATABASE_URL`; kept for tax retention). |
 | `miniapp/` | Donation Mini App on [Telegram Serverless](https://core.telegram.org/bots/serverless): static page in `web/`, endpoints `me` and `donate` in `tgcloud/endpoints/`. |
 
 Why the split: Serverless hosts the Mini App front-end and verifies `initData` before an endpoint runs,
-so `me` is the whole login and `donate` can create an invoice link for the verified user. The bot on
-`nyx` keeps polling for updates and deletes any Serverless webhook on start, so the two never compete
+so `me` is the whole login and `donate` can create an invoice link for the verified user. The bot
+keeps polling for updates and deletes any Serverless webhook on start, so the two never compete
 for updates. The `miniapp` project therefore has no `handlers/`.
 
 ## Run locally
 
 ```sh
 python -m venv venv && venv\Scripts\pip install -r bot\requirements.txt
-copy example.env .env   # fill in TELEGRAM
+copy example.env .env   # fill in TELEGRAM and DATABASE_URL
 run.bat
+set TEST_DATABASE_URL=postgresql://...   # an empty database, for the ledger test
 venv\Scripts\python -m pytest test
 ```
 
-## Deploy the bot on nyx
+## Deploy the bot
 
-The quadlet `ptb-words.container` lives in [PXNX/quadlets](https://github.com/PXNX/quadlets) (`~/.config/containers/systemd`
-on nyx). It runs `bot/bot` from the words-sv checkout and reads `bot/.env` (set `TELEGRAM`, `ADMINS`; see `example.env`).
-
-```sh
-ssh nyx@mn
-git clone https://github.com/PXNX/words-sv ~/projects/words-sv
-cp ~/projects/words-sv/bot/example.env ~/projects/words-sv/bot/.env
-ln -s words-sv/bot ~/projects/ptb-words
-systemctl --user daemon-reload && systemctl --user start ptb-words
-```
-
-Updates: push, then `ssh nyx@mn "cd ~/projects/words-sv && git pull --ff-only && systemctl --user restart ptb-words"`.
-
-`~/projects/ptb-words` is a relative symlink to `words-sv/bot`, so ptb-manager's `/redeploy ptb-words` (which works in
-`~/projects/<name>`) syncs words-sv and finds `.env` where it expects it.
+The bot is a long-running process (`python main.py` in `bot/`, see `run.bat`) next to a PostgreSQL database;
+it creates its table on start. It needs `.env` with `TELEGRAM`, `ADMINS` and `DATABASE_URL` (see
+`example.env`). After pulling new code, restart it: the code is only read at start-up.
 
 ## Deploy the Mini App on Telegram Serverless
 
@@ -60,9 +49,9 @@ Serverless is still behind a waitlist for this bot. Until it is enabled, `MINIAP
 1. @BotFather → the bot → enable **Serverless** and copy the CLI token (`app<id>:<secret>`).
 2. `cd miniapp && npm install && npx tgcloud login` (or set `TGCLOUD_TOKEN`).
 3. `npm run deploy` — prints `https://app<id>.tgcloud.ai/`.
-4. Put that URL into `MINIAPP_URL` in `.env` on nyx and restart `ptb-words`. `/start` then shows a
+4. Put that URL into `MINIAPP_URL` in the bot's `.env` and restart the bot. `/start` then shows a
    "Spenden-App öffnen" button.
 
 Enabling Serverless may point the bot's webhook at Telegram's platform; the bot removes it again on
 start (`delete_webhook`) so polling keeps working. Don't run `npx tgcloud webhook sync` while the bot
-runs on nyx.
+is running.
