@@ -172,6 +172,11 @@ function voicesKey(language: Language) {
 export function naturalMegabytes(language: Language, model: NaturalModel = settings.naturalModel) {
   const engine = activeEngine(language);
   if (engine === 'supertonic' || engine === 'voxcpm') return voiceEngines[engine].megabytes ?? 0;
+  return piperMegabytes(language, model);
+}
+
+/** Piper's download for a language, whichever engine is chosen (the settings list every engine). */
+export function piperMegabytes(language: Language, model: NaturalModel = settings.naturalModel) {
   return RUNTIME_MEGABYTES + modelsOf(language, model).reduce((sum, name) => sum + modelMegabytes[name], 0);
 }
 

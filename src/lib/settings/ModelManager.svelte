@@ -11,12 +11,12 @@
   import { settings } from '#lib/state/settings.svelte.js';
   import { runJob } from '#lib/audio/backgroundJobs.svelte.js';
   import { forgetWordAudio } from '#lib/audio/wordBank.svelte.js';
-  import { activeEngine, naturalMegabytes, naturalReady, naturalState, prepareNatural, unloadNaturalVoices } from '#lib/story/naturalVoices.svelte.js';
+  import { activeEngine, naturalReady, naturalState, naturalSupported, piperMegabytes, prepareNatural, unloadNaturalVoices } from '#lib/story/naturalVoices.svelte.js';
   import { cancelModelDownload, checkLocalModel, chooseModel, deleteModel, downloadModelFiles, localModel, modelGpuMB, pageMemoryMB, unloadLocalModel } from '#lib/conversation/localModel.svelte.js';
   import { chatModels, isRecommended, likelyFits, type ChatModel } from '#lib/conversation/models.js';
   import { unloadSupertonic } from '#lib/voice/supertonic.js';
   import { unloadVoxCPM } from '#lib/voice/voxcpm.js';
-  import { voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
+  import { deviceAbilities, speaksLanguage, voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
   import { formatSpeed } from '#lib/offline/downloadSpeed.js';
   import { deleteGroup, formatBytes, groupBytes, groupStored, keepStoragePersistent, storageSummary, storedGroupIds, type StoredGroup } from '#lib/offline/storage.js';
   import IconDownload from '~icons/material-symbols/download-rounded';
@@ -28,13 +28,15 @@
   import IconMemory from '~icons/material-symbols/memory-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
 
-  let { voices }: { voices?: Snippet } = $props();
+  // `voiceOptions`: the settings that belong to the chosen voice (Piper quality, test, dialects),
+  // shown under the voice cards; `onvoicechange` lets the panel stop a voice test that is playing.
+  let { voiceOptions, onvoicechange }: { voiceOptions?: Snippet; onvoicechange?: () => void } = $props();
 
   const locale = $derived(settings.interfaceLocale);
   const engineNames: Record<VoiceEngineId, () => string> = {
     standard: () => m.voice_quality_standard({}, { locale }),
     natural: () => m.voice_quality_natural({}, { locale }),
-    recorded: () => m.voice_quality_natural({}, { locale }),
+    recorded: () => m.voice_quality_recorded({}, { locale }),
     supertonic: () => m.voice_quality_supertonic({}, { locale }),
     voxcpm: () => m.voice_quality_voxcpm({}, { locale }),
     edge: () => 'Edge'
@@ -51,20 +53,48 @@
   const languageName = $derived(new Intl.DisplayNames([locale], { type: 'language' }).of(settings.lang) ?? settings.lang);
   const mb = (value: number) => formatBytes(value * 1_000_000, locale);
 
-  // --- story voices -----------------------------------------------------------------------------
+  // --- story voices ---------------------------------------------------------------------------
+  // Every voice engine is a card like the conversation models. Picking one (or its download button)
+  // chooses it and downloads its voices for the learning language; only the chosen engine downloads.
   const lang = $derived(settings.lang);
   const engine = $derived(activeEngine(lang));
-  const voiceDownloadable = $derived(voiceEngines[engine].onDevice && voiceEngines[engine].clips);
   const voiceStatus = $derived(naturalReady(lang) ? 'ready' : naturalState.status[lang] ?? 'idle');
-  // Piper's runtime memory grows with its voice files; the other engines have a fixed estimate.
-  const voiceMemoryMB = $derived(voiceEngines[engine].memoryMB ?? Math.round(naturalMegabytes(lang) * 1.3));
+  const voicesSupported = $derived(typeof window !== 'undefined' && naturalSupported());
+  const voiceGroups: Partial<Record<VoiceEngineId, StoredGroup>> = { natural: 'piper', recorded: 'piper', supertonic: 'supertonic', voxcpm: 'voxcpm' };
+  // Engines that can speak the learning language on this device, plus the chosen one in any case.
+  const voiceChoices = $derived(voiceEngineIds.filter((id) => id === settings.voiceQuality || (speaksLanguage(id, lang) && (!voiceEngines[id].webgpu || deviceAbilities().webgpu))));
+  const voiceDownloadMB = (id: VoiceEngineId) => (voiceEngines[id].megabytes ?? (voiceGroups[id] === 'piper' ? piperMegabytes(lang) : 0));
+  const voiceMemoryMB = (id: VoiceEngineId) => voiceEngines[id].memoryMB ?? Math.round(voiceDownloadMB(id) * 1.3);
+  function voiceHint(id: VoiceEngineId): string {
+    const size = String(voiceDownloadMB(id));
+    if (id === 'standard') return m.voice_quality_standard_hint({}, { locale });
+    if (id === 'recorded') return m.voice_quality_recorded_hint({}, { locale });
+    if (id === 'supertonic') return m.voice_quality_supertonic_hint({ size }, { locale });
+    if (id === 'voxcpm') return m.voice_quality_voxcpm_hint({ size }, { locale });
+    if (id === 'edge') return m.voice_quality_edge_hint({}, { locale });
+    return m.voice_quality_natural_hint({ size }, { locale });
+  }
+  function voiceState(id: VoiceEngineId): 'downloading' | 'failed' | 'downloaded' | 'none' | 'builtin' {
+    const group = voiceGroups[id];
+    if (!group) return 'builtin';
+    const chosen = settings.voiceQuality === id && engine === id;
+    if (chosen && voiceStatus === 'loading') return 'downloading';
+    if (chosen && voiceStatus === 'failed') return 'failed';
+    if ((chosen && voiceStatus === 'ready') || stored[group]) return 'downloaded';
+    return 'none';
+  }
 
   function downloadVoices() {
     const language = lang;
-    void runJob(`voices|${engine}|${language}`, engineNames[engine](), '/settings', async (control) => {
+    void runJob(`voices|${activeEngine(language)}|${language}`, engineNames[activeEngine(language)](), '/settings', async (control) => {
       const report = window.setInterval(() => control.progress({ done: Math.round((naturalState.progress[language] ?? 0) * 100), total: 100 }), 500);
       try { await prepareNatural(language); } finally { window.clearInterval(report); }
     }).finally(refresh);
+  }
+  function chooseVoice(id: VoiceEngineId) {
+    onvoicechange?.();
+    settings.setVoiceQuality(id);
+    if (voiceGroups[id]) downloadVoices();
   }
 
   // --- conversation model -----------------------------------------------------------------------
@@ -138,33 +168,51 @@
   <h2 id="models-heading">{m.models_title({}, { locale })}</h2>
   <p class="model-hint">{m.models_hint({}, { locale })}</p>
 
-  <h3>{m.models_voices({ engine: engineNames[engine]() }, { locale })}</h3>
-  {@render voices?.()}
-  <div class="model-row">
-    <div class="model-text">
-      {#if !voiceDownloadable}
-        <span>{m.models_voices_none({}, { locale })}</span>
-      {:else}
-        <span class="model-facts">{m.models_facts({ download: `~${mb(naturalMegabytes(lang))}`, memory: `~${mb(voiceMemoryMB)}` }, { locale })}</span>
-        {#if voiceStatus === 'ready'}
-          <span class="model-ok"><IconCheck aria-hidden="true" /> {m.models_downloaded({}, { locale })}</span>
-        {/if}
-      {/if}
-    </div>
-    {#if voiceDownloadable && voiceStatus !== 'ready' && voiceStatus !== 'loading'}
-      <button type="button" class="btn-play btn-play-sm btn-play-go" onclick={downloadVoices}><IconDownload aria-hidden="true" />{m.models_download({}, { locale })}</button>
-    {/if}
-  </div>
+  <h3>{m.models_downloads({}, { locale })}</h3>
+  {#if device}
+    <p class="model-device"><IconMemory aria-hidden="true" /> {m.models_device({ gpu: device.gpu, f16: device.f16 ? '16-bit' : '32-bit' }, { locale })}{#if device.deviceMemoryGB} · {m.models_ram({ ram: `${device.deviceMemoryGB}${device.deviceMemoryGB >= 8 ? '+' : ''} GB` }, { locale })}{/if}</p>
+  {/if}
+  <p class="model-hint">{m.models_parallel_hint({}, { locale })}</p>
 
-  <h3>{m.models_conversation({}, { locale })}</h3>
+  {#if voicesSupported}
+    <h4 id="models-voices-heading">{m.voice_quality({}, { locale })}</h4>
+    <ul class="model-list" role="radiogroup" aria-labelledby="models-voices-heading">
+      {#each voiceChoices as id (id)}
+        {@const state = voiceState(id)}
+        {@const chosen = settings.voiceQuality === id}
+        {@const group = voiceGroups[id]}
+        <li class="model-card" class:chosen>
+          <button type="button" class="model-pick" role="radio" aria-checked={chosen} onclick={() => chooseVoice(id)}>
+            <span class="model-name">{engineNames[id]()}</span>
+            {#if group}<span class="model-facts">{m.models_facts({ download: `~${mb(voiceDownloadMB(id))}`, memory: `~${mb(voiceMemoryMB(id))}` }, { locale })}</span>{/if}
+            {#if chosen}<span class="model-about">{voiceHint(id)}</span>{/if}
+            {#if state === 'downloading'}
+              {@const percent = Math.round((naturalState.progress[lang] ?? 0) * 100)}
+              <span class="model-progress"><span style:width={`${Math.max(2, percent)}%`}></span></span>
+              <span class="model-facts">{percent}% · {Math.round(naturalState.downloaded[lang] ?? 0)} / {Math.round(naturalState.total[lang] ?? voiceDownloadMB(id))} MB</span>
+            {:else if state === 'failed'}
+              <span class="model-warn"><IconWarning aria-hidden="true" /> {m.models_download_failed({}, { locale })}</span>
+            {:else if state === 'downloaded'}
+              <span class="model-ok"><IconCheck aria-hidden="true" /> {m.models_downloaded({}, { locale })}</span>
+            {/if}
+          </button>
+          <div class="model-actions">
+            {#if group && (state === 'none' || state === 'failed')}
+              <button type="button" class="btn-play btn-play-sm btn-play-go btn-play-round" onclick={() => chooseVoice(id)} aria-label={m.models_download({}, { locale })} title={m.models_download({}, { locale })}><IconDownload aria-hidden="true" /></button>
+            {:else if group && state === 'downloaded'}
+              <button type="button" class="btn-play btn-play-sm btn-play-soft btn-play-round" class:confirm={confirming === group} onclick={() => remove(group)} onblur={() => { if (confirming === group) confirming = null; }} aria-label={confirming === group ? m.models_confirm({}, { locale }) : m.models_delete({}, { locale })} title={confirming === group ? m.models_confirm({}, { locale }) : m.models_delete({}, { locale })}><IconDelete aria-hidden="true" /></button>
+            {/if}
+          </div>
+        </li>
+      {/each}
+    </ul>
+    {@render voiceOptions?.()}
+  {/if}
+  <h4 id="models-conversation-heading">{m.models_conversation({}, { locale })}</h4>
   {#if localModel.status === 'unsupported'}
     <p class="model-empty">{m.models_unsupported({}, { locale })}</p>
   {:else}
-    {#if device}
-      <p class="model-device"><IconMemory aria-hidden="true" /> {m.models_device({ gpu: device.gpu, f16: device.f16 ? '16-bit' : '32-bit' }, { locale })}{#if device.deviceMemoryGB} · {m.models_ram({ ram: `${device.deviceMemoryGB}${device.deviceMemoryGB >= 8 ? '+' : ''} GB` }, { locale })}{/if}</p>
-    {/if}
-    <p class="model-hint">{m.models_parallel_hint({}, { locale })}</p>
-    <ul class="model-list" role="radiogroup" aria-label={m.models_conversation({}, { locale })}>
+    <ul class="model-list" role="radiogroup" aria-labelledby="models-conversation-heading">
       {#each chatModels as model (model.id)}
         {@const state = modelState(model)}
         {@const chosen = settings.chatModel === model.id}
@@ -238,10 +286,9 @@
 <style>
   .models h2 { margin:0 0 .3rem;font-family:'DM Serif Display',serif;font-size:1.15rem;font-weight:400; }
   .models h3 { margin:.95rem 0 .35rem;font-size:.62rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;opacity:.65; }
+  .models h4 { margin:.8rem 0 .35rem;font-size:.7rem;font-weight:900; }
+  .model-about { font-size:.62rem;font-weight:700;line-height:1.4;opacity:.7; }
   .model-hint { margin:0 0 .2rem;font-size:.66rem;font-weight:700;opacity:.65;line-height:1.35; }
-  .model-row { margin-top:.55rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem; }
-  .model-text { flex:1;min-width:0;display:grid;gap:.25rem;font-size:.72rem;font-weight:700; }
-  .model-text > span { opacity:.8; }
   .model-facts { font-size:.66rem;font-weight:700;opacity:.7;font-variant-numeric:tabular-nums; }
   .model-progress { display:block;height:.45rem;border-radius:999px;background:color-mix(in srgb,currentColor 14%,transparent);overflow:hidden;opacity:1 !important; }
   .model-progress span { display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#34824d,#6fcf8e);transition:width .25s ease; }
