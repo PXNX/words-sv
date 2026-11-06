@@ -1,0 +1,5 @@
+python-telegram-bot[job-queue]==22.7
+python-dotenv==1.2.2
+
+# testing
+pytest==8.4.2
