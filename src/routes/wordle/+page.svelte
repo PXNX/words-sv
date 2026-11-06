@@ -1,6 +1,6 @@
 <script lang="ts">
   import { haptic } from '#lib/feedback/haptics.js';
-  import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
+  import { unlockCosmetic, WORDLE_TOP_TRIES } from '#lib/profile/cosmetics.svelte.js';
   import { goto } from '$app/navigation';
   import { browser } from '$app/env';
   import WordleMode from '#lib/wordle/WordleMode.svelte';
@@ -41,5 +41,6 @@
     void settings.recordStreak('wordle_completed');
     haptic('win');
     if (!practice && attempts <= 3) unlockCosmetic('wordle');
+    if (!practice && attempts <= WORDLE_TOP_TRIES) unlockCosmetic('score_wordle_two');
   }}
 />

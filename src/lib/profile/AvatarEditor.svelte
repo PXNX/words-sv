@@ -10,7 +10,8 @@
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import type { Mood } from '#lib/story/stories.js';
   import { avatarChoices, avatarParts, randomAvatar, type Avatar, type AvatarPart } from './avatar.js';
-  import { cosmeticState, isLocked, rewardFor, type CosmeticMode } from './cosmetics.svelte.js';
+  import { cosmetics, cosmeticState, isLocked, rewardFor, type CosmeticMode, type RewardId } from './cosmetics.svelte.js';
+  import type { AchievementId } from '#lib/progress/achievements.js';
   import IconCasino from '~icons/material-symbols/casino-rounded';
   import IconLock from '~icons/material-symbols/lock-rounded';
 
@@ -31,7 +32,7 @@
   const randomLabel = $derived(m.avatar_random({}, locale));
   const lockedLabel = $derived(m.cosmetic_locked({}, locale));
   // How each reward is earned, shown when a locked one is tapped.
-  const rewardHints = $derived<Record<CosmeticMode, string>>({
+  const modeHints = $derived<Record<CosmeticMode, string>>({
     vocab: m.cosmetic_hint_vocab({}, locale),
     circle: m.cosmetic_hint_circle({}, locale),
     definitions: m.cosmetic_hint_definitions({}, locale),
@@ -45,7 +46,28 @@
     listen: m.cosmetic_hint_listen({}, locale),
     conversation: m.cosmetic_hint_conversation({}, locale)
   });
-  let lockedHint = $state<CosmeticMode | null>(null);
+  const achievementNames = $derived<Record<AchievementId, string>>({
+    first_step: m.achievement_first_step({}, locale),
+    vocab_100: m.achievement_vocab_100({}, locale),
+    story_5: m.achievement_story_5({}, locale),
+    reading_5: m.achievement_reading_5({}, locale),
+    grammar_50: m.achievement_grammar_50({}, locale),
+    perfect_10: m.achievement_perfect_10({}, locale),
+    streak_3: m.achievement_streak_3({}, locale),
+    streak_7: m.achievement_streak_7({}, locale),
+    mastered_50: m.achievement_mastered_50({}, locale),
+    all_rounder: m.achievement_all_rounder({}, locale)
+  });
+  // How each reward is earned: its mode's own hint, the badge it comes with, or the high score.
+  function rewardHint(id: RewardId): string {
+    const source = cosmetics[id].source;
+    if (source.kind === 'mode') return modeHints[source.mode];
+    if (source.kind === 'achievement') return m.cosmetic_hint_achievement({ name: achievementNames[source.achievement] }, locale);
+    if (source.score === 'wordle_two') return m.cosmetic_hint_score_wordle({}, locale);
+    if (source.score === 'hangman_five') return m.cosmetic_hint_score_hangman({}, locale);
+    return m.cosmetic_hint_score_vocab({}, locale);
+  }
+  let lockedHint = $state<RewardId | null>(null);
   // Colours are picked from swatches; the rest from small previews of the character, zoomed in on
   // the head for everything but the top.
   const colourParts: AvatarPart[] = ['skin', 'hair', 'top'];
@@ -112,7 +134,7 @@
       {/if}
     {/each}
   </div>
-  {#if lockedHint}<p class="avatar-locked-hint" role="status"><IconLock aria-hidden="true" /> {rewardHints[lockedHint]}</p>{/if}
+  {#if lockedHint}<p class="avatar-locked-hint" role="status"><IconLock aria-hidden="true" /> {rewardHint(lockedHint)}</p>{/if}
 </div>
 
 <style>

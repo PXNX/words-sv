@@ -13,6 +13,8 @@ import StartupLoader from '#lib/app/StartupLoader.svelte';
 import CosmeticUnlockToast from '#lib/profile/CosmeticUnlockToast.svelte';
 import StreakToast from '#lib/streak/StreakToast.svelte';
 import { startCloudSync } from '#lib/sync/cloudSync.svelte.js';
+import { checkAchievementRewards } from '#lib/profile/cosmetics.svelte.js';
+import { readVocabularyProgressByLanguage } from '#lib/vocab/spacedRepetition.js';
 import BackgroundJobsBadge from '#lib/audio/BackgroundJobsBadge.svelte';
 import { haptic } from '#lib/feedback/haptics.js';
 	import { pwaInstall } from '#lib/pwa/pwaInstall.svelte.js';
@@ -70,6 +72,16 @@ import { haptic } from '#lib/feedback/haptics.js';
 			});
 		});
 	});
+
+// Badges bring character items: check at startup and whenever a mode moves the streak (each one
+// does after practice). The progress page checks again with every language's mastered words.
+$effect(() => {
+    const { bestStreak, dateKey, vocabCorrect, qualified } = settings.streak;
+    void dateKey; void vocabCorrect; void qualified;
+    if (!hydrated) return;
+    const masteredWords = readVocabularyProgressByLanguage([settings.lang])[settings.lang]?.masteredWords ?? 0;
+    checkAchievementRewards({ bestStreak, masteredWords });
+});
 
 onMount(() => {
     void autoUpdateOnStart();

@@ -2,7 +2,7 @@
   import { untrack } from 'svelte';
   import { haptic } from '#lib/feedback/haptics.js';
   import { playErrorSound, playSuccessSound } from '#lib/feedback/sounds.js';
-  import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
+  import { recordHangmanResult, unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { spokenWord, wordDefinitions, wordMetadata, type Language } from '#lib/data/vocabulary.js';
@@ -123,6 +123,7 @@
     if (won) playSuccessSound(settings.sound, 'pronunciation');
     haptic(won ? 'win' : 'error');
     if (won && wrongGuesses === 0) unlockCosmetic('hangman');
+    recordHangmanResult(won);
   });
 
   // Keep the unfinished round on the device; a finished one is cleared so the next visit draws a new word.

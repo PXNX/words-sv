@@ -22,6 +22,7 @@
   import Companion from '#lib/story/Companion.svelte';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import AvatarEditor from '#lib/profile/AvatarEditor.svelte';
+  import { checkAchievementRewards } from '#lib/profile/cosmetics.svelte.js';
   import SyncHint from '#lib/sync/SyncHint.svelte';
   import { defaultAvatar } from '#lib/profile/avatar.js';
   import type { Mood } from '#lib/story/stories.js';
@@ -198,6 +199,8 @@
     masteredWords
   }));
   const unlocked = $derived(unlockedCount(achievements));
+  // Finished badges hand out their character items, counting mastered words in every language.
+  $effect(() => checkAchievementRewards({ bestStreak: settings.streak.bestStreak, masteredWords }));
   const weekly = $derived(buildWeeklyRecap({
     ledger,
     activity,
