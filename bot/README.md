@@ -1,5 +1,7 @@
 # ptb-words
 
+Lives in the words-sv repository under `bot/` (its own history was merged in with it); the paths below are relative to `bot/`.
+
 Telegram bot [@word_circle_bot](https://t.me/word_circle_bot) for the WordCircle language app
 ([words-sv](https://words-sv.vercel.app)).
 
@@ -37,13 +39,13 @@ venv\Scripts\python -m pytest test
 
 ```sh
 ssh nyx@mn
-git clone https://github.com/<owner>/ptb-words ~/projects/ptb-words
-cp ~/projects/ptb-words/example.env ~/projects/ptb-words/.env   # set TELEGRAM, ADMINS
-ln -sf ~/projects/ptb-words/ptb-words.container ~/.config/containers/systemd/
+git clone https://github.com/PXNX/words-sv ~/projects/words-sv
+cp ~/projects/words-sv/bot/example.env ~/projects/words-sv/bot/.env   # set TELEGRAM, ADMINS
+ln -sf ~/projects/words-sv/bot/ptb-words.container ~/.config/containers/systemd/
 systemctl --user daemon-reload && systemctl --user start ptb-words
 ```
 
-Updates: push, then `ssh nyx@mn "cd ~/projects/ptb-words && gh repo sync && systemctl --user restart ptb-words"`.
+Updates: push, then `ssh nyx@mn "cd ~/projects/words-sv && git pull --ff-only && systemctl --user restart ptb-words"`.
 
 ## Deploy the Mini App on Telegram Serverless
 

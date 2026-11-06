@@ -28,7 +28,8 @@ SvelteKit app (static adapter, PWA), Svelte 5 runes, Paraglide i18n. Code is gro
 | PWA, reminders | `pwa/`, `reminders/` | `pwaInstall.svelte.ts`, `pwaUpdate.ts`, `pwaReminders.ts` |
 | App shell | `app/`, `routes/+layout.svelte` | `StartupLoader.svelte`, `TutorialDialog.svelte` |
 | Vocabulary data | `data/` | `vocabulary.ts` (word pools per language and level) |
-| Server functions (Vercel) | `api/` | streak sync, push, Telegram |
+| Server functions (Vercel) | `api/` | streak sync, push, Telegram, progress sync |
+| Telegram bot (@word_circle_bot) | `bot/` (Python, runs on nyx, not on Vercel) | `bot/bot/main.py`, quadlet `bot/ptb-words.container`, see `bot/README.md` |
 
 Conventions:
 
