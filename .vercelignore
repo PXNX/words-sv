@@ -1,2 +1,2 @@
-# The Telegram bot runs on nyx (bot/README.md), not on Vercel.
+# The Telegram bot runs as its own process (bot/README.md), not on Vercel.
 bot/

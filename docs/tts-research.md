@@ -10,7 +10,7 @@ play back instantly, instead of synthesizing on the fly.
 - No ffmpeg, no Python, no working cloud TTS endpoint (Edge TTS / Microsoft free endpoint is
   currently returning HTTP 400 "Our services aren't available right now").
 - npm is blocked by the PowerShell execution policy; Node is not on PATH (nvm4w at
-  `C:\Users\fhuber\AppData\Roaming\nvm4w\nodejs\node.exe`).
+  `%APPDATA%\nvm4w\nodejs\node.exe`).
 - The browser **can** run the app's own Piper worker (`static/voices/piper-worker.js`) — it
   downloads models from Hugging Face, caches them in `story-voices-v1`, and synthesizes audio
   via onnxruntime-web + espeak-ng WASM. This is the only path that is known to work.
