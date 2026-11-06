@@ -216,7 +216,9 @@ export const naturalState = $state<{
   downloaded: Partial<Record<Language, number>>;
   total: Partial<Record<Language, number>>;
   remaining: Partial<Record<Language, number | null>>;
-}>({ status: {}, model: {}, progress: {}, downloaded: {}, total: {}, remaining: {} });
+  // Why the last load failed, shown in the settings next to the voice.
+  error: Partial<Record<Language, string>>;
+}>({ status: {}, model: {}, progress: {}, downloaded: {}, total: {}, remaining: {}, error: {} });
 
 type Reply = { type: 'progress'; loaded: number; total: number } | { type: 'done'; pcm?: Float32Array; sampleRate?: number } | { type: 'error'; message: string };
 let worker: Worker | null = null;
@@ -282,6 +284,7 @@ async function loadNatural(language: Language) {
   const models = modelsOf(language, model);
   const totalMegabytes = naturalMegabytes(language, model);
   naturalState.status[language] = 'loading';
+  delete naturalState.error[language];
   naturalState.model[language] = model;
   naturalState.progress[language] = 0;
   naturalState.downloaded[language] = 0;
@@ -309,7 +312,9 @@ async function loadNatural(language: Language) {
     naturalState.downloaded[language] = totalMegabytes;
     naturalState.remaining[language] = 0;
     naturalState.status[language] = 'ready';
-  } catch {
+  } catch (error) {
+    console.error(`Voices for ${language} failed to load`, error);
+    naturalState.error[language] = error instanceof Error ? error.message : String(error);
     naturalState.remaining[language] = null;
     naturalState.status[language] = 'failed';
   }
@@ -319,6 +324,7 @@ async function loadNatural(language: Language) {
 async function loadModelEngine(language: Language, engine: 'supertonic' | 'voxcpm', prepare: (onProgress: (loaded: number, total: number) => void) => Promise<void>) {
   const totalMegabytes = voiceEngines[engine].megabytes ?? 0;
   naturalState.status[language] = 'loading';
+  delete naturalState.error[language];
   naturalState.model[language] = engine;
   naturalState.progress[language] = 0;
   naturalState.downloaded[language] = 0;
@@ -336,7 +342,9 @@ async function loadModelEngine(language: Language, engine: 'supertonic' | 'voxcp
     naturalState.downloaded[language] = totalMegabytes;
     naturalState.remaining[language] = 0;
     naturalState.status[language] = 'ready';
-  } catch {
+  } catch (error) {
+    console.error(`Voices for ${language} failed to load`, error);
+    naturalState.error[language] = error instanceof Error ? error.message : String(error);
     naturalState.remaining[language] = null;
     naturalState.status[language] = 'failed';
   }

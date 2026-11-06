@@ -192,6 +192,7 @@
               <span class="model-facts">{percent}% · {Math.round(naturalState.downloaded[lang] ?? 0)} / {Math.round(naturalState.total[lang] ?? voiceDownloadMB(id))} MB</span>
             {:else if state === 'failed'}
               <span class="model-warn"><IconWarning aria-hidden="true" /> {m.models_download_failed({}, { locale })}</span>
+              {#if naturalState.error[lang]}<span class="model-error">{naturalState.error[lang]}</span>{/if}
             {:else if state === 'downloaded'}
               <span class="model-ok"><IconCheck aria-hidden="true" /> {m.models_downloaded({}, { locale })}</span>
             {/if}
@@ -287,6 +288,7 @@
   .models h2 { margin:0 0 .3rem;font-family:'DM Serif Display',serif;font-size:1.15rem;font-weight:400; }
   .models h3 { margin:.95rem 0 .35rem;font-size:.62rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;opacity:.65; }
   .models h4 { margin:.8rem 0 .35rem;font-size:.7rem;font-weight:900; }
+  .model-error { font-size:.58rem;font-weight:700;line-height:1.35;opacity:.75;overflow-wrap:anywhere; }
   .model-about { font-size:.62rem;font-weight:700;line-height:1.4;opacity:.7; }
   .model-hint { margin:0 0 .2rem;font-size:.66rem;font-weight:700;opacity:.65;line-height:1.35; }
   .model-facts { font-size:.66rem;font-weight:700;opacity:.7;font-variant-numeric:tabular-nums; }

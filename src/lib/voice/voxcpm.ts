@@ -20,6 +20,17 @@ function ensureWorker() {
   worker ??= (() => {
     const created = new Worker(new URL('./voxcpm.worker.ts', import.meta.url), { type: 'module' });
     created.addEventListener('message', ({ data }: MessageEvent<VoxReply>) => pending.get(data.id)?.(data));
+    // A worker the browser killed (most often for running out of memory) never answers again: fail
+    // what is waiting with a reason instead of leaving the download hanging.
+    created.addEventListener('error', (event) => {
+      event.preventDefault();
+      const message = event.message || 'The VoxCPM worker stopped, most likely out of memory';
+      worker?.terminate();
+      worker = null;
+      loaded = false;
+      for (const answer of pending.values()) answer({ id: -1, type: 'error', message });
+      pending.clear();
+    });
     return created;
   })();
   return worker;
