@@ -19,7 +19,6 @@ Telegram bot [@word_circle_bot](https://t.me/word_circle_bot) for the WordCircle
 | `bot/` | python-telegram-bot app (long polling). Owns every update, including `pre_checkout_query` and `successful_payment`. |
 | `bot/data/donations.db` | SQLite donation ledger (git-ignored; kept for tax retention). |
 | `miniapp/` | Donation Mini App on [Telegram Serverless](https://core.telegram.org/bots/serverless): static page in `web/`, endpoints `me` and `donate` in `tgcloud/endpoints/`. |
-| `ptb-words.container` | Podman quadlet for `nyx`. |
 
 Why the split: Serverless hosts the Mini App front-end and verifies `initData` before an endpoint runs,
 so `me` is the whole login and `donate` can create an invoice link for the verified user. The bot on
@@ -37,20 +36,21 @@ venv\Scripts\python -m pytest test
 
 ## Deploy the bot on nyx
 
+The quadlet `ptb-words.container` lives in [PXNX/quadlets](https://github.com/PXNX/quadlets) (`~/.config/containers/systemd`
+on nyx). It runs `bot/bot` from the words-sv checkout and reads `bot/.env` (set `TELEGRAM`, `ADMINS`; see `example.env`).
+
 ```sh
 ssh nyx@mn
 git clone https://github.com/PXNX/words-sv ~/projects/words-sv
-cp ~/projects/words-sv/bot/example.env ~/projects/words-sv/bot/.env   # set TELEGRAM, ADMINS
-ln -sf ~/projects/words-sv/bot/ptb-words.container ~/.config/containers/systemd/
+cp ~/projects/words-sv/bot/example.env ~/projects/words-sv/bot/.env
+ln -s words-sv/bot ~/projects/ptb-words
 systemctl --user daemon-reload && systemctl --user start ptb-words
 ```
 
 Updates: push, then `ssh nyx@mn "cd ~/projects/words-sv && git pull --ff-only && systemctl --user restart ptb-words"`.
 
-The quadlet's source of truth is [PXNX/quadlets](https://github.com/PXNX/quadlets) (`~/.config/containers/systemd`
-on nyx); keep `ptb-words.container` there in step with this one. `~/projects/ptb-words` is a relative symlink to
-`words-sv/bot`, so ptb-manager's `/redeploy ptb-words` (which works in `~/projects/<name>`) syncs words-sv and finds
-`.env` where it expects it. The pre-merge checkout is kept as `~/projects/ptb-words.standalone-backup`.
+`~/projects/ptb-words` is a relative symlink to `words-sv/bot`, so ptb-manager's `/redeploy ptb-words` (which works in
+`~/projects/<name>`) syncs words-sv and finds `.env` where it expects it.
 
 ## Deploy the Mini App on Telegram Serverless
 
