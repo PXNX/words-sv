@@ -238,8 +238,38 @@ export function chooseModel(id: ChatModelId) {
   if (localModel.status === 'ready' && localModel.loaded !== id) localModel.status = 'idle';
 }
 
-/** Streams the model's reply; `onText` receives the reply so far after every new piece. */
+// WebLLM disposes its engine when the GPU device is lost (out of memory, a driver reset, another
+// model taking the GPU); every later call then fails with one of these.
+const GPU_LOST = /device (was )?lost|already been disposed|model not loaded|GPUDevice/i;
+
+/** Throws away a worker whose GPU device was lost, so the next load starts on a fresh device. */
+function dropLostEngine() {
+  worker?.terminate();
+  worker = null;
+  for (const answer of listeners.values()) answer({ id: -1, type: 'error', message: 'gpu_lost' });
+  listeners.clear();
+  loading = null;
+  localModel.loaded = null;
+  localModel.status = 'idle';
+}
+
+/**
+ * Streams the model's reply; `onText` receives the reply so far after every new piece. When the GPU
+ * device was lost, the model is loaded again (from the cache) and the reply tried once more.
+ */
 export async function generateReply(messages: ChatMessage[], onText: (text: string) => void): Promise<string> {
+  try {
+    return await generateOnce(messages, onText);
+  } catch (error) {
+    if (!(error instanceof Error) || !GPU_LOST.test(error.message)) throw error;
+    console.warn('The GPU device was lost; loading the conversation model again', error);
+    dropLostEngine();
+    await loadLocalModel();
+    return generateOnce(messages, onText);
+  }
+}
+
+async function generateOnce(messages: ChatMessage[], onText: (text: string) => void): Promise<string> {
   if (localModel.status !== 'ready') throw new Error('model_not_loaded');
   const startedAt = performance.now();
   let firstTokenAt = 0;
