@@ -125,7 +125,7 @@ onMount(() => {
 		<StartupLoader />
 	{:else}
 		<main class="game-shell">
-			<section class="game-paper" class:paper-wide={isHome} class:paper-list={isListPage} aria-label={shellLabel}>
+			<section class="game-paper" class:paper-wide={isHome} class:paper-list={isListPage} class:paper-full={routePath === '/settings'} aria-label={shellLabel}>
 				{#if !isHome}<button class="btn-play btn-play-round home-trigger" onclick={() => void goto('/')} aria-label={homeLabel}><IconHome aria-hidden="true" /></button>{/if}
 				{@render children()}
 			</section>
@@ -171,8 +171,13 @@ onMount(() => {
 		.game-paper.paper-wide { --paper-width:1000px; }
 		/* A landscape tablet has the width for the home page's two columns: use more of it. */
 		@media (orientation:landscape) and (min-width:1100px) { .game-paper.paper-wide { --paper-width:1240px; } }
+		/* Settings use the whole screen instead of a framed sheet with its own scroll box. */
+		:global(.game-shell:has(.paper-full)) { padding:var(--tg-inset-top) 0 var(--tg-inset-bottom);background-color:#ede4d5; }
+		:global(html.dark .game-shell:has(.paper-full)) { background-color:#213a5d; }
+		.game-paper.paper-full { --paper-width:100%;height:calc(100svh - var(--tg-inset-top) - var(--tg-inset-bottom));border:0;border-radius:0;box-shadow:none; }
 		.game-paper::before { content:'';display:block;position:absolute;z-index:-1;inset:8px;border:1px solid rgba(23,42,69,.13);border-radius:1.1rem;pointer-events:none; }
 		:global(html.dark) .game-paper { border-color:rgba(255,253,247,.18);box-shadow:0 24px 70px rgba(0,0,0,.35); }
 		:global(html.dark) .game-paper::before { border-color:rgba(255,253,247,.14); }
+		.game-paper.paper-full::before { display:none; }
 	}
 </style>
