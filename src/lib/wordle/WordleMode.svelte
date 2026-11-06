@@ -304,7 +304,7 @@
       {#if answer}
         <div class="wordle-result note-play grid justify-items-center gap-[.2rem] max-w-[min(100%,28rem)] p-[.6rem_.85rem] text-center" style:--reveal-delay={revealDelay}>
           <p class="m-0 text-[.68rem] font-extrabold" class:text-success={won} class:text-accent={!won}>{won ? `${labels.win} ${solvedLabel}` : revealLabel}</p>
-          <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[1.35rem] leading-tight" lang={language}>{#if answer.article}<span class="text-base-content/60 text-[1rem]">{answer.article} </span>{/if}{answer.spelling}</p>
+          <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[1.35rem] leading-tight" lang={language}>{#if answer.article}<span class="text-base-content/60 text-[1rem]">{answer.article}</span>{' '}{/if}{answer.spelling}</p>
           <p class="m-0 text-base-content/75 text-[.65rem] font-bold leading-[1.35]">{answer.definition ?? noDefinitionLabel}<a class="ml-1 font-extrabold text-accent underline underline-offset-2" href={answer.href} target="_blank" rel="noreferrer">Wiktionary</a></p>
         </div>
         <button class="wordle-result btn-play btn-play-go disabled:cursor-wait disabled:opacity-80" style:--reveal-delay={revealDelay} onclick={continueRound} disabled={loadingNextRound} aria-busy={loadingNextRound}>
