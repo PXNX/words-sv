@@ -47,6 +47,11 @@ systemctl --user daemon-reload && systemctl --user start ptb-words
 
 Updates: push, then `ssh nyx@mn "cd ~/projects/words-sv && git pull --ff-only && systemctl --user restart ptb-words"`.
 
+The quadlet's source of truth is [PXNX/quadlets](https://github.com/PXNX/quadlets) (`~/.config/containers/systemd`
+on nyx); keep `ptb-words.container` there in step with this one. `~/projects/ptb-words` is a relative symlink to
+`words-sv/bot`, so ptb-manager's `/redeploy ptb-words` (which works in `~/projects/<name>`) syncs words-sv and finds
+`.env` where it expects it. The pre-merge checkout is kept as `~/projects/ptb-words.standalone-backup`.
+
 ## Deploy the Mini App on Telegram Serverless
 
 Serverless is still behind a waitlist for this bot. Until it is enabled, `MINIAPP_URL` stays empty,
