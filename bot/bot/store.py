@@ -1,37 +1,43 @@
-"""Donation ledger in SQLite. Kept for up to 10 years because of tax retention duties (§ 147 AO)."""
-import sqlite3
-from os import makedirs, path
-
-from settings.config import DB_PATH
+"""
+Donation ledger in PostgreSQL. Kept for up to 10 years because of tax retention duties (§ 147 AO).
+A donation is keyed by Telegram's unique charge id, so a payment delivered twice is stored once.
+"""
+from psycopg.rows import dict_row
+from psycopg_pool import AsyncConnectionPool
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS donations (
-    telegram_payment_charge_id TEXT PRIMARY KEY,
-    telegram_user_id INTEGER NOT NULL,
-    amount INTEGER NOT NULL,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    telegram_payment_charge_id text PRIMARY KEY,
+    telegram_user_id bigint NOT NULL,
+    amount integer NOT NULL,
+    created_at timestamptz NOT NULL DEFAULT now()
 )
 """
 
 
-def connect(db_path: str = DB_PATH) -> sqlite3.Connection:
-    if db_path != ":memory:":
-        makedirs(path.dirname(db_path) or ".", exist_ok=True)
-    connection = sqlite3.connect(db_path)
-    connection.execute(SCHEMA)
-    return connection
+async def connect(database_url: str) -> AsyncConnectionPool:
+    """Opens a connection pool and creates the table if it is missing."""
+    pool = AsyncConnectionPool(database_url, min_size=1, max_size=3, open=False, kwargs={"autocommit": True, "row_factory": dict_row})
+    await pool.open(wait=True)
+    async with pool.connection() as connection:
+        await connection.execute(SCHEMA)
+    return pool
 
 
-def record_donation(connection: sqlite3.Connection, charge_id: str, user_id: int, amount: int) -> bool:
+async def record_donation(pool: AsyncConnectionPool, charge_id: str, user_id: int, amount: int) -> bool:
     """Stores a donation once; returns False when Telegram delivered the same payment twice."""
-    with connection:
-        cursor = connection.execute(
-            "INSERT OR IGNORE INTO donations (telegram_payment_charge_id, telegram_user_id, amount) VALUES (?, ?, ?)",
+    async with pool.connection() as connection:
+        cursor = await connection.execute(
+            "INSERT INTO donations (telegram_payment_charge_id, telegram_user_id, amount) VALUES (%s, %s, %s) "
+            "ON CONFLICT (telegram_payment_charge_id) DO NOTHING",
             (charge_id, user_id, amount),
         )
     return cursor.rowcount == 1
 
 
-def total_for(connection: sqlite3.Connection, user_id: int) -> int:
-    row = connection.execute("SELECT COALESCE(SUM(amount), 0) FROM donations WHERE telegram_user_id = ?", (user_id,)).fetchone()
-    return int(row[0])
+async def total_for(pool: AsyncConnectionPool, user_id: int) -> int:
+    async with pool.connection() as connection:
+        row = await (
+            await connection.execute("SELECT COALESCE(SUM(amount), 0) AS total FROM donations WHERE telegram_user_id = %s", (user_id,))
+        ).fetchone()
+    return int(row["total"])

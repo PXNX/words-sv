@@ -8,7 +8,7 @@ from telegram.ext import Application, CallbackQueryHandler, CommandHandler, Cont
 from donations import CURRENCY, TIERS, build_payload, check_checkout, parse_payload
 from settings.config import ADMINS, MINIAPP_URL, WORDS_URL
 from bot_profile import set_cmd
-from store import connect, record_donation
+from store import record_donation
 from texts import lang_of, t
 
 logger = logging.getLogger(__name__)
@@ -70,7 +70,7 @@ async def successful_payment(update: Update, context: ContextTypes.DEFAULT_TYPE)
     donation = parse_payload(payment.invoice_payload)
     user = update.effective_user
     amount = payment.total_amount if donation is None else donation.amount
-    stored = record_donation(context.bot_data["db"], payment.telegram_payment_charge_id, user.id, amount)
+    stored = await record_donation(context.bot_data["db"], payment.telegram_payment_charge_id, user.id, amount)
     if not stored:
         return
     await update.message.reply_text(t(_lang(update), "thanks", amount=amount))
@@ -92,7 +92,6 @@ def _legal(key: str):
 
 
 def register_handlers(app: Application):
-    app.bot_data["db"] = connect()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler(["spenden", "donate"], donate))
     app.add_handler(CallbackQueryHandler(send_invoice, pattern=r"^donate:\d+$"))

@@ -14,7 +14,8 @@ from telegram.ext import Application, ApplicationBuilder, Defaults
 from telegram.constants import ParseMode
 
 from handlers import register_handlers
-from settings.config import ADMINS, CONTAINER, TOKEN, WORDS_URL
+from settings.config import ADMINS, CONTAINER, DATABASE_URL, TOKEN, WORDS_URL
+from store import connect
 
 
 def add_logging():
@@ -61,6 +62,7 @@ COMMANDS: Final[dict[str, list[BotCommand]]] = {
 
 
 async def post_init(application: Application) -> None:
+    application.bot_data["db"] = await connect(DATABASE_URL)
     bot = application.bot
     # Telegram Serverless manages a webhook once it is enabled for the bot; polling needs it gone.
     await bot.delete_webhook(drop_pending_updates=False)
@@ -77,13 +79,22 @@ async def post_init(application: Application) -> None:
     logging.info("[main] Commands and menu button set")
 
 
+async def post_shutdown(application: Application) -> None:
+    pool = application.bot_data.get("db")
+    if pool is not None:
+        await pool.close()
+
+
 def main():
     add_logging()
+    if not DATABASE_URL:
+        raise SystemExit("DATABASE_URL is not set")
     app = (
         ApplicationBuilder()
         .token(TOKEN)
         .defaults(Defaults(parse_mode=ParseMode.HTML))
         .post_init(post_init)
+        .post_shutdown(post_shutdown)
         .build()
     )
     register_handlers(app)
