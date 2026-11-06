@@ -283,6 +283,8 @@
   </div>
 
   <!-- The learner themselves: their own story character and name, edited on the progress page -->
+  <!-- On wide screens the sections flow into columns instead of one long, narrow list. -->
+  <div class="settings-columns">
   <a class="settings-me mt-[1.35rem] px-[.8rem] py-[.6rem] panel-play flex items-center gap-3 text-base-content no-underline" href="/progress">
     <span class="settings-me-avatar" aria-hidden="true"><StoryCharacter id="kumar" avatar={settings.avatar ?? defaultAvatar} mood="happy" /></span>
     <span class="min-w-0 flex-1">
@@ -342,9 +344,12 @@
     {/snippet}
   </ModelManager>
 
+  <div class="settings-foot">
   {#if telegramHref}<a class="btn-play w-full mt-4 gap-[.48rem] normal-case tracking-normal text-[#237a26] dark:text-[#a9e8ab] text-[.72rem] font-bold leading-[1.45] text-center no-underline hover:bg-[#2aab2e] hover:text-[#fffdf7] focus-visible:bg-[#2aab2e] focus-visible:text-[#fffdf7] focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[3px]" href={telegramHref} target="_blank" rel="noreferrer" lang={settings.interfaceLocale} dir={interfaceDirection}><IconTelegram aria-hidden="true" class="w-[1.12rem] h-[1.12rem] flex-none" /><span>{labels.telegramShare}</span></a>{/if}
   <button type="button" class="btn-play w-full mt-2 gap-[.48rem] normal-case tracking-normal text-[#172a45] dark:text-[#fffdf7] text-[.72rem] font-bold leading-[1.45] text-center" onclick={shareApp}><IconShare aria-hidden="true" class="w-[1.12rem] h-[1.12rem] flex-none" /><span>Share app</span></button>
   <a class="flex items-center justify-center gap-[.42rem] mt-4 text-accent text-[.66rem] font-extrabold tracking-[.05em] text-center no-underline uppercase focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[3px]" href="https://github.com/PXNX/words-sv" target="_blank" rel="noreferrer"><IconGithub aria-hidden="true" class="w-4 h-4" /><span>GitHub · PXNX/words-sv</span></a>
+  </div>
+  </div>
 </aside>
 
 {#if explanationType}
@@ -382,6 +387,12 @@
 {/if}
 
 <style>
+  /* Tablets: the page fills the screen (see the layout's paper-full) and the sections fill the width
+     in balanced columns; each card stays whole. The aside keeps scrolling, the columns sit inside it. */
+  @media (min-width:900px) {
+    .settings-columns { columns:20rem 3;column-gap:clamp(1.5rem,3vw,2.5rem); }
+    .settings-columns > :global(*) { break-inside:avoid; }
+  }
   .settings-me { transition:transform .15s cubic-bezier(.34,1.56,.64,1); }
   .settings-me:hover { transform:translateY(-2px) rotate(-.4deg); }
   .settings-me:active { transform:scale(.98); }
