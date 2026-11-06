@@ -13,4 +13,4 @@
   const gender = $derived(entry?.type === 'noun' ? entry.gender : undefined);
 </script>
 
-<span class={gender ? `gender-${gender}` : ''} lang={language}>{#if article}<span class="gender-article">{article}</span> {/if}<span class:gender-word={Boolean(gender)}>{spelling}</span></span>
+<span class={gender ? `gender-${gender}` : ''} lang={language}>{#if article}<span class="gender-article">{article}</span>{' '}{/if}<span class:gender-word={Boolean(gender)}>{spelling}</span></span>
