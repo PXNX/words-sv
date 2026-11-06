@@ -1,4 +1,4 @@
-import { lockedIn, type CosmeticMode } from './cosmetics.js';
+import { lockedIn, type RewardId } from './cosmetics.js';
 
 // The learner's own story character, put together on the profile page and in the intro. In the
 // stories it stands in for Kumar (see stories.ts, fillName), drawn by StoryCharacter like the cast.
@@ -6,9 +6,9 @@ export type FaceShape = 'round' | 'oval' | 'wide' | 'square';
 export type EyeStyle = 'dots' | 'big' | 'lashes' | 'tiny';
 export type NoseStyle = 'curve' | 'button' | 'round' | 'pointy';
 export type AvatarHair = 'short' | 'curly' | 'bob' | 'bun' | 'long' | 'messy' | 'spiky' | 'mohawk' | 'bald';
-// The last few shirts and extras are rewards: each one is unlocked by playing one mode really well (see cosmetics.svelte.ts).
-export type AvatarShirt = 'plain' | 'stripes' | 'checked' | 'hoodie' | 'shirt' | 'blazer' | 'cardigan' | 'tshirt' | 'waistcoat' | 'tracht' | 'overalls' | 'tie';
-export type AvatarExtra = 'none' | 'glasses' | 'shades' | 'beard' | 'moustache' | 'stubble' | 'headphones' | 'crown' | 'monocle' | 'tyrolean' | 'pencil' | 'kaiser' | 'toque' | 'straw';
+// The last shirts, extras and colours are rewards for modes, achievements and high scores (see cosmetics.ts).
+export type AvatarShirt = 'plain' | 'stripes' | 'checked' | 'hoodie' | 'shirt' | 'blazer' | 'cardigan' | 'tshirt' | 'waistcoat' | 'tracht' | 'overalls' | 'tie' | 'sweater' | 'bowtie';
+export type AvatarExtra = 'none' | 'glasses' | 'shades' | 'beard' | 'moustache' | 'stubble' | 'headphones' | 'crown' | 'monocle' | 'tyrolean' | 'pencil' | 'kaiser' | 'toque' | 'straw' | 'wizard' | 'beret' | 'star' | 'party' | 'laurel' | 'mortarboard';
 
 export type Avatar = { skin: string; face: FaceShape; eyes: EyeStyle; nose: NoseStyle; hairStyle: AvatarHair; hair: string; shirt: AvatarShirt; top: string; extra: AvatarExtra };
 
@@ -20,10 +20,10 @@ export const avatarChoices = {
   eyes: ['dots', 'big', 'lashes', 'tiny'],
   nose: ['curve', 'button', 'round', 'pointy'],
   hairStyle: ['short', 'curly', 'bob', 'bun', 'long', 'messy', 'spiky', 'mohawk', 'bald'],
-  hair: ['#15110e', '#3b2a20', '#7a4a2a', '#c4522e', '#e2c25a', '#d8d4cc', '#5b3a8a', '#3d6fd1', '#e86a9a', '#9fc6e8'],
-  shirt: ['plain', 'stripes', 'checked', 'hoodie', 'shirt', 'blazer', 'cardigan', 'tshirt', 'waistcoat', 'tracht', 'overalls', 'tie'],
-  top: ['#e6a527', '#d64b45', '#4b78c2', '#34824d', '#8a62b6', '#3f9a9c', '#172a45', '#fffdf7', '#f19a8a', '#d4af37'],
-  extra: ['none', 'glasses', 'shades', 'beard', 'moustache', 'stubble', 'headphones', 'crown', 'monocle', 'tyrolean', 'pencil', 'kaiser', 'toque', 'straw']
+  hair: ['#15110e', '#3b2a20', '#7a4a2a', '#c4522e', '#e2c25a', '#d8d4cc', '#5b3a8a', '#3d6fd1', '#e86a9a', '#9fc6e8', '#2fae8f', '#ff7a3d'],
+  shirt: ['plain', 'stripes', 'checked', 'hoodie', 'shirt', 'blazer', 'cardigan', 'tshirt', 'waistcoat', 'tracht', 'overalls', 'tie', 'sweater', 'bowtie'],
+  top: ['#e6a527', '#d64b45', '#4b78c2', '#34824d', '#8a62b6', '#3f9a9c', '#172a45', '#fffdf7', '#f19a8a', '#d4af37', '#7fc8a9', '#7a2e4f', '#c0c6cf'],
+  extra: ['none', 'glasses', 'shades', 'beard', 'moustache', 'stubble', 'headphones', 'crown', 'monocle', 'tyrolean', 'pencil', 'kaiser', 'toque', 'straw', 'wizard', 'beret', 'star', 'party', 'laurel', 'mortarboard']
 } as const satisfies { [K in keyof Avatar]: readonly Avatar[K][] };
 
 export type AvatarPart = keyof typeof avatarChoices;
@@ -32,12 +32,12 @@ export const avatarParts = Object.keys(avatarChoices) as AvatarPart[];
 export const defaultAvatar: Avatar = { skin: '#f0c9a8', face: 'round', eyes: 'dots', nose: 'curve', hairStyle: 'short', hair: '#3b2a20', shirt: 'plain', top: '#e6a527', extra: 'none' };
 
 // Rolls only offer what the learner already has: basic choices and rewards they have unlocked.
-function pick<T>(items: readonly T[], part: AvatarPart, unlocked: readonly CosmeticMode[]): T {
+function pick<T>(items: readonly T[], part: AvatarPart, unlocked: readonly RewardId[]): T {
   const open = items.filter((item) => !lockedIn(part, String(item), unlocked));
   return open[Math.floor(Math.random() * open.length)];
 }
 // A random character; extras stay rare enough that most rolls are a plain face.
-export function randomAvatar(unlocked: readonly CosmeticMode[] = []): Avatar {
+export function randomAvatar(unlocked: readonly RewardId[] = []): Avatar {
   return {
     skin: pick(avatarChoices.skin, 'skin', unlocked),
     face: pick(avatarChoices.face, 'face', unlocked),

@@ -20,7 +20,7 @@
   // `build` widens the body (and, for 'wide', the face); `accent` colours an apron or a pair of
   // overalls; `checked` lays a check pattern over the top.
   // `face`, `eyes`, `nose` and `striped` are only picked by learners for their own character.
-  type Look = { skin: string; hair: string; hairStyle: 'bun' | 'short' | 'curly' | 'bob' | 'bald' | 'messy' | 'long' | 'spiky' | 'mohawk'; top: string; face?: Avatar['face']; eyes?: Avatar['eyes']; nose?: Avatar['nose']; striped?: boolean; glasses?: boolean; monocle?: boolean; beard?: boolean; stubble?: boolean; moustache?: boolean | 'kaiser'; hat?: 'tyrolean' | 'crown' | 'police' | 'toque' | 'straw'; headphones?: boolean; shades?: boolean; pencil?: boolean; build?: 'wide' | 'muscular'; accent?: string; checked?: boolean; outfit: 'plain' | 'hoodie' | 'cardigan' | 'apron' | 'blazer' | 'tie' | 'tracht' | 'waistcoat' | 'police' | 'chef' | 'overalls' | 'tanktop' | 'scrubs' | 'tshirt' | 'shirt' };
+  type Look = { skin: string; hair: string; hairStyle: 'bun' | 'short' | 'curly' | 'bob' | 'bald' | 'messy' | 'long' | 'spiky' | 'mohawk'; top: string; face?: Avatar['face']; eyes?: Avatar['eyes']; nose?: Avatar['nose']; striped?: boolean; glasses?: boolean; monocle?: boolean; beard?: boolean; stubble?: boolean; moustache?: boolean | 'kaiser'; hat?: 'tyrolean' | 'crown' | 'police' | 'toque' | 'straw' | 'wizard' | 'beret' | 'star' | 'party' | 'laurel' | 'mortarboard'; headphones?: boolean; shades?: boolean; pencil?: boolean; build?: 'wide' | 'muscular'; accent?: string; checked?: boolean; outfit: 'plain' | 'hoodie' | 'cardigan' | 'apron' | 'blazer' | 'tie' | 'tracht' | 'waistcoat' | 'police' | 'chef' | 'overalls' | 'tanktop' | 'scrubs' | 'tshirt' | 'shirt' | 'sweater' | 'bowtie' };
   // Animals are hand-drawn branches below rather than entries in `looks`.
   type Animal = 'bello' | 'crow' | 'seagull' | 'deer' | 'fox' | 'lilith' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake';
   const animals: readonly CharacterId[] = ['bello', 'crow', 'seagull', 'deer', 'fox', 'lilith', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
@@ -74,7 +74,7 @@
       glasses: extra === 'glasses', shades: extra === 'shades', beard: extra === 'beard', stubble: extra === 'stubble', headphones: extra === 'headphones',
       moustache: extra === 'kaiser' ? 'kaiser' : extra === 'moustache', monocle: extra === 'monocle', pencil: extra === 'pencil',
       // Reward hats (cosmetics.svelte.ts) are drawn like the cast's.
-      hat: extra === 'crown' || extra === 'tyrolean' || extra === 'toque' || extra === 'straw' ? extra : undefined
+      hat: extra === 'crown' || extra === 'tyrolean' || extra === 'toque' || extra === 'straw' || extra === 'wizard' || extra === 'beret' || extra === 'star' || extra === 'party' || extra === 'laurel' || extra === 'mortarboard' ? extra : undefined
     };
   }
   const own = $derived(avatar ?? (id === 'kumar' ? settings.avatar : null));
@@ -196,6 +196,18 @@
     {#if look.outfit === 'chef'}<path d="M60 112v38" stroke="rgba(23,42,69,.15)" stroke-width="1.5" /><g fill="rgba(23,42,69,.35)"><circle cx="52" cy="122" r="2" /><circle cx="52" cy="134" r="2" /><circle cx="68" cy="122" r="2" /><circle cx="68" cy="134" r="2" /></g><path d="m48 102 12 12 12-12-12 4Z" fill="#d64b45" />{/if}
     {#if look.outfit === 'tracht'}<path d="M47 104q13 10 26 0" fill="none" stroke="#4b78c2" stroke-width="3" stroke-dasharray="3 2" /><path d="M41 106 49 150M79 106l-8 44" stroke="#6b4426" stroke-width="6" /><path d="M44 127h32" stroke="#6b4426" stroke-width="5" /><circle cx="60" cy="127" r="3.2" fill="#fffdf7" stroke="#34824d" stroke-width="1.5" />{/if}
     {#if look.outfit === 'waistcoat'}<path d="m49 103 11 20 11-20Z" fill="#fffdf7" /><path d="M42 106 60 126l18-20 -2 44H44Z" fill="#596477" /><path d="m55 104 5 5 5-5-5 3Z" fill="#172a45" /><g fill="#e6b52e"><circle cx="60" cy="133" r="1.8" /><circle cx="60" cy="142" r="1.8" /></g><path d="M48 135q6 6 12 0" fill="none" stroke="#e6b52e" stroke-width="1.4" />{/if}
+    {#if look.outfit === 'sweater'}
+      <!-- a chunky knit: ribbed collar and a white zigzag band across the chest -->
+      <path d="M45 104q15 9 30 0" fill="none" stroke="rgba(255,253,247,.75)" stroke-width="5" stroke-linecap="round" />
+      <path d="M24 130l6-5 6 5 6-5 6 5 6-5 6 5 6-5 6 5 6-5 6 5 6-5 6 5" fill="none" stroke="#fffdf7" stroke-width="2.6" stroke-linejoin="round" />
+      <path d="M22 138h76" stroke="rgba(255,253,247,.45)" stroke-width="1.6" stroke-dasharray="2 2" />
+    {/if}
+    {#if look.outfit === 'bowtie'}
+      <!-- crisp white collar with a red bow tie -->
+      <path d="m48 103 12 13 12-13Z" fill="#fffdf7" />
+      <path d="M60 109l-10-5.5v11Z M60 109l10-5.5v11Z" fill="#d64b45" stroke="#a83a35" stroke-width="1" stroke-linejoin="round" />
+      <circle cx="60" cy="109" r="2.4" fill="#a83a35" />
+    {/if}
     {#if look.outfit === 'overalls'}
       <!-- bib overalls with straps and brass buttons; Robert keeps a folding rule in the bib pocket -->
       {@const bib = wide ? 26 : 20}
@@ -271,6 +283,35 @@
       <path d="M48 18q5 6 4 10M62 15v12M72 18q-4 5-3 10" fill="none" stroke="#b8933f" stroke-width="1.2" />
       <path d="M14 38q46-14 92 0-46 9-92 0Z" fill="#e9c86f" stroke="#b8933f" stroke-width="1.2" />
       <path d="M18 39l-3 3M102 39l3 3M30 42l-1 3" stroke="#b8933f" stroke-width="1.2" stroke-linecap="round" />
+    {:else if look.hat === 'wizard'}
+      <!-- a tall purple wizard's hat with gold stars -->
+      <path d="M40 34 60 0l20 34q-20 6-40 0Z" fill="#5b3a8a" />
+      <path d="M22 37q38-11 76 0-38 7-76 0Z" fill="#4a2e73" />
+      <path d="M57.6 13.5l1 2.5 2.7.2-2.1 1.8.7 2.6-2.3-1.4-2.3 1.4.7-2.6-2.1-1.8 2.7-.2Z" fill="#e6b52e" />
+      <circle cx="66" cy="25" r="1.8" fill="#e6b52e" /><circle cx="52" cy="28" r="1.3" fill="#e6b52e" />
+    {:else if look.hat === 'beret'}
+      <!-- a red beret, worn at an angle -->
+      <ellipse cx="55" cy="27" rx="28" ry="10" fill="#d64b45" transform="rotate(-8 55 27)" />
+      <path d="M35 31q20 6 42 0" fill="none" stroke="#a83a35" stroke-width="2" stroke-linecap="round" />
+      <path d="M57 17l1.5-5" stroke="#a83a35" stroke-width="3" stroke-linecap="round" />
+    {:else if look.hat === 'star'}
+      <!-- a pink headband with a gold star -->
+      <path d="M30 42q30-14 60 0" fill="none" stroke="#e86a9a" stroke-width="4" stroke-linecap="round" />
+      <path d="M60.0 18.5 L62.2 23.9 L68.1 24.4 L63.6 28.2 L65.0 33.9 L60.0 30.8 L55.0 33.9 L56.4 28.2 L51.9 24.4 L57.8 23.9Z" fill="#e6b52e" stroke="#a8862f" stroke-width="1.2" stroke-linejoin="round" />
+    {:else if look.hat === 'party'}
+      <!-- a striped party hat with a pompom -->
+      <path d="M47 33 62 2l14 29q-14 5-29 2Z" fill="#4b78c2" />
+      <path d="M52 22l17-3M49 29l24-3M57 12l9-2" stroke="#e6a527" stroke-width="2.6" stroke-linecap="round" />
+      <circle cx="62" cy="2.5" r="4.2" fill="#d64b45" />
+    {:else if look.hat === 'laurel'}
+      <!-- a gold laurel wreath around the crown of the head -->
+      <g fill="#d4af37" stroke="#a8862f" stroke-width=".8"><ellipse cx="32.7" cy="40.1" rx="5" ry="2.4" transform="rotate(290 32.7 40.1)" /><ellipse cx="35.5" cy="34.5" rx="5" ry="2.4" transform="rotate(302 35.5 34.5)" /><ellipse cx="39.4" cy="29.6" rx="5" ry="2.4" transform="rotate(315 39.4 29.6)" /><ellipse cx="44.3" cy="25.6" rx="5" ry="2.4" transform="rotate(327 44.3 25.6)" /><ellipse cx="49.9" cy="22.8" rx="5" ry="2.4" transform="rotate(340 49.9 22.8)" /><ellipse cx="56.0" cy="21.3" rx="5" ry="2.4" transform="rotate(352 56.0 21.3)" /><ellipse cx="64.0" cy="21.3" rx="5" ry="2.4" transform="rotate(368 64.0 21.3)" /><ellipse cx="70.1" cy="22.8" rx="5" ry="2.4" transform="rotate(380 70.1 22.8)" /><ellipse cx="75.7" cy="25.6" rx="5" ry="2.4" transform="rotate(393 75.7 25.6)" /><ellipse cx="80.6" cy="29.6" rx="5" ry="2.4" transform="rotate(405 80.6 29.6)" /><ellipse cx="84.5" cy="34.5" rx="5" ry="2.4" transform="rotate(418 84.5 34.5)" /><ellipse cx="87.3" cy="40.1" rx="5" ry="2.4" transform="rotate(430 87.3 40.1)" /></g>
+    {:else if look.hat === 'mortarboard'}
+      <!-- a graduation cap: square board, cap and a gold tassel -->
+      <path d="M42 26v9q18 6 36 0v-9" fill="#172a45" />
+      <path d="M28 24 60 13l32 11-32 11Z" fill="#172a45" stroke="#2b4a73" stroke-width="1.2" stroke-linejoin="round" />
+      <path d="M60 24l20 5v12" fill="none" stroke="#e6a527" stroke-width="1.8" stroke-linecap="round" />
+      <path d="M78 40h4l1 6h-6Z" fill="#e6a527" />
     {:else if look.hat === 'crown'}
       <!-- a gold crown set with red and blue stones, pearls on its points -->
       <path d="M40 30 38 12l11 9 11-13 11 13 11-9-2 18Z" fill="#e6b52e" stroke="#a8862f" stroke-width="1.5" />

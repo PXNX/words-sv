@@ -1,69 +1,123 @@
 /*
  * Cosmetic rewards for the learner's character: the catalog and the rules, without any state.
- * Every mode has one item of its own, unlocked by playing that mode really well (a flawless round,
- * a long run of first-try answers, …). The unlocked list itself lives in cosmetics.svelte.ts.
+ * Rewards come from three places:
+ *   - modes: every mode has one item, unlocked by playing it really well (a flawless round, a long
+ *     run of first-try answers, …; see each mode's call to unlockCosmetic);
+ *   - achievements: every badge on the progress page brings an item (progress/achievements.ts);
+ *   - high scores: a few standout results (Wordle in two tries, five Hangman wins in a row, forty
+ *     first-try words in a row).
+ * The unlocked list itself lives in cosmetics.svelte.ts.
  */
 import type { Avatar, AvatarPart } from './avatar.js';
+import type { Achievement, AchievementId } from '#lib/progress/achievements.js';
 
 export type CosmeticMode =
   | 'vocab' | 'circle' | 'definitions' | 'wordle' | 'hangman' | 'pronunciation' | 'alltag'
   | 'grammar' | 'story' | 'reading' | 'listen' | 'conversation';
+export type ScoreId = 'wordle_two' | 'hangman_five' | 'vocab_forty';
+export type AchievementReward = `achievement_${AchievementId}`;
+export type ScoreReward = `score_${ScoreId}`;
+// Mode rewards keep their plain mode id, so what was unlocked before stays unlocked.
+export type RewardId = CosmeticMode | AchievementReward | ScoreReward;
 
-export type Cosmetic = { mode: CosmeticMode; part: AvatarPart; choice: string };
+export type RewardSource = { kind: 'mode'; mode: CosmeticMode } | { kind: 'achievement'; achievement: AchievementId } | { kind: 'score'; score: ScoreId };
+export type Cosmetic = { id: RewardId; part: AvatarPart; choice: string; source: RewardSource };
 
-// One item per mode, each a part the story cast already wears somewhere (StoryCharacter draws it).
-export const cosmetics: Record<CosmeticMode, Cosmetic> = {
-  vocab: { mode: 'vocab', part: 'extra', choice: 'monocle' },
-  circle: { mode: 'circle', part: 'extra', choice: 'tyrolean' },
-  definitions: { mode: 'definitions', part: 'extra', choice: 'pencil' },
-  wordle: { mode: 'wordle', part: 'shirt', choice: 'waistcoat' },
-  hangman: { mode: 'hangman', part: 'extra', choice: 'kaiser' },
-  pronunciation: { mode: 'pronunciation', part: 'extra', choice: 'toque' },
-  alltag: { mode: 'alltag', part: 'extra', choice: 'straw' },
-  grammar: { mode: 'grammar', part: 'shirt', choice: 'tracht' },
-  story: { mode: 'story', part: 'shirt', choice: 'overalls' },
-  reading: { mode: 'reading', part: 'shirt', choice: 'tie' },
-  listen: { mode: 'listen', part: 'hair', choice: '#9fc6e8' },
-  conversation: { mode: 'conversation', part: 'top', choice: '#d4af37' }
-};
-export const cosmeticModes = Object.keys(cosmetics) as CosmeticMode[];
+const mode = (id: CosmeticMode, part: AvatarPart, choice: string): Cosmetic => ({ id, part, choice, source: { kind: 'mode', mode: id } });
+const badge = (achievement: AchievementId, part: AvatarPart, choice: string): Cosmetic => ({ id: `achievement_${achievement}`, part, choice, source: { kind: 'achievement', achievement } });
+const score = (id: ScoreId, part: AvatarPart, choice: string): Cosmetic => ({ id: `score_${id}`, part, choice, source: { kind: 'score', score: id } });
+
+// Every reward is a distinct avatar choice that StoryCharacter can draw.
+const catalog: Cosmetic[] = [
+  mode('vocab', 'extra', 'monocle'),
+  mode('circle', 'extra', 'tyrolean'),
+  mode('definitions', 'extra', 'pencil'),
+  mode('wordle', 'shirt', 'waistcoat'),
+  mode('hangman', 'extra', 'kaiser'),
+  mode('pronunciation', 'extra', 'toque'),
+  mode('alltag', 'extra', 'straw'),
+  mode('grammar', 'shirt', 'tracht'),
+  mode('story', 'shirt', 'overalls'),
+  mode('reading', 'shirt', 'tie'),
+  mode('listen', 'hair', '#9fc6e8'),
+  mode('conversation', 'top', '#d4af37'),
+  badge('first_step', 'top', '#7fc8a9'),
+  badge('streak_3', 'hair', '#2fae8f'),
+  badge('vocab_100', 'shirt', 'sweater'),
+  badge('story_5', 'extra', 'wizard'),
+  badge('reading_5', 'extra', 'beret'),
+  badge('perfect_10', 'extra', 'star'),
+  badge('streak_7', 'extra', 'party'),
+  badge('grammar_50', 'shirt', 'bowtie'),
+  badge('mastered_50', 'top', '#7a2e4f'),
+  badge('all_rounder', 'extra', 'laurel'),
+  score('wordle_two', 'top', '#c0c6cf'),
+  score('hangman_five', 'hair', '#ff7a3d'),
+  score('vocab_forty', 'extra', 'mortarboard')
+];
+
+export const cosmetics = Object.fromEntries(catalog.map((item) => [item.id, item])) as Record<RewardId, Cosmetic>;
+export const rewardIds = catalog.map((item) => item.id);
+export const cosmeticModes = catalog.flatMap((item) => (item.source.kind === 'mode' ? [item.source.mode] : []));
 
 // Runs of first-try answers that count as "really well" in the answer-by-answer modes. The other
 // modes unlock from a single flawless round (see each mode's call to unlockCosmetic).
 export const RUN_TARGETS: Partial<Record<CosmeticMode, number>> = { vocab: 15, grammar: 15, alltag: 20, pronunciation: 10 };
+// Longer runs that count as a high score, with the reward they bring.
+export const SCORE_RUNS: Partial<Record<CosmeticMode, { target: number; reward: ScoreReward }>> = { vocab: { target: 40, reward: 'score_vocab_forty' } };
 // Full listening sessions, since listening has no wrong answers to avoid.
 export const LISTEN_TARGET = 3;
+// Wordle solved in this many tries or fewer; Hangman words won in a row.
+export const WORDLE_TOP_TRIES = 2;
+export const HANGMAN_WIN_RUN = 5;
 
 export const COSMETICS_KEY = 'wordcircle-cosmetics-v1';
 
 /** The stored unlocked list; anything unknown is dropped. */
-export function parseUnlocked(raw: string | null): CosmeticMode[] {
+export function parseUnlocked(raw: string | null): RewardId[] {
   try {
     const value: unknown = JSON.parse(raw ?? '[]');
-    return Array.isArray(value) ? cosmeticModes.filter((mode) => value.includes(mode)) : [];
+    return Array.isArray(value) ? rewardIds.filter((id) => value.includes(id)) : [];
   } catch {
     return [];
   }
 }
 
-/** The mode whose item this choice is, if it is a reward at all. */
-export function rewardFor(part: AvatarPart, choice: string): CosmeticMode | null {
-  return cosmeticModes.find((mode) => cosmetics[mode].part === part && cosmetics[mode].choice === choice) ?? null;
+/** The reward this choice is, if it is a reward at all. */
+export function rewardFor(part: AvatarPart, choice: string): RewardId | null {
+  return catalog.find((item) => item.part === part && item.choice === choice)?.id ?? null;
 }
 
-export function lockedIn(part: AvatarPart, choice: string, unlocked: readonly CosmeticMode[]): boolean {
-  const mode = rewardFor(part, choice);
-  return mode !== null && !unlocked.includes(mode);
+/** The reward an achievement brings. */
+export function achievementReward(achievement: AchievementId): AchievementReward {
+  return `achievement_${achievement}`;
+}
+
+/** Rewards of achievements that are done but not unlocked yet. */
+export function earnedAchievementRewards(achievements: readonly Achievement[], unlocked: readonly RewardId[]): AchievementReward[] {
+  return achievements.filter((achievement) => achievement.done).map((achievement) => achievementReward(achievement.id)).filter((id) => id in cosmetics && !unlocked.includes(id));
+}
+
+export function lockedIn(part: AvatarPart, choice: string, unlocked: readonly RewardId[]): boolean {
+  const reward = rewardFor(part, choice);
+  return reward !== null && !unlocked.includes(reward);
 }
 
 /** Whether every part of `avatar` is either a basic choice or an unlocked reward. */
-export function avatarAllowed(avatar: Avatar, unlocked: readonly CosmeticMode[]): boolean {
+export function avatarAllowed(avatar: Avatar, unlocked: readonly RewardId[]): boolean {
   return (Object.keys(avatar) as AvatarPart[]).every((part) => !lockedIn(part, String(avatar[part]), unlocked));
 }
 
-/** The next length of a run of first-try answers, and whether it reaches the mode's target. */
-export function nextRun(mode: CosmeticMode, run: number, correctFirstTry: boolean): { run: number; reached: boolean } {
+/** The next length of a run of first-try answers, and which rewards it reaches. */
+export function nextRun(mode: CosmeticMode, run: number, correctFirstTry: boolean): { run: number; reached: boolean; score?: ScoreReward } {
   const target = RUN_TARGETS[mode];
   const next = correctFirstTry ? run + 1 : 0;
-  return { run: next, reached: Boolean(target) && next >= (target ?? Infinity) };
+  const high = SCORE_RUNS[mode];
+  return { run: next, reached: Boolean(target) && next >= (target ?? Infinity), ...(high && next >= high.target ? { score: high.reward } : {}) };
+}
+
+/** The next count of Hangman words won in a row, and whether it is a high score. */
+export function nextHangmanRun(run: number, won: boolean): { run: number; reached: boolean } {
+  const next = won ? run + 1 : 0;
+  return { run: next, reached: next >= HANGMAN_WIN_RUN };
 }

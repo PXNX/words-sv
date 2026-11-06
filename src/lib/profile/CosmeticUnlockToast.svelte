@@ -30,7 +30,7 @@
     <span class="cosmetic-toast-character" aria-hidden="true"><StoryCharacter id="kumar" avatar={preview} mood="laughing" /></span>
     <div class="cosmetic-toast-text">
       <strong>{m.cosmetic_unlocked_title({}, locale)}</strong>
-      <span>{m.cosmetic_unlocked_body({}, locale)}</span>
+      <span>{reward.source.kind === 'achievement' ? m.cosmetic_unlocked_badge({}, locale) : m.cosmetic_unlocked_body({}, locale)}</span>
       <a href="/progress" onclick={dismissUnlock}>{m.cosmetic_try_on({}, locale)}</a>
     </div>
     <button type="button" class="cosmetic-toast-close" onclick={dismissUnlock} aria-label={m.cosmetic_close({}, locale)}><IconClose aria-hidden="true" /></button>
