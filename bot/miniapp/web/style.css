@@ -1,0 +1,25 @@
+/* Follows Telegram's theme so the page looks native in light and dark chats. */
+:root {
+  --bg: var(--tg-theme-bg-color, #fffdf7);
+  --text: var(--tg-theme-text-color, #172a45);
+  --hint: var(--tg-theme-hint-color, #596477);
+  --accent: var(--tg-theme-button-color, #e6a527);
+  --accent-text: var(--tg-theme-button-text-color, #172a45);
+  --card: var(--tg-theme-secondary-bg-color, #f7e2b0);
+  --link: var(--tg-theme-link-color, #a45e38);
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; display: grid; grid-template-rows: 1fr auto; background: var(--bg); color: var(--text); font: 500 15px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif; }
+main { display: grid; align-content: center; gap: .8rem; width: min(100%, 26rem); margin: 0 auto; padding: 1.5rem 1.2rem; text-align: center; }
+.kicker { margin: 0; color: var(--link); font-size: .72rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+h1 { margin: 0; font-size: 1.6rem; line-height: 1.15; }
+p { margin: 0; color: var(--hint); }
+.tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin-top: .4rem; }
+.tiers button, .secondary { min-height: 2.9rem; border: 0; border-radius: .8rem; font: inherit; font-weight: 800; cursor: pointer; }
+.tiers button { background: var(--accent); color: var(--accent-text); }
+.tiers button:disabled { opacity: .5; cursor: default; }
+.secondary { background: var(--card); color: var(--text); }
+.note { font-size: .78rem; font-weight: 700; }
+.status { min-height: 1.5em; color: var(--text); font-weight: 700; }
+footer { display: flex; justify-content: center; gap: 1.1rem; padding: 1rem; font-size: .78rem; }
+footer a { color: var(--link); font-weight: 700; text-decoration: none; }

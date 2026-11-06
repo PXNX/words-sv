@@ -1,0 +1,7 @@
+{
+  "$schema": "./node_modules/@tgcloud/cli/schema/tgcloud.json",
+  "static": {
+    // Plain HTML, no build step: this folder is uploaded as the Mini App.
+    "source": "web"
+  }
+}
