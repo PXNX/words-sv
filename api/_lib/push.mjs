@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import webpush from 'web-push';
+import { sendNotification, setVapidDetails } from 'web-push';
 
 export function endpointHash(endpoint) {
 	return createHash('sha256').update(endpoint).digest('hex');
@@ -16,6 +16,6 @@ export function normalizeSubscription(value) {
 export async function sendPush(subscription, payload) {
 	const { VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY } = process.env;
 	if (!VAPID_SUBJECT || !VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) throw new Error('vapid_not_configured');
-	webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
-	return webpush.sendNotification(subscription, JSON.stringify(payload), { TTL: 60 * 60, urgency: 'high' });
+	setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
+	return sendNotification(subscription, JSON.stringify(payload), { TTL: 60 * 60, urgency: 'high' });
 }
