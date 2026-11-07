@@ -12,15 +12,18 @@ export function botUsername() {
 	return process.env.TELEGRAM_BOT_USERNAME || 'word_circle_bot';
 }
 
+/** @param {string} payload */
 export function startLink(payload) {
 	return `https://t.me/${botUsername()}?start=${payload}`;
 }
 
 // Codes ride in /start payloads, which Telegram limits to [A-Za-z0-9_-]{1,64}.
+/** @param {number} bytes */
 export function newCode(bytes) {
 	return randomBytes(bytes).toString('base64url');
 }
 
+/** @param {unknown} authorization @param {string} [secret] */
 export function bridgeAuthorized(authorization, secret = process.env.TELEGRAM_BRIDGE_SECRET ?? '') {
 	if (!secret || typeof authorization !== 'string' || !authorization.startsWith('Bearer ')) return false;
 	const token = Buffer.from(authorization.slice(7));
@@ -29,7 +32,9 @@ export function bridgeAuthorized(authorization, secret = process.env.TELEGRAM_BR
 }
 
 /** The Telegram user behind a Mini App launch, once Telegram's signature over `initData` checks out
- * against the bot token; null for anything forged, unsigned or older than `maxAgeSeconds`. */
+ * against the bot token; null for anything forged, unsigned or older than `maxAgeSeconds`.
+ * @param {unknown} initData @param {string} [token] @param {number} [now] @param {number} [maxAgeSeconds]
+ * @returns {{ id: number, [key: string]: unknown } | null} */
 export function verifyInitData(initData, token = process.env.TELEGRAM_BOT_TOKEN ?? '', now = Date.now(), maxAgeSeconds = 24 * 60 * 60) {
 	if (!token || typeof initData !== 'string' || initData.length > 4096) return null;
 	const params = new URLSearchParams(initData);
@@ -49,14 +54,16 @@ export function verifyInitData(initData, token = process.env.TELEGRAM_BOT_TOKEN 
 	}
 }
 
-/** `r_<code>` turns on reminders for the device that made the code; `i_<code>` is a player's invite. */
+/** `r_<code>` turns on reminders for the device that made the code; `i_<code>` is a player's invite.
+ * @param {unknown} payload @returns {{ kind: 'reminders' | 'invite', code: string } | null} */
 export function parseStartPayload(payload) {
 	const match = typeof payload === 'string' ? /^([ri])_([A-Za-z0-9_-]{8,40})$/.exec(payload) : null;
 	return match ? { kind: match[1] === 'r' ? 'reminders' : 'invite', code: match[2] } : null;
 }
 
 /** Adds invite embers; like the daily ember, every full set forges a freeze while there is room for
- * one, and the embers left over carry on. Only with both freezes stocked does the set stay full. */
+ * one, and the embers left over carry on. Only with both freezes stocked does the set stay full.
+ * @param {number} embers @param {number} freezes @param {number} count */
 export function addEmbers(embers, freezes, count) {
 	let nextEmbers = embers + count;
 	let nextFreezes = freezes;
@@ -67,6 +74,7 @@ export function addEmbers(embers, freezes, count) {
 	return { embers: Math.min(FREEZE_EVERY, nextEmbers), freezes: nextFreezes };
 }
 
+/** @param {number | string} chatId @param {string} text @param {string} [buttonUrl] */
 export async function sendTelegram(chatId, text, buttonUrl) {
 	const token = process.env.TELEGRAM_BOT_TOKEN;
 	if (!token) throw new Error('telegram_not_configured');
@@ -81,9 +89,7 @@ export async function sendTelegram(chatId, text, buttonUrl) {
 		})
 	});
 	if (!response.ok) {
-		const error = new Error('telegram_send_failed');
-		error.statusCode = response.status;
-		throw error;
+		throw Object.assign(new Error('telegram_send_failed'), { statusCode: response.status });
 	}
 }
 
@@ -91,8 +97,10 @@ export function appUrl() {
 	return (process.env.APP_URL || 'https://words-sv.vercel.app').replace(/\/+$/, '') + '/';
 }
 
+/** @param {string} text */
 const escapeHtml = (text) => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 
+/** @param {{ title: string, body: string }} message */
 export function htmlMessage({ title, body }) {
 	return `<b>${escapeHtml(title)}</b>\n${escapeHtml(body)}`;
 }
@@ -110,6 +118,7 @@ const INVITE_THANKS = {
 	uk: (count) => ({ title: 'Друг приєднався до WordCircle', body: `Дякуємо за запрошення! Ти отримав ${count} жарини.` })
 };
 
+/** @param {string} locale @param {number} count */
 export function inviteThanks(locale, count) {
 	return (INVITE_THANKS[locale] ?? INVITE_THANKS.en)(count);
 }
@@ -140,11 +149,15 @@ const TABLES = [
 const INVITE_FREEZES_COLUMN = 'ALTER TABLE wordcircle_streak_devices ADD COLUMN invite_freezes TINYINT UNSIGNED NOT NULL DEFAULT 0';
 
 let tablesReady;
-/** Creates the Telegram tables on first use, like the reward columns in /api/streak/progress. */
+/** Creates the Telegram tables on first use, like the reward columns in /api/streak/progress.
+ * @param {{ execute: (sql: string, params?: unknown[]) => Promise<unknown> }} db */
 export function ensureTelegramTables(db) {
 	tablesReady ??= (async () => {
 		for (const statement of TABLES) await db.execute(statement);
-		await db.execute(INVITE_FREEZES_COLUMN).catch((error) => { if (error?.code !== 'ER_DUP_FIELDNAME') throw error; });
+		await db.execute(INVITE_FREEZES_COLUMN).catch((error) => {
+		const code = /** @type {{ code?: string } | null} */ (error)?.code;
+		if (code !== 'ER_DUP_FIELDNAME') throw error;
+	});
 	})().catch((error) => { tablesReady = undefined; throw error; });
 	return tablesReady;
 }

@@ -7,6 +7,78 @@ export const MAX_FREEZES = 2;
 export const DAILY_GOALS = [5, 8, 12];
 export const REMINDER_LOCALES = ['de', 'en', 'fa', 'pt', 'ru', 'ar', 'uk', 'hi', 'ml'];
 
+/**
+ * A streak row as stored (snake_case, from MySQL) or as the client sends it (camelCase).
+ * @typedef {object} StoredStreak
+ * @property {string} [day_key]
+ * @property {string} [dateKey]
+ * @property {number} [vocab_correct]
+ * @property {number} [vocabCorrect]
+ * @property {boolean} [circle_completed]
+ * @property {boolean} [circleCompleted]
+ * @property {boolean} [definitions_completed]
+ * @property {boolean} [definitionsCompleted]
+ * @property {boolean} [wordle_completed]
+ * @property {boolean} [wordleCompleted]
+ * @property {boolean} [reading_completed]
+ * @property {boolean} [readingCompleted]
+ * @property {boolean} [story_completed]
+ * @property {boolean} [storyCompleted]
+ * @property {number} [grammar_correct]
+ * @property {number} [grammarCorrect]
+ * @property {boolean} [listen_completed]
+ * @property {boolean} [listenCompleted]
+ * @property {number} [pronunciation_attempts]
+ * @property {number} [pronunciationAttempts]
+ * @property {boolean} [hangman_completed]
+ * @property {boolean} [hangmanCompleted]
+ * @property {number} [alltag_correct]
+ * @property {number} [alltagCorrect]
+ * @property {boolean} [current_qualified]
+ * @property {boolean} [qualified]
+ * @property {number} [streak_count]
+ * @property {number} [streakCount]
+ * @property {string | null} [last_qualified_day]
+ * @property {string | null} [lastQualifiedDay]
+ * @property {number} [vocabulary_goal]
+ * @property {number} [vocabularyGoal]
+ * @property {number} [freezes]
+ * @property {number} [qualified_days]
+ * @property {number} [qualifiedDays]
+ * @property {boolean} [reward_collected]
+ * @property {boolean} [rewardCollected]
+ * @property {number | null} [embers]
+ * @property {number} [best_streak]
+ * @property {number} [bestStreak]
+ */
+
+/**
+ * The streak state for today, normalised to camelCase.
+ * @typedef {object} StreakState
+ * @property {string} dateKey
+ * @property {number} vocabCorrect
+ * @property {boolean} circleCompleted
+ * @property {boolean} definitionsCompleted
+ * @property {boolean} wordleCompleted
+ * @property {boolean} readingCompleted
+ * @property {boolean} storyCompleted
+ * @property {number} grammarCorrect
+ * @property {boolean} listenCompleted
+ * @property {number} pronunciationAttempts
+ * @property {boolean} hangmanCompleted
+ * @property {number} alltagCorrect
+ * @property {boolean} qualified
+ * @property {number} streakCount
+ * @property {string | null} lastQualifiedDay
+ * @property {number} vocabularyGoal
+ * @property {number} freezes
+ * @property {number} qualifiedDays
+ * @property {boolean} rewardCollected
+ * @property {number} embers
+ * @property {number} [bestStreak]
+ */
+
+
 /** @param {unknown} value */
 export function normalizeReminderLocale(value) {
 	const language = String(value ?? '').toLowerCase();
@@ -20,6 +92,7 @@ export function normalizeVocabularyGoal(value) {
 	return DAILY_GOALS.includes(numeric) ? numeric : VOCABULARY_GOAL;
 }
 
+/** @param {string} timeZone */
 export function isSupportedTimeZone(timeZone) {
 	try {
 		new Intl.DateTimeFormat('en-CA', { timeZone }).format();
@@ -29,12 +102,14 @@ export function isSupportedTimeZone(timeZone) {
 	}
 }
 
+/** @param {string} timeZone @param {Date} [now] */
 export function dateKeyFor(timeZone, now = new Date()) {
 	const parts = new Intl.DateTimeFormat('en-CA', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now);
 	const value = Object.fromEntries(parts.filter((part) => part.type !== 'literal').map((part) => [part.type, part.value]));
 	return `${value.year}-${value.month}-${value.day}`;
 }
 
+/** @param {string} dateKey */
 export function previousDateKey(dateKey) {
 	const date = new Date(`${dateKey}T12:00:00.000Z`);
 	date.setUTCDate(date.getUTCDate() - 1);
@@ -56,11 +131,13 @@ function numberField(value, fallback = 0) {
 }
 
 // Rows from before the daily reward keep their progress toward the next freeze.
+/** @param {StoredStreak | null | undefined} stored */
 function embersField(stored) {
 	const embers = stored?.embers;
 	return embers === undefined || embers === null ? numberField(stored?.qualified_days ?? stored?.qualifiedDays) % FREEZE_EVERY : Math.min(FREEZE_EVERY, numberField(embers));
 }
 
+/** @param {string} timeZone @param {Date} [now] */
 export function minutesUntilNextLocalDate(timeZone, now = new Date()) {
 	const currentKey = dateKeyFor(timeZone, now);
 	const start = now.getTime();
@@ -76,6 +153,7 @@ export function minutesUntilNextLocalDate(timeZone, now = new Date()) {
 	return Math.max(0, Math.ceil((high - start) / 60_000));
 }
 
+/** @param {StoredStreak | null | undefined} stored @param {string} timeZone @param {Date} [now] @returns {StreakState} */
 export function stateForToday(stored, timeZone, now = new Date()) {
 	const today = dateKeyFor(timeZone, now);
 	const previousDay = previousDateKey(today);
@@ -136,7 +214,7 @@ export function stateForToday(stored, timeZone, now = new Date()) {
 	};
 }
 
-/** @param {any} state */
+/** @param {StreakState} state */
 export function qualifiesToday(state) {
 	return (
 		state.vocabCorrect >= state.vocabularyGoal ||
@@ -153,12 +231,12 @@ export function qualifiesToday(state) {
 	);
 }
 
-/** @param {any} state */
+/** @param {StreakState} state @returns {StreakState} */
 function settleQualification(state) {
 	const qualifies = qualifiesToday(state) || state.qualified;
 	const next = { ...state, qualified: qualifies };
 	if (!qualifies || state.qualified) {
-		if (next.streakCount > next.bestStreak) next.bestStreak = next.streakCount;
+		if (next.streakCount > (next.bestStreak ?? 0)) next.bestStreak = next.streakCount;
 		return next;
 	}
 	next.qualifiedDays = state.qualifiedDays + 1;
@@ -169,7 +247,7 @@ function settleQualification(state) {
 }
 
 /** Collects today's ember once; a full set turns into a freeze as soon as there is room for one.
- * @param {any} state */
+ * @param {StreakState} state @returns {StreakState} */
 export function collectReward(state) {
 	if (!state.qualified || state.rewardCollected) return state;
 	const next = { ...state, rewardCollected: true, embers: Math.min(FREEZE_EVERY, state.embers + 1) };
@@ -180,6 +258,7 @@ export function collectReward(state) {
 	return next;
 }
 
+/** @param {StoredStreak | null | undefined} stored @param {string} timeZone @param {string} event @param {Date} [now] @returns {StreakState} */
 export function applyStreakEvent(stored, timeZone, event, now = new Date()) {
 	const state = stateForToday(stored, timeZone, now);
 	if (event === 'vocab_correct') state.vocabCorrect += 1;
@@ -197,6 +276,7 @@ export function applyStreakEvent(stored, timeZone, event, now = new Date()) {
 	return settleQualification(state);
 }
 
+/** @param {StoredStreak | null | undefined} stored @param {string} timeZone @param {Date} [now] */
 export function streakSummary(stored, timeZone, now = new Date()) {
 	const state = stateForToday(stored, timeZone, now);
 	return {
@@ -208,8 +288,10 @@ export function streakSummary(stored, timeZone, now = new Date()) {
 }
 
 /** A device gets at most one reminder a day, so the most urgent type wins. */
+/** @param {StoredStreak | null | undefined} stored @param {string} timeZone @param {Date} [now] */
 export function reminderTypes(stored, timeZone, now = new Date()) {
 	const summary = streakSummary(stored, timeZone, now);
+	/** @type {string[]} */
 	const types = [];
 	if (summary.canProtectStreak && summary.minutesRemaining > 0 && summary.minutesRemaining <= 120) types.push('deadline');
 	else if (summary.lastQualifiedDay === previousDateKey(summary.dateKey) && dateKeyFor(timeZone, new Date(now.getTime() - 2 * 60 * 60 * 1000)) !== summary.dateKey) types.push('new_day');
