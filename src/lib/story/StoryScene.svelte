@@ -4,12 +4,14 @@
   let { scene: requested, weather = 'sunny' }: { scene: SceneId; weather?: Weather } = $props();
   // Some stories name places that have no drawing of their own (a market, a school, …): they get the
   // closest scene instead of crashing the picture, and anything unknown falls back to home.
-  const aliases: Record<string, SceneId> = { market: 'square', town: 'square', shop: 'boutique', factory: 'workshop', school: 'library' };
+  const aliases = { market: 'square', town: 'square', shop: 'boutique', factory: 'workshop', school: 'library' } as const satisfies Record<string, SceneId>;
+  type AliasScene = keyof typeof aliases;
+  type DrawnScene = Exclude<SceneId, AliasScene>;
 
   // Clip-path ids must be unique per instance.
   const uid = $props.id();
 
-  const palettes: Record<SceneId, { back: string; floor: string }> = {
+  const palettes: Record<DrawnScene, { back: string; floor: string }> = {
     cafe: { back: '#f3dcc0', floor: '#a45e38' },
     park: { back: '#cfe6f2', floor: '#8fc27a' },
     station: { back: '#dfe5ea', floor: '#9aa3ad' },
@@ -41,12 +43,14 @@
     frankfurt: { back: '#cfe6f2', floor: '#c4cbd3' },
     library: { back: '#e8e2d9', floor: '#b8a07e' }
   };
-  const scene = $derived<SceneId>(requested in palettes ? requested : aliases[requested] ?? 'home');
+  const drawn = (id: SceneId): id is DrawnScene => id in palettes;
+  const isAlias = (id: SceneId): id is AliasScene => id in aliases;
+  const scene = $derived<DrawnScene>(drawn(requested) ? requested : isAlias(requested) ? aliases[requested] : 'home');
   const palette = $derived(palettes[scene]);
 
   // Where the weather shows: through the window indoors, across the whole sky outdoors.
   type Sky = { x: number; y: number; w: number; h: number; round?: boolean };
-  const skies: Record<SceneId, Sky> = {
+  const skies: Record<DrawnScene, Sky> = {
     cafe: { x: 40, y: 34, w: 120, h: 86 },
     park: { x: 0, y: 0, w: 400, h: 172 },
     station: { x: 0, y: 0, w: 400, h: 172 },

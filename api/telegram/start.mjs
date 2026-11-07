@@ -3,12 +3,19 @@ import { isMethod, readJson, respond } from '../_lib/http.mjs';
 import { FREEZE_EVERY, normalizeReminderLocale } from '../_lib/streak.mjs';
 import { INVITE_EMBERS, addEmbers, appUrl, bridgeAuthorized, ensureTelegramTables, htmlMessage, inviteThanks, parseStartPayload, sendTelegram } from '../_lib/telegram.mjs';
 
+/** @typedef {import('../_lib/database.mjs').Database} Database */
+
+/** @param {unknown} value */
 const validId = (value) => Number.isSafeInteger(value) && value !== 0;
 
 // Called by the ptb-words bot for every `/start r_…` or `/start i_…` it receives. Answers with what
 // happened, so the bot can reply in the player's language:
 // reminders_on | expired | invited | known | own_invite | unknown.
+/**
+ * @param {{ databaseProvider?: () => Database, telegramSender?: (chatId: number, text: string, buttonUrl: string) => Promise<unknown> }} [options]
+ */
 export function createStartEndpoint({ databaseProvider = getDatabase, telegramSender = sendTelegram } = {}) {
+	/** @param {import('../_lib/http.mjs').ApiRequest} req @param {import('../_lib/http.mjs').ApiResponse} res */
 	return async function telegramStart(req, res) {
 		if (!isMethod(req, 'POST')) return respond(res, 405, { ok: false, error: 'method_not_allowed' });
 		if (!bridgeAuthorized(req.headers?.authorization)) return respond(res, 401, { ok: false, error: 'unauthorized' });
@@ -22,13 +29,19 @@ export function createStartEndpoint({ databaseProvider = getDatabase, telegramSe
 				const [result] = await db.execute('UPDATE wordcircle_telegram_links SET chat_id = ?, telegram_user_id = ?, reminders = 1, link_code = NULL WHERE link_code = ?', [chatId, userId, start.code]);
 				return respond(res, 200, { ok: true, result: result.affectedRows === 1 ? 'reminders_on' : 'expired' });
 			}
-			return respond(res, 200, { ok: true, result: await creditInvite(db, start.code, userId, telegramSender) });
+			return respond(res, 200, { ok: true, result: await creditInvite(db, start.code, Number(userId), telegramSender) });
 		} catch (error) {
 			return respond(res, 503, { ok: false, error: error instanceof Error ? error.message : 'telegram_unavailable' });
 		}
 	};
 }
 
+/**
+ * @param {Database} db
+ * @param {string} code
+ * @param {number} userId
+ * @param {(chatId: number, text: string, buttonUrl: string) => Promise<unknown>} telegramSender
+ */
 async function creditInvite(db, code, userId, telegramSender) {
 	const [[inviter]] = await db.execute('SELECT device_id, chat_id, telegram_user_id FROM wordcircle_telegram_links WHERE invite_code = ? LIMIT 1', [code]);
 	if (!inviter) return 'unknown';
@@ -39,7 +52,7 @@ async function creditInvite(db, code, userId, telegramSender) {
 	try {
 		await db.execute('INSERT INTO wordcircle_telegram_invites (telegram_user_id, inviter_device_id) VALUES (?, ?)', [userId, inviter.device_id]);
 	} catch (error) {
-		if (error?.code === 'ER_DUP_ENTRY') return 'known';
+		if (/** @type {{ code?: string } | null} */ (error)?.code === 'ER_DUP_ENTRY') return 'known';
 		throw error;
 	}
 	// Compare-and-set, so two friends joining at once both count.

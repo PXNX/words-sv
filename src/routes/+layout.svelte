@@ -64,7 +64,8 @@ import { haptic } from '#lib/feedback/haptics.js';
 		if (!document.startViewTransition) return;
 		// Going deeper (home → mode → tutorial) slides forward, going up or back in history slides back.
 		const depth = (path = '/') => path.split('/').filter(Boolean).length;
-		const back = navigation.delta !== undefined ? navigation.delta < 0 : depth(navigation.to?.url.pathname) < depth(navigation.from?.url.pathname);
+		// `delta` only exists on a history (popstate) navigation.
+		const back = 'delta' in navigation ? navigation.delta < 0 : depth(navigation.to?.url.pathname) < depth(navigation.from?.url.pathname);
 		document.documentElement.dataset.navDirection = back ? 'back' : 'forward';
 		return new Promise((resolve) => {
 			document.startViewTransition(async () => {

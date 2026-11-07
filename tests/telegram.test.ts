@@ -4,20 +4,44 @@ import { addEmbers, bridgeAuthorized, parseStartPayload, verifyInitData } from '
 import { createStartEndpoint } from '../api/telegram/start.mjs';
 import { createRemindersEndpoint } from '../api/cron/reminders.mjs';
 
+type Device = {
+	embers?: number;
+	freezes?: number;
+	invite_freezes?: number;
+	qualified_days?: number;
+	locale?: string;
+	timezone?: string;
+	day_key?: string;
+	last_qualified_day?: string;
+	current_qualified?: number;
+	streak_count?: number;
+};
+type Link = {
+	device_id: string;
+	invite_code?: string;
+	link_code?: string | null;
+	chat_id?: number | null;
+	telegram_user_id?: number | null;
+	reminders?: number;
+	last_reminded_day?: string | null;
+};
+type Invite = { telegram_user_id: number; inviter_device_id: string };
+type SentMessage = [chatId: number, text: string, buttonUrl: string];
+
 function responseCapture() {
-	const result = { statusCode: 200, body: null };
+	const result = { statusCode: 200, body: null as any };
 	return {
 		result,
-		status(code) { result.statusCode = code; return this; },
-		json(body) { result.body = body; return this; }
+		status(code: number) { result.statusCode = code; return this; },
+		json(body: unknown) { result.body = body; return this; }
 	};
 }
 
 // A tiny in-memory stand-in for the few statements the Telegram endpoints run.
-function fakeDatabase({ devices = {}, links = [], invites = [] } = {}) {
+function fakeDatabase({ devices = {}, links = [], invites = [] }: { devices?: Record<string, Device>, links?: Link[], invites?: Invite[] } = {}) {
 	const db = {
 		devices, links, invites,
-		async execute(sql, params = []) {
+		async execute(sql: string, params: any[] = []) {
 			if (/^(CREATE|ALTER)/.test(sql)) return [{}];
 			if (sql.startsWith('UPDATE wordcircle_telegram_links SET chat_id')) {
 				const link = links.find((entry) => entry.link_code === params[2]);
@@ -34,18 +58,20 @@ function fakeDatabase({ devices = {}, links = [], invites = [] } = {}) {
 			if (sql.startsWith('SELECT embers, freezes')) return [devices[params[0]] ? [devices[params[0]]] : []];
 			if (sql.startsWith('UPDATE wordcircle_streak_devices SET embers')) {
 				const device = devices[params[3]];
+				if (!device) throw new Error('unknown device');
 				Object.assign(device, { embers: params[0], freezes: params[1], invite_freezes: Math.min(2, (device.invite_freezes ?? 0) + params[2]) });
 				return [{ affectedRows: 1 }];
 			}
 			if (sql.startsWith('SELECT d.*, t.chat_id')) return [links.filter((entry) => entry.reminders && entry.chat_id).map((entry) => ({ ...devices[entry.device_id], device_id: entry.device_id, chat_id: entry.chat_id }))];
 			if (sql.startsWith('UPDATE wordcircle_telegram_links SET last_reminded_day')) {
 				const link = links.find((entry) => entry.device_id === params[1]);
-				const claimed = link && link.last_reminded_day !== params[0];
-				if (claimed) link.last_reminded_day = params[0];
+				const claimed = Boolean(link && link.last_reminded_day !== params[0]);
+				if (claimed && link) link.last_reminded_day = params[0];
 				return [{ affectedRows: claimed ? 1 : 0 }];
 			}
 			if (sql.startsWith('UPDATE wordcircle_telegram_links SET reminders = 0')) {
-				links.find((entry) => entry.device_id === params[0]).reminders = 0;
+				const link = links.find((entry) => entry.device_id === params[0]);
+				if (link) link.reminders = 0;
 				return [{}];
 			}
 			if (sql.includes('wordcircle_push_subscriptions')) return [[]];
@@ -56,7 +82,7 @@ function fakeDatabase({ devices = {}, links = [], invites = [] } = {}) {
 }
 
 const secret = 'bridge-secret-for-tests-0123456789';
-async function start(db, body, sent = []) {
+async function start(db: ReturnType<typeof fakeDatabase>, body: Record<string, unknown>, sent: SentMessage[] = []) {
 	process.env.TELEGRAM_BRIDGE_SECRET = secret;
 	const res = responseCapture();
 	await createStartEndpoint({ databaseProvider: () => db, telegramSender: async (...args) => { sent.push(args); } })({ method: 'POST', headers: { authorization: `Bearer ${secret}` }, body }, res);
@@ -103,7 +129,7 @@ describe('telegram start bridge', () => {
 			devices: { 'device-a': { embers: 5, freezes: 0, qualified_days: 5, locale: 'de' } },
 			links: [{ device_id: 'device-a', invite_code: 'inviteCodeA1', chat_id: 11, telegram_user_id: 11 }]
 		});
-		const sent = [];
+		const sent: SentMessage[] = [];
 		for (const userId of [21, 22, 23, 24, 25]) expect((await start(db, { payload: 'i_inviteCodeA1', userId, chatId: userId }, sent)).body.result).toBe('invited');
 		// 5 + 5 × 2 = 15 embers: two freezes forged, the last ember stays.
 		expect(db.devices['device-a']).toMatchObject({ embers: 1, freezes: 2, invite_freezes: 2 });
@@ -122,8 +148,8 @@ describe('telegram streak reminders', () => {
 			devices: { 'device-a': { timezone: 'UTC', locale: 'en', day_key: '2026-10-27', last_qualified_day: '2026-10-26', current_qualified: 0, streak_count: 4 } },
 			links: [{ device_id: 'device-a', invite_code: 'inviteCodeA1', chat_id: 11, reminders: 1 }]
 		});
-		const sent = [];
-		const run = async (iso) => {
+		const sent: SentMessage[] = [];
+		const run = async (iso: string) => {
 			const res = responseCapture();
 			await createRemindersEndpoint({ databaseProvider: () => db, telegramSender: async (...args) => { sent.push(args); }, now: () => new Date(iso) })({ method: 'POST', headers: { authorization: `Bearer ${process.env.CRON_SECRET}` } }, res);
 			return res.result.body;
@@ -138,7 +164,7 @@ describe('telegram streak reminders', () => {
 
 describe('telegram mini app', () => {
 	const token = '123456:test-bot-token';
-	function signed(fields, botToken = token) {
+	function signed(fields: Record<string, string>, botToken = token) {
 		const params = new URLSearchParams(fields);
 		const checkString = [...params.entries()].map(([key, value]) => `${key}=${value}`).sort().join('\n');
 		const secret = createHmac('sha256', 'WebAppData').update(botToken).digest();

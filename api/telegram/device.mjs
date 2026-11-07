@@ -3,6 +3,9 @@ import { isMethod, readJson, respond } from '../_lib/http.mjs';
 import { dateKeyFor, isSupportedTimeZone, normalizeReminderLocale } from '../_lib/streak.mjs';
 import { INVITE_EMBERS, ensureTelegramTables, newCode, startLink, verifyInitData } from '../_lib/telegram.mjs';
 
+/** @typedef {import('../_lib/database.mjs').Database} Database */
+
+/** @param {unknown} value */
 const validDeviceId = (value) => typeof value === 'string' && /^[a-zA-Z0-9_-]{16,64}$/.test(value);
 const actions = new Set(['status', 'connect', 'disconnect', 'miniapp']);
 
@@ -10,12 +13,14 @@ const actions = new Set(['status', 'connect', 'disconnect', 'miniapp']);
 // on, `connect` turns them on (straight away when the bot can already write to the player, otherwise
 // through a one-time /start link), `disconnect` turns them off. `miniapp` links the device to the
 // Telegram user who opened WordCircle as a Mini App, from Telegram's signed `initData`.
+/** @param {{ databaseProvider?: () => Database }} [options] */
 export function createDeviceEndpoint({ databaseProvider = getDatabase } = {}) {
+	/** @param {import('../_lib/http.mjs').ApiRequest} req @param {import('../_lib/http.mjs').ApiResponse} res */
 	return async function telegramDevice(req, res) {
 		if (!isMethod(req, 'POST')) return respond(res, 405, { ok: false, error: 'method_not_allowed' });
 		try {
 			const { deviceId, timeZone, locale, action = 'status', initData } = await readJson(req);
-			if (!validDeviceId(deviceId) || !isSupportedTimeZone(timeZone) || !actions.has(action)) return respond(res, 400, { ok: false, error: 'invalid_request' });
+			if (!validDeviceId(deviceId) || typeof timeZone !== 'string' || !isSupportedTimeZone(timeZone) || typeof action !== 'string' || !actions.has(action)) return respond(res, 400, { ok: false, error: 'invalid_request' });
 			const user = action === 'miniapp' ? verifyInitData(initData) : null;
 			if (action === 'miniapp' && !user) return respond(res, 401, { ok: false, error: 'invalid_init_data' });
 			const db = databaseProvider();
