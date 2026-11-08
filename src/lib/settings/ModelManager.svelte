@@ -185,7 +185,7 @@
           <button type="button" class="model-pick" role="radio" aria-checked={chosen} onclick={() => chooseVoice(id)}>
             <span class="model-name">{engineNames[id]()}</span>
             {#if group}<span class="model-facts">{m.models_facts({ download: `~${mb(voiceDownloadMB(id))}`, memory: `~${mb(voiceMemoryMB(id))}` }, { locale })}</span>{/if}
-            {#if chosen}<span class="model-about">{voiceHint(id)}</span>{/if}
+            <span class="model-about">{voiceHint(id)}</span>
             {#if state === 'downloading'}
               {@const percent = Math.round((naturalState.progress[lang] ?? 0) * 100)}
               <span class="model-progress"><span style:width={`${Math.max(2, percent)}%`}></span></span>
