@@ -37,7 +37,7 @@
     behaviorGroup: m.behavior_group({}, { locale: settings.interfaceLocale }),
     gameLanguage: m.game_language({}, { locale: settings.interfaceLocale }),
     vocabulary: m.vocabulary({}, { locale: settings.interfaceLocale }),
-    wordleLength: 'Wordle length',
+    wordleLength: m.wordle_length({}, { locale: settings.interfaceLocale }),
     includeLower: m.include_lower({}, { locale: settings.interfaceLocale }),
     backwards: m.backwards({}, { locale: settings.interfaceLocale }),
     interfaceLanguage: m.interface_language({}, { locale: settings.interfaceLocale }),
@@ -45,14 +45,14 @@
     light: m.light({}, { locale: settings.interfaceLocale }),
     dark: m.dark({}, { locale: settings.interfaceLocale }),
     vibration: m.vibration({}, { locale: settings.interfaceLocale }),
-    sound: 'Sound effects',
-    voiceTest: 'Test voice',
-    voiceTesting: 'Playing…',
-    voiceTestFailed: 'This voice could not speak right now; stories would use the standard voice instead.',
-    voiceModel: 'Voice model',
-    voiceModelStandard: 'Standard',
-    voiceModelHigh: 'High',
-    voiceModelHint: 'Higher quality voices are larger and can take more time to load. All voices run on your device.',
+    sound: m.sound({}, { locale: settings.interfaceLocale }),
+    voiceTest: m.voice_test({}, { locale: settings.interfaceLocale }),
+    voiceTesting: m.voice_testing({}, { locale: settings.interfaceLocale }),
+    voiceTestFailed: m.voice_test_failed({}, { locale: settings.interfaceLocale }),
+    voiceModel: m.voice_model({}, { locale: settings.interfaceLocale }),
+    voiceModelStandard: m.voice_model_standard({}, { locale: settings.interfaceLocale }),
+    voiceModelHigh: m.voice_model_high({}, { locale: settings.interfaceLocale }),
+    voiceModelHint: m.voice_model_hint({}, { locale: settings.interfaceLocale }),
     dialects: m.dialects({}, { locale: settings.interfaceLocale }),
     dialectsHint: m.dialects_hint({}, { locale: settings.interfaceLocale }),
     notifications: m.notifications({}, { locale: settings.interfaceLocale }),
@@ -72,7 +72,10 @@
     inviteShare: m.invite_share({}, { locale: settings.interfaceLocale }),
     inviteCopied: m.invite_copied({}, { locale: settings.interfaceLocale }),
     inviteCount: (count: number) => m.invite_count({ count }, { locale: settings.interfaceLocale }),
-    inviteShareText: m.invite_share_text({}, { locale: settings.interfaceLocale })
+    inviteShareText: m.invite_share_text({}, { locale: settings.interfaceLocale }),
+    explainWordleLength: m.explain_wordle_length({}, { locale: settings.interfaceLocale }),
+    explainBackwards: m.explain_backwards({}, { locale: settings.interfaceLocale }),
+    shareApp: m.share_app({}, { locale: settings.interfaceLocale })
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   const voiceStatus = $derived(naturalState.status[settings.lang] ?? 'idle');
@@ -223,12 +226,10 @@
     setTimeout(() => (inviteCopied = false), 2000);
   }
 
-  const explanations: Record<'wordleLength' | 'backwards', string> = {
-    wordleLength:
-      'Wordle length sets how many letters the target word has. Shorter words are quicker to solve, longer words give you more combinations to think through.',
-    backwards:
-      'When this is on, the game also accepts words spelled in reverse. For example, “STOP” counts the same as “POTS”.'
-  };
+  const explanations = $derived<Record<'wordleLength' | 'backwards', string>>({
+    wordleLength: m.wordle_length_explain({}, { locale: settings.interfaceLocale }),
+    backwards: m.backwards_explain({}, { locale: settings.interfaceLocale })
+  });
   let explanationType = $state<'wordleLength' | 'backwards' | null>(null);
   const explanationTitle = $derived(explanationType === 'wordleLength' ? labels.wordleLength : labels.backwards);
   const explanationText = $derived(explanationType ? explanations[explanationType] : '');
@@ -243,8 +244,8 @@
   }
   function shareApp() {
     const url = typeof location !== 'undefined' ? location.origin + '/' : 'https://words-sv.vercel.app/';
-    const title = 'Words-SV - Learn German';
-    const text = 'Practice German vocabulary, grammar and stories with interactive exercises.';
+    const title = m.home_title({}, { locale: settings.interfaceLocale });
+    const text = m.share_app_text({}, { locale: settings.interfaceLocale });
     if (typeof navigator !== 'undefined' && (navigator as any).share) {
       (navigator as any).share({ title, text, url }).catch(() => {});
       return;
@@ -300,8 +301,8 @@
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.gameLanguage}</span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={settings.lang} options={languageOptions} label={labels.gameLanguage} onchange={selectLanguage} /></div>
     <div class="flex items-start justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.vocabulary}</span><div class="seg-play">{#each vocabularyLevels as level}<button class={`min-h-[1.65rem] min-w-[1.65rem] px-[.32rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.vocabularyLevel === level ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} onclick={() => selectVocabularyLevel(level)}>{level.toUpperCase()}</button>{/each}</div></div>
     {#if settings.vocabularyLevel !== 'a1'}<div class="flex items-center justify-between gap-4 mt-[.25rem] pt-[.35rem] border-t-0 text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.includeLower}</span><input aria-label={labels.includeLower} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.includeLowerVocabulary} onchange={(event) => settings.setIncludeLowerVocabulary((event.currentTarget as HTMLInputElement).checked)} /></div>{/if}
-    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.4rem]">{labels.wordleLength}<button type="button" class="btn-play btn-play-round btn-play-sm btn-play-soft flex-none" aria-label="Show explanation for wordle length" aria-haspopup="dialog" onclick={() => openExplanation('wordleLength')}><IconHelp aria-hidden="true" /></button></span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={String(settings.wordleLength)} options={wordleOptions} label={labels.wordleLength} onchange={selectWordleLength} /></div>
-    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.4rem]">{labels.backwards}<button type="button" class="btn-play btn-play-round btn-play-sm btn-play-soft flex-none" aria-label="Show explanation for reverse spelling" aria-haspopup="dialog" onclick={() => openExplanation('backwards')}><IconHelp aria-hidden="true" /></button></span><input aria-label={labels.backwards} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.allowBackwardWords} onchange={(event) => settings.setAllowBackwardWords((event.currentTarget as HTMLInputElement).checked)} /></div>
+    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.4rem]">{labels.wordleLength}<button type="button" class="btn-play btn-play-round btn-play-sm btn-play-soft flex-none" aria-label={labels.explainWordleLength} aria-haspopup="dialog" onclick={() => openExplanation('wordleLength')}><IconHelp aria-hidden="true" /></button></span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={String(settings.wordleLength)} options={wordleOptions} label={labels.wordleLength} onchange={selectWordleLength} /></div>
+    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.4rem]">{labels.backwards}<button type="button" class="btn-play btn-play-round btn-play-sm btn-play-soft flex-none" aria-label={labels.explainBackwards} aria-haspopup="dialog" onclick={() => openExplanation('backwards')}><IconHelp aria-hidden="true" /></button></span><input aria-label={labels.backwards} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.allowBackwardWords} onchange={(event) => settings.setAllowBackwardWords((event.currentTarget as HTMLInputElement).checked)} /></div>
   </section>
   <section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play" aria-labelledby="behavior-settings-heading">
     <h2 id="behavior-settings-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.behaviorGroup}</h2>
@@ -346,7 +347,7 @@
 
   <div class="settings-foot">
   {#if telegramHref}<a class="btn-play w-full mt-4 gap-[.48rem] normal-case tracking-normal text-[#237a26] dark:text-[#a9e8ab] text-[.72rem] font-bold leading-[1.45] text-center no-underline hover:bg-[#2aab2e] hover:text-[#fffdf7] focus-visible:bg-[#2aab2e] focus-visible:text-[#fffdf7] focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[3px]" href={telegramHref} target="_blank" rel="noreferrer" lang={settings.interfaceLocale} dir={interfaceDirection}><IconTelegram aria-hidden="true" class="w-[1.12rem] h-[1.12rem] flex-none" /><span>{labels.telegramShare}</span></a>{/if}
-  <button type="button" class="btn-play w-full mt-2 gap-[.48rem] normal-case tracking-normal text-[#172a45] dark:text-[#fffdf7] text-[.72rem] font-bold leading-[1.45] text-center" onclick={shareApp}><IconShare aria-hidden="true" class="w-[1.12rem] h-[1.12rem] flex-none" /><span>Share app</span></button>
+  <button type="button" class="btn-play w-full mt-2 gap-[.48rem] normal-case tracking-normal text-[#172a45] dark:text-[#fffdf7] text-[.72rem] font-bold leading-[1.45] text-center" onclick={shareApp}><IconShare aria-hidden="true" class="w-[1.12rem] h-[1.12rem] flex-none" /><span>{labels.shareApp}</span></button>
   <a class="flex items-center justify-center gap-[.42rem] mt-4 text-accent text-[.66rem] font-extrabold tracking-[.05em] text-center no-underline uppercase focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[3px]" href="https://github.com/PXNX/words-sv" target="_blank" rel="noreferrer"><IconGithub aria-hidden="true" class="w-4 h-4" /><span>GitHub · PXNX/words-sv</span></a>
   </div>
   </div>
@@ -375,7 +376,7 @@
           bind:this={closeButton}
           type="button"
           class="-mt-[.35rem] -mr-[.35rem] grid h-[2rem] w-[2rem] flex-none place-items-center rounded-full border-0 bg-transparent text-base-content/60 hover:bg-base-content/10 hover:text-base-content focus-visible:outline-2 focus-visible:outline-primary"
-          aria-label="Close"
+          aria-label={m.close({}, { locale: settings.interfaceLocale })}
           onclick={closeExplanation}
         >
           <IconClose aria-hidden="true" class="h-[1.15rem] w-[1.15rem]" />
