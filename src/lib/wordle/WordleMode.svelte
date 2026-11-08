@@ -11,7 +11,7 @@
   import { wiktionaryUrl } from '#lib/vocab/wiktionary.js';
   import IconHelp from '~icons/material-symbols/question-mark-rounded';
   import IconProgressActivity from '~icons/material-symbols/progress-activity';
-  import { tick } from 'svelte';
+  import { tick, untrack } from 'svelte';
   import { recordMissedWord } from '#lib/story/missedWords.js';
   import Companion from '#lib/story/Companion.svelte';
   import type { Mood } from '#lib/story/stories.js';
@@ -35,7 +35,7 @@
   let guess = $state('');
   let entries = $state<Entry[]>([]);
   let notice = $state('');
-  let practiceActive = $state(practice);
+  let practiceActive = $state(untrack(() => practice));
   let practiceStep = $state(0);
   let loadingNextRound = $state(false);
   let explanationWord = $state<string | null>(null);

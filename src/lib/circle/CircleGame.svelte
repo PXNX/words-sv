@@ -130,14 +130,14 @@
   // /circle and /circle/definitions share the same saved-round storage key, so a round begun in
   // regular Circle mode (or before this mode existed) can be full of words with no definition.
   // Only resume a stored round in definitions mode if every one of its words actually has one.
-  const initialGame = storedGame && showDefinitions && !storedGame.words.every(isDefinitionsWord) ? null : storedGame;
+  const initialGame = storedGame && untrack(() => showDefinitions) && !storedGame.words.every(isDefinitionsWord) ? null : storedGame;
   const initialRecentBases = readRecentBases();
   const isPractice = Boolean(startingPracticeLanguage);
   const initialRound: Round = startingPracticeLanguage
     ? circleTutorialRounds[startingPracticeLanguage]!
     : initialGame
       ? roundFromStoredGame(initialGame)
-      : buildRound(withDefinitionsOnly(selectedPool(wordPools[settings.lang], settings.vocabularyLevel, settings.includeLowerVocabulary)), randomSeed(), [], settings.allowBackwardWords, hintableBaseWords, showDefinitions ? 3 : 0);
+      : buildRound(withDefinitionsOnly(selectedPool(wordPools[settings.lang], settings.vocabularyLevel, settings.includeLowerVocabulary)), randomSeed(), [], settings.allowBackwardWords, hintableBaseWords, untrack(() => showDefinitions) ? 3 : 0);
 
   let roundNumber = $state(initialGame?.roundNumber ?? 1);
   let recentBaseWords = $state<string[]>(initialGame ? [...new Set([initialGame.words[0], ...initialRecentBases])] : initialRecentBases);
@@ -565,7 +565,9 @@
           {@const typingLetter = typingCells.get(cellKey(row, col))}
           {@const typing = typingLetter !== undefined && !solved}
           {@const foundAgain = solved && foundAgainCells.has(cellKey(row, col))}
-          {#if cell}<div
+          {#if cell}
+          <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+          <div
             class="aspect-square min-w-0 grid place-items-center rounded-[4px] border border-[#172a45] bg-[#fffdf7] text-[#172a45] text-[clamp(.62rem,2.6vw,.92rem)] font-extrabold leading-none uppercase [transition:background_.18s_ease,color_.18s_ease,transform_.18s_cubic-bezier(.23,1,.32,1)] motion-reduce:animate-none"
             class:border-l-4={isWordStart(row, col, 'across')}
             class:border-r-4={isWordEnd(row, col, 'across')}

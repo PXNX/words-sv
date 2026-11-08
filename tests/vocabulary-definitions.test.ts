@@ -1,10 +1,11 @@
+import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import test from 'node:test';
 
 /** @param {string} name */
-const load = (name) => JSON.parse(readFileSync(new URL(`../src/lib/data/${name}`, import.meta.url), 'utf8'));
-const a1 = load('de.a1.json');
+const load = (name: string): any => JSON.parse(readFileSync(new URL(`../src/lib/data/${name}`, import.meta.url), 'utf8'));
+
+const a1 = load('de.a1.json') as Record<string, any>;
 
 test('every German A1 word has a definition', () => {
   const missing = Object.entries(a1)
