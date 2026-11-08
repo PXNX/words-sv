@@ -3,6 +3,7 @@ import { createHmac } from 'node:crypto';
 import { addEmbers, bridgeAuthorized, parseStartPayload, verifyInitData } from '../api/_lib/telegram.mjs';
 import { createStartEndpoint } from '../api/telegram/start.mjs';
 import { createRemindersEndpoint } from '../api/cron/reminders.mjs';
+import { responseCapture } from './support/api';
 
 type Device = {
 	embers?: number;
@@ -28,14 +29,6 @@ type Link = {
 type Invite = { telegram_user_id: number; inviter_device_id: string };
 type SentMessage = [chatId: number, text: string, buttonUrl: string];
 
-function responseCapture() {
-	const result = { statusCode: 200, body: null as any };
-	return {
-		result,
-		status(code: number) { result.statusCode = code; return this; },
-		json(body: unknown) { result.body = body; return this; }
-	};
-}
 
 // A tiny in-memory stand-in for the few statements the Telegram endpoints run.
 function fakeDatabase({ devices = {}, links = [], invites = [] }: { devices?: Record<string, Device>, links?: Link[], invites?: Invite[] } = {}) {
