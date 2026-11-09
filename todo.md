@@ -164,6 +164,17 @@ tests/build, a focused commit and a push to `main`.
   `modeDone`, `qualifiesToday`, plus the server side in `api/_lib/streak.mjs`.
 - [x] Home card row with `group_sentence` heading and `mode_sentence` / `home_sentence` labels.
 - [x] Localised keys in `messages/de.json` and `messages/en.json`; Paraglide regenerated.
+- [x] Register the mode in `seo.js` and the Vercel rewrites (`/sentence`).
 - [ ] Hook an actual LLM grader behind `grade()` (the rule-based scorer is the scaffold).
 - [ ] Render the sentence result as a proper feature page, not raw factor strings.
 - [ ] Add Vitest coverage for the grader and the prompt index.
+
+### Reading word explainer
+- [x] Read the tapped word aloud from the word sheet: natural clip when neural voices are on,
+  browser speech synthesis otherwise.
+- [x] New `reading_word_speak` label in every locale.
+
+### Verification
+- [x] `bun run check` → 0 errors, 0 warnings.
+- [x] `bun run test` → 29 files, 189 tests passing.
+- [x] `bun run build` → 23 routes, OG tags written.
