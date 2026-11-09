@@ -165,9 +165,13 @@ tests/build, a focused commit and a push to `main`.
 - [x] Home card row with `group_sentence` heading and `mode_sentence` / `home_sentence` labels.
 - [x] Localised keys in `messages/de.json` and `messages/en.json`; Paraglide regenerated.
 - [x] Register the mode in `seo.js` and the Vercel rewrites (`/sentence`).
+- [x] Split into two modes with their own home cards: `/sentence` (short) and
+  `/sentence/full` (a whole text), sharing one scorer with per-mode thresholds.
+- [x] Full-text writing tools: revealable model answer, word-target progress bar, live
+  word/paragraph counts, localStorage draft autosave, reset.
+- [x] `GradeResultCard.svelte` renders the result as localised factors, not raw strings.
+- [x] Vitest coverage for the grader and the prompt index (`tests/sentence.test.ts`).
 - [ ] Hook an actual LLM grader behind `grade()` (the rule-based scorer is the scaffold).
-- [ ] Render the sentence result as a proper feature page, not raw factor strings.
-- [ ] Add Vitest coverage for the grader and the prompt index.
 
 ### Reading word explainer
 - [x] Read the tapped word aloud from the word sheet: natural clip when neural voices are on,
@@ -176,5 +180,5 @@ tests/build, a focused commit and a push to `main`.
 
 ### Verification
 - [x] `bun run check` → 0 errors, 0 warnings.
-- [x] `bun run test` → 29 files, 189 tests passing.
-- [x] `bun run build` → 23 routes, OG tags written.
+- [x] `bun run test` → 30 files, 198 tests passing.
+- [x] `bun run build` → 24 routes, OG tags written.
