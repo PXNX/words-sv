@@ -372,8 +372,8 @@ function wordsBefore(text: string, start: number, limit: number): ContextWord[] 
     if (!match) break;
     const gap = match[2] ?? '';
     if (/[.!?;:]/u.test(gap)) break;
-    words.push({ text: match[1], lower: match[1].toLocaleLowerCase() });
-    cursor -= match[1].length + gap.length;
+    words.push({ text: match[1]!, lower: match[1]!.toLocaleLowerCase() });
+    cursor -= match[1]!.length + gap.length;
   }
   return words;
 }
@@ -384,9 +384,9 @@ function wordsAfter(text: string, end: number, limit: number): ContextWord[] {
   while (words.length < limit && cursor < text.length) {
     const match = /^([^\p{L}]*)([\p{L}]+)/u.exec(text.slice(cursor));
     if (!match) break;
-    if (/[.!?;:]/u.test(match[1])) break;
-    words.push({ text: match[2], lower: match[2].toLocaleLowerCase() });
-    cursor += match[1].length + match[2].length;
+    if (/[.!?;:]/u.test(match[1]!)) break;
+    words.push({ text: match[2]!, lower: match[2]!.toLocaleLowerCase() });
+    cursor += match[1]!.length + match[2]!.length;
   }
   return words;
 }
@@ -560,13 +560,14 @@ function detectCurrentCase(
   const previous = before.map((word) => word.lower);
 
   for (let index = 0; index < previous.length; index += 1) {
-    const contraction = CONTRACTIONS[previous[index]];
+    const word = previous[index]!;
+    const contraction = CONTRACTIONS[word];
     if (contraction) {
       return caseFromDeterminer(contraction.article, info, contraction.preposition, before[index + 1], false, after);
     }
-    if (DETERMINER_WORDS.has(previous[index])) {
+    if (DETERMINER_WORDS.has(word)) {
       const nounBefore = before.slice(index + 1).some((word) => /^\p{Lu}/u.test(word.text));
-      return caseFromDeterminer(previous[index], info, previous[index + 1], before[index + 1], nounBefore, after);
+      return caseFromDeterminer(word, info, previous[index + 1], before[index + 1], nounBefore, after);
     }
   }
 
@@ -711,7 +712,7 @@ export function readingArticleNoun(
 
   let words = 0;
   for (let cursor = index + 1; cursor < tokens.length && words < 5; cursor += 1) {
-    const token = tokens[cursor];
+    const token = tokens[cursor]!;
     if (!token.word) {
       if (/[.!?;:]/u.test(token.text)) break;
       continue;

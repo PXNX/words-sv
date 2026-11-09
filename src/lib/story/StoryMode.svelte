@@ -301,7 +301,7 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
     const order = Array.from({ length }, (_, index) => index);
     for (let index = order.length - 1; index > 0; index -= 1) {
       const swap = Math.floor(Math.random() * (index + 1));
-      [order[index], order[swap]] = [order[swap], order[index]];
+      [order[index], order[swap]] = [order[swap]!, order[index]!];
     }
     return order;
   }
@@ -477,18 +477,20 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
     if (unread) return unread;
     const others = pool.filter((candidate) => candidate.id !== skip);
     const candidates = others.length ? others : pool;
-    return candidates[Math.floor(Math.random() * candidates.length)];
+    // storiesFor() always returns at least one story for a playable language and level.
+    return candidates[Math.floor(Math.random() * candidates.length)]!;
   }
   function advance() {
     if (!story || awaitingAnswer || revealed >= story.beats.length) return;
     revealed += 1;
     reaction = null;
-    presentBeat(story.beats[revealed - 1], revealed - 1);
-    if (revealed === story.beats.length && !isInteractive(story.beats[revealed - 1]) && !story.generated) markCompleted(story.id);
+    const beat = story.beats[revealed - 1]!;
+    presentBeat(beat, revealed - 1);
+    if (revealed === story.beats.length && !isInteractive(beat) && !story.generated) markCompleted(story.id);
   }
   function choose(option: number, index = currentIndex) {
     if (!story) return;
-    const beat = story.beats[index];
+    const beat = story.beats[index]!;
     if (!isInteractive(beat)) return;
     if (!awaitingAnswer) return;
     const who = beat.kind === 'reply' ? beat.to : 'all';
@@ -580,7 +582,7 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
     lipSync.stop();
     await waitForCue();
     if (token !== performing) return;
-    const intro = quote[1].replace(/[\s:,–—-]+$/u, '');
+    const intro = quote[1]!.replace(/[\s:,–—-]+$/u, '');
     if (/\p{L}/u.test(intro)) await speakSentences(intro, 'narrator', 'neutral', token, false, shown ? { beat, at: 0 } : null);
     if (token !== performing) return;
     marks.clear();
@@ -588,7 +590,7 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
     await waitForCue();
     if (token !== performing) return;
     crackle = startCrackle(settings.sound);
-    await speakSentences(quote[2], 'narrator', 'neutral', token, false, shown ? { beat, at: text.indexOf(quote[2], quote[1].length) } : null);
+    await speakSentences(quote[2]!, 'narrator', 'neutral', token, false, shown ? { beat, at: text.indexOf(quote[2]!, quote[1]!.length) } : null);
     silenceCrackle();
     if (token === performing) marks.clear();
   }
@@ -617,10 +619,10 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
         await prepareNaturalRead(text, 'narrator', 'neutral', cast, language, token);
         return;
       }
-      const intro = quote[1].replace(/[\s:,–—-]+$/u, '');
+      const intro = quote[1]!.replace(/[\s:,–—-]+$/u, '');
       if (/\p{L}/u.test(intro)) await prepareNaturalText(intro, 'narrator', 'neutral', cast, language, token);
       if (token !== audioPreparation) return;
-      await prepareNaturalText(quote[2], 'narrator', 'neutral', cast, language, token);
+      await prepareNaturalText(quote[2]!, 'narrator', 'neutral', cast, language, token);
       return;
     }
     if (beat.kind === 'narration') {
@@ -917,14 +919,14 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
             <span class="story-question-badge" aria-hidden="true"><IconQuestion /></span>
             <div>
               <p>{say(beat.prompt[lang])}</p>
-              <span class="story-answer"><IconCheck aria-hidden="true" />{say(beat.options[0][lang])}</span>
+              <span class="story-answer"><IconCheck aria-hidden="true" />{say(beat.options[0]![lang])}</span>
             </div>
           </li>
         {:else if beat.kind === 'reply' && solved[index]}
           <li class="story-line story-line--you">
             <div class="story-bubble">
               <b>{name}</b>
-              <p>{say(beat.options[0][lang])}</p>
+              <p>{say(beat.options[0]![lang])}</p>
             </div>
           </li>
         {/if}
@@ -940,7 +942,7 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
         <div class="story-options" lang={lang}>
           {#each orders[currentIndex] ?? [] as option (option)}
             {@const missed = wrong[currentIndex]?.includes(option)}
-            <button type="button" class="btn-play btn-play-choice" class:missed disabled={missed} onclick={() => choose(option)}>{say(current.options[option][lang])}{#if missed}<IconClose aria-hidden="true" />{/if}</button>
+            <button type="button" class="btn-play btn-play-choice" class:missed disabled={missed} onclick={() => choose(option)}>{say(current.options[option]![lang])}{#if missed}<IconClose aria-hidden="true" />{/if}</button>
           {/each}
         </div>
       {:else if finished}

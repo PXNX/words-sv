@@ -16,10 +16,10 @@ export function createSpeedMeter(windowMs = WINDOW_MS): SpeedMeter {
   return {
     sample(loadedBytes, now = Date.now()) {
       // A smaller number than before means a new file started counting from zero.
-      if (samples.length && loadedBytes < samples[samples.length - 1].bytes) samples = [];
+      if (samples.length && loadedBytes < samples[samples.length - 1]!.bytes) samples = [];
       samples.push({ at: now, bytes: loadedBytes });
-      while (samples.length > 2 && now - samples[0].at > windowMs) samples.shift();
-      const first = samples[0];
+      while (samples.length > 2 && now - samples[0]!.at > windowMs) samples.shift();
+      const first = samples[0]!;
       const seconds = (now - first.at) / 1000;
       return seconds >= 0.5 ? Math.max(0, (loadedBytes - first.bytes) / seconds) : 0;
     },

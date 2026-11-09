@@ -9,7 +9,7 @@
   /** "TASSE: T in the right place, A …" so a checked row reads as its result, not five bare letters. */
   function describe(entry: Entry): string {
     if (!markLabels) return entry.word;
-    return `${entry.word}: ${Array.from(entry.word).map((letter, index) => `${letter} ${markLabels[entry.marks[index]]}`).join(', ')}`;
+    return `${entry.word}: ${Array.from(entry.word).map((letter, index) => `${letter} ${markLabels[entry.marks[index]!]}`).join(', ')}`;
   }
 
   const guessLetters = $derived(Array.from(currentGuess));

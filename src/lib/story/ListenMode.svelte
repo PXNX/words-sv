@@ -204,8 +204,9 @@
     if (!session) return;
     for (let index = startIndex; index < session.segments.length; index += 1) {
       if (token !== liveToken) return;
-      const segment = session.segments[index];
-      const segmentStart = session.starts[index];
+      // `starts` parallels `segments`, and the loop keeps `index` inside both.
+      const segment = session.segments[index]!;
+      const segmentStart = session.starts[index]!;
       const begin = index === startIndex ? Math.max(startAt, segmentStart) : segmentStart;
       position = begin;
       if (segment.sound) {
@@ -297,7 +298,7 @@
     const copy = [...items];
     for (let index = copy.length - 1; index > 0; index -= 1) {
       const swap = Math.floor(Math.random() * (index + 1));
-      [copy[index], copy[swap]] = [copy[swap], copy[index]];
+      [copy[index], copy[swap]] = [copy[swap]!, copy[index]!];
     }
     return copy;
   }
@@ -403,14 +404,14 @@
       if (beat.kind === 'line') speakers.add(beat.speaker);
       else if (beat.kind === 'question' && beat.asker) speakers.add(beat.asker);
     }
-    const templates = dialectNotes[settings.lang] ?? dialectNotes.en;
-    const attention = dialectAttention[settings.lang] ?? dialectAttention.en;
+    const templates = dialectNotes[settings.lang] ?? dialectNotes.en!;
+    const attention = dialectAttention[settings.lang] ?? dialectAttention.en!;
     const notes: string[] = [];
     for (const speaker of speakers) {
       const dialect = profiles[speaker].dialect;
       if (!dialect) continue;
       const name = characterNames[speaker as CharacterId][settings.lang];
-      const note = `${attention}, ${templates[dialect].replace('{name}', name)}`;
+      const note = `${attention}, ${templates[dialect]!.replace('{name}', name)}`;
       if (!notes.includes(note)) notes.push(note);
     }
     return notes.join(' ');

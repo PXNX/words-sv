@@ -23,7 +23,7 @@ export function articleTable(kind: ArticleKind) {
 }
 
 export function capitalize(word: string) {
-  return word.length > 0 ? word[0].toLocaleUpperCase() + word.slice(1) : word;
+  return word.length > 0 ? word[0]!.toLocaleUpperCase() + word.slice(1) : word;
 }
 
 // Each template describes a full sentence built around the noun (already correctly
@@ -63,7 +63,7 @@ const templatesByCase: Record<GrammarCase, NounTemplate[]> = {
 export type GrammarPrompt = { before: string; after: string; correct: string; choices: string[]; question?: string; highlight?: string };
 
 export function pickCase(random: () => number): GrammarCase {
-  return GRAMMAR_CASES[Math.floor(random() * GRAMMAR_CASES.length)];
+  return GRAMMAR_CASES[Math.floor(random() * GRAMMAR_CASES.length)]!;
 }
 
 export function pickArticleKind(random: () => number): ArticleKind {
@@ -85,7 +85,7 @@ export function buildNounCasePrompt(noun: string, gender: VocabularyGender, rand
   const correct = articleTable(articleKind)[grammarCase][gender];
   const choices = uniqueForms(articleKind, gender);
   const templates = templatesByCase[grammarCase];
-  const { before, after } = templates[Math.floor(random() * templates.length)](noun);
+  const { before, after } = templates[Math.floor(random() * templates.length)]!(noun);
   return { before, after, correct, choices: shuffle(choices, random) };
 }
 
@@ -94,7 +94,7 @@ export function buildNounPropertyPrompt(noun: string, gender: VocabularyGender, 
   const grammarCase = pickCase(random);
   const article = definiteArticlesByCase[grammarCase][gender];
   const templates = templatesByCase[grammarCase];
-  const sentence = templates[Math.floor(random() * templates.length)](noun);
+  const sentence = templates[Math.floor(random() * templates.length)]!(noun);
   const before = sentence.before.length === 0 ? `${capitalize(article)} ` : `${sentence.before}${article} `;
   const labels: Record<GrammarCase, string> = { nominative: 'Nominativ', accusative: 'Akkusativ', dative: 'Dativ' };
   const genders: Record<VocabularyGender, string> = { masculine: 'Maskulinum', feminine: 'Femininum', neuter: 'Neutrum' };

@@ -32,7 +32,7 @@ export function pickTargetWords(pool: readonly string[], count = TARGET_WORD_COU
   const unique = [...new Set(pool)];
   for (let index = unique.length - 1; index > 0; index -= 1) {
     const swap = Math.floor(random() * (index + 1));
-    [unique[index], unique[swap]] = [unique[swap], unique[index]];
+    [unique[index], unique[swap]] = [unique[swap]!, unique[index]!];
   }
   return unique.slice(0, count);
 }

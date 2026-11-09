@@ -11,7 +11,8 @@ export type StreakDay = { dateKey: string; weekday: number; status: StreakDaySta
 /** The seven days ending today, oldest first; `weekday` is 0 (Sunday) to 6. */
 export function streakWeek(state: Pick<ClientStreak, 'dateKey' | 'qualified' | 'streakCount' | 'lastQualifiedDay'>): StreakDay[] {
   const keys = [state.dateKey];
-  while (keys.length < 7) keys.unshift(previousDate(keys[0]));
+  // `keys` always has at least one element (it starts with today), so `keys[0]` is safe.
+  while (keys.length < 7) keys.unshift(previousDate(keys[0]!));
   // The run's first day: walk back streakCount - 1 days from its last one.
   let runStart: string | null = null;
   if (state.lastQualifiedDay && state.streakCount > 0) {

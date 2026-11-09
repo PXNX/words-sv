@@ -54,13 +54,14 @@ function shuffleStable<T>(items: T[], seed: string): T[] {
   for (let index = copy.length - 1; index > 0; index -= 1) {
     state = (state * 1103515245 + 12345) % 2147483647;
     const swap = state % (index + 1);
-    [copy[index], copy[swap]] = [copy[swap], copy[index]];
+    [copy[index], copy[swap]] = [copy[swap]!, copy[index]!];
   }
   return copy;
 }
 
 export function questionView(prompt: string, options: string[], seed: string): ReadingQuestionView {
-  const answer = options[0];
+  // A question always lists at least one option, so the first one is the answer.
+  const answer = options[0]!;
   return { prompt, options: shuffleStable(options, seed), answer };
 }
 
@@ -111,7 +112,7 @@ export function storyProse(story: Story, language: Language, name: string, seed 
       continue;
     }
     if (beat.kind === 'reply') {
-      blocks.push({ kind: 'quote', speaker: 'you', text: fillName(beat.options[0][language], name), speech: 'answer' });
+      blocks.push({ kind: 'quote', speaker: 'you', text: fillName(beat.options[0]![language], name), speech: 'answer' });
       continue;
     }
     questions.push(questionView(

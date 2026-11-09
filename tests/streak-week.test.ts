@@ -7,7 +7,7 @@ describe('streak week', () => {
     expect(week.map((day) => day.dateKey)).toEqual(['2026-10-30', '2026-10-31', '2026-11-01', '2026-11-02', '2026-11-03', '2026-11-04', '2026-11-05']);
     expect(week.map((day) => day.status)).toEqual(['missed', 'missed', 'missed', 'done', 'done', 'done', 'today-open']);
     // 2026-11-05 is a Thursday.
-    expect(week[6].weekday).toBe(4);
+    expect(week[6]!.weekday).toBe(4);
   });
 
   it('counts today in the run once it is qualified', () => {

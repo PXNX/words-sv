@@ -86,10 +86,10 @@ const germanStems = ['', 'ein', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'siebe
 const germanTens = ['', '', 'zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig', 'neunzig'];
 
 function germanBelowHundred(value: number): string {
-  if (value < 20) return germanUnits[value];
+  if (value < 20) return germanUnits[value]!;
   const unit = value % 10;
-  const ten = germanTens[Math.floor(value / 10)];
-  return unit ? `${germanStems[unit]}und${ten}` : ten;
+  const ten = germanTens[Math.floor(value / 10)]!;
+  return unit ? `${germanStems[unit]!}und${ten}` : ten;
 }
 function germanBelowThousand(value: number): string {
   if (value < 100) return germanBelowHundred(value);

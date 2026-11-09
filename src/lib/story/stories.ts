@@ -1359,7 +1359,7 @@ function shuffled<T>(items: T[], random: () => number = Math.random): T[] {
   const copy = [...items];
   for (let index = copy.length - 1; index > 0; index -= 1) {
     const swap = Math.floor(random() * (index + 1));
-    [copy[index], copy[swap]] = [copy[swap], copy[index]];
+    [copy[index], copy[swap]] = [copy[swap]!, copy[index]!];
   }
   return copy;
 }
@@ -1375,10 +1375,12 @@ export function withDetails(story: Story, random: () => number = Math.random): S
   let ball: string | undefined;
   for (const detail of story.details) {
     const [chosen, ...others] = shuffled(detail, random);
+    // A detail always lists at least one variant.
+    if (!chosen) continue;
     ball = chosen.ball ?? ball;
     for (const [key, text] of Object.entries(chosen.words)) {
       values[key] = text;
-      others.forEach((other, index) => (values[`${key}#${index + 1}`] = other.words[key]));
+      others.forEach((other, index) => (values[`${key}#${index + 1}`] = other.words[key]!));
     }
   }
   const fill = (text: Text): Text => Object.fromEntries(Object.entries(text).map(([language, value]) => [
@@ -1403,7 +1405,7 @@ export function withDetails(story: Story, random: () => number = Math.random): S
  */
 export function withWeather(story: Story): Story {
   const choices = story.weathers ?? weathers;
-  const weather = choices[Math.floor(Math.random() * choices.length)];
+  const weather = choices[Math.floor(Math.random() * choices.length)]!;
   const lines = weatherLines[weather];
   const outdoor = outdoorScenes.includes(story.scene);
   // A blue sky carries birdsong. The beach always paints a sunset instead, so it stays quiet.

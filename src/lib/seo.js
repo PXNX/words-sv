@@ -160,8 +160,11 @@ export function pageMeta(pathname) {
 
 /** @param {string} pathname */
 export function pageTitle(pathname) {
+	// A route always has page metadata; treat a missing entry as empty rather than crashing.
 	const path = pathname.replace(/\/+$/, '') || '/';
-	return path === '/' ? `${SITE_NAME} – ${pages['/'].title}` : `${pageMeta(path).title} · ${SITE_NAME}`;
+	const home = pageMeta('/');
+	const current = pageMeta(path);
+	return path === '/' ? `${SITE_NAME} – ${home?.title ?? ''}` : `${current?.title ?? ''} · ${SITE_NAME}`;
 }
 
 /** @param {string} pathname */

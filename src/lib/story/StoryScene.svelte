@@ -129,10 +129,10 @@
     <rect x={sky.x} y={sky.y} width={sky.w} height={sky.h} fill={sunset ? `url(#${uid}-sunset)` : skyColours[weather]} />
     {#if sunset}
       <circle cx="270" cy="150" r="34" fill="#ffd36b" opacity=".95" /><circle cx="270" cy="150" r="48" fill="#ffd36b" opacity=".25" />
-      {@render cloud(clouds[0].x, clouds[0].y, clouds[0].s * 0.8)}
+      {@render cloud(clouds[0]!.x, clouds[0]!.y, clouds[0]!.s * 0.8)}
      {:else if weather === 'sunny'}
        <circle class="story-sun" cx={outdoor ? 340 : sky.x + sky.w * 0.7} cy={outdoor ? 44 : sky.y + sky.h * 0.36} r={outdoor ? 24 : unit * 0.2} fill="#f4c84a" />
-       {@render cloud(clouds[0].x, clouds[0].y, clouds[0].s * 0.8)}
+       {@render cloud(clouds[0]!.x, clouds[0]!.y, clouds[0]!.s * 0.8)}
        <g class="story-birds" fill="none" stroke="#172a45" stroke-width="1.6" stroke-linecap="round">
          <path d="M40 30q6-4 12 0q6-4 12 0" />
          <path d="M120 55q5-3 10 0q5-3 10 0" />
@@ -249,8 +249,8 @@
     <!-- glass shelves of pastel perfume bottles and a mirrored counter -->
     <rect x="28" y="24" width="80" height="64" rx="6" fill="none" stroke="#fffdf7" stroke-width="6" />
     <g fill="rgba(255,253,247,.7)" stroke="#b9a6c4" stroke-width="1.5"><rect x="250" y="56" width="136" height="5" /><rect x="250" y="100" width="136" height="5" /><rect x="16" y="120" width="104" height="5" /></g>
-    {#each [0, 1, 2, 3, 4] as i (i)}{@render bottle(262 + i * 28, 56, pastels[i], i % 3)}{@render bottle(266 + i * 26, 100, pastels[(i + 2) % 5], (i + 1) % 3)}{/each}
-    {#each [0, 1, 2] as i (i)}{@render bottle(34 + i * 34, 120, pastels[(i + 3) % 5], (i + 2) % 3)}{/each}
+    {#each [0, 1, 2, 3, 4] as i (i)}{@render bottle(262 + i * 28, 56, pastels[i]!, i % 3)}{@render bottle(266 + i * 26, 100, pastels[(i + 2) % 5]!, (i + 1) % 3)}{/each}
+    {#each [0, 1, 2] as i (i)}{@render bottle(34 + i * 34, 120, pastels[(i + 3) % 5]!, (i + 2) % 3)}{/each}
     <rect x="270" y="128" width="116" height="44" fill="#e9dcef" stroke="#7a6a8a" stroke-width="2" /><rect x="276" y="134" width="104" height="10" fill="#fffdf7" opacity=".6" />
     <g fill="#e6a527"><circle cx="300" cy="18" r="3" /><circle cx="330" cy="12" r="2" /><circle cx="360" cy="20" r="2.5" /></g>
   {:else if scene === 'workshop'}

@@ -96,7 +96,10 @@ export async function speakEdge(text: string, voice: EdgeVoice, rate = 1, pitch 
         return;
       }
       const frame = new Uint8Array(event.data as ArrayBuffer);
-      const headerLength = (frame[0] << 8) | frame[1];
+      // The first two bytes carry the header length; the frame is always well-formed here.
+      // The first two bytes carry the header length; the frame is always well-formed here.
+      // frame[0] is the high byte of the header length; the frame is always well-formed here.
+      const headerLength = (frame[0]! << 8) | frame[1]!;
       chunks.push(frame.subarray(2 + headerLength));
     };
     ws.onclose = () => finish(new Error('Edge TTS closed the connection'));

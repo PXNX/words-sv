@@ -16,7 +16,8 @@
   let choices = $state<string[]>([]);
   let answer = $state<string | null>(null);
   let numberReverse = $state(false);
-  const current = $derived(items[index]);
+  // `index` only ever advances with `% items.length`, so it always names a real item.
+  const current = $derived(items[index] as Item);
   const colorEmoji: Record<string, string> = { rot: '🔴', blau: '🔵', gelb: '🟡', grün: '🟢', orange: '🟠', violett: '🟣', rosa: '🩷', braun: '🟤', schwarz: '⚫', weiß: '⚪' };
   const animalEmoji: Record<string, string> = { 'der Hund': '🐕', 'die Katze': '🐈', 'die Maus': '🐁', 'das Pferd': '🐎', 'die Kuh': '🐄', 'das Schwein': '🐖', 'das Schaf': '🐑', 'der Vogel': '🐦', 'der Fisch': '🐟', 'der Hase': '🐇', 'der Bär': '🐻', 'die Ente': '🦆' };
   const numberEmoji: Record<string, string> = { '7': '7️⃣' };

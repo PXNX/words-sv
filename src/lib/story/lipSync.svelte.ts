@@ -120,10 +120,11 @@ export class LipSync {
     if (next === -1) {
       this.open = 0;
     } else if (next === 0) {
-      this.open = frames[0].open;
+      this.open = frames[0]!.open;
     } else {
-      const from = frames[next - 1];
-      const to = frames[next];
+      // `next` is at least 1 and below frames.length, so both neighbours exist.
+      const from = frames[next - 1]!;
+      const to = frames[next]!;
       const progress = (now - from.at) / Math.max(1, to.at - from.at);
       this.open = from.open + (to.open - from.open) * progress;
     }

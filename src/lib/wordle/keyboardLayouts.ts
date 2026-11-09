@@ -11,7 +11,8 @@ export const keyboardLayouts: Record<string, KeyboardLayout> = {
 };
 
 export function keyboardLayoutFor(language: string): KeyboardLayout {
-  return keyboardLayouts[language] ?? keyboardLayouts.en;
+  // Every supported interface language has a layout; unknown ones fall back to the English one.
+  return keyboardLayouts[language] ?? keyboardLayouts.en!;
 }
 
 /** Every letter the on-screen keyboard can type. */
@@ -50,8 +51,8 @@ export function keyboardMarksFrom(entries: ReadonlyArray<{ word: string; marks: 
   const marks: Record<string, WordleMark> = {};
   for (const entry of entries) {
     for (const [index, letter] of Array.from(entry.word).entries()) {
-      const mark = entry.marks[index];
-      if (!marks[letter] || priority[mark] > priority[marks[letter]]) marks[letter] = mark;
+      const mark = entry.marks[index]!;
+      if (!marks[letter] || priority[mark] > priority[marks[letter]!]) marks[letter] = mark;
     }
   }
   return marks;

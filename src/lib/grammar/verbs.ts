@@ -130,7 +130,7 @@ export function buildVerbPrompt(infinitive: string, random: () => number, shuffl
   return {
     before: `${VERB_PRONOUNS[personIndex]} `,
     after: entry.after,
-    correct: entry.forms[personIndex],
+    correct: entry.forms[personIndex]!,
     choices: shuffle(forms, random)
   };
 }

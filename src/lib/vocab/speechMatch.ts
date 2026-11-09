@@ -24,11 +24,12 @@ export function levenshteinDistance<T>(a: ArrayLike<T>, b: ArrayLike<T>): number
 		const currentRow = [i + 1];
 		for (let j = 0; j < b.length; j++) {
 			const cost = a[i] === b[j] ? 0 : 1;
-			currentRow.push(Math.min(previousRow[j + 1] + 1, currentRow[j] + 1, previousRow[j] + cost));
+			// Both rows have b.length + 1 entries; the loop keeps j and j + 1 inside them.
+			currentRow.push(Math.min(previousRow[j + 1]! + 1, currentRow[j]! + 1, previousRow[j]! + cost));
 		}
 		previousRow = currentRow;
 	}
-	return previousRow[b.length];
+	return previousRow[b.length]!;
 }
 
 // Splits an IPA string into sound units: a base symbol plus any combining marks, length mark or
@@ -47,7 +48,8 @@ function broadUnit(unit: string): string {
 const finalDevoicing: Record<string, string> = { b: 'p', d: 't', g: 'k', v: 'f', z: 's' };
 function phoneticKey(word: string, language: Language): string[] {
 	const units = ipaUnits(transcribeToIpa(normalize(word), language)).map(broadUnit).filter(Boolean);
-	if (language === 'de' && units.length > 0) units[units.length - 1] = finalDevoicing[units[units.length - 1]] ?? units[units.length - 1];
+	const last = units[units.length - 1];
+	if (language === 'de' && last !== undefined) units[units.length - 1] = finalDevoicing[last] ?? last;
 	// Doubled letters ("Bett", "Sonne") don't lengthen the consonant, so treat a repeat as one sound.
 	return units.filter((unit, index) => unit !== units[index - 1]);
 }
@@ -118,26 +120,27 @@ export function ipaDiff(spokenIpa: string, targetIpa: string): CorrectionSegment
 	const rows = target.length;
 	const cols = heard.length;
 	const dp: number[][] = Array.from({ length: rows + 1 }, () => new Array<number>(cols + 1).fill(0));
-	for (let i = 0; i <= rows; i++) dp[i][0] = i;
-	for (let j = 0; j <= cols; j++) dp[0][j] = j;
+	// The table is (rows + 1) × (cols + 1); every loop and branch below stays inside it.
+	for (let i = 0; i <= rows; i++) dp[i]![0] = i;
+	for (let j = 0; j <= cols; j++) dp[0]![j] = j;
 	for (let i = 1; i <= rows; i++) {
 		for (let j = 1; j <= cols; j++) {
-			dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + (same(target[i - 1], heard[j - 1]) ? 0 : 1));
+			dp[i]![j] = Math.min(dp[i - 1]![j]! + 1, dp[i]![j - 1]! + 1, dp[i - 1]![j - 1]! + (same(target[i - 1]!, heard[j - 1]!) ? 0 : 1));
 		}
 	}
 	const segments: CorrectionSegment[] = [];
 	let i = rows;
 	let j = cols;
 	while (i > 0 || j > 0) {
-		if (i > 0 && j > 0 && dp[i][j] === dp[i - 1][j - 1] + (same(target[i - 1], heard[j - 1]) ? 0 : 1)) {
-			segments.unshift({ char: target[i - 1], status: same(target[i - 1], heard[j - 1]) ? 'match' : 'sub' });
+		if (i > 0 && j > 0 && dp[i]![j] === dp[i - 1]![j - 1]! + (same(target[i - 1]!, heard[j - 1]!) ? 0 : 1)) {
+			segments.unshift({ char: target[i - 1]!, status: same(target[i - 1]!, heard[j - 1]!) ? 'match' : 'sub' });
 			i--;
 			j--;
-		} else if (i > 0 && dp[i][j] === dp[i - 1][j] + 1) {
-			segments.unshift({ char: target[i - 1], status: 'missing' });
+		} else if (i > 0 && dp[i]![j] === dp[i - 1]![j]! + 1) {
+			segments.unshift({ char: target[i - 1]!, status: 'missing' });
 			i--;
 		} else {
-			segments.unshift({ char: heard[j - 1], status: 'extra' });
+			segments.unshift({ char: heard[j - 1]!, status: 'extra' });
 			j--;
 		}
 	}

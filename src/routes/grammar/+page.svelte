@@ -162,10 +162,10 @@
     }
     if (kind === 'adj') {
       if (nounPool.length === 0) return null;
-      const pairedNoun = nounPool[Math.floor(random() * nounPool.length)];
+      const pairedNoun = nounPool[Math.floor(random() * nounPool.length)]!;
       const gender = metadata[pairedNoun]?.gender;
       if (!gender) return null;
-      const adjectiveSpelling = metadata[word]?.spelling ?? word;
+      const adjectiveSpelling = metadata[word!]?.spelling ?? word!;
       const nounSpelling = metadata[pairedNoun]?.spelling ?? pairedNoun;
       return buildAdjectivePrompt(adjectiveSpelling, nounSpelling, gender, random, shuffled);
     }
@@ -177,7 +177,7 @@
     selectedChoice = null;
     shownAt = performance.now();
     selectedOrder = [];
-    if (grammarMode === 'order') orderWords = shuffled(orderSentences[Number(currentKey.split(':')[1]) % orderSentences.length], random);
+    if (grammarMode === 'order') orderWords = shuffled(orderSentences[Number(currentKey.split(':')[1]) % orderSentences.length]!, random);
     prompt = currentKey ? buildPromptForKey(currentKey) : null;
   }
   function chooseOrderWord(index: number) {
@@ -186,7 +186,7 @@
     selectedOrder = next;
     if (next.length === orderWords.length) {
       const answer = next.map((item) => orderWords[item]).join(' ');
-      const target = orderSentences[Number(currentKey.split(':')[1]) % orderSentences.length].join(' ');
+      const target = orderSentences[Number(currentKey.split(':')[1]) % orderSentences.length]!.join(' ');
       answerStatus = answer === target ? 'correct' : 'wrong';
       recordAnswer('grammar', answerStatus === 'correct');
       if (answerStatus === 'correct') { playSuccessSound(settings.sound, 'grammar'); void settings.recordStreak('grammar_correct'); }
@@ -216,7 +216,7 @@
   // Word-based grammar prompts (noun:…, adj:…, verb:…, article:…) feed the story mode's practice list.
   function recordMissedGrammarWord(key: string) {
     const [kind, word] = key.split(':');
-    if (word && ['noun', 'adj', 'verb', 'article'].includes(kind)) recordMissedWord(settings.lang, word);
+    if (kind && word && ['noun', 'adj', 'verb', 'article'].includes(kind)) recordMissedWord(settings.lang, word);
   }
   function continueLearning() {
     position = position >= queue.length - 1 ? 0 : position + 1;

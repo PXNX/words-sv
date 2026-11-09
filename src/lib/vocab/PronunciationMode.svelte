@@ -199,7 +199,7 @@
     correction = null;
     recognitionStalled = false;
     consecutiveErrors = 0;
-    currentWord = candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : '';
+    currentWord = candidates.length > 0 ? (candidates[Math.floor(Math.random() * candidates.length)]!) : '';
     savePronunciationProgress();
   }
   function clearRestartTimer() {
@@ -365,7 +365,7 @@
         const end = Math.max(start + 1, Math.floor((index + 1) * samples.length / BAR_COUNT));
         const level = samples.slice(start, end).reduce((sum, value) => sum + Math.abs(value - 128), 0) / (end - start);
         const target = Math.max(IDLE_LEVEL, Math.min(1.4, IDLE_LEVEL + level / 42));
-        return waveform[index] + (target - waveform[index]) * 0.45;
+        return waveform[index]! + (target - waveform[index]!) * 0.45;
       });
       animationFrame = requestAnimationFrame(updateWaveform);
     };

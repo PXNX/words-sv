@@ -23,8 +23,9 @@ export function cellKey(row: number, col: number) {
   return `${row}:${col}`;
 }
 export function coordinate(key: string) {
+  // Keys are always produced by cellKey(), so both parts parse as numbers.
   const [row, col] = key.split(':').map(Number);
-  return { row, col };
+  return { row: row!, col: col! };
 }
 export function makeRng(seed: number) {
   let value = seed >>> 0;
@@ -37,7 +38,7 @@ export function shuffle<T>(values: T[], rng: () => number) {
   const result = [...values];
   for (let index = result.length - 1; index > 0; index -= 1) {
     const swap = Math.floor(rng() * (index + 1));
-    [result[index], result[swap]] = [result[swap], result[index]];
+    [result[index], result[swap]] = [result[swap]!, result[index]!];
   }
   return result;
 }
@@ -113,7 +114,7 @@ function canPlace(grid: Grid, entry: Placement, crossing: { row: number; col: nu
       [-1, 0],
       [0, 1],
       [0, -1]
-    ]) {
+    ] as const) {
       const neighbourKey = cellKey(point.row + rowDelta, point.col + colDelta);
       const neighbour = grid.cells.get(neighbourKey);
       if (!neighbour || planned.has(neighbourKey)) continue;
@@ -169,7 +170,7 @@ export function randomSeed() {
   if (typeof crypto !== 'undefined' && 'getRandomValues' in crypto) {
     const values = new Uint32Array(1);
     crypto.getRandomValues(values);
-    return values[0];
+    return values[0]!;
   }
   return Math.floor(Math.random() * 2147483647) ^ Date.now();
 }

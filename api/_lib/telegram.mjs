@@ -58,7 +58,10 @@ export function verifyInitData(initData, token = process.env.TELEGRAM_BOT_TOKEN 
  * @param {unknown} payload @returns {{ kind: 'reminders' | 'invite', code: string } | null} */
 export function parseStartPayload(payload) {
 	const match = typeof payload === 'string' ? /^([ri])_([A-Za-z0-9_-]{8,40})$/.exec(payload) : null;
-	return match ? { kind: match[1] === 'r' ? 'reminders' : 'invite', code: match[2] } : null;
+	if (!match) return null;
+	// The regex captures exactly two groups, so both are defined when `match` is non-null.
+	const kind = match[1] === 'r' ? 'reminders' : 'invite';
+	return { kind, code: match[2] };
 }
 
 /** Adds invite embers; like the daily ember, every full set forges a freeze while there is room for
@@ -120,7 +123,9 @@ const INVITE_THANKS = {
 
 /** @param {string} locale @param {number} count */
 export function inviteThanks(locale, count) {
-	return (INVITE_THANKS[locale] ?? INVITE_THANKS.en)(count);
+	// Every supported locale has a thanks message; unknown ones fall back to English.
+	const thanks = (INVITE_THANKS[locale] ?? INVITE_THANKS.en)?.(count);
+	return thanks ?? INVITE_THANKS.en(count);
 }
 
 const TABLES = [

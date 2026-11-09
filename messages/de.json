@@ -534,5 +534,14 @@
   "models_device": "GPU: {gpu} · {f16}-Shader",
   "models_ram": "Arbeitsspeicher {ram}",
   "models_last_reply": "Letzte Antwort: {decode} Tokens/s schreiben · {prefill} Tokens/s lesen · {tokens} Tokens",
-  "models_page_memory": "App-Speicher {memory}"
+  "models_page_memory": "App-Speicher {memory}",
+  "mode_sentence": "Satz composition",
+  "home_sentence": "Schreibe einen Satz auf ein Thema",
+  "sentence_prompt": "Describe a topic and write a short German sentence",
+  "sentence_placeholder": "Type a short German sentence about the topic",
+  "sentence_submit": "Submit",
+  "sentence_reset": "Reset",
+  "sentence_verdict": "Score: {score}% | Verdict: {verdict}",
+  "sentence_score": "Score: {score}%",
+  "group_sentence": "Satzschreiben"
 }

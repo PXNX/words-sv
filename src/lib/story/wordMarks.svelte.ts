@@ -32,7 +32,7 @@ export class WordMarks {
     let elapsed = 0;
     for (const [index, word] of words.entries()) {
       this.#timers.push(window.setTimeout(() => this.#show(beat, offset, word), (elapsed / total) * milliseconds));
-      elapsed += weights[index];
+      elapsed += weights[index]!;
     }
   }
 
@@ -64,7 +64,7 @@ export class WordMarks {
       const index = end === -1 ? words.length - 1 : end;
       if (index !== shown) {
         shown = index;
-        this.#show(beat, offset, words[index]);
+        this.#show(beat, offset, words[index]!);
       }
       if (elapsed < seconds) this.#frame = requestAnimationFrame(tick);
     };

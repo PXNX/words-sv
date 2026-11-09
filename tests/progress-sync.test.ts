@@ -61,7 +61,7 @@ describe('progress sync', () => {
     const result = await call(db, { deviceId: DEVICE, action: 'push', baseRevision: 2, snapshot: { a: '2' } });
     expect(result.statusCode).toBe(409);
     expect(result.body).toMatchObject({ error: 'conflict', revision: 3, snapshot: { a: '1' } });
-    expect(db.snapshots['42'].revision).toBe(3);
+    expect(db.snapshots['42']!.revision).toBe(3);
   });
 
   it('rejects bad requests and oversized snapshots', async () => {

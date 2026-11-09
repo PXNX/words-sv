@@ -44,6 +44,7 @@
   import IconEditNote from '~icons/material-symbols/edit-note-rounded';
   import IconFactCheck from '~icons/material-symbols/fact-check-rounded';
   import IconSort from '~icons/material-symbols/sort-rounded';
+import IconPen from "~icons/material-symbols/pen-rounded";
   import IconSwapHoriz from '~icons/material-symbols/swap-horiz-rounded';
   import IconStory from '~icons/material-symbols/auto-stories-rounded';
   import IconMenuBook from '~icons/material-symbols/menu-book-rounded';
@@ -92,7 +93,10 @@
     pronunciation: m.mode_pronunciation({}, { locale: settings.interfaceLocale }),
     alltag: m.mode_alltag({}, { locale: settings.interfaceLocale }),
     wordQuiz: m.mode_word_quiz({}, { locale: settings.interfaceLocale }),
+    modeSentence: m.mode_sentence({}, { locale: settings.interfaceLocale }),
+    homeSentence: m.home_sentence({}, { locale: settings.interfaceLocale }),
     gamesGroup: m.group_games({}, { locale: settings.interfaceLocale }),
+    sentenceGroup: m.group_sentence({}, { locale: settings.interfaceLocale }),
     vocabularyGroup: m.group_vocabulary({}, { locale: settings.interfaceLocale }),
     grammarGroup: m.group_grammar({}, { locale: settings.interfaceLocale }),
     grammarFill: m.grammar_fill({}, { locale: settings.interfaceLocale }),
@@ -345,6 +349,10 @@
       <a class="card-play {streakClass('reading')}" href="/reading"><span class="home-icon" aria-hidden="true"><IconMenuBook /></span><h2>{labels.reading}</h2><p>{labels.homeReading}</p>{#if readingDue > 0}<span class="home-due-badge">{labels.repeatDue(readingDue)}</span>{/if}<TodayBadge done={modeDone(settings.streak, 'reading')} label={labels.streakModeDone} /></a>
       <a class="card-play {streakClass('listen')}" href="/listen"><span class="home-icon" aria-hidden="true"><IconHeadphones /></span><h2>{labels.listen}</h2><p>{labels.homeListen}</p><TodayBadge done={modeDone(settings.streak, 'listen')} label={labels.streakModeDone} /></a>
       <a class="card-play {streakClass(null)}" href="/conversation"><span class="home-icon" aria-hidden="true"><IconForum /></span><h2>{labels.conversation}</h2><p>{labels.homeConversation}</p></a>
+    </div>
+    <h2 class="home-group-heading">{labels.sentenceGroup}</h2>
+    <div class="home-games">
+      <a class="card-play {streakClass('sentence')}" href="/sentence"><span class="home-icon" aria-hidden="true"><IconPen /></span><h2>{labels.modeSentence}</h2><p>{labels.homeSentence}</p><TodayBadge done={modeDone(settings.streak, 'sentence')} label={labels.streakModeDone} /></a>
     </div>
     <h2 class="home-group-heading">{labels.vocabularyGroup}</h2>
     <div class="home-games">

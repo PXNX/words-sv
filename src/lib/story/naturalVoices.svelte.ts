@@ -177,7 +177,7 @@ export function naturalMegabytes(language: Language, model: NaturalModel = setti
 
 /** Piper's download for a language, whichever engine is chosen (the settings list every engine). */
 export function piperMegabytes(language: Language, model: NaturalModel = settings.naturalModel) {
-  return RUNTIME_MEGABYTES + modelsOf(language, model).reduce((sum, name) => sum + modelMegabytes[name], 0);
+  return RUNTIME_MEGABYTES + modelsOf(language, model).reduce((sum, name) => sum + (modelMegabytes[name] ?? 0), 0);
 }
 
 // The name of the voice that reads the narration, for the story loading screen.
@@ -391,6 +391,8 @@ function castNatural(cast: Speaker[], language: Language): Casting {
     const distance = (candidate: NaturalVoice) => (candidate.f0 ? Math.abs(Math.log(candidate.f0 / target)) : 0);
     const unused = pool.filter((candidate) => !uses.has(candidate)).sort((left, right) => distance(left) - distance(right));
     const voice = unused[0] ?? [...pool].sort((left, right) => (uses.get(left) ?? 0) - (uses.get(right) ?? 0))[0];
+    // A language without any Piper voice in either gender is not castable; skip it.
+    if (!voice) continue;
     uses.set(voice, (uses.get(voice) ?? 0) + 1);
     casting.set(speaker, { voice, shared: false, borrowed });
   }
@@ -437,7 +439,7 @@ export function pcmFromClip(clip: NaturalClip) {
   const channel = clip.buffer.getChannelData(0);
   const samples = new Int16Array(channel.length);
   for (let index = 0; index < channel.length; index += 1) {
-    samples[index] = Math.max(-32768, Math.min(32767, Math.round(channel[index] * 32767)));
+    samples[index] = Math.max(-32768, Math.min(32767, Math.round(channel[index]! * 32767)));
   }
   return { samples, sampleRate: clip.buffer.sampleRate, playbackRate: clip.playbackRate, volume: clip.volume };
 }
@@ -446,7 +448,7 @@ export function pcmFromClip(clip: NaturalClip) {
 export function clipFromPcm(samples: Int16Array, sampleRate: number, playbackRate = 1, volume = 1): NaturalClip {
   const buffer = audio().createBuffer(1, samples.length, sampleRate);
   const channel = buffer.getChannelData(0);
-  for (let index = 0; index < samples.length; index += 1) channel[index] = samples[index] / 0x8000;
+  for (let index = 0; index < samples.length; index += 1) channel[index] = samples[index]! / 0x8000;
   return { buffer, playbackRate, volume };
 }
 
@@ -554,7 +556,7 @@ function castSupertonic(cast: Speaker[]): Map<Speaker, string> {
   for (const speaker of speakers) {
     const gender = profiles[speaker].gender;
     const pool = SUPERTONIC_VOICES[gender];
-    casting.set(speaker, pool[next[gender]++ % pool.length]);
+    casting.set(speaker, pool[next[gender]++ % pool.length]!);
   }
   return casting;
 }
@@ -589,7 +591,7 @@ async function synthesizeVoxCPM(text: string, speaker: Speaker, mood: Mood, prio
 /** Renders clips one after another into a single buffer, with optional silence before and after each. */
 export async function combineNatural(clips: NaturalClip[], gaps: number[], leads: number[] = []): Promise<AudioBuffer> {
   if (!clips.length) throw new Error('no clips');
-  const sampleRate = clips[0].buffer.sampleRate;
+  const sampleRate = clips[0]!.buffer.sampleRate;
   const durations = clips.map((clip) => clip.buffer.duration / clip.playbackRate);
   const total = durations.reduce((sum, duration, index) => sum + (leads[index] ?? 0) + duration + (gaps[index] ?? 0), 0);
   const offline = new OfflineAudioContext(1, Math.max(1, Math.ceil(total * sampleRate)), sampleRate);
@@ -603,7 +605,7 @@ export async function combineNatural(clips: NaturalClip[], gaps: number[], leads
     gain.gain.value = clip.volume;
     source.connect(gain).connect(offline.destination);
     source.start(at);
-    at += durations[index] + (gaps[index] ?? 0);
+    at += durations[index]! + (gaps[index] ?? 0);
   });
   return offline.startRendering();
 }

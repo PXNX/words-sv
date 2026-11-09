@@ -33,7 +33,7 @@ export const falseFriendPairs: FalseFriendPair[] = [
 
 export function buildFalseFriendPrompt(pair: FalseFriendPair, pool: FalseFriendPair[], random: () => number, shuffle: <T>(values: T[], random: () => number) => T[]): GrammarPrompt {
 	const others = pool.filter((candidate) => candidate.word !== pair.word && candidate.correctMeaning !== pair.correctMeaning && candidate.correctMeaning !== pair.trapMeaning);
-	const distractor = others.length > 0 ? others[Math.floor(random() * others.length)].correctMeaning : pair.trapMeaning;
+	const distractor = others.length > 0 ? (others[Math.floor(random() * others.length)]!.correctMeaning) : pair.trapMeaning;
 	const choices = shuffle([...new Set([pair.correctMeaning, pair.trapMeaning, distractor])], random);
 	return { before: '', after: pair.word, correct: pair.correctMeaning, choices, question: 'Was bedeutet dieses Wort wirklich?' };
 }
