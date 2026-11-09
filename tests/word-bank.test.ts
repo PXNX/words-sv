@@ -1,6 +1,11 @@
-import { describe, expect, test } from 'vitest';
+import { beforeAll, describe, expect, test } from 'vitest';
 import { orderWords } from '../src/lib/audio/wordBankWords.js';
-import { articleFor, spokenWord } from '../src/lib/data/vocabulary.js';
+import { articleFor, loadLevel, spokenWord, vocabularyLevels } from '../src/lib/data/vocabulary.js';
+
+// The vocabulary files are fetched lazily at runtime, so the lookups need the level cache warmed.
+beforeAll(async () => {
+	for (const level of vocabularyLevels) await loadLevel('de', level);
+});
 
 describe('orderWords', () => {
 	test('puts the current round first without losing the rest of the level', () => {

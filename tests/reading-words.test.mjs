@@ -1,7 +1,17 @@
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { loadLevel, vocabularyLevels } from '../src/lib/data/vocabulary.ts';
 import { pickReviewSection } from '../src/lib/vocab/learning.ts';
 import { normalizeReviewProgress, prioritizeLearningWords, updateReviewProgress } from '../src/lib/vocab/spacedRepetition.ts';
 import { isReadingArticle, lookupReadingWord, matchReadingCharacter, readingArticleNoun, tokenizeReadingText } from '../src/lib/story/readingWords.ts';
+
+// The vocabulary files are fetched lazily at runtime, so the lookups need the level cache warmed.
+beforeAll(async () => {
+	/** @type {Array<import('../src/lib/data/vocabulary.ts').Language>} */
+	const languages = ['de', 'en'];
+	for (const language of languages) {
+		for (const level of vocabularyLevels) await loadLevel(language, level);
+	}
+});
 
 describe('reading words', () => {
 	/**
@@ -200,9 +210,9 @@ describe('review priority', () => {
 		progress = updateReviewProgress(progress, 'BROT', false, now);
 		expect(progress.BROT).toMatchObject({ repetitions: 0, lapses: 1 });
 		progress = updateReviewProgress(progress, 'BROT', true, now);
-		expect(progress.BROT!.lapses).toBe(0);
+		expect(progress.BROT?.lapses).toBe(0);
 		progress = updateReviewProgress(progress, 'BROT', true, now);
-		expect(progress.BROT!.lapses).toBe(0);
+		expect(progress.BROT?.lapses).toBe(0);
 	});
 
 	it('gives marked words a slot in the next practice section', () => {
