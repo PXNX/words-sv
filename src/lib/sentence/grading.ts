@@ -1,192 +1,197 @@
 /*
- * Self-graded sentence composition: the user writes a short German text on a
- * prompt topic and the model grades it by hand against the target language.
+ * Rule-based writing grader for the composition modes.
  *
- * The grading happens in this module (no worker, no LLM API): the model is
- * a series of weighted rules plus counts of common mistakes (articles, prepositions,
- * verb order, missing/spurious words). A partial score gives each mistake its
- * relative weight; an overall quality verdict comes from a threshold curve so
- * that small errors never collapse a good answer.
+ * Two modes share one scorer:
+ *   - `short` — one or two sentences on a simple topic.
+ *   - `full`  — a whole paragraph (or several) on a richer topic.
+ *
+ * There is no network and no LLM here: the score is built from measurable writing
+ * signals — length, sentence and paragraph structure, sentence-initial capitals,
+ * German noun capitalisation, comma use, vocabulary variety and spacing. Each
+ * factor is returned as a message key so the UI can localise the feedback.
  */
 import type { Language } from '#lib/data/vocabulary.js';
 
-/** One graded result: parts measured in score and weight, plus a verdict. */
+export type GradeMode = 'short' | 'full';
+
+export type GradeFactorKey =
+  | 'lengthTooShort'
+  | 'lengthGood'
+  | 'lengthTooLong'
+  | 'noSentenceEnd'
+  | 'sentenceCountLow'
+  | 'sentenceCountGood'
+  | 'startNotCapitalized'
+  | 'nounsNotCapitalized'
+  | 'commasMissing'
+  | 'varietyLow'
+  | 'varietyGood'
+  | 'paragraphSingle'
+  | 'paragraphGood'
+  | 'spacingOdd'
+  | 'allGood';
+
+export type GradeFactor = {
+  key: GradeFactorKey;
+  /** Actual count (words, sentences, paragraphs, commas …). */
+  value?: number;
+  /** What the mode expected, where it matters. */
+  expected?: number;
+};
+
 export interface GradeResult {
-  /** Zero-to-one fraction of the usable part. */
+  /** Zero-to-one fraction of the achievable score. */
   score: number;
-  /** The targeted weighting of each sub-factor, for fine-grained feedback. */
-  weights: Record<WeightKey, number>;
-  /** Each factor's rating, like "Article wrong" or "Too short". */
-  factors: string[];
-  /** High / ok / low, on the question of whether the whole paragraph was correct. */
+  /** Feedback factors, worst first. */
+  factors: GradeFactor[];
   verdict: 'high' | 'ok' | 'low';
+  words: number;
+  sentences: number;
+  paragraphs: number;
 }
 
-export type WeightKey =
-  | 'article'
-  | 'preposition'
-  | 'adjective'
-  | 'verb'
-  | 'syntax'
-  | 'length'
-  | 'spelling';
-
-// Maximum penalisation per category; capped so a single slip doesn't
-// dominate an otherwise fine paragraph.
-const BASE_WEIGHTS: Record<WeightKey, number> = {
-  article: 0.15,
-  preposition: 0.12,
-  adjective: 0.10,
-  verb: 0.12,
-  syntax: 0.14,
-  length: 0.10,
-  spelling: 0.18
+type Analysis = {
+  words: string[];
+  sentences: string[];
+  paragraphs: string[];
+  commas: number;
+  uniqueRatio: number;
 };
+
+const MIN_WORDS: Record<GradeMode, number> = { short: 5, full: 30 };
+const GOOD_WORDS: Record<GradeMode, number> = { short: 10, full: 60 };
+const MAX_WORDS: Record<GradeMode, number> = { short: 45, full: 220 };
+const MIN_SENTENCES: Record<GradeMode, number> = { short: 1, full: 3 };
+const GOOD_SENTENCES: Record<GradeMode, number> = { short: 2, full: 5 };
+
+function analyze(text: string): Analysis {
+  const trimmed = text.trim();
+  const words = trimmed.split(/\s+/u).filter(Boolean);
+  // Sentence boundaries: terminal punctuation, keeping the mark with the sentence.
+  const sentences = trimmed.match(/[^.!?…]+[.!?…]+["“”»«„'’)]*|[^.!?…]+$/gu)?.map((s) => s.trim()).filter(Boolean) ?? [];
+  // Paragraphs are separated by one or more blank lines.
+  const paragraphs = trimmed.split(/\n\s*\n/u).map((p) => p.trim()).filter(Boolean);
+  const commas = (trimmed.match(/,/gu) ?? []).length;
+  const unique = new Set(words.map((word) => word.toLocaleLowerCase()));
+  const uniqueRatio = words.length ? unique.size / words.length : 0;
+  return { words, sentences, paragraphs, commas, uniqueRatio };
+}
+
+/** Uppercase letter check that also accepts umlauts and sharp s. */
+function startsUppercase(sentence: string): boolean {
+  const first = sentence.replace(/^["“„'’(]+/u, '').charAt(0);
+  return first.toLocaleUpperCase() === first && first.toLocaleLowerCase() !== first;
+}
+
+/** Heuristic: a capitalised word that is not sentence-initial is probably a German noun. */
+function capitalizedNouns(words: string[], sentences: string[]): number {
+  const initial = new Set<string>();
+  for (const sentence of sentences) {
+    const first = sentence.replace(/^["“„'’(]+/u, '').split(/\s+/u)[0];
+    if (first) initial.add(first);
+  }
+  let nouns = 0;
+  for (const word of words) {
+    const bare = word.replace(/[^A-Za-zÄÖÜäöüß]/gu, '');
+    if (bare.length < 2) continue;
+    if (initial.has(word)) continue;
+    if (bare.charAt(0).toLocaleUpperCase() === bare.charAt(0) && bare.charAt(0).toLocaleLowerCase() !== bare.charAt(0)) nouns += 1;
+  }
+  return nouns;
+}
 
 /**
- * Grades `text` against `target` (German) using a rule-based scorer.
- *
- * Grammar factors get their own weight; common mistakes bump the penalty per
- * instance; length and spelling are derived from simple rules. The verdict falls
- * off at the bottom so an almost-right answer isn't locked into "low" just because
- * one article slipped.
+ * Grades `text` in the given mode. `lang` is accepted for symmetry with the rest
+ * of the app; the rules are German-centric because every mode writes German.
  */
-export function grade(text: string, lang: Language, target = 'de'): GradeResult {
-  const factors: string[] = [];
-  // Start with the article penalty so a missing article is always flagged.
-  const detail: Record<WeightKey, number> = { ...BASE_WEIGHTS, article: BASE_WEIGHTS.article + 0.2 };
+export function grade(text: string, lang: Language, mode: GradeMode = 'short'): GradeResult {
+  const { words, sentences, paragraphs, commas, uniqueRatio } = analyze(text);
+  const factors: GradeFactor[] = [];
+  let score = 1;
 
-  const normalized = text.trim().toLowerCase().replace(/\s+/g, ' ');
-  const words = normalized.split(' ').filter((w) => w && /^\p{L}+$/u.test(w));
-
-  // Articles: check the three forms der/die/das used as determiners
-  const articleCount = countArticles(words);
-  if (articleCount > 0) {
-    detail.article += Math.min(articleCount - 1, 3) * 0.1;
-    factors.push(`Wrong article count (found ${articleCount}, expect 1–3)`);
-  } else if (!hasPluralArticle(normalized)) {
-    factors.push('Missing article before the noun');
-    detail.article = BASE_WEIGHTS.article + 0.2;
+  // --- length --------------------------------------------------------------
+  if (words.length < MIN_WORDS[mode]) {
+    const gap = MIN_WORDS[mode] - words.length;
+    score -= Math.min(0.45, 0.08 * gap);
+    factors.push({ key: 'lengthTooShort', value: words.length, expected: MIN_WORDS[mode] });
+  } else if (words.length >= GOOD_WORDS[mode]) {
+    factors.push({ key: 'lengthGood', value: words.length, expected: GOOD_WORDS[mode] });
+  }
+  if (words.length > MAX_WORDS[mode]) {
+    score -= 0.1;
+    factors.push({ key: 'lengthTooLong', value: words.length, expected: MAX_WORDS[mode] });
   }
 
-  // Prepositions: wrong case bumps things up
-  const prepCount = countPrepositions(words);
-  if (prepCount > 0) {
-    detail.preposition += Math.min(prepCount - 1, 2) * 0.08;
-    factors.push(`Wrong preposition count (${prepCount})`);
+  // --- sentences -----------------------------------------------------------
+  if (sentences.length < MIN_SENTENCES[mode]) {
+    score -= 0.25;
+    factors.push({ key: 'sentenceCountLow', value: sentences.length, expected: MIN_SENTENCES[mode] });
+  } else if (sentences.length >= GOOD_SENTENCES[mode]) {
+    factors.push({ key: 'sentenceCountGood', value: sentences.length, expected: GOOD_SENTENCES[mode] });
+  }
+  const last = text.trim();
+  if (last && !/[.!?…]["“”»«„'’)]*$/u.test(last)) {
+    score -= 0.15;
+    factors.push({ key: 'noSentenceEnd' });
   }
 
-  // Verbs: uninflected or missing subjects push the verb weight higher
-  const verbCount = countVerbs(words);
-  if (verbCount > 0) {
-    detail.verb += Math.min(verbCount - 1, 3) * 0.07;
-    factors.push(`Verb issues (need at least 1)`);
+  // --- capitalisation ------------------------------------------------------
+  const starts = sentences.filter((sentence) => sentence.length > 0);
+  const badStarts = starts.filter((sentence) => !startsUppercase(sentence)).length;
+  if (badStarts > 0) {
+    score -= Math.min(0.25, 0.06 * badStarts);
+    factors.push({ key: 'startNotCapitalized', value: badStarts, expected: starts.length });
+  }
+  // German nouns are capitalised; expect roughly one noun per five words.
+  const nouns = capitalizedNouns(words, sentences);
+  const expectedNouns = Math.floor(words.length / 6);
+  if (expectedNouns > 0 && nouns < expectedNouns) {
+    score -= 0.12;
+    factors.push({ key: 'nounsNotCapitalized', value: nouns, expected: expectedNouns });
   }
 
-  // Adjectives in weak position after indefinite articles: the article factor
-  // covers most of this; here we just note any plural adjective without an article
-  // behind it is suspicious
-  const adjCount = countAdjectives(words);
-  if (adjCount > 0 && !hasArticleBeforeNoun(words)) {
-    detail.adjective += 0.05;
-    factors.push('Adjective without definite article');
+  // --- commas and variety --------------------------------------------------
+  const expectedCommas = mode === 'full' ? Math.max(1, Math.floor(sentences.length / 2)) : 0;
+  if (commas < expectedCommas) {
+    score -= 0.08;
+    factors.push({ key: 'commasMissing', value: commas, expected: expectedCommas });
+  }
+  if (words.length >= GOOD_WORDS[mode] && uniqueRatio < 0.45) {
+    score -= 0.1;
+    factors.push({ key: 'varietyLow', value: Math.round(uniqueRatio * 100), expected: 45 });
+  } else if (words.length >= GOOD_WORDS[mode]) {
+    factors.push({ key: 'varietyGood', value: Math.round(uniqueRatio * 100), expected: 45 });
   }
 
-  // Syntax: run-on strings, comma splices, double spaces are flagged as layout issues
-  if (/([^ .]+)(, )([^ .]+)/.test(normalized)) {
-    detail.syntax += 0.1;
-    factors.push('Comma splice');
-  }
-  if (/\s\s/.test(normalized)) {
-    detail.syntax += 0.05;
-    factors.push('Double spaces');
-  }
-  if (!/\s/.test(normalized)) {
-    detail.length = BASE_WEIGHTS.length; // no structure
-    factors.push('No spaces — need sentences');
+  // --- paragraphs (full mode only) ----------------------------------------
+  if (mode === 'full') {
+    if (paragraphs.length < 1) {
+      score -= 0.1;
+    } else if (paragraphs.length === 1) {
+      // A single paragraph is fine, just nudge the learner toward structure.
+      factors.push({ key: 'paragraphSingle', value: 1 });
+    } else {
+      factors.push({ key: 'paragraphGood', value: paragraphs.length });
+    }
   }
 
-  // Length: too short gets capped, but a longer answer needs more structure
-  if (words.length < 6) {
-    detail.length = BASE_WEIGHTS.length + 0.1;
-    factors.push('Too short');
-  } else if (words.length < 15) {
-    detail.length = BASE_WEIGHTS.length;
+  // --- spacing -------------------------------------------------------------
+  // Blank lines between paragraphs are intentional; only stray spaces and tabs count.
+  if (/[^\S\n]{2,}/u.test(text) || /[ \t]+$/mu.test(text) || /^[ \t]+|[ \t]+$/u.test(text)) {
+    score -= 0.05;
+    factors.push({ key: 'spacingOdd' });
   }
 
-  // Spelling: any non-target letter bumps the spelling table, but small
-  // orthographic slips stay minor
-  const badChars = [...normalized].filter((c) => !/[a-zäöüß]/iu.test(c)).length;
-  if (badChars > 0) {
-    detail.spelling += Math.min(badChars, 5) * 0.04;
-    if (badChars > 2) factors.push('Spelling errors');
-  }
+  // An under-length answer cannot count as a very good one, however clean it is.
+  if (words.length < MIN_WORDS[mode]) score = Math.min(score, 0.7);
 
-  const score = clamp(1 - detail.article - detail.preposition - detail.adjective - detail.verb - detail.syntax - detail.length - detail.spelling, 0, 1);
+  score = clamp(score, 0, 1);
+  if (factors.length === 0) factors.push({ key: 'allGood' });
 
-  const verdict = score >= 0.7 ? 'high' : score >= 0.45 ? 'ok' : 'low';
-  return {
-    score,
-    weights: { ...detail },
-    factors,
-    verdict
-  };
+  const verdict: GradeResult['verdict'] = score >= 0.75 ? 'high' : score >= 0.5 ? 'ok' : 'low';
+  return { score, factors, verdict, words: words.length, sentences: sentences.length, paragraphs: paragraphs.length };
 }
 
-function clamp(v: number, lo: number, hi: number): number {
-  return v < lo ? lo : v > hi ? hi : v;
+function clamp(value: number, lo: number, hi: number): number {
+  return value < lo ? lo : value > hi ? hi : value;
 }
-
-// --- word detectors ----------------------------------------------------------
-
-const PREPS = new Set(['in', 'an', 'auf', 'zu', 'für', 'mit', 'von', 'gegen']);
-const ARTICLES_SET = new Set(['der', 'die', 'das', 'ein', 'eine']);
-
-function hasPluralArticle(text: string): boolean {
-  return /\b(der|die|das)\b/.test(text);
-}
-
-function countArticles(words: string[]): number {
-  let found = 0;
-  for (const w of words) {
-    if (ARTICLES_SET.has(w)) found++;
-  }
-  return found;
-}
-
-function hasArticleBeforeNoun(words: string[]): boolean {
-  // A noun should be preceded by an article; check the first word pair.
-  for (let i = 1; i < words.length; i += 1) {
-    if (ARTICLES_SET.has(words[i - 1]!)) return true;
-  }
-  return false;
-}
-
-function countPrepositions(words: string[]): number {
-  return words.reduce((n, w) => PREPS.has(w) ? n + 1 : n, 0);
-}
-
-function countVerbs(words: string[]): number {
-  // Very cheap heuristic: count words that look like verbs (simple heuristic)
-  return words.filter((w) => /[a-zA-Zäöüẞ][a-zA-Zäöü]*$/u.test(w)).length;
-}
-
-function countAdjectives(words: string[]): number {
-  return words.filter((w) => /[a-zA-Zäöü][a-zA-Zäöü]{2}$/u.test(w)).length;
-}
-
-/** Tests the lightweight endpoints available; marks required skills for today. */
-export const isPassableForToday = (lang: Language): { skills: string[]; exists: boolean } => {
-  // Check if sentence grading mode is available (we always have the rule-based scorer)
-  const exists = true;
-  const skills = ['vocab', 'grammar', 'reading', 'story', 'listen', 'sentence'];
-  return { exists, skills };
-};
-
-/** The empty default grade sentinel so callers can keep a blank space. */
-export const emptyGrade = (): GradeResult => ({
-  score: 0,
-  weights: { article: 0, preposition: 0, adjective: 0, verb: 0, syntax: 0, length: 0, spelling: 0 },
-  factors: [],
-  verdict: 'low'
-});

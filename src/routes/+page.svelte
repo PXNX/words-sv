@@ -44,7 +44,8 @@
   import IconEditNote from '~icons/material-symbols/edit-note-rounded';
   import IconFactCheck from '~icons/material-symbols/fact-check-rounded';
   import IconSort from '~icons/material-symbols/sort-rounded';
-import IconPen from "~icons/material-symbols/ink-pen-rounded";
+  import IconPen from '~icons/material-symbols/ink-pen-rounded';
+  import IconArticle from '~icons/material-symbols/article-rounded';
   import IconSwapHoriz from '~icons/material-symbols/swap-horiz-rounded';
   import IconStory from '~icons/material-symbols/auto-stories-rounded';
   import IconMenuBook from '~icons/material-symbols/menu-book-rounded';
@@ -95,6 +96,8 @@ import IconPen from "~icons/material-symbols/ink-pen-rounded";
     wordQuiz: m.mode_word_quiz({}, { locale: settings.interfaceLocale }),
     modeSentence: m.mode_sentence({}, { locale: settings.interfaceLocale }),
     homeSentence: m.home_sentence({}, { locale: settings.interfaceLocale }),
+    modeFullText: m.mode_fullText({}, { locale: settings.interfaceLocale }),
+    homeFullText: m.home_fullText({}, { locale: settings.interfaceLocale }),
     gamesGroup: m.group_games({}, { locale: settings.interfaceLocale }),
     sentenceGroup: m.group_sentence({}, { locale: settings.interfaceLocale }),
     vocabularyGroup: m.group_vocabulary({}, { locale: settings.interfaceLocale }),
@@ -353,6 +356,7 @@ import IconPen from "~icons/material-symbols/ink-pen-rounded";
     <h2 class="home-group-heading">{labels.sentenceGroup}</h2>
     <div class="home-games">
       <a class="card-play {streakClass('sentence')}" href="/sentence"><span class="home-icon" aria-hidden="true"><IconPen /></span><h2>{labels.modeSentence}</h2><p>{labels.homeSentence}</p><TodayBadge done={modeDone(settings.streak, 'sentence')} label={labels.streakModeDone} /></a>
+      <a class="card-play {streakClass('sentence')}" href="/sentence/full"><span class="home-icon" aria-hidden="true"><IconArticle /></span><h2>{labels.modeFullText}</h2><p>{labels.homeFullText}</p><TodayBadge done={modeDone(settings.streak, 'sentence')} label={labels.streakModeDone} /></a>
     </div>
     <h2 class="home-group-heading">{labels.vocabularyGroup}</h2>
     <div class="home-games">

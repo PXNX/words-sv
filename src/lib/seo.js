@@ -73,10 +73,16 @@ export const pages = {
 		icon: 'quiz-rounded'
 	},
 	'/sentence': {
-		title: 'Sätze schreiben',
-		description: 'Schreibe einen kurzen deutschen Text zu einem Thema und lass ihn bewerten.',
+		title: 'Kurzer Satz',
+		description: 'Schreibe ein oder zwei deutsche Sätze zu einem Thema und lass sie bewerten.',
 		kicker: 'Schreiben',
 		icon: 'ink-pen-rounded'
+	},
+	'/sentence/full': {
+		title: 'Ganzer Text',
+		description: 'Schreibe einen ganzen deutschen Text zu einem Thema und lass ihn bewerten.',
+		kicker: 'Schreiben',
+		icon: 'article-rounded'
 	},
 	'/pronunciation': {
 		title: 'Aussprache',

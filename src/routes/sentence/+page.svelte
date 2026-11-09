@@ -2,7 +2,8 @@
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { grade, type GradeResult } from '#lib/sentence/grading.js';
-  import { sentencePrompts, promptIndex } from '#lib/sentence/prompt.js';
+  import { shortPromptForToday } from '#lib/sentence/prompt.js';
+  import GradeResultCard from '#lib/sentence/GradeResultCard.svelte';
 
   const labels = $derived({
     title: m.mode_sentence({}, { locale: settings.interfaceLocale }),
@@ -12,15 +13,18 @@
     reset: m.sentence_reset({}, { locale: settings.interfaceLocale })
   });
 
+  const prompt = shortPromptForToday();
+
   let answer = $state('');
   let result = $state<GradeResult | null>(null);
 
-  const currentPrompt = $derived(sentencePrompts[promptIndex]);
-  const canSubmit = $derived(answer.trim().length >= 3);
+  const wordCount = $derived(answer.trim() ? answer.trim().split(/\s+/u).length : 0);
+  const canSubmit = $derived(wordCount >= 2);
 
   function submit() {
     if (!canSubmit) return;
-    result = grade(answer, settings.lang, currentPrompt?.topic ?? '');
+    result = grade(answer, settings.lang, 'short');
+    void settings.recordStreak('sentence_completed');
   }
 
   function reset() {
@@ -30,59 +34,74 @@
 </script>
 
 <svelte:head>
-  <title>Words-SV - Sentence Composition</title>
-  <meta name="description" content="Write a German sentence on a topic and get it graded." />
-  <meta property="og:title" content="Words-SV - Sentence Composition" />
-  <meta property="og:description" content="Write a German sentence on a topic and get it graded." />
+  <title>{labels.title} · WordCircle</title>
+  <meta name="description" content="Write one or two German sentences on a topic and get them graded." />
+  <meta property="og:title" content="WordCircle – Short sentence" />
+  <meta property="og:description" content="Write one or two German sentences on a topic and get them graded." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://words-sv.vercel.app/sentence" />
   <meta property="og:image" content="https://words-sv.vercel.app/pwa-512x512.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Words-SV - Sentence Composition" />
-  <meta name="twitter:description" content="Write a German sentence on a topic and get it graded." />
+  <meta name="twitter:title" content="WordCircle – Short sentence" />
+  <meta name="twitter:description" content="Write one or two German sentences on a topic and get them graded." />
   <meta name="twitter:image" content="https://words-sv.vercel.app/pwa-512x512.png" />
 </svelte:head>
 
-<div class="mx-auto max-w-2xl px-4 py-12">
-  <h1 class="font-bold text-3xl">{labels.title}</h1>
-  <p class="mt-2 text-base-content/70">{labels.intro}</p>
+<section class="writing-view">
+  <header class="writing-header">
+    <p class="writing-kicker">{labels.title}</p>
+    <h1>{labels.title}</h1>
+    <p class="writing-intro">{labels.intro}</p>
+  </header>
 
-  <div class="card mt-6 bg-base-200">
-    <div class="card-body">
-      <div class="text-base font-semibold">{currentPrompt?.topic ?? ''}</div>
-      {#if currentPrompt?.hint}
-        <div class="mt-2 text-sm text-base-content/70">{currentPrompt.hint}</div>
-      {/if}
-    </div>
+  <div class="writing-prompt">
+    <p class="writing-prompt-topic">{prompt.topic}</p>
+    {#if prompt.hint}
+      <p class="writing-prompt-hint">{prompt.hint}</p>
+    {/if}
   </div>
 
   <textarea
-    class="textarea mt-4 w-full"
+    class="writing-area"
     placeholder={labels.placeholder}
     bind:value={answer}
-    rows={6}
+    rows={4}
+    lang={settings.lang}
   ></textarea>
 
-  <div class="mt-4 flex gap-2">
-    <button class="btn btn-primary" onclick={submit} disabled={!canSubmit}>{labels.submit}</button>
+  <div class="writing-meta">
+    <span>{m.sentence_words({ count: String(wordCount) }, { locale: settings.interfaceLocale })}</span>
+  </div>
+
+  <div class="writing-actions">
+    <button class="btn-play btn-play-ink" onclick={submit} disabled={!canSubmit}>{labels.submit}</button>
     {#if result}
-      <button class="btn btn-ghost" onclick={reset}>{labels.reset}</button>
+      <button class="btn-play btn-play-soft" onclick={reset}>{labels.reset}</button>
     {/if}
   </div>
 
   {#if result}
-    <div class="card mt-6">
-      <div class="card-body">
-        <div class="text-2xl font-bold">
-          {m.sentence_score({ score: Math.round(result.score * 100) }, { locale: settings.interfaceLocale })}
-        </div>
-        <div class="text-sm font-semibold mt-1">{result.verdict}</div>
-        <ul class="mt-2 list-disc list-inside text-sm">
-          {#each result.factors as factor}
-            <li>{factor}</li>
-          {/each}
-        </ul>
-      </div>
-    </div>
+    <GradeResultCard {result} />
   {/if}
-</div>
+</section>
+
+<style>
+  .writing-view { display: flex; flex-direction: column; gap: 0.8rem; width: min(100%, 44rem); margin: 0 auto; padding: clamp(0.8rem, 3vw, 1.4rem); }
+  .writing-header { display: grid; gap: 0.2rem; text-align: center; }
+  .writing-kicker { margin: 0; color: #a45e38; font-family: 'DM Sans', sans-serif; font-size: 0.58rem; font-weight: 900; letter-spacing: 0.16em; text-transform: uppercase; }
+  .writing-header h1 { margin: 0; color: #172a45; font-family: 'DM Serif Display', serif; font-size: clamp(1.6rem, 7vw, 2.3rem); font-weight: 400; letter-spacing: -0.03em; line-height: 1.02; }
+  .writing-intro { max-width: 34rem; margin: 0 auto; color: #596477; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 700; line-height: 1.45; }
+  .writing-prompt { display: grid; gap: 0.25rem; padding: 0.8rem 0.9rem; border: 1px solid rgba(23, 42, 69, 0.16); border-radius: 0.9rem; background: #fbf7ee; }
+  .writing-prompt-topic { margin: 0; color: #172a45; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 800; line-height: 1.4; }
+  .writing-prompt-hint { margin: 0; color: #596477; font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 600; line-height: 1.4; }
+  .writing-area { width: 100%; min-height: 7rem; padding: 0.8rem 0.9rem; border: 1px solid rgba(23, 42, 69, 0.2); border-radius: 0.9rem; background: #fffdf7; color: #243449; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; line-height: 1.7; resize: vertical; }
+  .writing-area:focus-visible { outline: 2px solid #e6a527; outline-offset: 2px; }
+  .writing-meta { display: flex; justify-content: flex-end; color: #7b8494; font-family: 'DM Sans', sans-serif; font-size: 0.64rem; font-weight: 700; }
+  .writing-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  :global(html.dark) .writing-header h1 { color: #fffdf7; }
+  :global(html.dark) .writing-intro { color: rgba(255, 253, 247, 0.68); }
+  :global(html.dark) .writing-prompt { border-color: rgba(255, 253, 247, 0.24); background: rgba(255, 253, 247, 0.06); }
+  :global(html.dark) .writing-prompt-topic { color: #fffdf7; }
+  :global(html.dark) .writing-prompt-hint { color: rgba(255, 253, 247, 0.7); }
+  :global(html.dark) .writing-area { border-color: rgba(255, 253, 247, 0.24); background: #152b47; color: rgba(255, 253, 247, 0.9); }
+</style>
