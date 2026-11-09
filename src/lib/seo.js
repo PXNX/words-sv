@@ -72,6 +72,12 @@ export const pages = {
 		kicker: 'Vokabeln',
 		icon: 'quiz-rounded'
 	},
+	'/sentence': {
+		title: 'Sätze schreiben',
+		description: 'Schreibe einen kurzen deutschen Text zu einem Thema und lass ihn bewerten.',
+		kicker: 'Schreiben',
+		icon: 'ink-pen-rounded'
+	},
 	'/pronunciation': {
 		title: 'Aussprache',
 		description: 'Höre Aufnahmen und übe die Aussprache neuer Wörter.',
