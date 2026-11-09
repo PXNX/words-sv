@@ -543,5 +543,6 @@
   "sentence_reset": "Reset",
   "sentence_verdict": "Score: {score}% | Verdict: {verdict}",
   "sentence_score": "Score: {score}%",
-  "group_sentence": "Satzschreiben"
+  "group_sentence": "Satzschreiben",
+  "reading_word_speak": "Wort anhören"
 }

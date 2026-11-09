@@ -543,5 +543,6 @@
   "sentence_reset": "Reset",
   "sentence_verdict": "Score: {score}% | Verdict: {verdict}",
   "sentence_score": "Score: {score}%",
-  "group_sentence": "Sentence composition"
+  "group_sentence": "Sentence composition",
+  "reading_word_speak": "Hear the word"
 }

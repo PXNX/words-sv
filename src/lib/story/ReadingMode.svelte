@@ -30,6 +30,9 @@ import { page } from '$app/state';
   import IconChevronLeft from '~icons/material-symbols/chevron-left-rounded';
   import IconChevronRight from '~icons/material-symbols/chevron-right-rounded';
   import IconQuestion from '~icons/material-symbols/question-mark-rounded';
+  import IconVolume from '~icons/material-symbols/volume-up-rounded';
+  import { playWordClip } from '#lib/audio/wordBank.svelte.js';
+  import { naturalSupported } from '#lib/story/naturalVoices.svelte.js';
 
   const PROGRESS_KEY = 'wordcircle-reading-progress-v1';
   type SavedReading = {
@@ -69,6 +72,7 @@ import { page } from '$app/state';
     noDefinition: m.reading_word_no_definition({}, { locale: settings.interfaceLocale }),
     close: m.reading_word_close({}, { locale: settings.interfaceLocale }),
     explain: m.explain({}, { locale: settings.interfaceLocale }),
+    speak: m.reading_word_speak({}, { locale: settings.interfaceLocale }),
     nominative: m.reading_word_case_nominative({}, { locale: settings.interfaceLocale }),
     genitive: m.reading_word_case_genitive({}, { locale: settings.interfaceLocale }),
     accusative: m.reading_word_case_accusative({}, { locale: settings.interfaceLocale }),
@@ -100,6 +104,9 @@ import { page } from '$app/state';
   let markedWords = $state<Set<string>>(new Set());
   let closeButton = $state<HTMLButtonElement | null>(null);
   let wordTrigger: HTMLButtonElement | null = null;
+  let speaking = $state(false);
+  let speechSupported = $state(false);
+  let voices = $state<SpeechSynthesisVoice[]>([]);
 
   const current = $derived(catalog.find((item) => item.id === currentId) ?? catalog[0] ?? null);
   const paragraphs = $derived(current ? readingParagraphs(current.blocks, current.language, name) : []);
@@ -214,6 +221,38 @@ import { page } from '$app/state';
     markedWords = new Set(readMissedWords(settings.lang).map((entry) => entry.word));
   }
 
+  function speechLocale() {
+    return ({ de: 'de-DE', en: 'en-US', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', pt: 'pt-PT', uk: 'uk-UA' } as Record<string, string>)[settings.lang] ?? settings.lang;
+  }
+
+  // Reads the tapped word aloud in the word sheet: the natural clip when the learner chose the
+  // neural voices, otherwise the browser's own speech synthesis. Same fallback as the vocab mode.
+  async function speakWord(word: string) {
+    if (!word || speaking) return;
+    speaking = true;
+    try {
+      if (settings.clipVoices && naturalSupported()) {
+        const playback = await playWordClip(settings.lang, word);
+        if (playback) {
+          await playback.done;
+          return;
+        }
+      }
+      if (!speechSupported) return;
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = speechLocale();
+      utterance.rate = 0.84;
+      utterance.voice = voices.find((voice) => voice.lang.toLowerCase().startsWith(settings.lang)) ?? voices.find((voice) => voice.default) ?? null;
+      await new Promise<void>((resolve) => {
+        utterance.onend = () => resolve();
+        utterance.onerror = () => resolve();
+        window.speechSynthesis.speak(utterance);
+      });
+    } finally {
+      speaking = false;
+    }
+  }
+
   function handleKeydown(event: KeyboardEvent) {
     if (event.key === 'Escape' && sheet) closeSheet();
   }
@@ -259,6 +298,12 @@ import { page } from '$app/state';
     // A "continue" link from the home screen opens one specific text.
     const requested = page.url.searchParams.get('text');
     if (requested && catalog.some((item) => item.id === requested)) currentId = requested;
+    speechSupported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+    if (speechSupported) {
+      const refreshVoices = () => (voices = window.speechSynthesis.getVoices());
+      refreshVoices();
+      window.speechSynthesis.addEventListener('voiceschanged', refreshVoices);
+    }
     ready = true;
   });
 
@@ -439,9 +484,10 @@ import { page } from '$app/state';
           <StoryCharacter id={sheet.id} still />
         </div>
       {:else}
+        {@const info = sheet.info}
         <section class="word-sheet-block">
           <h3>{labels.meaning}</h3>
-          <p>{sheet.info.definition || labels.noDefinition}</p>
+          <p>{info.definition || labels.noDefinition}</p>
         </section>
 
         {#if sheet.info.cases.length}
@@ -462,6 +508,9 @@ import { page } from '$app/state';
         {/if}
 
         <div class="word-sheet-actions">
+          <button type="button" class="btn-play btn-play-soft word-sheet-speak" onclick={() => void speakWord(info.spelling)} disabled={speaking} aria-label={labels.speak}>
+            <IconVolume aria-hidden="true" /><span>{labels.speak}</span>
+          </button>
           <button type="button" class="btn-play btn-play-soft word-sheet-mark" class:active={markedWords.has(sheet.info.word)} onclick={toggleMark}>
             {markedWords.has(sheet.info.word) ? labels.unmark : labels.mark}
           </button>
@@ -554,6 +603,9 @@ import { page } from '$app/state';
   .word-sheet-cases dt small { padding:.12rem .34rem;border-radius:999px;background:#e6a527;color:#172a45;font-size:.5rem;font-weight:900;letter-spacing:.01em; }
   .word-sheet-cases dd { margin:0;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:900; }
   .word-sheet-actions { display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;padding-top:.15rem; }
+  .word-sheet-speak { display:inline-flex;align-items:center;justify-content:center;gap:.3rem;flex:0 1 auto;min-height:2.4rem;font-size:.66rem; }
+  .word-sheet-speak :global(svg) { width:1rem;height:1rem; }
+  .word-sheet-speak[disabled] { opacity:.55;cursor:progress; }
   .word-sheet-mark { flex:1 1 12rem;min-height:2.4rem;font-size:.66rem; }
   .word-sheet-mark.active { border-color:rgba(201,96,78,.5);background:rgba(217,123,108,.22); }
   .word-sheet-link { flex:1 1 10rem;padding:.5rem .6rem;border-radius:.65rem;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:900;text-align:center;text-decoration:underline;text-underline-offset:.16em; }
