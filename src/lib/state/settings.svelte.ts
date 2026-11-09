@@ -244,7 +244,8 @@ class SettingsStore {
       (event === 'reading_completed' && this.streak.readingCompleted) ||
       (event === 'story_completed' && this.streak.storyCompleted) ||
       (event === 'listen_completed' && this.streak.listenCompleted) ||
-      (event === 'hangman_completed' && this.streak.hangmanCompleted)
+      (event === 'hangman_completed' && this.streak.hangmanCompleted) ||
+      (event === 'sentence_completed' && this.streak.sentenceCompleted)
     )) return;
     // Counters drop one timestamp per answer, so the weekly recap can measure real time spent.
     // Reading, story and listening completions are logged where their ids are known.
