@@ -39,7 +39,7 @@ export function lifetimeTotals(events: readonly ActivityEvent[]): LifetimeTotals
   if (events.length === 0) return { minutes: 0, daysPractised: 0, sessions: 0 };
   const times = events.map((event) => event.at).sort((a, b) => a - b);
   let sessions = 1;
-  for (let index = 1; index < times.length; index += 1) if (times[index] - times[index - 1] > SESSION_GAP_MS) sessions += 1;
+  for (let index = 1; index < times.length; index += 1) if (times[index]! - times[index - 1]! > SESSION_GAP_MS) sessions += 1;
   return { minutes: activeMinutes(events as ActivityEvent[]), daysPractised: new Set(times.map(dayStart)).size, sessions };
 }
 

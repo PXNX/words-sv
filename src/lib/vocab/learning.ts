@@ -6,7 +6,7 @@ export function pickLearningSection(words: string[], random: () => number, size 
   const shuffled = [...normalized];
   for (let index = shuffled.length - 1; index > 0; index -= 1) {
     const swap = Math.floor(random() * (index + 1));
-    [shuffled[index], shuffled[swap]] = [shuffled[swap], shuffled[index]];
+    [shuffled[index], shuffled[swap]] = [shuffled[swap]!, shuffled[index]!];
   }
   return shuffled.slice(0, Math.min(size, shuffled.length));
 }
@@ -15,7 +15,7 @@ function shuffled<T>(values: T[], random: () => number): T[] {
   const result = [...values];
   for (let index = result.length - 1; index > 0; index -= 1) {
     const swap = Math.floor(random() * (index + 1));
-    [result[index], result[swap]] = [result[swap], result[index]];
+    [result[index], result[swap]] = [result[swap]!, result[index]!];
   }
   return result;
 }

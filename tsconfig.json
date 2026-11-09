@@ -4,7 +4,8 @@
     "sourceMap": true,
     "strict": true,
     "noImplicitOverride": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "noUncheckedIndexedAccess": true
   },
   "include": [
     "src",

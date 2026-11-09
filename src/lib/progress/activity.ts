@@ -101,8 +101,8 @@ export function activeMinutes(events: ActivityEvent[], since = 0, until = Number
 		.sort((left, right) => left - right);
 	if (times.length === 0) return 0;
 	let total = 0;
-	let sessionStart = times[0];
-	let previous = times[0];
+	let sessionStart = times[0]!;
+	let previous = times[0]!;
 	for (const at of times.slice(1)) {
 		if (at - previous > SESSION_GAP_MS) {
 			total += Math.max(1, Math.round((previous - sessionStart) / 60_000));

@@ -328,13 +328,14 @@ function fill(template: string, values: Record<string, string>) {
   return template.replace(/\{(word|definition)\}/g, (match, key: string) => values[key] ?? match);
 }
 function pick<T>(items: T[]): T {
-  return items[Math.floor(Math.random() * items.length)];
+  // Callers pass the template and word lists, which are never empty.
+  return items[Math.floor(Math.random() * items.length)]!;
 }
 function shuffled<T>(items: T[]): T[] {
   const copy = [...items];
   for (let index = copy.length - 1; index > 0; index -= 1) {
     const swap = Math.floor(Math.random() * (index + 1));
-    [copy[index], copy[swap]] = [copy[swap], copy[index]];
+    [copy[index], copy[swap]] = [copy[swap]!, copy[index]!];
   }
   return copy;
 }
@@ -387,7 +388,7 @@ function distractors(language: Language, level: VocabularyLevel, word: string, n
   const type = metadata[word]?.type;
   const pool = vocabularyLevels.slice(0, vocabularyLevels.indexOf(level) + 2).flatMap((candidateLevel) => wordPools[language]?.[candidateLevel] ?? []);
   const usable = pool.filter((candidate) => candidate !== word && metadata[candidate] && (!needsDefinition || (definitions[candidate] && definitions[candidate] !== definitions[word])));
-  const close = usable.filter((candidate) => metadata[candidate].type === type && Math.abs(candidate.length - word.length) <= 2);
+  const close = usable.filter((candidate) => metadata[candidate]!.type === type && Math.abs(candidate.length - word.length) <= 2);
   const chosen = shuffled(close.length >= 2 ? close : usable).slice(0, 2);
   return [...new Set(chosen)];
 }
@@ -399,7 +400,9 @@ function distractors(language: Language, level: VocabularyLevel, word: string, n
 // for a noun's article instead; a word without an explanation can only be heard and picked out.
 // Explaining and the article question belong to Mia and Tom; a guest asks straight out.
 function exerciseFor(language: Language, level: VocabularyLevel, word: string, text: Templates, speaker: 'mia' | 'tom' | Guest, direction: 'definition' | 'word', articleChance = 0.2): StoryBeat[] {
+  // `word` comes from focusWords(), which only keeps words the metadata knows.
   const metadata = wordMetadata[language][word];
+  if (!metadata) throw new Error(`generated story: no metadata for ${language}:${word}`);
   const spelling = metadata.spelling;
   const definition = wordDefinitions[language]?.[word];
   const article = metadata.type === 'noun' && metadata.article && ARTICLES.includes(metadata.article) ? metadata.article : null;
@@ -413,14 +416,14 @@ function exerciseFor(language: Language, level: VocabularyLevel, word: string, t
     const ask: StoryBeat[] = host ? [{ kind: 'line', speaker: 'tom', word: spelling, text: same(fill(pick(text.defAsks), { word: spelling })) }] : [];
     return [
       ...ask,
-      { kind: 'question', focus: word, asker: host ? 'tom' : speaker, word: spelling, prompt: same(fill(text.defQuestion, { word: spelling })), options: [definition!, ...others.map((other) => wordDefinitions[language][other])].map(same) },
+      { kind: 'question', focus: word, asker: host ? 'tom' : speaker, word: spelling, prompt: same(fill(text.defQuestion, { word: spelling })), options: [definition!, ...others.map((other) => wordDefinitions[language][other]!)].map(same) },
       { kind: 'line', speaker: 'mia', text: same(fill(pick(text.defAnswers), { word: spelling, definition: definition! })) }
     ];
   }
   if (kind === 'word') {
     const others = distractors(language, level, word, false);
     return [
-      { kind: 'question', focus: word, asker: speaker, word: spelling, prompt: same(fill(text.wordQuestion, { definition: definition! })), options: [spelling, ...others.map((other) => wordMetadata[language][other].spelling)].map(same) },
+      { kind: 'question', focus: word, asker: speaker, word: spelling, prompt: same(fill(text.wordQuestion, { definition: definition! })), options: [spelling, ...others.map((other) => wordMetadata[language][other]!.spelling)].map(same) },
       { kind: 'line', speaker, text: same(fill(pick(text.confirms), { word: spelling })) }
     ];
   }
@@ -435,23 +438,26 @@ function exerciseFor(language: Language, level: VocabularyLevel, word: string, t
   const others = distractors(language, level, word, false);
   return [
     { kind: 'line', speaker, word: spelling, text: same(fill(pick(text.hearAsks), { word: spelling })) },
-    { kind: 'question', focus: word, asker: speaker, word: spelling, prompt: same(text.hearQuestion), options: [spelling, ...others.map((other) => wordMetadata[language][other].spelling)].map(same) }
+    { kind: 'question', focus: word, asker: speaker, word: spelling, prompt: same(text.hearQuestion), options: [spelling, ...others.map((other) => wordMetadata[language][other]!.spelling)].map(same) }
   ];
 }
 
 // The word practised just before an event, asked for again: what it means, among the meanings of two
 // other words, or (without an explanation) the word itself among two other words of the evening.
 function recallFor(language: Language, level: VocabularyLevel, word: string, words: string[], text: Templates, asker: 'mia' | 'tom'): StoryBeat {
-  const spelling = wordMetadata[language][word].spelling;
+  // Like exerciseFor(), recallFor() only sees words with metadata.
+  const metadata = wordMetadata[language][word];
+  if (!metadata) throw new Error(`generated story: no metadata for ${language}:${word}`);
+  const spelling = metadata.spelling;
   const definitions = wordDefinitions[language] ?? {};
   if (definitions[word] && text.retryMeaningQuestion) {
     const explained = words.filter((other) => other !== word && definitions[other] && definitions[other] !== definitions[word]);
     const others = explained.length >= 2 ? shuffled(explained).slice(0, 2) : distractors(language, level, word, true);
-    if (others.length === 2) return { kind: 'question', focus: word, asker, word: spelling, prompt: same(fill(text.retryMeaningQuestion, { word: spelling })), options: [definitions[word], ...others.map((other) => definitions[other])].map(same) };
+    if (others.length === 2) return { kind: 'question', focus: word, asker, word: spelling, prompt: same(fill(text.retryMeaningQuestion, { word: spelling })), options: [definitions[word]!, ...others.map((other) => definitions[other]!)].map(same) };
   }
   const evening = words.filter((other) => other !== word);
   const others = evening.length >= 2 ? shuffled(evening).slice(0, 2) : distractors(language, level, word, false);
-  return { kind: 'question', focus: word, asker, word: spelling, prompt: same(text.retryQuestion!), options: [spelling, ...others.map((other) => wordMetadata[language][other].spelling)].map(same) };
+  return { kind: 'question', focus: word, asker, word: spelling, prompt: same(text.retryQuestion!), options: [spelling, ...others.map((other) => wordMetadata[language][other]!.spelling)].map(same) };
 }
 
 function stepBeats(steps: Step[], recall?: (asker: 'mia' | 'tom') => StoryBeat): StoryBeat[] {

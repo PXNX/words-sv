@@ -49,7 +49,8 @@
 
   let recordedCompletion = '';
   function start() {
-    target = candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : '';
+    // `candidates` always has at least one word.
+    target = candidates.length > 0 ? (candidates[Math.floor(Math.random() * candidates.length)]!) : '';
     guessed = [];
     notice = null;
     recordedCompletion = '';

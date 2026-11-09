@@ -71,11 +71,11 @@ export function sampleWeighted(words: readonly string[], weights: ReadonlyMap<st
     const total = pool.reduce((sum, entry) => sum + entry.weight, 0);
     let pick = random() * total;
     let index = 0;
-    while (index < pool.length - 1 && pick >= pool[index].weight) {
-      pick -= pool[index].weight;
+    while (index < pool.length - 1 && pick >= pool[index]!.weight) {
+      pick -= pool[index]!.weight;
       index += 1;
     }
-    chosen.push(pool[index].word);
+    chosen.push(pool[index]!.word);
     pool.splice(index, 1);
   }
   return chosen;

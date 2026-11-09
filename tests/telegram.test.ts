@@ -127,7 +127,7 @@ describe('telegram start bridge', () => {
 		// 5 + 5 × 2 = 15 embers: two freezes forged, the last ember stays.
 		expect(db.devices['device-a']).toMatchObject({ embers: 1, freezes: 2, invite_freezes: 2 });
 		expect(sent).toHaveLength(5);
-		expect(sent[0][0]).toBe(11);
+		expect(sent[0]![0]).toBe(11);
 		expect((await start(db, { payload: 'i_inviteCodeA1', userId: 21, chatId: 21 })).body.result).toBe('known');
 		expect((await start(db, { payload: 'i_inviteCodeA1', userId: 11, chatId: 11 })).body.result).toBe('own_invite');
 		expect((await start(db, { payload: 'i_unknownCode1', userId: 30, chatId: 30 })).body.result).toBe('unknown');
@@ -149,8 +149,8 @@ describe('telegram streak reminders', () => {
 		};
 		expect((await run('2026-10-27T20:30:00Z')).telegram).toEqual({ attempted: 0, delivered: 0 });
 		expect((await run('2026-10-27T22:30:00Z')).telegram).toEqual({ attempted: 1, delivered: 1 });
-		expect(sent[0][0]).toBe(11);
-		expect(sent[0][1]).toContain('91 minutes remain');
+		expect(sent[0]![0]).toBe(11);
+		expect(sent[0]![1]).toContain('91 minutes remain');
 		expect((await run('2026-10-27T23:30:00Z')).telegram).toEqual({ attempted: 0, delivered: 0 });
 	});
 });

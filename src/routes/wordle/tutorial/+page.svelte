@@ -30,8 +30,8 @@
 
 {#snippet row(index: number, focus: Mark)}
   <div class="demo-row">
-    {#each [...rows[index].letters] as letter, position (position)}
-      {@const mark = rows[index].marks[position]}
+    {#each [...rows[index]!.letters] as letter, position (position)}
+      {@const mark = rows[index]!.marks[position]!}
       <span class="demo-tile" data-mark={mark} class:dim={mark !== focus} style:--i={position}>{letter}</span>
     {/each}
   </div>

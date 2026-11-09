@@ -98,7 +98,9 @@ export function mergeJson(local: Json, remote: Json): Json {
       return 'bestStreak' in newer ? { ...newer, bestStreak: best } : newer;
     }
     const merged: Record<string, Json> = { ...remote, ...local };
-    for (const key of Object.keys(local)) if (key in remote) merged[key] = mergeJson(local[key], remote[key]);
+    // Each local key exists on both devices: if it isn't in `remote` it is purely local, so the
+    // result already has the right value — no undefined access.
+    for (const key of Object.keys(local)) if (key in remote) merged[key] = mergeJson(local[key]!, remote[key]!);
     return merged;
   }
   if (typeof local === 'number' && typeof remote === 'number') return Math.max(local, remote);
@@ -127,7 +129,7 @@ export function mergeSnapshots(local: ProgressSnapshot, remote: ProgressSnapshot
   if (!remote) return { ...local };
   const merged: ProgressSnapshot = {};
   for (const [key, value] of Object.entries(remote)) if (isSyncedKey(key) && typeof value === 'string') merged[key] = value;
-  for (const [key, value] of Object.entries(local)) merged[key] = key in merged ? mergeEntry(key, value, merged[key]) : value;
+  for (const [key, value] of Object.entries(local)) merged[key] = key in merged ? mergeEntry(key, value, merged[key]!) : value;
   return merged;
 }
 

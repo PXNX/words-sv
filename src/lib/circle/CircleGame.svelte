@@ -140,7 +140,7 @@
       : buildRound(withDefinitionsOnly(selectedPool(wordPools[settings.lang], settings.vocabularyLevel, settings.includeLowerVocabulary)), randomSeed(), [], settings.allowBackwardWords, hintableBaseWords, untrack(() => showDefinitions) ? 3 : 0);
 
   let roundNumber = $state(initialGame?.roundNumber ?? 1);
-  let recentBaseWords = $state<string[]>(initialGame ? [...new Set([initialGame.words[0], ...initialRecentBases])] : initialRecentBases);
+  let recentBaseWords = $state<string[]>(initialGame ? [...new Set([initialGame.words[0]!, ...initialRecentBases])] : initialRecentBases);
   let currentRound = $state<Round>(initialRound);
   let typedWord = $state('');
   let selectedPath = $state<number[]>([]);
@@ -274,7 +274,7 @@
   }
   function showIdleHint() {
     const candidates = currentRound.words.filter((word) => !solvedSet.has(word) && Boolean(wordDefinitions[settings.lang][word]));
-    const target = candidates.length > 0 ? candidates[Math.floor(randomSeed() % candidates.length)] : null;
+    const target = candidates.length > 0 ? candidates[Math.floor(randomSeed() % candidates.length)]! : null;
     if (!target) return;
     revealedHintWord = target;
     hintUsed = true;
@@ -286,7 +286,7 @@
     if (!cell) return;
     const candidates = cell.words.filter((word) => Boolean(wordDefinitions[settings.lang][word]));
     if (candidates.length === 0) return;
-    revealedHintWord = candidates.find((word) => !solvedSet.has(word)) ?? candidates[0];
+    revealedHintWord = candidates.find((word) => !solvedSet.has(word)) ?? candidates[0]!;
     idleHintReady = false;
     scheduleIdleHint(true);
   }
@@ -294,7 +294,7 @@
     if (resetCount) roundNumber = 0;
     const nextRound = buildRound(withDefinitionsOnly(selectedPool(wordPools[settings.lang], settings.vocabularyLevel, settings.includeLowerVocabulary)), randomSeed(), recentBaseWords, settings.allowBackwardWords, hintableBaseWords, showDefinitions ? 3 : 0);
     currentRound = nextRound;
-    recentBaseWords = [nextRound.words[0], ...recentBaseWords.filter((word) => word !== nextRound.words[0])].slice(0, 24);
+    recentBaseWords = [nextRound.words[0]!, ...recentBaseWords.filter((word) => word !== nextRound.words[0])].slice(0, 24);
     roundNumber += 1;
     typedWord = '';
     selectedPath = [];

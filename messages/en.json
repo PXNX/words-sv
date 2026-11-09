@@ -534,5 +534,14 @@
   "models_device": "GPU: {gpu} · {f16} shaders",
   "models_ram": "RAM {ram}",
   "models_last_reply": "Last reply: {decode} tokens/s writing · {prefill} tokens/s reading · {tokens} tokens",
-  "models_page_memory": "App memory {memory}"
+  "models_page_memory": "App memory {memory}",
+  "mode_sentence": "Sentence composition",
+  "home_sentence": "Write a German sentence on a topic",
+  "sentence_prompt": "Describe a topic and write a short German sentence",
+  "sentence_placeholder": "Type a short German sentence about the topic",
+  "sentence_submit": "Submit",
+  "sentence_reset": "Reset",
+  "sentence_verdict": "Score: {score}% | Verdict: {verdict}",
+  "sentence_score": "Score: {score}%",
+  "group_sentence": "Sentence composition"
 }

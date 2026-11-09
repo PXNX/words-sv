@@ -66,11 +66,12 @@ export function pickPartner(language: Language, level: VocabularyLevel, includeL
     story.cast.filter((id) => canTalk(id, language) && id !== previous).map((id) => ({ story, id }))
   );
   if (!options.length) return null;
-  const { story: raw, id } = options[Math.floor(random() * options.length)];
+  // options is non-empty thanks to the guard above.
+  const { story: raw, id } = options[Math.floor(random() * options.length)]!;
   const story = withDetails(raw, random);
   return {
     id,
-    name: characterNames[id][language],
+    name: characterNames[id]![language],
     background: backgrounds[id]!,
     scene: story.scene,
     storyTitle: story.title[language],

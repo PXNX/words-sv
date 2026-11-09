@@ -98,8 +98,15 @@ const zeros = (dims: number[]) => f32(new Float32Array(dims.reduce((a, b) => a *
 /** The last row of a [1, S, D] tensor, as [1, D]. */
 function lastRow(tensor: Tensor): Tensor {
   const [, rows, width] = tensor.dims;
+  if (rows === undefined || width === undefined) throw new Error('VoxCPM: expected a [1, S, D] tensor');
   const data = tensor.data as Float32Array;
   return f32(data.slice((rows - 1) * width, rows * width), [1, width]);
+}
+
+/** An output the graph always produces; a missing one means the model file is not the expected one. */
+function output(tensor: Tensor | undefined, name: string): Tensor {
+  if (!tensor) throw new Error(`VoxCPM: the model returned no ${name}`);
+  return tensor;
 }
 
 // Mulberry32: a tiny seeded generator, so a seed always draws the same noise.
@@ -133,10 +140,11 @@ function cachedLm(session: InferenceSession) {
     const outputs = await session.run({ inputs_embeds: inputsEmbeds, ...past });
     const next: Record<string, Tensor> = {};
     for (const name of session.outputNames) {
-      if (name.startsWith('present')) next[name.replace(/^present/, 'past_key_values')] = outputs[name];
+      const value = outputs[name];
+      if (name.startsWith('present') && value) next[name.replace(/^present/, 'past_key_values')] = value;
     }
     past = next;
-    return outputs.hidden;
+    return output(outputs.hidden, 'hidden');
   };
 }
 
@@ -156,12 +164,12 @@ async function speak(text: string, seed: number, id: number): Promise<Float32Arr
   const random = seeded(seed);
 
   // 2. The text, through both language models.
-  const { embeds } = await sessions.text_embed_q4.run({ ids: new ort.Tensor('int64', BigInt64Array.from(ids.map(BigInt)), [1, ids.length]) });
-  let raw = await baseLm(embeds);
+  const textRun = await sessions.text_embed_q4.run({ ids: new ort.Tensor('int64', BigInt64Array.from(ids.map(BigInt)), [1, ids.length]) });
+  let raw = await baseLm(output(textRun.embeds, 'embeds'));
   let bridged = await sessions.bridge_q4.run({ hidden: raw, feat_embed: zeros([1, ids.length, HIDDEN]), audio_mask: zeros([1, ids.length]) });
-  let lmHidden = lastRow(bridged.lm_hidden);
-  let resHidden = lastRow(await residualLm(bridged.residual_input));
-  let stopLogits = bridged.stop_logits;
+  let lmHidden = lastRow(output(bridged.lm_hidden, 'lm_hidden'));
+  let resHidden = lastRow(await residualLm(output(bridged.residual_input, 'residual_input')));
+  let stopLogits = output(bridged.stop_logits, 'stop_logits');
   let prev = zeros([1, PATCH, FEAT]);
 
   // 3. One patch of four latent frames at a time.
@@ -169,27 +177,28 @@ async function speak(text: string, seed: number, id: number): Promise<Float32Arr
   for (let index = 0; index < maxPatches; index += 1) {
     let x = gaussian(random, FEAT * PATCH);
     for (let step = 1; step <= 9; step += 1) {
-      const { v } = await sessions.dit_step_q4.run({
+      const ditRun = await sessions.dit_step_q4.run({
         x: f32(x, [1, FEAT, PATCH]), lm_hidden: lmHidden, residual_hidden: resHidden, cond: prev,
-        t: f32(new Float32Array([SCHEDULE[step]]), [1]), cfg_value: f32(new Float32Array([2]), [])
+        t: f32(new Float32Array([SCHEDULE[step]!]), [1]), cfg_value: f32(new Float32Array([2]), [])
       });
-      const velocity = v.data as Float32Array;
-      const dt = SCHEDULE[step] - SCHEDULE[step + 1];
-      x = x.map((value, at) => value - dt * velocity[at]);
+      const velocity = output(ditRun.v, 'v').data as Float32Array;
+      const dt = SCHEDULE[step]! - SCHEDULE[step + 1]!;
+      x = x.map((value, at) => value - dt * velocity[at]!);
     }
     columns.push(x);
     // patch = xᵀ: [64, 4] → [4, 64].
     const patch = new Float32Array(PATCH * FEAT);
-    for (let feature = 0; feature < FEAT; feature += 1) for (let frame = 0; frame < PATCH; frame += 1) patch[frame * FEAT + feature] = x[feature * PATCH + frame];
+    for (let feature = 0; feature < FEAT; feature += 1) for (let frame = 0; frame < PATCH; frame += 1) patch[frame * FEAT + feature] = x[feature * PATCH + frame]!;
     const stop = (stopLogits.data as Float32Array).slice(-2);
-    if (index > 2 && stop[1] > stop[0]) break;
+    if (index > 2 && (stop[1] ?? 0) > (stop[0] ?? 0)) break;
     const patchTensor = f32(patch, [1, PATCH, FEAT]);
-    const { embeds: featEmbed } = await sessions.feat_encoder_q4.run({ feats: f32(patch, [1, 1, PATCH, FEAT]) });
+    const featRun = await sessions.feat_encoder_q4.run({ feats: f32(patch, [1, 1, PATCH, FEAT]) });
+    const featEmbed = output(featRun.embeds, 'embeds');
     raw = await baseLm(featEmbed);
     bridged = await sessions.bridge_q4.run({ hidden: raw, feat_embed: featEmbed, audio_mask: f32(new Float32Array([1]), [1, 1]) });
-    lmHidden = lastRow(bridged.lm_hidden);
-    resHidden = lastRow(await residualLm(bridged.residual_input));
-    stopLogits = bridged.stop_logits;
+    lmHidden = lastRow(output(bridged.lm_hidden, 'lm_hidden'));
+    resHidden = lastRow(await residualLm(output(bridged.residual_input, 'residual_input')));
+    stopLogits = output(bridged.stop_logits, 'stop_logits');
     prev = patchTensor;
   }
 
@@ -197,10 +206,10 @@ async function speak(text: string, seed: number, id: number): Promise<Float32Arr
   const frames = columns.length * PATCH;
   const latents = new Float32Array(FEAT * frames);
   columns.forEach((x, patchIndex) => {
-    for (let feature = 0; feature < FEAT; feature += 1) for (let frame = 0; frame < PATCH; frame += 1) latents[feature * frames + patchIndex * PATCH + frame] = x[feature * PATCH + frame];
+    for (let feature = 0; feature < FEAT; feature += 1) for (let frame = 0; frame < PATCH; frame += 1) latents[feature * frames + patchIndex * PATCH + frame] = x[feature * PATCH + frame]!;
   });
-  const { audio } = await sessions.vae_decoder_q4c8.run({ latents: f32(latents, [1, FEAT, frames]) });
-  return (audio.data as Float32Array).slice();
+  const vaeRun = await sessions.vae_decoder_q4c8.run({ latents: f32(latents, [1, FEAT, frames]) });
+  return (output(vaeRun.audio, 'audio').data as Float32Array).slice();
 }
 
 self.onmessage = async ({ data }: MessageEvent<VoxRequest>) => {

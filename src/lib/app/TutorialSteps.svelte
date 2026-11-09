@@ -28,7 +28,8 @@
   const locale = $derived({ locale: settings.interfaceLocale });
   let index = $state(0);
   const last = $derived(index === steps.length - 1);
-  const step = $derived(steps[index]);
+  // The index is clamped to [0, steps.length), so the step always exists.
+const step = $derived(steps[index]!);
 
   function go(next: number) {
     index = Math.max(0, Math.min(steps.length - 1, next));

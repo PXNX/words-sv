@@ -24,13 +24,13 @@
 </script>
 
 {#if running.length}
-  <a class="background-jobs" href={running[0].route} aria-live="polite">
+  <a class="background-jobs" href={running[0]!.route} aria-live="polite">
     <span class="background-jobs-ring" style:--fill={`${percent}%`} aria-hidden="true"></span>
-    <span>{m.background_working({ label: running[0].label, percent: String(percent) }, locale)}</span>
+    <span>{m.background_working({ label: running[0]!.label, percent: String(percent) }, locale)}</span>
   </a>
 {:else if ready.length}
   <div class="background-jobs ready" role="status">
-    <a href={ready[0].route} onclick={dismissFinishedJobs}>{m.background_ready({ label: ready[0].label }, locale)}</a>
+    <a href={ready[0]!.route} onclick={dismissFinishedJobs}>{m.background_ready({ label: ready[0]!.label }, locale)}</a>
     <button type="button" onclick={dismissFinishedJobs} aria-label={m.cosmetic_close({}, locale)}><IconClose aria-hidden="true" /></button>
   </div>
 {/if}

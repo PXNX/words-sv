@@ -34,7 +34,8 @@ export const defaultAvatar: Avatar = { skin: '#f0c9a8', face: 'round', eyes: 'do
 // Rolls only offer what the learner already has: basic choices and rewards they have unlocked.
 function pick<T>(items: readonly T[], part: AvatarPart, unlocked: readonly RewardId[]): T {
   const open = items.filter((item) => !lockedIn(part, String(item), unlocked));
-  return open[Math.floor(Math.random() * open.length)];
+  // `open` is never empty: every part has at least one unlocked choice for a fresh roll.
+  return open[Math.floor(Math.random() * open.length)]!;
 }
 // A random character; extras stay rare enough that most rolls are a plain face.
 export function randomAvatar(unlocked: readonly RewardId[] = []): Avatar {

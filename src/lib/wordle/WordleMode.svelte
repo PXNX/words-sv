@@ -88,11 +88,12 @@
   }
 
   function describeRow(entry: Entry): string {
-    return `${entry.word}: ${Array.from(entry.word).map((letter, index) => `${letter} ${markLabels[entry.marks[index]]}`).join(', ')}`;
+    return `${entry.word}: ${Array.from(entry.word).map((letter, index) => `${letter} ${markLabels[entry.marks[index]!]}`).join(', ')}`;
   }
 
   function start() {
-    target = candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : '';
+    // `candidates` always has at least one word.
+target = candidates.length > 0 ? (candidates[Math.floor(Math.random() * candidates.length)]!) : '';
     guess = '';
     entries = [];
     notice = '';
@@ -164,7 +165,7 @@
     guess = '';
     if (marks.some((mark) => mark === 'correct')) onGreen();
     notice = '';
-    const row = describeRow(entries[entries.length - 1]);
+    const row = describeRow(entries[entries.length - 1]!);
     if (normalized === target) {
       announcement = `${row}. ${labels.win} ${solvedLabel}`;
       onWin(entries.length);

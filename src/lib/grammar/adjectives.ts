@@ -75,7 +75,8 @@ export function buildAdjectivePrompt(
   const article = articleTable(articleKind)[grammarCase][gender];
   const endingsTable = articleKind === 'definite' ? weakEndings : mixedEndings;
   const correctEnding = endingsTable[grammarCase][gender];
-  const template = templatesByCase[grammarCase][Math.floor(random() * templatesByCase[grammarCase].length)];
+  // Every grammar case has at least one template; callers pick a random one within its row.
+  const template = templatesByCase[grammarCase]![Math.floor(random() * templatesByCase[grammarCase]!.length)]!;
   const before = template.leadIn === '' ? `${capitalize(article)} ` : `${template.leadIn}${article} `;
   const after = `${noun}${template.tail}`;
   const endings = uniqueEndingsAcrossGenders(endingsTable);

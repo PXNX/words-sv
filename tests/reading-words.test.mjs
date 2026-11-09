@@ -200,9 +200,9 @@ describe('review priority', () => {
 		progress = updateReviewProgress(progress, 'BROT', false, now);
 		expect(progress.BROT).toMatchObject({ repetitions: 0, lapses: 1 });
 		progress = updateReviewProgress(progress, 'BROT', true, now);
-		expect(progress.BROT.lapses).toBe(0);
+		expect(progress.BROT!.lapses).toBe(0);
 		progress = updateReviewProgress(progress, 'BROT', true, now);
-		expect(progress.BROT.lapses).toBe(0);
+		expect(progress.BROT!.lapses).toBe(0);
 	});
 
 	it('gives marked words a slot in the next practice section', () => {

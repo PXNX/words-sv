@@ -221,7 +221,7 @@ import { page } from '$app/state';
   function choose(option: string, index: number) {
     const item = current;
     if (!item || currentSolved[index]) return;
-    const question = item.questions[index];
+    const question = item.questions[index]!;
     if (isCorrectAnswer(question, option)) {
       const nextSolved: Record<number, true> = { ...currentSolved, [index]: true };
       solved = { ...solved, [item.id]: nextSolved };

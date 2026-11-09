@@ -34,6 +34,8 @@ export const REMINDER_LOCALES = ['de', 'en', 'fa', 'pt', 'ru', 'ar', 'uk', 'hi',
  * @property {boolean | number} [hangmanCompleted]
  * @property {number} [alltag_correct]
  * @property {number} [alltagCorrect]
+ * @property {boolean | number} [sentence_completed]
+ * @property {boolean | number} [sentenceCompleted]
  * @property {boolean | number} [current_qualified]
  * @property {boolean | number} [qualified]
  * @property {number} [streak_count]
@@ -67,6 +69,7 @@ export const REMINDER_LOCALES = ['de', 'en', 'fa', 'pt', 'ru', 'ar', 'uk', 'hi',
  * @property {number} pronunciationAttempts
  * @property {boolean} hangmanCompleted
  * @property {number} alltagCorrect
+ * @property {boolean} sentenceCompleted
  * @property {boolean} qualified
  * @property {number} streakCount
  * @property {string | null} lastQualifiedDay
@@ -173,6 +176,7 @@ export function stateForToday(stored, timeZone, now = new Date()) {
 			pronunciationAttempts: numberField(stored?.pronunciation_attempts ?? stored?.pronunciationAttempts),
 			hangmanCompleted: Boolean(stored?.hangman_completed ?? stored?.hangmanCompleted),
 			alltagCorrect: numberField(stored?.alltag_correct ?? stored?.alltagCorrect),
+			sentenceCompleted: Boolean(stored?.sentence_completed ?? stored?.sentenceCompleted),
 			qualified: Boolean(stored?.current_qualified ?? stored?.qualified),
 			streakCount: numberField(stored?.streak_count ?? stored?.streakCount),
 			lastQualifiedDay: stored?.last_qualified_day ?? stored?.lastQualifiedDay ?? null,
@@ -203,6 +207,7 @@ export function stateForToday(stored, timeZone, now = new Date()) {
 		pronunciationAttempts: 0,
 		hangmanCompleted: false,
 		alltagCorrect: 0,
+		sentenceCompleted: false,
 		qualified: false,
 		streakCount,
 		lastQualifiedDay,
@@ -227,7 +232,8 @@ export function qualifiesToday(state) {
 		state.listenCompleted ||
 		state.pronunciationAttempts >= PRONUNCIATION_GOAL ||
 		state.hangmanCompleted ||
-		state.alltagCorrect >= ALLTAG_GOAL
+		state.alltagCorrect >= ALLTAG_GOAL ||
+		state.sentenceCompleted
 	);
 }
 
@@ -272,6 +278,7 @@ export function applyStreakEvent(stored, timeZone, event, now = new Date()) {
 	if (event === 'pronunciation_practised') state.pronunciationAttempts += 1;
 	if (event === 'hangman_completed') state.hangmanCompleted = true;
 	if (event === 'alltag_correct') state.alltagCorrect += 1;
+	if (event === 'sentence_completed') state.sentenceCompleted = true;
 	if (event === 'reward_collected') return collectReward(state);
 	return settleQualification(state);
 }
@@ -331,5 +338,7 @@ const NOTIFICATIONS = {
 
 /** @param {string} type @param {string} locale @param {number} minutesRemaining */
 export function reminderNotification(type, locale, minutesRemaining) {
-	return (NOTIFICATIONS[normalizeReminderLocale(locale)] ?? NOTIFICATIONS.en)(type, minutesRemaining);
+	// Every supported locale has a notification set; unknown ones fall back to English.
+	const set = NOTIFICATIONS[normalizeReminderLocale(locale)] ?? NOTIFICATIONS.en;
+	return set(type, minutesRemaining);
 }

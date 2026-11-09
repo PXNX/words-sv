@@ -25,7 +25,7 @@ export function shuffled<T>(values: T[], random: () => number): T[] {
   const result = [...values];
   for (let index = result.length - 1; index > 0; index -= 1) {
     const swap = Math.floor(random() * (index + 1));
-    [result[index], result[swap]] = [result[swap], result[index]];
+    [result[index], result[swap]] = [result[swap]!, result[index]!];
   }
   return result;
 }

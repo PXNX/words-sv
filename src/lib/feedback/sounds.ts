@@ -118,7 +118,7 @@ type Keyframes = [seconds: number, value: number][];
 type VoiceShape = { length: number; pitch: Keyframes; formants: [Keyframes, Keyframes, Keyframes]; mouth: Keyframes; loudness: Keyframes; breath: number; vibrato?: number; vibratoRate?: number; growl?: number };
 
 function glide(param: AudioParam, start: number, frames: Keyframes, scale = 1) {
-  param.setValueAtTime(frames[0][1] * scale, start + frames[0][0]);
+  param.setValueAtTime(frames[0]![1] * scale, start + frames[0]![0]);
   for (const [at, value] of frames.slice(1)) param.linearRampToValueAtTime(value * scale, start + at);
 }
 
@@ -180,7 +180,7 @@ function animalVoice(context: AudioContext, start: number, shape: VoiceShape) {
     const formant = filter(context, 'bandpass', 1000, [5, 7, 9][index]);
     glide(formant.frequency, start, frames, formantScale);
     const weight = context.createGain();
-    weight.gain.value = [1, 0.7, 0.35][index];
+    weight.gain.value = [1, 0.7, 0.35][index]!;
     voiced.connect(formant);
     breathGain.connect(formant);
     formant.connect(weight).connect(mouth);
@@ -363,7 +363,7 @@ function bark(context: AudioContext, start: number) {
 // basis for hissing, waves and engines.
 function noiseSwell(context: AudioContext, start: number, length: number, type: BiquadFilterType, cutoff: Keyframes, loudness: Keyframes, q = 0.7) {
   const source = noise(context, length);
-  const shape = filter(context, type, cutoff[0][1], q);
+  const shape = filter(context, type, cutoff[0]![1], q);
   glide(shape.frequency, start, cutoff);
   const gain = context.createGain();
   glide(gain.gain, start, loudness);
