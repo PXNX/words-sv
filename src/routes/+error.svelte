@@ -1,7 +1,8 @@
 <script lang="ts">
+  import { page } from '$app/state';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
 
-  let { status = 404 }: { status?: number } = $props();
+  const status = $derived(page.status ?? 404);
 </script>
 
 <svelte:head><title>{status} · WordCircle</title></svelte:head>
