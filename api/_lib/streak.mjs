@@ -340,5 +340,6 @@ const NOTIFICATIONS = {
 export function reminderNotification(type, locale, minutesRemaining) {
 	// Every supported locale has a notification set; unknown ones fall back to English.
 	const set = NOTIFICATIONS[normalizeReminderLocale(locale)] ?? NOTIFICATIONS.en;
+	if (!set) return { title: 'Keep your WordCircle streak', body: `Only ${minutesRemaining} minutes remain to qualify today.` };
 	return set(type, minutesRemaining);
 }

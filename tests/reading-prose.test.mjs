@@ -43,7 +43,7 @@ describe('reading prose', () => {
 
 	it('folds headings and dialogue into one continuous flow', () => {
 		const [item] = readingCatalog('de', 'a1', true, 'Alex');
-	// readingCatalog returns non-empty array for valid language/level.
+		if (!item) throw new Error('no a1 reading text');
 		const paragraphs = readingParagraphs(item.blocks, item.language, 'Alex');
 		expect(paragraphs.length).toBeGreaterThan(0);
 		expect(paragraphs.some((paragraph) => paragraph.includes('„'))).toBe(true);

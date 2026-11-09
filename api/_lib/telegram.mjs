@@ -61,7 +61,7 @@ export function parseStartPayload(payload) {
 	if (!match) return null;
 	// The regex captures exactly two groups, so both are defined when `match` is non-null.
 	const kind = match[1] === 'r' ? 'reminders' : 'invite';
-	return { kind, code: match[2] };
+	return { kind, code: match[2] ?? '' };
 }
 
 /** Adds invite embers; like the daily ember, every full set forges a freeze while there is room for
@@ -124,8 +124,8 @@ const INVITE_THANKS = {
 /** @param {string} locale @param {number} count */
 export function inviteThanks(locale, count) {
 	// Every supported locale has a thanks message; unknown ones fall back to English.
-	const thanks = (INVITE_THANKS[locale] ?? INVITE_THANKS.en)?.(count);
-	return thanks ?? INVITE_THANKS.en(count);
+	const chosen = INVITE_THANKS[locale] ?? INVITE_THANKS.en;
+	return chosen ? chosen(count) : { title: 'A friend joined WordCircle', body: `Thanks for inviting them! You got ${count} embers.` };
 }
 
 const TABLES = [
