@@ -60,17 +60,18 @@ function openDatabase(): Promise<IDBDatabase | null> {
 }
 
 function withStore<T>(storeName: string, mode: IDBTransactionMode, run: (store: IDBObjectStore) => IDBRequest<T>): Promise<T | null> {
-  return new Promise(async (resolve) => {
-    const database = await openDatabase();
-    if (!database) return resolve(null);
-    const transaction = database.transaction(storeName, mode);
-    let result: T | null = null;
-    const request = run(transaction.objectStore(storeName));
-    request.onsuccess = () => { result = request.result ?? null; };
-    request.onerror = () => { result = null; };
-    transaction.oncomplete = () => { database.close(); resolve(result); };
-    transaction.onerror = () => { database.close(); resolve(null); };
-    transaction.onabort = () => { database.close(); resolve(null); };
+  return openDatabase().then((database) => {
+    if (!database) return null;
+    return new Promise<T | null>((resolve) => {
+      const transaction = database.transaction(storeName, mode);
+      let result: T | null = null;
+      const request = run(transaction.objectStore(storeName));
+      request.onsuccess = () => { result = request.result ?? null; };
+      request.onerror = () => { result = null; };
+      transaction.oncomplete = () => { database.close(); resolve(result); };
+      transaction.onerror = () => { database.close(); resolve(null); };
+      transaction.onabort = () => { database.close(); resolve(null); };
+    });
   });
 }
 

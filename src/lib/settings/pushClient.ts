@@ -54,7 +54,7 @@ export async function enablePush() {
 	await publishReminderState(readStreak(), reminderExtras(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary, settings.firstName || 'du'));
 	await setReminderEnabled(true);
 
-	let server = false;
+	let server: boolean;
 	try {
 		await subscribeServer();
 		server = true;
