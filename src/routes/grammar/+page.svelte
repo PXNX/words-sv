@@ -16,6 +16,7 @@
   import { buildAdjectivePrompt, isEligibleAdjective } from '#lib/grammar/adjectives.js';
   import { buildVerbPrompt, buildVerbPropertyPrompt, verbConjugations } from '#lib/grammar/verbs.js';
   import { buildFalseFriendPrompt, falseFriendsFor } from '#lib/grammar/falseFriends.js';
+  import { isSentenceLanguage, matchOrder, orderExercisePool, shuffleTiles } from '#lib/grammar/sentenceBuilder.js';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import { gradeFromAnswer } from '#lib/review/scheduler.js';
   import { insertLearningRepeat } from '#lib/vocab/learning.js';
@@ -30,7 +31,11 @@
     chooseArticle: m.grammar_choose_article({}, { locale: settings.interfaceLocale }),
     continue: m.continue({}, { locale: settings.interfaceLocale }),
     correct: m.learning_correct({}, { locale: settings.interfaceLocale }),
-    tryAgain: m.learning_try_again({}, { locale: settings.interfaceLocale })
+    tryAgain: m.learning_try_again({}, { locale: settings.interfaceLocale }),
+    orderTitle: m.grammar_order({}, { locale: settings.interfaceLocale }),
+    orderPrompt: m.grammar_order_prompt({}, { locale: settings.interfaceLocale }),
+    orderReset: m.grammar_order_reset({}, { locale: settings.interfaceLocale }),
+    orderUnsupported: m.grammar_order_unsupported({}, { locale: settings.interfaceLocale })
   });
 
   // German gets the full case/adjective/verb engine below (`cases.ts`, `adjectives.ts`,
@@ -48,22 +53,15 @@
     : 'fill'
   );
   const modeTitle = $derived(
-    grammarMode === 'order' ? 'Satzbau'
+    grammarMode === 'order' ? labels.orderTitle
     : grammarMode === 'determine' ? 'Bestimmung'
     : grammarMode === 'falsefriends' ? 'Falsche Freunde'
     : 'Lücken füllen'
   );
-  const orderSentences = [
-    ['Ich', 'lerne', 'Deutsch', 'jeden', 'Tag'],
-    ['Heute', 'geht', 'sie', 'ins', 'Kino'],
-    ['Wir', 'kaufen', 'frisches', 'Brot'],
-    ['Der', 'Hund', 'schläft', 'im', 'Garten'],
-    ['Morgen', 'fährt', 'er', 'nach', 'Berlin'],
-    ['Ich', 'habe', 'einen', 'Kaffee', 'bestellt'],
-    ['Die', 'Kinder', 'spielen', 'im', 'Park'],
-    ['Am', 'Abend', 'liest', 'sie', 'ein', 'Buch']
-  ];
   const metadata = $derived(wordMetadata[settings.lang]);
+  // Word order works for German and English: generated sentences plus hand-checked ones for the
+  // level (`sentenceBuilder.ts`). The vocabulary's genders veto any lexicon noun they disagree with.
+  const orderPool = $derived(grammarMode === 'order' && isSentenceLanguage(settings.lang) ? orderExercisePool(settings.lang, settings.vocabularyLevel, { metadata }) : []);
   const articleUniverse = $derived(grammarArticles[settings.lang] ?? []);
   const words = $derived(wordPools[settings.lang][settings.vocabularyLevel]);
 
@@ -75,10 +73,10 @@
   const eligibleKeys = $derived(
     grammarMode === 'falsefriends'
       ? falseFriendPairs.map((pair) => `ff:${pair.word}`)
+      : grammarMode === 'order'
+      ? orderPool.map((exercise) => `order:${exercise.id}`)
       : isGerman
-      ? grammarMode === 'order'
-        ? orderSentences.map((_, index) => `order:${index}`)
-        : grammarMode === 'determine'
+      ? grammarMode === 'determine'
         ? [...nounPool.map((word) => `noun:${word}`), ...verbPool.map((word) => `verb:${word}`)]
         : [...nounPool.map((word) => `noun:${word}`), ...adjectivePool.map((word) => `adj:${word}`), ...verbPool.map((word) => `verb:${word}`)]
       : legacyArticleWords.map((word) => `article:${word}`)
@@ -86,6 +84,8 @@
   const isSupported = $derived(
     grammarMode === 'falsefriends'
       ? falseFriendPairs.length > 0
+      : grammarMode === 'order'
+      ? orderPool.length > 0
       : isGerman
       ? nounPool.length + adjectivePool.length + verbPool.length > 0
       : articleUniverse.length > 0
@@ -111,8 +111,11 @@
   let reviewProgress = $state<Record<string, { repetitions: number; dueAt: number }>>({});
   let orderWords = $state<string[]>([]);
   let selectedOrder = $state<number[]>([]);
+  // The correct sentence the learner built, with its punctuation, once it matches.
+  let orderSolution = $state<string | null>(null);
 
   const currentKey = $derived(queue[position] ?? '');
+  const currentOrderExercise = $derived(currentKey.startsWith('order:') ? orderPool.find((exercise) => exercise.id === currentKey.slice('order:'.length)) ?? null : null);
 
   function random() { return Math.random(); }
   function persistProgress() {
@@ -143,7 +146,7 @@
     const separator = key.indexOf(':');
     const kind = key.slice(0, separator);
     const word = key.slice(separator + 1);
-    if (kind === 'order') return { before: '', after: '', correct: '', choices: [], question: 'Bringe die Wörter in die richtige Reihenfolge.' };
+    if (kind === 'order') return currentOrderExercise ? { before: '', after: '', correct: currentOrderExercise.answers[0]!, choices: [], question: labels.orderPrompt } : null;
     if (kind === 'ff') {
       const pair = falseFriendPairs.find((candidate) => candidate.word === word);
       return pair ? buildFalseFriendPrompt(pair, falseFriendPairs, random, shuffled, m.false_friends_question({}, { locale: settings.interfaceLocale })) : null;
@@ -182,17 +185,18 @@
     selectedChoice = null;
     shownAt = performance.now();
     selectedOrder = [];
-    if (grammarMode === 'order') orderWords = shuffled(orderSentences[Number(currentKey.split(':')[1]) % orderSentences.length]!, random);
+    orderSolution = null;
+    orderWords = grammarMode === 'order' && currentOrderExercise ? shuffleTiles(currentOrderExercise, shuffled, random) : [];
     prompt = currentKey ? buildPromptForKey(currentKey) : null;
   }
   function chooseOrderWord(index: number) {
     if (answerStatus || selectedOrder.includes(index)) return;
     const next = [...selectedOrder, index];
     selectedOrder = next;
-    if (next.length === orderWords.length) {
-      const answer = next.map((item) => orderWords[item]).join(' ');
-      const target = orderSentences[Number(currentKey.split(':')[1]) % orderSentences.length]!.join(' ');
-      answerStatus = answer === target ? 'correct' : 'wrong';
+    if (next.length === orderWords.length && currentOrderExercise) {
+      // Any correct order counts, e.g. "Heute kauft sie …" as well as "Sie kauft heute …".
+      orderSolution = matchOrder(currentOrderExercise, next.map((item) => orderWords[item]!));
+      answerStatus = orderSolution ? 'correct' : 'wrong';
       recordAnswer('grammar', answerStatus === 'correct');
       if (answerStatus === 'correct') { playSuccessSound(settings.sound, 'grammar'); void settings.recordStreak('grammar_correct'); }
       else { playErrorSound(settings.sound, 'grammar'); requeue(currentKey); }
@@ -202,7 +206,15 @@
       recordReview(settings.lang, currentKey, answerStatus === 'correct', 'grammar', Date.now(), grade);
     }
   }
-  function resetOrder() { selectedOrder = []; answerStatus = null; }
+  function resetOrder() { selectedOrder = []; answerStatus = null; orderSolution = null; }
+  // The words picked so far, read as the start of a sentence, with the target's closing mark so a question shows as one.
+  function orderPreview() {
+    if (orderSolution) return orderSolution;
+    if (selectedOrder.length === 0) return '…';
+    const text = selectedOrder.map((index) => orderWords[index]).join(' ');
+    const mark = selectedOrder.length === orderWords.length ? (currentOrderExercise?.answers[0]?.slice(-1) ?? '') : ' …';
+    return `${text.charAt(0).toLocaleUpperCase()}${text.slice(1)}${mark}`;
+  }
   function chooseAnswer(event: MouseEvent) {
     if (answerStatus || !prompt) return;
     const chosen = (event.currentTarget as HTMLButtonElement).value;
@@ -264,23 +276,23 @@
     <Companion id="tom" mood={answerStatus === 'correct' ? 'happy' : answerStatus === 'wrong' ? 'sad' : 'curious'} size="sm" />
   </header>
   {#if !isSupported}
-    <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{grammarMode === 'falsefriends' ? 'Falsche Freunde sind aktuell nur für Deutsch verfügbar.' : labels.unsupported}</div>
+    <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{grammarMode === 'falsefriends' ? 'Falsche Freunde sind aktuell nur für Deutsch verfügbar.' : grammarMode === 'order' ? labels.orderUnsupported : labels.unsupported}</div>
   {:else if !prompt}
     <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{labels.unavailable}</div>
   {:else}
     {#if grammarMode === 'order'}
       {#key position}<article class="learn-card-in w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center" class:learn-correct={answerStatus === 'correct'} class:learn-wrong={answerStatus === 'wrong'}>
-        <p class="m-0 text-accent text-[.62rem] font-black tracking-[.08em] uppercase">Bringe die Wörter in die richtige Reihenfolge.</p>
-        <p class="m-0 min-h-[2.2rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.35rem,6vw,2.1rem)] leading-[1.3]">{selectedOrder.length > 0 ? selectedOrder.map((index) => orderWords[index]).join(' ') : '…'}</p>
+        <p class="m-0 text-accent text-[.62rem] font-black tracking-[.08em] uppercase">{labels.orderPrompt}</p>
+        <p class="m-0 min-h-[2.2rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.35rem,6vw,2.1rem)] leading-[1.3]" lang={settings.lang}>{orderPreview()}</p>
       </article>{/key}
-      <div class="w-[min(100%,28rem)] flex flex-wrap justify-center gap-[.45rem]">{#each orderWords as word, index}<button type="button" class="btn-play btn-play-choice min-h-[2.55rem] px-[.75rem] text-[.75rem] {selectedOrder.includes(index) ? 'border-neutral/30 bg-neutral/20 text-base-content/35 shadow-none' : ''}" onclick={() => chooseOrderWord(index)} disabled={selectedOrder.includes(index) || answerStatus !== null}>{word}</button>{/each}</div>
+      <div class="w-[min(100%,28rem)] flex flex-wrap justify-center gap-[.45rem]" lang={settings.lang}>{#each orderWords as word, index}<button type="button" class="btn-play btn-play-choice min-h-[2.55rem] px-[.75rem] text-[.75rem] {selectedOrder.includes(index) ? 'border-neutral/30 bg-neutral/20 text-base-content/35 shadow-none' : ''}" onclick={() => chooseOrderWord(index)} disabled={selectedOrder.includes(index) || answerStatus !== null}>{word}</button>{/each}</div>
       {#if answerStatus === 'wrong'}
-        <div class="flex items-center gap-[.35rem] text-error text-[.7rem] font-extrabold"><IconClose class="w-[1rem] h-[1rem]" aria-hidden="true" />Not quite. Try again.</div>
+        <div class="flex items-center gap-[.35rem] text-error text-[.7rem] font-extrabold"><IconClose class="w-[1rem] h-[1rem]" aria-hidden="true" />{labels.tryAgain}</div>
         <div class="flex flex-wrap justify-center gap-[.45rem]">
-          <button class="btn-play btn-play-sm text-accent" onclick={resetOrder}>Reset order</button>
+          <button class="btn-play btn-play-sm text-accent" onclick={resetOrder}>{labels.orderReset}</button>
         </div>
       {:else if answerStatus === 'correct'}
-        <div class="flex items-center gap-[.35rem] text-success text-[.7rem] font-extrabold"><IconCheck class="w-[1rem] h-[1rem]" aria-hidden="true" />Correct!</div>
+        <div class="flex items-center gap-[.35rem] text-success text-[.7rem] font-extrabold"><IconCheck class="w-[1rem] h-[1rem]" aria-hidden="true" />{labels.correct}</div>
         <div class="flex flex-wrap justify-center gap-[.45rem]">
           <button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>
         </div>
