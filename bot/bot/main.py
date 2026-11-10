@@ -9,7 +9,7 @@ from datetime import datetime
 from os import makedirs, path
 from typing import Final
 
-from telegram import BotCommand, BotCommandScopeChat, BotCommandScopeDefault, MenuButtonWebApp, Update, WebAppInfo
+from telegram import BotCommand, BotCommandScopeAllGroupChats, BotCommandScopeChat, BotCommandScopeDefault, MenuButtonWebApp, Update, WebAppInfo
 from telegram.ext import Application, ApplicationBuilder, Defaults
 from telegram.constants import ParseMode
 
@@ -63,6 +63,12 @@ COMMANDS: Final[dict[str, list[BotCommand]]] = {
 }
 
 
+GROUP_COMMANDS: Final[dict[str, list[BotCommand]]] = {
+    "de": [BotCommand("games", "WordCircle-Spiel in die Gruppe posten"), BotCommand("top", "Bestenliste der Gruppe")],
+    "en": [BotCommand("games", "Post a WordCircle game to the group"), BotCommand("top", "The group's leaderboard")],
+}
+
+
 async def post_init(application: Application) -> None:
     application.bot_data["db"] = await connect(DATABASE_URL)
     bot = application.bot
@@ -70,6 +76,9 @@ async def post_init(application: Application) -> None:
     await bot.delete_webhook(drop_pending_updates=False)
     await bot.set_my_commands(COMMANDS["en"], scope=BotCommandScopeDefault())
     await bot.set_my_commands(COMMANDS["de"], scope=BotCommandScopeDefault(), language_code="de")
+    # In groups the bot only plays: posting games and showing their scoreboards.
+    await bot.set_my_commands(GROUP_COMMANDS["en"], scope=BotCommandScopeAllGroupChats())
+    await bot.set_my_commands(GROUP_COMMANDS["de"], scope=BotCommandScopeAllGroupChats(), language_code="de")
     # Admins additionally see /set_cmd in their own chat's menu; it is never advertised publicly.
     admin_commands = COMMANDS["de"] + [BotCommand("set_cmd", "Profilbild, Name und Beschreibung setzen")]
     for admin_id in ADMINS:
