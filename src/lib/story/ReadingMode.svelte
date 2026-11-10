@@ -518,6 +518,7 @@ import { page } from '$app/state';
           <button type="button" class="btn-play btn-play-soft word-sheet-mark" class:active={markedWords.has(sheet.info.word)} onclick={toggleMark}>
             {markedWords.has(sheet.info.word) ? labels.unmark : labels.mark}
           </button>
+          <a class="word-sheet-link" href={`/dictionary?word=${encodeURIComponent(sheet.info.word)}`}>{m.dictionary_title({}, { locale: settings.interfaceLocale })}</a>
           <a class="word-sheet-link" href={wiktionaryUrl(settings.lang, sheet.info.spelling)} target="_blank" rel="noreferrer">{labels.explain}</a>
           <p class="word-sheet-hint">{labels.markHint}</p>
         </div>
