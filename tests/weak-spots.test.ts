@@ -3,7 +3,7 @@ import { articleFocus, sampleWeighted, weakest, weakSpotWeights } from '../src/l
 
 const NOW = Date.UTC(2026, 10, 4, 9, 0, 0);
 const DAY = 24 * 60 * 60 * 1000;
-const entry = (lapses: number, dueAt = 0, ease?: number) => ({ repetitions: 0, dueAt, lapses, source: 'grammar' as const, updatedAt: NOW, ease });
+const entry = (lapses: number, dueAt = 0, ease?: number) => ({ repetitions: 0, dueAt, lapses, source: 'grammar' as const, updatedAt: NOW, ...(ease === undefined ? {} : { ease }) });
 
 describe('weak spots', () => {
   it('weighs recent misses above old ones and counts grammar mistakes for the noun', () => {

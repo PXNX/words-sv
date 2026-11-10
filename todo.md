@@ -204,7 +204,7 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 
 ### Done
 - [x] `v1.0.0` baseline tag and GitHub release (9.1).
-- [x] Phase T: strict flags (except `exactOptionalPropertyTypes`), zero `check` errors, Vitest
+- [x] Phase T: strict flags, zero `check` errors, Vitest
   only, CI gate, typescript-eslint.
 - [x] Domain types: `src/lib/domain/types.ts` (`LangCode`, `Level`, `Skill`, branded `ItemId` /
   `SessionId`, `assertNever`).
@@ -225,7 +225,7 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
   GitHub links; Settings row with version and unseen dot.
 
 ### Phase T leftovers
-- [ ] `exactOptionalPropertyTypes`, per directory.
+- [x] `exactOptionalPropertyTypes`, for the whole project at once (only 30 places needed it).
 - [ ] Schema library (Valibot) at the boundaries: API, IndexedDB/localStorage reads, LLM JSON,
   Telegram `initData`; typed fetch client for `api/`.
 - [x] Typed worker protocol (`src/lib/workers/protocol.ts`: calls with params, result and updates;

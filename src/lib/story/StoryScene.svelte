@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { SceneId, Weather } from './stories';
 
-  let { scene: requested, weather = 'sunny' }: { scene: SceneId; weather?: Weather } = $props();
+  let { scene: requested, weather = 'sunny' }: { scene: SceneId; weather?: Weather | undefined } = $props();
   // Some stories name places that have no drawing of their own (a market, a school, …): they get the
   // closest scene instead of crashing the picture, and anything unknown falls back to home.
   const aliases = { market: 'square', town: 'square', shop: 'boutique', factory: 'workshop', school: 'library' } as const satisfies Record<string, SceneId>;

@@ -219,7 +219,7 @@ export function dueReminderTypes(state: ReminderState, now = new Date()): { type
 }
 
 type NotificationText = { title: string; body: string };
-type NotificationContext = { count?: number; title?: string };
+type NotificationContext = { count?: number; title?: string | undefined };
 
 const NOTIFICATIONS: Record<ReminderLocale, (type: ReminderType, minutes: number, context: NotificationContext) => NotificationText> = {
   en: (type, minutes, context) => {

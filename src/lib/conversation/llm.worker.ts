@@ -14,7 +14,7 @@ export type LlmProtocol = {
   load: Call<{ model: string }, void, LoadProgress>;
   download: Call<{ model: string }, void, LoadProgress>;
   cancelDownload: Call<{ model: string }, void>;
-  generate: Call<{ messages: ChatMessage[]; noThinking: boolean }, { text: string; stats?: GenerationStats }, { text: string; tokens: number }>;
+  generate: Call<{ messages: ChatMessage[]; noThinking: boolean }, { text: string; stats?: GenerationStats | undefined }, { text: string; tokens: number }>;
   delete: Call<{ model: string }, void>;
   interrupt: Call<object, void>;
 };
