@@ -21,6 +21,7 @@ import * as ortWebgpu from 'onnxruntime-web/webgpu';
 import type { InferenceSession, Tensor } from 'onnxruntime-common';
 import { AutoTokenizer, type PreTrainedTokenizer } from '@huggingface/transformers';
 import { forgetDownload, resumableDownload } from '#lib/offline/resumableDownload.js';
+import { serveWorker, type Call } from '#lib/workers/protocol.js';
 
 // The WebGPU build, typed as the main package (same API).
 const ort = ortWebgpu as typeof import('onnxruntime-common');
@@ -36,19 +37,16 @@ const PATCH = 4;
 const AUDIO_START = 101;
 const SAMPLE_RATE = 48_000;
 
-export type VoxRequest =
-  | { id: number; type: 'load' }
-  | { id: number; type: 'speak'; text: string; seed: number };
-export type VoxReply =
-  | { id: number; type: 'progress'; loaded: number; total: number }
-  | { id: number; type: 'done'; pcm?: Float32Array; sampleRate?: number }
-  | { id: number; type: 'error'; message: string };
+export type LoadProgress = { loaded: number; total: number };
+export type VoxProtocol = {
+  load: Call<object, void, LoadProgress>;
+  speak: Call<{ text: string; seed: number }, { pcm: Float32Array; sampleRate: number }, LoadProgress>;
+};
 
 type Model = { sessions: Record<Graph, InferenceSession>; tokenizer: PreTrainedTokenizer };
 let model: Promise<Model> | null = null;
-const post = (reply: VoxReply, transfer: Transferable[] = []) => self.postMessage(reply, transfer);
 
-function load(id: number): Promise<Model> {
+function load(onProgress: (progress: LoadProgress) => void): Promise<Model> {
   model ??= (async () => {
     // Without a GPU adapter ONNX Runtime would quietly run a 2B model on the CPU, far too slow to
     // speak; say so before downloading 1.6 GB.
@@ -62,7 +60,7 @@ function load(id: number): Promise<Model> {
       let loaded = 0;
       let total = 0;
       for (const size of sizes.values()) { loaded += size.loaded; total += size.total; }
-      post({ id, type: 'progress', loaded, total });
+      onProgress({ loaded, total });
     };
     const fetchGraph = (graph: Graph) => resumableDownload(`${BASE}/${graph}.onnx`, CACHE, (loaded, total) => {
       sizes.set(graph, { loaded, total });
@@ -154,8 +152,8 @@ const SCHEDULE = Array.from({ length: 11 }, (_, index) => {
   return s + (Math.cos((Math.PI * s) / 2) - 1 + s);
 });
 
-async function speak(text: string, seed: number, id: number): Promise<Float32Array> {
-  const { sessions, tokenizer } = await load(id);
+async function speak(text: string, seed: number, onProgress: (progress: LoadProgress) => void): Promise<Float32Array> {
+  const { sessions, tokenizer } = await load(onProgress);
   const tokens = tokenizer.encode(text, { add_special_tokens: false });
   const ids = [...tokens, AUDIO_START];
   const maxPatches = Math.min(6 * tokens.length + 10, 2000);
@@ -212,16 +210,13 @@ async function speak(text: string, seed: number, id: number): Promise<Float32Arr
   return (output(vaeRun.audio, 'audio').data as Float32Array).slice();
 }
 
-self.onmessage = async ({ data }: MessageEvent<VoxRequest>) => {
-  try {
-    if (data.type === 'load') {
-      await load(data.id);
-      post({ id: data.id, type: 'done' });
-      return;
-    }
-    const pcm = await speak(data.text, data.seed, data.id);
-    post({ id: data.id, type: 'done', pcm, sampleRate: SAMPLE_RATE }, [pcm.buffer]);
-  } catch (error) {
-    post({ id: data.id, type: 'error', message: error instanceof Error ? error.message : String(error) });
+serveWorker<VoxProtocol>(self, {
+  async load(_, { update }) {
+    await load(update);
+  },
+  async speak({ text, seed }, { update, transfer }) {
+    const pcm = await speak(text, seed, update);
+    transfer(pcm.buffer);
+    return { pcm, sampleRate: SAMPLE_RATE };
   }
-};
+});
