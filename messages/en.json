@@ -745,5 +745,8 @@
   "grammar_value_en_positive": "positive",
   "grammar_value_en_comparative": "comparative",
   "grammar_value_en_superlative": "superlative",
-  "today_feature": "Practise {feature} – that's where most of your mistakes are right now"
+  "today_feature": "Practise {feature} – that's where most of your mistakes are right now",
+  "progress_download": "Downloading",
+  "progress_load": "Loading into memory",
+  "progress_update": "Fetching the new version"
 }
