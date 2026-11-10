@@ -1,6 +1,7 @@
 import type { ChatMessage } from './conversation.js';
 import type { GenerationStats, LlmProtocol } from './llm.worker.js';
 import { createWorkerClient } from '#lib/workers/protocol.js';
+import { webgpuUsable } from '#lib/app/webgpuCheck.svelte.js';
 import { cancelJob, runJob } from '#lib/audio/backgroundJobs.svelte.js';
 import { createSpeedMeter } from '#lib/offline/downloadSpeed.js';
 import { settings } from '#lib/state/settings.svelte.js';
@@ -48,9 +49,10 @@ let loading: Promise<void> | null = null;
 type GpuAdapter = { features: Set<string>; limits?: { maxBufferSize?: number }; info?: { vendor?: string; architecture?: string; description?: string } };
 type GpuNavigator = Navigator & { gpu?: { requestAdapter: () => Promise<GpuAdapter | null> }; deviceMemory?: number };
 
-/** What this device offers the models, or null without WebGPU. */
+/** What this device offers the models, or null without working WebGPU (the app-wide check, run once). */
 async function detectDevice(): Promise<DeviceInfo | null> {
   if (typeof navigator === 'undefined') return null;
+  if (!(await webgpuUsable())) return null;
   const nav = navigator as GpuNavigator;
   if (!nav.gpu) return null;
   try {
