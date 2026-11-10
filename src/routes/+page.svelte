@@ -65,6 +65,11 @@
   // Keeps the welcome flow open through its name, character and finale steps after the language.
   let pickingLook = $state(false);
 
+  // Letter tiles drifting around the cast: decoration only, like loose tiles on a game table.
+  const FLOATING_TILES = [
+    { letter: 'W', x: 4, y: 18, r: -12 }, { letter: 'O', x: 88, y: 8, r: 9 }, { letter: 'R', x: 12, y: 62, r: 6 },
+    { letter: 'T', x: 82, y: 58, r: -8 }, { letter: 'A', x: 46, y: 2, r: 14 }, { letter: 'Ö', x: 94, y: 36, r: -4 }
+  ];
   const labels = $derived({
     settings: m.settings({}, { locale: settings.interfaceLocale }),
     homeTitle: m.home_title({}, { locale: settings.interfaceLocale }),
@@ -274,7 +279,8 @@
     <InstallAppHint />
     <header class="home-header">
       <div class="home-family"><span class="home-family-people" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="tom" /></span><button type="button" class="home-lilith-pet" class:petting onclick={petLilith} onanimationend={() => (petting = false)} aria-label={labels.petLilith}><span class="home-lilith" class:loving={lilith === 'loving'}><StoryCharacter id="lilith" mood={petting && lilith !== 'loving' ? 'happy' : lilithFace(lilith)} />{#if lilith === 'loving'}<span class="home-lilith-hearts" aria-hidden="true"><span>♥</span><span>♥</span></span>{/if}</span></button></div>
-      <h1>{labels.homeTitle}</h1><span class="home-cast-note">{labels.homeCast}</span>
+      <span class="home-tiles" aria-hidden="true">{#each FLOATING_TILES as tile, index}<i style={`--x:${tile.x}%;--y:${tile.y}%;--d:${index * 0.7}s;--r:${tile.r}deg`}>{tile.letter}</i>{/each}</span>
+      <h1 class="home-title" aria-label={labels.homeTitle}>{#each [...labels.homeTitle] as letter, index}<span aria-hidden="true" style={`--i:${index}`}>{letter === ' ' ? '\u00a0' : letter}</span>{/each}</h1><span class="home-cast-note">{labels.homeCast}</span>
     </header>
     <!-- One daily card: today's challenge, its reward and the next steps, instead of three stacked blocks -->
     <section class="panel-play home-daily" aria-label={labels.dailyChallenge}>
@@ -347,6 +353,33 @@
 
 <style>
   .home-view { flex:1 1 auto;min-height:0;display:grid;grid-auto-rows:max-content;align-content:safe center;gap:clamp(1rem,4vw,1.8rem);padding:clamp(.6rem,3vw,1.1rem) clamp(.7rem,3.4vw,1.25rem);overflow-x:hidden;overflow-y:auto; }
+  /* Joy on the start page: tiles drift, the title waves in, the cast hops now and then, cards pop in. */
+  .home-header { position:relative; }
+  .home-tiles { position:absolute;inset:0 -.5rem;pointer-events:none;z-index:0; }
+  .home-header > :not(.home-tiles) { position:relative;z-index:1; }
+  .home-tiles i { position:absolute;left:var(--x);top:var(--y);display:grid;place-items:center;width:1.55rem;height:1.55rem;border:2px solid #172a45;border-radius:.4rem;background:#fffdf7;box-shadow:2px 2px 0 #172a45;color:#172a45;font-family:'DM Serif Display',serif;font-size:.85rem;font-style:normal;opacity:.55;rotate:var(--r);animation:home-tile-float 7s ease-in-out var(--d) infinite; }
+  :global(html.dark) .home-tiles i { border-color:#fffdf7;background:#213a5d;color:#fffdf7;box-shadow:2px 2px 0 #0a1626; }
+  @keyframes home-tile-float { 0%,100% { translate:0 0; } 50% { translate:0 -.55rem;rotate:calc(var(--r) * -1); } }
+  .home-title span { display:inline-block;animation:home-letter .7s cubic-bezier(.34,1.56,.64,1) both;animation-delay:calc(var(--i) * 35ms + .1s); }
+  @keyframes home-letter { from { opacity:0;translate:0 .7em;rotate:-12deg; } }
+  .home-family-people :global(.story-character) { animation:home-hop 9s ease-in-out infinite; transform-origin:50% 100%; }
+  .home-family-people :global(.story-character + .story-character) { animation-delay:1.3s; }
+  @keyframes home-hop { 0%,88%,100% { translate:0 0;scale:1; } 91% { translate:0 0;scale:1.06 .94; } 94% { translate:0 -.6rem;scale:.97 1.04; } 97% { translate:0 0;scale:1.03 .97; } }
+  .home-games > :global(*) { animation:home-card-pop .5s cubic-bezier(.34,1.56,.64,1) both; }
+  .home-games > :global(*:nth-child(2)) { animation-delay:.06s; } .home-games > :global(*:nth-child(3)) { animation-delay:.12s; } .home-games > :global(*:nth-child(4)) { animation-delay:.18s; } .home-games > :global(*:nth-child(5)) { animation-delay:.24s; } .home-games > :global(*:nth-child(n+6)) { animation-delay:.3s; }
+  @keyframes home-card-pop { from { opacity:0;translate:0 .9rem;scale:.92;rotate:-2deg; } }
+  @media (hover:hover) { .home-games :global(.card-play:hover .home-icon) { animation:home-icon-wiggle .55s ease-in-out; } }
+  @keyframes home-icon-wiggle { 0%,100% { rotate:0deg;scale:1; } 30% { rotate:-12deg;scale:1.12; } 60% { rotate:9deg;scale:1.08; } }
+  .home-today-icon { animation:home-today-glow 2.8s ease-in-out infinite; }
+  @keyframes home-today-glow { 0%,100% { box-shadow:0 0 0 0 rgba(230,165,39,0); } 50% { box-shadow:0 0 0 .35rem rgba(230,165,39,.35); } }
+  .home-today :global(.home-today-start svg) { animation:home-nudge 1.6s ease-in-out infinite; }
+  @keyframes home-nudge { 0%,100% { translate:0 0; } 50% { translate:.2rem 0; } }
+  :global([dir='rtl']) .home-today :global(.home-today-start svg) { animation-name:home-nudge-rtl; }
+  @keyframes home-nudge-rtl { 0%,100% { translate:0 0; } 50% { translate:-.2rem 0; } }
+  @media (prefers-reduced-motion:reduce) {
+    .home-tiles i,.home-title span,.home-family-people :global(.story-character),.home-games > :global(*),.home-today-icon,.home-today :global(.home-today-start svg) { animation:none; }
+    .home-games :global(.card-play:hover .home-icon) { animation:none; }
+  }
   .home-header { display:grid;gap:.35rem;text-align:center; }.home-group-heading { margin:0 -.1rem -.35rem;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase; }.home-header p { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }.home-header h1 { margin:0;color:#172a45 !important;text-shadow:0 1px 0 rgba(255,253,247,.72);font-family:'DM Serif Display',serif;font-size:clamp(2.1rem,10vw,3.35rem);font-weight:400;letter-spacing:-.05em;line-height:.9; }
   .home-settings-link { justify-self:center; }
   /* overflow clips the row backgrounds to the rounded corners; min-height keeps the scrolling home grid from squeezing the card to nothing */
