@@ -301,7 +301,6 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 ### Release process leftovers
 - [x] `tests/fixtures/v1.0.0/` snapshot of a learner's local data for migration tests
   (`scripts/snapshot-local-data.ts`, `tests/local-data-migration.test.ts`).
-- [x] One-time "Updated to …" snackbar and a link from the update prompt to `/changelog`.
 - [x] Forced updates with a Lilith sheet, a what's new sheet after each update (1.3.0).
 - [x] Service-worker caches are already keyed by the build version.
 - [x] Version in the Telegram bot's `/version` (from `package.json`, `APP_VERSION` as override).
