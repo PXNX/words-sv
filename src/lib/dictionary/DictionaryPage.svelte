@@ -46,7 +46,12 @@
     if (settings.lang === language) index = buildIndex(language, levels);
   }
   $effect(() => {
-    void load(settings.lang);
+    void load(settings.lang).then(() => {
+      // Opened from a word elsewhere (the reading sheet): straight to that word.
+      const wanted = new URLSearchParams(location.search).get('word')?.toLocaleUpperCase();
+      const entry = wanted ? index?.byWord.get(wanted) : undefined;
+      if (entry) show(entry);
+    });
   });
   onMount(() => {
     try { recent = JSON.parse(localStorage.getItem(`${RECENT_KEY}:${settings.lang}`) ?? '[]'); } catch { recent = []; }
