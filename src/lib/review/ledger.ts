@@ -4,7 +4,7 @@
  * The older per-mode stores stay readable; this ledger is what the Repeat hub and the mixed
  * session read, so marked reading words, grammar answers and pronunciation results meet there.
  */
-import { schedule, type Grade } from './scheduler.js';
+import { normalizeMemory, schedule, type Grade, type SchedulerState } from './scheduler.js';
 export type ReviewSource = 'vocab' | 'reading' | 'grammar' | 'pronunciation' | 'story' | 'listening';
 
 export type ReviewEntry = {
@@ -13,10 +13,8 @@ export type ReviewEntry = {
 	lapses: number;
 	source: ReviewSource;
 	updatedAt: number;
-	// Scheduler memory (review/scheduler.ts); missing on entries written before it existed.
-	ease?: number;
-	intervalDays?: number;
-};
+} & Pick<SchedulerState, 'stability' | 'difficulty' | 'lastReviewAt' | 'totalLapses' | 'intervalDays' | 'ease'>;
+// Scheduler memory (review/scheduler.ts); missing on entries written before it existed.
 
 export type ReviewLedger = Record<string, ReviewEntry>;
 
@@ -45,16 +43,13 @@ export function normalizeReviewEntry(value: unknown): ReviewEntry | null {
 	if (!value || typeof value !== 'object') return null;
 	const entry = value as Partial<ReviewEntry>;
 	const source = REVIEW_SOURCES.includes(entry.source as ReviewSource) ? (entry.source as ReviewSource) : 'vocab';
-	const ease = Number(entry.ease);
-	const intervalDays = Number(entry.intervalDays);
 	return {
 		repetitions: safeNumber(entry.repetitions),
 		dueAt: safeNumber(entry.dueAt),
 		lapses: safeNumber(entry.lapses),
 		source,
 		updatedAt: safeNumber(entry.updatedAt),
-		...(ease >= 1 && ease <= 5 ? { ease } : {}),
-		...(intervalDays >= 0 && intervalDays <= 3650 ? { intervalDays } : {})
+		...normalizeMemory(entry)
 	};
 }
 

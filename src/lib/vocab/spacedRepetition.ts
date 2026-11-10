@@ -1,6 +1,6 @@
 import { vocabularyLevels, wordPools, type Language, type VocabularyLevel } from '#lib/data/vocabulary.js';
 import { clearReviewItem, markReviewItem, type ReviewSource } from '#lib/review/ledger.js';
-import { schedule, type Grade } from '#lib/review/scheduler.js';
+import { normalizeMemory, schedule, type Grade, type SchedulerState } from '#lib/review/scheduler.js';
 
 export const VOCABULARY_REVIEW_STORAGE_PREFIX = 'wordcircle-vocabulary-review-v2';
 
@@ -10,8 +10,8 @@ export const MASTERY_THRESHOLD = 20;
 
 // `lapses` counts how often a word was rated as hard. It is the strongest sort key in
 // `prioritizeLearningWords`, so a word marked in reading (or answered wrong) keeps coming back.
-// `ease` and `intervalDays` are the scheduler's memory (review/scheduler.ts).
-export type ReviewProgress = { repetitions: number; dueAt: number; lapses?: number; ease?: number; intervalDays?: number };
+// The remaining fields are the scheduler's memory (review/scheduler.ts).
+export type ReviewProgress = { repetitions: number; dueAt: number; lapses?: number } & Pick<SchedulerState, 'stability' | 'difficulty' | 'lastReviewAt' | 'totalLapses' | 'intervalDays' | 'ease'>;
 
 export function normalizeReviewProgress(value: unknown): ReviewProgress {
   if (!value || typeof value !== 'object') return { repetitions: 0, dueAt: 0, lapses: 0 };
@@ -19,15 +19,7 @@ export function normalizeReviewProgress(value: unknown): ReviewProgress {
   const repetitions = typeof progress.repetitions === 'number' && Number.isSafeInteger(progress.repetitions) && progress.repetitions >= 0 ? progress.repetitions : 0;
   const dueAt = typeof progress.dueAt === 'number' && Number.isSafeInteger(progress.dueAt) && progress.dueAt >= 0 ? progress.dueAt : 0;
   const lapses = typeof progress.lapses === 'number' && Number.isSafeInteger(progress.lapses) && progress.lapses >= 0 ? progress.lapses : 0;
-  const ease = Number(progress.ease);
-  const intervalDays = Number(progress.intervalDays);
-  return {
-    repetitions,
-    dueAt,
-    lapses,
-    ...(ease >= 1 && ease <= 5 ? { ease } : {}),
-    ...(intervalDays >= 0 && intervalDays <= 3650 ? { intervalDays } : {})
-  };
+  return { repetitions, dueAt, lapses, ...normalizeMemory(progress) };
 }
 
 /**

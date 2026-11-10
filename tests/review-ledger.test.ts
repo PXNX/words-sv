@@ -15,11 +15,13 @@ describe('review ledger', () => {
 		let ledger: ReviewLedger = applyReview({}, 'de', 'Wohnung', false, 'vocab', NOW);
 		expect(ledger['de:WOHNUNG']).toMatchObject({ repetitions: 0, lapses: 1, source: 'vocab', dueAt: NOW + 10 * 60 * 1000 });
 		ledger = applyReview(ledger, 'de', 'Wohnung', true, 'vocab', NOW + 1);
-		expect(ledger['de:WOHNUNG']).toMatchObject({ repetitions: 1, lapses: 0, dueAt: NOW + 1 + day });
-		ledger = applyReview(ledger, 'de', 'Wohnung', true, 'vocab', NOW + 2);
+		expect(ledger['de:WOHNUNG']).toMatchObject({ repetitions: 1, lapses: 0, totalLapses: 1 });
+		const first = ledger['de:WOHNUNG']!.dueAt;
+		expect(first).toBeGreaterThanOrEqual(NOW + 1 + day);
+		// Reviewed again when due, the interval grows.
+		ledger = applyReview(ledger, 'de', 'Wohnung', true, 'vocab', first);
 		expect(ledger['de:WOHNUNG']?.repetitions).toBe(2);
-		// Three days, with the scheduler's small per-word jitter.
-		expect(Math.abs(ledger['de:WOHNUNG']!.dueAt - (NOW + 2 + 3 * day))).toBeLessThanOrEqual(0.08 * 3 * day);
+		expect(ledger['de:WOHNUNG']!.dueAt - first).toBeGreaterThan(first - NOW);
 	});
 
 	test('the source records the mode that last touched an item', () => {
