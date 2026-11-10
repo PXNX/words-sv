@@ -3503,14 +3503,30 @@ export const germanStories: Story[] = [
     scene: 'office',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Extra B2 1'),
+    title: german('Der Absatz bricht ein'),
     beats: [
-      { kind: 'narration', text: german('abhängen und Absatz und Abschluß und abstrakt und abwerten.') },
-      { kind: 'line', speaker: 'mia', text: german('ähnlich ist wichtig und aktiv ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('Analyse und anführen sind da.') },
-      { kind: 'narration', text: german('Anhänger und anordnen.') },
-      { kind: 'question', prompt: german('Was ist anpassen?'), options: [german('Ansatz'), german('Ansicht'), german('Anteil')] },
-      { kind: 'question', prompt: german('Wer hat anpassen?'), options: [german('Ansatz'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Mittwochabend im Vertriebsbüro eines Herstellers von Fahrradhelmen. Morgen früh müssen Mia und Tom der Geschäftsführung erklären, warum der Absatz im letzten Quartal um 18 Prozent gesunken ist.') },
+      { kind: 'line', speaker: 'tom', text: german('Für mich ist die Sache klar: Wir sind zu teuer. Die Konkurrenz verkauft ähnliche Helme für 30 Euro weniger. Wir senken den Preis, und das Problem ist gelöst.') },
+      { kind: 'line', speaker: 'mia', mood: 'worried', text: german('Das ist mir zu einfach. Wenn wir den Preis so stark senken, werten wir unsere eigene Marke ab. Unsere Kunden zahlen mehr, weil sie Qualität erwarten. Ein Billighelm ist nicht unser Ansatz.') },
+      { kind: 'line', speaker: 'tom', text: german('Und welches Argument willst du stattdessen anführen? Die Zahlen sind eindeutig.') },
+      { kind: 'line', speaker: 'mia', text: german('Die Zahlen schon, aber nicht ihre Ursache. Ich habe eine genauere Analyse gemacht. Im Fachhandel verkaufen wir genauso viel wie im Vorjahr. Eingebrochen ist nur der Online-Verkauf – und der macht inzwischen einen Anteil von 40 Prozent aus.') },
+      { kind: 'line', speaker: 'tom', mood: 'surprised', text: german('Moment, das heißt, es hängt gar nicht am Preis, sondern am Vertriebsweg?') },
+      { kind: 'line', speaker: 'mia', text: german('Zumindest nicht nur. Seit dem Frühjahr erscheinen unsere Helme bei den großen Plattformen erst auf Seite drei. Die Konkurrenz ist dort viel aktiver: bessere Fotos, Videos, Hunderte Bewertungen.') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Das klingt abstrakt, aber plausibel. Was schlägst du konkret vor?') },
+      { kind: 'line', speaker: 'mia', text: german('Wir passen unseren Online-Auftritt an, statt die Preise zu senken. Und wir bieten ein Einsteigermodell an, damit wir auch preisbewusste Kunden erreichen, ohne das Premiumsortiment anzutasten.') },
+      { kind: 'line', speaker: 'tom', text: german('Ich bin nicht ganz überzeugt, aber ich sehe, dass deine Ansicht besser belegt ist als meine. {name}, du hast die Präsentation gegengelesen. Was sollten wir morgen als Erstes sagen?') },
+      { kind: 'reply', to: 'tom', options: [
+        german('Dass der Rückgang fast nur online stattfindet und wir deshalb zuerst den Online-Auftritt verbessern sollten.'),
+        german('Dass wir alle Helme ab sofort zum halben Preis verkaufen sollten.'),
+        german('Dass die Zahlen falsch sind und es eigentlich gar keinen Rückgang gibt.')
+      ] },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Genau. Und falls die Geschäftsführung trotzdem eine Preissenkung anordnet, haben wir wenigstens gezeigt, welche Folgen das hätte.') },
+      { kind: 'question', prompt: german('Um wie viel Prozent ist der Absatz im letzten Quartal gesunken?'), options: [german('Um 18 Prozent'), german('Um 40 Prozent'), german('Um 30 Prozent')] },
+      { kind: 'question', prompt: german('Warum ist Mia gegen eine starke Preissenkung?'), options: [german('Weil sie die Marke abwerten würde'), german('Weil die Konkurrenz teurer ist'), german('Weil die Helme schon billig sind')] },
+      { kind: 'question', prompt: german('Wo ist der Verkauf laut Mias Analyse eingebrochen?'), options: [german('Nur im Online-Verkauf'), german('Nur im Fachhandel'), german('Überall gleichermaßen')] },
+      { kind: 'question', prompt: german('Welchen Anteil hat der Online-Verkauf inzwischen?'), options: [german('40 Prozent'), german('18 Prozent'), german('Drei Viertel')] },
+      { kind: 'question', prompt: german('Warum ist die Konkurrenz online erfolgreicher?'), options: [german('Sie hat bessere Fotos, Videos und viele Bewertungen.'), german('Sie hat bessere Helme.'), german('Sie hat mehr Geschäfte in der Stadt.')] },
+      { kind: 'question', prompt: german('Wozu soll das Einsteigermodell dienen?'), options: [german('Preisbewusste Kunden zu erreichen, ohne das Premiumsortiment zu verbilligen'), german('Die alten Helme loszuwerden'), german('Den Fachhandel zu ersetzen')] }
     ]
   },
   {
@@ -3519,14 +3535,29 @@ export const germanStories: Story[] = [
     scene: 'town',
     cast: ['kim', 'leo'],
     languages: ['de'],
-    title: german('Extra B2 2'),
+    title: german('Nach der Lesung'),
     beats: [
-      { kind: 'narration', text: german('anwesend und Anzahl und arabisch und Argument und asozial.') },
-      { kind: 'line', speaker: 'mia', text: german('Aufbau ist wichtig und Aufsatz ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('Ausdruck und Äußerung sind da.') },
-      { kind: 'narration', text: german('Autorin und Bachelor.') },
-      { kind: 'question', prompt: german('Was ist basieren?'), options: [german('Basis'), german('befassen'), german('befinden')] },
-      { kind: 'question', prompt: german('Wer hat basieren?'), options: [german('Basis'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Ein lauer Abend auf dem Marktplatz. Im Rahmen des Literaturfestivals hat eine bekannte Autorin aus ihrem neuen Roman gelesen. Rund zweihundert Zuhörer waren anwesend, darunter Kim und Leo.') },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Das war großartig! Ich schreibe gerade meine Bachelorarbeit über sie, und heute habe ich so viel Material bekommen.') },
+      { kind: 'line', speaker: 'leo', mood: 'curious', text: german('Mir hat die Lesung auch gefallen. Nur eine Äußerung hat mich gestört: Sie hat gesagt, das Dorf, in dem der Roman spielt, sei „ein Ort ohne Zukunft“. Ich komme selbst vom Dorf.') },
+      { kind: 'line', speaker: 'kim', text: german('Ich glaube, das war eher als Ausdruck der Hauptfigur gemeint, nicht als ihre eigene Meinung. Der ganze Aufbau des Romans basiert darauf, dass die Figur ihr Urteil am Ende revidiert.') },
+      { kind: 'line', speaker: 'leo', text: german('Mag sein, aber in der Diskussion danach hat sie es noch einmal wiederholt – ohne Distanz. Da sprach sie nicht als Erzählerin, sondern als Autorin.') },
+      { kind: 'line', speaker: 'kim', mood: 'curious', text: german('Interessant, das habe ich anders verstanden. Genau mit solchen Fragen befasst sich übrigens mein drittes Kapitel: Wo endet die Figur, und wo beginnt die Autorin?') },
+      { kind: 'line', speaker: 'leo', text: german('Dann solltest du sie fragen. Sie signiert doch noch Bücher. Die Anzahl der Leute in der Schlange ist überschaubar.') },
+      { kind: 'line', speaker: 'kim', mood: 'worried', text: german('Ich bin aber nervös. Was, wenn sie meine Frage für naiv hält?') },
+      { kind: 'line', speaker: 'leo', mood: 'laughing', text: german('Eine gut begründete Frage ist nie naiv. {name}, wie könnte Kim ihre Frage höflich formulieren?') },
+      { kind: 'reply', to: 'leo', options: [
+        german('Ich schreibe über Ihr Werk und würde gern wissen: Teilen Sie das Urteil Ihrer Hauptfigur über das Dorf, oder ist es bewusst von Ihrer Meinung getrennt?'),
+        german('Warum haben Sie so einen schlechten Roman über Dörfer geschrieben?'),
+        german('Können Sie bitte meinen Aufsatz für mich schreiben?')
+      ] },
+      { kind: 'narration', text: german('Kim stellt sich an. Als sie an der Reihe ist, hört die Autorin aufmerksam zu und lächelt.') },
+      { kind: 'line', speaker: 'kim', mood: 'surprised', text: german('Sie hat gesagt, die Figur sehe das Dorf so, wie sie selbst es mit zwanzig gesehen habe – heute lebe sie aber wieder dort. Leo, du hattest beide Male ein bisschen recht!') },
+      { kind: 'question', prompt: german('Worüber schreibt Kim ihre Bachelorarbeit?'), options: [german('Über die Autorin'), german('Über das Literaturfestival'), german('Über Leos Dorf')] },
+      { kind: 'question', prompt: german('Welche Äußerung hat Leo gestört?'), options: [german('Das Dorf sei ein Ort ohne Zukunft.'), german('Die Stadt sei zu laut.'), german('Junge Leute läsen keine Bücher mehr.')] },
+      { kind: 'question', prompt: german('Worauf basiert laut Kim der Aufbau des Romans?'), options: [german('Darauf, dass die Hauptfigur ihr Urteil am Ende ändert'), german('Auf einer wahren Geschichte'), german('Auf Briefen der Autorin')] },
+      { kind: 'question', prompt: german('Womit befasst sich Kims drittes Kapitel?'), options: [german('Mit der Grenze zwischen Figur und Autorin'), german('Mit dem Leben auf dem Dorf'), german('Mit der Geschichte des Marktplatzes')] },
+      { kind: 'question', prompt: german('Was antwortet die Autorin?'), options: [german('Die Figur sieht das Dorf so wie sie selbst mit zwanzig; heute lebt sie wieder dort.'), german('Sie hat das Dorf nie besucht.'), german('Sie möchte nicht über ihren Roman sprechen.')] }
     ]
   },
   {
@@ -3535,14 +3566,31 @@ export const germanStories: Story[] = [
     scene: 'shop',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Extra B2 3'),
+    title: german('Falscher Alarm'),
     beats: [
-      { kind: 'narration', text: german('befreien und begabt und begehen und beklagen und Bemühung.') },
-      { kind: 'line', speaker: 'mia', text: german('Benehmen ist wichtig und bereit ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('bereiten und Betracht sind da.') },
-      { kind: 'narration', text: german('bewahren und Beweis.') },
-      { kind: 'question', prompt: german('Was ist bewerten?'), options: [german('bewirken'), german('beziehen'), german('Bezug')] },
-      { kind: 'question', prompt: german('Wer hat bewerten?'), options: [german('bewirken'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Samstag, kurz vor Ladenschluss. Mia arbeitet als Verkäuferin in einer kleinen Boutique. Ihr Freund Tom hat bei ihrer Kollegin gerade einen teuren Wollschal als Geschenk für seine Mutter gekauft und geht zur Tür.') },
+      { kind: 'narration', text: german('Als er durch die Tür geht, piept die Diebstahlsicherung laut. Alle Kunden drehen sich um.') },
+      { kind: 'line', speaker: 'tom', mood: 'angry', text: german('Mia, das ist jetzt nicht dein Ernst! Ich habe den Schal eben bezahlt. Alle starren mich an, als würde ich hier einen Diebstahl begehen.') },
+      { kind: 'line', speaker: 'mia', text: german('Bleib ruhig, niemand wirft dir etwas vor. Darf ich kurz in deine Tüte schauen? Das ist reine Routine, die Kunden sehen ja zu.') },
+      { kind: 'line', speaker: 'tom', text: german('Bitte. Hier ist auch der Beleg – das ist ja wohl Beweis genug.') },
+      { kind: 'narration', text: german('Mia sieht in die Tüte und findet am Schal ein kleines Plastikschild, das noch nicht entfernt worden ist.') },
+      { kind: 'line', speaker: 'mia', mood: 'sad', text: german('Oh nein. Meine Kollegin hat vergessen, die Sicherung zu entfernen. Es tut mir wirklich leid, dass du vor allen Leuten in diese Lage gekommen bist.') },
+      { kind: 'line', speaker: 'tom', text: german('Ehrlich gesagt war das ziemlich peinlich. Jeder andere Kunde würde sich jetzt bei deiner Chefin beklagen und euren Laden im Internet schlecht bewerten.') },
+      { kind: 'line', speaker: 'mia', text: german('Das wäre auch verständlich, ich will das gar nicht kleinreden. Als kleine Entschädigung bekommst du zehn Prozent auf deinen nächsten Einkauf. Das biete ich jedem an, dem so etwas passiert.') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Hm. Und was bewirkt das, wenn es dem nächsten Kunden genauso geht?') },
+      { kind: 'line', speaker: 'mia', text: german('Ich werde vorschlagen, dass wir an der Kasse jedes Teil zweimal kontrollieren. Deine Kritik hilft uns also tatsächlich. {name}, du hast alles gesehen. Wie findest du die Lösung?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Fair. Du hast den Fehler zugegeben, dich entschuldigt und willst etwas ändern.'),
+        german('Unfair. Tom hätte den Schal einfach nicht bezahlen sollen.'),
+        german('Egal. Diebstahlsicherungen piepen nie ohne Grund.')
+      ] },
+      { kind: 'line', speaker: 'tom', mood: 'happy', text: german('Na gut. Dein Benehmen war jedenfalls vorbildlich, ganz ohne Ausreden. Statt einer schlechten Bewertung schreibe ich lieber, wie fair ihr hier reagiert.') },
+      { kind: 'question', prompt: german('Warum piept die Diebstahlsicherung?'), options: [german('Am Schal ist noch das Sicherungsschild.'), german('Tom hat den Schal nicht bezahlt.'), german('Die Anlage ist kaputt.')] },
+      { kind: 'question', prompt: german('Womit beweist Tom, dass er bezahlt hat?'), options: [german('Mit dem Beleg'), german('Mit einem Foto'), german('Mit seiner Bankkarte')] },
+      { kind: 'question', prompt: german('Wer hat vergessen, die Sicherung zu entfernen?'), options: [german('Mias Kollegin'), german('Mia selbst'), german('Die Chefin')] },
+      { kind: 'question', prompt: german('Was würde laut Tom jeder andere Kunde jetzt tun?'), options: [german('Sich beschweren und den Laden schlecht bewerten'), german('Die Polizei rufen'), german('Den Schal zurückgeben')] },
+      { kind: 'question', prompt: german('Was bietet Mia als Entschädigung an?'), options: [german('Zehn Prozent auf den nächsten Einkauf'), german('Einen zweiten Schal'), german('Das Geld zurück')] },
+      { kind: 'question', prompt: german('Was schreibt Tom am Ende?'), options: [german('Eine Bewertung darüber, wie fair der Laden reagiert'), german('Eine Beschwerde an die Chefin'), german('Gar nichts')] }
     ]
   },
   {
@@ -3551,14 +3599,32 @@ export const germanStories: Story[] = [
     scene: 'market',
     cast: ['kim', 'leo'],
     languages: ['de'],
-    title: german('Extra B2 4'),
+    weathers: ['sunny', 'cloudy'],
+    title: german('Wochenmarkt oder Supermarkt?'),
     beats: [
-      { kind: 'narration', text: german('bilden und Blut und Code und Dach und Diagramm.') },
-      { kind: 'line', speaker: 'mia', text: german('Dilemma ist wichtig und dominant ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('Dozent und Drittel sind da.') },
-      { kind: 'narration', text: german('drohen und Drohung.') },
-      { kind: 'question', prompt: german('Was ist Ebene?'), options: [german('ehemalig'), german('einbauen'), german('eingehen')] },
-      { kind: 'question', prompt: german('Wer hat Ebene?'), options: [german('ehemalig'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Samstagvormittag. Leo, ein ehemaliger Dozent für Agrarwirtschaft, betreibt heute einen Obststand. Kim, die in der Nähe wohnt, kauft eigentlich im Supermarkt ein. Heute will sie wissen, ob sich der Markt lohnt.') },
+      { kind: 'line', speaker: 'kim', mood: 'curious', text: german('Ehrlich gesagt verstehe ich nicht, warum ich hier für ein Kilo Äpfel fast einen Euro mehr bezahlen soll. Im Supermarkt sind sie genauso rot.') },
+      { kind: 'line', speaker: 'leo', text: german('Eine berechtigte Frage. Darf ich Ihnen etwas zeigen?') },
+      { kind: 'narration', text: german('Leo holt ein laminiertes Blatt mit einem Diagramm unter der Theke hervor.') },
+      { kind: 'line', speaker: 'leo', text: german('Hier sehen Sie, wer am Preis eines Apfels verdient. Im Supermarkt bleibt beim Erzeuger oft nur ein kleiner Teil hängen, den Rest teilen sich Handel, Transport und Lager. Bei mir geht das Geld direkt an den Hof, zwanzig Kilometer von hier.') },
+      { kind: 'line', speaker: 'kim', text: german('Das klingt gut, aber für viele Familien ist der Preis entscheidend, nicht die Gerechtigkeit. Das ist doch ein echtes Dilemma.') },
+      { kind: 'line', speaker: 'leo', mood: 'worried', text: german('Da haben Sie recht. Und die großen Ketten sind so dominant, dass vielen kleinen Ständen die Schließung droht. Auf diesem Markt waren vor zehn Jahren noch dreißig Stände, heute sind es neunzehn – ein gutes Drittel weniger.') },
+      { kind: 'line', speaker: 'kim', mood: 'curious', text: german('Und was ist mit Lebensmittelverschwendung? Man hört ja, dass sehr viel weggeworfen wird.') },
+      { kind: 'line', speaker: 'leo', text: german('Weltweit geht laut der Welternährungsorganisation etwa ein Drittel aller Lebensmittel verloren oder wird verschwendet. Ich verkaufe auch krumme Gurken und Äpfel mit kleinen Flecken, die im Supermarkt aussortiert würden – und zwar günstiger.') },
+      { kind: 'line', speaker: 'kim', mood: 'surprised', text: german('Das wusste ich nicht. Und was ist das für ein Code auf Ihrem Schild?') },
+      { kind: 'line', speaker: 'leo', text: german('Ein QR-Code. Wenn Sie ihn scannen, sehen Sie Fotos vom Hof und wie die Äpfel unter dem Dach der alten Scheune gelagert werden. Wir haben nichts zu verbergen. {name}, Sie hören ja schon eine Weile zu. Was ist Ihre Meinung?') },
+      { kind: 'reply', to: 'leo', options: [
+        german('Ich finde, man muss nicht alles auf dem Markt kaufen, aber Obst und Gemüse aus der Region sind den Aufpreis oft wert.'),
+        german('Ich finde, Äpfel sollten grundsätzlich nur im Winter verkauft werden.'),
+        german('Ich finde, krumme Gurken sollte man verbieten.')
+      ] },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Gut, überzeugt. Ich nehme ein Kilo von den Äpfeln mit Flecken – und nächsten Samstag komme ich wieder.') },
+      { kind: 'question', prompt: german('Was war Leo früher von Beruf?'), options: [german('Dozent für Agrarwirtschaft'), german('Supermarktleiter'), german('Lkw-Fahrer')] },
+      { kind: 'question', prompt: german('Was zeigt Leos Diagramm?'), options: [german('Wer am Preis eines Apfels verdient'), german('Wie viele Äpfel er verkauft'), german('Wie das Wetter die Ernte beeinflusst')] },
+      { kind: 'question', prompt: german('Welches Dilemma nennt Kim?'), options: [german('Für viele Familien ist der Preis wichtiger als die Gerechtigkeit.'), german('Der Markt ist zu weit weg.'), german('Bioäpfel schmecken schlechter.')] },
+      { kind: 'question', prompt: german('Wie viele Stände gibt es heute auf dem Markt?'), options: [german('Neunzehn'), german('Dreißig'), german('Zehn')] },
+      { kind: 'question', prompt: german('Welcher Anteil der Lebensmittel geht laut Leo weltweit verloren oder wird verschwendet?'), options: [german('Etwa ein Drittel'), german('Etwa die Hälfte'), german('Etwa ein Zehntel')] },
+      { kind: 'question', prompt: german('Was sieht man, wenn man den QR-Code scannt?'), options: [german('Fotos vom Hof und von der Lagerung'), german('Die Preise im Supermarkt'), german('Ein Rezept für Apfelkuchen')] }
     ]
   },
   {
@@ -3567,14 +3633,31 @@ export const germanStories: Story[] = [
     scene: 'park',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Extra B2 5'),
+    weathers: ['sunny', 'cloudy'],
+    title: german('Einsam in der großen Stadt'),
     beats: [
-      { kind: 'narration', text: german('einigen und einsam und einzelne und einzig und Element.') },
-      { kind: 'line', speaker: 'mia', text: german('Empathie ist wichtig und Endung ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('eng und entstehen sind da.') },
-      { kind: 'narration', text: german('Epoche und erheben.') },
-      { kind: 'question', prompt: german('Was ist Erlebnis?'), options: [german('erleiden'), german('erlernen'), german('erregen')] },
-      { kind: 'question', prompt: german('Wer hat Erlebnis?'), options: [german('erleiden'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Ein ruhiger Sonntagmorgen im Park. Mia und Tom sitzen auf einer Bank und beobachten einen älteren Herrn, der jeden Tag allein die Tauben füttert.') },
+      { kind: 'line', speaker: 'mia', mood: 'sad', text: german('Er sitzt da jeden Tag, immer allein. Ich frage mich, ob er jemanden hat, mit dem er reden kann.') },
+      { kind: 'line', speaker: 'tom', text: german('Einsamkeit ist ein größeres Problem, als viele denken. In manchen Umfragen gibt mehr als die Hälfte der Erwachsenen in Deutschland an, sich zumindest manchmal einsam zu fühlen. Und es trifft längst nicht nur alte Menschen, sondern auch viele junge.') },
+      { kind: 'line', speaker: 'mia', mood: 'surprised', text: german('Auch junge? Die haben doch Hunderte Kontakte im Handy.') },
+      { kind: 'line', speaker: 'tom', text: german('Genau das ist das Paradoxe. Hunderte Kontakte ersetzen keine einzige enge Freundschaft. Einsamkeit entsteht nicht dadurch, dass man allein ist, sondern dadurch, dass man sich nicht verbunden fühlt.') },
+      { kind: 'line', speaker: 'mia', text: german('Und es ist ja nicht nur ein Gefühl. Ich habe gelesen, dass Einsamkeit auf Dauer ähnlich schädlich für die Gesundheit sein kann wie Rauchen. Menschen, die darunter leiden, erleiden häufiger Herzerkrankungen und Depressionen.') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Was könnte man denn hier im Viertel tun? Einzelne Gespräche sind schön, aber sie ändern wenig.') },
+      { kind: 'line', speaker: 'mia', text: german('Ich hätte eine Idee: ein Nachbarschaftspicknick, einmal im Monat, hier im Park. Jeder bringt etwas mit, und das wichtigste Element ist, dass niemand eine Einladung braucht. Man kommt einfach.') },
+      { kind: 'line', speaker: 'tom', text: german('Das gefällt mir. Aber wir sollten den Leuten mit Empathie begegnen, nicht mit Mitleid. Niemand möchte als „der Einsame“ eingeladen werden.') },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Einverstanden. Lass uns auf einen Termin einigen: Der erste Sonntag im Monat? {name}, wie würdest du den Herrn mit den Tauben ansprechen?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Guten Morgen! Wir organisieren hier nächsten Sonntag ein Picknick für die Nachbarschaft. Haben Sie Lust, vorbeizukommen?'),
+        german('Sie sehen so einsam aus, Sie brauchen dringend Hilfe!'),
+        german('Füttern Sie bitte keine Tauben mehr, das ist verboten.')
+      ] },
+      { kind: 'narration', text: german('Tom geht zu dem älteren Herrn hinüber. Zuerst ist der Mann überrascht, dann lacht er und erzählt, dass er früher Bäcker war. Er verspricht, einen Kuchen mitzubringen.') },
+      { kind: 'question', prompt: german('Wen beobachten Mia und Tom?'), options: [german('Einen älteren Herrn, der Tauben füttert'), german('Eine Gruppe junger Leute'), german('Einen Hund ohne Besitzer')] },
+      { kind: 'question', prompt: german('Wie viele Erwachsene fühlen sich laut Tom zumindest manchmal einsam?'), options: [german('Mehr als die Hälfte'), german('Fast niemand'), german('Nur jeder hundertste')] },
+      { kind: 'question', prompt: german('Wodurch entsteht Einsamkeit laut Tom?'), options: [german('Dadurch, dass man sich nicht verbunden fühlt'), german('Dadurch, dass man allein wohnt'), german('Dadurch, dass man kein Handy hat')] },
+      { kind: 'question', prompt: german('Womit vergleicht Mia die Folgen von Einsamkeit?'), options: [german('Mit Rauchen'), german('Mit zu wenig Schlaf'), german('Mit einer Erkältung')] },
+      { kind: 'question', prompt: german('Warum soll man den Leuten laut Tom mit Empathie statt Mitleid begegnen?'), options: [german('Weil niemand als „der Einsame“ eingeladen werden möchte'), german('Weil Mitleid zu teuer ist'), german('Weil die Leute sonst nicht essen')] },
+      { kind: 'question', prompt: german('Was war der ältere Herr früher von Beruf?'), options: [german('Bäcker'), german('Lehrer'), german('Gärtner')] }
     ]
   },
 
