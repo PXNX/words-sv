@@ -1,14 +1,12 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
-  import { page } from '$app/state';
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import TutorialSteps from '#lib/app/TutorialSteps.svelte';
-  import { requestCirclePractice } from '#lib/circle/practice.js';
 
-  const isDefinitionsMode = $derived(page.url.searchParams.get('mode') === 'definitions');
-  const destination = $derived(isDefinitionsMode ? '/circle/definitions' : '/circle');
+  // Shown as an overlay inside the game (app/GameToolbar.svelte); the game decides what "start" does.
+  let { definitions = false, onstart, onskip }: { definitions?: boolean; onstart: () => void; onskip: () => void } = $props();
+  const isDefinitionsMode = $derived(definitions);
 
   const circleTutorialHints: Record<'de' | 'en', string> = {
     de: 'G••••• · G•• · T••',
@@ -35,11 +33,6 @@
   ]);
   // The example word: RAT reads as a word in German and English.
   const wheel = [{ letter: 'R', x: 50, y: 14 }, { letter: 'A', x: 86, y: 50 }, { letter: 'T', x: 50, y: 86 }, { letter: 'E', x: 14, y: 50 }];
-
-  function beginPractice() {
-    requestCirclePractice(tutorialLanguage);
-    void goto(destination);
-  }
 </script>
 
 {#snippet traceDemo()}
@@ -70,7 +63,7 @@
 {/snippet}
 
 <div class="tutorial-panel" dir={interfaceDirection} lang={settings.interfaceLocale}>
-  <TutorialSteps kicker={labels.kicker} title={labels.title} cornerMark="01" {steps} startLabel={labels.start} onstart={beginPractice} footer={practiceHint} />
+  <TutorialSteps kicker={labels.kicker} title={labels.title} cornerMark="01" {steps} startLabel={labels.start} {onstart} {onskip} footer={practiceHint} />
 </div>
 
 <style>

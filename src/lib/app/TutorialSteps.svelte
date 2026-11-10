@@ -14,13 +14,15 @@
   import TutorialDialog from './TutorialDialog.svelte';
 
 
-  let { kicker, title, cornerMark, steps, startLabel, onstart, footer }: {
+  let { kicker, title, cornerMark, steps, startLabel, onstart, onskip, footer }: {
     kicker: string;
     title: string;
     cornerMark?: string;
     steps: TutorialStep[];
     startLabel: string;
     onstart: () => void;
+    /** "Skip" on the first step; defaults to starting. */
+    onskip?: () => void;
     /** Extra content under the last step (e.g. the practice round's hint). */
     footer?: Snippet;
   } = $props();
@@ -62,7 +64,7 @@ const step = $derived(steps[index]!);
     {#if index > 0}
       <button type="button" class="btn-play btn-play-soft" onclick={() => go(index - 1)}>{m.tutorial_back({}, locale)}</button>
     {:else}
-      <button type="button" class="tutorial-skip" onclick={onstart}>{m.tutorial_skip({}, locale)}</button>
+      <button type="button" class="tutorial-skip" onclick={onskip ?? onstart}>{m.tutorial_skip({}, locale)}</button>
     {/if}
     {#if last}
       <button type="button" class="btn-play btn-play-ink tutorial-go" onclick={onstart}>{startLabel}</button>

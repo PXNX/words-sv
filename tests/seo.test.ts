@@ -28,6 +28,6 @@ test('titles, descriptions and image slugs resolve per route', () => {
 	assert.equal(pageTitle('/hangman/'), 'Hangman · WordCircle');
 	assert.equal(imageSlug('/'), 'home');
 	assert.equal(imageSlug('/circle/definitions'), 'circle-definitions');
-	assert.equal(imageSlug('/wordle/tutorial'), 'wordle');
+	assert.equal(imageSlug('/wordle'), 'wordle');
 	for (const meta of Object.values(pages)) assert.ok(meta.description.length <= 160, meta.title);
 });

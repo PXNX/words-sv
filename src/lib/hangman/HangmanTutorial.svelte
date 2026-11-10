@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import TutorialSteps from '#lib/app/TutorialSteps.svelte';
 
-  const HANGMAN_TUTORIAL_KEY = 'wordcircle-hangman-tutorial-v1';
+  // Shown as an overlay inside the game (app/GameToolbar.svelte).
+  let { onstart, onskip }: { onstart: () => void; onskip: () => void } = $props();
   // A word that reads the same in German and English.
   const WORD = 'PIZZA';
 
@@ -16,11 +16,6 @@
     { text: m.hangman_tutorial_step_wrong({}, locale), demo: wrong },
     { text: m.hangman_tutorial_step_win({}, locale), demo: win }
   ]);
-
-  function begin() {
-    if (typeof localStorage !== 'undefined') localStorage.setItem(HANGMAN_TUTORIAL_KEY, 'complete');
-    void goto('/hangman');
-  }
 </script>
 
 {#snippet slots(shown: string, solved = false)}
@@ -56,7 +51,7 @@
 {/snippet}
 
 <div class="tutorial-panel" dir={interfaceDirection} lang={settings.interfaceLocale}>
-  <TutorialSteps kicker={m.hangman_tutorial_title({}, locale)} title={m.mode_hangman({}, locale)} cornerMark="03" {steps} startLabel={m.tutorial_start({}, locale)} onstart={begin} />
+  <TutorialSteps kicker={m.hangman_tutorial_title({}, locale)} title={m.mode_hangman({}, locale)} cornerMark="03" {steps} startLabel={m.tutorial_start({}, locale)} {onstart} {onskip} />
 </div>
 
 <style>
