@@ -744,5 +744,6 @@
   "grammar_value_en_passive": "passive",
   "grammar_value_en_positive": "positive",
   "grammar_value_en_comparative": "comparative",
-  "grammar_value_en_superlative": "superlative"
+  "grammar_value_en_superlative": "superlative",
+  "today_feature": "Practise {feature} – that's where most of your mistakes are right now"
 }
