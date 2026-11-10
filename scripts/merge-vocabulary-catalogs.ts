@@ -1,15 +1,22 @@
 import fs from 'node:fs';
-import path from 'node:path';
+import { join, resolve } from 'node:path';
 import vm from 'node:vm';
 
 const root = process.cwd();
-const dataDir = path.join(root, 'src/lib/data');
+const dataDir = resolve(root, 'src/lib/data');
 const levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
 const languages = ['de', 'en', 'fr', 'it', 'es', 'pt', 'uk'];
 
-const readJson = <T>(file: string): T => JSON.parse(fs.readFileSync(path.join(dataDir, file), 'utf8')) as T;
+const readJson = <T>(file: string): T => JSON.parse(fs.readFileSync(join(dataDir, file), 'utf8')) as T;
 const writeJson = (file: string, value: unknown): void =>
-  fs.writeFileSync(path.join(dataDir, file), `${JSON.stringify(value, null, 2)}\n`);
+  fs.writeFileSync(join(dataDir, file), `${JSON.stringify(value, null, 2)}\n`);
+
+type VocabularyEntry = {
+  definition?: string;
+  type?: string;
+  genus?: 'masculine' | 'feminine' | 'neuter';
+  article?: string;
+};
 
 type LanguagePack = {
   words?: Record<string, string[]>;
@@ -27,13 +34,33 @@ type CatalogEntry = {
 };
 
 function loadAddedPacks(): Record<string, LanguagePack> {
-  const raw = fs.readFileSync(path.join(dataDir, 'languagePacks.ts'), 'utf8');
+  const raw = fs.readFileSync(join(dataDir, 'languagePacks.ts'), 'utf8');
   const source = raw.slice(0, raw.indexOf('export const existingArticles'))
     .replace(/^export const addedLanguagePacks = /, 'const addedLanguagePacks = ')
     .replace(/\s+as const;\s*$/, ';');
   const context: Record<string, unknown> = {};
   vm.runInNewContext(`${source}; result = addedLanguagePacks;`, context);
   return context.result as Record<string, LanguagePack>;
+}
+
+function buildSourceFromLevelFiles(language: string): LanguagePack {
+  const words: Record<string, string[]> = {};
+  const definitions: Record<string, string> = {};
+  const metadata: Record<string, Record<string, unknown>> = {};
+  const articles: Record<string, string> = {};
+
+  for (const level of levels) {
+    const data = readJson<Record<string, VocabularyEntry>>(`${language}.${level}.json`);
+    words[level] = Object.keys(data);
+    for (const [word, entry] of Object.entries(data)) {
+      const key = word.toUpperCase();
+      if (entry.definition) definitions[key] = entry.definition;
+      if (entry.type) metadata[key] = { ...metadata[key], type: entry.type };
+      if (entry.genus) metadata[key] = { ...metadata[key], genus: entry.genus };
+      if (entry.article) articles[key] = entry.article;
+    }
+  }
+  return { words, definitions, metadata, articles };
 }
 
 function mergeCatalog(language: string, source: LanguagePack): Record<string, CatalogEntry> {
@@ -66,15 +93,10 @@ function mergeCatalog(language: string, source: LanguagePack): Record<string, Ca
 }
 
 const added = loadAddedPacks();
-const germanWords = Object.fromEntries(levels.map((level) => [level, readJson<string[]>(`words.de.${level}.json`)]));
-const englishWords = Object.fromEntries(levels.map((level) => [level, readJson<string[]>(`words.en.${level}.json`)]));
-const definitionsDe = readJson<Record<string, string>>('definitions.de.json');
-const definitionsEn = readJson<Record<string, string>>('definitions.en.json');
-const metadataDe = readJson<Record<string, Record<string, unknown>>>('metadata.de.json');
 
 const sources: Record<string, LanguagePack> = {
-  de: { words: germanWords, definitions: definitionsDe, metadata: metadataDe },
-  en: { words: englishWords, definitions: definitionsEn, metadata: {} },
+  de: buildSourceFromLevelFiles('de'),
+  en: buildSourceFromLevelFiles('en'),
   ...Object.fromEntries(['fr', 'it', 'es', 'pt', 'uk'].map((language) => [language, added[language]]))
 };
 
