@@ -7,6 +7,7 @@
  * Unlinked devices only ask once per start whether they are linked, and nothing else is sent.
  */
 import { deviceId } from '#lib/streak/clientStreak.js';
+import * as v from 'valibot';
 import { ApiError, callApi } from '#lib/api/client.js';
 import { SyncReplySchema, type SyncReply } from '#lib/api/schemas.js';
 import { changedEntries, collectSnapshot, mergeSnapshots, snapshotFingerprint, type ProgressSnapshot } from './progressMerge.js';
@@ -21,13 +22,19 @@ const MAX_ATTEMPTS = 3;
 
 export const cloudSync = $state<{ linked: boolean | null; savedAt: number | null; busy: boolean; failed: boolean }>({ linked: null, savedAt: null, busy: false, failed: false });
 
+// Anything unreadable starts over from revision 0, which only costs one extra pull.
+const MetaSchema = v.object({
+  revision: v.fallback(v.pipe(v.number(), v.integer(), v.minValue(0)), 0),
+  fingerprint: v.fallback(v.string(), ''),
+  savedAt: v.fallback(v.nullable(v.pipe(v.number(), v.minValue(1))), null)
+});
+
 function readMeta(): Meta {
   try {
-    const parsed = JSON.parse(localStorage.getItem(META_KEY) ?? 'null') as Partial<Meta> | null;
-    return { revision: Number(parsed?.revision) || 0, fingerprint: String(parsed?.fingerprint ?? ''), savedAt: Number(parsed?.savedAt) || null };
-  } catch {
-    return { revision: 0, fingerprint: '', savedAt: null };
-  }
+    const parsed = v.safeParse(MetaSchema, JSON.parse(localStorage.getItem(META_KEY) ?? 'null'));
+    if (parsed.success) return parsed.output;
+  } catch {}
+  return { revision: 0, fingerprint: '', savedAt: null };
 }
 
 function writeMeta(meta: Meta) {

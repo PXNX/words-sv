@@ -226,8 +226,10 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 
 ### Phase T leftovers
 - [x] `exactOptionalPropertyTypes`, for the whole project at once (only 30 places needed it).
-- [ ] Schema library (Valibot) at the boundaries: API, IndexedDB/localStorage reads, LLM JSON,
-  Telegram `initData`; typed fetch client for `api/`.
+- [x] Schema library (Valibot) at the boundaries: every `api/` reply through the typed fetch client
+  (`src/lib/api/client.ts`, `schemas.ts`), IndexedDB aggregates and the sync metadata, the LLM
+  grade JSON, Telegram `initData` (client and server). The older localStorage readers keep their
+  hand-written normalisers, which the v1.0.0 fixture test covers.
 - [x] Typed worker protocol (`src/lib/workers/protocol.ts`: calls with params, result and updates;
   shared client with timeouts and crash handling) for the LLM, Supertonic, VoxCPM and WAV workers.
   The Piper worker stays plain JS under `static/`.
