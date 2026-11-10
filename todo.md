@@ -195,3 +195,83 @@ tests/build, a focused commit and a push to `main`.
 - [x] `bun run test` → 31 files, 205 tests passing.
 - [x] `bun run build` → 24 routes, OG tags written (the OG step now runs as
   `bun scripts/og.ts`).
+
+## 11. Implementation plan: learning progress (from `impl-plan.md`)
+
+Status of the full plan against the code. Items marked done above (sections 1–10) are not
+repeated. Conventions in this repo win over the plan where they differ: commits go straight to
+`main` (no feature branches or PRs), and the bot uses PostgreSQL.
+
+### Done
+- [x] `v1.0.0` baseline tag and GitHub release (9.1).
+- [x] Phase T: strict flags (except `exactOptionalPropertyTypes`), zero `check` errors, Vitest
+  only, CI gate, typescript-eslint.
+- [x] Domain types: `src/lib/domain/types.ts` (`LangCode`, `Level`, `Skill`, branded `ItemId` /
+  `SessionId`, `assertNever`).
+- [x] Typed grammar-feature taxonomy (3.7): `src/lib/grammar/taxonomy.ts` with `FeatureKey`,
+  `featureKey()`, `ALL_FEATURE_KEYS` snapshot, `isFeatureKey`, rename map, `labelKey`; type tests.
+- [x] Phase L core: `src/lib/format/format.ts` (one convention per learned language, explicit
+  calendar/digits, cached `Intl` formatters, ordinals, week start, LTR isolate) and
+  `src/lib/format/spoken.ts` (German/English numbers, ordinals, clock times); Settings →
+  "Format like" (learned language / app language) with Persian calendar and native-digit options;
+  progress, streak strip, listening history and sync time use it; ESLint bans raw
+  `toLocale*String()`.
+- [x] CalVer (9.2, 9.4, 9.5): `src/lib/app/version.ts` (`AppVersion`, `parseVersion`,
+  `compareVersions`, `nextCalVer`), `scripts/release.ts` (local, tested `cutChangelog`),
+  `CHANGELOG.md`, `__APP_VERSION__` from `package.json`.
+- [x] Changelog page (9.6): `/changelog`, bundled and offline, newest first, unseen badge
+  (`lastSeenVersion`), anchors per release, localised highlights (`changelog_v<version>`),
+  GitHub links; Settings row with version and unseen dot.
+
+### Phase T leftovers
+- [ ] `exactOptionalPropertyTypes`, per directory.
+- [ ] Schema library (Valibot) at the boundaries: API, IndexedDB/localStorage reads, LLM JSON,
+  Telegram `initData`; typed fetch client for `api/`.
+- [ ] Typed worker protocol (discriminated union) for LLM, TTS and scoring workers.
+- [ ] Locale-completeness CI check (every key in every locale, or an explicit fallback list).
+- [ ] Type-aware lint rules (`no-floating-promises`, `switch-exhaustiveness-check`).
+
+### Phase L leftovers
+- [ ] Route the remaining numbers through `format.ts` (byte sizes in the model manager, quiz
+  counters, recap minutes, reminder time picker, Telegram messages).
+- [ ] Alltag/Satzbau drills for dates, times, ordinals, prices; spoken forms wired into listening.
+- [ ] Interface formatting in Telegram reminder texts.
+
+### Phase P — content packs and fast loading
+- [ ] Measure where the per-level word files land in the bundle; move them to hashed, fetched,
+  validated packs with a manifest; `loadPack()` with cache, idle prefetch, download manager.
+- [ ] Budgets: bundle size and pack size in CI, Lighthouse CI.
+
+### Phase A — progress foundation
+- [ ] Append-only `LearningEvent` log (IndexedDB) with one writer used by every mode; backfill
+  from the activity log and ledger; 12-month compaction.
+- [ ] FSRS scheduler (`ts-fsrs`) behind the ledger interface; migrate SM-2 state
+  (`repetitions`, `ease`, `intervalDays`, `dueAt`, `lapses`) without losing due dates.
+- [ ] Item states `new → learning → young → mature`, leeches; "known" = R ≥ 0.9 and S ≥ 21 d.
+- [ ] Per-feature state keyed by `FeatureKey`; skill × level state (coverage, mastery,
+  retained accuracy, confidence).
+
+### Phase B — assessment and visibility
+- [ ] Placement test, 4-weekly checkpoints, readiness ranges and forecast, target exam/date,
+  `/progress` redesign, recap with real learning numbers.
+
+### Phase V — visual layer
+- [ ] V1 tokens (OKLCH, gender colours with shape cue, motion tokens), V2 word→picture map with
+  coverage report and Credits page, V3 cat mascot rig and inclusive avatar options, V4 teaching
+  animations, V5 scenes, V6 memory map, V7 retention A/B.
+
+### Phases C, W, D, E, F, G, H, I
+- [ ] C: Formen verbs/adjectives (German first) on `FormItem`/`FeatureKey`, partial credit,
+  feature errors as events; deeper gap-fill, Satzbau and B2–C2 content.
+- [ ] W: offline dictionary packs, tap-to-lookup, lemma index, compound split, add to review.
+- [ ] D: provider router (WebGPU first, OpenRouter BYOK opt-in), per-language model settings.
+- [ ] E: Persian/Arabic native-speaker path, RTL audit, L1 error priors.
+- [ ] F: writing rubric per exam, reading/listening exam formats, speaking simulation, mock exams.
+- [ ] G: offline audit, progress-aware reminders.
+- [ ] H: Telegram Mini App sign-in and sync, leagues and duels with server-side scoring.
+- [ ] I: dashboards, A/B framework, content QA loop.
+
+### Release process leftovers
+- [ ] `tests/fixtures/v1.0.0/` snapshot of a learner's local data for migration tests.
+- [ ] One-time "Updated to …" snackbar and a link from the update prompt to `/changelog`.
+- [ ] Version in the service-worker cache name and in the Telegram bot's `/version`.
