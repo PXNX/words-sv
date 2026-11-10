@@ -4,6 +4,7 @@
   away from its own page, the pill turns into a link back to it.
 -->
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { page } from '$app/state';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
@@ -26,7 +27,7 @@
 {#if running.length}
   <a class="background-jobs" href={running[0]!.route} aria-live="polite">
     <span class="background-jobs-ring" style:--fill={`${percent}%`} aria-hidden="true"></span>
-    <span>{m.background_working({ label: running[0]!.label, percent: String(percent) }, locale)}</span>
+    <span>{m.background_working({ label: running[0]!.label, percent: num(percent) }, locale)}</span>
   </a>
 {:else if ready.length}
   <div class="background-jobs ready" role="status">

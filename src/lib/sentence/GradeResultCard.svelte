@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import type { GradeFactor, GradeResult } from './grading.js';
@@ -59,9 +60,9 @@
     <span class="grade-verdict">{verdictLabel}</span>
   </div>
   <p class="grade-stats">
-    {m.sentence_words({ count: String(result.words) }, { locale: settings.interfaceLocale })}
+    {m.sentence_words({ count: num(result.words) }, { locale: settings.interfaceLocale })}
     {#if result.paragraphs > 1}
-      · {m.fullText_paragraphs({ count: String(result.paragraphs) }, { locale: settings.interfaceLocale })}
+      · {m.fullText_paragraphs({ count: num(result.paragraphs) }, { locale: settings.interfaceLocale })}
     {/if}
     · <span class="grade-source">{sourceLabel}</span>
   </p>

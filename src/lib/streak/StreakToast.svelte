@@ -4,6 +4,7 @@
   (no buttons, no focus) and stays silent apart from a soft vibration.
 -->
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { haptic } from '#lib/feedback/haptics.js';
@@ -33,7 +34,7 @@
   });
 
   const locale = $derived({ locale: settings.interfaceLocale });
-  const text = $derived(!shown ? '' : shown.count <= 1 ? m.streak_toast_first({}, locale) : shown.milestone ? m.streak_toast_milestone({ count: shown.count }, locale) : m.streak_toast({ count: shown.count }, locale));
+  const text = $derived(!shown ? '' : shown.count <= 1 ? m.streak_toast_first({}, locale) : shown.milestone ? m.streak_toast_milestone({ count: num(shown.count) }, locale) : m.streak_toast({ count: num(shown.count) }, locale));
 </script>
 
 {#if shown}

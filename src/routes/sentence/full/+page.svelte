@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { logAnswer } from '#lib/progress/eventLog.js';
   import { onMount } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
@@ -21,8 +22,8 @@
     hideHint: m.fullText_hintHide({}, { locale: settings.interfaceLocale }),
     reference: m.fullText_reference({}, { locale: settings.interfaceLocale }),
     target: (target: number) => m.sentence_target({ target: String(target) }, { locale: settings.interfaceLocale }),
-    words: (count: number) => m.sentence_words({ count: String(count) }, { locale: settings.interfaceLocale }),
-    paragraphs: (count: number) => m.fullText_paragraphs({ count: String(count) }, { locale: settings.interfaceLocale }),
+    words: (count: number) => m.sentence_words({ count: num(count) }, { locale: settings.interfaceLocale }),
+    paragraphs: (count: number) => m.fullText_paragraphs({ count: num(count) }, { locale: settings.interfaceLocale }),
     aiSubmitting: m.grade_ai_submitting({}, { locale: settings.interfaceLocale }),
   });
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { onMount, tick, untrack } from 'svelte';
   import { flip } from 'svelte/animate';
@@ -948,7 +949,7 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
       {:else if finished}
         <div class="story-finished" dir={interfaceDirection} lang={settings.interfaceLocale}>
           <strong>{labels.finished}</strong>
-          {#if interactiveIndices.length}<span>{m.story_score({ correct: String(firstTry), total: String(interactiveIndices.length) }, { locale: settings.interfaceLocale })}</span>{/if}
+          {#if interactiveIndices.length}<span>{m.story_score({ correct: num(firstTry), total: num(interactiveIndices.length) }, { locale: settings.interfaceLocale })}</span>{/if}
           <div>
             <button type="button" class="btn-play story-secondary" onclick={() => written && start(written)}>{labels.again}</button>
             <button type="button" class="btn-play btn-play-ink story-primary" onclick={() => start(pickStory(story?.id))}>{labels.next}</button>

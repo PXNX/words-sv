@@ -4,6 +4,7 @@
   Used in the intro and on the profile page; `onchange` gets every new look.
 -->
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { playSoundEffect } from '#lib/feedback/sounds.js';
@@ -71,7 +72,7 @@
     const source = cosmetics[id].source;
     if (source.kind === 'mode') return modeHints[source.mode];
     if (source.kind === 'achievement') return m.cosmetic_hint_achievement({ name: achievementNames[source.achievement] }, locale);
-    if (source.kind === 'language') return m.cosmetic_hint_language({ count: source.target, language: new Intl.DisplayNames([settings.interfaceLocale], { type: 'language' }).of(source.language) ?? source.language }, locale);
+    if (source.kind === 'language') return m.cosmetic_hint_language({ count: num(source.target), language: new Intl.DisplayNames([settings.interfaceLocale], { type: 'language' }).of(source.language) ?? source.language }, locale);
     if (source.score === 'wordle_two') return m.cosmetic_hint_score_wordle({}, locale);
     if (source.score === 'hangman_five') return m.cosmetic_hint_score_hangman({}, locale);
     return m.cosmetic_hint_score_vocab({}, locale);

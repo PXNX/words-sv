@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { logAnswer } from '#lib/progress/eventLog.js';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
@@ -76,7 +77,7 @@
   ></textarea>
 
   <div class="writing-meta">
-    <span>{m.sentence_words({ count: String(wordCount) }, { locale: settings.interfaceLocale })}</span>
+    <span>{m.sentence_words({ count: num(wordCount) }, { locale: settings.interfaceLocale })}</span>
   </div>
 
   <GraderGate />

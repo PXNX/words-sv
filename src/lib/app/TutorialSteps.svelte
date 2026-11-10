@@ -4,6 +4,7 @@
   step's button starts playing (the game's own guided first round, where it has one).
 -->
 <script lang="ts" module>
+  import { num } from '#lib/format/num.svelte.js';
   import type { Snippet } from 'svelte';
   export type TutorialStep = { text: string; demo: Snippet };
 </script>
@@ -51,13 +52,13 @@ const step = $derived(steps[index]!);
   <div class="tutorial-stage">
     {#key index}
       <div class="tutorial-demo" aria-hidden="true">{@render step.demo()}</div>
-      <p class="tutorial-text" aria-live="polite"><b>{index + 1}</b><span>{step.text}</span></p>
+      <p class="tutorial-text" aria-live="polite"><b>{num(index + 1)}</b><span>{step.text}</span></p>
     {/key}
   </div>
   {#if last && footer}{@render footer()}{/if}
-  <div class="tutorial-dots" role="tablist" aria-label={m.tutorial_step_of({ current: index + 1, total: steps.length }, locale)}>
+  <div class="tutorial-dots" role="tablist" aria-label={m.tutorial_step_of({ current: num(index + 1), total: num(steps.length) }, locale)}>
     {#each steps as _, dot (dot)}
-      <button type="button" role="tab" class="tutorial-dot" class:active={dot === index} aria-selected={dot === index} aria-label={m.tutorial_step_of({ current: dot + 1, total: steps.length }, locale)} onclick={() => go(dot)}></button>
+      <button type="button" role="tab" class="tutorial-dot" class:active={dot === index} aria-selected={dot === index} aria-label={m.tutorial_step_of({ current: num(dot + 1), total: num(steps.length) }, locale)} onclick={() => go(dot)}></button>
     {/each}
   </div>
   <div class="tutorial-nav">

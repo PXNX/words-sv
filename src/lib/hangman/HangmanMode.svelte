@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { logAnswer } from '#lib/progress/eventLog.js';
   import { untrack } from 'svelte';
   import { haptic } from '#lib/feedback/haptics.js';
@@ -37,7 +38,7 @@
     for (const letter of guessed) marks[letter] = target.includes(letter) ? 'correct' : 'absent';
     return marks;
   });
-  const wordLabel = $derived(m.hangman_word_label({ count: letters.length, pattern: letters.map((letter) => (guessedSet.has(letter) || finished ? letter : m.hangman_blank({}, { locale }))).join(', ') }, { locale }));
+  const wordLabel = $derived(m.hangman_word_label({ count: num(letters.length), pattern: letters.map((letter) => (guessedSet.has(letter) || finished ? letter : m.hangman_blank({}, { locale }))).join(', ') }, { locale }));
   // The reveal: the word as it is written (with its article) and what it means.
   const revealSpelling = $derived(finished ? spokenWord(language as Language, target) : '');
   const revealDefinition = $derived(finished ? wordDefinitions[language as Language]?.[target] ?? null : null);
@@ -172,7 +173,7 @@
         <span class="grid justify-items-start gap-[.3rem]">
           <Companion id="lilith" mood={lilithMood} line={lilithLine} />
           <!-- The dots are the tries left; the count is only spoken. -->
-          <span class="flex gap-[.22rem]" role="img" aria-label={m.hangman_tries_left({ count: triesLeft }, { locale })}>
+          <span class="flex gap-[.22rem]" role="img" aria-label={m.hangman_tries_left({ count: num(triesLeft) }, { locale })}>
             {#each Array(HANGMAN_LIVES) as _, index}<span class="hm-life" class:hm-life-spent={index >= triesLeft}></span>{/each}
           </span>
         </span>

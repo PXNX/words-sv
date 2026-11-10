@@ -5,6 +5,7 @@
   yes/no format with invented words (assessment/placement.ts). The result can become their level.
 -->
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { onMount } from 'svelte';
   import { fly, scale } from 'svelte/transition';
   import { backOut } from 'svelte/easing';
@@ -171,7 +172,7 @@
       <button type="button" class="btn-play btn-play-ink placement-cta" onclick={start}>{m.placement_start({}, locale)}</button>
     </div>
   {:else if phase === 'test' && format === 'exam' && examItem}
-    <p class="placement-level">{examLevel.toUpperCase()} · {m.placement_question({ current: itemIndex + 1, total: examItems.length }, locale)}</p>
+    <p class="placement-level">{examLevel.toUpperCase()} · {m.placement_question({ current: num(itemIndex + 1), total: num(examItems.length) }, locale)}</p>
     {#key examItem.id}
       <div class="exam-card" in:fly={{ x: 24, duration: ms(240) }}>
         <p class="exam-prompt">{examPrompt}</p>

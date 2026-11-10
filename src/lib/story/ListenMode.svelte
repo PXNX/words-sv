@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { LISTEN_TARGET, unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { onMount, tick, untrack } from 'svelte';
   import { goto } from '$app/navigation';
@@ -25,7 +26,7 @@
   import IconPause from '~icons/material-symbols/pause-rounded';
   import IconRewind from '~icons/material-symbols/fast-rewind-rounded';
   import IconForward from '~icons/material-symbols/fast-forward-rounded';
-  import { formatDateTime } from '#lib/format/format.js';
+  import { formatDateTime, formatNumber } from '#lib/format/format.js';
 
   const STORY_TARGETS: Record<string, number> = { a1: 200, a2: 250, b1: 320, b2: 380, c1: 420, c2: 480 };
   const LISTEN_PROGRESS_KEY = 'wordcircle-listen-progress-v1';
@@ -100,7 +101,7 @@
   const labels = $derived({
     listen: m.story_listen({}, { locale: settings.interfaceLocale }),
     level: m.vocabulary({}, { locale: settings.interfaceLocale }),
-    download: m.voice_quality_loading({ percent: String(download) }, { locale: settings.interfaceLocale }),
+    download: m.voice_quality_loading({ percent: num(download) }, { locale: settings.interfaceLocale }),
     audio: m.story_listen_audio({}, { locale: settings.interfaceLocale }),
     loading: m.story_listen_loading({}, { locale: settings.interfaceLocale }),
     wordBankLoading: m.word_bank_loading({}, { locale: settings.interfaceLocale }),
@@ -940,7 +941,7 @@
   }
   function formatTime(seconds: number) {
     const whole = Math.max(0, Math.round(seconds));
-    return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, '0')}`;
+    return `${num(Math.floor(whole / 60))}:${formatNumber(settings.formatContext, whole % 60, { minimumIntegerDigits: 2 })}`;
   }
   // The scene animation and the play button follow the audio element itself, so they stay in step
   // whether the learner tapped play, a media key started it or the browser stopped it on its own.
@@ -1022,7 +1023,7 @@
         <span class="listen-pulse" aria-hidden="true"><IconHeadphones /></span>
         <p>{labels.download}</p>
         <div class="listen-bar"><span style={`width:${download}%`}></span></div>
-        <small>{downloadMegabytes} / {downloadTotalMegabytes} MB</small>
+        <small>{num(downloadMegabytes)} / {num(downloadTotalMegabytes)} MB</small>
         {#if downloadRemaining !== null && downloadRemaining >= 1}
           <small>{m.voice_quality_remaining({ time: formatTime(downloadRemaining) }, { locale: settings.interfaceLocale })}</small>
         {/if}
@@ -1046,12 +1047,12 @@
         <div class="listen-generating-content">
           <span class="listen-walk" aria-hidden="true"><span class="listen-walker"><StoryCharacter id="lilith" mood="happy" /></span></span>
           <p class="listen-current" lang={settings.lang}>{generatingTitle || labels.audio}</p>
-          <p class="listen-audio-dot">Audio {batchIndex} of {batchTotal} · {Math.round(progress * 100)}%</p>
+          <p class="listen-audio-dot">{m.listen_audio_batch({ current: num(batchIndex), total: num(batchTotal), percent: num(Math.round(progress * 100)) }, { locale: settings.interfaceLocale })}</p>
           <div class="listen-bar"><span style={`width:${progress * 100}%`}></span></div>
           <div class="listen-eta">
             {#if eta !== null && eta >= 1}<small>{m.voice_quality_remaining({ time: formatTime(eta) }, { locale: settings.interfaceLocale })}</small>{/if}
           </div>
-          <small class="listen-part">Part {done} of {total}</small>
+          <small class="listen-part">{m.story_loader_parts({ done: num(done), total: num(total) }, { locale: settings.interfaceLocale })}</small>
         </div>
       </div>
     {:else if phase === 'loading'}
@@ -1129,7 +1130,7 @@
               </span>
               <span class="listen-history-text">
                 <strong lang={session.language}>{sessionTitle(session)}</strong>
-                <small>{session.level.toUpperCase()} · {dateFormat.format(session.updatedAt)}{#if session.storyCount > 1}{' · '}{session.storyCount}{/if}</small>
+                <small>{session.level.toUpperCase()} · {dateFormat.format(session.updatedAt)}{#if session.storyCount > 1}{' · '}{num(session.storyCount)}{/if}</small>
               </span>
               <span class="listen-history-at">{formatTime(session.position)} / {formatTime(session.duration)}</span>
             </button>
