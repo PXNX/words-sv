@@ -896,5 +896,12 @@
   "case_nominative": "Nominativ",
   "case_genitive": "Genitiv",
   "case_dative": "Dativ",
-  "case_accusative": "Akkusativ"
+  "case_accusative": "Akkusativ",
+  "goal_date_label": "Bereit für {level} bis",
+  "goal_date_hint": "Wähle ein Datum, und der Coach sagt dir, ob dein Tempo dafür reicht.",
+  "goal_on_track": "Noch {weeks} Wochen – in deinem Tempo schaffst du es.",
+  "goal_tight": "Noch {weeks} Wochen – das wird knapp; jeden Tag etwas mehr hilft.",
+  "goal_behind": "Noch {weeks} Wochen – in diesem Tempo dauert es länger. Üb öfter oder wähle ein späteres Datum.",
+  "goal_unknown": "Noch {weeks} Wochen – üb ein paar Tage, dann kennt der Coach dein Tempo.",
+  "goal_passed": "Das Datum ist vorbei – wähle ein neues."
 }

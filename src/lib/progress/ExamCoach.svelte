@@ -20,6 +20,7 @@
   import { buildOverview } from './overview.js';
   import BottomSheet from '#lib/app/BottomSheet.svelte';
   import IconHelp from '~icons/material-symbols/question-mark-rounded';
+  import { goalPace, parseGoalDate } from './goalDate.js';
   import { ACCURACY_WINDOW_DAYS, confidenceFor, forecastWeeks, readinessPercent, retainedAccuracy, rubricAverage, type ReadinessRange } from './skillState.js';
   import { storeSnapshot, weeklySeries, type MasterySnapshot } from './masteryHistory.js';
   import IconArrow from '~icons/material-symbols/arrow-forward-rounded';
@@ -62,6 +63,28 @@
     if (currentRung) history = storeSnapshot(settings.lang, settings.vocabularyLevel, currentRung.mastery);
   });
   const forecast = $derived(forecastWeeks(weeklySeries(history, settings.lang, settings.vocabularyLevel), FORECAST_TARGET));
+  // Goal date per language and level, kept on the device.
+  const goalKey = $derived(`wordcircle-goal-date-v1:${settings.lang}:${settings.vocabularyLevel}`);
+  let goalDate = $state<string | null>(null);
+  $effect(() => {
+    try { goalDate = parseGoalDate(localStorage.getItem(goalKey)); } catch { goalDate = null; }
+  });
+  function setGoalDate(value: string) {
+    goalDate = parseGoalDate(value);
+    try {
+      if (goalDate) localStorage.setItem(goalKey, goalDate);
+      else localStorage.removeItem(goalKey);
+    } catch {}
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const pace = $derived(goalDate ? goalPace(goalDate, Date.now(), forecast) : null);
+  const paceText = $derived({
+    on_track: () => m.goal_on_track({ weeks: number(pace?.weeksLeft ?? 0) }, locale),
+    tight: () => m.goal_tight({ weeks: number(pace?.weeksLeft ?? 0) }, locale),
+    behind: () => m.goal_behind({ weeks: number(pace?.weeksLeft ?? 0) }, locale),
+    unknown: () => m.goal_unknown({ weeks: number(pace?.weeksLeft ?? 0) }, locale),
+    passed: () => m.goal_passed({}, locale)
+  });
 
   const skillName = $derived<Record<Skill, string>>({
     vocab: m.skill_vocab({}, locale),
@@ -108,6 +131,11 @@
       <p class="coach-sub">{practised ? m.readiness_known_words({ count: number(overview.knownWords) }, locale) : m.coach_no_data({}, locale)}</p>
     </div>
     <span class="coach-mia" aria-hidden="true"><StoryCharacter id="mia" mood={practised && headline.point >= 0.6 ? 'happy' : 'curious'} still /></span>
+  </div>
+  <!-- The learner's own goal date for the level, against the forecast -->
+  <div class="coach-goal">
+    <label><span>{m.goal_date_label({ level: settings.vocabularyLevel.toUpperCase() }, locale)}</span><input type="date" min={today} value={goalDate ?? ''} onchange={(event) => setGoalDate((event.currentTarget as HTMLInputElement).value)} /></label>
+    <p class="coach-goal-verdict {pace?.verdict ?? ''}" aria-live="polite">{pace ? paceText[pace.verdict]() : m.goal_date_hint({}, locale)}</p>
   </div>
   {#if forecast && forecast.weeks > 0}
     <p class="coach-forecast">{m.readiness_forecast({ weeks: number(forecast.weeks), low: number(forecast.low), high: number(forecast.high), level: settings.vocabularyLevel.toUpperCase() }, locale)}</p>
@@ -237,6 +265,13 @@
   .coach-step small { font-size:.62rem;font-weight:700;opacity:.65; }
   .coach-step :global(svg) { flex:none;width:1.2rem;height:1.2rem;color:var(--color-accent); }
 
+  .coach-goal { display:grid;gap:.3rem;margin-top:.6rem;padding:.55rem .65rem;border-radius:.8rem;background:color-mix(in srgb,currentColor 5%,transparent); }
+  .coach-goal label { display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-size:.66rem;font-weight:800; }
+  .coach-goal input { padding:.25rem .4rem;border:1.5px solid color-mix(in srgb,currentColor 25%,transparent);border-radius:.5rem;background:transparent;color:inherit;font:inherit;font-size:.66rem; }
+  .coach-goal-verdict { min-height:1.4em;margin:0;font-size:.62rem;font-weight:800;opacity:.75; }
+  .coach-goal-verdict.on_track { color:#34824d;opacity:1; }
+  .coach-goal-verdict.tight { color:#b5762a;opacity:1; }
+  .coach-goal-verdict.behind { color:#c4522e;opacity:1; }
   .coach-hero-text { position:relative;padding-inline-end:2rem; }
   .coach-how-button { position:absolute;top:-.2rem;inset-inline-end:-.2rem;display:grid;place-items:center;width:1.7rem;height:1.7rem;padding:0;border:2px solid currentColor;border-radius:50%;background:transparent;color:inherit;opacity:.6;cursor:pointer;transition:opacity .2s,rotate .3s cubic-bezier(.34,1.56,.64,1); }
   .coach-how-button:hover,.coach-how-button:focus-visible { opacity:1;rotate:12deg; }

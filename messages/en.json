@@ -896,5 +896,12 @@
   "case_nominative": "Nominative",
   "case_genitive": "Genitive",
   "case_dative": "Dative",
-  "case_accusative": "Accusative"
+  "case_accusative": "Accusative",
+  "goal_date_label": "Ready for {level} by",
+  "goal_date_hint": "Pick a date and the coach tells you whether your pace gets you there.",
+  "goal_on_track": "{weeks} weeks left – at your pace you'll make it.",
+  "goal_tight": "{weeks} weeks left – it will be tight; a little more each day helps.",
+  "goal_behind": "{weeks} weeks left – at this pace it takes longer. Practise more often or pick a later date.",
+  "goal_unknown": "{weeks} weeks left – practise a few days so the coach can tell your pace.",
+  "goal_passed": "The date has passed – pick a new one."
 }
