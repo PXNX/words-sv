@@ -10,8 +10,8 @@
  */
 import type { Level } from '#lib/domain/types.js';
 import type { VocabularyGender } from '#lib/data/vocabulary.js';
-import { buildNounCasePrompt } from '#lib/grammar/cases.js';
-import { buildAdjectivePrompt } from '#lib/grammar/adjectives.js';
+import { buildNounCasePrompt, isDeclinableNoun } from '#lib/grammar/cases.js';
+import { buildAdjectivePrompt, isEligibleAdjective } from '#lib/grammar/adjectives.js';
 import { buildVerbPrompt, verbConjugations } from '#lib/grammar/verbs.js';
 
 export type ExamEntry = { definition?: string; type?: string; genus?: VocabularyGender; article?: string };
@@ -74,8 +74,8 @@ export function articleItem(word: string, entry: ExamEntry, level: Level, random
 
 /** A sentence gap that tests the grammar of the level (German). */
 export function grammarItem(level: Level, entries: Readonly<Record<string, ExamEntry>>, random: () => number): ExamItem | null {
-  const nouns = Object.entries(entries).filter(([, entry]) => entry.type === 'noun' && entry.genus);
-  const adjectives = Object.keys(entries).filter((word) => entries[word]!.type === 'adjective' && /^[a-zäöü]+$/u.test(word));
+  const nouns = Object.entries(entries).filter(([word, entry]) => entry.type === 'noun' && entry.genus && isDeclinableNoun(word));
+  const adjectives = Object.keys(entries).filter((word) => entries[word]!.type === 'adjective' && /^[a-zäöü]+$/u.test(word) && isEligibleAdjective(word));
   const keep = <T>(values: T[]) => shuffle(values, random);
   let prompt: { before: string; after: string; correct: string; choices: string[] } | null;
   if (level === 'a1') {

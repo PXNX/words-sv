@@ -12,6 +12,8 @@ function personFeatures(personIndex: number): FeatureKey[] {
 // du- and er-forms, so a hardcoded table is the only way to stay correct — deriving it from
 // the infinitive algorithmically would silently mis-conjugate verbs like "sehen" -> "siehst"
 // or "nehmen" -> "nimmt". Keyed uppercase to match `wordPools`/`wordMetadata`.
+// `after` must read right after every pronoun, so it never holds mir/dich/sich: "Ich gebe mir
+// das Buch" or "Du triffst sich" would be wrong for all but one person.
 export type VerbForms = [string, string, string, string, string, string];
 type VerbEntry = { forms: VerbForms; after: string };
 
@@ -22,7 +24,7 @@ export const verbConjugations: Record<string, VerbEntry> = {
   HABEN: { forms: ['habe', 'hast', 'hat', 'haben', 'habt', 'haben'], after: 'heute keine Zeit.' },
   WERDEN: { forms: ['werde', 'wirst', 'wird', 'werden', 'werdet', 'werden'], after: 'langsam müde.' },
   WISSEN: { forms: ['weiß', 'weißt', 'weiß', 'wissen', 'wisst', 'wissen'], after: 'die Antwort nicht.' },
-  TUN: { forms: ['tue', 'tust', 'tut', 'tun', 'tut', 'tun'], after: 'das gern für dich.' },
+  TUN: { forms: ['tue', 'tust', 'tut', 'tun', 'tut', 'tun'], after: 'das gern für sie.' },
 
   KÖNNEN: { forms: ['kann', 'kannst', 'kann', 'können', 'könnt', 'können'], after: 'gut schwimmen.' },
   MÜSSEN: { forms: ['muss', 'musst', 'muss', 'müssen', 'müsst', 'müssen'], after: 'jetzt gehen.' },
@@ -32,13 +34,13 @@ export const verbConjugations: Record<string, VerbEntry> = {
   MÖGEN: { forms: ['mag', 'magst', 'mag', 'mögen', 'mögt', 'mögen'], after: 'diesen Film sehr.' },
   MÖCHTEN: { forms: ['möchte', 'möchtest', 'möchte', 'möchten', 'möchtet', 'möchten'], after: 'einen Kaffee, bitte.' },
 
-  GEBEN: { forms: ['gebe', 'gibst', 'gibt', 'geben', 'gebt', 'geben'], after: 'mir bitte das Buch.' },
+  GEBEN: { forms: ['gebe', 'gibst', 'gibt', 'geben', 'gebt', 'geben'], after: 'dem Kind das Buch.' },
   NEHMEN: { forms: ['nehme', 'nimmst', 'nimmt', 'nehmen', 'nehmt', 'nehmen'], after: 'jeden Tag den Bus.' },
   SPRECHEN: { forms: ['spreche', 'sprichst', 'spricht', 'sprechen', 'sprecht', 'sprechen'], after: 'sehr gut Deutsch.' },
   ESSEN: { forms: ['esse', 'isst', 'isst', 'essen', 'esst', 'essen'], after: 'gern frisches Obst.' },
   VERGESSEN: { forms: ['vergesse', 'vergisst', 'vergisst', 'vergessen', 'vergesst', 'vergessen'], after: 'den Termin schon wieder.' },
   HELFEN: { forms: ['helfe', 'hilfst', 'hilft', 'helfen', 'helft', 'helfen'], after: 'oft in der Küche.' },
-  TREFFEN: { forms: ['treffe', 'triffst', 'trifft', 'treffen', 'trefft', 'treffen'], after: 'sich am Bahnhof.' },
+  TREFFEN: { forms: ['treffe', 'triffst', 'trifft', 'treffen', 'trefft', 'treffen'], after: 'die Freunde am Bahnhof.' },
   WERFEN: { forms: ['werfe', 'wirfst', 'wirft', 'werfen', 'werft', 'werfen'], after: 'den Ball sehr weit.' },
   BRECHEN: { forms: ['breche', 'brichst', 'bricht', 'brechen', 'brecht', 'brechen'], after: 'das frische Brot.' },
   MESSEN: { forms: ['messe', 'misst', 'misst', 'messen', 'messt', 'messen'], after: 'die Temperatur genau.' },
@@ -47,7 +49,7 @@ export const verbConjugations: Record<string, VerbEntry> = {
   SEHEN: { forms: ['sehe', 'siehst', 'sieht', 'sehen', 'seht', 'sehen'], after: 'heute Abend einen Film.' },
   LESEN: { forms: ['lese', 'liest', 'liest', 'lesen', 'lest', 'lesen'], after: 'jeden Abend ein Buch.' },
   EMPFEHLEN: { forms: ['empfehle', 'empfiehlst', 'empfiehlt', 'empfehlen', 'empfehlt', 'empfehlen'], after: 'dieses Restaurant.' },
-  STEHLEN: { forms: ['stehle', 'stiehlst', 'stiehlt', 'stehlen', 'stehlt', 'stehlen'], after: 'nichts, das versprochen ist.' },
+  STEHLEN: { forms: ['stehle', 'stiehlst', 'stiehlt', 'stehlen', 'stehlt', 'stehlen'], after: 'nie etwas.' },
 
   FAHREN: { forms: ['fahre', 'fährst', 'fährt', 'fahren', 'fahrt', 'fahren'], after: 'morgen nach Berlin.' },
   SCHLAFEN: { forms: ['schlafe', 'schläfst', 'schläft', 'schlafen', 'schlaft', 'schlafen'], after: 'acht Stunden pro Nacht.' },
@@ -77,7 +79,7 @@ export const verbConjugations: Record<string, VerbEntry> = {
   LACHEN: { forms: ['lache', 'lachst', 'lacht', 'lachen', 'lacht', 'lachen'], after: 'über den lustigen Witz.' },
   KOCHEN: { forms: ['koche', 'kochst', 'kocht', 'kochen', 'kocht', 'kochen'], after: 'heute Abend Nudeln.' },
   PUTZEN: { forms: ['putze', 'putzt', 'putzt', 'putzen', 'putzt', 'putzen'], after: 'samstags die ganze Wohnung.' },
-  ZEIGEN: { forms: ['zeige', 'zeigst', 'zeigt', 'zeigen', 'zeigt', 'zeigen'], after: 'mir bitte den Weg.' },
+  ZEIGEN: { forms: ['zeige', 'zeigst', 'zeigt', 'zeigen', 'zeigt', 'zeigen'], after: 'den Gästen die Stadt.' },
   GLAUBEN: { forms: ['glaube', 'glaubst', 'glaubt', 'glauben', 'glaubt', 'glauben'], after: 'das nicht wirklich.' },
   MEINEN: { forms: ['meine', 'meinst', 'meint', 'meinen', 'meint', 'meinen'], after: 'das durchaus ernst.' },
   HOLEN: { forms: ['hole', 'holst', 'holt', 'holen', 'holt', 'holen'], after: 'schnell noch die Post.' },
@@ -87,7 +89,7 @@ export const verbConjugations: Record<string, VerbEntry> = {
   TANZEN: { forms: ['tanze', 'tanzt', 'tanzt', 'tanzen', 'tanzt', 'tanzen'], after: 'jeden Freitag sehr gern.' },
   REISEN: { forms: ['reise', 'reist', 'reist', 'reisen', 'reist', 'reisen'], after: 'im Sommer oft nach Italien.' },
   TRÄUMEN: { forms: ['träume', 'träumst', 'träumt', 'träumen', 'träumt', 'träumen'], after: 'nachts oft von Ferien.' },
-  DANKEN: { forms: ['danke', 'dankst', 'dankt', 'danken', 'dankt', 'danken'], after: 'dir sehr für die Hilfe.' },
+  DANKEN: { forms: ['danke', 'dankst', 'dankt', 'danken', 'dankt', 'danken'], after: 'ihr sehr für die Hilfe.' },
   WANDERN: { forms: ['wandere', 'wanderst', 'wandert', 'wandern', 'wandert', 'wandern'], after: 'am Wochenende gern im Wald.' },
   SAMMELN: { forms: ['sammle', 'sammelst', 'sammelt', 'sammeln', 'sammelt', 'sammeln'], after: 'seit Jahren alte Briefmarken.' },
   KLETTERN: { forms: ['klettere', 'kletterst', 'klettert', 'klettern', 'klettert', 'klettern'], after: 'jedes Jahr auf einen Berg.' },
@@ -98,13 +100,13 @@ export const verbConjugations: Record<string, VerbEntry> = {
   REDEN: { forms: ['rede', 'redest', 'redet', 'reden', 'redet', 'reden'], after: 'heute wieder viel zu viel.' },
   LEBEN: { forms: ['lebe', 'lebst', 'lebt', 'leben', 'lebt', 'leben'], after: 'schon lange in Hamburg.' },
   LIEBEN: { forms: ['liebe', 'liebst', 'liebt', 'lieben', 'liebt', 'lieben'], after: 'diese Stadt sehr.' },
-  WÜNSCHEN: { forms: ['wünsche', 'wünschst', 'wünscht', 'wünschen', 'wünscht', 'wünschen'], after: 'dir alles Gute.' },
+  WÜNSCHEN: { forms: ['wünsche', 'wünschst', 'wünscht', 'wünschen', 'wünscht', 'wünschen'], after: 'ihr alles Gute.' },
   ZAHLEN: { forms: ['zahle', 'zahlst', 'zahlt', 'zahlen', 'zahlt', 'zahlen'], after: 'lieber immer bar.' },
   BEZAHLEN: { forms: ['bezahle', 'bezahlst', 'bezahlt', 'bezahlen', 'bezahlt', 'bezahlen'], after: 'sofort die Rechnung.' },
   RIECHEN: { forms: ['rieche', 'riechst', 'riecht', 'riechen', 'riecht', 'riechen'], after: 'gern an frischen Blumen.' },
-  FÜHLEN: { forms: ['fühle', 'fühlst', 'fühlt', 'fühlen', 'fühlt', 'fühlen'], after: 'mich heute ziemlich müde.' },
-  FOLGEN: { forms: ['folge', 'folgst', 'folgt', 'folgen', 'folgt', 'folgen'], after: 'mir bitte langsam.' },
-  STÖREN: { forms: ['störe', 'störst', 'stört', 'stören', 'stört', 'stören'], after: 'dich hoffentlich nicht.' },
+  FÜHLEN: { forms: ['fühle', 'fühlst', 'fühlt', 'fühlen', 'fühlt', 'fühlen'], after: 'die warme Sonne auf der Haut.' },
+  FOLGEN: { forms: ['folge', 'folgst', 'folgt', 'folgen', 'folgt', 'folgen'], after: 'dem Weg bis zum Fluss.' },
+  STÖREN: { forms: ['störe', 'störst', 'stört', 'stören', 'stört', 'stören'], after: 'die Nachbarn hoffentlich nicht.' },
   WECKEN: { forms: ['wecke', 'weckst', 'weckt', 'wecken', 'weckt', 'wecken'], after: 'die Kinder um sieben Uhr.' },
   FÜHREN: { forms: ['führe', 'führst', 'führt', 'führen', 'führt', 'führen'], after: 'heute die ganze Gruppe.' },
   ERZÄHLEN: { forms: ['erzähle', 'erzählst', 'erzählt', 'erzählen', 'erzählt', 'erzählen'], after: 'den Kindern eine Geschichte.' },
@@ -113,7 +115,7 @@ export const verbConjugations: Record<string, VerbEntry> = {
   VERDIENEN: { forms: ['verdiene', 'verdienst', 'verdient', 'verdienen', 'verdient', 'verdienen'], after: 'in diesem Job gutes Geld.' },
   VERLIEREN: { forms: ['verliere', 'verlierst', 'verliert', 'verlieren', 'verliert', 'verlieren'], after: 'ständig den Schlüssel.' },
   KENNEN: { forms: ['kenne', 'kennst', 'kennt', 'kennen', 'kennt', 'kennen'], after: 'diese Stadt schon sehr gut.' },
-  BRINGEN: { forms: ['bringe', 'bringst', 'bringt', 'bringen', 'bringt', 'bringen'], after: 'dir gleich das Paket.' },
+  BRINGEN: { forms: ['bringe', 'bringst', 'bringt', 'bringen', 'bringt', 'bringen'], after: 'ihr gleich das Paket.' },
   DENKEN: { forms: ['denke', 'denkst', 'denkt', 'denken', 'denkt', 'denken'], after: 'oft an die letzten Ferien.' },
   BLEIBEN: { forms: ['bleibe', 'bleibst', 'bleibt', 'bleiben', 'bleibt', 'bleiben'], after: 'heute lieber zu Hause.' },
   SCHREIBEN: { forms: ['schreibe', 'schreibst', 'schreibt', 'schreiben', 'schreibt', 'schreiben'], after: 'gerade einen langen Brief.' },

@@ -12,7 +12,7 @@
   import { prioritizeLearningWords, updateReviewProgress } from '#lib/vocab/spacedRepetition.js';
   import { dueReviewEntries, recordReview } from '#lib/review/ledger.js';
   import { articleChoiceOptions, gapSentenceSuffixes, grammarArticles, pickRandomSection, shuffled, GRAMMAR_REVIEW_STORAGE_PREFIX } from '#lib/grammar/learning.js';
-  import { buildNounCasePrompt, buildNounPropertyPrompt, genderFeature, type GrammarPrompt } from '#lib/grammar/cases.js';
+  import { buildNounCasePrompt, buildNounPropertyPrompt, genderFeature, isDeclinableNoun, type GrammarPrompt } from '#lib/grammar/cases.js';
   import { buildAdjectivePrompt, isEligibleAdjective } from '#lib/grammar/adjectives.js';
   import { buildVerbPrompt, buildVerbPropertyPrompt, verbConjugations } from '#lib/grammar/verbs.js';
   import { buildFalseFriendPrompt, falseFriendsFor } from '#lib/grammar/falseFriends.js';
@@ -67,7 +67,7 @@
   const articleUniverse = $derived(grammarArticles[settings.lang] ?? []);
   const words = $derived(wordPools[settings.lang][settings.vocabularyLevel]);
 
-  const nounPool = $derived(words.filter((word) => Boolean(metadata[word]?.article) && Boolean(metadata[word]?.gender)));
+  const nounPool = $derived(words.filter((word) => Boolean(metadata[word]?.article) && Boolean(metadata[word]?.gender) && isDeclinableNoun(metadata[word]?.spelling ?? word)));
   const adjectivePool = $derived(words.filter((word) => metadata[word]?.type === 'adjective' && isEligibleAdjective(metadata[word]?.spelling ?? word)));
   const verbPool = $derived(words.filter((word) => Boolean(verbConjugations[word])));
   const legacyArticleWords = $derived(words.filter((word) => Boolean(metadata[word]?.article)));
