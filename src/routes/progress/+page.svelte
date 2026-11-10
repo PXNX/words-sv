@@ -29,6 +29,7 @@
   import { defaultAvatar } from '#lib/profile/avatar.js';
   import type { Mood } from '#lib/story/stories.js';
   import { formatWeekday } from '#lib/format/format.js';
+  import ReadinessCard from '#lib/progress/ReadinessCard.svelte';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   // Lilith turns loving at five days, happy once today is qualified, sad about a broken streak and
@@ -400,6 +401,7 @@
   </section>
 
   <!-- Overall: everything practised on this device (and in the saved progress), at a glance. -->
+  <ReadinessCard />
   <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4" aria-labelledby="progress-overall-heading">
     <h2 id="progress-overall-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{m.stats_overall({}, { locale: settings.interfaceLocale })}</h2>
     <dl class="overall-grid">
