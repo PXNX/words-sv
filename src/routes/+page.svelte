@@ -25,6 +25,9 @@
   import { REPAIR_WORDS, lilithFace, lilithMood, modeDone, type StreakMode, type StreakRepair } from '#lib/streak/clientStreak.js';
   import TodayBadge from '#lib/streak/TodayBadge.svelte';
   import StreakStrip from '#lib/streak/StreakStrip.svelte';
+  import { readEvents } from '#lib/progress/eventLog.js';
+  import { featureStats } from '#lib/progress/events.js';
+  import { labelKeys, type FeatureKey } from '#lib/grammar/taxonomy.js';
   import { buildTodayPlan, estimatedMinutes, type TodayPlan, type TodayReading } from '#lib/today/todayPlan.js';
   import { readingCatalog } from '#lib/story/readingCatalog.js';
   import { readDueVocabulary } from '#lib/vocab/spacedRepetition.js';
@@ -159,6 +162,14 @@
   type HomeContinue = { href: string; label: string; detail: string };
   let homeContinue = $state<HomeContinue[]>([]);
 
+  // The weakest grammar feature of the last 30 days, read once from the event log (IndexedDB).
+  let weakFeature = $state<{ feature: FeatureKey; accuracy: number; errors: number } | null>(null);
+  function loadWeakFeature() {
+    void readEvents(Date.now() - 30 * 24 * 60 * 60 * 1000).then((events) => {
+      weakFeature = featureStats(events.filter((event) => event.lang === settings.lang))[0] ?? null;
+      refreshToday();
+    });
+  }
   // The next best action is derived from local progress only: due reviews first, then an unfinished
   // text, the daily streak and finally the words marked while reading.
   function refreshToday() {
@@ -174,7 +185,8 @@
       reading,
       streakQualified: settings.streak.qualified,
       vocabCorrect: settings.streak.vocabCorrect,
-      vocabularyGoal: settings.streak.vocabularyGoal
+      vocabularyGoal: settings.streak.vocabularyGoal,
+      weakFeature
     });
     const next: HomeContinue[] = [];
     // When the Today card already points into the text, a second link would only repeat it.
@@ -229,6 +241,12 @@
     if (plan.kind === 'reading') return labels.todayReading(plan.title, plan.answered + 1);
     if (plan.kind === 'streak') return labels.todayStreak(plan.count);
     if (plan.kind === 'marked') return labels.todayMarked(plan.count);
+    if (plan.kind === 'feature') {
+      const keys = labelKeys(plan.feature);
+      const messages = m as unknown as Record<string, ((inputs: object, options: { locale: string }) => string) | undefined>;
+      const name = [messages[keys.category], messages[keys.value]].map((message) => message?.({}, { locale: settings.interfaceLocale })).filter(Boolean).join(' · ');
+      return m.today_feature({ feature: name || plan.feature }, { locale: settings.interfaceLocale });
+    }
     return labels.todayDone;
   }
 
@@ -238,6 +256,7 @@
     // Learners without a name go through the rest of the welcome flow, finale included.
     pickingLook = rootOnboarding || !settings.firstName;
     void settings.refreshStreak().then(refreshToday);
+    loadWeakFeature();
     streakTimer = window.setInterval(() => void settings.refreshStreak().then(refreshToday), 30_000);
     return () => {
       if (streakTimer !== null) window.clearInterval(streakTimer);
