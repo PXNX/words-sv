@@ -20,3 +20,9 @@ def test_every_result_has_a_text():
     for lang in TEXTS:
         for result in BRIDGE_RESULTS | {"failed"}:
             assert f"bridge_{result}" in TEXTS[lang]
+
+
+def test_store_texts():
+    for lang in TEXTS:
+        for key in ("checkout_error_store", "store_thanks", "store_pending"):
+            assert key in TEXTS[lang]

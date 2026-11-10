@@ -55,3 +55,19 @@ async def open_game(game: str, user_id: int, first_name: str, chat_id: int | Non
     body = await post("/api/telegram/game", data, client)
     url = body.get("url") if body else None
     return url if isinstance(url, str) else None
+
+
+async def check_purchase(payload: str, currency: str, amount: int, user_id: int, client: httpx.AsyncClient | None = None) -> str | None:
+    """Why the server refuses a store checkout, None when it is fine; "unreachable" without an answer."""
+    body = await post("/api/telegram/purchase", {"action": "check", "payload": payload, "currency": currency, "amount": amount, "userId": user_id}, client)
+    return body.get("problem") if body else "unreachable"
+
+
+async def record_purchase(payload: str, currency: str, amount: int, user_id: int, charge_id: str, subscription_expiration: int | None, client: httpx.AsyncClient | None = None) -> bool:
+    """Stores a paid store product on the server; False when it could not be reached (logged for a retry by hand)."""
+    body = await post(
+        "/api/telegram/purchase",
+        {"action": "paid", "payload": payload, "currency": currency, "amount": amount, "userId": user_id, "chargeId": charge_id, "subscriptionExpiration": subscription_expiration},
+        client,
+    )
+    return bool(body and body.get("problem") is None)
