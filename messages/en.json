@@ -612,5 +612,6 @@
   "changelog_github": "View on GitHub",
   "changelog_technical": "Details in English",
   "changelog_back": "Back",
-  "changelog_v1_0_0": "The first version: streaks, daily goal, review, stories, writing and more."
+  "changelog_v1_0_0": "The first version: streaks, daily goal, review, stories, writing and more.",
+  "changelog_v2026_11_1": "Dates, times and numbers now look like they do in the language you learn, and this page shows what's new."
 }
