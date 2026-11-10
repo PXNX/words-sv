@@ -8,7 +8,7 @@
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { formatDate, formatNumber, formatPercent } from '#lib/format/format.js';
-  import { checkpointDue, checkpointTrend, readCheckpoints, type CheckpointResult } from '#lib/assessment/checkpoints.js';
+  import { checkpointDue, checkpointTrend, nextCheckpointAt, readCheckpoints, type CheckpointResult } from '#lib/assessment/checkpoints.js';
   import { SKILLS, LEVELS, type Skill } from '#lib/domain/types.js';
   import { labelKeys, type FeatureKey } from '#lib/grammar/taxonomy.js';
   import { readEvents } from './eventLog.js';
@@ -21,7 +21,9 @@
   const DAY_MS = 24 * 60 * 60 * 1000;
   let events = $state<LearningEvent[]>([]);
   let checkpoints = $state<CheckpointResult[]>([]);
-  const due = $derived(checkpointDue(checkpoints, settings.lang, Date.now()));
+  const due = $derived(checkpointDue(checkpoints, settings.lang, Date.now(), settings.dailyGoal()));
+  // The next test follows the daily word goal: more words a day, sooner a test.
+  const nextAt = $derived(nextCheckpointAt(checkpoints, settings.lang, settings.dailyGoal()));
   const trend = $derived(checkpointTrend(checkpoints, settings.lang));
   onMount(() => {
     checkpoints = readCheckpoints();
@@ -70,7 +72,7 @@
 <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4 readiness" aria-labelledby="progress-readiness-heading">
   <h2 id="progress-readiness-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{m.readiness_title({}, locale)} · {settings.vocabularyLevel.toUpperCase()}</h2>
   <p class="readiness-known">{m.readiness_known_words({ count: formatNumber(settings.formatContext, overview.knownWords) }, locale)}</p>
-  <a class="readiness-placement" href="/placement">{m.placement_link({}, locale)}{#if due}<span class="readiness-due">{m.checkpoint_due({}, locale)}</span>{/if}</a>
+  <a class="readiness-placement" href="/placement">{m.placement_link({}, locale)}{#if due}<span class="readiness-due">{m.checkpoint_due({}, locale)}</span>{:else if nextAt}<span class="readiness-next">{m.checkpoint_next({ date: formatDate(settings.formatContext, nextAt, 'dayMonthShort') }, locale)}</span>{/if}</a>
   {#if trend.length}
     <h3>{m.checkpoint_trend({}, locale)}</h3>
     <ol class="readiness-trend">
@@ -128,6 +130,7 @@
   .readiness-known { margin: .35rem 0 0; font-size: 1.05rem; font-weight: 900; }
   .readiness-due { margin-inline-start: .4rem; padding: .05rem .4rem; border-radius: 999px; background: #e6a527; color: #172a45; font-size: .55rem; }
   .readiness-forecast { margin: .55rem 0 0; padding: .5rem .65rem; border-radius: .6rem; background: color-mix(in oklch, var(--color-success, #2f8f5b) 12%, transparent); font-size: .68rem; font-weight: 800; line-height: 1.4; }
+  .readiness-next { margin-inline-start: .4rem; font-size: .55rem; opacity: .7; text-transform: none; letter-spacing: 0; }
   .readiness-trend { display: flex; gap: .5rem; margin: .5rem 0 0; padding: 0; list-style: none; }
   .readiness-trend li { display: grid; gap: .1rem; padding: .35rem .6rem; border-radius: .6rem; background: color-mix(in oklch, currentColor 8%, transparent); font-size: .74rem; font-weight: 900; text-align: center; }
   .readiness-trend small { font-size: .56rem; font-weight: 700; opacity: .65; }

@@ -761,5 +761,6 @@
   "mobile_data_title_saver": "Datensparmodus ist an",
   "mobile_data_body": "{name} lädt {size} herunter. Das kann dein Datenvolumen aufbrauchen – im WLAN geht es kostenlos.",
   "mobile_data_go": "Trotzdem laden",
-  "mobile_data_wait": "Im WLAN laden"
+  "mobile_data_wait": "Im WLAN laden",
+  "checkpoint_next": "nächster ab {date}"
 }

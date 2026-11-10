@@ -761,5 +761,6 @@
   "mobile_data_title_saver": "Data saver is on",
   "mobile_data_body": "{name} downloads {size}. That can use up your data plan – on Wi-Fi it's free.",
   "mobile_data_go": "Download anyway",
-  "mobile_data_wait": "Wait for Wi-Fi"
+  "mobile_data_wait": "Wait for Wi-Fi",
+  "checkpoint_next": "next from {date}"
 }
