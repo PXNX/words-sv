@@ -64,6 +64,34 @@ export function parseChangelog(markdown: string): ChangelogRelease[] {
   return releases.sort((a, b) => compareVersions(b.version, a.version));
 }
 
+const COMMIT = /^(\w+)(?:\([^)]*\))?(!)?:\s*(.+)$/u;
+
+/**
+ * Changelog entries from Conventional Commit subjects: `feat` → new, `fix` → fixed, a `!` marks a
+ * breaking change (migration). docs, chore, refactor, test, ci, style and build stay internal.
+ */
+export function commitEntries(subjects: readonly string[]): Partial<Record<ChangeType, string[]>> {
+  const entries: Partial<Record<ChangeType, string[]>> = {};
+  for (const subject of subjects) {
+    const match = COMMIT.exec(subject.trim());
+    if (!match) continue;
+    const [, kind, breaking, text] = match;
+    const type: ChangeType | null = breaking ? 'migration' : kind === 'feat' ? 'new' : kind === 'fix' ? 'fixed' : null;
+    if (!type) continue;
+    const entry = text!.charAt(0).toLocaleUpperCase('en') + text!.slice(1).replace(/\.$/u, '');
+    if (!entries[type]?.includes(entry)) (entries[type] ??= []).push(entry);
+  }
+  return entries;
+}
+
+/** Markdown sections (### New, ### Fixed …) for entries, in the canonical order. */
+export function entriesMarkdown(entries: Partial<Record<ChangeType, string[]>>): string {
+  const headings: Record<ChangeType, string> = { new: 'New', improved: 'Improved', fixed: 'Fixed', migration: 'Migration', known: 'Known issues' };
+  return CHANGE_TYPES.filter((type) => entries[type]?.length)
+    .map((type) => `### ${headings[type]}\n${entries[type]!.map((entry) => `- ${entry}`).join('\n')}`)
+    .join('\n\n');
+}
+
 /** Releases newer than the last one the learner has opened the page for. */
 export function unseenReleases(releases: readonly ChangelogRelease[], lastSeen: string | null): ChangelogRelease[] {
   if (!lastSeen || !isAppVersion(lastSeen)) return [...releases];
