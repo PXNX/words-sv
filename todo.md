@@ -228,7 +228,9 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [ ] `exactOptionalPropertyTypes`, per directory.
 - [ ] Schema library (Valibot) at the boundaries: API, IndexedDB/localStorage reads, LLM JSON,
   Telegram `initData`; typed fetch client for `api/`.
-- [ ] Typed worker protocol (discriminated union) for LLM, TTS and scoring workers.
+- [x] Typed worker protocol (`src/lib/workers/protocol.ts`: calls with params, result and updates;
+  shared client with timeouts and crash handling) for the LLM, Supertonic, VoxCPM and WAV workers.
+  The Piper worker stays plain JS under `static/`.
 - [x] Locale check (`tests/locales.test.ts`): English complete, no stray keys, same placeholders.
 - [x] Type-aware lint rules (`no-floating-promises`, `switch-exhaustiveness-check`) over `src/` and
   `tests/`.
