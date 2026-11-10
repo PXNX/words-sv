@@ -23,10 +23,10 @@ const pages = routes
 	.filter((route) => route.page && !route.id.includes('['))
 	.map((route) => pageKey(route.id.replace(/\/\([^)]+\)/g, '') || SHELL))
 	.filter((page) => page !== SHELL);
-// The on-device model engines (WebLLM for the conversation partner, ~6 MB; Supertonic and VoxCPM with their
+// The on-device model engines (WebLLM for the conversation partner, ~6 MB; the voice models with their
 // ~20 MB ONNX runtime) are left out: most learners never pick them, and their models need a network
 // connection for the first download anyway. They are fetched when first used.
-const ON_DEMAND = [/\/(llm|supertonic|voxcpm)\.worker-[^/]+\.js$/, /\/workers\/assets\/ort-[^/]+\.wasm$/];
+const ON_DEMAND = [/\/(llm|supertonic)\.worker-[^/]+\.js$/, /\/workers\/assets\/ort-[^/]+\.wasm$/];
 // Kept across versions (hashed names), and pruned on activation to what this build still uses.
 const ON_DEMAND_CACHE = 'wordcircle-on-demand';
 const onDemandPaths = new Set(immutable.map(({ path }) => pathnameOf(path)).filter((path) => ON_DEMAND.some((pattern) => pattern.test(path))));

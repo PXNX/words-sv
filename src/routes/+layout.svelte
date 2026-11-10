@@ -105,8 +105,10 @@ $effect(() => {
 onMount(() => {
     // Opened from a Telegram group game's Play button: rounds report to that group's scoreboard.
     initGroupGame(new URL(page.url.href));
-    // Whether WebGPU really has an adapter, so VoxCPM falls back to Piper where it cannot run.
+    // Whether WebGPU really has an adapter, so voice engines that need it fall back to Piper in time.
     void probeWebGpu();
+    // Removed voice engines' downloads (VoxCPM's 1.6 GB) are dead weight; free them once idle.
+    setTimeout(() => void import('#lib/offline/storage.js').then(({ deleteRetiredStorage }) => deleteRetiredStorage()), 15_000);
     void autoUpdateOnStart();
     void updated.check();
     pwaInstall.init();

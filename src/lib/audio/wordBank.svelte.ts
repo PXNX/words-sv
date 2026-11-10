@@ -12,6 +12,7 @@ import {
 } from '#lib/story/naturalVoices.svelte.js';
 import { listWordAudioKeys, readWordAudio, writeWordAudio, deleteWordAudio, type StoredWordAudio } from './wordAudioStore.js';
 import { orderWords } from './wordBankWords.js';
+import { ownsClipKey, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
 
 /*
  * The shared word bank: every word of a level, spoken once by the natural voice model and kept on
@@ -70,11 +71,13 @@ async function loadKnown(language: Language) {
 		for (const key of keys) {
 			if (key.startsWith(prefix)) known.add(key);
 		}
-		// Audio of an older Piper model is dead weight; drop it while the keys are at hand. Edge audio
-		// stays, so switching voices back and forth to compare them doesn't throw work away.
+		// Audio of an older Piper model or a removed engine is dead weight; drop it while the keys are
+		// at hand. Audio of the current model engines and Edge stays, so switching voices back and forth
+		// to compare them doesn't throw work away.
 		const stale = keys.filter((key) => {
-			const [model, entryLanguage] = key.split('|');
-			return entryLanguage === language && model !== 'edge' && model !== 'supertonic' && model !== 'voxcpm' && model !== settings.naturalModel;
+			const [model = '', entryLanguage] = key.split('|');
+			const engineAudio = Object.hasOwn(voiceEngines, model) && ownsClipKey(model as VoiceEngineId);
+			return entryLanguage === language && !engineAudio && model !== settings.naturalModel;
 		});
 		if (stale.length) await deleteWordAudio(stale);
 	})();

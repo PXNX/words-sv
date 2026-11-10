@@ -5,7 +5,7 @@
  * only knows their names, so keep it in step when an engine changes where it stores things.
  */
 import { formatNumber, learningContext, type FormatContext } from '#lib/format/format.js';
-export type StoredGroup = 'piper' | 'supertonic' | 'voxcpm' | 'conversation' | 'wordAudio' | 'listening';
+export type StoredGroup = 'piper' | 'supertonic' | 'conversation' | 'wordAudio' | 'listening';
 
 type CacheStore = { cache: string; match?: (url: string) => boolean };
 type Store = { caches?: CacheStore[]; databases?: string[] };
@@ -15,7 +15,6 @@ export const storedGroups: Record<StoredGroup, Store> = {
   piper: { caches: [{ cache: 'story-voices-v1' }] },
   // transformers.js keeps every model it loads in one cache, keyed by URL.
   supertonic: { caches: [{ cache: 'transformers-cache', match: (url) => url.includes('Supertonic') }] },
-  voxcpm: { caches: [{ cache: 'voxcpm2-v1' }, { cache: 'transformers-cache', match: (url) => url.includes('VoxCPM') }] },
   // WebLLM (conversation/llm.worker.ts)
   conversation: { caches: [{ cache: 'webllm/model' }, { cache: 'webllm/wasm' }, { cache: 'webllm/config' }] },
   // audio/wordAudioStore.ts and story/audioLibrary.ts
@@ -59,8 +58,8 @@ export async function groupStored(group: StoredGroup): Promise<boolean> {
 }
 
 /** Deletes everything the group stored. The engine must be unloaded first (see ModelManager). */
-export async function deleteGroup(group: StoredGroup): Promise<void> {
-  for (const entry of storedGroups[group].caches ?? []) {
+async function deleteCaches(entries: readonly CacheStore[]) {
+  for (const entry of entries) {
     if (!entry.match) {
       if (typeof caches !== 'undefined') await caches.delete(entry.cache);
       continue;
@@ -68,6 +67,19 @@ export async function deleteGroup(group: StoredGroup): Promise<void> {
     const { store, requests } = await cacheEntries(entry);
     if (store) await Promise.all(requests.map((request) => store.delete(request)));
   }
+}
+
+// What removed engines left behind: nothing reads it any more, so it only takes up space.
+// VoxCPM2 kept ~1.6 GB of graphs in its own cache and its tokenizer among transformers.js's files.
+const retiredCaches: readonly CacheStore[] = [{ cache: 'voxcpm2-v1' }, { cache: 'transformers-cache', match: (url) => url.includes('VoxCPM') }];
+
+/** Frees the space of engines the app no longer has (run once the app is idle). */
+export async function deleteRetiredStorage(): Promise<void> {
+  await deleteCaches(retiredCaches).catch(() => undefined);
+}
+
+export async function deleteGroup(group: StoredGroup): Promise<void> {
+  await deleteCaches(storedGroups[group].caches ?? []);
   for (const name of storedGroups[group].databases ?? []) {
     await new Promise<void>((resolve) => {
       const request = indexedDB.deleteDatabase(name);

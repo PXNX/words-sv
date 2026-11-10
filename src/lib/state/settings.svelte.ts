@@ -1,6 +1,6 @@
 import { requiresCumulativePool } from '#lib/circle/engine.js';
 import { chatModel, DEFAULT_CHAT_MODEL, type ChatModelId } from '#lib/conversation/models.js';
-import { voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
+import { ownsClipKey, storedVoiceEngine, voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
 import { wordPools, isLanguage, isVocabularyLevel, type Language, type VocabularyLevel, warmLanguage, refreshHintableBaseWords } from '#lib/data/vocabulary.js';
 import { normalizeVocabularyGoal, dateKey, readStreak, repairCandidate, repairStreak as repairStoredStreak, syncStreak, syncStreakGoal, type ClientStreak, type StreakRepair, type StreakEvent } from '#lib/streak/clientStreak.js';
 import { recordActivity, type ActivityKind } from '#lib/progress/activity.js';
@@ -110,8 +110,8 @@ function readCompletedRounds() {
 }
 function readVoiceQuality(): VoiceQuality {
   if (typeof localStorage === 'undefined') return 'standard';
-  const value = localStorage.getItem(VOICE_QUALITY_KEY);
-  return voiceQualities.find((quality) => quality === value) ?? 'standard';
+  // A retired engine's setting (VoxCPM) moves to its replacement instead of silently resetting.
+  return storedVoiceEngine(localStorage.getItem(VOICE_QUALITY_KEY));
 }
 // The conversation partner's language model (conversation/models.ts).
 function readChatModel(): ChatModelId {
@@ -194,7 +194,7 @@ class SettingsStore {
   }
   // Which voices rendered clips belong to, so caches never mix one engine's audio with another's.
   get clipVoiceKey() {
-    return this.voiceQuality === 'edge' || this.voiceQuality === 'supertonic' || this.voiceQuality === 'voxcpm' ? this.voiceQuality : this.naturalModel;
+    return ownsClipKey(this.voiceQuality) ? this.voiceQuality : this.naturalModel;
   }
   setVoiceQuality(next: VoiceQuality) {
     this.voiceQuality = next;
