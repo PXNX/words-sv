@@ -6,7 +6,8 @@
     "definition": "Die Tageszeit zwischen Nachmittag und Nacht."
   },
   "abschließen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Tür mit einem Schlüssel zumachen; etwas zu Ende bringen."
   },
   "Ahnung": {
     "type": "noun",
@@ -21,7 +22,8 @@
     "definition": "Eine Anlage mit Lichtern, die den Verkehr regelt."
   },
   "ändern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas anders machen, als es vorher war."
   },
   "Angst": {
     "type": "noun",
@@ -30,10 +32,12 @@
     "definition": "Ein starkes Gefühl der Furcht."
   },
   "ansehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas oder jemanden mit den Augen genau betrachten."
   },
   "anzeigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas sichtbar machen oder zeigen; eine Tat der Polizei melden."
   },
   "Anzug": {
     "type": "noun",
@@ -48,16 +52,20 @@
     "definition": "Ein technisches Gerät für einen bestimmten Zweck."
   },
   "ärgern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden wütend machen; sich über etwas aufregen."
   },
   "auspacken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas aus einer Tasche, einem Koffer oder einem Paket herausnehmen."
   },
   "aussprechen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Wort mit dem Mund sagen, sodass man es hört."
   },
   "austragen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Zeitungen oder Briefe zu den Leuten bringen."
   },
   "Autor": {
     "type": "noun",
@@ -72,7 +80,8 @@
     "definition": "Eine Person, die auf Kinder aufpasst."
   },
   "backen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Kuchen oder Brot im Ofen heiß machen und fertig garen."
   },
   "Ball": {
     "type": "noun",
@@ -87,44 +96,46 @@
     "definition": "Eine Gruppe von Musikern, die zusammen auftritt."
   },
   "basteln": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit den Händen kleine Dinge aus Papier, Holz oder anderem Material machen."
   },
   "bauen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Haus oder etwas anderes aus Teilen herstellen."
   },
   "beachten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Auf etwas achten und sich danach richten."
   },
   "beantworten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Auf eine Frage oder einen Brief eine Antwort geben."
   },
   "bedanken": {
-    "type": "verb"
-  },
-  "bedankt": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich bei jemandem bedanken: einer Person Danke sagen."
   },
   "beeilen": {
-    "type": "verb"
-  },
-  "beeilt": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich beeilen: etwas schnell machen, um nicht zu spät zu sein."
   },
   "beenden": {
-    "type": "verb"
-  },
-  "begonnen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit etwas aufhören; etwas zu Ende bringen."
   },
   "begründen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sagen, warum man etwas tut oder denkt."
   },
   "Bekannte": {
     "type": "noun",
-    "definition": "Eine Person, die man kennt, aber nicht sehr gut."
+    "definition": "Eine Person, die man kennt, aber nicht sehr gut.",
+    "genus": "masculine",
+    "article": "der"
   },
   "beraten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem Tipps und Hilfe für eine Entscheidung geben."
   },
   "Berg": {
     "type": "noun",
@@ -133,10 +144,12 @@
     "definition": "Eine hohe natürliche Erhebung der Erdoberfläche."
   },
   "berichten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Erzählen, was passiert ist; über etwas informieren."
   },
   "berühmt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Sehr bekannt; viele Menschen kennen diese Person oder Sache."
   },
   "Bescheid": {
     "type": "noun",
@@ -145,25 +158,20 @@
     "definition": "Eine Information oder Nachricht über etwas."
   },
   "beschreiben": {
-    "type": "verb"
-  },
-  "beschrieben": {
-    "type": "verb"
-  },
-  "bestanden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit Worten sagen, wie etwas oder jemand aussieht oder ist."
   },
   "bestätigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sagen oder zeigen, dass etwas richtig oder sicher ist."
   },
   "bestehen": {
-    "type": "verb"
-  },
-  "bestellen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Prüfung schaffen; aus bestimmten Teilen gemacht sein."
   },
   "besten": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Am meisten gut; besser als alle anderen."
   },
   "Besuch": {
     "type": "noun",
@@ -177,8 +185,9 @@
     "article": "die",
     "definition": "Ein schriftlicher Antrag auf eine Arbeitsstelle."
   },
-  "beworben": {
-    "type": "verb"
+  "bewerben": {
+    "type": "verb",
+    "definition": "Sich um eine Arbeitsstelle oder einen Platz bemühen."
   },
   "Biologie": {
     "type": "noun",
@@ -193,10 +202,12 @@
     "definition": "Ein dünnes Stück Papier oder ein Teil einer Pflanze."
   },
   "blau": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Die Farbe des Himmels bei schönem Wetter."
   },
   "blond": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit hellen, gelblichen Haaren."
   },
   "Boden": {
     "type": "noun",
@@ -205,7 +216,8 @@
     "definition": "Die untere Fläche eines Raumes oder der Erde."
   },
   "braun": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Die Farbe von Schokolade oder Erde."
   },
   "Brücke": {
     "type": "noun",
@@ -214,10 +226,12 @@
     "definition": "Ein Bauwerk, das über einen Fluss oder ein Tal führt."
   },
   "buchen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Reise, ein Zimmer oder einen Platz fest bestellen."
   },
   "bunt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit vielen verschiedenen Farben."
   },
   "Büro": {
     "type": "noun",
@@ -250,7 +264,8 @@
     "definition": "Eine Sammlung von Daten auf einem Computer."
   },
   "denken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit dem Kopf überlegen; eine Meinung haben."
   },
   "Deutsch": {
     "definition": "Die deutsche Sprache oder etwas aus Deutschland.",
@@ -259,7 +274,8 @@
     "article": "das"
   },
   "dick": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit viel Fett am Körper; nicht dünn."
   },
   "Ding": {
     "type": "noun",
@@ -268,7 +284,8 @@
     "definition": "Ein Gegenstand, dessen Namen man nicht kennt oder nicht nennt."
   },
   "direkt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ohne Umweg oder Pause; ohne eine Person dazwischen."
   },
   "Disko": {
     "type": "noun",
@@ -277,7 +294,8 @@
     "definition": "Ein Ort, an dem man tanzt und Musik hört."
   },
   "diskutieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit anderen über ein Thema sprechen und Meinungen austauschen."
   },
   "Dollar": {
     "type": "noun",
@@ -286,22 +304,28 @@
     "definition": "Die Währung der USA und einiger anderer Länder."
   },
   "dringend": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Sehr wichtig und eilig; muss sofort passieren."
   },
   "drinnen": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Im Haus oder in einem Raum; nicht draußen."
   },
   "drüben": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Auf der anderen Seite; dort gegenüber."
   },
   "dumm": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht klug; ohne viel Verstand."
   },
   "dunkel": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ohne Licht oder mit wenig Licht; nicht hell."
   },
   "dünn": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit wenig Fett am Körper; schmal, nicht dick."
   },
   "E-Book": {
     "type": "noun",
@@ -310,10 +334,12 @@
     "definition": "Ein Buch in digitaler Form."
   },
   "egal": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht wichtig; es macht keinen Unterschied."
   },
   "eigen": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Zu einer Person selbst gehörend."
   },
   "Einkaufszentrum": {
     "type": "noun",
@@ -322,25 +348,22 @@
     "definition": "Ein großes Gebäude mit vielen Geschäften."
   },
   "einpacken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas in eine Tasche, einen Koffer oder in Papier tun."
   },
   "einverstanden": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Mit etwas zufrieden sein und Ja dazu sagen."
   },
   "einziehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "In eine neue Wohnung gehen, um dort zu wohnen."
   },
   "Eis": {
     "type": "noun",
     "genus": "neuter",
     "article": "das",
     "definition": "Eine kalte, süße Speise oder gefrorenes Wasser."
-  },
-  "empfohlen": {
-    "type": "verb"
-  },
-  "entschuldigt": {
-    "type": "verb"
   },
   "Erfolg": {
     "type": "noun",
@@ -349,16 +372,16 @@
     "definition": "Ein positives Ergebnis nach einer Anstrengung."
   },
   "erinnern": {
-    "type": "verb"
-  },
-  "erinnert": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas Vergangenes wieder im Kopf haben; sich erinnern."
   },
   "ernst": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht lustig; wichtig und schwer."
   },
   "erreichen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "An einem Ziel ankommen; ein Ziel schaffen."
   },
   "Euro": {
     "type": "noun",
@@ -385,7 +408,8 @@
     "definition": "Eine Reise mit einem Fahrzeug."
   },
   "fallen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Nach unten gehen, weil man den Halt verliert."
   },
   "Fan": {
     "type": "noun",
@@ -394,7 +418,8 @@
     "definition": "Eine Person, die eine Sache oder Person begeistert bewundert."
   },
   "faul": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ohne Lust zu arbeiten; nicht fleißig."
   },
   "Feier": {
     "type": "noun",
@@ -415,7 +440,8 @@
     "article": "das"
   },
   "fern": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Weit weg; nicht nah."
   },
   "Fest": {
     "type": "noun",
@@ -424,10 +450,12 @@
     "definition": "Eine größere Feier, oft mit vielen Gästen."
   },
   "fit": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Gesund und mit viel Kraft, weil man Sport macht."
   },
   "fleißig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Viel und gern arbeitend; nicht faul."
   },
   "Flug": {
     "type": "noun",
@@ -442,16 +470,16 @@
     "definition": "Ein großes, natürlich fließendes Gewässer."
   },
   "fotografieren": {
-    "type": "verb"
-  },
-  "freut": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit einer Kamera oder dem Handy ein Bild machen."
   },
   "frisch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Neu und nicht alt; gerade erst gemacht oder geerntet."
   },
   "früh": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Am Anfang des Tages; vor der normalen Zeit."
   },
   "Frühling": {
     "type": "noun",
@@ -460,10 +488,8 @@
     "definition": "Die Jahreszeit zwischen Winter und Sommer."
   },
   "fühlen": {
-    "type": "verb"
-  },
-  "fühlt": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas mit dem Körper oder im Herzen merken; sich gut oder schlecht fühlen."
   },
   "Führerschein": {
     "type": "noun",
@@ -490,7 +516,8 @@
     "definition": "Ein Bauwerk wie ein Haus oder ein Turm."
   },
   "gelb": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Die Farbe von Zitronen oder der Sonne."
   },
   "Gesicht": {
     "type": "noun",
@@ -499,7 +526,8 @@
     "definition": "Der vordere Teil des Kopfes mit Augen, Nase und Mund."
   },
   "gesund": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht krank; der Körper funktioniert gut."
   },
   "Gitarre": {
     "type": "noun",
@@ -520,10 +548,12 @@
     "definition": "Eine Einheit zur Messung von Temperatur oder Winkeln."
   },
   "grüßen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem Hallo sagen, wenn man ihn trifft."
   },
   "halbe": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ein Teil von zwei gleich großen Teilen."
   },
   "Hals": {
     "type": "noun",
@@ -532,10 +562,12 @@
     "definition": "Der Körperteil zwischen Kopf und Schultern."
   },
   "hängen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas oben festmachen, sodass es nach unten zeigt; oben befestigt sein."
   },
   "hässlich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht schön; unangenehm anzusehen."
   },
   "Haushalt": {
     "type": "noun",
@@ -550,7 +582,8 @@
     "definition": "Ein kleines Buch mit leeren Seiten zum Schreiben."
   },
   "heiß": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Sehr warm."
   },
   "Hemd": {
     "type": "noun",
@@ -565,7 +598,8 @@
     "definition": "Die Jahreszeit zwischen Sommer und Winter."
   },
   "herstellen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas machen oder produzieren, zum Beispiel in einer Fabrik."
   },
   "Himmel": {
     "type": "noun",
@@ -574,7 +608,8 @@
     "definition": "Der Raum über der Erde, in dem sich Wolken und Sterne befinden."
   },
   "hoffen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Wünschen und glauben, dass etwas Gutes passiert."
   },
   "Homepage": {
     "type": "noun",
@@ -589,7 +624,8 @@
     "definition": "Ein Kleidungsstück für die Beine."
   },
   "husten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Plötzlich und laut Luft aus dem Hals stoßen, oft bei einer Erkältung."
   },
   "Idee": {
     "type": "noun",
@@ -628,7 +664,8 @@
     "definition": "Eine Übersicht über die Tage, Wochen und Monate eines Jahres."
   },
   "kalt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit niedriger Temperatur; nicht warm."
   },
   "Kamera": {
     "type": "noun",
@@ -679,7 +716,8 @@
     "definition": "Eine Vereinigung von Menschen mit einem gemeinsamen Interesse."
   },
   "klug": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit viel Verstand; intelligent."
   },
   "König": {
     "type": "noun",
@@ -694,7 +732,8 @@
     "definition": "Eine Verbindung oder ein Austausch zwischen Menschen."
   },
   "kontrollieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Prüfen, ob etwas richtig oder in Ordnung ist."
   },
   "Konzert": {
     "type": "noun",
@@ -727,7 +766,8 @@
     "definition": "Eine Geschichte oder ein Film über ein Verbrechen."
   },
   "kühl": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ein bisschen kalt; nicht warm."
   },
   "Kultur": {
     "type": "noun",
@@ -735,11 +775,9 @@
     "article": "die",
     "definition": "Die Gesamtheit der Traditionen, Kunst und Lebensweise einer Gesellschaft."
   },
-  "kümmert": {
-    "type": "verb"
-  },
   "kündigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen Vertrag oder eine Arbeitsstelle beenden."
   },
   "Kunst": {
     "type": "noun",
@@ -754,10 +792,12 @@
     "definition": "Ein Gerät, das Licht spendet."
   },
   "leer": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ohne Inhalt; nichts ist darin."
   },
   "leihen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem etwas für kurze Zeit geben; etwas für kurze Zeit bekommen."
   },
   "Leute": {
     "type": "noun",
@@ -784,7 +824,8 @@
     "definition": "Eine geordnete Aufzählung von Dingen oder Namen."
   },
   "lügen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Bewusst etwas Falsches sagen; nicht die Wahrheit sagen."
   },
   "Magen": {
     "type": "noun",
@@ -799,7 +840,8 @@
     "definition": "Ein elektronischer Speicher für Nachrichten."
   },
   "malen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit Farbe und Pinsel ein Bild machen."
   },
   "Mantel": {
     "type": "noun",
@@ -832,7 +874,8 @@
     "definition": "Eine Person."
   },
   "merken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas bemerken; sich etwas im Kopf behalten."
   },
   "Messe": {
     "type": "noun",
@@ -889,7 +932,8 @@
     "definition": "Eine Person, die Kleidung oder Produkte präsentiert."
   },
   "modern": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Neu und passend zur heutigen Zeit; nicht alt."
   },
   "Müll": {
     "type": "noun",
@@ -946,13 +990,16 @@
     "definition": "Alles, was nicht vom Menschen geschaffen wurde, wie Pflanzen und Tiere."
   },
   "neben": {
-    "type": "verb"
+    "type": "preposition",
+    "definition": "An der Seite von etwas; direkt daneben."
   },
   "nervös": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Unruhig und ein bisschen ängstlich."
   },
   "nett": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Freundlich und angenehm zu anderen."
   },
   "Norden": {
     "type": "noun",
@@ -961,7 +1008,8 @@
     "definition": "Die Himmelsrichtung, die zum Nordpol zeigt."
   },
   "notieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas aufschreiben, damit man es nicht vergisst."
   },
   "Ohr": {
     "type": "noun",
@@ -976,7 +1024,8 @@
     "definition": "Die Himmelsrichtung, in der die Sonne aufgeht."
   },
   "packen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sachen in einen Koffer oder eine Tasche tun."
   },
   "Paket": {
     "type": "noun",
@@ -997,13 +1046,16 @@
     "definition": "Eine große Grünfläche in einer Stadt zur Erholung."
   },
   "parken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Auto an einem Ort abstellen."
   },
   "passen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Die richtige Größe haben; gut zu etwas oder jemandem gehören."
   },
   "passieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Geschehen; sich ereignen."
   },
   "Passwort": {
     "type": "noun",
@@ -1018,7 +1070,8 @@
     "definition": "Ein großes Tier, auf dem man reiten kann."
   },
   "pflanzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Pflanze oder einen Samen in die Erde setzen."
   },
   "Pizza": {
     "type": "noun",
@@ -1033,7 +1086,8 @@
     "definition": "Ein großes Blatt mit Werbung oder Informationen zum Aufhängen."
   },
   "planen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Vorher überlegen, wie man etwas machen will."
   },
   "Polizist": {
     "type": "noun",
@@ -1054,7 +1108,8 @@
     "definition": "Ein geplantes Vorhaben mit einem bestimmten Ziel."
   },
   "putzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas sauber machen."
   },
   "Qualität": {
     "type": "noun",
@@ -1087,7 +1142,8 @@
     "definition": "Ein Teilbetrag, den man regelmäßig zurückzahlt."
   },
   "raten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Antwort sagen, ohne sie sicher zu wissen; jemandem einen Tipp geben."
   },
   "Rathaus": {
     "type": "noun",
@@ -1096,15 +1152,18 @@
     "definition": "Das Gebäude, in dem die Verwaltung einer Stadt sitzt."
   },
   "Recht": {
-    "type": "adjective",
+    "type": "noun",
     "genus": "neuter",
-    "article": "das"
+    "article": "das",
+    "definition": "Etwas, das man nach dem Gesetz tun oder bekommen darf."
   },
   "reden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit anderen sprechen."
   },
   "reich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit viel Geld oder Besitz; nicht arm."
   },
   "Reihe": {
     "type": "noun",
@@ -1119,13 +1178,16 @@
     "definition": "Ein Geschäft, das Kleidung säubert, oder das Säubern selbst."
   },
   "reiten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Auf einem Pferd sitzen und sich tragen lassen."
   },
   "renovieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Wohnung oder ein Haus neu machen, zum Beispiel streichen."
   },
   "reservieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen Platz oder einen Tisch vorher bestellen."
   },
   "Rest": {
     "type": "noun",
@@ -1164,7 +1226,8 @@
     "definition": "Eine Blume mit Stacheln und angenehmem Duft."
   },
   "rot": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Die Farbe von Blut oder Tomaten."
   },
   "Rücken": {
     "type": "noun",
@@ -1179,7 +1242,8 @@
     "definition": "Eine Tasche, die man auf dem Rücken trägt."
   },
   "rufen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Laut sprechen, damit jemand es hört oder kommt."
   },
   "Ruhe": {
     "type": "noun",
@@ -1206,13 +1270,16 @@
     "definition": "Eine Person, die beruflich singt."
   },
   "sauber": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ohne Schmutz; nicht dreckig."
   },
   "sauer": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit einem Geschmack wie Zitrone; auch: verärgert."
   },
   "schade": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Bedauerlich; man ist traurig, dass etwas nicht so ist."
   },
   "Schiff": {
     "type": "noun",
@@ -1239,13 +1306,12 @@
     "definition": "Gefrorene, weiße Niederschlagsflocken im Winter."
   },
   "schneiden": {
-    "type": "verb"
-  },
-  "schneidet": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit einem Messer oder einer Schere etwas teilen."
   },
   "schneien": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Wenn weiße, kalte Flocken vom Himmel fallen."
   },
   "Schokolade": {
     "type": "noun",
@@ -1254,7 +1320,8 @@
     "definition": "Eine süße Speise aus Kakao."
   },
   "schwarz": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Die dunkelste Farbe, wie die Nacht."
   },
   "Seife": {
     "type": "noun",
@@ -1275,7 +1342,8 @@
     "definition": "Ein Programm im Fernsehen oder Radio, oder ein verschicktes Paket."
   },
   "separat": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Getrennt; für sich allein."
   },
   "Service": {
     "type": "noun",
@@ -1284,13 +1352,12 @@
     "definition": "Eine Dienstleistung für Kunden."
   },
   "setzen": {
-    "type": "verb"
-  },
-  "setzt": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas oder jemanden an einen Ort bringen; sich hinsetzen."
   },
   "singen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit der Stimme Musik machen; ein Lied machen."
   },
   "Situation": {
     "type": "noun",
@@ -1305,13 +1372,16 @@
     "definition": "Ein schmales Brett zum Gleiten über Schnee."
   },
   "sonnig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit viel Sonne; hell und warm."
   },
   "spannend": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "So interessant, dass man wissen will, wie es weitergeht."
   },
   "sparen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Geld nicht ausgeben, sondern behalten; wenig verbrauchen."
   },
   "Spaß": {
     "type": "noun",
@@ -1326,10 +1396,12 @@
     "definition": "Ein langsamer Gang an der frischen Luft zur Erholung."
   },
   "speichern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Daten auf einem Computer oder Handy sichern."
   },
   "stören": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden bei etwas unterbrechen oder ärgern."
   },
   "streiten": {
     "definition": "Einen Konflikt oder eine heftige Diskussion haben.",
@@ -1360,10 +1432,12 @@
     "definition": "Eine warme, flüssige Speise."
   },
   "surfen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Auf einem Brett über Wellen fahren; im Internet Seiten ansehen."
   },
   "süß": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit dem Geschmack von Zucker; auch: niedlich."
   },
   "Süßigkeiten": {
     "type": "noun",
@@ -1378,7 +1452,8 @@
     "definition": "Ein flacher, tragbarer Computer mit Touchscreen."
   },
   "täglich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Jeden Tag."
   },
   "Tante": {
     "type": "noun",
@@ -1399,7 +1474,8 @@
     "definition": "Ein kleines Gefäß mit Henkel zum Trinken."
   },
   "tausend": {
-    "type": "numeral"
+    "type": "numeral",
+    "definition": "Die Zahl 1000; zehnmal hundert."
   },
   "Team": {
     "type": "noun",
@@ -1408,7 +1484,8 @@
     "definition": "Eine Gruppe von Menschen, die zusammenarbeitet."
   },
   "teilen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas in Stücke trennen; anderen etwas von seinen Dingen geben."
   },
   "Tennis": {
     "type": "noun",
@@ -1435,7 +1512,8 @@
     "definition": "Eine Person, die zum Vergnügen reist und Orte besichtigt."
   },
   "tragen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas in der Hand oder auf dem Körper halten und mitnehmen; Kleidung anhaben."
   },
   "Traum": {
     "type": "noun",
@@ -1444,7 +1522,8 @@
     "definition": "Bilder und Erlebnisse im Kopf während des Schlafens."
   },
   "träumen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Im Schlaf Bilder und Geschichten sehen; sich etwas wünschen."
   },
   "Tür": {
     "type": "noun",
@@ -1453,13 +1532,16 @@
     "definition": "Ein beweglicher Teil, der eine Öffnung zum Betreten eines Raumes verschließt."
   },
   "üben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas oft machen, um es besser zu können."
   },
   "übermorgen": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Am Tag nach morgen; in zwei Tagen."
   },
   "übersetzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen Text in eine andere Sprache bringen."
   },
   "Übersetzung": {
     "type": "noun",
@@ -1467,17 +1549,13 @@
     "article": "die",
     "definition": "Die Übertragung eines Textes in eine andere Sprache."
   },
-  "überwiesen": {
-    "type": "verb"
-  },
-  "umgestiegen": {
-    "type": "verb"
-  },
   "umgezogen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "In eine andere Wohnung gegangen; andere Kleidung angezogen."
   },
   "umsteigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Von einem Zug oder Bus in einen anderen wechseln."
   },
   "Unfall": {
     "type": "noun",
@@ -1485,20 +1563,17 @@
     "article": "der",
     "definition": "Ein plötzliches, ungewolltes Ereignis mit Schaden oder Verletzung."
   },
-  "unterhält": {
-    "type": "verb"
-  },
   "unterhalten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich mit jemandem freundlich über etwas austauschen; miteinander sprechen."
   },
   "unternehmen": {
-    "type": "verb"
-  },
-  "unternommen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas tun oder machen, zum Beispiel einen Ausflug."
   },
   "untersuchen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas genau prüfen; ein Arzt prüft den Körper."
   },
   "Veranstaltung": {
     "type": "noun",
@@ -1507,19 +1582,20 @@
     "definition": "Ein organisiertes Ereignis für mehrere Personen."
   },
   "verbieten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sagen, dass jemand etwas nicht tun darf."
   },
   "vereinbaren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit jemandem etwas fest ausmachen, zum Beispiel einen Termin."
   },
   "vergessen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas nicht mehr wissen oder nicht daran denken."
   },
   "vergleichen": {
-    "type": "verb"
-  },
-  "verglichen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Prüfen, was bei zwei Dingen gleich und was anders ist."
   },
   "Verkehr": {
     "type": "noun",
@@ -1534,43 +1610,48 @@
     "definition": "Ein Fahrzeug wie Bus oder Bahn, mit dem man sich fortbewegt."
   },
   "verletzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem oder sich wehtun, sodass eine Wunde entsteht."
   },
   "verletzt": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Mit einer Wunde am Körper; nicht unversehrt."
   },
   "verlieben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich verlieben: anfangen, eine Person sehr zu lieben."
   },
   "verliebt": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Voller Liebe zu einer anderen Person."
   },
   "verlieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas nicht mehr finden; ein Spiel nicht gewinnen."
   },
   "verloren": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Nicht mehr da und nicht zu finden."
   },
   "verpassen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Zu spät kommen und etwas nicht mehr bekommen, zum Beispiel den Bus."
   },
   "verreisen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Für eine Zeit an einen anderen Ort fahren."
   },
   "verschieben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas auf eine spätere Zeit legen; etwas an einen anderen Platz schieben."
   },
   "verschieden": {
-    "type": "verb"
-  },
-  "verschoben": {
-    "type": "verb"
-  },
-  "verstanden": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Nicht gleich; anders als etwas anderes."
   },
   "versuchen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Probieren, ob man etwas schafft."
   },
   "Viertel": {
     "type": "noun",
@@ -1585,7 +1666,8 @@
     "definition": "Ein Tier mit Federn, das meist fliegen kann."
   },
   "voll": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ganz gefüllt; es passt nichts mehr hinein."
   },
   "Volleyball": {
     "type": "noun",
@@ -1606,16 +1688,20 @@
     "definition": "Eine große Fläche mit vielen Bäumen."
   },
   "wecken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden aus dem Schlaf holen."
   },
   "wegen": {
-    "type": "verb"
+    "type": "preposition",
+    "definition": "Aus diesem Grund; weil etwas so ist."
   },
   "weinen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Tränen aus den Augen kommen lassen, weil man traurig ist."
   },
   "weiß": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Die Farbe von Schnee oder Milch."
   },
   "Welt": {
     "type": "noun",
@@ -1624,13 +1710,16 @@
     "definition": "Die Erde mit allen Ländern und Menschen."
   },
   "weniger": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Nicht so viel; eine kleinere Menge."
   },
   "werfen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas mit Schwung durch die Luft fliegen lassen."
   },
   "windig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit viel Wind."
   },
   "Winter": {
     "type": "noun",
@@ -1669,7 +1758,8 @@
     "definition": "Etwas, das man sich erhofft oder gerne hätte."
   },
   "wünschen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas gern haben wollen; jemandem Gutes sagen."
   },
   "Wurst": {
     "type": "noun",
@@ -1696,7 +1786,8 @@
     "definition": "Ein Symbol mit einer bestimmten Bedeutung."
   },
   "zeichnen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit einem Stift ein Bild oder eine Form auf Papier machen."
   },
   "Zelt": {
     "type": "noun",
@@ -1717,7 +1808,8 @@
     "definition": "Ein kleines Stück Papier für Notizen."
   },
   "ziehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas mit Kraft zu sich hin bewegen; auch: an einen anderen Wohnort gehen."
   },
   "Ziel": {
     "type": "noun",
@@ -1732,6 +1824,7 @@
     "definition": "Eine süße Substanz zum Süßen von Speisen."
   },
   "zuhören": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Genau auf das achten, was jemand sagt."
   }
 }
