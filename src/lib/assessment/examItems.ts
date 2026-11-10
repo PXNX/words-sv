@@ -15,7 +15,7 @@ import { buildAdjectivePrompt, isEligibleAdjective } from '#lib/grammar/adjectiv
 import { buildVerbPrompt, verbConjugations } from '#lib/grammar/verbs.js';
 
 export type ExamEntry = { definition?: string; type?: string; genus?: VocabularyGender; article?: string };
-export type ExamKind = 'meaning' | 'article' | 'grammar';
+export type ExamKind = 'meaning' | 'article' | 'grammar' | 'listening';
 
 export interface ExamItem {
   id: string;
@@ -37,6 +37,8 @@ export interface ExamAnswer {
 
 export const MEANING_PER_LEVEL = 6;
 export const FORM_PER_LEVEL = 2;
+/** Words only heard, not shown: listening at the level, in every language with a voice. */
+export const LISTENING_PER_LEVEL = 2;
 export const EXAM_PASS_SCORE = 0.6;
 const OPTIONS = 4;
 const ARTICLES = ['der', 'die', 'das'] as const;
@@ -64,6 +66,12 @@ export function meaningItem(word: string, entries: Readonly<Record<string, ExamE
   const distractors = shuffle(pool, random).slice(0, OPTIONS - 1).map(([, candidate]) => candidate.definition!);
   if (distractors.length < OPTIONS - 1) return null;
   return { id: `meaning:${level}:${word}`, kind: 'meaning', level, word, options: shuffle([entry.definition, ...distractors], random), correct: entry.definition };
+}
+
+/** A listening question: the word is only spoken, and the learner picks what it means. */
+export function listeningItem(word: string, entries: Readonly<Record<string, ExamEntry>>, level: Level, random: () => number): ExamItem | null {
+  const item = meaningItem(word, entries, level, random);
+  return item ? { ...item, id: `listening:${level}:${word}`, kind: 'listening' } : null;
 }
 
 /** "___ Tisch": the article of a German noun. */
@@ -105,6 +113,12 @@ export function examRound(language: string, level: Level, entries: Readonly<Reco
   for (const word of words) {
     if (items.length >= MEANING_PER_LEVEL) break;
     const item = meaningItem(word, entries, level, random);
+    if (item) items.push(item);
+  }
+  for (const word of words) {
+    if (items.filter((item) => item.kind === 'listening').length >= LISTENING_PER_LEVEL) break;
+    if (items.some((item) => item.word === word)) continue;
+    const item = listeningItem(word, entries, level, random);
     if (item) items.push(item);
   }
   if (language === 'de') {

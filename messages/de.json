@@ -903,5 +903,6 @@
   "goal_tight": "Noch {weeks} Wochen – das wird knapp; jeden Tag etwas mehr hilft.",
   "goal_behind": "Noch {weeks} Wochen – in diesem Tempo dauert es länger. Üb öfter oder wähle ein späteres Datum.",
   "goal_unknown": "Noch {weeks} Wochen – üb ein paar Tage, dann kennt der Coach dein Tempo.",
-  "goal_passed": "Das Datum ist vorbei – wähle ein neues."
+  "goal_passed": "Das Datum ist vorbei – wähle ein neues.",
+  "placement_listening": "Hör zu: Was bedeutet das Wort?"
 }

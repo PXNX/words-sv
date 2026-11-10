@@ -16,6 +16,8 @@
   import { loadLevel, warmLanguage, wordMetadata, wordPools } from '#lib/data/vocabulary.js';
   import { haptic } from '#lib/feedback/haptics.js';
   import { logAnswer } from '#lib/progress/eventLog.js';
+  import { playWordClip } from '#lib/audio/wordBank.svelte.js';
+  import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import type { Level } from '#lib/domain/types.js';
   import type { Mood } from '#lib/story/stories.js';
@@ -104,7 +106,8 @@
     if (!examItem || reveal) return;
     const correct = chosen === examItem.correct;
     examAnswers = [...examAnswers, { item: examItem, chosen }];
-    logAnswer(language, 'placement', `EXAM:${examItem.id}`, correct, { level: examLevel });
+    // A listening question counts for the listening skill, the others for the placement (vocabulary).
+    logAnswer(language, examItem.kind === 'listening' ? 'listen' : 'placement', `EXAM:${examItem.id}`, correct, { level: examLevel });
     haptic(correct ? 'success' : 'tap');
     mood = correct ? 'happy' : chosen === null ? 'curious' : 'sad';
     reveal = { chosen };
@@ -130,7 +133,7 @@
     phase = 'result';
     haptic('win');
   }
-  const examPrompt = $derived(!examItem ? '' : examItem.kind === 'meaning' ? m.placement_meaning({ word: examItem.word ?? '' }, locale) : examItem.kind === 'article' ? m.placement_article({}, locale) : m.placement_grammar({}, locale));
+  const examPrompt = $derived(!examItem ? '' : examItem.kind === 'meaning' ? m.placement_meaning({ word: examItem.word ?? '' }, locale) : examItem.kind === 'listening' ? m.placement_listening({}, locale) : examItem.kind === 'article' ? m.placement_article({}, locale) : m.placement_grammar({}, locale));
   const optionState = (option: string) => !reveal || !examItem ? '' : option === examItem.correct ? 'right' : option === reveal.chosen ? 'wrong' : 'dim';
   function answer(known: boolean) {
     if (!item) return;
@@ -153,6 +156,24 @@
     applied = true;
     haptic('success');
   }
+
+  // Listening questions speak their word as they appear (and again on the button): the word bank's
+  // clip when there is one, the browser's voice otherwise.
+  async function speakExamWord(word: string) {
+    if (!word) return;
+    // The word bank keys clips by the upper-case word, like the pools.
+    const playback = settings.clipVoices ? await playWordClip(language, word.toLocaleUpperCase()).catch(() => null) : null;
+    if (playback) return;
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(word);
+    utterance.lang = language;
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+  }
+  $effect(() => {
+    if (examItem?.kind === 'listening' && examItem.word) void speakExamWord(examItem.word);
+  });
 </script>
 
 <svelte:window onkeydown={(event) => { if (phase !== 'test' || format !== 'recognition') return; if (event.key === 'ArrowRight') answer(true); else if (event.key === 'ArrowLeft') answer(false); }} />
@@ -176,12 +197,15 @@
     {#key examItem.id}
       <div class="exam-card" in:fly={{ x: 24, duration: ms(240) }}>
         <p class="exam-prompt">{examPrompt}</p>
-        {#if examItem.kind === 'article'}
+        {#if examItem.kind === 'listening'}
+          <button type="button" class="btn-play btn-play-ink btn-play-round exam-listen" onclick={() => speakExamWord(examItem!.word ?? '')} aria-label={m.dictionary_listen({}, locale)}><IconVolume aria-hidden="true" /></button>
+          {#if reveal}<p class="exam-sentence" lang={language} dir="ltr">{examItem.word}</p>{/if}
+        {:else if examItem.kind === 'article'}
           <p class="exam-sentence" lang={language} dir="ltr"><span class="exam-gap">{reveal ? examItem.correct : '___'}</span> {examItem.word}</p>
         {:else if examItem.kind === 'grammar'}
           <p class="exam-sentence" lang={language} dir="ltr">{examItem.before}<span class="exam-gap">{reveal ? examItem.correct : '___'}</span>{examItem.after ? ` ${examItem.after}`.replace(/^ ([.,!?])/u, '$1') : ''}</p>
         {/if}
-        <div class="exam-options" class:long={examItem.kind === 'meaning'} lang={language} dir="ltr">
+        <div class="exam-options" class:long={examItem.kind === 'meaning' || examItem.kind === 'listening'} lang={language} dir="ltr">
           {#each examItem.options as option (option)}
             <button type="button" class="btn-play btn-play-choice {optionState(option)}" onclick={() => choose(option)} disabled={Boolean(reveal)}>{option}</button>
           {/each}
@@ -225,6 +249,8 @@
 </section>
 
 <style>
+  .exam-listen { justify-self:center;width:3.4rem;height:3.4rem; }
+  .exam-listen :global(svg) { width:1.5rem;height:1.5rem; }
   .placement { flex:1;min-height:0;overflow-y:auto;display:grid;align-content:start;justify-items:center;gap:.9rem;width:min(100%,28rem);margin-inline:auto;padding:clamp(2.9rem,10vw,3.6rem) clamp(1rem,5vw,2rem) 1.5rem;text-align:center; }
   header { display:grid;gap:.45rem;width:100%; }
   .placement-kicker { margin:0;color:#a45e38;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { articleItem, examResult, examRound, FORM_PER_LEVEL, grammarItem, meaningItem, MEANING_PER_LEVEL, nextExamLevel, scoreExamLevel, supportsExam, type ExamItem } from '../src/lib/assessment/examItems';
+import { articleItem, examResult, examRound, FORM_PER_LEVEL, grammarItem, meaningItem, MEANING_PER_LEVEL, nextExamLevel, scoreExamLevel, supportsExam, type ExamItem, LISTENING_PER_LEVEL } from '../src/lib/assessment/examItems';
 import { seededRandom } from '../src/lib/assessment/placement';
 import a1 from '../src/lib/data/de.a1.json';
 import b1 from '../src/lib/data/de.b1.json';
@@ -32,10 +32,14 @@ describe('exam questions', () => {
     }
   });
 
-  it('builds a level round of meaning and form questions', () => {
+  it('builds a level round of meaning, listening and form questions', () => {
     const round = examRound('de', 'a1', de1, seededRandom(4));
     expect(round.filter((item) => item.kind === 'meaning')).toHaveLength(MEANING_PER_LEVEL);
-    expect(round.filter((item) => item.kind !== 'meaning')).toHaveLength(FORM_PER_LEVEL);
+    expect(round.filter((item) => item.kind === 'listening')).toHaveLength(LISTENING_PER_LEVEL);
+    expect(round.filter((item) => item.kind === 'article' || item.kind === 'grammar')).toHaveLength(FORM_PER_LEVEL);
+    // A listened word is never also asked in writing.
+    const listened = round.filter((item) => item.kind === 'listening').map((item) => item.word);
+    expect(round.some((item) => item.kind === 'meaning' && listened.includes(item.word))).toBe(false);
     expect(new Set(round.map((item) => item.id)).size).toBe(round.length);
     expect(supportsExam(de1)).toBe(true);
     expect(supportsExam(en as Entries)).toBe(false);
