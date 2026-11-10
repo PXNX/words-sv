@@ -874,5 +874,6 @@
   "background_offer_title": "Keeps going in the background",
   "background_offer_text": "You can play something else now – this keeps preparing. The small badge in the corner shows how far it is and tells you when it's ready.",
   "background_offer_go": "Play something else",
-  "background_offer_stay": "Wait here"
+  "background_offer_stay": "Wait here",
+  "models_voices_count": "{count} voices"
 }

@@ -16,7 +16,7 @@
   import { chatModels, isRecommended, likelyFits, type ChatModel } from '#lib/conversation/models.js';
   import { unloadSupertonic } from '#lib/voice/supertonic.js';
   import { unloadStyleTts } from '#lib/voice/styleTts.js';
-  import { deviceAbilities, speaksLanguage, voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
+  import { deviceAbilities, engineFootprint, speaksLanguage, voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
   import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
   import ModelStatus from '#lib/offline/ModelStatus.svelte';
   import { confirmDownload } from '#lib/offline/downloadConsent.svelte.js';
@@ -71,8 +71,20 @@
   const voiceGroups: Partial<Record<VoiceEngineId, StoredGroup>> = { natural: 'piper', recorded: 'piper', supertonic: 'supertonic', supertonic3: 'supertonic3', kokoro: 'kokoro', kitten: 'kitten' };
   // Engines that can speak the learning language on this device, plus the chosen one in any case.
   const voiceChoices = $derived(voiceEngineIds.filter((id) => id === settings.voiceQuality || (speaksLanguage(id, lang) && (!voiceEngines[id].webgpu || deviceAbilities().webgpu))));
-  const voiceDownloadMB = (id: VoiceEngineId) => (voiceEngines[id].megabytes ?? (voiceGroups[id] === 'piper' ? piperMegabytes(lang) : 0));
-  const voiceMemoryMB = (id: VoiceEngineId) => voiceEngines[id].memoryMB ?? Math.round(voiceDownloadMB(id) * 1.3);
+  // Sizes for this device: an engine that runs on WebAssembly without WebGPU downloads its WASM build.
+  const voiceDownloadMB = (id: VoiceEngineId) => engineFootprint(id)?.megabytes ?? (voiceGroups[id] === 'piper' ? piperMegabytes(lang) : 0);
+  const voiceMemoryMB = (id: VoiceEngineId) => engineFootprint(id)?.memoryMB ?? Math.round(voiceDownloadMB(id) * 1.3);
+  // One line per engine like the chat models': size class, voices, and where it runs.
+  function voiceMeta(id: VoiceEngineId): string {
+    const engine = voiceEngines[id];
+    const parts: string[] = [];
+    if (engine.tier) parts.push(sizeNames[engine.tier]);
+    if (engine.voices?.length) parts.push(m.models_voices_count({ count: String(engine.voices.length) }, { locale }));
+    // Kitten's model only has a WebAssembly build; the others take the GPU when the check passed.
+    if (engine.runtime === 'model') parts.push(deviceAbilities().webgpu && id !== 'kitten' ? 'WebGPU' : 'WebAssembly');
+    if (engine.languages !== 'all') parts.push(engine.languages.map((code) => code.toUpperCase()).join(' · '));
+    return parts.join(' · ');
+  }
   function voiceHint(id: VoiceEngineId): string {
     const size = String(voiceDownloadMB(id));
     if (id === 'standard') return m.voice_quality_standard_hint({}, { locale });
@@ -196,6 +208,7 @@
         <li class="model-card" class:chosen>
           <button type="button" class="model-pick" role="radio" aria-checked={chosen} onclick={() => chooseVoice(id)}>
             <span class="model-name">{engineNames[id]()}</span>
+            {#if voiceMeta(id)}<span class="model-facts">{voiceMeta(id)}</span>{/if}
             {#if group}<span class="model-facts">{m.models_facts({ download: `~${mb(voiceDownloadMB(id))}`, memory: `~${mb(voiceMemoryMB(id))}` }, { locale })}</span>{/if}
             <span class="model-about">{voiceHint(id)}</span>
             {#if state === 'downloading'}
