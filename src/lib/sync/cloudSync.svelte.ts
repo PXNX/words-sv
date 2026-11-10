@@ -7,10 +7,12 @@
  * Unlinked devices only ask once per start whether they are linked, and nothing else is sent.
  */
 import { deviceId } from '#lib/streak/clientStreak.js';
+import { ApiError, callApi } from '#lib/api/client.js';
+import { SyncReplySchema, type SyncReply } from '#lib/api/schemas.js';
 import { changedEntries, collectSnapshot, mergeSnapshots, snapshotFingerprint, type ProgressSnapshot } from './progressMerge.js';
 
 type Meta = { revision: number; fingerprint: string; savedAt: number | null };
-type Reply = { ok: boolean; linked?: boolean; revision?: number; snapshot?: ProgressSnapshot | null; error?: string };
+type Reply = SyncReply;
 
 const META_KEY = 'wordcircle-sync-v1';
 const RELOAD_KEY = 'wordcircle-sync-reloaded';
@@ -34,10 +36,11 @@ function writeMeta(meta: Meta) {
 }
 
 async function call(body: Record<string, unknown>): Promise<Reply> {
-  const response = await fetch('/api/progress/sync', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ deviceId: deviceId(), ...body }) });
-  const reply = (await response.json().catch(() => ({ ok: false }))) as Reply;
-  if (!response.ok && response.status !== 409) throw new Error(reply.error ?? 'sync_unavailable');
-  return reply;
+  try {
+    return await callApi('/api/progress/sync', SyncReplySchema, { body: { deviceId: deviceId(), ...body }, accept: [409] });
+  } catch (error) {
+    throw new Error(error instanceof ApiError && error.code !== 'unavailable' ? error.code : 'sync_unavailable');
+  }
 }
 
 /** Writes merged entries back; returns whether anything on this device changed. */

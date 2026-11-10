@@ -9,6 +9,7 @@
         "@mlc-ai/web-llm": "0.2.87",
         "mysql2": "^3.24.6",
         "onnxruntime-web": "1.31.1",
+        "valibot": "^1.5.0",
         "web-push": "^4.0.0",
       },
       "devDependencies": {

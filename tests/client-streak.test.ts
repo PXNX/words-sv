@@ -170,3 +170,12 @@ describe('Lilith streak moods', () => {
 		expect(lilithMood(state({ streakCount: 3, bestStreak: 3, qualified: false }))).toBe('surprised');
 	});
 });
+
+describe('server streak merge', async () => {
+	const { mergeServerStreak } = await import('../src/lib/streak/clientStreak.js');
+	test('fields the server sent win, missing ones keep the device values', () => {
+		const local = readStreak(NOW);
+		const merged = mergeServerStreak({ ...local, vocabCorrect: 4, embers: 2 }, { dateKey: TODAY, qualified: true, streakCount: 7, lastQualifiedDay: TODAY, vocabCorrect: 6, embers: undefined });
+		expect(merged).toMatchObject({ vocabCorrect: 6, embers: 2, streakCount: 7, qualified: true });
+	});
+});

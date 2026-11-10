@@ -1,4 +1,6 @@
 import { deviceId, readStreak, timeZone } from '#lib/streak/clientStreak.js';
+import { callApi } from '#lib/api/client.js';
+import { OkSchema, PushKeySchema } from '#lib/api/schemas.js';
 import { settings } from '#lib/state/settings.svelte.js';
 import { reminderExtras } from '#lib/reminders/reminderSnapshot.js';
 import {
@@ -28,13 +30,14 @@ async function subscribeServer() {
 	const registration = await navigator.serviceWorker.ready;
 	let subscription = await registration.pushManager.getSubscription();
 	if (!subscription) {
-		const keyResponse = await fetch('/api/push/public-key');
-		const keyBody = await keyResponse.json();
-		if (!keyResponse.ok || typeof keyBody?.publicKey !== 'string') throw new Error('push_unavailable');
-		subscription = await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: decodeApplicationServerKey(keyBody.publicKey) });
+		const { publicKey } = await callApi('/api/push/public-key', PushKeySchema).catch(() => {
+			throw new Error('push_unavailable');
+		});
+		subscription = await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: decodeApplicationServerKey(publicKey) });
 	}
-	const response = await fetch('/api/push/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), subscription: subscription.toJSON() }) });
-	if (!response.ok) throw new Error('subscription_failed');
+	await callApi('/api/push/subscribe', OkSchema, { body: { deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), subscription: subscription.toJSON() } }).catch(() => {
+		throw new Error('subscription_failed');
+	});
 	return subscription;
 }
 
@@ -42,7 +45,7 @@ async function unsubscribeServer() {
 	const registration = await navigator.serviceWorker.ready;
 	const subscription = await registration.pushManager.getSubscription();
 	if (!subscription) return;
-	await fetch('/api/push/unsubscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ endpoint: subscription.endpoint }) }).catch(() => undefined);
+	await callApi('/api/push/unsubscribe', OkSchema, { body: { endpoint: subscription.endpoint } }).catch(() => undefined);
 	await subscription.unsubscribe();
 }
 

@@ -1,4 +1,6 @@
 import { deviceId, timeZone } from '#lib/streak/clientStreak.js';
+import { callApi } from '#lib/api/client.js';
+import { TelegramStatusSchema } from '#lib/api/schemas.js';
 import { reminderLocale } from '#lib/pwa/pwaReminders.js';
 import { interfaceLocales, settings } from '#lib/state/settings.svelte.js';
 import type { MiniAppLaunch } from '#lib/settings/telegramMiniApp.js';
@@ -19,10 +21,11 @@ export type TelegramStatus = { reminders: boolean; linked: boolean; connectUrl: 
 export async function telegramDevice(action: 'status' | 'connect' | 'disconnect' | 'miniapp', initData?: string): Promise<TelegramStatus> {
 	// The /api functions only exist on Vercel; under `vite dev` every call would just 404.
 	if (import.meta.env?.DEV) throw new Error('telegram_unavailable');
-	const response = await fetch('/api/telegram/device', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), action, initData }) });
-	const body = await response.json();
-	if (!response.ok || !body?.ok) throw new Error('telegram_unavailable');
-	return body;
+	try {
+		return await callApi('/api/telegram/device', TelegramStatusSchema, { body: { deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), action, initData } });
+	} catch {
+		throw new Error('telegram_unavailable');
+	}
 }
 
 // Opened as the Mini App, the player's Telegram profile fills in what they have not set yet: their
