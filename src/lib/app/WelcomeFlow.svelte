@@ -17,6 +17,7 @@
   import AvatarEditor from '#lib/profile/AvatarEditor.svelte';
   import SelectMenu from '#lib/settings/SelectMenu.svelte';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
+  import WalkingLilith from '#lib/story/WalkingLilith.svelte';
   import type { CharacterId } from '#lib/story/stories.js';
 
   type Step = 'hello' | 'cast' | 'language' | 'name' | 'look' | 'done';
@@ -31,7 +32,6 @@
   let castIndex = $state(0);
   let nameDraft = $state(settings.firstName);
   let lookDraft = $state<Avatar>(randomAvatar());
-  let petting = $state(0);
 
   const locale = $derived({ locale: settings.interfaceLocale });
   const still = $derived(prefersReducedMotion.current);
@@ -81,7 +81,6 @@
   function pet() {
     playSoundEffect(settings.sound, 'purr');
     haptic('select');
-    petting += 1;
   }
   // Confetti for the finale: a fixed spread so it looks the same on every device.
   const CONFETTI = ['#e6a527', '#e86a9a', '#4b78c2', '#34824d', '#d64b45', '#8a62b6'];
@@ -101,12 +100,10 @@
           <SelectMenu class="w-[9.6rem]" value={settings.interfaceLocale} options={interfaceOptions} label={m.interface_language({}, locale)} onchange={(value) => { if (interfaceLocales.some((entry) => entry.code === value)) settings.setInterfaceLocale(value as typeof settings.interfaceLocale); }} />
         </label>
         <span class="welcome-rings" aria-hidden="true"><i></i><b></b></span>
-        <div class="welcome-parade" aria-hidden="true">
-          <span class="walk-in left" style="--d:.25s"><StoryCharacter id="mia" mood="happy" /></span>
-          <button type="button" class="welcome-lilith pop-in" style="--d:.75s" onclick={pet} aria-label={m.pet_lilith({}, locale)} tabindex="-1">
-            {#key petting}<span class="welcome-lilith-body" class:petted={petting > 0}><StoryCharacter id="lilith" mood="happy" /></span>{#if petting}<span class="welcome-hearts"><b>♥</b><b>♥</b></span>{/if}{/key}
-          </button>
-          <span class="walk-in right" style="--d:.5s"><StoryCharacter id="tom" mood="happy" /></span>
+        <div class="welcome-parade">
+          <span class="walk-in left" aria-hidden="true" style="--d:.25s"><StoryCharacter id="mia" mood="happy" /></span>
+          <span class="welcome-stroll"><WalkingLilith from="right" label={m.pet_lilith({}, locale)} onpet={pet} /></span>
+          <span class="walk-in right" style="--d:.5s" aria-hidden="true"><StoryCharacter id="tom" mood="happy" /></span>
         </div>
         <p class="welcome-kicker rise" style="--d:1s">{m.welcome_kicker({}, locale)}</p>
         <h1 class="rise" style="--d:1.1s">{m.welcome_title({}, locale)}</h1>
@@ -195,15 +192,14 @@
   .welcome-rings b { right:0;bottom:0;border-color:#e6a527;animation:welcome-ring-b .7s cubic-bezier(.34,1.56,.64,1) .12s both; }
 
   .welcome-parade { display:flex;align-items:flex-end;justify-content:center;gap:.2rem;height:7rem; }
-  .welcome-parade :global(.story-character) { width:5.4rem;height:100%; }
+  .welcome-parade > .walk-in :global(.story-character),.welcome-parade.finale > .hop:not(.welcome-lilith) :global(.story-character) { width:5.4rem;height:100%; }
+  /* Lilith strolls in the gap between Mia and Tom (story/WalkingLilith.svelte) */
+  .welcome-stroll { flex:1;min-width:6rem;height:5.6rem;align-self:flex-end; }
   .welcome-lilith { position:relative;width:4.6rem;height:5.6rem;padding:0;border:0;background:none;cursor:pointer;align-self:flex-end; }
   .welcome-lilith :global(.story-character) { width:100%; }
-  .welcome-lilith-body { display:block;height:100%;transform-origin:50% 100%; }
-  .welcome-lilith-body.petted { animation:welcome-squish .5s ease-out; }
   .walk-in { display:block;height:100%;animation:welcome-walk .8s cubic-bezier(.22,1,.36,1) var(--d) both; }
   .walk-in.left { --from:-140%; }
   .walk-in.right { --from:140%; }
-  .pop-in { animation:welcome-pop .55s cubic-bezier(.34,1.56,.64,1) var(--d) both; }
   .rise { animation:welcome-rise .45s ease-out var(--d) both; }
   .welcome-hearts { position:absolute;inset:0;pointer-events:none; }
   .welcome-hearts b { position:absolute;top:25%;left:50%;color:#e86a9a;font-size:.95rem;opacity:0;animation:welcome-heart 1.4s ease-out forwards; }
@@ -246,7 +242,6 @@
   @keyframes welcome-rise { from { opacity:0;transform:translateY(.6rem); } }
   @keyframes welcome-bob { 0%,100% { translate:0 0; } 50% { translate:0 -.25rem; } }
   @keyframes welcome-hop { 0%,100% { transform:translateY(0); } 30% { transform:translateY(0) scale(1.06,.92); } 55% { transform:translateY(-1rem) rotate(-4deg); } 80% { transform:translateY(0) scale(1.03,.96); } }
-  @keyframes welcome-squish { 0% { transform:scale(1); } 30% { transform:scale(1.1,.86); } 60% { transform:scale(.95,1.06); } 100% { transform:scale(1); } }
   @keyframes welcome-heart { 0% { opacity:0;transform:translate(-50%,0) scale(.4); } 25% { opacity:1; } 100% { opacity:0;transform:translate(calc(-50% + var(--hx)),-3rem) scale(1.2); } }
   @keyframes welcome-confetti { 0% { opacity:1;transform:translateY(0) rotate(0); } 100% { opacity:0;transform:translateY(11rem) rotate(calc(var(--s) * 600deg)); } }
 
