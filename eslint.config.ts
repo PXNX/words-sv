@@ -68,6 +68,18 @@ export default tseslint.config(
     },
   },
   {
+    // Type-aware rules: a dropped promise hides its rejection, and a switch over a union must
+    // handle every member (or say `default:` on purpose).
+    files: ['src/**/*.{ts,svelte}', 'tests/**/*.ts'],
+    languageOptions: {
+      parserOptions: { projectService: true, tsconfigRootDir: import.meta.dirname, extraFileExtensions: ['.svelte'] },
+    },
+    rules: {
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/switch-exhaustiveness-check': ['error', { considerDefaultExhaustiveForUnions: true }],
+    },
+  },
+  {
     files: ['**/*.{ts,svelte}'],
     rules: {
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],

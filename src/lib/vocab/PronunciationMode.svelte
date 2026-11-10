@@ -218,7 +218,7 @@
     if (animationFrame !== null) cancelAnimationFrame(animationFrame);
     animationFrame = null;
     analyser?.disconnect();
-    audioContext?.close();
+    void audioContext?.close().catch(() => {});
     audioContext = null;
     analyser = null;
     mediaStream?.getTracks().forEach((track) => track.stop());
@@ -261,7 +261,7 @@
       stopListening();
     } else {
       // Say the word back the right way; speak() pauses the recogniser so it won't grade the sample.
-      speak();
+      void speak();
     }
   }
   function startRecognition() {

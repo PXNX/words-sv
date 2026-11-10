@@ -17,7 +17,7 @@
   import type { Mood } from '#lib/story/stories.js';
 
   type Entry = { word: string; marks: WordleMark[] };
-  type Labels = { title: string; subtitle: string; empty: string; input: string; win: string; invalid: string; again: string };
+  type Labels = { title: string; empty: string; input: string; win: string; invalid: string; again: string };
   type TutorialRound = { target: string; warmup: string };
 
   const WORDLE_TUTORIAL_KEY = 'wordcircle-wordle-tutorial-v1';

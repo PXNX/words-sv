@@ -168,7 +168,7 @@ self.onmessage = async ({ data }: MessageEvent<WorkerRequest>) => {
       await deleteModelAllInfoInCache(data.model);
       post({ id: data.id, type: 'done' });
     } else if (data.type === 'interrupt') {
-      engine?.interruptGenerate();
+      void engine?.interruptGenerate();
       post({ id: data.id, type: 'done' });
     }
   } catch (error) {

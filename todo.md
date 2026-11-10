@@ -230,7 +230,8 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
   Telegram `initData`; typed fetch client for `api/`.
 - [ ] Typed worker protocol (discriminated union) for LLM, TTS and scoring workers.
 - [x] Locale check (`tests/locales.test.ts`): English complete, no stray keys, same placeholders.
-- [ ] Type-aware lint rules (`no-floating-promises`, `switch-exhaustiveness-check`).
+- [x] Type-aware lint rules (`no-floating-promises`, `switch-exhaustiveness-check`) over `src/` and
+  `tests/`.
 
 ### Phase L leftovers
 - [x] Byte sizes and download speeds follow the format setting.
