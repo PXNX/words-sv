@@ -10,7 +10,7 @@
   import { GRAMMAR_GOAL, PRONUNCIATION_GOAL, REPAIR_WORDS, VOCABULARY_GOALS, lilithFace, lilithMood, modeDone, type StreakRepair } from '#lib/streak/clientStreak.js';
   import { readingTextsFor } from '#lib/story/readingTexts.js';
   import { readReviewLedger, type ReviewLedger } from '#lib/review/ledger.js';
-  import { completedIds, countActivity, readActivity, type ActivityEvent } from '#lib/progress/activity.js';
+  import { activityFor, completedIds, countActivity, readActivity, type ActivityEvent } from '#lib/progress/activity.js';
   import { buildMilestones, buildWeeklyRecap, milestonePercent, nextMilestone, weekStartTimestamp, type MilestoneId } from '#lib/progress/milestones.js';
   import { buildAchievements, unlockedCount, type AchievementId } from '#lib/progress/achievements.js';
   import IconExpand from '~icons/material-symbols/expand-more-rounded';
@@ -61,7 +61,6 @@
     modeHangman: m.mode_hangman({}, { locale: settings.interfaceLocale }),
     alltag: m.mode_alltag({}, { locale: settings.interfaceLocale }),
     completed: m.completed({}, { locale: settings.interfaceLocale }),
-    languagesHeading: m.stats_languages_heading({}, { locale: settings.interfaceLocale }),
     vocab: m.stats_vocab({}, { locale: settings.interfaceLocale }),
     grammar: m.mode_grammar({}, { locale: settings.interfaceLocale }),
     wordsPracticed: m.stats_words_practiced({}, { locale: settings.interfaceLocale }),
@@ -69,7 +68,6 @@
     repetitions: m.stats_repetitions({}, { locale: settings.interfaceLocale }),
     masteredWords: m.stats_mastered_words({}, { locale: settings.interfaceLocale }),
     nothingYet: m.stats_nothing_yet({}, { locale: settings.interfaceLocale }),
-    noProgress: m.stats_no_progress({}, { locale: settings.interfaceLocale }),
     topWords: m.stats_top_words({}, { locale: settings.interfaceLocale }),
     trickyWords: m.stats_tricky_words({}, { locale: settings.interfaceLocale }),
     noneYet: m.stats_none_yet({}, { locale: settings.interfaceLocale }),
@@ -163,27 +161,24 @@
     uk: '#5b7fd6'
   };
 
-  const languageCodes = playableLanguages.map((language) => language.code);
-  const vocabProgress = $derived(readVocabularyProgressByLanguage(languageCodes));
-  const grammarProgress = $derived(readGrammarProgressByLanguage(languageCodes));
-  // Languages with any vocabulary or grammar practice, the most practised first. Tricky words
-  // are the ones most often answered wrong anywhere in the app (see `missedWords.ts`).
-  const practicedLanguages = $derived(
-    playableLanguages
-      .map((language) => ({
-        ...language,
-        vocab: vocabProgress[language.code],
-        grammar: grammarProgress[language.code],
-        trickyWords: readMissedWords(language.code).sort((left, right) => right.count - left.count).slice(0, 5)
-      }))
-      .filter((language) => language.vocab || language.grammar || language.trickyWords.length > 0)
-      .sort((left, right) => (right.vocab?.totalRepetitions ?? 0) + (right.grammar?.totalRepetitions ?? 0) - (left.vocab?.totalRepetitions ?? 0) - (left.grammar?.totalRepetitions ?? 0))
-  );
+  // The whole page is about the language being learned right now; switching it in Settings
+  // switches every number here. Tricky words are the ones most often answered wrong (missedWords.ts).
+  const vocabProgress = $derived(readVocabularyProgressByLanguage([settings.lang]));
+  const grammarProgress = $derived(readGrammarProgressByLanguage([settings.lang]));
+  const learningLanguage = $derived(playableLanguages.find((language) => language.code === settings.lang) ?? playableLanguages[0]!);
+  const practicedLanguages = $derived([{
+    ...learningLanguage,
+    vocab: vocabProgress[settings.lang],
+    grammar: grammarProgress[settings.lang],
+    trickyWords: readMissedWords(settings.lang).sort((left, right) => right.count - left.count).slice(0, 5)
+  }]);
 
   // Milestones and the weekly recap read the activity log and the shared review ledger. Both are
   // loaded on the client so server rendering never sees a half-empty history.
-  let activity = $state<ActivityEvent[]>([]);
-  let ledger = $state<ReviewLedger>({});
+  let allActivity = $state<ActivityEvent[]>([]);
+  let allLedger = $state<ReviewLedger>({});
+  const activity = $derived(activityFor(allActivity, settings.lang));
+  const ledger = $derived(Object.fromEntries(Object.entries(allLedger).filter(([key]) => key.startsWith(`${settings.lang}:`))) as ReviewLedger);
   let progressReady = $state(false);
   let shareNote = $state('');
   // The name and the character are edited right here, not in the settings panel.
@@ -193,7 +188,7 @@
 
   const textsRead = $derived(completedIds(activity, 'reading'));
   const a1TextIds = $derived(readingTextsFor(settings.lang, 'a1', false).map((text) => text.id));
-  const masteredWords = $derived(Object.values(vocabProgress).reduce((sum, progress) => sum + progress.masteredWords, 0));
+  const masteredWords = $derived(vocabProgress[settings.lang]?.masteredWords ?? 0);
   const milestones = $derived(buildMilestones({
     textsRead: textsRead.length,
     storiesCompleted: completedIds(activity, 'story').length,
@@ -239,7 +234,7 @@
     const item = cosmetics[`achievement_${id}`];
     return { ...(settings.avatar ?? defaultAvatar), [item.part]: item.choice };
   }
-  // Finished badges hand out their character items, counting mastered words in every language.
+  // Finished badges hand out their character items.
   $effect(() => checkAchievementRewards({ bestStreak: settings.streak.bestStreak, masteredWords }));
   const weekly = $derived(buildWeeklyRecap({
     ledger,
@@ -301,8 +296,8 @@
     });
   }
   onMount(() => {
-    activity = readActivity();
-    ledger = readReviewLedger();
+    allActivity = readActivity();
+    allLedger = readReviewLedger();
     nameDraft = settings.firstName;
     progressReady = true;
     void refreshStreak();
@@ -509,12 +504,7 @@
     <p class="m-0 mt-[.35rem] text-success text-[.58rem] font-bold" aria-live="polite">{shareNote}</p>
   </section>
 
-  <!-- One section per language, split into vocabulary (Tom) and grammar (Mia) -->
-  <h2 class="m-0 mt-6 text-center text-accent text-[.62rem] font-black tracking-[.12em] uppercase">{labels.languagesHeading}</h2>
-
-  {#if practicedLanguages.length === 0}
-    <div class="panel-play mt-3 px-[.8rem] py-[.7rem]"><p class="m-0 text-base-content/60 text-[.68rem] font-bold leading-[1.4]">{labels.noProgress}</p></div>
-  {/if}
+  <!-- The learning language, split into vocabulary (Tom) and grammar (Mia) -->
 
   {#each practicedLanguages as language (language.code)}
     {@const expanded = expandedLanguages.includes(language.code)}
