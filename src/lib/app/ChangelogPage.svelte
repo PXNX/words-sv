@@ -4,7 +4,8 @@
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { formatDate, isolateLtr } from '#lib/format/format.js';
-  import { CHANGE_TYPES, highlightKey, releaseAnchor, unseenReleases, type ChangeType, type ChangelogRelease } from './changelog.js';
+  import { releaseHighlight } from './highlight.js';
+  import { CHANGE_TYPES, releaseAnchor, unseenReleases, type ChangeType, type ChangelogRelease } from './changelog.js';
   import { lastSeenVersion, markVersionSeen } from './changelogSeen.js';
   import { releases } from './releases.js';
   import { appVersion } from './version.js';
@@ -25,11 +26,6 @@
     known: m.changelog_known({}, locale)
   });
 
-  // Localised one-liner from the message files when it exists, else the English summary.
-  function highlight(release: ChangelogRelease): string {
-    const message = (m as unknown as Record<string, ((inputs: object, options: { locale: string }) => string) | undefined>)[highlightKey(release.version)];
-    return message ? message({}, locale) : release.summary;
-  }
   function releaseDate(release: ChangelogRelease) {
     const text = formatDate(settings.formatContext, Date.parse(`${release.date}T12:00:00Z`), 'long', 'UTC');
     return settings.formatContext.learning && direction === 'rtl' ? isolateLtr(text) : text;
@@ -60,7 +56,7 @@
         {#if unseen.has(release.version)}<span class="changelog-badge">{m.changelog_unseen({}, locale)}</span>{/if}
         <span class="changelog-date">{releaseDate(release)}</span>
       </summary>
-      <p class="changelog-highlight">{highlight(release)}</p>
+      <p class="changelog-highlight">{releaseHighlight(release, settings.interfaceLocale)}</p>
       <div class="changelog-details" dir="ltr" lang="en">
         {#each CHANGE_TYPES as type}
           {#if release.entries[type]?.length}

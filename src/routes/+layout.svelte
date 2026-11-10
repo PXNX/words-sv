@@ -13,6 +13,7 @@ import { settings } from '#lib/state/settings.svelte.js';
 import { playableLanguages, warmLanguage, refreshHintableBaseWords } from '#lib/data/vocabulary.js';
 import StartupLoader from '#lib/app/StartupLoader.svelte';
 import CosmeticUnlockToast from '#lib/profile/CosmeticUnlockToast.svelte';
+import WhatsNewSheet from '#lib/app/WhatsNewSheet.svelte';
 import StreakToast from '#lib/streak/StreakToast.svelte';
 import { startCloudSync } from '#lib/sync/cloudSync.svelte.js';
 import { probeWebGpu } from '#lib/voice/engines.js';
@@ -153,6 +154,7 @@ onMount(() => {
 		</main>
 		<CosmeticUnlockToast />
 		<StreakToast />
+		<WhatsNewSheet />
 		<BackgroundJobsBadge />
 	{/if}
 </div>
