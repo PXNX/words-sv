@@ -757,5 +757,6 @@
   "cosmetic_from_badge": "Für das Abzeichen „{name}“ – richtig stark!",
   "cosmetic_from_language": "Für {count} geübte Wörter auf {language}.",
   "cosmetic_wear": "Gleich anziehen",
-  "cosmetic_worn": "Steht dir!"
+  "cosmetic_worn": "Steht dir!",
+  "game_settings": "Spieleinstellungen"
 }

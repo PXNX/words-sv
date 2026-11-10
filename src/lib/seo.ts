@@ -38,38 +38,17 @@ export const pages: Record<string, PageMeta> = {
     kicker: 'Wortspiel',
     icon: 'fact-check-rounded'
   },
-  '/circle/tutorial': {
-    title: 'Circle – Tutorial',
-    description: 'Lerne an einem Übungsrätsel, wie du im Wortkreis Buchstaben zu Wörtern verbindest.',
-    kicker: 'Tutorial',
-    icon: 'crossword-rounded',
-    image: 'circle'
-  },
   '/wordle': {
     title: 'Wordle',
     description: 'Finde das gesuchte Wort mit fünf Buchstaben.',
     kicker: 'Wortspiel',
     icon: 'spellcheck-rounded'
   },
-  '/wordle/tutorial': {
-    title: 'Wordle – Tutorial',
-    description: 'So funktioniert Wordle: Farben zeigen dir, welche Buchstaben richtig sind und wo sie hingehören.',
-    kicker: 'Tutorial',
-    icon: 'spellcheck-rounded',
-    image: 'wordle'
-  },
   '/hangman': {
     title: 'Hangman',
     description: 'Errate das versteckte Wort Buchstabe für Buchstabe.',
     kicker: 'Wortspiel',
     icon: 'extension-rounded'
-  },
-  '/hangman/tutorial': {
-    title: 'Hangman – Tutorial',
-    description: 'So funktioniert Hangman: Rate Buchstaben, bevor dir die Versuche ausgehen.',
-    kicker: 'Tutorial',
-    icon: 'extension-rounded',
-    image: 'hangman'
   },
   '/vocab': {
     title: 'Word Quiz',

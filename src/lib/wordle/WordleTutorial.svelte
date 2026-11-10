@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import TutorialSteps from '#lib/app/TutorialSteps.svelte';
-  import { requestWordlePractice } from '#lib/wordle/practice.js';
+
+  // Shown as an overlay inside the game (app/GameToolbar.svelte); the game decides what "start" does.
+  let { onstart, onskip }: { onstart: () => void; onskip: () => void } = $props();
 
   type Mark = 'correct' | 'present' | 'absent';
   // Words that read the same in German and English, so every learner can follow the examples.
@@ -21,11 +22,6 @@
     { text: m.wordle_tutorial_step_green({}, locale), demo: green },
     { text: m.wordle_tutorial_step_repeat({}, locale), demo: repeat }
   ]);
-
-  function beginPractice() {
-    requestWordlePractice();
-    void goto('/wordle');
-  }
 </script>
 
 {#snippet row(index: number, focus: Mark)}
@@ -41,7 +37,7 @@
 {#snippet repeat()}{@render row(2, 'correct')}{/snippet}
 
 <div class="tutorial-panel" dir={interfaceDirection} lang={settings.interfaceLocale}>
-  <TutorialSteps kicker={m.wordle_tutorial_title({}, locale)} title={m.wordle_title({}, locale)} cornerMark="02" {steps} startLabel={m.tutorial_start({}, locale)} onstart={beginPractice} />
+  <TutorialSteps kicker={m.wordle_tutorial_title({}, locale)} title={m.wordle_title({}, locale)} cornerMark="02" {steps} startLabel={m.tutorial_start({}, locale)} {onstart} {onskip} />
 </div>
 
 <style>

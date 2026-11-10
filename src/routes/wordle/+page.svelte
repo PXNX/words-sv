@@ -1,20 +1,27 @@
 <script lang="ts">
   import { haptic } from '#lib/feedback/haptics.js';
   import { unlockCosmetic, WORDLE_TOP_TRIES } from '#lib/profile/cosmetics.svelte.js';
-  import { goto } from '$app/navigation';
-  import { browser } from '$app/env';
   import WordleMode from '#lib/wordle/WordleMode.svelte';
   import { playSuccessSound } from '#lib/feedback/sounds.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { wordPools } from '#lib/data/vocabulary.js';
   import { m } from '#lib/paraglide/messages.js';
-  import { consumeWordlePracticeRequest } from '#lib/wordle/practice.js';
+  import GameToolbar from '#lib/app/GameToolbar.svelte';
+  import GameSetting from '#lib/app/GameSetting.svelte';
+  import SelectMenu from '#lib/settings/SelectMenu.svelte';
+  import WordleTutorial from '#lib/wordle/WordleTutorial.svelte';
+  import { hasPracticeRound } from '#lib/app/tutorials.js';
+  import type { WordleLength } from '#lib/state/settings.svelte.js';
 
-  const WORDLE_TUTORIAL_KEY = 'wordcircle-wordle-tutorial-v1';
-
-  const practice = browser ? consumeWordlePracticeRequest() : false;
-  const needsTutorial = browser && !practice && (settings.lang === 'de' || settings.lang === 'en') && localStorage.getItem(WORDLE_TUTORIAL_KEY) !== 'complete';
-  if (needsTutorial) void goto('/wordle/tutorial', { replaceState: true });
+  // The first-visit tutorial can start a guided practice round; the game restarts for it.
+  let practice = $state(false);
+  let round = $state(0);
+  function startPractice() {
+    if (!hasPracticeRound(settings.lang)) return;
+    practice = true;
+    round += 1;
+  }
+  const lengthOptions = [3, 4, 5, 6, 7].map((length) => ({ value: String(length), label: String(length) }));
 
   const labels = $derived({
     title: m.wordle_title({}, { locale: settings.interfaceLocale }),
@@ -29,6 +36,16 @@
   const words = $derived(wordPools[settings.lang][settings.vocabularyLevel]);
 </script>
 
+<GameToolbar game="wordle" onfirststart={startPractice}>
+  {#snippet tutorial({ start, skip })}<WordleTutorial onstart={start} onskip={skip} />{/snippet}
+  {#snippet gameSettings()}
+    <GameSetting label={m.wordle_length({}, { locale: settings.interfaceLocale })} hint={m.wordle_length_explain({}, { locale: settings.interfaceLocale })}>
+      <SelectMenu class="w-[7rem]" value={String(settings.wordleLength)} options={lengthOptions} label={m.wordle_length({}, { locale: settings.interfaceLocale })} onchange={(value) => settings.setWordleLength(Number(value) as WordleLength)} />
+    </GameSetting>
+  {/snippet}
+</GameToolbar>
+
+{#key round}
 <WordleMode
   words={words}
   level={settings.vocabularyLevel}
@@ -44,3 +61,4 @@
     if (!practice && attempts <= WORDLE_TOP_TRIES) unlockCosmetic('score_wordle_two');
   }}
 />
+{/key}
