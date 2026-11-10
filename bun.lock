@@ -24,7 +24,6 @@
         "@tailwindcss/vite": "^4.3.5",
         "@types/web-push": "^3.6.4",
         "daisyui": "^5.7.50",
-        "eslint": "^10.14.0",
         "eslint-plugin-svelte": "^3.24.1",
         "globals": "^17.14.0",
         "potrace": "^2.1.8",
