@@ -29,7 +29,20 @@ export type GradeFactorKey =
   | 'paragraphSingle'
   | 'paragraphGood'
   | 'spacingOdd'
-  | 'allGood';
+  | 'allGood'
+  // Count-free issues the language model can report; they carry no numbers, so the
+  // card renders them without placeholders.
+  | 'llmTooShort'
+  | 'llmTooLong'
+  | 'llmPunctuation'
+  | 'llmCapitalisation'
+  | 'llmNouns'
+  | 'llmCommas'
+  | 'llmVariety'
+  | 'llmStructure'
+  | 'llmSpacing'
+  | 'llmGrammar'
+  | 'llmNoIssues';
 
 export type GradeFactor = {
   key: GradeFactorKey;
@@ -48,6 +61,10 @@ export interface GradeResult {
   words: number;
   sentences: number;
   paragraphs: number;
+  /** Which grader produced this result. */
+  source?: 'rules' | 'llm';
+  /** A short free-text remark from the language model, when it graded the text. */
+  comment?: string;
 }
 
 type Analysis = {
@@ -189,7 +206,7 @@ export function grade(text: string, lang: Language, mode: GradeMode = 'short'): 
   if (factors.length === 0) factors.push({ key: 'allGood' });
 
   const verdict: GradeResult['verdict'] = score >= 0.75 ? 'high' : score >= 0.5 ? 'ok' : 'low';
-  return { score, factors, verdict, words: words.length, sentences: sentences.length, paragraphs: paragraphs.length };
+  return { score, factors, verdict, words: words.length, sentences: sentences.length, paragraphs: paragraphs.length, source: 'rules' };
 }
 
 function clamp(value: number, lo: number, hi: number): number {
