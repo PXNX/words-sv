@@ -70,3 +70,21 @@ describe('feature stats', () => {
     expect(stats[0]!.accuracy).toBeCloseTo(1 / 3);
   });
 });
+
+describe('stored daily aggregates', async () => {
+  const { normalizeDailyAggregate } = await import('../src/lib/progress/events');
+  const aggregate = { day: '2026-01-02', lang: 'de', skill: 'vocab', level: 'a1', attempts: 4, correct: 3, scored: 0, scoreSum: 0 };
+
+  it('keeps a valid aggregate as it is', () => {
+    expect(normalizeDailyAggregate(aggregate)).toEqual(aggregate);
+    expect(normalizeDailyAggregate({ ...aggregate, level: 'none' })?.level).toBe('none');
+  });
+
+  it('drops rows that would break the totals', () => {
+    expect(normalizeDailyAggregate(null)).toBeNull();
+    expect(normalizeDailyAggregate({ ...aggregate, attempts: -1 })).toBeNull();
+    expect(normalizeDailyAggregate({ ...aggregate, lang: 'xx' })).toBeNull();
+    expect(normalizeDailyAggregate({ ...aggregate, day: '2026-13-40' })).toBeNull();
+    expect(normalizeDailyAggregate({ ...aggregate, correct: '3' })).toBeNull();
+  });
+});

@@ -7,6 +7,7 @@ import { isItemId, isLevel, isSkill, type ItemId, type LangCode, type Level, typ
 import { isLanguage } from '#lib/data/vocabulary.js';
 import { isFeatureKey, type FeatureKey } from '#lib/grammar/taxonomy.js';
 import type { Grade } from '#lib/review/scheduler.js';
+import * as v from 'valibot';
 
 export const EVENT_MODES = [
   'vocab', 'reading', 'listen', 'speak', 'write', 'grammar', 'forms', 'story', 'mock', 'duel', 'dictionary',
@@ -87,6 +88,24 @@ export interface DailyAggregate {
   correct: number;
   scored: number;
   scoreSum: number;
+}
+
+const tally = v.pipe(v.number(), v.minValue(0));
+const DailyAggregateSchema = v.object({
+  day: v.pipe(v.string(), v.isoDate()),
+  lang: v.custom<LangCode>(isLanguage),
+  skill: v.custom<Skill>(isSkill),
+  level: v.union([v.literal('none'), v.custom<Level>(isLevel)]),
+  attempts: tally,
+  correct: tally,
+  scored: tally,
+  scoreSum: tally
+});
+
+/** Validates a stored aggregate (IndexedDB reads are untrusted); null when it cannot be used. */
+export function normalizeDailyAggregate(value: unknown): DailyAggregate | null {
+  const parsed = v.safeParse(DailyAggregateSchema, value);
+  return parsed.success ? parsed.output : null;
 }
 
 export function aggregateKey(aggregate: Pick<DailyAggregate, 'day' | 'lang' | 'skill' | 'level'>): string {

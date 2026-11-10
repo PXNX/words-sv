@@ -4,7 +4,7 @@
  * Every mode logs through `logLearningEvent`; none writes progress on its own.
  */
 import { itemId, isLevel, sessionId as newSessionId, type LangCode, type SessionId } from '#lib/domain/types.js';
-import { aggregateKey, compactEvents, normalizeLearningEvent, skillForMode, type DailyAggregate, type EventMode, type LearningEvent, type LearningEventInput } from './events.js';
+import { aggregateKey, compactEvents, normalizeDailyAggregate, normalizeLearningEvent, skillForMode, type DailyAggregate, type EventMode, type LearningEvent, type LearningEventInput } from './events.js';
 
 const DB_NAME = 'wordcircle-events-v1';
 const DB_VERSION = 1;
@@ -130,11 +130,14 @@ export async function readAggregates(): Promise<Map<string, DailyAggregate>> {
   if (!db) return result;
   try {
     const request = db.transaction(AGGREGATES, 'readonly').objectStore(AGGREGATES).getAll();
-    const rows = await new Promise<DailyAggregate[]>((resolve) => {
-      request.onsuccess = () => resolve(request.result as DailyAggregate[]);
+    const rows = await new Promise<unknown[]>((resolve) => {
+      request.onsuccess = () => resolve(request.result);
       request.onerror = () => resolve([]);
     });
-    for (const row of rows) result.set(aggregateKey(row), row);
+    for (const row of rows) {
+      const aggregate = normalizeDailyAggregate(row);
+      if (aggregate) result.set(aggregateKey(aggregate), aggregate);
+    }
   } catch {}
   return result;
 }
