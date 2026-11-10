@@ -7,7 +7,7 @@
   // `holding` puts an item in their hand (or, for Lilith, in a bowl at her paws); `still` stops the
   // blinking and wagging, for the small faces in the transcript. `avatar` draws a learner's own
   // character instead; Kumar is drawn as the learner's character whenever they have made one.
-  let { id, talking = false, label = '', mood: feeling = 'neutral', mouth = null, holding = null, still = false, avatar = null }: { id: CharacterId; talking?: boolean; label?: string; mood?: Mood; mouth?: number | null; holding?: HeldItem | null; still?: boolean; avatar?: Avatar | null } = $props();
+  let { id, talking = false, label = '', mood: feeling = 'neutral', mouth = null, holding = null, still = false, avatar = null, walking = false }: { id: CharacterId; talking?: boolean; label?: string; mood?: Mood; mouth?: number | null; holding?: HeldItem | null; still?: boolean; avatar?: Avatar | null; walking?: boolean } = $props();
   // The animals know the five basic moods; the finer ones map onto the closest of those.
   const animalMoods: Record<Mood, Mood> = { neutral: 'neutral', happy: 'happy', sad: 'sad', surprised: 'surprised', curious: 'curious', angry: 'sad', worried: 'sad', laughing: 'happy', sleepy: 'neutral' };
   const lipSynced = $derived(mouth !== null);
@@ -173,7 +173,7 @@
   <ellipse class="story-mouth-open" style:transform={mouthScale} cx={x} cy={y} rx={w * 0.9} ry={w * 0.7} fill="#5a1f28" />
 {/snippet}
 
-<svg class="story-character" class:talking class:lip-synced={lipSynced} class:still viewBox="0 0 120 150" role="img" aria-label={label}>
+<svg class="story-character" class:talking class:lip-synced={lipSynced} class:still class:walking viewBox="0 0 120 150" role="img" aria-label={label}>
   <!-- Bello-style eyes and brows shared by the farm and zoo animals. -->
   {#snippet animalEyes(lx: number, rx: number, y: number, r: number, browColor = '#172a45')}
     {@const brow = animalBrows(lx, rx, y)}
@@ -418,10 +418,11 @@
       <radialGradient id="{uid}-eye" cx=".45" cy=".4" r=".6"><stop offset="0" stop-color="#d9f0fb" /><stop offset=".5" stop-color="#7cc0ea" /><stop offset="1" stop-color="#2c6aa3" /></radialGradient>
     </defs>
     <!-- fluffy body, legs and the white ruff -->
-    <path d="M60 76c20 0 36 14 39 34l4 3-3 3c1 12-2 23-8 31H28c-6-8-9-19-8-31l-3-3 4-3c3-20 19-34 39-34Z" fill="url(#{uid}-coat)" />
-    <path d="M46 116c-2 10-2 21-1 30h13c0-9 0-19-1-30Z" fill="url(#{uid}-leg)" /><path d="M74 116c2 10 2 21 1 30H62c0-9 0-19 1-30Z" fill="url(#{uid}-leg)" />
-    <g fill="#f8efe3" opacity=".85"><ellipse cx="60" cy="94" rx="20" ry="13" /><circle cx="46" cy="101" r="7.5" /><circle cx="74" cy="101" r="7.5" /><circle cx="52" cy="108" r="7" /><circle cx="68" cy="108" r="7" /><circle cx="60" cy="112" r="6.5" /></g>
-    <g fill="#3e2b20"><ellipse cx="51" cy="145.5" rx="8" ry="4.5" /><ellipse cx="69" cy="145.5" rx="8" ry="4.5" /></g>
+    <!-- `walking` lifts the front legs in turn, bobs the body and sways the head (styles below) -->
+    <g class="cat-body"><path d="M60 76c20 0 36 14 39 34l4 3-3 3c1 12-2 23-8 31H28c-6-8-9-19-8-31l-3-3 4-3c3-20 19-34 39-34Z" fill="url(#{uid}-coat)" /></g>
+    <g class="cat-leg cat-leg-left"><path d="M46 116c-2 10-2 21-1 30h13c0-9 0-19-1-30Z" fill="url(#{uid}-leg)" /><ellipse cx="51" cy="145.5" rx="8" ry="4.5" fill="#3e2b20" /></g>
+    <g class="cat-leg cat-leg-right"><path d="M74 116c2 10 2 21 1 30H62c0-9 0-19 1-30Z" fill="url(#{uid}-leg)" /><ellipse cx="69" cy="145.5" rx="8" ry="4.5" fill="#3e2b20" /></g>
+    <g class="cat-body" fill="#f8efe3" opacity=".85"><ellipse cx="60" cy="94" rx="20" ry="13" /><circle cx="46" cy="101" r="7.5" /><circle cx="74" cy="101" r="7.5" /><circle cx="52" cy="108" r="7" /><circle cx="68" cy="108" r="7" /><circle cx="60" cy="112" r="6.5" /></g>
     <!-- the bushy tail curls round the front paws -->
     <path class="story-tail story-tail-cat" d="M93 146c-15 7-60 8-78 0-9-4-8-16 2-15 4 1 6 4 10 5 18 5 43 5 63 2 6 0 8 6 3 8Z" fill="url(#{uid}-tail)" />
     {#if holding === 'fish'}
@@ -430,7 +431,7 @@
       <path d="M-20 138h30q-2 11-15 11t-15-11Z" fill="#d64b45" /><path d="M-20 138h30" stroke="#9c2a25" stroke-width="1.6" />
     {/if}
     <!-- the head sits a little smaller than life, like the round fluffy face in her portrait -->
-    <g transform="rotate({lilithTilt} 60 64) translate(60 66) scale(.86) translate(-60 -62)">
+    <g class="cat-head"><g transform="rotate({lilithTilt} 60 64) translate(60 66) scale(.86) translate(-60 -62)">
       <!-- ears, drooping when she is sad -->
       <g transform={mood === 'sad' ? 'rotate(-24 42 40)' : undefined}><path d="M29 50Q24 30 28 15q14 7 27 18Z" fill="url(#{uid}-ear)" /><path d="M33 44q-3-13-1-22 9 5 16 12Z" fill="#7a5646" /><path d="M35 42l4-6M38 44l5-5" stroke="#f4e9da" stroke-width="1" opacity=".8" /></g>
       <g transform={mood === 'sad' ? 'rotate(24 78 40)' : undefined}><path d="M91 50Q96 30 92 15q-14 7-27 18Z" fill="url(#{uid}-ear)" /><path d="M87 44q3-13 1-22-9 5-16 12Z" fill="#7a5646" /><path d="M85 42l-4-6M82 44l-5-5" stroke="#f4e9da" stroke-width="1" opacity=".8" /></g>
@@ -461,7 +462,7 @@
       {/if}
       <g class="story-mouth-open" style:transform={mouthScale}><ellipse cx="60" cy="84.5" rx="5.4" ry="5" fill="#5a1f28" /><ellipse cx="60" cy="87.4" rx="3.4" ry="2.1" fill="#e58fa0" /></g>
       <path d="M44 78 18 73M44 81l-26 2M76 78l26-5M76 81l26 2" stroke="rgba(255,250,240,.85)" stroke-width="1" stroke-linecap="round" />
-    </g>
+    </g></g>
   {:else if id === 'bird'}
     <!-- Pieps the budgie: green body, yellow head, a little orange beak and a long tail -->
     <path class="story-tail" d="M52 132l-6 16h10l4-14Z" fill="#4b78c2" />
@@ -608,6 +609,15 @@
   @keyframes story-blink { 0%,94%,100% { transform:scaleY(1); } 97% { transform:scaleY(.1); } }
   @keyframes story-talk { from { transform:scaleY(.35); } to { transform:scaleY(1); } }
   @keyframes story-wag { from { transform:rotate(-6deg); } to { transform:rotate(7deg); } }
+  /* Lilith walking: one step every .44s, legs in turn, body bobbing twice per cycle */
+  .walking .cat-leg { transform-box:fill-box;transform-origin:50% 0;animation:cat-step .44s ease-in-out infinite; }
+  .walking .cat-leg-right { animation-delay:-.22s; }
+  .walking .cat-body { animation:cat-bob .22s ease-in-out infinite alternate; }
+  .walking .cat-head { transform-box:fill-box;transform-origin:50% 100%;animation:cat-sway .88s ease-in-out infinite; }
+  .walking .story-tail-cat { transform-box:fill-box;transform-origin:right center;animation:story-wag .44s ease-in-out infinite alternate; }
+  @keyframes cat-step { 0%,100% { transform:translateY(0) scaleY(1); } 30% { transform:translateY(-4px) scaleY(.92) rotate(-4deg); } 55% { transform:translateY(-1px) scaleY(.97); } }
+  @keyframes cat-bob { from { transform:translateY(0); } to { transform:translateY(-1.6px); } }
+  @keyframes cat-sway { 0%,100% { transform:translateY(0) rotate(0); } 25% { transform:translateY(-1.5px) rotate(-2.5deg); } 75% { transform:translateY(-1.5px) rotate(2.5deg); } }
   .still .story-eyes,.still .story-mouth-open,.still .story-tail { animation:none; }
-  @media (prefers-reduced-motion:reduce) { .story-eyes,.talking .story-mouth-open,.talking .story-tail,.lip-synced .story-tail { animation:none; } }
+  @media (prefers-reduced-motion:reduce) { .story-eyes,.talking .story-mouth-open,.talking .story-tail,.lip-synced .story-tail,.walking .cat-leg,.walking .cat-body,.walking .cat-head,.walking .story-tail-cat { animation:none; } }
 </style>
