@@ -9,7 +9,7 @@
   },
   "include": [
     "src",
-    "scripts/*.ts",
+    "scripts",
     "eslint.config.ts",
     "vite.config.ts",
     "tests"
