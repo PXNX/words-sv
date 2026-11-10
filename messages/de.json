@@ -869,5 +869,10 @@
   "store_item_hair": "Haarfarbe",
   "store_item_top": "Oberteilfarbe",
   "store_link": "Laden und Figur",
-  "store_link_hint": "Gestalte deine Figur, hol dir neue Farben und Pro."
+  "store_link_hint": "Gestalte deine Figur, hol dir neue Farben und Pro.",
+  "background_offer": "Inzwischen etwas anderes machen",
+  "background_offer_title": "Läuft im Hintergrund weiter",
+  "background_offer_text": "Du kannst jetzt etwas anderes spielen – das hier wird weiter vorbereitet. Das kleine Abzeichen in der Ecke zeigt, wie weit es ist, und sagt Bescheid, wenn es fertig ist.",
+  "background_offer_go": "Etwas anderes spielen",
+  "background_offer_stay": "Hier warten"
 }

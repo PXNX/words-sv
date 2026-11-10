@@ -869,5 +869,10 @@
   "store_item_hair": "Hair colour",
   "store_item_top": "Top colour",
   "store_link": "Store and character",
-  "store_link_hint": "Customise your character, get new colours and Pro."
+  "store_link_hint": "Customise your character, get new colours and Pro.",
+  "background_offer": "Do something else meanwhile",
+  "background_offer_title": "Keeps going in the background",
+  "background_offer_text": "You can play something else now – this keeps preparing. The small badge in the corner shows how far it is and tells you when it's ready.",
+  "background_offer_go": "Play something else",
+  "background_offer_stay": "Wait here"
 }
