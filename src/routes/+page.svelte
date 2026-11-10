@@ -36,6 +36,7 @@
   import { dueReviewEntries } from '#lib/review/ledger.js';
   import IconSettings from '~icons/material-symbols/settings-rounded';
   import IconChevronRight from '~icons/material-symbols/chevron-right-rounded';
+  import IconDictionary from '~icons/material-symbols/menu-book-rounded';
   import IconCrossword from '~icons/material-symbols/crossword-rounded';
   import IconSpellcheck from '~icons/material-symbols/spellcheck-rounded';
   import IconQuiz from '~icons/material-symbols/quiz-rounded';
@@ -335,6 +336,7 @@
       <a class="card-play {streakClass('vocab')}" href="/vocab"><span class="home-icon" aria-hidden="true"><IconQuiz /></span><h2>{labels.wordQuiz}</h2><p>{labels.homeVocab}</p>{#if wordDue > 0}<span class="home-due-badge">{labels.repeatDue(wordDue)}</span>{/if}<TodayBadge done={modeDone(settings.streak, 'vocab')} label={labels.streakModeDone} /></a>
       <a class="card-play {streakClass('pronunciation')}" href="/pronunciation"><span class="home-icon" aria-hidden="true"><IconMic /></span><h2>{labels.pronunciation}</h2><p>{labels.homePronunciation}</p><TodayBadge done={modeDone(settings.streak, 'pronunciation')} label={labels.streakModeDone} /></a>
       <a class="card-play {streakClass('alltag')}" href="/alltag"><span class="home-icon" aria-hidden="true"><IconEmoji /></span><h2>{labels.alltag}</h2><p>{labels.homeAlltag}</p><TodayBadge done={modeDone(settings.streak, 'alltag')} label={labels.streakModeDone} /></a>
+      <a class="card-play" href="/dictionary"><span class="home-icon" aria-hidden="true"><IconDictionary /></span><h2>{m.dictionary_title({}, { locale: settings.interfaceLocale })}</h2><p>{m.home_dictionary({}, { locale: settings.interfaceLocale })}</p></a>
       <a class="card-play {streakClass('grammar')}" href="/grammar?mode=falsefriends"><span class="home-icon" aria-hidden="true"><IconSwapHoriz /></span><h2>{labels.grammarFalseFriends}</h2><p>{labels.homeFalseFriends}</p><TodayBadge done={modeDone(settings.streak, 'grammar')} label={labels.streakModeDone} /></a>
     </div>
     <h2 class="home-group-heading">{labels.grammarGroup}</h2>
