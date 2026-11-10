@@ -9,6 +9,7 @@ from donations import CURRENCY, TIERS, build_payload, check_checkout, parse_payl
 from settings.config import ADMINS, MINIAPP_URL, WORDS_URL
 from bot_profile import set_cmd
 from bridge import forward_start, is_bridge_payload
+from group_games import register_group_games
 from store import record_donation
 from texts import lang_of, t
 from version import APP_VERSION
@@ -111,6 +112,7 @@ def _legal(key: str):
 
 
 def register_handlers(app: Application):
+    register_group_games(app)
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler(["spenden", "donate"], donate))
     app.add_handler(CallbackQueryHandler(send_invoice, pattern=r"^donate:\d+$"))

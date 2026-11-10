@@ -5,6 +5,8 @@ A donation is keyed by Telegram's unique charge id, so a payment delivered twice
 from psycopg.rows import dict_row
 from psycopg_pool import AsyncConnectionPool
 
+from games import SCHEMA as GAMES_SCHEMA
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS donations (
     telegram_payment_charge_id text PRIMARY KEY,
@@ -21,6 +23,7 @@ async def connect(database_url: str) -> AsyncConnectionPool:
     await pool.open(wait=True)
     async with pool.connection() as connection:
         await connection.execute(SCHEMA)
+        await connection.execute(GAMES_SCHEMA)
     return pool
 
 
