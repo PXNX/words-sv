@@ -10,7 +10,7 @@
   import { formatDate, formatNumber, formatPercent } from '#lib/format/format.js';
   import { checkpointDue, checkpointTrend, readCheckpoints, type CheckpointResult } from '#lib/assessment/checkpoints.js';
   import { SKILLS, LEVELS, type Skill } from '#lib/domain/types.js';
-  import { parseFeatureKey } from '#lib/grammar/taxonomy.js';
+  import { labelKeys, type FeatureKey } from '#lib/grammar/taxonomy.js';
   import { readEvents } from './eventLog.js';
   import type { LearningEvent } from './events.js';
   import { buildOverview } from './overview.js';
@@ -56,9 +56,14 @@
     const { low, high } = readinessPercent(range);
     return m.readiness_range({ low: formatNumber(settings.formatContext, low), high: formatNumber(settings.formatContext, high) }, locale);
   }
-  const featureLabel = (key: Parameters<typeof parseFeatureKey>[0]) => {
-    const { category, value } = parseFeatureKey(key);
-    return `${category} · ${value.replace(/-/gu, ' ')}`;
+  type MessageFn = (inputs: object, options: { locale: string }) => string;
+  const messages = m as unknown as Record<string, MessageFn | undefined>;
+  // "Kasus · Dativ" from the message files; the raw id only if a label is missing.
+  const featureLabel = (key: FeatureKey) => {
+    const keys = labelKeys(key);
+    const category = messages[keys.category]?.({}, locale);
+    const value = messages[keys.value]?.({}, locale);
+    return category && value ? `${category} · ${value}` : key;
   };
 </script>
 
@@ -146,7 +151,7 @@
   .readiness-legend .started { margin-inline-start: 0; background: color-mix(in oklch, var(--color-primary) 35%, transparent); }
   .readiness-legend .known { background: var(--color-success, #2f8f5b); }
   h3 { margin: 1rem 0 0; color: var(--color-accent); font-size: .56rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
-  .readiness-errors li { display: flex; justify-content: space-between; font-size: .7rem; font-weight: 800; text-transform: capitalize; }
+  .readiness-errors li { display: flex; justify-content: space-between; font-size: .7rem; font-weight: 800; }
   @media (prefers-reduced-motion: no-preference) {
     .readiness-bar i, .readiness-rung i, .readiness-rung b { transition: width .4s cubic-bezier(.23, 1, .32, 1), inset-inline-start .4s cubic-bezier(.23, 1, .32, 1); }
   }
