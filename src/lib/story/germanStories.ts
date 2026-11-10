@@ -3336,14 +3336,30 @@ export const germanStories: Story[] = [
     scene: 'office',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Extra B1 1'),
+    title: german('Weniger Müll im Büro'),
     beats: [
-      { kind: 'narration', text: german('Abbildung und Abenteuer und Abfall und Abfalleimer und abhängig.') },
-      { kind: 'line', speaker: 'mia', text: german('Abitur ist wichtig und abonnieren ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('Abschluss und Abschnitt sind da.') },
-      { kind: 'narration', text: german('Absenderin und Absicht.') },
-      { kind: 'question', prompt: german('Was ist Abteilung?'), options: [german('Aktion'), german('Aktivität'), german('akzeptieren')] },
-      { kind: 'question', prompt: german('Wer hat Abteilung?'), options: [german('Aktion'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Montagmorgen in der Marketingabteilung. Mia steht vor dem Abfalleimer in der Küche, der schon wieder voll ist: Pappbecher, Plastikverpackungen, Papier und Essensreste – alles durcheinander.') },
+      { kind: 'line', speaker: 'mia', mood: 'angry', text: german('Das kann so nicht weitergehen! Wir produzieren jeden Tag einen ganzen Sack Abfall. Und das in einer Firma, die sich angeblich für die Umwelt einsetzt.') },
+      { kind: 'line', speaker: 'tom', text: german('Ich gebe zu, ich nehme mir morgens auch immer einen Pappbecher vom Bäcker mit. Aber was sollen wir dagegen tun?') },
+      { kind: 'line', speaker: 'mia', text: german('Ich habe vor, eine Aktion zu starten: „Ein Monat ohne Einwegbecher“. Jeder bringt seine eigene Tasse mit, und wir stellen drei Mülleimer zum Trennen auf.') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Klingt gut, aber du weißt, wie die Kollegen sind. Ob sie das akzeptieren, hängt davon ab, ob es bequem ist. Wenn es zu kompliziert ist, macht keiner mit.') },
+      { kind: 'line', speaker: 'mia', text: german('Deshalb brauchen wir eine klare Anleitung. Ich schreibe einen kurzen Text für den Newsletter, mit einem Abschnitt zu jedem Mülleimer und einer Abbildung, was wohin gehört.') },
+      { kind: 'line', speaker: 'tom', mood: 'happy', text: german('Und ich frage die Chefin, ob die Firma jedem eine Tasse mit Logo schenkt. Wer eine schöne Tasse hat, benutzt sie auch.') },
+      { kind: 'narration', text: german('Am Nachmittag kommt eine Antwort von der Chefin. Mia liest sie laut vor.') },
+      { kind: 'line', speaker: 'mia', mood: 'surprised', text: german('„Gute Absicht, tolle Idee! Die Firma bezahlt die Tassen. Wenn die Aktion Erfolg hat, machen wir sie zu einer festen Regel.“ – Tom, sie ist dafür!') },
+      { kind: 'line', speaker: 'tom', mood: 'laughing', text: german('Dann ist das ja fast ein kleines Abenteuer für die Abteilung. {name}, du arbeitest doch auch hier. Machst du mit?') },
+      { kind: 'reply', to: 'tom', options: [
+        german('Klar, ich bringe ab morgen meine eigene Tasse mit und trenne den Müll.'),
+        german('Klar, ich bringe ab morgen jeden Tag drei Pappbecher mit.'),
+        german('Nein, ich habe den Newsletter schon abonniert.')
+      ] },
+      { kind: 'narration', text: german('Nach vier Wochen ist der Abfalleimer nur noch halb so voll. Die Aktion wird zur festen Regel, und Mia bekommt sogar ein Lob im nächsten Newsletter.') },
+      { kind: 'question', prompt: german('Worüber ärgert sich Mia am Anfang?'), options: [german('Über den vielen Abfall in der Küche'), german('Über einen Fehler im Newsletter'), german('Über ihre Chefin')] },
+      { kind: 'question', prompt: german('Wie heißt Mias Aktion?'), options: [german('Ein Monat ohne Einwegbecher'), german('Ein Monat ohne Papier'), german('Ein Monat ohne Kaffee')] },
+      { kind: 'question', prompt: german('Wovon hängt es laut Tom ab, ob die Kollegen mitmachen?'), options: [german('Davon, ob es bequem ist'), german('Davon, ob es Geld gibt'), german('Davon, ob die Chefin mitmacht')] },
+      { kind: 'question', prompt: german('Was soll im Newsletter zeigen, was in welchen Mülleimer gehört?'), options: [german('Eine Abbildung'), german('Ein Video'), german('Eine Tabelle mit Preisen')] },
+      { kind: 'question', prompt: german('Was bezahlt die Firma?'), options: [german('Die Tassen mit Logo'), german('Den Kaffee vom Bäcker'), german('Neue Computer')] },
+      { kind: 'question', prompt: german('Was ist nach vier Wochen passiert?'), options: [german('Der Abfalleimer ist nur noch halb so voll.'), german('Niemand hat mitgemacht.'), german('Die Küche wurde geschlossen.')] }
     ]
   },
   {
@@ -3352,14 +3368,31 @@ export const germanStories: Story[] = [
     scene: 'town',
     cast: ['kim', 'leo'],
     languages: ['de'],
-    title: german('Extra B1 2'),
+    title: german('Der Weg zum Bürgeramt'),
     beats: [
-      { kind: 'narration', text: german('Alarm und Alltag und Alphabet und Altenheim und Alternative.') },
-      { kind: 'line', speaker: 'mia', text: german('Altersheim ist wichtig und Amt ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('analysieren und Änderung sind da.') },
-      { kind: 'narration', text: german('Angabe und angeben.') },
-      { kind: 'question', prompt: german('Was ist Anlage?'), options: [german('Anleitung'), german('Annonce'), german('Anspruch')] },
-      { kind: 'question', prompt: german('Wer hat Anlage?'), options: [german('Anleitung'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Dienstagvormittag in der Innenstadt. Kim ist vor einem Monat umgezogen und muss ihre neue Adresse beim Amt anmelden. Vor dem Bürgeramt trifft sie Leo.') },
+      { kind: 'line', speaker: 'leo', mood: 'surprised', text: german('Kim! Was machst du denn hier? Du siehst ziemlich gestresst aus.') },
+      { kind: 'line', speaker: 'kim', mood: 'worried', text: german('Ich muss die Änderung meiner Adresse melden. Eigentlich hat man dafür nur zwei Wochen Zeit, und ich bin schon spät dran. Außerdem habe ich keine Ahnung, welche Unterlagen ich brauche.') },
+      { kind: 'line', speaker: 'leo', text: german('Zeig mal dein Formular. Ah, da fehlt eine Angabe: Du musst die Wohnungsgeberbestätigung beilegen – das ist die Anlage, die dein Vermieter unterschreibt.') },
+      { kind: 'line', speaker: 'kim', mood: 'sad', text: german('So ein Mist! Das Blatt liegt zu Hause auf dem Schreibtisch.') },
+      { kind: 'line', speaker: 'leo', text: german('Keine Panik. Dann hast du heute eben keinen Anspruch auf eine Anmeldung, aber du kannst einen neuen Termin machen. Auf der Website der Stadt gibt es eine Anleitung, Schritt für Schritt.') },
+      { kind: 'line', speaker: 'kim', mood: 'curious', text: german('Woher weißt du das alles so genau?') },
+      { kind: 'line', speaker: 'leo', mood: 'laughing', text: german('Weil ich das Gleiche letztes Jahr erlebt habe. Im Alltag denkt man an solche Sachen einfach nicht.') },
+      { kind: 'narration', text: german('Plötzlich ertönt aus dem Gebäude ein lauter Alarm. Menschen kommen heraus und stellen sich auf den Platz.') },
+      { kind: 'line', speaker: 'leo', text: german('Das ist nur eine Übung. Das machen sie hier zweimal im Jahr. Na ja, heute wäre dein Termin sowieso ausgefallen.') },
+      { kind: 'line', speaker: 'kim', text: german('Dann gibt es nur eine Alternative: Ich hole das Blatt und buche online einen neuen Termin. {name}, was meinst du, soll ich das gleich machen?') },
+      { kind: 'reply', to: 'kim', options: [
+        german('Ja, buch den Termin am besten sofort, damit du nicht noch später dran bist.'),
+        german('Nein, warte lieber noch ein Jahr, das Amt hat ja Zeit.'),
+        german('Ja, aber ohne Formular und ohne Vermieter.')
+      ] },
+      { kind: 'narration', text: german('Kim nimmt ihr Handy und findet einen Termin für Donnerstag um neun Uhr. Diesmal schreibt sie sich alles auf, was sie mitbringen muss.') },
+      { kind: 'question', prompt: german('Warum muss Kim zum Bürgeramt?'), options: [german('Sie muss ihre neue Adresse anmelden.'), german('Sie braucht einen neuen Pass.'), german('Sie möchte dort arbeiten.')] },
+      { kind: 'question', prompt: german('Wie lange hat man normalerweise Zeit, eine neue Adresse zu melden?'), options: [german('Zwei Wochen'), german('Zwei Monate'), german('Ein Jahr')] },
+      { kind: 'question', prompt: german('Welche Angabe fehlt in Kims Unterlagen?'), options: [german('Die Bestätigung vom Vermieter'), german('Ihr Geburtsdatum'), german('Ihre Telefonnummer')] },
+      { kind: 'question', prompt: german('Woher weiß Leo so gut Bescheid?'), options: [german('Er hat das Gleiche letztes Jahr erlebt.'), german('Er arbeitet im Bürgeramt.'), german('Er hat eine Annonce gelesen.')] },
+      { kind: 'question', prompt: german('Warum kommen die Menschen aus dem Gebäude?'), options: [german('Es gibt eine Alarmübung.'), german('Das Amt macht Mittagspause.'), german('Es brennt wirklich.')] },
+      { kind: 'question', prompt: german('Wann ist Kims neuer Termin?'), options: [german('Am Donnerstag um neun Uhr'), german('Am Dienstag um zehn Uhr'), german('Am Freitag um acht Uhr')] }
     ]
   },
   {
@@ -3368,14 +3401,31 @@ export const germanStories: Story[] = [
     scene: 'shop',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Extra B1 3'),
+    title: german('Der erste Tag der Ausbildung'),
     beats: [
-      { kind: 'narration', text: german('Apotheke und Arbeiter und Arbeiterin und Arbeitsstelle und Art.') },
-      { kind: 'line', speaker: 'mia', text: german('Asyl ist wichtig und atmen ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('Aufenthalt und Aufforderung sind da.') },
-      { kind: 'narration', text: german('auflösen und Aufnahme.') },
-      { kind: 'question', prompt: german('Was ist aufschreiben?'), options: [german('Auftrag'), german('Augenblick'), german('Ausbildung')] },
-      { kind: 'question', prompt: german('Wer hat aufschreiben?'), options: [german('Auftrag'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Tom hat diese Woche eine Ausbildung zum Verkäufer in einem Modegeschäft angefangen. Heute hat ihm die Chefin seinen ersten eigenen Auftrag gegeben: Er soll allein Kunden beraten.') },
+      { kind: 'narration', enters: ['mia'], text: german('Die Tür geht auf, und Mia kommt herein. Sie ist nervös und sieht sich hektisch um.') },
+      { kind: 'line', speaker: 'tom', mood: 'surprised', text: german('Mia! Du bist meine erste Kundin. Was kann ich für dich tun?') },
+      { kind: 'line', speaker: 'mia', mood: 'worried', text: german('Ich habe morgen ein Vorstellungsgespräch für eine neue Arbeitsstelle – in einer Apotheke. Und ich habe überhaupt nichts Passendes zum Anziehen!') },
+      { kind: 'line', speaker: 'tom', text: german('Atme erst mal tief durch. Wir finden etwas. Welche Art von Kleidung stellst du dir vor? Eher elegant oder eher bequem?') },
+      { kind: 'line', speaker: 'mia', text: german('Ordentlich, aber nicht zu schick. In der Apotheke trage ich später sowieso einen weißen Kittel.') },
+      { kind: 'line', speaker: 'tom', text: german('Dann würde ich eine dunkelblaue Hose und eine helle Bluse empfehlen. Moment, ich schreibe mir deine Größe auf, damit ich nichts vergesse.') },
+      { kind: 'narration', text: german('Tom holt drei Blusen aus dem Lager. Mia probiert sie an und entscheidet sich für die hellgrüne.') },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Perfekt! In dem Augenblick, als ich sie angezogen habe, war ich weniger nervös. Du bist ein guter Verkäufer.') },
+      { kind: 'line', speaker: 'tom', mood: 'laughing', text: german('Danke, das sage ich meiner Chefin. Aber jetzt zu morgen: Was antwortest du, wenn man dich fragt, warum du in der Apotheke arbeiten möchtest?') },
+      { kind: 'line', speaker: 'mia', mood: 'curious', text: german('Gute Frage. {name}, hilf mir mal. Was wäre eine gute Antwort?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Ich arbeite gern mit Menschen und möchte ihnen helfen, gesund zu werden.'),
+        german('Weil die Kittel in der Apotheke so schön weiß sind.'),
+        german('Weil ich keine Lust auf eine andere Arbeitsstelle habe.')
+      ] },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Genau so sage ich es. Drückt mir morgen die Daumen!') },
+      { kind: 'question', prompt: german('Was macht Tom in dem Modegeschäft?'), options: [german('Eine Ausbildung zum Verkäufer'), german('Ein Praktikum als Apotheker'), german('Er ist dort der Chef.')] },
+      { kind: 'question', prompt: german('Welchen Auftrag hat Tom heute bekommen?'), options: [german('Er soll allein Kunden beraten.'), german('Er soll das Lager aufräumen.'), german('Er soll die Kasse machen.')] },
+      { kind: 'question', prompt: german('Warum braucht Mia neue Kleidung?'), options: [german('Sie hat morgen ein Vorstellungsgespräch.'), german('Sie geht auf eine Hochzeit.'), german('Ihre Kleidung ist kaputt.')] },
+      { kind: 'question', prompt: german('Wo möchte Mia arbeiten?'), options: [german('In einer Apotheke'), german('In einem Modegeschäft'), german('In einem Krankenhaus')] },
+      { kind: 'question', prompt: german('Warum schreibt Tom sich Mias Größe auf?'), options: [german('Damit er nichts vergisst'), german('Weil die Chefin es verlangt'), german('Weil Mia es möchte')] },
+      { kind: 'question', prompt: german('Welche Bluse nimmt Mia?'), options: [german('Die hellgrüne'), german('Die dunkelblaue'), german('Die weiße')] }
     ]
   },
   {
@@ -3384,14 +3434,32 @@ export const germanStories: Story[] = [
     scene: 'market',
     cast: ['kim', 'leo'],
     languages: ['de'],
-    title: german('Extra B1 4'),
+    weathers: ['sunny', 'cloudy'],
+    title: german('Die Aushilfe am Gemüsestand'),
     beats: [
-      { kind: 'narration', text: german('Ausfahrt und Ausgabe und Aushilfe und Ausländerin und Ausnahme.') },
-      { kind: 'line', speaker: 'mia', text: german('außen ist wichtig und Aussicht ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('Auswahl und Ballett sind da.') },
-      { kind: 'narration', text: german('Bankleitzahl und Bart.') },
-      { kind: 'question', prompt: german('Was ist Basketball?'), options: [german('Batterie'), german('Bauernhof'), german('beantragen')] },
-      { kind: 'question', prompt: german('Wer hat Basketball?'), options: [german('Batterie'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Freitag auf dem Wochenmarkt. Leo arbeitet seit zwei Wochen als Aushilfe am Gemüsestand von einem Bauernhof aus der Region. Kim kauft hier jede Woche ein.') },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Hallo Leo! Was für eine Auswahl heute! Ich hätte gern ein Kilo Kartoffeln, einen Kürbis und zwei Bund Karotten.') },
+      { kind: 'line', speaker: 'leo', text: german('Sehr gern. Die Karotten sind heute Morgen erst geerntet worden. Das macht zusammen elf Euro fünfzig.') },
+      { kind: 'narration', text: german('Kim hält ihre Karte an das Lesegerät. Nichts passiert. Leo versucht es noch einmal.') },
+      { kind: 'line', speaker: 'leo', mood: 'worried', text: german('Oh nein, die Batterie ist leer. Und die neue liegt im Auto, das ganz unten an der Ausfahrt vom Parkplatz steht.') },
+      { kind: 'line', speaker: 'kim', mood: 'sad', text: german('Und ich habe nur fünf Euro Bargeld dabei. Als Ausländerin bin ich das nicht gewohnt: Bei mir zu Hause in Korea bezahlt man fast alles mit Karte. Ich wusste nicht, dass das auf dem Markt ein Problem sein kann.') },
+      { kind: 'line', speaker: 'leo', text: german('Normalerweise gibt es bei uns nur Bargeld oder Karte, aber heute machen wir eine Ausnahme. Du kannst den Rest einfach überweisen. Ich schreibe dir die Kontonummer auf. Eine Bankleitzahl brauchst du nicht mehr, nur die IBAN.') },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Danke, das ist wirklich nett. Ich überweise es dir noch heute Abend, versprochen.') },
+      { kind: 'line', speaker: 'leo', mood: 'curious', text: german('Kein Stress. Sag mal, wofür brauchst du so viel Gemüse?') },
+      { kind: 'line', speaker: 'kim', text: german('Meine Tochter tanzt morgen zum ersten Mal Ballett auf einer Bühne. Danach kommt die ganze Familie zu mir, und ich koche eine große Suppe.') },
+      { kind: 'line', speaker: 'leo', mood: 'laughing', text: german('Und ich habe morgen ein Basketballspiel. Wir haben also beide einen wichtigen Tag. {name}, du stehst ja auch in der Schlange. Was darf es bei dir sein?') },
+      { kind: 'reply', to: 'leo', options: [
+        german('Ich hätte gern ein halbes Kilo Tomaten, bitte. Ich zahle bar.'),
+        german('Ich hätte gern eine neue Batterie für dein Auto.'),
+        german('Ich hätte gern ein Kilo Ballett, bitte.')
+      ] },
+      { kind: 'narration', text: german('Am Abend schaut Leo auf sein Handy. Kim hat die sechs Euro fünfzig schon überwiesen, mit dem Betreff: „Danke für die Karotten!“') },
+      { kind: 'question', prompt: german('Als was arbeitet Leo auf dem Markt?'), options: [german('Als Aushilfe am Gemüsestand'), german('Als Bauer'), german('Als Kassierer im Supermarkt')] },
+      { kind: 'question', prompt: german('Warum funktioniert das Kartenlesegerät nicht?'), options: [german('Die Batterie ist leer.'), german('Kims Karte ist kaputt.'), german('Es regnet.')] },
+      { kind: 'question', prompt: german('Wie viel Bargeld hat Kim dabei?'), options: [german('Fünf Euro'), german('Elf Euro fünfzig'), german('Gar keins')] },
+      { kind: 'question', prompt: german('Welche Ausnahme macht Leo?'), options: [german('Kim darf den Rest überweisen.'), german('Kim bekommt das Gemüse geschenkt.'), german('Kim darf morgen bezahlen.')] },
+      { kind: 'question', prompt: german('Warum kocht Kim eine große Suppe?'), options: [german('Ihre Tochter tanzt Ballett, und danach kommt die Familie.'), german('Sie hat Geburtstag.'), german('Sie verkauft die Suppe auf dem Markt.')] },
+      { kind: 'question', prompt: german('Was hat Leo morgen?'), options: [german('Ein Basketballspiel'), german('Eine Prüfung'), german('Einen freien Tag auf dem Bauernhof')] }
     ]
   },
   {
@@ -3400,14 +3468,32 @@ export const germanStories: Story[] = [
     scene: 'park',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Extra B1 5'),
+    weathers: ['sunny', 'cloudy'],
+    title: german('Die neue Drohne'),
     beats: [
-      { kind: 'narration', text: german('Bedarf und Bedeutung und bedienen und Bedienungsanleitung und Bedingung.') },
-      { kind: 'line', speaker: 'mia', text: german('beeinflussen ist wichtig und begegnen ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('Beginn und Begründung sind da.') },
-      { kind: 'narration', text: german('begrüßen und behalten.') },
-      { kind: 'question', prompt: german('Was ist behandeln?'), options: [german('behaupten'), german('Behörde'), german('beißen')] },
-      { kind: 'question', prompt: german('Wer hat behandeln?'), options: [german('behaupten'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Sonntagnachmittag im Stadtpark. Tom hat zum Geburtstag eine kleine Drohne bekommen und will sie heute zum ersten Mal fliegen lassen. Mia hat die Bedienungsanleitung in der Hand.') },
+      { kind: 'line', speaker: 'tom', mood: 'happy', text: german('Gleich geht’s los! Die Bedienung ist ganz einfach: Mit dem linken Hebel steigt sie, mit dem rechten fliegt sie nach vorn.') },
+      { kind: 'line', speaker: 'mia', mood: 'curious', text: german('Moment mal. Hier steht etwas Wichtiges: Man darf eine Drohne nur unter bestimmten Bedingungen fliegen lassen. Hast du die gelesen?') },
+      { kind: 'line', speaker: 'tom', text: german('Ach, die ist doch winzig. Die wiegt nur 200 Gramm.') },
+      { kind: 'line', speaker: 'mia', text: german('Trotzdem. Man darf nicht über Menschenmengen fliegen und muss die Drohne immer sehen können. Und weil sie eine Kamera hat, musst du sie bei der Behörde registrieren. Das steht hier ganz deutlich.') },
+      { kind: 'line', speaker: 'tom', mood: 'surprised', text: german('Wirklich? Ich habe immer behauptet, dass man für so kleine Drohnen gar nichts braucht.') },
+      { kind: 'line', speaker: 'mia', mood: 'laughing', text: german('Dann hast du eben unrecht gehabt. Die Registrierung geht online, kostet nicht viel und dauert zehn Minuten.') },
+      { kind: 'narration', text: german('Tom registriert die Drohne auf seinem Handy. Dann suchen sie sich eine leere Wiese am Rand des Parks.') },
+      { kind: 'narration', sfx: 'hum', text: german('Die Drohne summt und steigt langsam in die Luft. In diesem Moment begegnen sie einem großen Hund, der laut bellt und nach oben springt.') },
+      { kind: 'line', speaker: 'mia', mood: 'worried', text: german('Vorsicht, Tom! Nicht dass er hineinbeißt!') },
+      { kind: 'line', speaker: 'tom', text: german('Keine Sorge, ich lande sie sofort.') },
+      { kind: 'narration', text: german('Die Drohne landet sicher im Gras. Der Hund verliert das Interesse und läuft zu seinem Besitzer zurück.') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Puh. {name}, was denkst du: Wo fliegen wir am besten das nächste Mal?') },
+      { kind: 'reply', to: 'tom', options: [
+        german('Auf einem freien Feld ohne Menschen und Hunde, wo man die Drohne gut sehen kann.'),
+        german('Mitten über dem Spielplatz, da ist am meisten los.'),
+        german('Im Dunkeln, damit uns niemand sieht.')
+      ] },
+      { kind: 'question', prompt: german('Was hat Tom zum Geburtstag bekommen?'), options: [german('Eine kleine Drohne'), german('Einen Hund'), german('Ein neues Handy')] },
+      { kind: 'question', prompt: german('Was liest Mia?'), options: [german('Die Bedienungsanleitung'), german('Eine Zeitung'), german('Einen Brief von der Behörde')] },
+      { kind: 'question', prompt: german('Warum muss Tom die Drohne registrieren?'), options: [german('Weil sie eine Kamera hat'), german('Weil sie sehr schwer ist'), german('Weil er sie im Park fliegen will')] },
+      { kind: 'question', prompt: german('Wie lange dauert die Registrierung?'), options: [german('Zehn Minuten'), german('Zwei Wochen'), german('Einen ganzen Tag')] },
+      { kind: 'question', prompt: german('Warum landet Tom die Drohne sofort?'), options: [german('Ein großer Hund springt nach oben.'), german('Die Batterie ist leer.'), german('Es fängt an zu regnen.')] }
     ]
   },
 
