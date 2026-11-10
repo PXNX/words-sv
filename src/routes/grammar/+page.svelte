@@ -210,7 +210,7 @@
     const grade = gradeNow(correct);
     reviewProgress = updateReviewProgress(reviewProgress, currentKey, correct, Date.now(), grade);
     persistProgress();
-    recordReview(settings.lang, currentKey, correct, 'grammar', Date.now(), grade, settings.lang === 'de' && prompt.features ? { featureErrors: prompt.features } : {});
+    recordReview(settings.lang, currentKey, correct, 'grammar', Date.now(), grade, settings.lang === 'de' && prompt.features ? { features: prompt.features } : {});
     if (correct) { playSuccessSound(settings.sound, 'grammar'); void settings.recordStreak('grammar_correct'); }
     else { playErrorSound(settings.sound, 'grammar'); recordMissedGrammarWord(currentKey); requeue(currentKey); }
   }
