@@ -81,7 +81,22 @@
   const look = $derived(own ? avatarLook(own) : animals.includes(id) ? null : looks[id as Exclude<CharacterId, Animal>]);
   const wide = $derived(look?.build === 'wide');
   // The head, and where the ears sit beside it, for each face shape (the cast all have round faces).
-  const head = $derived(wide ? { rx: 33, ry: 31, cy: 59, ear: 33 } : look?.face === 'oval' ? { rx: 26, ry: 32, cy: 57, ear: 27 } : look?.face === 'wide' ? { rx: 34, ry: 28, cy: 60, ear: 33 } : { rx: 30, ry: 30, cy: 58, ear: 30 });
+  const HEADS: Partial<Record<Avatar['face'], { rx: number; ry: number; cy: number; ear: number }>> = {
+    oval: { rx: 26, ry: 32, cy: 57, ear: 27 },
+    wide: { rx: 34, ry: 28, cy: 60, ear: 33 },
+    long: { rx: 25, ry: 34, cy: 56, ear: 26 },
+    heart: { rx: 30, ry: 31, cy: 58, ear: 30 },
+    pear: { rx: 30, ry: 31, cy: 59, ear: 31 }
+  };
+  const head = $derived(wide ? { rx: 33, ry: 31, cy: 59, ear: 33 } : (look?.face && HEADS[look.face]) || { rx: 30, ry: 30, cy: 58, ear: 30 });
+  // A five-pointed star around (cx, cy), for the starry eyes.
+  function starPath(cx: number, cy: number, r: number) {
+    return Array.from({ length: 10 }, (_, index) => {
+      const radius = index % 2 ? r * 0.45 : r;
+      const angle = -Math.PI / 2 + (index * Math.PI) / 5;
+      return `${index ? 'L' : 'M'}${(cx + radius * Math.cos(angle)).toFixed(2)} ${(cy + radius * Math.sin(angle)).toFixed(2)}`;
+    }).join('') + 'Z';
+  }
   const mood = $derived(look ? feeling : animalMoods[feeling]);
 
   // Eyebrows carry most of a face's mood; mouths and eyes follow below. A question lifts one brow
@@ -248,7 +263,10 @@
     <!-- neck, ears, head; a wide build gets a fuller face and a double chin -->
     <rect x={wide ? 49 : 51} y="82" width={wide ? 22 : 18} height="22" rx="6" fill={look.skin} />
     <circle cx={60 - head.ear} cy="60" r="6" fill={look.skin} /><circle cx={60 + head.ear} cy="60" r="6" fill={look.skin} />
-    {#if look.face === 'square'}<rect x="31" y="28" width="58" height="60" rx="17" fill={look.skin} />{:else}<ellipse cx="60" cy={head.cy} rx={head.rx} ry={head.ry} fill={look.skin} />{/if}
+    {#if look.face === 'square'}<rect x="31" y="28" width="58" height="60" rx="17" fill={look.skin} />
+    {:else if look.face === 'heart' && !wide}<path d="M60 93C51 91 37 81 31 65c-4-12-2-26 9-33 6-4 14-5 20-2 6-3 14-2 20 2 11 7 13 21 9 33-6 16-20 26-29 28Z" fill={look.skin} />
+    {:else if look.face === 'pear' && !wide}<path d="M60 28c-13 0-21 9-22 22-1 8-6 13-6 21 0 11 12 19 28 19s28-8 28-19c0-8-5-13-6-21-1-13-9-22-22-22Z" fill={look.skin} />
+    {:else}<ellipse cx="60" cy={head.cy} rx={head.rx} ry={head.ry} fill={look.skin} />{/if}
     {#if wide}<path d="M47 87q13 6 26 0" fill="none" stroke="rgba(23,42,69,.2)" stroke-width="1.8" stroke-linecap="round" />{/if}
     {#if look.stubble}<path d="M32 64c2 18 14 27 28 27s26-9 28-27c-5 10-14 14-28 14s-23-4-28-14Z" fill={look.hair} opacity=".22" />{/if}
     {#if look.beard}<path d="M31 62c1 22 14 32 29 32s28-10 29-32c-5 12-15 17-29 17s-24-5-29-17Z" fill={look.hair} />{/if}
@@ -339,7 +357,17 @@
       {@const rx = mood === 'curious' ? 72 : 71}
       {@const ly = mood === 'sad' || mood === 'angry' ? 61 : mood === 'curious' ? 59 : 60}
       {@const ry = mood === 'sad' || mood === 'angry' ? 61 : mood === 'curious' ? 59.5 : 60}
-      {#if look.eyes === 'big'}
+      {#if look.eyes === 'sparkle'}
+        <g class="story-eyes" fill="#172a45"><circle cx={lx} cy={ly} r="3.6" /><circle cx={rx} cy={ry} r="3.6" /><path d="M{lx + 1.3} {ly - 2.6}l.5 1.1 1.1.5-1.1.5-.5 1.1-.5-1.1-1.1-.5 1.1-.5ZM{rx + 1.3} {ry - 2.6}l.5 1.1 1.1.5-1.1.5-.5 1.1-.5-1.1-1.1-.5 1.1-.5Z" fill="#fffdf7" /></g>
+      {:else if look.eyes === 'sleepy'}
+        <g class="story-eyes"><circle cx={lx} cy={ly} r="3.6" fill="#172a45" /><circle cx={rx} cy={ry} r="3.6" fill="#172a45" /><path d="M{lx - 4.4} {ly}a4.4 4.4 0 0 1 8.8 0ZM{rx - 4.4} {ry}a4.4 4.4 0 0 1 8.8 0Z" fill={look.skin} /><path d="M{lx - 4.4} {ly}h8.8M{rx - 4.4} {ry}h8.8" stroke="#172a45" stroke-width="1.6" stroke-linecap="round" /></g>
+      {:else if look.eyes === 'almond'}
+        <g class="story-eyes"><ellipse cx={lx} cy={ly} rx="4.8" ry="2.8" fill="#172a45" transform="rotate(-8 {lx} {ly})" /><ellipse cx={rx} cy={ry} rx="4.8" ry="2.8" fill="#172a45" transform="rotate(8 {rx} {ry})" /><circle cx={lx + 1.4} cy={ly - .8} r="1" fill="#fffdf7" /><circle cx={rx + 1.4} cy={ry - .8} r="1" fill="#fffdf7" /></g>
+      {:else if look.eyes === 'wink'}
+        <g class="story-eyes"><circle cx={lx} cy={ly} r="3.4" fill="#172a45" /><circle cx={lx + 1.2} cy={ly - 1.3} r="1.1" fill="#fffdf7" /><path d="M{rx - 4} {ry + .5}q4-4 8 0" fill="none" stroke="#172a45" stroke-width="2.4" stroke-linecap="round" /></g>
+      {:else if look.eyes === 'starry'}
+        <g class="story-eyes" fill="#172a45"><path d={starPath(lx, ly, 4.6)} /><path d={starPath(rx, ry, 4.6)} /></g>
+      {:else if look.eyes === 'big'}
         <g class="story-eyes"><circle cx={lx} cy={ly} r="5.6" fill="#fffdf7" stroke="#172a45" stroke-width="1.4" /><circle cx={rx} cy={ry} r="5.6" fill="#fffdf7" stroke="#172a45" stroke-width="1.4" /><circle cx={lx + .6} cy={ly + .6} r="3.3" fill="#172a45" /><circle cx={rx + .6} cy={ry + .6} r="3.3" fill="#172a45" /><circle cx={lx + 1.6} cy={ly - .6} r="1.1" fill="#fffdf7" /><circle cx={rx + 1.6} cy={ry - .6} r="1.1" fill="#fffdf7" /></g>
       {:else}
         {@const r = look.eyes === 'tiny' ? 2.1 : mood === 'worried' ? 3.6 : 3.3}
@@ -349,7 +377,12 @@
     <path class="story-brows" d={brows[mood]} fill="none" stroke={look.hairStyle === 'bald' || id === 'oma' ? '#8a857d' : look.hair} stroke-width="2.8" stroke-linecap="round" />
     {#if look.glasses}<g fill="none" stroke="#172a45" stroke-width="1.8"><circle cx="49" cy="60" r="7.5" /><circle cx="71" cy="60" r="7.5" /><path d="M56.5 60h7" /></g>{/if}
     {#if look.monocle}<circle cx="71" cy="60" r="7.5" fill="rgba(255,253,247,.18)" stroke="#c9a227" stroke-width="1.8" /><path d="M78.5 61q6 16 0 36" fill="none" stroke="#c9a227" stroke-width="1" />{/if}
-    {#if look.nose === 'button'}<circle cx="60" cy="67" r="2.4" fill="rgba(23,42,69,.28)" />
+    {#if look.nose === 'freckles'}<g fill="rgba(140,78,44,.75)"><circle cx="45" cy="66.5" r="1.1" /><circle cx="48.5" cy="68.5" r="1.1" /><circle cx="44" cy="70" r="1.1" /><circle cx="75" cy="66.5" r="1.1" /><circle cx="71.5" cy="68.5" r="1.1" /><circle cx="76" cy="70" r="1.1" /></g>{/if}
+    {#if look.nose === 'wide'}<ellipse cx="60" cy="67.5" rx="5.6" ry="2.7" fill="rgba(23,42,69,.22)" />
+    {:else if look.nose === 'long'}<path d="M60 57q0 9-4 13q3 2.2 7 .3" fill="none" stroke="rgba(23,42,69,.45)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    {:else if look.nose === 'snub'}<path d="M56.5 67.5q3.5 2.6 7 0" fill="none" stroke="rgba(23,42,69,.42)" stroke-width="1.7" stroke-linecap="round" /><circle cx="58.3" cy="66.6" r=".9" fill="rgba(23,42,69,.4)" /><circle cx="61.7" cy="66.6" r=".9" fill="rgba(23,42,69,.4)" />
+    {:else if look.nose === 'heart'}<path d="M60 70.5c-3-2-5.2-3.6-5.2-5.6a2.6 2.6 0 0 1 5.2-.6 2.6 2.6 0 0 1 5.2.6c0 2-2.2 3.6-5.2 5.6Z" fill="#e0645a" />
+    {:else if look.nose === 'button'}<circle cx="60" cy="67" r="2.4" fill="rgba(23,42,69,.28)" />
     {:else if look.nose === 'round'}<ellipse cx="60" cy="67" rx="4.6" ry="3.8" fill="#e0645a" /><circle cx="58.6" cy="65.8" r="1.2" fill="rgba(255,253,247,.6)" />
     {:else if look.nose === 'pointy'}<path d="M60 59l-6 10h6" fill="none" stroke="rgba(23,42,69,.45)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
     {:else}<path d="M60 62q-3 5 0 7" fill="none" stroke="rgba(23,42,69,.4)" stroke-width="1.8" stroke-linecap="round" />{/if}

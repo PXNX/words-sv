@@ -2,11 +2,11 @@ import { lockedIn, type RewardId } from './cosmetics.js';
 
 // The learner's own story character, put together on the profile page and in the intro. In the
 // stories it stands in for Kumar (see stories.ts, fillName), drawn by StoryCharacter like the cast.
-export type FaceShape = 'round' | 'oval' | 'wide' | 'square';
-export type EyeStyle = 'dots' | 'big' | 'lashes' | 'tiny';
-export type NoseStyle = 'curve' | 'button' | 'round' | 'pointy';
+export type FaceShape = 'round' | 'oval' | 'wide' | 'square' | 'heart' | 'long' | 'pear';
+export type EyeStyle = 'dots' | 'big' | 'lashes' | 'tiny' | 'sparkle' | 'sleepy' | 'almond' | 'wink' | 'starry';
+export type NoseStyle = 'curve' | 'button' | 'round' | 'pointy' | 'wide' | 'long' | 'snub' | 'heart' | 'freckles';
 export type AvatarHair = 'short' | 'curly' | 'bob' | 'bun' | 'long' | 'messy' | 'spiky' | 'mohawk' | 'bald';
-// The last shirts, extras and colours are rewards for modes, achievements and high scores (see cosmetics.ts).
+// The last faces, eyes, noses, shirts, extras and colours are rewards for modes, achievements and high scores (see cosmetics.ts).
 export type AvatarShirt = 'plain' | 'stripes' | 'checked' | 'hoodie' | 'shirt' | 'blazer' | 'cardigan' | 'tshirt' | 'waistcoat' | 'tracht' | 'overalls' | 'tie' | 'sweater' | 'bowtie';
 export type AvatarExtra = 'none' | 'glasses' | 'shades' | 'beard' | 'moustache' | 'stubble' | 'headphones' | 'crown' | 'monocle' | 'tyrolean' | 'pencil' | 'kaiser' | 'toque' | 'straw' | 'wizard' | 'beret' | 'star' | 'party' | 'laurel' | 'mortarboard';
 
@@ -15,10 +15,10 @@ export type Avatar = { skin: string; face: FaceShape; eyes: EyeStyle; nose: Nose
 // Every choice, in the order the editor shows them. Colours are swatches rather than free pickers,
 // so every combination stays in the storybook palette.
 export const avatarChoices = {
-  face: ['round', 'oval', 'wide', 'square'],
+  face: ['round', 'oval', 'wide', 'square', 'heart', 'long', 'pear'],
   skin: ['#f6d7bd', '#f0c9a8', '#e2b08c', '#d9a07a', '#c99068', '#9a6440', '#7a4a2e', '#5a3624'],
-  eyes: ['dots', 'big', 'lashes', 'tiny'],
-  nose: ['curve', 'button', 'round', 'pointy'],
+  eyes: ['dots', 'big', 'lashes', 'tiny', 'sparkle', 'sleepy', 'almond', 'wink', 'starry'],
+  nose: ['curve', 'button', 'round', 'pointy', 'wide', 'long', 'snub', 'heart', 'freckles'],
   hairStyle: ['short', 'curly', 'bob', 'bun', 'long', 'messy', 'spiky', 'mohawk', 'bald'],
   hair: ['#15110e', '#3b2a20', '#7a4a2a', '#c4522e', '#e2c25a', '#d8d4cc', '#5b3a8a', '#3d6fd1', '#e86a9a', '#9fc6e8', '#2fae8f', '#ff7a3d'],
   shirt: ['plain', 'stripes', 'checked', 'hoodie', 'shirt', 'blazer', 'cardigan', 'tshirt', 'waistcoat', 'tracht', 'overalls', 'tie', 'sweater', 'bowtie'],
