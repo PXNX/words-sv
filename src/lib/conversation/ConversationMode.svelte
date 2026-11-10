@@ -1,16 +1,19 @@
 <!--
   The conversation mode: the learner talks out loud with a member of the story cast, met in one of
-  their stories, while an on-device model (localModel.svelte.ts) plays the character. Every round
-  brings someone new and five words of the learner's level (from the settings) to use. Speech in
-  is the browser's recogniser (on the device where it can), speech out the voices chosen in the
-  settings (naturalVoices.svelte.ts), and every line can be heard again from the transcript.
+  their stories, while an on-device model (localModel.svelte.ts) plays the character. Without the
+  model (no WebGPU, not downloaded, still downloading, failed) or when the learner picks "without
+  AI", the character follows a scripted dialogue instead (scripted.ts), with reply suggestions to
+  tap. Every round brings someone new and five words of the learner's level (from the settings) to
+  use. Speech in is the browser's recogniser (on the device where it can), speech out the voices
+  chosen in the settings (naturalVoices.svelte.ts), and every line can be heard again from the
+  transcript.
 -->
 <script lang="ts">
   import { num } from '#lib/format/num.svelte.js';
   import { onMount, tick } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { loadLevel, wordMetadata } from '#lib/data/vocabulary.js';
+  import { articleFor, loadLevel, wordMetadata } from '#lib/data/vocabulary.js';
   import { pronounceable } from '#lib/story/speech.js';
   import { naturalReady, naturalSupported, playNatural, prepareNatural, synthesizeNatural } from '#lib/story/naturalVoices.svelte.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
@@ -26,6 +29,9 @@
   import { chatMessages, cleanReply, LEVEL_WORD_SAMPLE, pickTargetWords, usedWords, type Turn } from './conversation.js';
   import { pickPartner, type Partner } from './partners.js';
   import { checkLocalModel, chosenModel, generateReply, interruptReply, loadLocalModel, localModel, modelGpuMB } from './localModel.svelte.js';
+  import { aiAvailable, usesAi } from './aiChoice.svelte.js';
+  import AiSwitch from './AiSwitch.svelte';
+  import { choicesOpen, replyChoices, respond, startScript, type ScriptState, type ScriptTurn, type ScriptWord, type Verdict } from './scripted.js';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconMic from '~icons/material-symbols/mic-rounded';
   import IconStop from '~icons/material-symbols/stop-rounded';
@@ -86,7 +92,13 @@
     handsFree: m.conversation_hands_free({}, { locale }),
     you: m.conversation_you({}, { locale }),
     noRecognition: m.conversation_no_recognition({}, { locale }),
-    cloudRecognition: m.conversation_cloud_recognition({}, { locale })
+    cloudRecognition: m.conversation_cloud_recognition({}, { locale }),
+    scriptedNote: m.conversation_scripted_note({}, { locale }),
+    scriptedLoading: m.conversation_scripted_loading({}, { locale }),
+    choices: m.conversation_choices({}, { locale }),
+    showChoices: m.conversation_show_choices({}, { locale }),
+    next: m.conversation_next({}, { locale }),
+    withoutAi: m.engine_without_ai({}, { locale })
   });
 
   let partner = $state<Partner | null>(null);
@@ -113,12 +125,22 @@
   let audioToken = 0;
   let stopClip: () => void = () => {};
   let roundToken = 0;
+  // Without AI: the round's scripted dialogue (scripted.ts), and how the last answer went.
+  let scripted = $state(false);
+  let script = $state<ScriptState | null>(null);
+  let lastVerdict = $state<Verdict | null>(null);
+  let showChoices = $state(false);
 
   const lang = $derived(settings.lang);
   // Always the level from the settings: the conversation practises what the learner is learning.
   const level = $derived(settings.vocabularyLevel);
   const used = $derived(usedWords(turns, targetWords, spellingOf, lang));
-  const partnerMood = $derived<Mood>(cheer ? 'laughing' : phase === 'speaking' ? 'happy' : phase === 'listening' ? 'curious' : phase === 'thinking' ? 'sleepy' : 'neutral');
+  const partnerMood = $derived<Mood>(cheer ? 'laughing' : phase === 'speaking' ? (lastVerdict === 'retry' ? 'curious' : 'happy') : phase === 'listening' ? 'curious' : phase === 'thinking' ? 'sleepy' : 'neutral');
+  // Whether the next round runs with the model: it is there and not switched off.
+  const withAi = $derived(usesAi('conversation'));
+  const scriptDone = $derived(scripted && Boolean(script?.done));
+  const choices = $derived(scripted && script ? replyChoices(script) : []);
+  const choicesShown = $derived(script ? choicesOpen(script) || showChoices : false);
 
   // Every word the learner uses gets a cheer; all of them earn the conversation reward.
   let cheeredFor = 0;
@@ -261,6 +283,11 @@
     }
     if (token !== roundToken) return;
     draftReply = '';
+    await deliver(reply, token);
+  }
+
+  /** Adds the partner's line to the transcript, speaks it and, hands-free, listens again. */
+  async function deliver(reply: string, token: number) {
     if (!reply) { phase = 'waiting'; return; }
     turns = [...turns, { speaker: 'partner', text: reply }];
     void scrollToEnd();
@@ -269,17 +296,34 @@
     // The learner may have interrupted the reply by tapping the mic: then they are already talking.
     if (token !== roundToken || phase !== 'speaking') return;
     phase = 'waiting';
-    if (handsFree && recognitionSupported && !typing) startListening();
+    if (handsFree && recognitionSupported && !typing && !scriptDone) startListening();
+  }
+
+  /** The scripted partner's turn: a short pause to "think", then the line. */
+  async function scriptedTurn(next: () => ScriptTurn) {
+    const token = roundToken;
+    phase = 'thinking';
+    void scrollToEnd();
+    await new Promise((resolve) => window.setTimeout(resolve, 450));
+    if (token !== roundToken) return;
+    const turn = next();
+    script = turn.state;
+    lastVerdict = turn.verdict;
+    showChoices = false;
+    if (turn.verdict === 'retry') haptic('tap');
+    await deliver(turn.line, token);
   }
 
   async function submit(text: string) {
     const clean = text.trim();
-    if (!clean || phase === 'thinking' || phase === 'speaking') return;
+    if (!clean || phase === 'thinking' || phase === 'speaking' || scriptDone) return;
     stopListening();
     stopAudio();
     typed = '';
     turns = [...turns, { speaker: 'learner', text: clean }];
-    await partnerTurn();
+    const current = script;
+    if (scripted && current) await scriptedTurn(() => respond(current, clean));
+    else await partnerTurn();
   }
 
   // The next partner is drawn ahead of time, so the start screen can introduce them.
@@ -293,18 +337,39 @@
     stopAudio();
     interruptReply();
     if (!partner) drawPartner();
-    // A first download on mobile data asks before fetching gigabytes.
-    if (!localModel.cached && localModel.status !== 'ready' && !(await confirmDownload(chosenModel().downloadMB, chosenModel().label))) return;
-    await loadLocalModel();
-    if (localModel.status !== 'ready') return;
+    const token = roundToken;
+    // With AI only when the model is downloaded and not switched off; if it then fails to load,
+    // the round goes on without it.
+    let ai = withAi;
+    if (ai) {
+      await loadLocalModel();
+      if (token !== roundToken) return;
+      ai = localModel.status === 'ready';
+    }
+    scripted = !ai;
+    script = null;
+    lastVerdict = null;
     const entries = await loadLevel(lang, level);
+    if (token !== roundToken) return;
     const pool = Object.keys(entries).map((word) => word.toLocaleUpperCase()).filter((word) => /\p{L}{3,}/u.test(word));
     targetWords = pickTargetWords(pool);
     // A sample of the level's own word list, which the model is asked to prefer in general.
     levelWords = pickTargetWords(pool.filter((word) => !targetWords.includes(word)), LEVEL_WORD_SAMPLE).map(spellingOf);
     turns = [];
     cheeredFor = 0;
-    await partnerTurn();
+    if (!scripted) { await partnerTurn(); return; }
+    const words: ScriptWord[] = targetWords.map((word) => {
+      const spelling = spellingOf(word);
+      const entry = entries[spelling];
+      return { word: spelling, type: entry?.type, article: articleFor(lang, word) || undefined, definition: entry?.definition };
+    });
+    const setup = { language: lang, level, partnerId: partner?.id ?? '', partnerName: partner?.name ?? '', learnerName: settings.firstName, storyTitle: partner?.storyTitle ?? '', words };
+    await scriptedTurn(() => startScript(setup));
+  }
+
+  // Downloads the model from the start screen; the next round then runs with it.
+  async function downloadModel() {
+    if (await confirmDownload(chosenModel().downloadMB, chosenModel().label)) await loadLocalModel();
   }
 
   // Someone new, with new words: straight into the next conversation.
@@ -380,18 +445,27 @@
       {/if}
       <p class="talk-text">{labels.intro}</p>
       <span class="talk-level">Level {level.toUpperCase()}</span>
-      <p class="talk-model">{labels.model(chosenModel().label)} · <a href="/settings">{labels.changeModel}</a></p>
-      <ModelStatus downloaded={localModel.cached} inMemory={localModel.status === 'ready'} downloadMB={chosenModel().downloadMB} memoryMB={modelGpuMB(chosenModel())} />
+      {#if aiAvailable()}<AiSwitch mode="conversation" />{/if}
+      {#if withAi}
+        <p class="talk-model">{labels.model(chosenModel().label)} · <a href="/settings">{labels.changeModel}</a></p>
+        <ModelStatus downloaded={localModel.cached} inMemory={localModel.status === 'ready'} downloadMB={chosenModel().downloadMB} memoryMB={modelGpuMB(chosenModel())} />
+      {:else}
+        <p class="talk-model">{labels.scriptedNote}</p>
+      {/if}
       {#if localModel.status === 'unsupported'}
-        <p class="talk-error">{labels.unsupported}</p>
+        <p class="talk-hint">{labels.unsupported}</p>
       {:else if localModel.status === 'loading'}
         <DownloadProgress progress={localModel.progress} phase={modelProgressPhase(localModel.text)} bytesPerSecond={localModel.bytesPerSecond} detail={chosenModel().label} />
-      {:else}
-        {#if localModel.status === 'failed'}<p class="talk-error">{labels.failed}</p>{/if}
-        <div class="talk-intro-actions">
-          <button type="button" class="btn-play btn-play-soft btn-play-round" onclick={drawPartner} aria-label={labels.newPartner} title={labels.newPartner}><IconCasino aria-hidden="true" /></button>
-          <button type="button" class="btn-play btn-play-go" onclick={startRound} disabled={localModel.status === 'checking'}>{localModel.cached || localModel.status === 'ready' ? labels.start : labels.download}</button>
-        </div>
+        <p class="talk-hint">{labels.scriptedLoading}</p>
+      {:else if localModel.status === 'failed'}
+        <p class="talk-error">{labels.failed}</p>
+      {/if}
+      <div class="talk-intro-actions">
+        <button type="button" class="btn-play btn-play-soft btn-play-round" onclick={drawPartner} aria-label={labels.newPartner} title={labels.newPartner}><IconCasino aria-hidden="true" /></button>
+        <button type="button" class="btn-play btn-play-go" onclick={startRound}>{labels.start}</button>
+      </div>
+      {#if !aiAvailable() && localModel.status !== 'unsupported' && localModel.status !== 'loading' && localModel.status !== 'checking'}
+        <button type="button" class="btn-play btn-play-soft talk-download" onclick={() => void downloadModel()}>{labels.download}</button>
       {/if}
       <p class="talk-privacy"><IconLock aria-hidden="true" /> {labels.privacy}</p>
       {#if !recognitionSupported}<p class="talk-hint">{labels.noRecognition}</p>{/if}
@@ -404,7 +478,7 @@
         <div class="talk-header-text">
           <strong>{partner.name}</strong>
           <span>{phase === 'thinking' ? labels.thinking(partner.name) : phase === 'speaking' ? labels.speaking(partner.name) : phase === 'listening' ? labels.listening : labels.tapToTalk}</span>
-          {#if localModel.tokensPerSecond}<span class="talk-speed" title={chosenModel().label}>{Math.round(localModel.tokensPerSecond)} tok/s</span>{/if}
+          {#if scripted}<span class="talk-speed">{labels.withoutAi}</span>{:else if localModel.tokensPerSecond}<span class="talk-speed" title={chosenModel().label}>{Math.round(localModel.tokensPerSecond)} tok/s</span>{/if}
         </div>
       {/if}
       <button type="button" class="btn-play btn-play-round talk-new" onclick={newPartner} aria-label={labels.newPartner} title={labels.newPartner}><IconCasino aria-hidden="true" /></button>
@@ -446,6 +520,19 @@
     </ol>
 
     <footer class="talk-controls">
+      {#if scriptDone}
+        <button type="button" class="btn-play btn-play-go" onclick={newPartner}>{labels.next}</button>
+      {:else if scripted && choices.length && phase !== 'thinking'}
+        {#if choicesShown}
+          <ul class="talk-choices" aria-label={labels.choices}>
+            {#each choices as choice (choice)}
+              <li><button type="button" class="talk-choice" lang={lang} disabled={phase === 'speaking'} onclick={() => void submit(choice)}>{choice}</button></li>
+            {/each}
+          </ul>
+        {:else}
+          <button type="button" class="talk-show-choices" onclick={() => (showChoices = true)}>{labels.showChoices}</button>
+        {/if}
+      {/if}
       {#if recognitionSupported && !recognitionLocal}<p class="talk-hint">{labels.cloudRecognition}</p>{/if}
       {#if typing}
         <form class="talk-type" onsubmit={(event) => { event.preventDefault(); void submit(typed); }}>
@@ -543,9 +630,15 @@
   .talk-toggle :global(svg) { width:1.25rem;height:1.25rem; }
   .talk-toggle.on { opacity:1;border-color:#172a45;background:#fffdf7;color:#172a45; }
   .talk-type { width:100%;display:flex;gap:.5rem; }
+  .talk-download { font-size:.72rem; }
+  .talk-choices { width:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem;margin:0;padding:0;list-style:none; }
+  .talk-choice { padding:.4rem .8rem;border:2px solid #172a45;border-radius:14px;background:#fffdf7;color:#172a45;font-size:.85rem;font-weight:700;line-height:1.3;text-align:left;cursor:pointer;box-shadow:2px 2px 0 #172a45;transition:transform .15s ease; }
+  .talk-choice:active { transform:scale(.96); }
+  .talk-choice:disabled { opacity:.55;cursor:default; }
+  .talk-show-choices { padding:.3rem .8rem;border:2px dashed rgba(23,42,69,.4);border-radius:999px;background:transparent;color:inherit;font-size:.72rem;font-weight:800;cursor:pointer; }
   .talk-type input { flex:1;min-width:0;padding:.6rem .9rem;border:2px solid #172a45;border-radius:999px;background:#fffdf7;color:#172a45;font-size:.92rem; }
 
-  :global(html.dark) .talk-word,:global(html.dark) .talk-bubble,:global(html.dark) .talk-replay,:global(html.dark) .talk-type input,:global(html.dark) .talk-toggle.on { border-color:#0b1626; }
+  :global(html.dark) .talk-word,:global(html.dark) .talk-choice,:global(html.dark) .talk-bubble,:global(html.dark) .talk-replay,:global(html.dark) .talk-type input,:global(html.dark) .talk-toggle.on { border-color:#0b1626; }
 
   @keyframes talk-bob { 0%,100% { translate:-50% 0; } 50% { translate:-50% -.35rem; } }
   @keyframes talk-hop { 0% { translate:0 0; } 40% { translate:0 -.6rem; } 100% { translate:0 0; } }
