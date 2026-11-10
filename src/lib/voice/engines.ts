@@ -181,6 +181,11 @@ export async function probeWebGpu(): Promise<boolean> {
   return webgpuAdapter;
 }
 
+/** The app-wide WebGPU check's answer (app/webgpuCheck.ts) overrides the plain adapter probe. */
+export function setWebGpuUsable(usable: boolean) {
+  webgpuAdapter = usable;
+}
+
 export function deviceAbilities(): DeviceAbilities {
   return { webgpu: typeof navigator !== 'undefined' && 'gpu' in navigator && webgpuAdapter !== false };
 }

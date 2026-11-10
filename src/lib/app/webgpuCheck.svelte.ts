@@ -1,5 +1,6 @@
 // The device's WebGPU check result for the whole app: run once (per browser version) before the first
 // on-device model loads, remembered in localStorage, and shown in the settings with a re-test button.
+import { setWebGpuUsable } from '#lib/voice/engines.js';
 import { isCurrentResult, runWebGpuCheck, type GpuLike, type WebGpuResult } from './webgpuCheck.js';
 
 const STORAGE_KEY = 'wordcircle-webgpu-check-v1';
@@ -27,6 +28,7 @@ export function checkWebGpu(force = false): Promise<WebGpuResult> {
       const gpu = typeof navigator === 'undefined' ? undefined : (navigator as Navigator & { gpu?: GpuLike }).gpu;
       const result = await runWebGpuCheck(gpu, { userAgent: typeof navigator === 'undefined' ? '' : navigator.userAgent });
       webgpu.result = result;
+      setWebGpuUsable(result.status === 'ok');
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(result)); } catch { /* checked again next time */ }
       return result;
     } finally {

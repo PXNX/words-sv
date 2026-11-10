@@ -6,6 +6,7 @@
  * this when the settings pick either (see engines.ts), with Piper for the other languages.
  */
 import { createPriorityQueue, type Priority } from '#lib/audio/priorityQueue.js';
+import { webgpuUsable } from '#lib/app/webgpuCheck.svelte.js';
 import { createWorkerClient } from '#lib/workers/protocol.js';
 import type { SupertonicModel, SupertonicProtocol } from './supertonic.worker.js';
 
@@ -35,7 +36,7 @@ export function prepareSupertonic(onProgress?: (loaded: number, total: number) =
   if (loaded.has(model)) return Promise.resolve();
   let task = loading.get(model);
   if (!task) {
-    task = engine.request('load', { model }, { onUpdate: (progress) => onProgress?.(progress.loaded, progress.total) })
+    task = webgpuUsable().catch(() => false).then((webgpu) => engine.request('load', { model, webgpu }, { onUpdate: (progress) => onProgress?.(progress.loaded, progress.total) }))
       .then(() => { loaded.add(model); })
       .finally(() => loading.delete(model));
     loading.set(model, task);

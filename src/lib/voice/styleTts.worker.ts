@@ -31,7 +31,8 @@ const MODELS: Record<StyleTtsModel, { repo: string; webgpu: string | null; wasm:
 
 export type LoadProgress = { loaded: number; total: number };
 export type StyleTtsProtocol = {
-  load: Call<{ model: StyleTtsModel }, void, LoadProgress>;
+  /** `webgpu`: whether the app's WebGPU check passed; without it the model runs on WebAssembly. */
+  load: Call<{ model: StyleTtsModel; webgpu?: boolean }, void, LoadProgress>;
   speak: Call<{ model: StyleTtsModel; text: string; voice: string; accent: EnglishAccent; speed: number }, { pcm: Float32Array; sampleRate: number }, LoadProgress>;
 };
 
@@ -40,7 +41,9 @@ const loaded = new Map<StyleTtsModel, Promise<Loaded>>();
 
 // `navigator.gpu` alone is not enough: many browsers expose it without handing out an adapter.
 let gpu: Promise<boolean> | null = null;
+let webgpuAllowed = true;
 function hasWebGpu() {
+  if (!webgpuAllowed) return Promise.resolve(false);
   const api = (self.navigator as Navigator & { gpu?: { requestAdapter: () => Promise<unknown> } }).gpu;
   gpu ??= api ? api.requestAdapter().then(Boolean, () => false) : Promise.resolve(false);
   return gpu;
@@ -112,7 +115,8 @@ async function speak(name: StyleTtsModel, text: string, voice: string, accent: E
 }
 
 serveWorker<StyleTtsProtocol>(self, {
-  async load({ model }, { update }) {
+  async load({ model, webgpu }, { update }) {
+    if (webgpu === false) webgpuAllowed = false;
     await load(model, update);
   },
   async speak({ model, text, voice, accent, speed }, { update, transfer }) {
