@@ -9,6 +9,10 @@ its one-line summary; the localised highlight shown in the app lives in the mess
 
 ## Unreleased
 
+### New
+- Schedule reviews with FSRS-5; older entries keep their due dates
+- Record every answer in an on-device learning event log
+
 ## v1.1.0 - 2026-11-10
 
 Dates and numbers follow the learned language; version history in Settings.
