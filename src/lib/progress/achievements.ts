@@ -15,7 +15,15 @@ export type AchievementId =
 	| 'streak_3'
 	| 'streak_7'
 	| 'mastered_50'
-	| 'all_rounder';
+	| 'all_rounder'
+	| 'streak_14'
+	| 'vocab_500'
+	| 'perfect_30'
+	| 'reading_15'
+	| 'story_15'
+	| 'grammar_200'
+	| 'mastered_200'
+	| 'streak_30';
 
 export type Achievement = {
 	id: AchievementId;
@@ -50,7 +58,16 @@ const ORDER: { id: AchievementId; target: number; value: (input: AchievementInpu
 	{ id: 'streak_7', target: 7, value: (input) => input.bestStreak },
 	{ id: 'grammar_50', target: 50, value: (input) => countActivity(input.activity, 'grammar') },
 	{ id: 'mastered_50', target: 50, value: (input) => input.masteredWords },
-	{ id: 'all_rounder', target: MODES.length, value: (input) => distinctModes(input.activity) }
+	{ id: 'all_rounder', target: MODES.length, value: (input) => distinctModes(input.activity) },
+	// The long roads: each brings a new face, eyes or nose for the learner's character.
+	{ id: 'streak_14', target: 14, value: (input) => input.bestStreak },
+	{ id: 'vocab_500', target: 500, value: (input) => countActivity(input.activity, 'vocab') },
+	{ id: 'perfect_30', target: 30, value: (input) => countActivity(input.activity, 'pronunciation', 0, Number.MAX_SAFE_INTEGER, (event) => event.perfect === true) },
+	{ id: 'reading_15', target: 15, value: (input) => completedIds(input.activity, 'reading').length },
+	{ id: 'story_15', target: 15, value: (input) => completedIds(input.activity, 'story').length },
+	{ id: 'grammar_200', target: 200, value: (input) => countActivity(input.activity, 'grammar') },
+	{ id: 'mastered_200', target: 200, value: (input) => input.masteredWords },
+	{ id: 'streak_30', target: 30, value: (input) => input.bestStreak }
 ];
 
 export function buildAchievements(input: AchievementInput): Achievement[] {

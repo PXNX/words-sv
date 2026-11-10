@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { avatarAllowed, cosmeticModes, cosmetics, earnedAchievementRewards, lockedIn, nextHangmanRun, nextRun, parseUnlocked, rewardFor, rewardIds } from '../src/lib/profile/cosmetics.js';
+import { avatarAllowed, cosmeticModes, cosmetics, earnedAchievementRewards, earnedLanguageRewards, LANGUAGE_REWARD_TARGET, lockedIn, nextHangmanRun, nextRun, parseUnlocked, rewardFor, rewardIds } from '../src/lib/profile/cosmetics.js';
 import { avatarChoices, defaultAvatar } from '../src/lib/profile/avatar.js';
 import { buildAchievements } from '../src/lib/progress/achievements.js';
 
@@ -52,5 +52,21 @@ describe('cosmetic rewards', () => {
     const achievements = buildAchievements({ activity: [{ kind: 'vocab', at: 1 }], bestStreak: 3, masteredWords: 0 });
     expect(earnedAchievementRewards(achievements, [])).toEqual(['achievement_first_step', 'achievement_streak_3']);
     expect(earnedAchievementRewards(achievements, ['achievement_first_step'])).toEqual(['achievement_streak_3']);
+  });
+
+  it('adds five noses, five eyes and three faces, all earned, some tied to a language', () => {
+    const rewards = (part: 'nose' | 'eyes' | 'face') => rewardIds.filter((id) => cosmetics[id].part === part);
+    expect(rewards('nose')).toHaveLength(5);
+    expect(rewards('eyes')).toHaveLength(5);
+    expect(rewards('face')).toHaveLength(3);
+    // The basic choices stay free.
+    for (const nose of ['curve', 'button', 'round', 'pointy']) expect(lockedIn('nose', nose, [])).toBe(false);
+    expect(lockedIn('eyes', 'wink', [])).toBe(true);
+    expect(cosmetics.language_en).toMatchObject({ part: 'eyes', choice: 'wink', source: { kind: 'language', language: 'en' } });
+  });
+
+  it('unlocks a language item once enough words of that language are practised', () => {
+    expect(earnedLanguageRewards({ fr: LANGUAGE_REWARD_TARGET - 1, it: LANGUAGE_REWARD_TARGET }, [])).toEqual(['language_it']);
+    expect(earnedLanguageRewards({ it: 500, de: 80 }, ['language_it'])).toEqual(['language_de']);
   });
 });

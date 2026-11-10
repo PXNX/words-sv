@@ -11,7 +11,7 @@ const empty = { activity: [], bestStreak: 0, masteredWords: 0 };
 describe('buildAchievements', () => {
 	it('starts with everything locked on a fresh install', () => {
 		const achievements = buildAchievements(empty);
-		expect(achievements).toHaveLength(10);
+		expect(achievements).toHaveLength(18);
 		expect(unlockedCount(achievements)).toBe(0);
 		expect(achievements.every((achievement) => achievement.value === 0)).toBe(true);
 	});

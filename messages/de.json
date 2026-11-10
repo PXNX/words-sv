@@ -632,5 +632,14 @@
   "readiness_errors": "Häufigste Fehler",
   "target_exam": "Ziel-Prüfung",
   "target_exam_none": "Keine",
-  "changelog_v1_2_0": "Dein Lernstand pro Fertigkeit, klügere Wiederholungen und Erklärungen für jedes deutsche Wort."
+  "changelog_v1_2_0": "Dein Lernstand pro Fertigkeit, klügere Wiederholungen und Erklärungen für jedes deutsche Wort.",
+  "achievement_streak_14": "14 Tage in Folge",
+  "achievement_vocab_500": "500 Wörter richtig",
+  "achievement_perfect_30": "30-mal perfekt ausgesprochen",
+  "achievement_reading_15": "15 Texte gelesen",
+  "achievement_story_15": "15 Geschichten gelesen",
+  "achievement_grammar_200": "200 Grammatik-Aufgaben",
+  "achievement_mastered_200": "200 Wörter gemeistert",
+  "achievement_streak_30": "30 Tage in Folge",
+  "cosmetic_hint_language": "Übe {count} Wörter auf {language}."
 }

@@ -115,7 +115,15 @@
     streak_3: m.achievement_streak_3({}, { locale: settings.interfaceLocale }),
     streak_7: m.achievement_streak_7({}, { locale: settings.interfaceLocale }),
     mastered_50: m.achievement_mastered_50({}, { locale: settings.interfaceLocale }),
-    all_rounder: m.achievement_all_rounder({}, { locale: settings.interfaceLocale })
+    all_rounder: m.achievement_all_rounder({}, { locale: settings.interfaceLocale }),
+    streak_14: m.achievement_streak_14({}, { locale: settings.interfaceLocale }),
+    vocab_500: m.achievement_vocab_500({}, { locale: settings.interfaceLocale }),
+    perfect_30: m.achievement_perfect_30({}, { locale: settings.interfaceLocale }),
+    reading_15: m.achievement_reading_15({}, { locale: settings.interfaceLocale }),
+    story_15: m.achievement_story_15({}, { locale: settings.interfaceLocale }),
+    grammar_200: m.achievement_grammar_200({}, { locale: settings.interfaceLocale }),
+    mastered_200: m.achievement_mastered_200({}, { locale: settings.interfaceLocale }),
+    streak_30: m.achievement_streak_30({}, { locale: settings.interfaceLocale })
   });
 
   // Milestone names live here, so the pure milestone model only deals with ids and numbers.

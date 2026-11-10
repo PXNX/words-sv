@@ -357,5 +357,14 @@
   "invite_share_text": "تعلّم الكلمات معي في WordCircle!",
   "format_digits": "الأرقام",
   "format_digits_latn": "0–9",
-  "format_digits_native": "عربية"
+  "format_digits_native": "عربية",
+  "achievement_streak_14": "14 يومًا متتاليًا",
+  "achievement_vocab_500": "500 كلمة صحيحة",
+  "achievement_perfect_30": "30 نطقًا مثاليًا",
+  "achievement_reading_15": "15 نصًا مقروءًا",
+  "achievement_story_15": "15 قصة مقروءة",
+  "achievement_grammar_200": "200 تمرين قواعد",
+  "achievement_mastered_200": "200 كلمة متقنة",
+  "achievement_streak_30": "30 يومًا متتاليًا",
+  "cosmetic_hint_language": "تدرّب على {count} كلمة باللغة {language}."
 }

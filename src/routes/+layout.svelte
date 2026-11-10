@@ -10,13 +10,13 @@ import { onMount } from 'svelte';
 import { getTextDirection, locales, localizeHref, setLocale } from '#lib/paraglide/runtime.js';
 import { m } from '#lib/paraglide/messages.js';
 import { settings } from '#lib/state/settings.svelte.js';
-import { warmLanguage, refreshHintableBaseWords } from '#lib/data/vocabulary.js';
+import { playableLanguages, warmLanguage, refreshHintableBaseWords } from '#lib/data/vocabulary.js';
 import StartupLoader from '#lib/app/StartupLoader.svelte';
 import CosmeticUnlockToast from '#lib/profile/CosmeticUnlockToast.svelte';
 import StreakToast from '#lib/streak/StreakToast.svelte';
 import { startCloudSync } from '#lib/sync/cloudSync.svelte.js';
 import { probeWebGpu } from '#lib/voice/engines.js';
-import { checkAchievementRewards } from '#lib/profile/cosmetics.svelte.js';
+import { checkAchievementRewards, checkLanguageRewards } from '#lib/profile/cosmetics.svelte.js';
 import { readVocabularyProgressByLanguage } from '#lib/vocab/spacedRepetition.js';
 import BackgroundJobsBadge from '#lib/audio/BackgroundJobsBadge.svelte';
 import { haptic } from '#lib/feedback/haptics.js';
@@ -78,13 +78,14 @@ import { haptic } from '#lib/feedback/haptics.js';
 	});
 
 // Badges bring character items: check at startup and whenever a mode moves the streak (each one
-// does after practice). The progress page checks again with every language's mastered words.
+// does after practice). Language items unlock from the words practised in each language.
 $effect(() => {
     const { bestStreak, dateKey, vocabCorrect, qualified } = settings.streak;
     void dateKey; void vocabCorrect; void qualified;
     if (!hydrated) return;
-    const masteredWords = readVocabularyProgressByLanguage([settings.lang])[settings.lang]?.masteredWords ?? 0;
-    checkAchievementRewards({ bestStreak, masteredWords });
+    const progress = readVocabularyProgressByLanguage(playableLanguages.map((language) => language.code));
+    checkAchievementRewards({ bestStreak, masteredWords: progress[settings.lang]?.masteredWords ?? 0 });
+    checkLanguageRewards(Object.fromEntries(Object.entries(progress).map(([code, entry]) => [code, entry.wordsPracticed])));
 });
 
 onMount(() => {
