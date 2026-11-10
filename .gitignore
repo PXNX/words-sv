@@ -119,3 +119,6 @@ client/public/__manus__/version.json
 # Paraglide
 src/lib/paraglide
 project.inlang/cache/
+
+# Worktrees of parallel agent sessions
+.claude/worktrees/
