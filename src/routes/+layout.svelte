@@ -14,6 +14,7 @@ import { playableLanguages, warmLanguage, refreshHintableBaseWords } from '#lib/
 import StartupLoader from '#lib/app/StartupLoader.svelte';
 import CosmeticUnlockToast from '#lib/profile/CosmeticUnlockToast.svelte';
 import WhatsNewSheet from '#lib/app/WhatsNewSheet.svelte';
+import MobileDataDialog from '#lib/offline/MobileDataDialog.svelte';
 import StreakToast from '#lib/streak/StreakToast.svelte';
 import { startCloudSync } from '#lib/sync/cloudSync.svelte.js';
 import { probeWebGpu } from '#lib/voice/engines.js';
@@ -155,6 +156,7 @@ onMount(() => {
 		<CosmeticUnlockToast />
 		<StreakToast />
 		<WhatsNewSheet />
+		<MobileDataDialog />
 		<BackgroundJobsBadge />
 	{/if}
 </div>

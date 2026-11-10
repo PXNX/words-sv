@@ -756,5 +756,10 @@
   "cosmetic_from_language": "For practising {count} words in {language}.",
   "cosmetic_wear": "Put it on",
   "cosmetic_worn": "Looks great!",
-  "game_settings": "Game settings"
+  "game_settings": "Game settings",
+  "mobile_data_title": "You're on mobile data",
+  "mobile_data_title_saver": "Data saver is on",
+  "mobile_data_body": "{name} downloads {size}. That can use up your data plan – on Wi-Fi it's free.",
+  "mobile_data_go": "Download anyway",
+  "mobile_data_wait": "Wait for Wi-Fi"
 }

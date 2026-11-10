@@ -756,5 +756,10 @@
   "cosmetic_from_language": "Für {count} geübte Wörter auf {language}.",
   "cosmetic_wear": "Gleich anziehen",
   "cosmetic_worn": "Steht dir!",
-  "game_settings": "Spieleinstellungen"
+  "game_settings": "Spieleinstellungen",
+  "mobile_data_title": "Du bist im Mobilfunknetz",
+  "mobile_data_title_saver": "Datensparmodus ist an",
+  "mobile_data_body": "{name} lädt {size} herunter. Das kann dein Datenvolumen aufbrauchen – im WLAN geht es kostenlos.",
+  "mobile_data_go": "Trotzdem laden",
+  "mobile_data_wait": "Im WLAN laden"
 }
