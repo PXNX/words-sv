@@ -109,3 +109,13 @@ describe('spoken forms', () => {
     expect(timeToWords(9, 40, 'en')).toBe('twenty to ten');
   });
 });
+
+describe('sizes and speeds', () => {
+  it('follow the format context', async () => {
+    const { formatBytes } = await import('../src/lib/offline/storage');
+    const { formatSpeed } = await import('../src/lib/offline/downloadSpeed');
+    expect(formatBytes(1_250_000_000, de)).toBe('1,3 GB');
+    expect(formatBytes(1_250_000_000, en)).toBe('1.3 GB');
+    expect(formatSpeed(12_400_000, de)).toBe('12,4 MB/s');
+  });
+});

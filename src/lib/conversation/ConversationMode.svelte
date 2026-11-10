@@ -115,7 +115,7 @@
   const level = $derived(settings.vocabularyLevel);
   const used = $derived(usedWords(turns, targetWords, spellingOf, lang));
   const loadingPercent = $derived(Math.round(localModel.progress * 100));
-  const downloadSpeed = $derived(formatSpeed(localModel.bytesPerSecond, locale));
+  const downloadSpeed = $derived(formatSpeed(localModel.bytesPerSecond, settings.formatContext));
   const partnerMood = $derived<Mood>(cheer ? 'laughing' : phase === 'speaking' ? 'happy' : phase === 'listening' ? 'curious' : phase === 'thinking' ? 'sleepy' : 'neutral');
 
   // Every word the learner uses gets a cheer; all of them earn the conversation reward.

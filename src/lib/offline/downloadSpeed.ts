@@ -3,6 +3,7 @@
  * the last few seconds only, so a connection that slows down shows it quickly, and it ignores the
  * jump when cached files arrive instantly at the start.
  */
+import { formatNumber, learningContext, type FormatContext } from '#lib/format/format.js';
 const WINDOW_MS = 4000;
 
 export type SpeedMeter = {
@@ -30,9 +31,9 @@ export function createSpeedMeter(windowMs = WINDOW_MS): SpeedMeter {
 }
 
 /** "850 KB/s", "12.4 MB/s"; empty while nothing is measured yet. */
-export function formatSpeed(bytesPerSecond: number, locale = 'en'): string {
+export function formatSpeed(bytesPerSecond: number, context: FormatContext = learningContext('en')): string {
   if (!bytesPerSecond || !Number.isFinite(bytesPerSecond)) return '';
-  const format = (value: number, digits: number) => new Intl.NumberFormat(locale, { maximumFractionDigits: digits }).format(value);
+  const format = (value: number, digits: number) => formatNumber(context, value, { maximumFractionDigits: digits });
   if (bytesPerSecond >= 1_000_000) return `${format(bytesPerSecond / 1_000_000, 1)} MB/s`;
   return `${format(bytesPerSecond / 1000, 0)} KB/s`;
 }

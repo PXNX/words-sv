@@ -51,7 +51,7 @@
   };
   const sizeNames = $derived({ small: m.models_tier_small({}, { locale }), medium: m.models_tier_medium({}, { locale }), large: m.models_tier_large({}, { locale }) });
   const languageName = $derived(new Intl.DisplayNames([locale], { type: 'language' }).of(settings.lang) ?? settings.lang);
-  const mb = (value: number) => formatBytes(value * 1_000_000, locale);
+  const mb = (value: number) => formatBytes(value * 1_000_000, settings.formatContext);
 
   // --- story voices ---------------------------------------------------------------------------
   // Every voice engine is a card like the conversation models. Picking one (or its download button)
@@ -225,12 +225,12 @@
             {#if state === 'downloading'}
               {@const download = localModel.downloads[model.id]!}
               <span class="model-progress"><span style:width={`${Math.max(2, Math.round(download.progress * 100))}%`}></span></span>
-              <span class="model-facts">{Math.round(download.progress * 100)}%{#if download.bytesPerSecond} · {formatSpeed(download.bytesPerSecond, locale)}{/if}</span>
+              <span class="model-facts">{Math.round(download.progress * 100)}%{#if download.bytesPerSecond} · {formatSpeed(download.bytesPerSecond, settings.formatContext)}{/if}</span>
             {:else if state === 'failed'}
               <span class="model-warn"><IconWarning aria-hidden="true" /> {m.models_download_failed({}, { locale })}</span>
             {:else if state === 'loading'}
               <span class="model-progress"><span style:width={`${Math.round(localModel.progress * 100)}%`}></span></span>
-              <span>{Math.round(localModel.progress * 100)}%{#if localModel.bytesPerSecond} · {formatSpeed(localModel.bytesPerSecond, locale)}{/if}</span>
+              <span>{Math.round(localModel.progress * 100)}%{#if localModel.bytesPerSecond} · {formatSpeed(localModel.bytesPerSecond, settings.formatContext)}{/if}</span>
             {:else if state === 'loaded'}
               <span class="model-ok"><IconCheck aria-hidden="true" /> {m.models_in_use({ memory: mb(modelGpuMB(model)) }, { locale })}{#if localModel.tokensPerSecond} · {Math.round(localModel.tokensPerSecond)} tok/s{/if}</span>
             {:else if state === 'downloaded'}
@@ -260,7 +260,7 @@
       {#each storedGroupIds.filter((group) => stored[group]) as group (group)}
         <li>
           <span>{groupNames[group]()}</span>
-          <span class="model-size">{sizes[group] ? formatBytes(sizes[group]!, locale) : ''}</span>
+          <span class="model-size">{sizes[group] ? formatBytes(sizes[group]!, settings.formatContext) : ''}</span>
           <button type="button" class="btn-play btn-play-sm btn-play-soft" class:confirm={confirming === group} onclick={() => remove(group)} onblur={() => { if (confirming === group) confirming = null; }}>
             <IconDelete aria-hidden="true" />{confirming === group ? m.models_confirm({}, { locale }) : m.models_delete({}, { locale })}
           </button>
@@ -273,7 +273,7 @@
 
   <div class="model-summary">
     <span>
-      {#if summary.quota}{m.models_usage({ used: formatBytes(summary.usage, locale), quota: formatBytes(summary.quota, locale) }, { locale })}{/if}
+      {#if summary.quota}{m.models_usage({ used: formatBytes(summary.usage, settings.formatContext), quota: formatBytes(summary.quota, settings.formatContext) }, { locale })}{/if}
       {#if memoryNow !== null} · {m.models_page_memory({ memory: `${memoryNow} MB` }, { locale })}{/if}
     </span>
     {#if summary.persisted}

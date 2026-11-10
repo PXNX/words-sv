@@ -4,6 +4,7 @@
  * these with their size and lets the learner delete them. Engine code owns its caches; this file
  * only knows their names, so keep it in step when an engine changes where it stores things.
  */
+import { formatNumber, learningContext, type FormatContext } from '#lib/format/format.js';
 export type StoredGroup = 'piper' | 'supertonic' | 'voxcpm' | 'conversation' | 'wordAudio' | 'listening';
 
 type CacheStore = { cache: string; match?: (url: string) => boolean };
@@ -92,8 +93,9 @@ export async function keepStoragePersistent(): Promise<boolean> {
   return navigator.storage.persist();
 }
 
-export function formatBytes(bytes: number, locale = 'en'): string {
-  const format = (value: number, digits: number) => new Intl.NumberFormat(locale, { maximumFractionDigits: digits }).format(value);
+/** "1,2 GB", "350 MB": sizes follow the learner's number format (format/format.ts). */
+export function formatBytes(bytes: number, context: FormatContext = learningContext('en')): string {
+  const format = (value: number, digits: number) => formatNumber(context, value, { maximumFractionDigits: digits });
   if (bytes >= 1e9) return `${format(bytes / 1e9, 1)} GB`;
   if (bytes >= 1e6) return `${format(bytes / 1e6, 0)} MB`;
   return `${format(bytes / 1e3, 0)} KB`;
