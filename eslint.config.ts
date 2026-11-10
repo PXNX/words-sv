@@ -29,7 +29,7 @@ export default tseslint.config(
   {
     files: ['**/*.{js,mjs,cjs,ts,mts,svelte}'],
     languageOptions: {
-      globals: { ...globals.browser, ...globals.node },
+      globals: { ...globals.browser, ...globals.node, __APP_VERSION__: 'readonly' },
     },
     rules: {
       // Deliberate in this codebase: catch blocks that just fall back, and rethrows

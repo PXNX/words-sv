@@ -2,6 +2,8 @@
 	import '../app.css';
 	import type { Path } from '$app/types';
 	import { resolve } from '$app/paths';
+	// resolve() is overloaded per route; past 25 routes TS can no longer match a union path against it.
+	const resolvePath = resolve as (path: Path) => string;
 	import { goto, onNavigate } from '$app/navigation';
 	import { page, updated } from '$app/state';
 import { onMount } from 'svelte';
@@ -131,7 +133,7 @@ onMount(() => {
 <div style="display:none">
 	{#each locales as locale (locale)}
 		<a
-			href={resolve(localizeHref(page.url.pathname, { locale }) as Path)}
+			href={resolvePath(localizeHref(page.url.pathname, { locale }) as Path)}
 		>{locale}</a>
 	{/each}
 </div>

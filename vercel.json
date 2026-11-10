@@ -7,6 +7,6 @@
   "outputDirectory": "build",
   "routes": [
     { "handle": "filesystem" },
-    { "src": "/(circle(?:/tutorial|/definitions)?|wordle(?:/tutorial)?|hangman(?:/tutorial)?|vocab|sentence(?:/full)?|pronunciation|conversation|alltag|grammar|stories|reading|listen|progress|repeat|stats|settings|impressum|datenschutz|bedingungen)/?", "dest": "/$1/index.html" }
+    { "src": "/(circle(?:/tutorial|/definitions)?|wordle(?:/tutorial)?|hangman(?:/tutorial)?|vocab|sentence(?:/full)?|pronunciation|conversation|alltag|grammar|stories|reading|listen|progress|repeat|stats|settings|changelog|impressum|datenschutz|bedingungen)/?", "dest": "/$1/index.html" }
   ]
 }

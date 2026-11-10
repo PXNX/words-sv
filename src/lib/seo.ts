@@ -77,6 +77,12 @@ export const pages: Record<string, PageMeta> = {
     kicker: 'Vokabeln',
     icon: 'quiz-rounded'
   },
+  '/changelog': {
+    title: 'Was ist neu',
+    description: 'Alle Versionen von WordCircle mit ihren Neuerungen und Korrekturen.',
+    kicker: 'Versionen',
+    icon: 'update-rounded'
+  },
   '/sentence': {
     title: 'Kurzer Satz',
     description: 'Schreibe ein oder zwei deutsche Sätze zu einem Thema und lass sie bewerten.',

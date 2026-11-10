@@ -599,5 +599,18 @@
   "format_calendar_persian": "Persian",
   "format_digits": "Digits",
   "format_digits_latn": "0–9",
-  "format_digits_native": "Native"
+  "format_digits_native": "Native",
+  "changelog_title": "What's new",
+  "changelog_settings": "Version history",
+  "changelog_version": "Version {version}",
+  "changelog_new": "New",
+  "changelog_improved": "Improved",
+  "changelog_fixed": "Fixed",
+  "changelog_migration": "Migration",
+  "changelog_known": "Known issues",
+  "changelog_unseen": "New",
+  "changelog_github": "View on GitHub",
+  "changelog_technical": "Details in English",
+  "changelog_back": "Back",
+  "changelog_v1_0_0": "The first version: streaks, daily goal, review, stories, writing and more."
 }
