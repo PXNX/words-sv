@@ -3,11 +3,12 @@
  * stories can practise exactly that. Pure: storage is read by the caller (generated.ts).
  *
  * A word's weight adds up its signals: misses anywhere in the app (more, and more recent, count
- * more), lapses the scheduler has not seen earned back, a low ease, and how overdue its review is.
+ * more), lapses the scheduler has not seen earned back, a high difficulty, and how overdue its review is.
  * Grammar mistakes on a noun count for the noun, and articles missed in grammar make stories ask
  * for articles more often. Words are then drawn at random in proportion to their weight: the weak
  * ones come up most, but no two stories practise the same handful.
  */
+import { isHardItem } from '#lib/review/scheduler.js';
 import type { ReviewEntry } from '#lib/review/ledger.js';
 import type { ReviewProgress } from '#lib/vocab/spacedRepetition.js';
 import type { MissedWord } from './missedWords';
@@ -41,10 +42,10 @@ export function weakSpotWeights({ missed, ledger, progress }: WeakSpotInput, now
   for (const { item, entry } of ledger) {
     // Grammar items are "KIND:WORD"; their weakness belongs to the word.
     const word = item.includes(':') ? item.slice(item.indexOf(':') + 1) : item;
-    add(word, 2 * entry.lapses + Math.min(3, overdueDays(entry.dueAt, now) / 3) + (entry.ease !== undefined && entry.ease < 2.1 ? 1.5 : 0));
+    add(word, 2 * entry.lapses + Math.min(3, overdueDays(entry.dueAt, now) / 3) + (isHardItem(entry) ? 1.5 : 0));
   }
   for (const [word, state] of Object.entries(progress)) {
-    add(word, 2 * (state.lapses ?? 0) + Math.min(3, overdueDays(state.dueAt, now) / 3) + (state.ease !== undefined && state.ease < 2.1 ? 1.5 : 0));
+    add(word, 2 * (state.lapses ?? 0) + Math.min(3, overdueDays(state.dueAt, now) / 3) + (isHardItem(state) ? 1.5 : 0));
   }
   return weights;
 }
