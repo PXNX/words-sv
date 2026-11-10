@@ -101,3 +101,9 @@ export function parseFeatureKey(key: FeatureKey): { lang: GrammarLang; pos: stri
 export function labelKey(key: FeatureKey): `grammar_feature_${string}` {
   return `grammar_feature_${key.replace(/[^a-z0-9]+/gu, '_')}`;
 }
+
+/** Message keys for a feature's category ("Kasus") and value ("Dativ"), shown as "Kasus · Dativ". */
+export function labelKeys(key: FeatureKey): { category: `grammar_category_${string}`; value: `grammar_value_${string}` } {
+  const { lang, pos, category, value } = parseFeatureKey(key);
+  return { category: `grammar_category_${pos}_${category}`, value: `grammar_value_${lang}_${value.replace(/-/gu, '_')}` };
+}
