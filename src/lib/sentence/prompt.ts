@@ -27,7 +27,7 @@ const SHORT_PROMPTS: SentencePrompt[] = [
   {
     id: 'daily-routine',
     topic: 'Beschreibe deinen typischen Morgen.',
-    hint: 'Nutze Zeitangaben (um 7 Uhr, dann, danach) und reflexive Verben (sich wecken, sich waschen).'
+    hint: 'Nutze Zeitangaben (um 7 Uhr, dann, danach) und reflexive Verben (sich anziehen, sich waschen).'
   },
   {
     id: 'weekend-plans',
