@@ -1,4 +1,5 @@
 import { publishReminderState, reminderLocale } from '../pwa/pwaReminders.js';
+import { useProShield } from './proShield.js';
 import { callApi } from '../api/client.js';
 import { StreakReplySchema, type ServerStreak } from '../api/schemas.js';
 
@@ -38,6 +39,8 @@ export type ClientStreak = {
 	streakCount: number;
 	bestStreak: number;
 	lastQualifiedDay: string | null;
+	/** The ISO week whose Pro shield bridged a missed day, so it is used once a week. */
+	proShieldWeek: string | null;
 	vocabularyGoal: number;
 	minutesRemaining: number;
 	// One earned freeze bridges a single missed day, so a long streak does not vanish overnight.
@@ -83,6 +86,27 @@ export function normalizeVocabularyGoal(value: unknown): number {
 	return (VOCABULARY_GOALS as readonly number[]).includes(numeric) ? numeric : DEFAULT_VOCABULARY_GOAL;
 }
 
+const PRO_KEY = 'wordcircle-pro-v1';
+
+/** Until when this device's Telegram account has Pro (epoch ms), as the store last reported it. */
+export function readProUntil(): number | null {
+	if (typeof localStorage === 'undefined') return null;
+	try {
+		const until = Number(JSON.parse(localStorage.getItem(PRO_KEY) ?? 'null')?.until);
+		return Number.isFinite(until) && until > 0 ? until : null;
+	} catch {
+		return null;
+	}
+}
+
+export function writeProUntil(until: number | null) {
+	if (typeof localStorage === 'undefined') return;
+	try {
+		if (until) localStorage.setItem(PRO_KEY, JSON.stringify({ until }));
+		else localStorage.removeItem(PRO_KEY);
+	} catch { /* Pro still applies on the server */ }
+}
+
 export function readDailyGoal(): number {
 	if (typeof localStorage === 'undefined') return DEFAULT_VOCABULARY_GOAL;
 	return normalizeVocabularyGoal(localStorage.getItem(DAILY_GOAL_KEY));
@@ -114,6 +138,7 @@ function defaultState(now = new Date()): ClientStreak {
 		streakCount: 0,
 		bestStreak: 0,
 		lastQualifiedDay: null,
+		proShieldWeek: null,
 		vocabularyGoal: readDailyGoal(),
 		minutesRemaining: minutesLeft(now),
 		freezes: 0,
@@ -157,8 +182,13 @@ export function readStreak(now = new Date()) {
 			const yesterday = previousDate(today);
 			let lastQualifiedDay = typeof saved.lastQualifiedDay === 'string' ? saved.lastQualifiedDay : null;
 			let freezes = Math.min(MAX_FREEZES, numberField(saved.freezes));
+			let proShieldWeek = typeof saved.proShieldWeek === 'string' ? saved.proShieldWeek : null;
 			const missedYesterday = Boolean(lastQualifiedDay && lastQualifiedDay < yesterday && daysBetween(lastQualifiedDay, yesterday) === 1);
-			if (missedYesterday && freezes > 0) {
+			// Pro forgives one missed day a week before a freeze is spent.
+			const shield = missedYesterday ? useProShield(yesterday, readProUntil(), proShieldWeek) : null;
+			if (shield) {
+				({ lastQualifiedDay, proShieldWeek } = shield);
+			} else if (missedYesterday && freezes > 0) {
 				freezes -= 1;
 				lastQualifiedDay = yesterday;
 			} else if (missedYesterday) {
@@ -172,6 +202,7 @@ export function readStreak(now = new Date()) {
 				streakCount,
 				bestStreak: Math.max(numberField(saved.bestStreak), streakCount),
 				lastQualifiedDay,
+				proShieldWeek,
 				freezes,
 				qualifiedDays: numberField(saved.qualifiedDays),
 				embers: embersField(saved)

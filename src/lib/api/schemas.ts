@@ -36,6 +36,7 @@ export const ServerStreakSchema = v.object({
   streakCount: count,
   bestStreak: v.optional(count),
   lastQualifiedDay: v.nullable(v.string()),
+  proShieldWeek: v.optional(v.nullable(v.string())),
   vocabularyGoal: v.optional(count),
   minutesRemaining: v.optional(count),
   freezes: v.optional(count),

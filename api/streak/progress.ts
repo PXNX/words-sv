@@ -22,7 +22,7 @@ const events = new Set([
 ]);
 const validDeviceId = (value: unknown): value is string => typeof value === 'string' && /^[a-zA-Z0-9_-]{16,64}$/.test(value);
 
-const COLUMNS = ['device_id', 'timezone', 'locale', 'day_key', 'vocab_correct', 'circle_completed', 'definitions_completed', 'wordle_completed', 'reading_completed', 'story_completed', 'grammar_correct', 'listen_completed', 'pronunciation_attempts', 'hangman_completed', 'alltag_correct', 'sentence_completed', 'current_qualified', 'last_qualified_day', 'streak_count', 'best_streak', 'vocabulary_goal', 'freezes', 'qualified_days', 'reward_collected', 'embers'];
+const COLUMNS = ['device_id', 'timezone', 'locale', 'day_key', 'vocab_correct', 'circle_completed', 'definitions_completed', 'wordle_completed', 'reading_completed', 'story_completed', 'grammar_correct', 'listen_completed', 'pronunciation_attempts', 'hangman_completed', 'alltag_correct', 'sentence_completed', 'pro_shield_week', 'current_qualified', 'last_qualified_day', 'streak_count', 'best_streak', 'vocabulary_goal', 'freezes', 'qualified_days', 'reward_collected', 'embers'];
 const UPSERT = `INSERT INTO wordcircle_streak_devices (${COLUMNS.join(', ')})
 	VALUES (${COLUMNS.map(() => '?').join(', ')})
 	ON DUPLICATE KEY UPDATE ${COLUMNS.slice(1).map((column) => `${column} = VALUES(${column})`).join(', ')}`;
@@ -30,7 +30,8 @@ const UPSERT = `INSERT INTO wordcircle_streak_devices (${COLUMNS.join(', ')})
 // a deploy never breaks streak syncing while the migrations in database-schema.sql are still pending.
 const MIGRATIONS = [
 	'ALTER TABLE wordcircle_streak_devices ADD COLUMN reward_collected TINYINT(1) NOT NULL DEFAULT 0, ADD COLUMN embers TINYINT UNSIGNED NULL',
-	'ALTER TABLE wordcircle_streak_devices ADD COLUMN sentence_completed TINYINT(1) NOT NULL DEFAULT 0'
+	'ALTER TABLE wordcircle_streak_devices ADD COLUMN sentence_completed TINYINT(1) NOT NULL DEFAULT 0',
+	'ALTER TABLE wordcircle_streak_devices ADD COLUMN pro_shield_week CHAR(8) NULL'
 ];
 
 async function upsert(db: Database, row: Record<string, unknown>) {
@@ -51,6 +52,16 @@ function counter(value: unknown, max = 999) {
 	return Number.isSafeInteger(number) && number >= 0 ? Math.min(max, number) : 0;
 }
 
+/** Until when the device's Telegram account has Pro; null without a link, Pro or store tables yet. */
+async function readProUntil(db: Database, deviceId: string): Promise<number | null> {
+	try {
+		const [[row]] = await db.execute('SELECT p.pro_until FROM wordcircle_telegram_links l INNER JOIN wordcircle_pro p ON p.telegram_user_id = l.telegram_user_id WHERE l.device_id = ? LIMIT 1', [deviceId]);
+		return row?.pro_until ? new Date(row.pro_until).getTime() : null;
+	} catch {
+		return null;
+	}
+}
+
 export default async function streakProgress(req: ApiRequest, res: ApiResponse) {
 	if (!isMethod(req, 'POST')) return respond(res, 405, { ok: false, error: 'method_not_allowed' });
 	try {
@@ -61,7 +72,8 @@ export default async function streakProgress(req: ApiRequest, res: ApiResponse) 
 		const db = getDatabase();
 		const [rows] = await db.execute('SELECT * FROM wordcircle_streak_devices WHERE device_id = ? LIMIT 1', [deviceId]);
 		const reminderLocale = normalizeReminderLocale(locale ?? rows[0]?.locale);
-		const merged = stateForToday(rows[0], timeZone, new Date());
+		const proUntil = await readProUntil(db, deviceId);
+		const merged = stateForToday(rows[0], timeZone, new Date(), proUntil);
 		const inviteFreezes = counter(rows[0]?.invite_freezes, 2);
 		// A device that played offline sends its snapshot along, so the server never loses progress and
 		// never awards the same day twice.
@@ -79,6 +91,8 @@ export default async function streakProgress(req: ApiRequest, res: ApiResponse) 
 			merged.listenCompleted = merged.listenCompleted || Boolean(snapshot.listenCompleted);
 			merged.hangmanCompleted = merged.hangmanCompleted || Boolean(snapshot.hangmanCompleted);
 			merged.sentenceCompleted = merged.sentenceCompleted || Boolean(snapshot.sentenceCompleted);
+			// The later week wins ("2026-W46" > "2026-W45"), so a shield used offline stays used.
+			if (typeof snapshot.proShieldWeek === 'string' && /^\d{4}-W\d{2}$/u.test(snapshot.proShieldWeek) && snapshot.proShieldWeek > (merged.proShieldWeek ?? '')) merged.proShieldWeek = snapshot.proShieldWeek;
 			// The device is the only place that knows when a freeze was consumed, so take the lower count;
 			// freezes forged from invite embers (see /api/telegram/start) are new to it and come on top.
 			merged.freezes = Math.min(merged.freezes, counter(snapshot.freezes, 2) + inviteFreezes);
@@ -111,6 +125,7 @@ export default async function streakProgress(req: ApiRequest, res: ApiResponse) 
 			hangman_completed: next.hangmanCompleted ? 1 : 0,
 			alltag_correct: next.alltagCorrect,
 			sentence_completed: next.sentenceCompleted ? 1 : 0,
+			pro_shield_week: next.proShieldWeek,
 			current_qualified: next.qualified ? 1 : 0,
 			last_qualified_day: next.lastQualifiedDay,
 			streak_count: next.streakCount,
