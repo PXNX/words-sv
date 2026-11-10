@@ -14,16 +14,15 @@ import { setKumarStandIn } from '#lib/story/standIn.js';
 import { isExamId, type ExamId } from '#lib/progress/skillState.js';
 import { resolveFormatContext, type FormatCalendar, type FormatContext, type FormatDigits, type FormatSource } from '#lib/format/format.js';
 
-// Completions logged here; answers in vocab, grammar and reading are logged where they happen.
+// Completions logged here; answers in vocab, grammar, reading, hangman and writing are logged
+// where they happen (with the word or the score).
 const EVENT_MODE_BY_STREAK: Partial<Record<StreakEvent, EventMode>> = {
   circle_completed: 'circle',
   definitions_completed: 'circle',
   wordle_completed: 'wordle',
-  hangman_completed: 'hangman',
   alltag_correct: 'alltag',
   story_completed: 'story',
-  listen_completed: 'listen',
-  sentence_completed: 'write'
+  listen_completed: 'listen'
 };
 
 const ACTIVITY_BY_EVENT: Partial<Record<StreakEvent, ActivityKind>> = {
