@@ -17,7 +17,7 @@ SvelteKit app (static adapter, PWA), Svelte 5 runes, Paraglide i18n. Code is gro
 |---|---|---|
 | Word modes | `vocab/`, `circle/`, `wordle/`, `hangman/`, `grammar/` (+ `routes/grammar`) | `PronunciationMode.svelte`, `AlltagMode.svelte`, `CircleGame.svelte`, `WordleMode.svelte`, `HangmanMode.svelte` |
 | Stories, reading, listening | `story/` | `StoryMode.svelte`, `ReadingMode.svelte`, `ListenMode.svelte`, cast in `stories.ts` / `StoryCharacter.svelte` |
-| Conversation (on-device LLM) | `conversation/` | `ConversationMode.svelte`, prompt in `conversation.ts`, partners in `partners.ts`, model in `localModel.svelte.ts` + `llm.worker.ts` |
+| Conversation (on-device LLM, or scripted without AI) | `conversation/` | `ConversationMode.svelte`, prompt in `conversation.ts`, partners in `partners.ts`, model in `localModel.svelte.ts` + `llm.worker.ts`; without AI `scripted.ts` + `dialogues.ts`, with/without AI choice in `aiChoice.svelte.ts` |
 | Speech engines | `voice/` + `story/naturalVoices.svelte.ts` | `voice/engines.ts` (registry), one `*.worker.ts` per model; see `docs/voice-engines.md` |
 | Background work, word audio | `audio/` | `backgroundJobs.svelte.ts`, `priorityQueue.ts`, `wordBank.svelte.ts`, `wav.ts` |
 | Downloads, storage, offline | `offline/` + `src/service-worker.ts` | `resumableDownload.ts`, `downloadSpeed.ts`, `storage.ts` |
