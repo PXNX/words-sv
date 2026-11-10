@@ -62,12 +62,6 @@ export const pages: Record<string, PageMeta> = {
     kicker: 'Niveau',
     icon: 'fact-check-rounded'
   },
-  '/groups': {
-    title: 'Gruppen',
-    description: 'Tritt mit Freunden, deiner Klasse oder Familie in einer Wochenliga an.',
-    kicker: 'Liga',
-    icon: 'groups-rounded'
-  },
   '/changelog': {
     title: 'Was ist neu',
     description: 'Alle Versionen von WordCircle mit ihren Neuerungen und Korrekturen.',
