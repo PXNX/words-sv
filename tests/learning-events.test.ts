@@ -54,3 +54,19 @@ describe('learning events', () => {
     expect(await readEvents()).toEqual([]);
   });
 });
+
+describe('feature stats', () => {
+  it('ranks features by accuracy and ignores rarely seen ones', async () => {
+    const { featureStats } = await import('../src/lib/progress/events');
+    const dativ = featureKey('de', 'noun', 'case', 'dativ');
+    const akkusativ = featureKey('de', 'noun', 'case', 'akkusativ');
+    const events = [
+      event({ features: [dativ], featureErrors: [dativ] }), event({ features: [dativ], featureErrors: [dativ] }), event({ features: [dativ] }),
+      event({ features: [akkusativ] }), event({ features: [akkusativ] }), event({ features: [akkusativ], featureErrors: [akkusativ] }), event({ features: [akkusativ] }),
+      event({ features: [featureKey('de', 'noun', 'case', 'genitiv')], featureErrors: [featureKey('de', 'noun', 'case', 'genitiv')] })
+    ];
+    const stats = featureStats(events);
+    expect(stats.map((stat) => [stat.feature, stat.attempts, stat.errors])).toEqual([[dativ, 3, 2], [akkusativ, 4, 1]]);
+    expect(stats[0]!.accuracy).toBeCloseTo(1 / 3);
+  });
+});
