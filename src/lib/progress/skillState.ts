@@ -104,6 +104,8 @@ export const EXAMS = {
   'ielts': { level: 'b2', weights: { reading: 0.25, listening: 0.25, writing: 0.25, speaking: 0.25 } }
 } as const satisfies Record<string, { level: Level; weights: ExamWeights }>;
 export type ExamId = keyof typeof EXAMS;
+/** Display names are proper names and stay untranslated. */
+export const EXAM_NAMES: Record<ExamId, string> = { 'goethe-b1': 'Goethe B1', 'telc-b1': 'telc B1', testdaf: 'TestDaF', 'cambridge-b2': 'Cambridge B2 First', ielts: 'IELTS' };
 
 export function isExamId(value: unknown): value is ExamId {
   return typeof value === 'string' && value in EXAMS;
