@@ -1,15 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { readingCatalog } from '../src/lib/story/readingCatalog.ts';
-import { readingParagraphs } from '../src/lib/story/prose.ts';
+import type { Language, VocabularyLevel } from '../src/lib/data/vocabulary.js';
+import { readingCatalog, type ReadingItem } from '../src/lib/story/readingCatalog.js';
+import { readingParagraphs } from '../src/lib/story/prose.js';
 
-/** @type {import('../src/lib/data/vocabulary.ts').Language[]} */
-const languages = ['de', 'en', 'fr', 'it', 'es', 'pt', 'uk'];
-/** @type {import('../src/lib/data/vocabulary.ts').VocabularyLevel[]} */
-const levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
+const languages: Language[] = ['de', 'en', 'fr', 'it', 'es', 'pt', 'uk'];
+const levels: VocabularyLevel[] = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
 const placeholder = /\{[^{}]+\}/;
 
-/** @param {import('../src/lib/story/readingCatalog.ts').ReadingItem} item */
-function readableText(item) {
+function readableText(item: ReadingItem): string[] {
 	const paragraphs = readingParagraphs(item.blocks, item.language, 'Alex');
 	return [
 		...item.blocks.map((block) => block.text),

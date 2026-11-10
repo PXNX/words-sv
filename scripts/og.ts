@@ -1,5 +1,5 @@
 // Post-build step: the app ships as a static SPA, so crawlers only ever see the HTML shell.
-// For every route in src/lib/seo.js this writes build/<route>/index.html with its own
+// For every route in src/lib/seo.ts this writes build/<route>/index.html with its own
 // title/description/Open Graph tags, and renders a 1200×630 PNG card (built as SVG) to build/og/.
 
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
@@ -9,12 +9,15 @@ import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { Resvg } from '@resvg/resvg-js';
 import { decompress } from 'wawoff2';
-import { DEFAULT_SITE_URL, SITE_NAME, imageSlug, pageTitle, pages } from '../src/lib/seo.js';
+import { DEFAULT_SITE_URL, SITE_NAME, imageSlug, pageTitle, pages, type PageMeta } from '../src/lib/seo.js';
+
+type IconifyIcon = { body: string; width?: number; height?: number };
+type IconifyCatalog = { width?: number; height?: number; icons: Record<string, IconifyIcon> };
 
 const require = createRequire(import.meta.url);
 const root = fileURLToPath(new URL('..', import.meta.url));
 const buildDir = join(root, 'build');
-const icons = require('@iconify-json/material-symbols/icons.json');
+const icons = require('@iconify-json/material-symbols/icons.json') as IconifyCatalog;
 
 const productionHost = process.env.VERCEL_PROJECT_PRODUCTION_URL;
 const siteUrl = (process.env.PUBLIC_SITE_URL || (productionHost ? `https://${productionHost}` : DEFAULT_SITE_URL)).replace(/\/+$/, '');
@@ -30,11 +33,11 @@ const MUTED = '#596477';
 const SANS = 'DM Sans 9pt';
 const SERIF = 'DM Serif Display';
 
-const escapeXml = (/** @type {string} */ value) =>
+const escapeXml = (value: string): string =>
 	value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 
-/** Greedy word wrap by character count; good enough for the short, fixed copy in seo.js. */
-function wrap(/** @type {string} */ text, /** @type {number} */ maxChars, /** @type {number} */ maxLines) {
+/** Greedy word wrap by character count; good enough for the short, fixed copy in seo.ts. */
+function wrap(text: string, maxChars: number, maxLines: number): string[] {
 	const lines = [''];
 	for (const word of text.split(/\s+/)) {
 		const current = lines[lines.length - 1];
@@ -44,12 +47,12 @@ function wrap(/** @type {string} */ text, /** @type {number} */ maxChars, /** @t
 	}
 	if (lines.length > maxLines) {
 		lines.length = maxLines;
-		lines[maxLines - 1] = `${lines[maxLines - 1].replace(/[\s,.:;–-]+$/, '')}…`;
+		lines[maxLines - 1] = `${(lines[maxLines - 1] ?? '').replace(/[\s,.:;–-]+$/, '')}…`;
 	}
 	return lines;
 }
 
-const brandMark = (/** @type {number} */ x, /** @type {number} */ y, /** @type {number} */ size) => `
+const brandMark = (x: number, y: number, size: number): string => `
 	<g transform="translate(${x} ${y}) scale(${size / 512})">
 		<path d="M256 75a181 181 0 1 0 0 362 181 181 0 1 0 0-362Zm0 56a125 125 0 1 1 0 250 125 125 0 1 1 0-250Z" fill="${NAVY}"/>
 		<path d="M317 169a101 101 0 1 0 0 202 101 101 0 1 0 0-202Zm0 40a61 61 0 1 1 0 122 61 61 0 1 1 0-122Z" fill="${AMBER}"/>
@@ -57,7 +60,7 @@ const brandMark = (/** @type {number} */ x, /** @type {number} */ y, /** @type {
 		<circle cx="317" cy="270" r="19" fill="${AMBER}"/>
 	</g>`;
 
-function emblem(/** @type {string | null} */ iconName) {
+function emblem(iconName: string | null): string {
 	if (!iconName) return brandMark(720, 95, 440);
 	const icon = icons.icons[iconName];
 	if (!icon) throw new Error(`Unknown material-symbols icon: ${iconName}`);
@@ -69,7 +72,7 @@ function emblem(/** @type {string | null} */ iconName) {
 	<g transform="translate(${905 - size / 2} ${285 - size / 2}) scale(${scale})">${icon.body.replaceAll('currentColor', PAPER)}</g>`;
 }
 
-function cardSvg(/** @type {import('../src/lib/seo.js').PageMeta} */ meta) {
+function cardSvg(meta: PageMeta): string {
 	const titleLines = wrap(meta.title, 14, 2);
 	const titleSize = titleLines.length > 1 ? 84 : 104;
 	const titleTop = 238;
@@ -110,15 +113,15 @@ function cardSvg(/** @type {import('../src/lib/seo.js').PageMeta} */ meta) {
 
 // resvg only loads fonts from disk and cannot read woff2, so the fonts are unpacked to a temp dir.
 // The app ships DM Sans as a variable font, which resvg cannot instance, hence the static
-// weights from @fontsource. The latin subsets cover all characters used in seo.js.
-async function loadFonts(/** @type {string} */ dir) {
+// weights from @fontsource. The latin subsets cover all characters used in seo.ts.
+async function loadFonts(dir: string): Promise<string[]> {
 	const files = [
 		require.resolve('@fontsource/dm-sans/files/dm-sans-latin-400-normal.woff2'),
 		require.resolve('@fontsource/dm-sans/files/dm-sans-latin-700-normal.woff2'),
 		join(root, 'static/fonts/dm-serif-display-normal-latin.woff2')
 	];
 	// Sequential on purpose: concurrent wawoff2 decompress calls corrupt each other's output.
-	const ttfs = [];
+	const ttfs: string[] = [];
 	for (const [i, file] of files.entries()) {
 		const ttf = join(dir, `${i}.ttf`);
 		await writeFile(ttf, await decompress(await readFile(file)));
@@ -127,7 +130,7 @@ async function loadFonts(/** @type {string} */ dir) {
 	return ttfs;
 }
 
-function headTags(/** @type {string} */ path, /** @type {import('../src/lib/seo.js').PageMeta} */ meta) {
+function headTags(path: string, meta: PageMeta): string {
 	const url = `${siteUrl}${path === '/' ? '/' : path}`;
 	const image = `${siteUrl}/og/${imageSlug(path)}.png`;
 	const title = escapeXml(pageTitle(path));
@@ -173,7 +176,8 @@ for (const [path, meta] of Object.entries(pages)) {
 	if (meta.image) continue;
 	const png = new Resvg(cardSvg(meta), {
 		fitTo: { mode: 'width', value: WIDTH },
-		font: { fontFiles, loadSystemFonts: false, defaultFontFamily: SANS }, logLevel: 'warn'
+		font: { fontFiles, loadSystemFonts: false, defaultFontFamily: SANS },
+		logLevel: 'warn'
 	}).render().asPng();
 	await writeFile(join(buildDir, 'og', `${imageSlug(path)}.png`), png);
 }

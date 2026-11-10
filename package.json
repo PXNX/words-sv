@@ -8,10 +8,10 @@
   },
   "scripts": {
     "dev": "vite dev --host 0.0.0.0",
-    "build": "vite build && node scripts/og.mjs",
+    "build": "vite build && bun scripts/og.ts",
     "preview": "vite preview --host 0.0.0.0",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "test": "vitest run --config tests/vitest.server.config.mjs",
+    "test": "vitest run --config tests/vitest.server.config.ts",
     "voices:build": "bun scripts/build-character-voices.ts",
     "lint": "bun lint",
     "ci": "bun run lint && bun run check && bun run test"

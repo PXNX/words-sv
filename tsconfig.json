@@ -9,6 +9,8 @@
   },
   "include": [
     "src",
+    "scripts/*.ts",
+    "eslint.config.ts",
     "vite.config.ts",
     "tests"
   ]
