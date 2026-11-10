@@ -30,6 +30,13 @@ describe('voice engines', () => {
     expect(ownsClipKey('recorded')).toBe(false);
   });
 
+  it('speaks every app language with Supertonic 3, on WebAssembly too', () => {
+    for (const language of ['de', 'en', 'fr', 'it', 'es', 'pt', 'uk'] as const) expect(engineFor('supertonic3', language, { webgpu: false })).toBe('supertonic3');
+    expect(voiceEngines.supertonic3.voices?.filter((voice) => voice.gender === 'female')).toHaveLength(5);
+    expect(voiceEngines.supertonic3.voices?.filter((voice) => voice.gender === 'male')).toHaveLength(5);
+    expect(engineFootprint('supertonic3', { webgpu: false })).toEqual(voiceEngines.supertonic3.wasm);
+  });
+
   it('marks only Edge as leaving the device', () => {
     expect(voiceEngineIds.filter((id) => !voiceEngines[id].onDevice)).toEqual(['edge']);
   });

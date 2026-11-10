@@ -209,7 +209,7 @@ type Status = 'idle' | 'loading' | 'ready' | 'failed';
 /** How far each language's natural voices are: the settings show it, and stories use them once ready. */
 export const naturalState = $state<{
   status: Partial<Record<Language, Status>>;
-  // The voices loaded for each language: a Piper pack ('standard' / 'high') or 'supertonic'.
+  // The voices loaded for each language: a Piper pack ('standard' / 'high') or a model engine's id.
   model: Partial<Record<Language, string>>;
   progress: Partial<Record<Language, number>>;
   downloaded: Partial<Record<Language, number>>;
@@ -277,7 +277,9 @@ export function prepareNatural(language: Language): Promise<void> {
 }
 
 async function loadNatural(language: Language) {
-  if (activeEngine(language) === 'supertonic') return loadModelEngine(language, 'supertonic', prepareSupertonic);
+  const engine = activeEngine(language);
+  const modelEngine = modelEngines[engine];
+  if (modelEngine) return loadModelEngine(language, engine, modelEngine.prepare);
   const model = settings.naturalModel;
   const models = modelsOf(language, model);
   const totalMegabytes = naturalMegabytes(language, model);
@@ -318,7 +320,24 @@ async function loadNatural(language: Language) {
   }
 }
 
-// Engines with one model for every language (Supertonic): one download, shown per language.
+// The model engines (runtime 'model' in engines.ts): how each downloads and speaks. Each resolves
+// with mono PCM; casting, speed and pitch are the same for all of them (synthesizeModel).
+type ModelEngine = {
+  prepare: (onProgress: (loaded: number, total: number) => void) => Promise<void>;
+  speak: (text: string, language: Language, voice: string, speed: number, priority: SpeechPriority) => Promise<{ pcm: Float32Array; sampleRate: number }>;
+};
+const modelEngines: Partial<Record<VoiceEngineId, ModelEngine>> = {
+  supertonic: {
+    prepare: (onProgress) => prepareSupertonic(onProgress, 'supertonic'),
+    speak: (text, language, voice, speed, priority) => speakSupertonic(text, language, voice, speed, priority, 'supertonic')
+  },
+  supertonic3: {
+    prepare: (onProgress) => prepareSupertonic(onProgress, 'supertonic3'),
+    speak: (text, language, voice, speed, priority) => speakSupertonic(text, language, voice, speed, priority, 'supertonic3')
+  }
+};
+
+// Engines with one model for every language (Supertonic, Kokoro): one download, shown per language.
 async function loadModelEngine(language: Language, engine: VoiceEngineId, prepare: (onProgress: (loaded: number, total: number) => void) => Promise<void>) {
   const totalMegabytes = engineFootprint(engine)?.megabytes ?? 0;
   naturalState.status[language] = 'loading';
@@ -482,7 +501,9 @@ async function renderNatural(text: string, speaker: Speaker, mood: Mood, cast: S
 
 async function synthesizeChunk(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number, priority: SpeechPriority): Promise<NaturalClip> {
   if (settings.voiceQuality === 'edge') return synthesizeEdge(text, speaker, mood, cast, language, baseRate);
-  if (activeEngine(language) === 'supertonic') return synthesizeSupertonic(text, speaker, mood, cast, language, baseRate, priority);
+  const engine = activeEngine(language);
+  const modelEngine = modelEngines[engine];
+  if (modelEngine) return synthesizeModel(engine, modelEngine, text, speaker, mood, cast, language, baseRate, priority);
   const profile = profiles[speaker];
   const { voice, shared, borrowed } = castNatural(cast, language).get(speaker) ?? castNatural([speaker], language).get(speaker)!;
   const shape = moodShape[mood];
@@ -557,15 +578,15 @@ function modelVoice(speaker: Speaker, cast: Speaker[], voices: readonly EngineVo
   return voice;
 }
 
-async function synthesizeSupertonic(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number, priority: SpeechPriority): Promise<NaturalClip> {
+async function synthesizeModel(engine: VoiceEngineId, modelEngine: ModelEngine, text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number, priority: SpeechPriority): Promise<NaturalClip> {
   const profile = profiles[speaker];
-  const voice = modelVoice(speaker, cast, voiceEngines.supertonic.voices ?? []);
+  const voice = modelVoice(speaker, cast, voiceEngines[engine].voices ?? []);
   const shape = moodShape[mood];
   const accent = accentShape(profile.dialect, settings.dialects);
   const speed = Math.max(0.8, Math.min(1.2, baseRate * (profile.natural?.rate ?? profile.rate) * shape.rate * accent.rate));
   // Pitch is shifted on playback, like Piper's shared voices; animals keep their cartoon pitch.
   const playbackRate = animals.includes(speaker) ? Math.min(1.4, Math.max(0.75, profile.pitch)) : (profile.natural?.pitch ?? 1) * accent.pitch;
-  const { pcm, sampleRate } = await speakSupertonic(text, language, voice, speed, priority);
+  const { pcm, sampleRate } = await modelEngine.speak(text, language, voice, speed, priority);
   const buffer = audio().createBuffer(1, pcm.length, sampleRate);
   buffer.copyToChannel(pcm as Float32Array<ArrayBuffer>, 0);
   return { buffer, playbackRate, volume: Math.min(1, profile.volume * shape.volume) };
