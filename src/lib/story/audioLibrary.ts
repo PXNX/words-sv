@@ -15,7 +15,7 @@ export type SavedAudio = {
   storyCount: number;
   stories: SavedStoryStart[];
   scene?: SceneId;
-  weather?: Weather;
+  weather?: Weather | undefined;
   sounds?: SavedSound[];
 };
 

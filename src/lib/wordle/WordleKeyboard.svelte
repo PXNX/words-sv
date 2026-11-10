@@ -15,7 +15,7 @@
   }: {
     language: string;
     marks?: Record<string, WordleMark>;
-    expectedLetter?: string;
+    expectedLetter?: string | undefined;
     disabled?: boolean;
     ariaLabel: string;
     /** Spoken after a used key's letter, e.g. "A, not in the word". */

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
 
-  let { kicker, title, cornerMark, children }: { kicker: string; title: string; cornerMark?: string; children: Snippet } = $props();
+  let { kicker, title, cornerMark, children }: { kicker: string; title: string; cornerMark?: string | undefined; children: Snippet } = $props();
 </script>
 
 <div

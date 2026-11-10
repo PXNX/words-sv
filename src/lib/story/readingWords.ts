@@ -17,14 +17,14 @@ export type ReadingWordInfo = {
   display: string;
   article: string;
   number: ReadingNumber;
-  plural?: string;
-  gender?: VocabularyGender;
+  plural?: string | undefined;
+  gender?: VocabularyGender | undefined;
   type: string;
   definition: string;
   cases: ReadingWordCase[];
   // The case the tapped word actually has in its sentence, when the surrounding words make it
   // clear enough to point at one row.
-  currentCase?: ReadingGrammarCase;
+  currentCase?: ReadingGrammarCase | undefined;
 };
 
 export type ReadingToken = { text: string; word: boolean; start: number; end: number };

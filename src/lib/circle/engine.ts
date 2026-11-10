@@ -13,8 +13,8 @@ export type StoredGame<Language extends string> = {
   letters: string[];
   placements: Placement[];
   solvedWords: string[];
-  startedAt?: number;
-  completedDuration?: number;
+  startedAt?: number | undefined;
+  completedDuration?: number | undefined;
   vocabularyLevel?: VocabularyLevel;
   includeLowerVocabulary?: boolean;
 };

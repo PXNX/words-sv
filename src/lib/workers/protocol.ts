@@ -49,7 +49,7 @@ export type WorkerClient<P extends Protocol> = {
 
 export type ClientOptions = {
   /** Runs after every restart, also one caused by a timeout or a crashed worker. */
-  onRestart?: (reason: string) => void;
+  onRestart?: ((reason: string) => void) | undefined;
   /** The error for a worker the browser killed (most often for running out of memory). */
   crashMessage?: string;
 };

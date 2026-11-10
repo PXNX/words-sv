@@ -33,11 +33,11 @@ export type HeldItem = 'cake' | 'fish';
 // again: 'lamp' leaves one harsh lamp burning in a dark room (an interrogation, say), 'off' plunges
 // it into darkness (a power cut) and 'on' brings the light back. An `announcement` is a narration
 // whose quoted part comes over a station loudspeaker: a gong, a crackling line and a different voice.
-type Staging = { enters?: CharacterId[]; exits?: CharacterId[]; holds?: Partial<Record<CharacterId, HeldItem | null>>; faces?: Partial<Record<CharacterId, Mood>>; lights?: Lights };
+type Staging = { enters?: CharacterId[] | undefined; exits?: CharacterId[] | undefined; holds?: Partial<Record<CharacterId, HeldItem | null>> | undefined; faces?: Partial<Record<CharacterId, Mood>>; lights?: Lights };
 export type Lights = 'on' | 'lamp' | 'off';
 export type StoryBeat =
-  | ({ kind: 'narration'; text: Text; sfx?: SoundEffect; prop?: StoryProp; announcement?: boolean } & Staging)
-  | ({ kind: 'line'; speaker: CharacterId; text: Text; sfx?: SoundEffect; mood?: Mood; word?: string; noisy?: boolean } & Staging)
+  | ({ kind: 'narration'; text: Text; sfx?: SoundEffect | undefined; prop?: StoryProp | undefined; announcement?: boolean } & Staging)
+  | ({ kind: 'line'; speaker: CharacterId; text: Text; sfx?: SoundEffect | undefined; mood?: Mood | undefined; word?: string; noisy?: boolean } & Staging)
   | { kind: 'question'; prompt: Text; options: Text[]; focus?: string; asker?: CharacterId; word?: string }
   | { kind: 'reply'; to: CharacterId; options: Text[]; focus?: string; word?: string };
 
@@ -46,12 +46,12 @@ export type StoryBeat =
 // `{key#1}` and `{key#2}` take the words of two other choices, as wrong answers. A placeholder that
 // opens a text starts with a capital letter ("{day}" → "Sonntag", "Domingo"). `ball` paints the ball
 // on stage to match the text.
-export type Detail = { words: Record<string, Text>; ball?: string }[];
+export type Detail = { words: Record<string, Text>; ball?: string | undefined }[];
 
 // `weathers` limits the random weather where the text depends on it; `languages` limits a story to learners
 // of those languages (their texts then only need to be written in those languages, see `german`).
 // `details` vary between playthroughs (see Detail); `ball` is the colour drawn for this playthrough.
-export type Story = { id: string; level: VocabularyLevel; scene: SceneId; cast: CharacterId[]; title: Text; beats: StoryBeat[]; generated?: boolean; weathers?: Weather[]; weather?: Weather; languages?: Language[]; details?: Detail[]; ball?: string };
+export type Story = { id: string; level: VocabularyLevel; scene: SceneId; cast: CharacterId[]; title: Text; beats: StoryBeat[]; generated?: boolean; weathers?: Weather[]; weather?: Weather; languages?: Language[]; details?: Detail[]; ball?: string | undefined };
 
 // The days of the week, as they appear inside a sentence ("Es ist Sonntag", "c’est dimanche").
 export const weekdays: Text[] = [

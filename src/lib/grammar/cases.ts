@@ -63,7 +63,7 @@ const templatesByCase: Record<GrammarCase, NounTemplate[]> = {
 
 // `features` names the grammar features a German prompt tests, so a wrong answer can be logged
 // against them (progress/events.ts, featureErrors).
-export type GrammarPrompt = { before: string; after: string; correct: string; choices: string[]; question?: string; highlight?: string; features?: FeatureKey[] };
+export type GrammarPrompt = { before: string; after: string; correct: string; choices: string[]; question?: string; highlight?: string | undefined; features?: FeatureKey[] };
 
 const CASE_FEATURE = { nominative: 'nominativ', accusative: 'akkusativ', dative: 'dativ' } as const satisfies Record<GrammarCase, string>;
 const GENDER_FEATURE = { masculine: 'maskulin', feminine: 'feminin', neuter: 'neutrum' } as const satisfies Record<VocabularyGender, string>;
