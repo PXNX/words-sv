@@ -673,5 +673,7 @@
   "placement_done": "To the start",
   "placement_again": "Try again",
   "placement_unavailable": "There aren't enough words in this language for a placement test yet.",
-  "placement_link": "Take the placement test"
+  "placement_link": "Take the placement test",
+  "checkpoint_due": "due",
+  "checkpoint_trend": "Your recent tests"
 }

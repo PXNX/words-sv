@@ -16,6 +16,7 @@
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import type { Level } from '#lib/domain/types.js';
   import type { Mood } from '#lib/story/stories.js';
+  import { saveCheckpoint } from './checkpoints.js';
   import { placementResult, placementRound, PLACEMENT_LEVELS, scoreLevel, seededRandom, testableLevels, type LevelScore, type PlacementAnswer, type PlacementItem } from './placement.js';
 
   type Phase = 'loading' | 'intro' | 'test' | 'result' | 'unavailable';
@@ -79,6 +80,7 @@
     const outcome = placementResult(scores, testable);
     if (outcome.done) {
       result = outcome.level;
+      saveCheckpoint({ at: Date.now(), lang: language, level: result, scores: Object.fromEntries(scores.map((entry) => [entry.level, Math.round(entry.score.score * 100) / 100])) });
       mood = 'happy';
       phase = 'result';
       haptic('win');
