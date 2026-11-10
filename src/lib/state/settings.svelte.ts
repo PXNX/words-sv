@@ -11,6 +11,7 @@ import { reminderExtras } from '#lib/reminders/reminderSnapshot.js';
 import type { Locale } from '#lib/paraglide/runtime.js';
 import { parseAvatar, type Avatar } from '#lib/profile/avatar.js';
 import { setKumarStandIn } from '#lib/story/standIn.js';
+import { isExamId, type ExamId } from '#lib/progress/skillState.js';
 import { resolveFormatContext, type FormatCalendar, type FormatContext, type FormatDigits, type FormatSource } from '#lib/format/format.js';
 
 // Completions logged here; answers in vocab, grammar and reading are logged where they happen.
@@ -73,6 +74,7 @@ const WORDLE_LENGTH_KEY = 'wordcircle-wordle-length-v1';
 const FIRST_NAME_KEY = 'wordcircle-first-name-v1';
 const AVATAR_KEY = 'wordcircle-avatar-v1';
 const FORMAT_SOURCE_KEY = 'wordcircle-format-source-v1';
+const TARGET_EXAM_KEY = 'wordcircle-target-exam-v1';
 const INTERFACE_CALENDAR_KEY = 'wordcircle-interface-calendar-v1';
 const INTERFACE_DIGITS_KEY = 'wordcircle-interface-digits-v1';
 export const FIRST_NAME_MAX_LENGTH = 30;
@@ -158,6 +160,8 @@ class SettingsStore {
     formatSource = $state<FormatSource>(readStored(FORMAT_SOURCE_KEY, ['learning', 'interface'], 'learning'));
     interfaceCalendar = $state<FormatCalendar>(readStored(INTERFACE_CALENDAR_KEY, ['gregory', 'persian'], 'gregory'));
     interfaceDigits = $state<FormatDigits>(readStored(INTERFACE_DIGITS_KEY, ['latn', 'native'], 'latn'));
+    // The exam the learner prepares for; drives the weighted readiness on /progress.
+    targetExam = $state<ExamId | null>(typeof localStorage !== 'undefined' && isExamId(localStorage.getItem(TARGET_EXAM_KEY)) ? localStorage.getItem(TARGET_EXAM_KEY) as ExamId : null);
     formatContext = $derived<FormatContext>(resolveFormatContext({
       learningLanguage: this.lang,
       interfaceLocale: this.interfaceLocale,
@@ -256,6 +260,11 @@ class SettingsStore {
   // With a character of their own and a name, the learner plays Kumar's part in the stories.
   private castLearner() {
     setKumarStandIn(this.avatar ? this.firstName : null);
+  }
+  setTargetExam(next: ExamId | null) {
+    this.targetExam = next;
+    if (next) localStorage.setItem(TARGET_EXAM_KEY, next);
+    else localStorage.removeItem(TARGET_EXAM_KEY);
   }
   setFormatSource(next: FormatSource) {
     this.formatSource = next;
