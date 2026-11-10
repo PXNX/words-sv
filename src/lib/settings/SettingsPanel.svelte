@@ -12,6 +12,9 @@
   import { naturalMegabytes, naturalReady, naturalState, naturalSupported, playNatural, prepareNatural, synthesizeNatural } from '#lib/story/naturalVoices.svelte.js';
   import { onMount } from 'svelte';
   import SelectMenu from './SelectMenu.svelte';
+  import { unseenReleases } from '#lib/app/changelog.js';
+  import { lastSeenVersion } from '#lib/app/changelogSeen.js';
+  import { releases } from '#lib/app/releases.js';
   import { formatMoment, nativeDigitsFor, offersCalendarChoice, type FormatCalendar, type FormatDigits, type FormatSource } from '#lib/format/format.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import { defaultAvatar } from '#lib/profile/avatar.js';
@@ -283,7 +286,10 @@
     };
   });
 
+  // A dot on the version row until the learner has opened /changelog for the newest release.
+  let hasUnseenRelease = $state(false);
   onMount(() => {
+    hasUnseenRelease = unseenReleases(releases, lastSeenVersion()).length > 0;
     void pushEnabled().then((enabled) => (notificationsEnabled = enabled));
     voicesSupported = naturalSupported();
     refreshTelegram();
@@ -374,6 +380,13 @@
   <div class="settings-foot">
   {#if telegramHref}<a class="btn-play w-full mt-4 gap-[.48rem] normal-case tracking-normal text-[#237a26] dark:text-[#a9e8ab] text-[.72rem] font-bold leading-[1.45] text-center no-underline hover:bg-[#2aab2e] hover:text-[#fffdf7] focus-visible:bg-[#2aab2e] focus-visible:text-[#fffdf7] focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[3px]" href={telegramHref} target="_blank" rel="noreferrer" lang={settings.interfaceLocale} dir={interfaceDirection}><IconTelegram aria-hidden="true" class="w-[1.12rem] h-[1.12rem] flex-none" /><span>{labels.telegramShare}</span></a>{/if}
   <button type="button" class="btn-play w-full mt-2 gap-[.48rem] normal-case tracking-normal text-[#172a45] dark:text-[#fffdf7] text-[.72rem] font-bold leading-[1.45] text-center" onclick={shareApp}><IconShare aria-hidden="true" class="w-[1.12rem] h-[1.12rem] flex-none" /><span>{labels.shareApp}</span></button>
+  <a class="flex items-center justify-between gap-3 mt-[1.35rem] px-[.8rem] py-[.7rem] panel-play text-base-content no-underline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[3px]" href="/changelog">
+    <span class="grid gap-[.1rem]">
+      <span class="inline-flex items-center gap-[.4rem] text-[.67rem] font-extrabold tracking-[.06em] uppercase">{m.changelog_settings({}, { locale: settings.interfaceLocale })}{#if hasUnseenRelease}<i class="block w-[.45rem] h-[.45rem] rounded-full bg-primary" aria-label={m.changelog_unseen({}, { locale: settings.interfaceLocale })}></i>{/if}</span>
+      <span class="text-base-content/60 text-[.6rem] font-bold" dir="ltr">{m.changelog_version({ version: __APP_VERSION__ }, { locale: settings.interfaceLocale })}</span>
+    </span>
+    <IconChevronRight aria-hidden="true" class="w-[1.2rem] h-[1.2rem] flex-none rtl:rotate-180" />
+  </a>
   <a class="flex items-center justify-center gap-[.42rem] mt-4 text-accent text-[.66rem] font-extrabold tracking-[.05em] text-center no-underline uppercase focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[3px]" href="https://github.com/PXNX/words-sv" target="_blank" rel="noreferrer"><IconGithub aria-hidden="true" class="w-4 h-4" /><span>GitHub · PXNX/words-sv</span></a>
   </div>
   </div>

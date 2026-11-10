@@ -5,8 +5,13 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
 import Icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
+import { readFileSync } from 'node:fs';
+
+const { version } = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as { version: string };
 
 export default defineConfig({
+  // Shown in Settings and on /changelog; scripts/release.ts bumps it in package.json.
+  define: { __APP_VERSION__: JSON.stringify(version) },
   plugins: [
     tailwindcss(),
     sveltekit({
