@@ -440,7 +440,7 @@
         <button class="btn-play btn-play-ink" onclick={speak} disabled={!canHear}><IconVolume class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />{labels.listen}</button>
         <p class="m-0 text-accent text-[.62rem] font-extrabold leading-[1.35]">{labels.audioPrompt}</p>
       {/if}
-      {#if speechStatus && promptKind === 'audio'}<p class="m-0 text-accent text-[.62rem] font-extrabold leading-[1.35]">{speechStatus}</p>{/if}
+      {#if promptKind === 'audio'}<p class="m-0 min-h-[1.35em] text-accent text-[.62rem] font-extrabold leading-[1.35]" aria-live="polite">{speechStatus}</p>{/if}
       <!-- The definition's space is kept from the start (invisible until answered), so the choices never move. -->
       {#if !isDefinitionPrompt && currentDefinition}<p class="m-0 max-w-[22rem] text-base-content/65 text-[.72rem] font-bold leading-[1.4] {answerStatus !== null ? 'learn-fade-in' : 'invisible'}" aria-hidden={answerStatus === null}>{currentDefinition}</p>{/if}
     </article>
