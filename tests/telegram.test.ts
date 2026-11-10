@@ -38,7 +38,7 @@ function fakeDatabase({ devices = {}, links = [], invites = [] }: { devices?: Re
 			if (/^(CREATE|ALTER)/.test(sql)) return [{}];
 			if (sql.startsWith('UPDATE wordcircle_telegram_links SET chat_id')) {
 				const link = links.find((entry) => entry.link_code === params[2]);
-				if (link) Object.assign(link, { chat_id: params[0], telegram_user_id: params[1], reminders: 1, link_code: null });
+				if (link) Object.assign(link, { chat_id: params[0], telegram_user_id: params[1], link_code: null }, sql.includes('reminders = 1') ? { reminders: 1 } : {});
 				return [{ affectedRows: link ? 1 : 0 }];
 			}
 			if (sql.includes('FROM wordcircle_telegram_links WHERE invite_code')) return [links.filter((entry) => entry.invite_code === params[0])];
@@ -86,6 +86,7 @@ describe('telegram helpers', () => {
 	it('reads reminder and invite start payloads only', () => {
 		expect(parseStartPayload('r_abcdefgh1234')).toEqual({ kind: 'reminders', code: 'abcdefgh1234' });
 		expect(parseStartPayload('i_abcdefgh1234')).toEqual({ kind: 'invite', code: 'abcdefgh1234' });
+		expect(parseStartPayload('l_abcdefgh1234')).toEqual({ kind: 'login', code: 'abcdefgh1234' });
 		expect(parseStartPayload('donate')).toBeNull();
 		expect(parseStartPayload('i_short')).toBeNull();
 	});
@@ -115,6 +116,13 @@ describe('telegram start bridge', () => {
 		expect((await start(db, { payload: 'r_linkcode1234', userId: 11, chatId: 11 })).body.result).toBe('reminders_on');
 		expect(db.links[0]).toMatchObject({ chat_id: 11, telegram_user_id: 11, reminders: 1, link_code: null });
 		expect((await start(db, { payload: 'r_linkcode1234', userId: 11, chatId: 11 })).body.result).toBe('expired');
+	});
+
+	it('signs a device in with a one-time code, without turning reminders on', async () => {
+		const db = fakeDatabase({ links: [{ device_id: 'device-a', invite_code: 'inviteA', link_code: 'logincode123', reminders: 0 }] });
+		expect((await start(db, { payload: 'l_logincode123', userId: 11, chatId: 11 })).body.result).toBe('signed_in');
+		expect(db.links[0]).toMatchObject({ chat_id: 11, telegram_user_id: 11, reminders: 0, link_code: null });
+		expect((await start(db, { payload: 'l_logincode123', userId: 11, chatId: 11 })).body.result).toBe('expired');
 	});
 
 	it('pays embers for every new player, once per player, without a limit', async () => {
