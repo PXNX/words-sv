@@ -148,8 +148,15 @@ tests/build, a focused commit and a push to `main`.
 - [x] Strict typing at the API/domain boundaries; enable `noImplicitOverride`,
   `verbatimModuleSyntax` and `noUncheckedIndexedAccess`.
 - [x] Shared `tests/support/api.ts` with `responseCapture()` typed against `api/_lib/http.mjs`.
-- [x] Add ESLint and a CI gate that fails on `check` errors (`eslint.config.mjs`,
+- [x] Add ESLint and a CI gate that fails on `check` errors (`eslint.config.ts`,
   `.github/workflows/ci.yml`: lint → check → tests → build).
+- [x] Run the linter through Bun's built-in `bun lint` (same config, rules run natively).
+- [x] Move the app, tests, configs and build scripts to TypeScript: `src/lib/seo.ts`,
+  `scripts/og.ts`, the six vocabulary/brand scripts, the three `.mjs` test suites and
+  `tests/vitest.server.config.ts`. `tsconfig.json` now type-checks `scripts/*.ts` and
+  `eslint.config.ts` too. `api/*.mjs` stays JavaScript for the Vercel function runtime;
+  `static/sw.js`, `static/voices/piper-worker.js` and the Mini App assets stay plain JS
+  because they are served as-is.
 
 ### Phase I — quick fixes
 - [x] Translate the remaining English Settings strings.
@@ -186,4 +193,5 @@ tests/build, a focused commit and a push to `main`.
 - [x] `bun run check` → 0 errors, 0 warnings.
 - [x] `bun run lint` → 0 errors (30 `no-explicit-any` warnings).
 - [x] `bun run test` → 31 files, 205 tests passing.
-- [x] `bun run build` → 24 routes, OG tags written.
+- [x] `bun run build` → 24 routes, OG tags written (the OG step now runs as
+  `bun scripts/og.ts`).
