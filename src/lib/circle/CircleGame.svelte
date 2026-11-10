@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { logAnswer } from '#lib/progress/eventLog.js';
   import { num } from '#lib/format/num.svelte.js';
   import { haptic } from '#lib/feedback/haptics.js';
   import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
@@ -327,6 +328,8 @@
     feedbackWord = word;
     const completed = solvedWords.length + 1 === currentRound.words.length;
     solvedWords = [...solvedWords, word];
+    // Every found word is a correct answer in the learning log; practice rounds are not.
+    if (!practiceLanguage) logAnswer(settings.lang, 'circle', word, true, { level: settings.vocabularyLevel });
     if (revealedHintWord === word) revealedHintWord = null;
     feedback = 'correct';
     // A found word already buzzes with its success sound; the last one gets the win rhythm.

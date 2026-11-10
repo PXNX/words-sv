@@ -9,6 +9,7 @@
   transcript.
 -->
 <script lang="ts">
+  import { logAnswer } from '#lib/progress/eventLog.js';
   import { num } from '#lib/format/num.svelte.js';
   import { onMount, tick } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
@@ -135,6 +136,15 @@
   // Always the level from the settings: the conversation practises what the learner is learning.
   const level = $derived(settings.vocabularyLevel);
   const used = $derived(usedWords(turns, targetWords, spellingOf, lang));
+  // Each target word the learner used in the conversation is a correct answer in the learning log.
+  const logged = new Set<string>();
+  $effect(() => {
+    for (const word of used) {
+      if (logged.has(word)) continue;
+      logged.add(word);
+      logAnswer(lang, 'conversation', word, true, { level });
+    }
+  });
   const partnerMood = $derived<Mood>(cheer ? 'laughing' : phase === 'speaking' ? (lastVerdict === 'retry' ? 'curious' : 'happy') : phase === 'listening' ? 'curious' : phase === 'thinking' ? 'sleepy' : 'neutral');
   // Whether the next round runs with the model: it is there and not switched off.
   const withAi = $derived(usesAi('conversation'));
