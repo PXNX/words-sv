@@ -19,10 +19,10 @@ Words-sv therefore labels its small puzzle-word pools using a reproducible hiera
 The checked-in lists are regenerated with:
 
 ```bash
-node tools/align-cefr-vocabulary.mjs
+bun scripts/align-cefr-vocabulary.ts
 ```
 
-The command reads reference sources held outside the web project under `/home/ubuntu/vocabulary-sources/` and produces `cefr-vocabulary-alignment-report.json`. The external data files are not packaged with the site.
+The command reads reference sources from a `vocabulary-sources/` directory next to the project checkout and produces `cefr-vocabulary-alignment-report.json`. The external data files are not packaged with the site.
 
 ## Limitations and playability
 

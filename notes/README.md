@@ -17,7 +17,7 @@ Die deutsche Vokabelkurierung verwendet Lemma-Daten aus [gambolputty/german-noun
 
 ## CEFR-Zuordnung
 
-Die aktuell ausgelieferten Wortlisten werden nicht mehr aus Häufigkeitsbändern abgeleitet. Sie entstehen mit `node tools/align-cefr-vocabulary.mjs` aus einer dokumentierten CEFR-Evidenzhierarchie und werden mit `node tools/verify-cefr-provenance.mjs` geprüft. Die vollständige Methodik, Quellen, Attributionen und die notwendige Einschränkung – CEFR veröffentlicht keine universelle wortgenaue Liste für alle Sprachen – stehen in [VOCABULARY_LEVELS.md](./VOCABULARY_LEVELS.md). Die Frequenz- und Kategorienquellen bleiben für frühere Kuration und allgemeine Lemmata dokumentiert, sind jedoch keine Grundlage der aktuellen Niveauzuordnung.
+Die aktuell ausgelieferten Wortlisten werden nicht mehr aus Häufigkeitsbändern abgeleitet. Sie entstehen mit `bun scripts/align-cefr-vocabulary.ts` aus einer dokumentierten CEFR-Evidenzhierarchie und werden mit `bun scripts/verify-cefr-provenance.ts` geprüft. Die vollständige Methodik, Quellen, Attributionen und die notwendige Einschränkung – CEFR veröffentlicht keine universelle wortgenaue Liste für alle Sprachen – stehen in [VOCABULARY_LEVELS.md](./VOCABULARY_LEVELS.md). Die Frequenz- und Kategorienquellen bleiben für frühere Kuration und allgemeine Lemmata dokumentiert, sind jedoch keine Grundlage der aktuellen Niveauzuordnung.
 
 ## Vercel
 
