@@ -1,8 +1,11 @@
 /*
  * A light daily activity log. Every mode drops a timestamped event here, so "minutes practised"
  * and "what did I actually finish" come from real interactions instead of a guessed average.
- * The log is a plain ring buffer in localStorage; it is never synced and never leaves the device.
+ * The log is a plain ring buffer in localStorage, each event tagged with its learning language;
+ * it is never synced and never leaves the device.
  */
+import { isLanguage, type Language } from '#lib/data/vocabulary.js';
+
 export type ActivityKind =
 	| 'vocab'
 	| 'grammar'
@@ -23,6 +26,8 @@ export type ActivityEvent = {
 	id?: string;
 	// Pronunciation only: the attempt was scored as correct.
 	perfect?: boolean;
+	// The learning language it happened in; missing on events logged before languages were recorded.
+	lang?: Language;
 };
 
 export const ACTIVITY_KEY = 'wordcircle-activity-v1';
@@ -41,7 +46,8 @@ export function normalizeActivityEvent(value: unknown): ActivityEvent | null {
 		kind: event.kind as ActivityKind,
 		at,
 		...(typeof event.id === 'string' && event.id ? { id: event.id } : {}),
-		...(event.perfect === true ? { perfect: true } : {})
+		...(event.perfect === true ? { perfect: true } : {}),
+		...(isLanguage(event.lang) ? { lang: event.lang } : {})
 	};
 }
 
@@ -71,11 +77,27 @@ export function writeActivity(events: ActivityEvent[]) {
 	}
 }
 
-export function recordActivity(kind: ActivityKind, extra: { id?: string; perfect?: boolean } = {}, now: number = Date.now(), events: ActivityEvent[] = readActivity()): ActivityEvent[] {
-	const next: ActivityEvent = { kind, at: now, ...(extra.id ? { id: extra.id } : {}), ...(extra.perfect ? { perfect: true } : {}) };
+// The learning language currently selected in Settings (the same key settings.svelte.ts writes).
+function currentLanguage(): Language | undefined {
+	if (typeof localStorage === 'undefined') return undefined;
+	const value = localStorage.getItem('wordcircle-language-v1');
+	return isLanguage(value) ? value : 'de';
+}
+
+export function recordActivity(kind: ActivityKind, extra: { id?: string; perfect?: boolean; lang?: Language } = {}, now: number = Date.now(), events: ActivityEvent[] = readActivity()): ActivityEvent[] {
+	const lang = extra.lang ?? currentLanguage();
+	const next: ActivityEvent = { kind, at: now, ...(extra.id ? { id: extra.id } : {}), ...(extra.perfect ? { perfect: true } : {}), ...(lang ? { lang } : {}) };
 	const updated = [...events, next];
 	writeActivity(updated);
 	return updated;
+}
+
+/**
+ * The events of one learning language, for views that focus on it. Events from before languages
+ * were recorded have none and count for every language, so no earlier practice disappears.
+ */
+export function activityFor(events: readonly ActivityEvent[], lang: Language): ActivityEvent[] {
+	return events.filter((event) => !event.lang || event.lang === lang);
 }
 
 /** Distinct ids of finished texts/stories, in completion order. */
