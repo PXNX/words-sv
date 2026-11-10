@@ -9,8 +9,9 @@ import { fileURLToPath } from 'node:url';
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const sourceRoot = resolve(projectRoot, '..', 'vocabulary-sources');
-const levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
-const quotas = {
+const levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'] as const;
+type Level = (typeof levels)[number];
+const quotas: Record<Level, { nouns: number; verbs: number }> = {
   a1: { nouns: 100, verbs: 20 },
   a2: { nouns: 140, verbs: 25 },
   b1: { nouns: 180, verbs: 25 },
@@ -44,17 +45,17 @@ const coreInfinitives = [
   'abdecken', 'ablegen', 'abrufen', 'abwägen', 'aneignen', 'anstoßen', 'aufbauen', 'aufweisen', 'ausbauen', 'ausführen', 'ausgehen', 'auslegen', 'auswerten', 'bedingen', 'beheben', 'belegen', 'beruhen', 'betreten', 'bewahren', 'bewirken', 'beziehen', 'einordnen', 'erörtern', 'verfügen', 'verweisen'
 ];
 
-function parseNoun(line) {
+function parseNoun(line: string): { lemma: string; pos: string } {
   const [lemma = '', pos = ''] = line.split(',', 2);
   return { lemma: lemma.trim(), pos: pos.trim() };
 }
 
-function normalize(word) {
+function normalize(word: string): string {
   const normalized = word.normalize('NFC').toLocaleLowerCase('de-DE');
   return lowercaseSharpSReplacements.get(normalized) ?? normalized;
 }
 
-function toPuzzleForm(word) {
+function toPuzzleForm(word: string): string {
   const sharpSPlaceholder = '\uE000';
   return normalize(word)
     .replaceAll('ß', sharpSPlaceholder)
@@ -62,11 +63,11 @@ function toPuzzleForm(word) {
     .replaceAll(sharpSPlaceholder, 'ẞ');
 }
 
-function isPuzzleWord(word) {
+function isPuzzleWord(word: string): boolean {
   return puzzleWord.test(word) && !word.includes('-') && !word.includes(' ');
 }
 
-function isPuzzleForm(word) {
+function isPuzzleForm(word: string): boolean {
   return /^[A-ZÄÖÜẞ]{3,8}$/.test(toPuzzleForm(word));
 }
 
@@ -76,14 +77,14 @@ const [nounsRaw, frequencyRaw, verbsRaw] = await Promise.all([
   readFile(resolve(sourceRoot, 'german-infinitive-verbs.txt'), 'utf8')
 ]);
 
-const frequencies = new Map();
+const frequencies = new Map<string, number>();
 for (const line of frequencyRaw.split(/\r?\n/).slice(1)) {
   const [word, value] = line.split(',', 2);
   const frequency = Number(value);
   if (word && Number.isFinite(frequency)) frequencies.set(normalize(word), frequency);
 }
 
-const nounCandidates = new Map();
+const nounCandidates = new Map<string, number>();
 for (const line of nounsRaw.split(/\r?\n/).slice(1)) {
   const { lemma, pos } = parseNoun(line);
   const word = normalize(lemma);
@@ -94,14 +95,14 @@ for (const line of nounsRaw.split(/\r?\n/).slice(1)) {
   nounCandidates.set(word, Math.max(nounCandidates.get(word) ?? 0, frequency));
 }
 
-const infinitiveCandidates = new Map();
+const infinitiveCandidates = new Map<string, number>();
 for (const entry of verbsRaw.split(/\r?\n/)) {
   const word = normalize(entry.trim());
   if (!isPuzzleWord(word)) continue;
   infinitiveCandidates.set(word, frequencies.get(word) ?? 0);
 }
 
-const ranked = (candidates) => [...candidates.entries()]
+const ranked = (candidates: Map<string, number>): string[] => [...candidates.entries()]
   .sort(([, leftFrequency], [, rightFrequency]) => rightFrequency - leftFrequency)
   .map(([word]) => toPuzzleForm(word));
 
@@ -116,11 +117,11 @@ const transliteratedSharpSForms = new Set(
 );
 let nounCursor = 0;
 let verbCursor = 0;
-const summary = {};
+const summary: Record<Level, { total: number; nounsAdded: number; infinitiveVerbsAdded: number }> = {} as Record<Level, { total: number; nounsAdded: number; infinitiveVerbsAdded: number }>;
 
 for (const level of levels) {
   const filePath = resolve(projectRoot, 'src', 'lib', 'data', `words.de.${level}.json`);
-  const existing = JSON.parse(await readFile(filePath, 'utf8'));
+  const existing = JSON.parse(await readFile(filePath, 'utf8')) as string[];
   const retained = existing
     .map((word) => legacySharpSReplacements.get(word) ?? word)
     .filter((word) => !excludedExistingForms.has(word) && isPuzzleWord(normalize(word)) && !transliteratedSharpSForms.has(word));

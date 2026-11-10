@@ -8,14 +8,26 @@
 //   description (/setdescriptionpic); the Bot API has no method for it.
 //
 // The characters are StoryCharacter's rendered markup in its resting pose (captured from the home
-// page); rerun after changing their look. Usage: node scripts/brand-images.mjs
+// page); rerun after changing their look. Usage: bun scripts/brand-images.ts
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 import { Resvg } from '@resvg/resvg-js';
-import potrace from 'potrace';
 import { decompress } from 'wawoff2';
+
+// potrace ships no type declarations; only the options this script uses are typed.
+type Potrace = {
+	trace(
+		bitmap: Buffer,
+		options: { threshold?: number; turdSize?: number; optTolerance?: number; alphaMax?: number },
+		callback: (error: Error | null, svg: string) => void
+	): void;
+};
+
+const require = createRequire(import.meta.url);
+const potrace = require('potrace') as Potrace;
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -29,11 +41,11 @@ const LILITH = `<defs><radialGradient cx=".5" cy=".2" r=".85" id="lilith-coat"><
 // with Mia and Tom (64 x 86.4 each, overlapping by 14.4), Lilith (70.4 x 88) overlapping its right
 // edge by 21.6, and the 2px ground line reaching 9.6 past both sides.
 const FAMILY = { left: -9.6, width: 208.8, height: 99.2 };
-const character = (body, x, y, width, height) => `<svg x="${x}" y="${y}" width="${width}" height="${height}" viewBox="0 0 120 150">${body}</svg>`;
+const character = (body: string, x: number, y: number, width: number, height: number): string => `<svg x="${x}" y="${y}" width="${width}" height="${height}" viewBox="0 0 120 150">${body}</svg>`;
 const ARCH = 'M1 99.2V52.2A51.2 51.2 0 0 1 52.2 1H88.6A51.2 51.2 0 0 1 139.8 52.2V99.2';
 
 // `line` is the arch outline and ground line: navy on light backgrounds, cream on dark ones.
-function family(line = '#172a45') {
+function family(line = '#172a45'): string {
   return `<defs><radialGradient id="arch-glow" cx=".5" cy=".85" r=".7"><stop offset="0" stop-color="#f7e2b0"/><stop offset="1" stop-color="#fbf1da"/></radialGradient><clipPath id="arch-clip"><path d="${ARCH}Z"/></clipPath></defs>
 <path d="${ARCH}Z" fill="url(#arch-glow)"/>
 <g clip-path="url(#arch-clip)">${character(MIA, 10.8, 12.8, 64, 86.4)}${character(TOM, 60.4, 12.8, 64, 86.4)}</g>
@@ -42,12 +54,12 @@ ${character(LILITH, 119.2, 11.2, 70.4, 88)}
 <rect x="${FAMILY.left}" y="97.2" width="${FAMILY.width}" height="2" rx="1" fill="${line}"/>`;
 }
 
-function place(width, top, canvasWidth) {
+function place(width: number, top: number, canvasWidth: number): string {
   const scale = width / FAMILY.width;
   return `transform="translate(${(canvasWidth - width) / 2 - FAMILY.left * scale} ${top}) scale(${scale})"`;
 }
 
-function iconSvg() {
+function iconSvg(): string {
   const width = 448;
   const top = (512 - FAMILY.height * (width / FAMILY.width)) / 2;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Mia, Tom und Lilith">
@@ -64,7 +76,7 @@ function iconSvg() {
 const TRACE_SIZE = 1024;
 const RING_GAP = 22;
 
-function splashStencilSvg() {
+function splashStencilSvg(): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"><rect width="512" height="512" fill="#fff"/>
 <circle cx="256" cy="256" r="153" fill="none" stroke="#000" stroke-width="56"/>
 <circle cx="317" cy="270" r="${101 + RING_GAP}" fill="#fff"/>
@@ -72,54 +84,60 @@ function splashStencilSvg() {
 <circle cx="187" cy="256" r="24" fill="#000"/><circle cx="317" cy="270" r="19" fill="#000"/></svg>`;
 }
 
+type Point = [number, number];
+type Segment = { command: string; points: Point[] };
+type Contour = { start: Point; segments: Segment[] };
+type WalkStep = [string, Point[]];
+
 // Potrace draws every outline and hole as its own subpath (one `M` each), and splash tooling
 // counts those as separate paths. Each contour ends where it starts, so all of them can hang off
 // the first one's start point A: line out to the contour, around it, and back to A. Every bridge is
 // drawn there and back along the same line, which adds no area under either fill rule.
 // Contours are also turned so that outlines and holes wind in opposite directions by nesting depth,
 // which makes the shape fill the same under nonzero as under evenodd, for tools that ignore fill-rule.
-function singleContour(d) {
-  const contours = d.trim().split(/(?=M)/).map((part) => {
+function singleContour(d: string): string {
+  const contours: Contour[] = d.trim().split(/(?=M)/).map((part) => {
     const [, x, y, body] = /^M\s*([-\d.]+)[ ,]+([-\d.]+)\s*([\s\S]*?)\s*Z?\s*$/.exec(part.trim()) ?? [];
-    if (body === undefined) throw new Error(`unexpected subpath: ${part.slice(0, 40)}`);
+    if (x === undefined || y === undefined || body === undefined) throw new Error(`unexpected subpath: ${part.slice(0, 40)}`);
     // Segments as [command, ...points]; potrace only writes absolute L and C.
-    const segments = [...body.matchAll(/([LC])([^LC]*)/g)].map(([, command, numbers]) => {
-      const values = numbers.trim().split(/[ ,]+/).map(Number);
-      const points = [];
-      for (let index = 0; index < values.length; index += 2) points.push([values[index], values[index + 1]]);
-      return { command, points };
+    const segments: Segment[] = [...body.matchAll(/([LC])([^LC]*)/g)].map(([, command, numbers]) => {
+      const values = (numbers ?? '').trim().split(/[ ,]+/).map(Number);
+      const points: Point[] = [];
+      for (let index = 0; index < values.length; index += 2) points.push([values[index] ?? 0, values[index + 1] ?? 0]);
+      return { command: command ?? 'L', points };
     });
     return { start: [Number(x), Number(y)], segments };
   });
   // The polygon through every point approximates each contour well enough for area and containment.
-  const polygon = (contour) => [contour.start, ...contour.segments.flatMap((segment) => segment.points)];
-  const area = (points) => points.reduce((sum, [x1, y1], index) => {
-    const [x2, y2] = points[(index + 1) % points.length];
+  const polygon = (contour: Contour): Point[] => [contour.start, ...contour.segments.flatMap((segment) => segment.points)];
+  const area = (points: Point[]): number => points.reduce((sum, [x1, y1], index) => {
+    const [x2, y2] = points[(index + 1) % points.length] ?? [0, 0];
     return sum + x1 * y2 - x2 * y1;
   }, 0) / 2;
-  const inside = ([x, y], points) => points.reduce((hit, [x1, y1], index) => {
-    const [x2, y2] = points[(index + 1) % points.length];
+  const inside = ([x, y]: Point, points: Point[]): boolean => points.reduce((hit, [x1, y1], index) => {
+    const [x2, y2] = points[(index + 1) % points.length] ?? [0, 0];
     return (y1 > y) !== (y2 > y) && x < ((x2 - x1) * (y - y1)) / (y2 - y1) + x1 ? !hit : hit;
   }, false);
-  const reversed = (contour) => {
+  const reversed = (contour: Contour): Contour => {
     // Walk the segments backwards: each one now ends where it used to start.
-    const ends = [contour.start, ...contour.segments.map((segment) => segment.points.at(-1))];
+    const ends: Point[] = [contour.start, ...contour.segments.map((segment) => segment.points.at(-1) ?? contour.start)];
     const segments = contour.segments.map((segment, index) => ({
       command: segment.command,
-      points: [...segment.points.slice(0, -1).reverse(), ends[index]]
+      points: [...segment.points.slice(0, -1).reverse(), ends[index] ?? contour.start]
     })).reverse();
     return { start: contour.start, segments };
   };
   const polygons = contours.map(polygon);
   const oriented = contours.map((contour, index) => {
     const depth = polygons.filter((other, otherIndex) => otherIndex !== index && inside(contour.start, other)).length;
-    const clockwise = area(polygons[index]) > 0;
+    const clockwise = area(polygons[index] ?? []) > 0;
     return clockwise === (depth % 2 === 0) ? contour : reversed(contour);
   });
   const [first, ...rest] = oriented;
-  const walk = [
-    ['M', [first.start]], ...first.segments.map((segment) => [segment.command, segment.points]),
-    ...rest.flatMap((contour) => [['L', [contour.start]], ...contour.segments.map((segment) => [segment.command, segment.points]), ['L', [first.start]]])
+  if (!first) throw new Error('potrace returned no contours');
+  const walk: WalkStep[] = [
+    ['M', [first.start]], ...first.segments.map((segment): WalkStep => [segment.command, segment.points]),
+    ...rest.flatMap((contour): WalkStep[] => [['L', [contour.start]], ...contour.segments.map((segment): WalkStep => [segment.command, segment.points]), ['L', [first.start]]])
   ];
   return compact(walk, 512 / TRACE_SIZE);
 }
@@ -127,45 +145,45 @@ function singleContour(d) {
 // Writes the walk on the 512 canvas with relative commands in whole pixels, which is invisible at
 // icon size and keeps the file small. Offsets are taken from the rounded previous point, so rounding
 // never drifts.
-function compact(walk, scale) {
-  const round = (value) => Math.round(value * scale);
-  const number = (value, previous) => {
+function compact(walk: WalkStep[], scale: number): string {
+  const round = (value: number): number => Math.round(value * scale);
+  const number = (value: number, previous: string | undefined): string => {
     const text = String(Math.round(value * 10) / 10).replace(/^(-?)0\./, '$1.');
     // A separator is only needed when the next number does not start with a sign or a dot after a decimal.
     return previous === undefined || text.startsWith('-') || (text.startsWith('.') && previous.includes('.')) ? text : ` ${text}`;
   };
-  let current = [0, 0];
+  let current: Point = [0, 0];
   let output = '';
   let last = '';
   for (const [command, points] of walk) {
-    const absolute = points.map(([x, y]) => [round(x), round(y)]);
+    const absolute: Point[] = points.map(([x, y]) => [round(x), round(y)]);
     // A cubic's points are all relative to where it starts; a polyline's (potrace writes corners as
     // `L` with two points) are each relative to the point before.
-    const values = command === 'M' ? absolute[0]
+    const values = command === 'M' ? absolute[0] ?? [0, 0]
       : command === 'L' ? absolute.flatMap(([x, y], index) => {
-        const [fromX, fromY] = index === 0 ? current : absolute[index - 1];
+        const [fromX, fromY] = index === 0 ? current : absolute[index - 1] ?? current;
         return [x - fromX, y - fromY];
       })
       : absolute.flatMap(([x, y]) => [x - current[0], y - current[1]]);
     const letter = command === 'M' ? 'M' : command.toLowerCase();
     if (letter !== last || letter === 'M') output += letter;
-    let previous;
+    let previous: string | undefined;
     if (letter === last && letter !== 'M') previous = 'x';
     for (const value of values) {
       const text = number(value, previous);
       output += text;
       previous = text;
     }
-    current = absolute.at(-1);
+    current = absolute.at(-1) ?? [0, 0];
     last = letter;
   }
   return `${output}Z`;
 }
 
 // Renders the stencil large and traces it into a single outline.
-async function splashSvg() {
+async function splashSvg(): Promise<(fill: string) => string> {
   const bitmap = new Resvg(splashStencilSvg(), { fitTo: { mode: 'width', value: TRACE_SIZE } }).render().asPng();
-  const traced = await new Promise((resolve, reject) => potrace.trace(Buffer.from(bitmap), { threshold: 128, turdSize: 30, optTolerance: 1, alphaMax: 1.2 }, (error, svg) => (error ? reject(error) : resolve(svg))));
+  const traced = await new Promise<string>((resolve, reject) => potrace.trace(Buffer.from(bitmap), { threshold: 128, turdSize: 30, optTolerance: 1, alphaMax: 1.2 }, (error, svg) => (error ? reject(error) : resolve(svg))));
   const d = /\sd="([^"]+)"/.exec(traced)?.[1];
   if (!d) throw new Error('potrace returned no path');
   const outline = singleContour(d);
@@ -173,12 +191,12 @@ async function splashSvg() {
 }
 
 // A cream letter tile like the game boards', tilted by `angle` degrees.
-const tile = (letter, x, y, size, angle) => `<g transform="translate(${x} ${y}) rotate(${angle})"><rect x="${-size / 2 + 2.5}" y="${-size / 2 + 3}" width="${size}" height="${size}" rx="${size * 0.22}" fill="#0e1b2e" opacity=".45"/><rect x="${-size / 2}" y="${-size / 2}" width="${size}" height="${size}" rx="${size * 0.22}" fill="#fffdf7"/><text y="${size * 0.25}" text-anchor="middle" font-family="DM Serif Display" font-size="${size * 0.68}" fill="#172a45">${letter}</text></g>`;
+const tile = (letter: string, x: number, y: number, size: number, angle: number): string => `<g transform="translate(${x} ${y}) rotate(${angle})"><rect x="${-size / 2 + 2.5}" y="${-size / 2 + 3}" width="${size}" height="${size}" rx="${size * 0.22}" fill="#0e1b2e" opacity=".45"/><rect x="${-size / 2}" y="${-size / 2}" width="${size}" height="${size}" rx="${size * 0.22}" fill="#fffdf7"/><text y="${size * 0.25}" text-anchor="middle" font-family="DM Serif Display" font-size="${size * 0.68}" fill="#172a45">${letter}</text></g>`;
 
 // Navy night with the logo's rings, a golden glow behind the trio and W-O-R-T tiles in the margins.
-function telegramSvg() {
+function telegramSvg(): string {
   const width = 400;
-  const dots = [[150, 38, 3.2, '#e6a527'], [488, 30, 2.6, '#fffdf7'], [44, 160, 2.4, '#fffdf7'], [604, 182, 3, '#e6a527'], [112, 318, 2.6, '#c4522e'], [534, 330, 3.2, '#34824d'], [262, 22, 2, '#fffdf7'], [404, 344, 2, '#e6a527']];
+  const dots: Array<[number, number, number, string]> = [[150, 38, 3.2, '#e6a527'], [488, 30, 2.6, '#fffdf7'], [44, 160, 2.4, '#fffdf7'], [604, 182, 3, '#e6a527'], [112, 318, 2.6, '#c4522e'], [534, 330, 3.2, '#34824d'], [262, 22, 2, '#fffdf7'], [404, 344, 2, '#e6a527']];
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" width="640" height="360">
 <defs><linearGradient id="night" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#21406a"/><stop offset=".55" stop-color="#172a45"/><stop offset="1" stop-color="#101e33"/></linearGradient><radialGradient id="glow" cx=".5" cy=".42" r=".42"><stop offset="0" stop-color="#e6a527" stop-opacity=".55"/><stop offset=".6" stop-color="#e6a527" stop-opacity=".12"/><stop offset="1" stop-color="#e6a527" stop-opacity="0"/></radialGradient><linearGradient id="title" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffdf7"/><stop offset="1" stop-color="#f3e6cc"/></linearGradient></defs>
 <rect width="640" height="360" fill="url(#night)"/>
@@ -194,7 +212,7 @@ ${tile('W', 56, 236, 46, -12)}${tile('O', 104, 290, 38, 9)}${tile('R', 584, 92, 
 </svg>`;
 }
 
-async function serifFont(dir) {
+async function serifFont(dir: string): Promise<string> {
   const ttf = join(dir, 'serif.ttf');
   await writeFile(ttf, await decompress(await readFile(join(root, 'static/fonts/dm-serif-display-normal-latin.woff2'))));
   return ttf;
@@ -207,7 +225,8 @@ await writeFile(join(outDir, 'wordcircle-trio-512.svg'), iconSvg());
 await writeFile(join(outDir, 'wordcircle-trio-512.png'), new Resvg(iconSvg()).render().asPng());
 // The same path in navy for light splash screens and in cream for dark ones.
 const splash = await splashSvg();
-for (const [name, fill, background] of [['wordcircle-splash-512', '#172A45', '#fffdf7'], ['wordcircle-splash-512-light', '#FFFDF7', '#172a45']]) {
+const splashVariants: Array<[string, string, string]> = [['wordcircle-splash-512', '#172A45', '#fffdf7'], ['wordcircle-splash-512-light', '#FFFDF7', '#172a45']];
+for (const [name, fill, background] of splashVariants) {
   await writeFile(join(outDir, `${name}.svg`), splash(fill));
   await writeFile(join(outDir, `${name}.png`), new Resvg(splash(fill), { background }).render().asPng());
 }

@@ -1,8 +1,8 @@
-﻿import { describe, expect, it } from 'vitest';
-import { dateKeyFor, dueReminderTypes, minutesUntilNextLocalDate, previousDateKey } from '../src/lib/pwa/pwaReminders.ts';
+import { describe, expect, it } from 'vitest';
+import type { ReminderState } from '../src/lib/pwa/pwaReminders.js';
+import { dateKeyFor, dueReminderTypes, minutesUntilNextLocalDate, previousDateKey } from '../src/lib/pwa/pwaReminders.js';
 
-/** @type {import('../src/lib/pwa/pwaReminders.ts').ReminderState} */
-const base = {
+const base: ReminderState = {
 	enabled: true,
 	timeZone: 'Europe/Berlin',
 	dateKey: '2026-10-19',

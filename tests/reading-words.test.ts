@@ -1,24 +1,21 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { loadLevel, vocabularyLevels } from '../src/lib/data/vocabulary.ts';
-import { pickReviewSection } from '../src/lib/vocab/learning.ts';
-import { normalizeReviewProgress, prioritizeLearningWords, updateReviewProgress } from '../src/lib/vocab/spacedRepetition.ts';
-import { isReadingArticle, lookupReadingWord, matchReadingCharacter, readingArticleNoun, tokenizeReadingText } from '../src/lib/story/readingWords.ts';
+import type { Language } from '../src/lib/data/vocabulary.js';
+import { loadLevel, vocabularyLevels } from '../src/lib/data/vocabulary.js';
+import { pickReviewSection } from '../src/lib/vocab/learning.js';
+import type { ReviewProgress } from '../src/lib/vocab/spacedRepetition.js';
+import { normalizeReviewProgress, prioritizeLearningWords, updateReviewProgress } from '../src/lib/vocab/spacedRepetition.js';
+import { isReadingArticle, lookupReadingWord, matchReadingCharacter, readingArticleNoun, tokenizeReadingText } from '../src/lib/story/readingWords.js';
 
 // The vocabulary files are fetched lazily at runtime, so the lookups need the level cache warmed.
 beforeAll(async () => {
-	/** @type {Array<import('../src/lib/data/vocabulary.ts').Language>} */
-	const languages = ['de', 'en'];
+	const languages: Language[] = ['de', 'en'];
 	for (const language of languages) {
 		for (const level of vocabularyLevels) await loadLevel(language, level);
 	}
 });
 
 describe('reading words', () => {
-	/**
-	 * @param {string} text
-	 * @param {string} word
-	 */
-	function contextFor(text, word) {
+	function contextFor(text: string, word: string): { text: string; start: number; end: number } {
 		const token = tokenizeReadingText(text).find((entry) => entry.text === word);
 		if (!token) throw new Error(`missing token ${word}`);
 		return { text, start: token.start, end: token.end };
@@ -123,11 +120,7 @@ describe('reading words', () => {
 });
 
 describe('reading characters and articles', () => {
-	/**
-	 * @param {string} text
-	 * @param {string} word
-	 */
-	function tokenFor(text, word) {
+	function tokenFor(text: string, word: string) {
 		const token = tokenizeReadingText(text).find((entry) => entry.text.toLocaleLowerCase() === word.toLocaleLowerCase());
 		if (!token) throw new Error(`missing token ${word}`);
 		return token;
@@ -205,8 +198,7 @@ describe('review priority', () => {
 	});
 
 	it('adds a lapse on a wrong answer and earns it back on a right one', () => {
-		/** @type {Record<string, import('../src/lib/vocab/spacedRepetition.ts').ReviewProgress>} */
-		let progress = { BROT: { repetitions: 3, dueAt: now, lapses: 0 } };
+		let progress: Record<string, ReviewProgress> = { BROT: { repetitions: 3, dueAt: now, lapses: 0 } };
 		progress = updateReviewProgress(progress, 'BROT', false, now);
 		expect(progress.BROT).toMatchObject({ repetitions: 0, lapses: 1 });
 		progress = updateReviewProgress(progress, 'BROT', true, now);
