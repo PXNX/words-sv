@@ -41,6 +41,8 @@ export interface StoredStreak {
 	streakCount?: number;
 	last_qualified_day?: string | null;
 	lastQualifiedDay?: string | null;
+	pro_shield_week?: string | null;
+	proShieldWeek?: string | null;
 	vocabulary_goal?: number;
 	vocabularyGoal?: number;
 	freezes?: number;
@@ -71,6 +73,8 @@ export interface StreakState {
 	qualified: boolean;
 	streakCount: number;
 	lastQualifiedDay: string | null;
+	/** The ISO week whose Pro shield bridged a missed day (one per week). */
+	proShieldWeek: string | null;
 	vocabularyGoal: number;
 	freezes: number;
 	qualifiedDays: number;
@@ -112,6 +116,15 @@ export function previousDateKey(dateKey: string) {
 	return date.toISOString().slice(0, 10);
 }
 
+/** The ISO week of a `YYYY-MM-DD` day, as `YYYY-Www`. */
+export function isoWeek(dateKey: string): string {
+	const date = new Date(`${dateKey}T12:00:00.000Z`);
+	date.setUTCDate(date.getUTCDate() - ((date.getUTCDay() + 6) % 7) + 3);
+	const year = date.getUTCFullYear();
+	const week = Math.ceil(((date.getTime() - Date.UTC(year, 0, 1)) / 86_400_000 + 1) / 7);
+	return `${year}-W${String(week).padStart(2, '0')}`;
+}
+
 function daysBetween(earlier: string, later: string) {
 	const start = Date.parse(`${earlier}T12:00:00.000Z`);
 	const end = Date.parse(`${later}T12:00:00.000Z`);
@@ -144,7 +157,8 @@ export function minutesUntilNextLocalDate(timeZone: string, now = new Date()) {
 	return Math.max(0, Math.ceil((high - start) / 60_000));
 }
 
-export function stateForToday(stored: StoredStreak | null | undefined, timeZone: string, now = new Date()): StreakState {
+/** `proUntil`: until when the device's Telegram account has Pro (epoch ms), if at all. */
+export function stateForToday(stored: StoredStreak | null | undefined, timeZone: string, now = new Date(), proUntil: number | null = null): StreakState {
 	const today = dateKeyFor(timeZone, now);
 	const previousDay = previousDateKey(today);
 	const storedDayKey = stored?.day_key ?? stored?.dateKey;
@@ -167,6 +181,7 @@ export function stateForToday(stored: StoredStreak | null | undefined, timeZone:
 			qualified: Boolean(stored?.current_qualified ?? stored?.qualified),
 			streakCount: numberField(stored?.streak_count ?? stored?.streakCount),
 			lastQualifiedDay: stored?.last_qualified_day ?? stored?.lastQualifiedDay ?? null,
+			proShieldWeek: stored?.pro_shield_week ?? stored?.proShieldWeek ?? null,
 			vocabularyGoal,
 			freezes: Math.min(MAX_FREEZES, numberField(stored?.freezes)),
 			qualifiedDays: numberField(stored?.qualified_days ?? stored?.qualifiedDays),
@@ -176,7 +191,14 @@ export function stateForToday(stored: StoredStreak | null | undefined, timeZone:
 	}
 	let lastQualifiedDay = stored?.last_qualified_day ?? stored?.lastQualifiedDay ?? null;
 	let freezes = Math.min(MAX_FREEZES, numberField(stored?.freezes));
-	if (lastQualifiedDay && lastQualifiedDay < previousDay && daysBetween(lastQualifiedDay, previousDay) === 1 && freezes > 0) {
+	let proShieldWeek = stored?.pro_shield_week ?? stored?.proShieldWeek ?? null;
+	const missedYesterday = Boolean(lastQualifiedDay && lastQualifiedDay < previousDay && daysBetween(lastQualifiedDay, previousDay) === 1);
+	// Pro forgives one missed day per ISO week before a freeze is spent (as src/lib/streak/proShield.ts).
+	const shieldWeek = isoWeek(previousDay);
+	if (missedYesterday && proUntil !== null && proUntil >= Date.parse(`${previousDay}T00:00:00.000Z`) && proShieldWeek !== shieldWeek) {
+		lastQualifiedDay = previousDay;
+		proShieldWeek = shieldWeek;
+	} else if (missedYesterday && freezes > 0) {
 		freezes -= 1;
 		lastQualifiedDay = previousDay;
 	}
@@ -198,6 +220,7 @@ export function stateForToday(stored: StoredStreak | null | undefined, timeZone:
 		qualified: false,
 		streakCount,
 		lastQualifiedDay,
+		proShieldWeek,
 		vocabularyGoal,
 		freezes,
 		qualifiedDays: numberField(stored?.qualified_days ?? stored?.qualifiedDays),
