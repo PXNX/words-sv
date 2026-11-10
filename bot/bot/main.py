@@ -49,6 +49,7 @@ COMMANDS: Final[dict[str, list[BotCommand]]] = {
         BotCommand("bedingungen", "Nutzungs- und Spendenbedingungen"),
         BotCommand("datenschutz", "Datenschutzerklärung"),
         BotCommand("impressum", "Impressum"),
+        BotCommand("version", "App-Version und Neuigkeiten"),
     ],
     "en": [
         BotCommand("start", "Open WordCircle"),
@@ -57,6 +58,7 @@ COMMANDS: Final[dict[str, list[BotCommand]]] = {
         BotCommand("terms", "Terms of use and donation"),
         BotCommand("privacy", "Privacy policy"),
         BotCommand("impressum", "Legal notice"),
+        BotCommand("version", "App version and what's new"),
     ],
 }
 

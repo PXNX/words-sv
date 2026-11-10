@@ -36,6 +36,8 @@ TEXTS = {
         "legal_terms": "📄 Nutzungs- und Spendenbedingungen:\n{terms}",
         "legal_privacy": "🔒 Datenschutzerklärung:\n{privacy}",
         "legal_imprint": "ℹ️ Impressum:\n{imprint}",
+        "version": "🏷️ WordCircle <b>v{version}</b>\n<a href=\"{changelog}\">Was ist neu?</a>",
+        "version_unknown": "🏷️ Die Version ist auf diesem Server nicht bekannt.",
     },
     "en": {
         "start": (
@@ -65,6 +67,8 @@ TEXTS = {
         "legal_terms": "📄 Terms of use and donation:\n{terms}",
         "legal_privacy": "🔒 Privacy policy:\n{privacy}",
         "legal_imprint": "ℹ️ Legal notice:\n{imprint}",
+        "version": "🏷️ WordCircle <b>v{version}</b>\n<a href=\"{changelog}\">What's new?</a>",
+        "version_unknown": "🏷️ The version is not known on this server.",
     },
 }
 
