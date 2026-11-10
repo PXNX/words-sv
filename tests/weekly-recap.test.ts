@@ -1,24 +1,11 @@
 import { describe, expect, test } from 'vitest';
 import { activeMinutes, completedIds, countActivity, normalizeActivity, type ActivityEvent } from '../src/lib/progress/activity.js';
-import { buildMilestones, buildWeeklyRecap, milestonePercent, nextMilestone, readableItem, type MilestoneInput } from '../src/lib/progress/milestones.js';
+import { buildWeeklyRecap, readableItem } from '../src/lib/progress/weeklyRecap.js';
 import type { ReviewLedger } from '../src/lib/review/ledger.js';
 
 const HOUR = 60 * 60 * 1000;
 const NOW = Date.UTC(2026, 9, 26, 12, 0, 0);
 
-function input(overrides: Partial<MilestoneInput> = {}): MilestoneInput {
-	return {
-		textsRead: 0,
-		storiesCompleted: 0,
-		perfectPronunciations: 0,
-		masteredWords: 0,
-		bestStreak: 0,
-		a1TextsRead: 0,
-		a1TextsTotal: 6,
-		trickyCleared: 0,
-		...overrides
-	};
-}
 
 describe('activity log', () => {
 	test('ignores malformed entries but keeps the good ones', () => {
@@ -58,40 +45,6 @@ describe('activity log', () => {
 	});
 });
 
-describe('milestones', () => {
-	test('the first small wins are reachable one step at a time', () => {
-		const milestones = buildMilestones(input({ textsRead: 1, storiesCompleted: 1 }));
-		expect(milestones[0]).toEqual({ id: 'first_text', value: 1, target: 1, done: true });
-		expect(milestones[1]).toEqual({ id: 'first_story', value: 1, target: 1, done: true });
-		expect(nextMilestone(milestones)?.id).toBe('perfect_pronunciation');
-	});
-
-	test('the next milestone carries a capped progress value', () => {
-		const milestone = buildMilestones(input({ bestStreak: 9, textsRead: 2, storiesCompleted: 2, perfectPronunciations: 1 }))[3];
-		expect(milestone).toEqual({ id: 'streak_7', value: 7, target: 7, done: true });
-		expect(milestonePercent({ id: 'streak_7', value: 3, target: 7, done: false })).toBe(43);
-	});
-
-	test('all A1 texts never look finished without an A1 text', () => {
-		const milestones = buildMilestones(input({ a1TextsRead: 0, a1TextsTotal: 0 }));
-		expect(milestones.find((milestone) => milestone.id === 'all_a1_texts')).toMatchObject({ value: 0, target: 1, done: false });
-	});
-
-	test('every milestone done means no next step', () => {
-		const milestones = buildMilestones(input({
-			textsRead: 1,
-			storiesCompleted: 1,
-			perfectPronunciations: 1,
-			masteredWords: 100,
-			bestStreak: 7,
-			a1TextsRead: 6,
-			a1TextsTotal: 6,
-			trickyCleared: 10
-		}));
-		expect(milestones.every((milestone) => milestone.done)).toBe(true);
-		expect(nextMilestone(milestones)).toBeNull();
-	});
-});
 
 describe('weekly recap', () => {
 	const since = NOW - 7 * 24 * HOUR;

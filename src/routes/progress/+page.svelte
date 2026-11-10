@@ -7,15 +7,12 @@
   import { readVocabularyProgressByLanguage } from '#lib/vocab/spacedRepetition.js';
   import { readGrammarProgressByLanguage } from '#lib/grammar/learning.js';
   import { readMissedWords } from '#lib/story/missedWords.js';
-  import { GRAMMAR_GOAL, PRONUNCIATION_GOAL, REPAIR_WORDS, VOCABULARY_GOALS, lilithFace, lilithMood, modeDone, type StreakRepair } from '#lib/streak/clientStreak.js';
-  import { readingTextsFor } from '#lib/story/readingTexts.js';
+  import { REPAIR_WORDS, VOCABULARY_GOALS, lilithFace, lilithMood, type StreakRepair } from '#lib/streak/clientStreak.js';
   import { readReviewLedger, type ReviewLedger } from '#lib/review/ledger.js';
-  import { activityFor, completedIds, countActivity, readActivity, type ActivityEvent } from '#lib/progress/activity.js';
-  import { buildMilestones, buildWeeklyRecap, milestonePercent, nextMilestone, weekStartTimestamp, type MilestoneId } from '#lib/progress/milestones.js';
+  import { activityFor, readActivity, type ActivityEvent } from '#lib/progress/activity.js';
+  import { buildWeeklyRecap, weekStartTimestamp } from '#lib/progress/weeklyRecap.js';
   import { buildAchievements, unlockedCount, type AchievementId } from '#lib/progress/achievements.js';
-  import IconExpand from '~icons/material-symbols/expand-more-rounded';
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
-  import IconPending from '~icons/material-symbols/radio-button-unchecked-rounded';
   import IconFlame from '~icons/material-symbols/local-fire-department-rounded';
   import IconEdit from '~icons/material-symbols/edit-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
@@ -23,13 +20,13 @@
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import AvatarEditor from '#lib/profile/AvatarEditor.svelte';
   import { checkAchievementRewards, cosmetics } from '#lib/profile/cosmetics.svelte.js';
-  import { dailyActivity, lifetimeTotals, modeShares } from '#lib/progress/statsView.js';
+  import { dailyActivity, modeShares } from '#lib/progress/statsView.js';
   import type { ActivityKind } from '#lib/progress/activity.js';
   import SyncHint from '#lib/sync/SyncHint.svelte';
   import { defaultAvatar } from '#lib/profile/avatar.js';
   import type { Mood } from '#lib/story/stories.js';
   import { formatWeekday } from '#lib/format/format.js';
-  import ReadinessCard from '#lib/progress/ReadinessCard.svelte';
+  import ExamCoach from '#lib/progress/ExamCoach.svelte';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   // Lilith turns loving at five days, happy once today is qualified, sad about a broken streak and
@@ -71,10 +68,6 @@
     topWords: m.stats_top_words({}, { locale: settings.interfaceLocale }),
     trickyWords: m.stats_tricky_words({}, { locale: settings.interfaceLocale }),
     noneYet: m.stats_none_yet({}, { locale: settings.interfaceLocale }),
-    milestonesTitle: m.milestones_title({}, { locale: settings.interfaceLocale }),
-    milestonesNext: m.milestones_next({}, { locale: settings.interfaceLocale }),
-    milestonesDone: m.milestones_done({}, { locale: settings.interfaceLocale }),
-    milestonesProgress: (value: number, target: number) => m.milestones_progress({ value, target }, { locale: settings.interfaceLocale }),
     weekTitle: m.week_title({}, { locale: settings.interfaceLocale }),
     weekWords: m.week_words({}, { locale: settings.interfaceLocale }),
     weekMinutes: m.week_minutes({}, { locale: settings.interfaceLocale }),
@@ -124,42 +117,8 @@
     streak_30: m.achievement_streak_30({}, { locale: settings.interfaceLocale })
   });
 
-  // Milestone names live here, so the pure milestone model only deals with ids and numbers.
-  const milestoneLabels = $derived<Record<MilestoneId, string>>({
-    first_text: m.milestone_first_text({}, { locale: settings.interfaceLocale }),
-    first_story: m.milestone_first_story({}, { locale: settings.interfaceLocale }),
-    perfect_pronunciation: m.milestone_perfect_pronunciation({}, { locale: settings.interfaceLocale }),
-    streak_7: m.milestone_streak_7({}, { locale: settings.interfaceLocale }),
-    tricky_10: m.milestone_tricky_10({}, { locale: settings.interfaceLocale }),
-    all_a1_texts: m.milestone_all_a1_texts({}, { locale: settings.interfaceLocale }),
-    mastered_100: m.milestone_mastered_100({}, { locale: settings.interfaceLocale })
-  });
 
-  // Every mode that can qualify the day, so the daily progress is visible in one place.
-  const todayModes = $derived([
-    { label: labels.modeCrossword, done: modeDone(settings.streak, 'circle') },
-    { label: labels.modeDefinitions, done: modeDone(settings.streak, 'definitions') },
-    { label: labels.modeWordle, done: modeDone(settings.streak, 'wordle') },
-    { label: labels.modeHangman, done: modeDone(settings.streak, 'hangman') },
-    { label: labels.vocab, done: modeDone(settings.streak, 'vocab') },
-    { label: labels.story, done: modeDone(settings.streak, 'story') },
-    { label: labels.reading, done: modeDone(settings.streak, 'reading') },
-    { label: labels.listen, done: modeDone(settings.streak, 'listen') },
-    { label: labels.alltag, done: modeDone(settings.streak, 'alltag') },
-    { label: labels.grammar, done: modeDone(settings.streak, 'grammar') },
-    { label: labels.pronunciation, done: modeDone(settings.streak, 'pronunciation') }
-  ]);
 
-  // One accent colour per language keeps the cards apart without extra decoration.
-  const languageColors: Record<Language, string> = {
-    de: '#e6a527',
-    en: '#3b6fb6',
-    fr: '#d0564b',
-    it: '#34824d',
-    es: '#c8742e',
-    pt: '#2f8f87',
-    uk: '#5b7fd6'
-  };
 
   // The whole page is about the language being learned right now; switching it in Settings
   // switches every number here. Tricky words are the ones most often answered wrong (missedWords.ts).
@@ -179,37 +138,22 @@
   let allLedger = $state<ReviewLedger>({});
   const activity = $derived(activityFor(allActivity, settings.lang));
   const ledger = $derived(Object.fromEntries(Object.entries(allLedger).filter(([key]) => key.startsWith(`${settings.lang}:`))) as ReviewLedger);
-  let progressReady = $state(false);
   let shareNote = $state('');
   // The name and the character are edited right here, not in the settings panel.
   let editingName = $state(false);
   let nameDraft = $state('');
   let editingAvatar = $state(false);
 
-  const textsRead = $derived(completedIds(activity, 'reading'));
-  const a1TextIds = $derived(readingTextsFor(settings.lang, 'a1', false).map((text) => text.id));
   const masteredWords = $derived(vocabProgress[settings.lang]?.masteredWords ?? 0);
-  const milestones = $derived(buildMilestones({
-    textsRead: textsRead.length,
-    storiesCompleted: completedIds(activity, 'story').length,
-    perfectPronunciations: countActivity(activity, 'pronunciation', 0, Number.MAX_SAFE_INTEGER, (event) => event.perfect === true),
-    masteredWords,
-    bestStreak: settings.streak.bestStreak,
-    a1TextsRead: textsRead.filter((id) => a1TextIds.includes(id)).length,
-    a1TextsTotal: a1TextIds.length,
-    trickyCleared: countActivity(activity, 'tricky_cleared')
-  }));
-  const next = $derived(nextMilestone(milestones));
   const achievements = $derived(buildAchievements({
     activity,
     bestStreak: settings.streak.bestStreak,
     masteredWords
   }));
   const unlocked = $derived(unlockedCount(achievements));
-  // The week as bars (minutes per day), lifetime totals and the modes played most this week.
+  // The week as bars (minutes per day) and the modes played most this week.
   const week = $derived(dailyActivity(activity));
   const weekMax = $derived(Math.max(1, ...week.map((day) => day.minutes)));
-  const totals = $derived(lifetimeTotals(activity));
   const topModes = $derived(modeShares(activity, weekStartTimestamp()).slice(0, 4));
   const dayName = $derived.by(() => {
     const context = settings.formatContext;
@@ -257,11 +201,6 @@
     }
   }
 
-  // Clicking a language card reveals its top and tricky words.
-  let expandedLanguages = $state<Language[]>([]);
-  function toggleLanguage(code: Language) {
-    expandedLanguages = expandedLanguages.includes(code) ? expandedLanguages.filter((entry) => entry !== code) : [...expandedLanguages, code];
-  }
   function spellingOf(language: Language, word: string) {
     return wordMetadata[language]?.[word.toLocaleUpperCase()]?.spelling ?? word.toLocaleLowerCase();
   }
@@ -299,7 +238,6 @@
     allActivity = readActivity();
     allLedger = readReviewLedger();
     nameDraft = settings.firstName;
-    progressReady = true;
     void refreshStreak();
     streakTimer = window.setInterval(() => void refreshStreak(), 30_000);
     return () => {
@@ -339,9 +277,9 @@
     {/if}
   </section>
 
-  <!-- Not linked to Telegram yet: an invitation to save the progress there. -->
-  <div class="mt-4"><SyncHint /></div>
+  <ExamCoach />
 
+  <h2 class="progress-group">{m.coach_keep_going({}, { locale: settings.interfaceLocale })}</h2>
   <!-- Streak -->
   <section class="panel-play mt-[1.2rem] px-4 pt-[.9rem] pb-4" aria-labelledby="progress-streak-heading">
     <div class="flex items-end justify-between gap-3">
@@ -391,76 +329,11 @@
       {/if}
     </div>
 
-    <div class="mt-[.7rem] flex flex-wrap items-center gap-x-4 gap-y-1 text-base-content text-[.64rem] font-extrabold" aria-label={labels.today}>
-      {#each todayModes as mode (mode.label)}
-        <span class="inline-flex items-center gap-[.25rem]">{#if mode.done}<IconCheck class="w-[1rem] h-[1rem] text-success" aria-label={labels.streakModeDone} />{:else}<IconPending class="w-[1rem] h-[1rem] text-base-content/35" aria-hidden="true" />{/if}{mode.label}</span>
-      {/each}
-    </div>
 
     <dl class="m-0 mt-[.8rem] pt-[.7rem] grid grid-cols-2 border-t border-base-content/[.14] dark:border-base-content/[.22]">
       <div class="grid gap-[.1rem] text-center"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.4rem] leading-none text-base-content">{settings.streak.bestStreak}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.streakBest}</dt></div>
       <div class="grid gap-[.1rem] text-center border-s border-base-content/[.14] dark:border-base-content/[.22]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.4rem] leading-none text-base-content">{settings.completedRounds}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.completed}</dt></div>
     </dl>
-  </section>
-
-  <!-- Overall: everything practised on this device (and in the saved progress), at a glance. -->
-  <ReadinessCard />
-  <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4" aria-labelledby="progress-overall-heading">
-    <h2 id="progress-overall-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{m.stats_overall({}, { locale: settings.interfaceLocale })}</h2>
-    <dl class="overall-grid">
-      <div><dd>{totals.minutes}</dd><dt>{m.stats_total_minutes({}, { locale: settings.interfaceLocale })}</dt></div>
-      <div><dd>{totals.daysPractised}</dd><dt>{m.stats_days_practised({}, { locale: settings.interfaceLocale })}</dt></div>
-      <div><dd>{totals.sessions}</dd><dt>{m.stats_sessions({}, { locale: settings.interfaceLocale })}</dt></div>
-      <div><dd>{masteredWords}</dd><dt>{labels.masteredWords}</dt></div>
-      <div><dd>{settings.streak.bestStreak}</dd><dt>{labels.streakBest}</dt></div>
-    </dl>
-  </section>
-
-  <!-- Milestones: the nearest unfinished goal first, then the whole path. -->
-  <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4" aria-labelledby="progress-milestones-heading">
-    <h2 id="progress-milestones-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.milestonesTitle}</h2>
-    {#if next}
-      <div class="mt-[.5rem]">
-        <div class="flex items-center justify-between gap-3 text-base-content text-[.64rem] font-extrabold">
-          <span>{labels.milestonesNext}</span>
-          <span class="tabular-nums">{labels.milestonesProgress(next.value, next.target)}</span>
-        </div>
-        <p class="m-0 mt-[.2rem] text-base-content font-['DM_Serif_Display',serif] text-[1.15rem] leading-[1.15]">{milestoneLabels[next.id]}</p>
-        <div class="mt-[.4rem] h-[.5rem] w-full rounded-full bg-base-content/10 overflow-hidden" role="progressbar" aria-valuenow={milestonePercent(next)} aria-valuemin="0" aria-valuemax="100" aria-label={milestoneLabels[next.id]}>
-          <div class="h-full rounded-full bg-[#e6a527] transition-[width] duration-500" style={`width:${Math.max(milestonePercent(next), next.value > 0 ? 3 : 0)}%`}></div>
-        </div>
-      </div>
-    {:else if progressReady}
-      <p class="m-0 mt-[.45rem] text-success text-[.7rem] font-extrabold">{labels.milestonesDone}</p>
-    {/if}
-    <ul class="m-0 mt-[.7rem] p-0 list-none grid gap-[.3rem]">
-      {#each milestones as milestone (milestone.id)}
-        <li class="flex items-center gap-[.4rem] text-[.64rem] font-bold {milestone.done ? 'text-base-content' : 'text-base-content/50'}">
-          {#if milestone.done}<IconCheck class="w-[.95rem] h-[.95rem] flex-none text-success" aria-label={labels.milestonesDone} />{:else}<IconPending class="w-[.95rem] h-[.95rem] flex-none text-base-content/30" aria-hidden="true" />{/if}
-          <span class="min-w-0 flex-1 truncate">{milestoneLabels[milestone.id]}</span>
-          <span class="tabular-nums text-base-content/55">{labels.milestonesProgress(milestone.value, milestone.target)}</span>
-        </li>
-      {/each}
-    </ul>
-  </section>
-
-  <!-- Achievements: badges earned from real practice. -->
-  <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4" aria-labelledby="progress-achievements-heading">
-    <div class="flex items-baseline justify-between gap-3">
-      <h2 id="progress-achievements-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.achievementsTitle}</h2>
-      <span class="text-base-content/55 text-[.58rem] font-extrabold tabular-nums">{labels.achievementsUnlocked(unlocked, achievements.length)}</span>
-    </div>
-    <ul class="achievement-grid">
-      {#each achievements as achievement (achievement.id)}
-        <li class="achievement" class:done={achievement.done} title={m.stats_reward_item({}, { locale: settings.interfaceLocale })}>
-          <span class="achievement-look" aria-hidden="true"><StoryCharacter id="kumar" avatar={rewardLook(achievement.id)} mood={achievement.done ? 'happy' : 'curious'} /></span>
-          <span class="achievement-label">{#if achievement.done}<IconCheck class="achievement-check" aria-hidden="true" />{/if}{achievementLabels[achievement.id]}</span>
-          <span class="achievement-meter" aria-hidden="true"><span style:width={`${Math.round((achievement.value / achievement.target) * 100)}%`}></span></span>
-          <span class="achievement-progress tabular-nums">{achievement.value}/{achievement.target}</span>
-        </li>
-      {/each}
-    </ul>
-    {#if unlocked === 0}<p class="m-0 mt-[.5rem] text-base-content/55 text-[.6rem] font-bold leading-[1.4]">{labels.achievementsNone}</p>{/if}
   </section>
 
   <!-- Weekly recap: what actually happened this week, not a guessed average. -->
@@ -504,73 +377,59 @@
     <p class="m-0 mt-[.35rem] text-success text-[.58rem] font-bold" aria-live="polite">{shareNote}</p>
   </section>
 
-  <!-- The learning language, split into vocabulary (Tom) and grammar (Mia) -->
-
-  {#each practicedLanguages as language (language.code)}
-    {@const expanded = expandedLanguages.includes(language.code)}
-    <section class="panel-play mt-4 overflow-hidden border-t-[6px]" style={`border-top-color:${languageColors[language.code]};--lang:${languageColors[language.code]}`} aria-labelledby={`progress-lang-${language.code}`}>
-      <h3 id={`progress-lang-${language.code}`} class="m-0">
-        <button type="button" class="w-full flex items-center justify-between gap-3 px-[.9rem] pt-[.7rem] bg-transparent border-0 cursor-pointer text-start text-base-content font-['DM_Serif_Display',serif] text-[1.3rem] font-normal leading-none" aria-expanded={expanded} aria-controls={`progress-words-${language.code}`} onclick={() => toggleLanguage(language.code)}>
-          {language.label}<IconExpand class={`w-[1.4rem] h-[1.4rem] text-base-content/50 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} aria-hidden="true" />
-        </button>
-      </h3>
-
-      <!-- The header button handles keyboard access; the rest of the card is just a larger click target. -->
-      <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
-      <div class="px-[.9rem] pb-[.8rem] cursor-pointer" onclick={() => toggleLanguage(language.code)}>
-        <div class="flex items-end gap-3 pt-[.6rem]">
-          <Companion id="tom" mood={language.vocab ? 'happy' : 'curious'} size="sm" />
-          <div class="flex-1 min-w-0 pb-[.2rem]">
-            <h4 class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.1em] uppercase">{labels.vocab}</h4>
-            {#if language.vocab}
-              <p class="m-0 mt-[.2rem] text-base-content text-[.66rem] font-extrabold">{labels.wordsPracticed}: {language.vocab.wordsPracticed} · {labels.repetitions}: {language.vocab.totalRepetitions}</p>
-              <div class="mt-[.4rem] flex items-center justify-between gap-3 text-base-content/60 text-[.56rem] font-extrabold"><span>{labels.masteredWords}</span><span class="tabular-nums">{language.vocab.masteredWords}/{language.vocab.totalWords}</span></div>
-              <div class="mt-[.2rem] h-[.45rem] w-full rounded-full bg-base-content/10 overflow-hidden" role="progressbar" aria-valuenow={language.vocab.percentage} aria-valuemin="0" aria-valuemax="100" aria-label={`${labels.masteredWords}: ${language.vocab.percentage}%`}>
-                <div class="h-full rounded-full bg-[var(--lang)] transition-[width] duration-500" style={`width:${Math.max(language.vocab.percentage, language.vocab.masteredWords > 0 ? 2 : 0)}%`}></div>
-              </div>
-            {:else}
-              <p class="m-0 mt-[.2rem] text-base-content/50 text-[.64rem] font-bold">{labels.nothingYet}</p>
-            {/if}
-          </div>
+  <!-- Your words in the learning language: the tricky ones to repeat and the most practised -->
+  <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4" aria-labelledby="progress-words-heading">
+    <div class="flex items-baseline justify-between gap-3">
+      <h2 id="progress-words-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{m.coach_words({ language: learningLanguage.label }, { locale: settings.interfaceLocale })}</h2>
+      {#if vocabProgress[settings.lang]}<span class="text-base-content/55 text-[.58rem] font-extrabold tabular-nums">{labels.wordsPracticed}: {vocabProgress[settings.lang]!.wordsPracticed}</span>{/if}
+    </div>
+    <div class="grid grid-cols-2 gap-4 mt-[.6rem]">
+      {#each [{ heading: labels.trickyWords, words: practicedLanguages[0]!.trickyWords.map((entry) => ({ word: entry.word, count: entry.count })) }, { heading: labels.topWords, words: vocabProgress[settings.lang]?.mostRepeated.map((entry) => ({ word: entry.word, count: entry.repetitions })) ?? [] }] as list (list.heading)}
+        <div class="min-w-0">
+          <h3 class="m-0 text-base-content/60 text-[.54rem] font-extrabold tracking-[.08em] uppercase">{list.heading}</h3>
+          {#if list.words.length > 0}
+            <ol class="m-0 mt-[.3rem] p-0 list-none grid gap-[.2rem]">
+              {#each list.words as entry (entry.word)}
+                <li class="flex items-center justify-between gap-2 text-base-content text-[.68rem] font-bold"><span class="truncate" lang={settings.lang}>{spellingOf(settings.lang, entry.word)}</span><span class="text-base-content/50 tabular-nums">{entry.count}×</span></li>
+              {/each}
+            </ol>
+          {:else}
+            <p class="m-0 mt-[.3rem] text-base-content/50 text-[.64rem] font-bold">{labels.noneYet}</p>
+          {/if}
         </div>
+      {/each}
+    </div>
+    {#if practicedLanguages[0]!.trickyWords.length}<a class="btn-play btn-play-soft btn-play-sm mt-[.7rem]" href="/repeat">{m.coach_repeat({}, { locale: settings.interfaceLocale })}</a>{/if}
+  </section>
 
-        <div class="flex items-end gap-3 mt-[.7rem] pt-[.6rem] border-t border-base-content/[.14] dark:border-base-content/[.22]">
-          <Companion id="mia" mood={language.grammar ? 'happy' : 'curious'} size="sm" />
-          <div class="flex-1 min-w-0 pb-[.2rem]">
-            <h4 class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.1em] uppercase">{labels.grammar}</h4>
-            {#if language.grammar}
-              <p class="m-0 mt-[.2rem] text-base-content text-[.66rem] font-extrabold">{labels.grammarPracticed}: {language.grammar.itemsPracticed} · {labels.repetitions}: {language.grammar.totalRepetitions}</p>
-            {:else}
-              <p class="m-0 mt-[.2rem] text-base-content/50 text-[.64rem] font-bold">{labels.nothingYet}</p>
-            {/if}
-          </div>
-        </div>
+  <!-- Achievements: badges earned from real practice. -->
+  <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4" aria-labelledby="progress-achievements-heading">
+    <div class="flex items-baseline justify-between gap-3">
+      <h2 id="progress-achievements-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.achievementsTitle}</h2>
+      <span class="text-base-content/55 text-[.58rem] font-extrabold tabular-nums">{labels.achievementsUnlocked(unlocked, achievements.length)}</span>
+    </div>
+    <ul class="achievement-grid">
+      {#each achievements as achievement (achievement.id)}
+        <li class="achievement" class:done={achievement.done} title={m.stats_reward_item({}, { locale: settings.interfaceLocale })}>
+          <span class="achievement-look" aria-hidden="true"><StoryCharacter id="kumar" avatar={rewardLook(achievement.id)} mood={achievement.done ? 'happy' : 'curious'} /></span>
+          <span class="achievement-label">{#if achievement.done}<IconCheck class="achievement-check" aria-hidden="true" />{/if}{achievementLabels[achievement.id]}</span>
+          <span class="achievement-meter" aria-hidden="true"><span style:width={`${Math.round((achievement.value / achievement.target) * 100)}%`}></span></span>
+          <span class="achievement-progress tabular-nums">{achievement.value}/{achievement.target}</span>
+        </li>
+      {/each}
+    </ul>
+    {#if unlocked === 0}<p class="m-0 mt-[.5rem] text-base-content/55 text-[.6rem] font-bold leading-[1.4]">{labels.achievementsNone}</p>{/if}
+  </section>
 
-        {#if expanded}
-          <div id={`progress-words-${language.code}`} class="grid grid-cols-2 gap-4 mt-[.7rem] pt-[.6rem] border-t border-base-content/[.14] dark:border-base-content/[.22]">
-            {#each [{ heading: labels.topWords, words: language.vocab?.mostRepeated.map((entry) => ({ word: entry.word, count: entry.repetitions })) ?? [] }, { heading: labels.trickyWords, words: language.trickyWords.map((entry) => ({ word: entry.word, count: entry.count })) }] as list (list.heading)}
-              <div class="min-w-0">
-                <h4 class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.1em] uppercase">{list.heading}</h4>
-                {#if list.words.length > 0}
-                  <ol class="m-0 mt-[.3rem] p-0 list-none grid gap-[.2rem]">
-                    {#each list.words as entry (entry.word)}
-                      <li class="flex items-center justify-between gap-2 text-base-content text-[.66rem] font-bold"><span class="truncate">{spellingOf(language.code, entry.word)}</span><span class="text-base-content/50 tabular-nums">×{entry.count}</span></li>
-                    {/each}
-                  </ol>
-                {:else}
-                  <p class="m-0 mt-[.3rem] text-base-content/50 text-[.64rem] font-bold">{labels.noneYet}</p>
-                {/if}
-              </div>
-            {/each}
-          </div>
-        {/if}
-      </div>
-    </section>
-  {/each}
+  <!-- Not linked to Telegram yet: an invitation to save the progress there. -->
+  <div class="mt-4"><SyncHint /></div>
+
+
 </section>
 
 <style>
   .pip { border: 2px solid var(--play-line); border-radius: 5px; }
+  .progress-group { margin: 1.6rem 0 0; color: var(--color-accent); font-size: .62rem; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; text-align: center; }
   .progress-ring { rotate: -90deg; overflow: visible; }
   .progress-ring-track { fill: none; stroke: var(--play-line); stroke-width: 2.4; opacity: .28; }
   .progress-ring-value { fill: none; stroke: #34824d; stroke-width: 2.4; stroke-linecap: round; transition: stroke-dashoffset .45s ease; }
@@ -591,10 +450,6 @@
   .progress-edit { display:grid;place-items:center;flex:none;width:1.7rem;height:1.7rem;padding:0;border:1.5px solid var(--play-line);border-radius:999px;background:transparent;color:var(--play-ink,#172a45);cursor:pointer; }
   .progress-edit :global(svg) { width:1rem;height:1rem; }
   .progress-edit:focus-visible,.progress-name-input:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
-  .overall-grid { margin:.6rem 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(6.5rem,1fr));gap:.55rem 1rem; }
-  .overall-grid div { display:grid;gap:.1rem; }
-  .overall-grid dd { order:1;margin:0;color:var(--play-ink,#172a45);font-family:'DM Serif Display',serif;font-size:1.5rem;line-height:1;font-variant-numeric:tabular-nums; }
-  .overall-grid dt { order:2;color:rgba(23,42,69,.6);font-size:.54rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }
   .week-chart { margin:.7rem 0 .2rem; }
   .week-chart figcaption { color:rgba(23,42,69,.6);font-size:.54rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }
   .week-bars { display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.35rem;height:7rem;margin-top:.45rem;padding-bottom:1.1rem;position:relative;background:linear-gradient(rgba(23,42,69,.1),rgba(23,42,69,.1)) left bottom 1.1rem / 100% 1px no-repeat; }
@@ -616,8 +471,6 @@
   .achievement.done .achievement-meter span { background:#34824d; }
   .achievement-label :global(.achievement-check) { width:.8rem;height:.8rem;margin-inline-end:.2rem;vertical-align:-.12rem;color:#34824d; }
   @media (prefers-reduced-motion:reduce) { .week-fill { transition:none; } }
-  :global(html.dark) .overall-grid dd,:global(html.dark) .week-value,:global(html.dark) .week-bar.today .week-day,:global(html.dark) .mode-shares li { color:#fffdf7; }
-  :global(html.dark) .overall-grid dt,:global(html.dark) .week-chart figcaption,:global(html.dark) .week-day { color:rgba(255,253,247,.6); }
   :global(html.dark) .week-bars { background-image:linear-gradient(rgba(255,253,247,.16),rgba(255,253,247,.16)); }
   :global(html.dark) .mode-share-bar,:global(html.dark) .achievement-meter { background:rgba(255,253,247,.14); }
   :global(html.dark) .week-bar.today .week-fill { background:#f0c06a; }
