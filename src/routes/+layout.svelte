@@ -18,7 +18,8 @@ import MobileDataDialog from '#lib/offline/MobileDataDialog.svelte';
 import StreakToast from '#lib/streak/StreakToast.svelte';
 import GroupScoreSheet from '#lib/games/GroupScoreSheet.svelte';
 import { initGroupGame } from '#lib/games/groupGame.svelte.js';
-import { startCloudSync } from '#lib/sync/cloudSync.svelte.js';
+import { cloudSync, startCloudSync } from '#lib/sync/cloudSync.svelte.js';
+import { refreshStore } from '#lib/store/storeClient.svelte.js';
 import { probeWebGpu } from '#lib/voice/engines.js';
 import { checkAchievementRewards, checkLanguageRewards } from '#lib/profile/cosmetics.svelte.js';
 import { readVocabularyProgressByLanguage } from '#lib/vocab/spacedRepetition.js';
@@ -43,7 +44,7 @@ import { haptic } from '#lib/feedback/haptics.js';
 
 	const routePath = $derived(page.url.pathname.replace(/\/+$/, '') || '/');
 	const isHome = $derived(routePath === '/');
-	const isListPage = $derived(routePath === '/settings' || routePath === '/progress' || routePath === '/repeat');
+	const isListPage = $derived(routePath === '/settings' || routePath === '/progress' || routePath === '/repeat' || routePath === '/store');
 	const homeLabel = $derived(m.home_button({}, { locale: settings.interfaceLocale }));
 	const shellLabel = $derived(m.label({}, { locale: settings.interfaceLocale }));
 
@@ -90,6 +91,15 @@ $effect(() => {
     const progress = readVocabularyProgressByLanguage(playableLanguages.map((language) => language.code));
     checkAchievementRewards({ bestStreak, masteredWords: progress[settings.lang]?.masteredWords ?? 0 });
     checkLanguageRewards(Object.fromEntries(Object.entries(progress).map(([code, entry]) => [code, entry.wordsPracticed])));
+});
+
+// Signed in with Telegram: what the account bought (on any device) unlocks here, and Pro's end date
+// reaches the streak, once per visit.
+let storeChecked = false;
+$effect(() => {
+    if (cloudSync.linked !== true || storeChecked) return;
+    storeChecked = true;
+    void refreshStore();
 });
 
 onMount(() => {

@@ -19,7 +19,9 @@
   import IconClose from '~icons/material-symbols/close-rounded';
   import Companion from '#lib/story/Companion.svelte';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
-  import AvatarEditor from '#lib/profile/AvatarEditor.svelte';
+  import IconStore from '~icons/material-symbols/storefront-rounded';
+  import IconChevron from '~icons/material-symbols/chevron-right-rounded';
+  import { cloudSync } from '#lib/sync/cloudSync.svelte.js';
   import { checkAchievementRewards, cosmetics } from '#lib/profile/cosmetics.svelte.js';
   import { dailyActivity, modeShares } from '#lib/progress/statsView.js';
   import type { ActivityKind } from '#lib/progress/activity.js';
@@ -143,7 +145,6 @@
   // The name and the character are edited right here, not in the settings panel.
   let editingName = $state(false);
   let nameDraft = $state('');
-  let editingAvatar = $state(false);
 
   const masteredWords = $derived(vocabProgress[settings.lang]?.masteredWords ?? 0);
   const achievements = $derived(buildAchievements({
@@ -272,11 +273,19 @@
       </div>
     </div>
     <p class="m-0 mt-[.55rem] text-base-content/65 text-[.6rem] font-bold leading-[1.4]">{labels.profileHint}</p>
-    <button type="button" class="btn-play btn-play-soft btn-play-sm mt-[.6rem]" aria-expanded={editingAvatar} onclick={() => (editingAvatar = !editingAvatar)}>{labels.profileEdit}</button>
-    {#if editingAvatar}
-      <div class="mt-[.7rem]"><AvatarEditor value={settings.avatar ?? defaultAvatar} onchange={(next) => settings.setAvatar(next)} /></div>
-    {/if}
+    <a class="btn-play btn-play-soft btn-play-sm mt-[.6rem]" href="/store">{labels.profileEdit}</a>
   </section>
+
+  <!-- Signed in with Telegram: the store with the character; otherwise first the offer to save progress. -->
+  {#if cloudSync.linked === true}
+    <a class="panel-play card-play progress-store" href="/store">
+      <span class="progress-store-icon" aria-hidden="true"><IconStore /></span>
+      <span class="progress-store-text"><strong>{m.store_link({}, { locale: settings.interfaceLocale })}</strong><small>{m.store_link_hint({}, { locale: settings.interfaceLocale })}</small></span>
+      <IconChevron aria-hidden="true" class="progress-store-arrow rtl:rotate-180" />
+    </a>
+  {:else}
+    <div class="mt-4"><SyncHint /></div>
+  {/if}
 
   <ExamCoach />
 
@@ -423,12 +432,21 @@
   </section>
 
   <!-- Not linked to Telegram yet: an invitation to save the progress there. -->
-  <div class="mt-4"><SyncHint /></div>
 
 
 </section>
 
 <style>
+  .progress-store { display:flex;align-items:center;gap:.75rem;margin-top:1rem;padding:.75rem .85rem;color:inherit;text-decoration:none; }
+  .progress-store-icon { display:grid;place-items:center;flex:none;width:2.4rem;height:2.4rem;border-radius:.8rem;background:#fff4d9;color:#a45e38;animation:progress-store-bob 3.2s ease-in-out infinite; }
+  :global(html.dark) .progress-store-icon { background:#4a3a1a;color:#e6a527; }
+  .progress-store-icon :global(svg) { width:1.3rem;height:1.3rem; }
+  .progress-store-text { display:grid;gap:.1rem;flex:1;min-width:0; }
+  .progress-store-text strong { font-size:.78rem;font-weight:900; }
+  .progress-store-text small { font-size:.62rem;font-weight:700;opacity:.65; }
+  :global(.progress-store-arrow) { flex:none;width:1.2rem;height:1.2rem; }
+  @keyframes progress-store-bob { 0%,100% { translate:0 0; } 50% { translate:0 -3px; } }
+  @media (prefers-reduced-motion:reduce) { .progress-store-icon { animation:none; } }
   .pip { border: 2px solid var(--play-line); border-radius: 5px; }
   .progress-group { margin: 1.6rem 0 0; color: var(--color-accent); font-size: .62rem; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; text-align: center; }
   .progress-ring { rotate: -90deg; overflow: visible; }
