@@ -8,7 +8,7 @@ from telegram.ext import Application, CallbackQueryHandler, CommandHandler, Cont
 from donations import CURRENCY, TIERS, build_payload, check_checkout, parse_payload
 from settings.config import ADMINS, MINIAPP_URL, WORDS_URL
 from bot_profile import set_cmd
-from bridge import forward_start, is_bridge_payload
+from bridge import check_purchase, forward_start, is_bridge_payload, record_purchase
 from group_games import register_group_games
 from store import record_donation
 from texts import lang_of, t
@@ -68,6 +68,15 @@ async def send_invoice(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def pre_checkout(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.pre_checkout_query
+    # Store purchases (character items, sets, Pro) are checked by WordCircle's server, which owns the catalog.
+    if query.invoice_payload.startswith("shop:"):
+        problem = await check_purchase(query.invoice_payload, query.currency, query.total_amount, query.from_user.id)
+        if problem:
+            logger.warning("Rejected store checkout from %s: %s (%s)", query.from_user.id, problem, query.invoice_payload)
+            await query.answer(ok=False, error_message=t(lang_of(query.from_user.language_code), "checkout_error_store"))
+        else:
+            await query.answer(ok=True)
+        return
     reason = check_checkout(query.invoice_payload, query.currency, query.total_amount, query.from_user.id)
     if reason:
         logger.warning("Rejected checkout from %s: %s (%s)", query.from_user.id, reason, query.invoice_payload)
@@ -78,6 +87,14 @@ async def pre_checkout(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def successful_payment(update: Update, context: ContextTypes.DEFAULT_TYPE):
     payment = update.message.successful_payment
+    if payment.invoice_payload.startswith("shop:"):
+        user = update.effective_user
+        expiration = getattr(payment, "subscription_expiration_date", None)
+        stored = await record_purchase(payment.invoice_payload, payment.currency, payment.total_amount, user.id, payment.telegram_payment_charge_id, int(expiration.timestamp()) if expiration else None)
+        if not stored:
+            logger.error("Store payment %s by %s for %s not recorded", payment.telegram_payment_charge_id, user.id, payment.invoice_payload)
+        await update.message.reply_text(t(_lang(update), "store_thanks" if stored else "store_pending"))
+        return
     donation = parse_payload(payment.invoice_payload)
     user = update.effective_user
     amount = payment.total_amount if donation is None else donation.amount
