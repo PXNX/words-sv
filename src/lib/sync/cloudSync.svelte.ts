@@ -1,5 +1,5 @@
 /*
- * Keeps this device's progress and the linked Telegram account's in step (api/progress/sync.mjs).
+ * Keeps this device's progress and the linked Telegram account's in step (api/progress/sync.ts).
  * At startup it pulls the account's snapshot and merges it in (progressMerge.ts); when that brings
  * anything new, the page reloads once so every mode reads the merged progress. Afterwards it pushes
  * whenever the progress changed: every minute while open and when the app goes to the background.

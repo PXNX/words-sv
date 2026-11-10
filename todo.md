@@ -147,15 +147,15 @@ tests/build, a focused commit and a push to `main`.
 - [x] Port the legacy `node --test` suites to Vitest.
 - [x] Strict typing at the API/domain boundaries; enable `noImplicitOverride`,
   `verbatimModuleSyntax` and `noUncheckedIndexedAccess`.
-- [x] Shared `tests/support/api.ts` with `responseCapture()` typed against `api/_lib/http.mjs`.
+- [x] Shared `tests/support/api.ts` with `responseCapture()` typed against `api/_lib/http.ts`.
 - [x] Add ESLint and a CI gate that fails on `check` errors (`eslint.config.ts`,
   `.github/workflows/ci.yml`: lint → check → tests → build).
 - [x] Run the linter through Bun's built-in `bun lint` (same config, rules run natively).
 - [x] Move the app, tests, configs and build scripts to TypeScript: `src/lib/seo.ts`,
   `scripts/og.ts`, the six vocabulary/brand scripts, the three `.mjs` test suites and
   `tests/vitest.server.config.ts`. `tsconfig.json` now type-checks `scripts/*.ts` and
-  `eslint.config.ts` too. `api/*.mjs` stays JavaScript for the Vercel function runtime;
-  `static/sw.js`, `static/voices/piper-worker.js` and the Mini App assets stay plain JS
+  `eslint.config.ts` too. The Vercel server functions in `api/` are TypeScript as well (Vercel
+  runs them under Bun); `static/sw.js`, `static/voices/piper-worker.js` and the Mini App assets stay plain JS
   because they are served as-is.
 
 ### Phase I — quick fixes
@@ -169,7 +169,7 @@ tests/build, a focused commit and a push to `main`.
 - [x] `src/lib/sentence/prompt.ts` — topic pool plus a stable per-day prompt index.
 - [x] `src/routes/sentence/+page.svelte` — editor UI: prompt card, textarea, submit, score/verdict.
 - [x] Streak wiring: `StreakMode` `'sentence'`, `sentenceCompleted`, `sentence_completed` event,
-  `modeDone`, `qualifiesToday`, plus the server side in `api/_lib/streak.mjs`.
+  `modeDone`, `qualifiesToday`, plus the server side in `api/_lib/streak.ts`.
 - [x] Home card row with `group_sentence` heading and `mode_sentence` / `home_sentence` labels.
 - [x] Localised keys in `messages/de.json` and `messages/en.json`; Paraglide regenerated.
 - [x] Register the mode in `seo.js` and the Vercel rewrites (`/sentence`).

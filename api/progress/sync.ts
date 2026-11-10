@@ -1,8 +1,8 @@
-import { getDatabase } from '../_lib/database.mjs';
-import { isMethod, readJson, respond } from '../_lib/http.mjs';
-import { ensureTelegramTables } from '../_lib/telegram.mjs';
-
-/** @typedef {import('../_lib/database.mjs').Database} Database */
+import { getDatabase } from '../_lib/database.js';
+import { isMethod, readJson, respond } from '../_lib/http.js';
+import { ensureTelegramTables } from '../_lib/telegram.js';
+import type { Database } from '../_lib/database.js';
+import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 
 // Progress saved to the player's Telegram account. A device that is linked to a Telegram user (by
 // opening the Mini App or through the bot's reminder link) can `pull` the account's snapshot and
@@ -10,8 +10,7 @@ import { ensureTelegramTables } from '../_lib/telegram.mjs';
 // on the device (src/lib/sync/progressMerge.ts). Pushes are compare-and-set on `revision`, so two
 // devices never overwrite each other: a stale push gets the current snapshot back to merge first.
 
-/** @param {unknown} value */
-const validDeviceId = (value) => typeof value === 'string' && /^[a-zA-Z0-9_-]{16,64}$/.test(value);
+const validDeviceId = (value: unknown): value is string => typeof value === 'string' && /^[a-zA-Z0-9_-]{16,64}$/.test(value);
 // Plenty for years of reviews and activity; MEDIUMTEXT holds 16 MB, Vercel bodies 4.5 MB.
 export const MAX_SNAPSHOT_BYTES = 2_000_000;
 
@@ -23,15 +22,13 @@ const TABLE = `CREATE TABLE IF NOT EXISTS wordcircle_progress_snapshots (
 	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )`;
 
-let tableReady;
-/** @param {Database} db */
-function ensureProgressTable(db) {
-	tableReady ??= db.execute(TABLE).catch((error) => { tableReady = undefined; throw error; });
+let tableReady: Promise<unknown> | undefined;
+function ensureProgressTable(db: Database) {
+	tableReady ??= db.execute(TABLE).catch((error: unknown) => { tableReady = undefined; throw error; });
 	return tableReady;
 }
 
-/** @param {string} raw @returns {Record<string, unknown> | null} */
-function parseSnapshot(raw) {
+function parseSnapshot(raw: string): Record<string, unknown> | null {
 	try {
 		const value = JSON.parse(raw);
 		return value && typeof value === 'object' && !Array.isArray(value) ? value : null;
@@ -40,11 +37,8 @@ function parseSnapshot(raw) {
 	}
 }
 
-/** @param {{ databaseProvider?: () => Database }} [options] */
-/** @param {{ databaseProvider?: () => Database }} [options] */
-export function createSyncEndpoint({ databaseProvider = getDatabase } = {}) {
-	/** @param {import('../_lib/http.mjs').ApiRequest} req @param {import('../_lib/http.mjs').ApiResponse} res */
-	return async function progressSync(req, res) {
+export function createSyncEndpoint({ databaseProvider = getDatabase }: { databaseProvider?: () => Database } = {}) {
+	return async function progressSync(req: ApiRequest, res: ApiResponse) {
 		if (!isMethod(req, 'POST')) return respond(res, 405, { ok: false, error: 'method_not_allowed' });
 		try {
 			const { deviceId, action = 'pull', snapshot, baseRevision } = await readJson(req);
