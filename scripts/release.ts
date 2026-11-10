@@ -8,18 +8,29 @@
 // as `changelog_v<version>` (with dots as underscores) before releasing.
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
-import { parseChangelog } from '../src/lib/app/changelog.js';
+import { commitEntries, entriesMarkdown, parseChangelog, type ChangeType } from '../src/lib/app/changelog.js';
 import { bumpVersion, latestVersion, type AppVersion } from '../src/lib/app/version.js';
 
-/** Moves the Unreleased section under a new heading; throws when there is nothing to release. */
-export function cutChangelog(markdown: string, version: AppVersion, date: string, summary: string): { changelog: string; notes: string } {
+/**
+ * Moves the Unreleased section under a new heading, adding the `feat`/`fix` commits since the last
+ * tag (docs and chore commits never show up); throws when there is nothing to release.
+ */
+export function cutChangelog(markdown: string, version: AppVersion, date: string, summary: string, commitSubjects: readonly string[] = []): { changelog: string; notes: string } {
   const start = markdown.search(/^## \[?unreleased\]?.*$/imu);
   if (start < 0) throw new Error('CHANGELOG.md has no "## Unreleased" section');
   const headingEnd = markdown.indexOf('\n', start) + 1;
   const nextRelease = markdown.slice(headingEnd).search(/^## /mu);
   const end = nextRelease < 0 ? markdown.length : headingEnd + nextRelease;
-  const body = markdown.slice(headingEnd, end).trim();
-  if (!/^[-*] /mu.test(body)) throw new Error('Nothing to release: "Unreleased" has no entries');
+  const manual = parseChangelog(`## v0.0.0 - 2000-01-01\n\n${markdown.slice(headingEnd, end)}`)[0]!.entries;
+  const fromCommits = commitEntries(commitSubjects);
+  const entries: Partial<Record<ChangeType, string[]>> = {};
+  for (const source of [manual, fromCommits]) {
+    for (const [type, items] of Object.entries(source) as Array<[ChangeType, string[]]>) {
+      for (const item of items) if (!entries[type]?.includes(item)) (entries[type] ??= []).push(item);
+    }
+  }
+  const body = entriesMarkdown(entries);
+  if (!body) throw new Error('Nothing to release: no entries under "Unreleased" and no feat/fix commits');
   const section = `## v${version} - ${date}\n\n${summary.trim()}\n\n${body}\n`;
   const changelog = `${markdown.slice(0, start)}## Unreleased\n\n${section}\n${markdown.slice(end)}`.replace(/\n{3,}/gu, '\n\n');
   parseChangelog(changelog);
@@ -46,7 +57,9 @@ if (import.meta.main) {
   const bump = args.includes('--major') ? 'major' : args.includes('--patch') ? 'patch' : 'minor';
   const version = bumpVersion(latestVersion(tags), bump);
   const date = now.toISOString().slice(0, 10);
-  const { changelog, notes } = cutChangelog(readFileSync('CHANGELOG.md', 'utf8'), version, date, summary);
+  const previous = latestVersion(tags);
+  const subjects = execFileSync('git', ['log', '--format=%s', `v${previous}..HEAD`], { encoding: 'utf8' }).split('\n').filter(Boolean).reverse();
+  const { changelog, notes } = cutChangelog(readFileSync('CHANGELOG.md', 'utf8'), version, date, summary, subjects);
   const pkg = JSON.parse(readFileSync('package.json', 'utf8')) as { version: string };
   pkg.version = version;
 

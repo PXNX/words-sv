@@ -90,3 +90,24 @@ describe('changelog', () => {
     expect(() => cutChangelog(changelog, appVersion('1.3.0'), '2026-11-21', 'Empty')).toThrow('Nothing to release');
   });
 });
+
+describe('release notes from commits', () => {
+  it('lists features and fixes, never docs or chore', async () => {
+    const { commitEntries } = await import('../src/lib/app/changelog');
+    expect(commitEntries([
+      'feat(pwa): offer updates in a bottom sheet',
+      'fix(data): restore the directory listing.',
+      'docs(todo): track the plan',
+      'chore(release): 1.1.0',
+      'refactor(format): cache week info',
+      'feat(api)!: drop the old sync endpoint',
+      'Merge branch main'
+    ])).toEqual({ new: ['Offer updates in a bottom sheet'], fixed: ['Restore the directory listing'], migration: ['Drop the old sync endpoint'] });
+  });
+
+  it('merges commit entries into the unreleased section as bullets', () => {
+    const { changelog } = cutChangelog('# C\n\n## Unreleased\n\n## v1.0.0 - 2026-11-10\n\nBase.\n\n### New\n- X\n', appVersion('1.1.0'), '2026-11-11', 'Next.', ['feat(a): add a', 'fix(b): fix b', 'chore(c): bump']);
+    expect(changelog).toContain('## v1.1.0 - 2026-11-11\n\nNext.\n\n### New\n- Add a\n\n### Fixed\n- Fix b\n');
+    expect(changelog).not.toContain('bump');
+  });
+});
