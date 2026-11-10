@@ -9,9 +9,23 @@ its one-line summary; the localised highlight shown in the app lives in the mess
 
 ## Unreleased
 
+## v1.2.0 - 2026-11-10
+
+Readiness per skill, FSRS scheduling and complete German definitions.
+
 ### New
 - Schedule reviews with FSRS-5; older entries keep their due dates
 - Record every answer in an on-device learning event log
+- Offer updates in a bottom sheet with a link to what's new
+- Build release notes from feat and fix commits, leaving out docs and chore
+- Show changelog entries as bullets under separate feature and fix headings
+- Build a level ladder and per-skill readiness overview from scheduler states and events
+- Choose a target exam for weighted readiness
+- Show readiness ranges, the level ladder, known words and frequent mistakes
+
+### Fixed
+- Define every German word and correct mistyped, misspelled and inflected headwords
+- Correct the spelling of entstehen in a B2 story
 
 ## v1.1.0 - 2026-11-10
 
