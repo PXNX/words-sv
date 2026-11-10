@@ -8,11 +8,14 @@ from telegram.ext import Application, CallbackQueryHandler, CommandHandler, Cont
 from donations import CURRENCY, TIERS, build_payload, check_checkout, parse_payload
 from settings.config import ADMINS, MINIAPP_URL, WORDS_URL
 from bot_profile import set_cmd
+from bridge import forward_start, is_bridge_payload
 from store import record_donation
 from texts import lang_of, t
 from version import APP_VERSION
 
 logger = logging.getLogger(__name__)
+
+BRIDGE_RESULTS = {"reminders_on", "signed_in", "expired", "invited", "known", "own_invite", "unknown"}
 
 
 def _lang(update: Update) -> str:
@@ -25,6 +28,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await donate(update, context)
         return
     lang = _lang(update)
+    # One-time links from the app: sign-in, reminders, invites.
+    if context.args and is_bridge_payload(context.args[0]) and update.effective_user and update.effective_chat:
+        result = await forward_start(context.args[0], update.effective_user.id, update.effective_chat.id)
+        button = InlineKeyboardMarkup([[InlineKeyboardButton(t(lang, "open_app"), web_app=WebAppInfo(WORDS_URL))]])
+        await update.message.reply_text(t(lang, f"bridge_{result}" if result in BRIDGE_RESULTS else "bridge_failed"), reply_markup=button)
+        return
     rows = [[InlineKeyboardButton(t(lang, "open_app"), web_app=WebAppInfo(WORDS_URL))]]
     if MINIAPP_URL:
         rows.append([InlineKeyboardButton(t(lang, "open_donate_app"), web_app=WebAppInfo(MINIAPP_URL))])
