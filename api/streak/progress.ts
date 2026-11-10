@@ -93,7 +93,7 @@ export default async function streakProgress(req: ApiRequest, res: ApiResponse) 
 		let next = applyStreakEvent(merged, timeZone, event);
 		// An ember collected offline is collected here too; collecting is idempotent per day.
 		if (snapshot?.rewardCollected && snapshot.dateKey === next.dateKey) next = collectReward(next);
-		const bestStreak = Math.max(counter(rows[0]?.best_streak), counter(snapshot?.bestStreak, 100000), next.bestStreak as number, next.streakCount);
+		const bestStreak = Math.max(counter(rows[0]?.best_streak), counter(snapshot?.bestStreak, 100000), next.bestStreak ?? 0, next.streakCount);
 		const row = {
 			device_id: deviceId,
 			timezone: timeZone,

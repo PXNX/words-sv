@@ -44,3 +44,11 @@ describe('streak progress endpoint', () => {
     expect((await post({ event: 'made_up' })).statusCode).toBe(400);
   });
 });
+
+describe('best streak', () => {
+  it('stays a number when an event leaves it unset', async () => {
+    await post({ event: 'reward_collected' });
+    const row = [...table.values()].at(-1)!;
+    expect(Number.isFinite(row.best_streak)).toBe(true);
+  });
+});
