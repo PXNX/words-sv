@@ -210,9 +210,7 @@
   "onboarding_name_hint": "The characters in the stories will talk to you by this name.",
   "home_greeting": "Hi, {name}!",
   "home_cast": "Learning together with Mia, Tom and Lilith",
-  "update_app_hint": "Lilith found a new version of the app.",
-  "update_app_button": "Update",
-  "update_app_dismiss": "Later",
+  "update_app_hint": "Lilith is fetching the new version …",
   "story_for_you": "Made for you",
   "story_practice_words": "Practise my words",
   "pet_lilith": "Pet Lilith",
@@ -641,5 +639,11 @@
   "achievement_grammar_200": "200 grammar tasks",
   "achievement_mastered_200": "200 words mastered",
   "achievement_streak_30": "30 days in a row",
-  "cosmetic_hint_language": "Practise {count} words in {language}."
+  "cosmetic_hint_language": "Practise {count} words in {language}.",
+  "whats_new_title": "New in {version}",
+  "whats_new_fixes": "Fixes: {count}",
+  "whats_new_more": "Everything new",
+  "whats_new_go": "Let's go!",
+  "update_app_button": "Update",
+  "update_app_dismiss": "Later"
 }
