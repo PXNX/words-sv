@@ -216,8 +216,9 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
   "Format like" (learned language / app language) with Persian calendar and native-digit options;
   progress, streak strip, listening history and sync time use it; ESLint bans raw
   `toLocale*String()`.
-- [x] CalVer (9.2, 9.4, 9.5): `src/lib/app/version.ts` (`AppVersion`, `parseVersion`,
-  `compareVersions`, `nextCalVer`), `scripts/release.ts` (local, tested `cutChangelog`),
+- [x] Semantic versioning 1.x.x (replaces the plan's CalVer, 9.2, 9.4, 9.5):
+  `src/lib/app/version.ts` (`AppVersion`, `parseVersion`, `compareVersions`, `latestVersion`,
+  `bumpVersion`), `scripts/release.ts` (minor by default, `--patch`/`--major`, tested `cutChangelog`),
   `CHANGELOG.md`, `__APP_VERSION__` from `package.json`.
 - [x] Changelog page (9.6): `/changelog`, bundled and offline, newest first, unseen badge
   (`lastSeenVersion`), anchors per release, localised highlights (`changelog_v<version>`),
