@@ -51,6 +51,7 @@
 <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4 readiness" aria-labelledby="progress-readiness-heading">
   <h2 id="progress-readiness-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{m.readiness_title({}, locale)} · {settings.vocabularyLevel.toUpperCase()}</h2>
   <p class="readiness-known">{m.readiness_known_words({ count: formatNumber(settings.formatContext, overview.knownWords) }, locale)}</p>
+  <a class="readiness-placement" href="/placement">{m.placement_link({}, locale)}</a>
 
   {#if overview.exam}
     <div class="readiness-exam">
@@ -95,6 +96,8 @@
 
 <style>
   .readiness-known { margin: .35rem 0 0; font-size: 1.05rem; font-weight: 900; }
+  .readiness-placement { display: inline-block; margin-top: .3rem; color: #a45e38; font-size: .64rem; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; }
+  :global(html.dark) .readiness-placement { color: #e6a527; }
   .readiness-exam { display: flex; justify-content: space-between; gap: .5rem; margin-top: .6rem; padding: .55rem .7rem; border-radius: .7rem; background: color-mix(in oklch, var(--color-primary) 14%, transparent); font-size: .72rem; font-weight: 800; }
   .readiness-skills, .readiness-ladder, .readiness-errors { display: grid; gap: .45rem; margin: .7rem 0 0; padding: 0; list-style: none; }
   .readiness-skills li, .readiness-ladder li { display: grid; grid-template-columns: 5.6rem 1fr 4.4rem; align-items: center; gap: .55rem; font-size: .7rem; font-weight: 800; }
