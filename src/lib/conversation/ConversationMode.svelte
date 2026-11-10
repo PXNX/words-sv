@@ -19,6 +19,7 @@
   import { haptic } from '#lib/feedback/haptics.js';
   import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
   import ModelStatus from '#lib/offline/ModelStatus.svelte';
+  import { confirmDownload } from '#lib/offline/downloadConsent.svelte.js';
   import { modelProgressPhase } from '#lib/offline/progressPhase.js';
   import { voiceEngines } from '#lib/voice/engines.js';
   import { chatMessages, cleanReply, LEVEL_WORD_SAMPLE, pickTargetWords, usedWords, type Turn } from './conversation.js';
@@ -291,6 +292,8 @@
     stopAudio();
     interruptReply();
     if (!partner) drawPartner();
+    // A first download on mobile data asks before fetching gigabytes.
+    if (!localModel.cached && localModel.status !== 'ready' && !(await confirmDownload(chosenModel().downloadMB, chosenModel().label))) return;
     await loadLocalModel();
     if (localModel.status !== 'ready') return;
     const entries = await loadLevel(lang, level);

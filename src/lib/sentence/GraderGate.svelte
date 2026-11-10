@@ -9,6 +9,7 @@
   import { settings } from '#lib/state/settings.svelte.js';
   import { chosenModel, loadLocalModel, localModel, modelGpuMB } from '#lib/conversation/localModel.svelte.js';
   import ModelStatus from '#lib/offline/ModelStatus.svelte';
+  import { confirmDownload } from '#lib/offline/downloadConsent.svelte.js';
   import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
   import { modelProgressPhase } from '#lib/offline/progressPhase.js';
   import { formatBytes } from '#lib/offline/storage.js';
@@ -20,12 +21,15 @@
   const model = $derived(chosenModel());
 
   onMount(() => void prepareGrader());
+  async function download() {
+    if (await confirmDownload(model.downloadMB, model.label)) await loadLocalModel();
+  }
 </script>
 
 <div class="grader-gate" aria-live="polite">
   {#if availability === 'missing'}
     <p>{m.grade_model_needed({ model: model.label, size: formatBytes(model.downloadMB * 1_000_000, settings.formatContext) }, locale)}</p>
-    <button type="button" class="btn-play btn-play-ink" onclick={() => void loadLocalModel()}><IconDownload aria-hidden="true" />{m.grade_model_download({}, locale)}</button>
+    <button type="button" class="btn-play btn-play-ink" onclick={() => void download()}><IconDownload aria-hidden="true" />{m.grade_model_download({}, locale)}</button>
     {#if localModel.status === 'failed'}<p class="grader-warn">{m.grade_model_failed({}, locale)}</p>{/if}
   {:else if availability === 'loading'}
     <DownloadProgress progress={localModel.progress} phase={modelProgressPhase(localModel.text)} bytesPerSecond={localModel.bytesPerSecond} detail={model.label} />
