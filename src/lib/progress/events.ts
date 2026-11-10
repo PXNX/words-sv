@@ -29,6 +29,8 @@ export interface LearningEvent {
   score?: number;
   latencyMs?: number;
   rating?: Grade;
+  /** Grammar features the item tested; `featureErrors` are the ones answered wrong. */
+  features?: FeatureKey[];
   featureErrors?: FeatureKey[];
   sessionId: SessionId;
   /** Lets the retention report compare items shown with and without pictures or animations. */
@@ -53,6 +55,7 @@ export function normalizeLearningEvent(value: unknown): LearningEvent | null {
   const score = Number(raw.score);
   const latencyMs = Number(raw.latencyMs);
   const featureErrors = Array.isArray(raw.featureErrors) ? raw.featureErrors.filter(isFeatureKey) : [];
+  const features = Array.isArray(raw.features) ? raw.features.filter(isFeatureKey) : [];
   const presentation = raw.presentation && typeof raw.presentation === 'object' ? raw.presentation as Record<string, unknown> : null;
   return {
     id: raw.id,
@@ -67,6 +70,7 @@ export function normalizeLearningEvent(value: unknown): LearningEvent | null {
     ...(raw.score !== undefined && score >= 0 && score <= 1 ? { score } : {}),
     ...(raw.latencyMs !== undefined && Number.isFinite(latencyMs) && latencyMs >= 0 ? { latencyMs } : {}),
     ...(GRADES.includes(raw.rating as Grade) ? { rating: raw.rating as Grade } : {}),
+    ...(features.length ? { features } : {}),
     ...(featureErrors.length ? { featureErrors } : {}),
     ...(presentation ? { presentation: { image: presentation.image === true, animation: presentation.animation === true } } : {})
   };
@@ -150,3 +154,31 @@ export function featureErrorProfile(events: readonly LearningEvent[], since = 0)
   return [...counts].map(([feature, count]) => ({ feature, count })).sort((a, b) => b.count - a.count || a.feature.localeCompare(b.feature));
 }
 
+export interface FeatureStat {
+  feature: FeatureKey;
+  attempts: number;
+  errors: number;
+  accuracy: number;
+}
+
+/**
+ * Accuracy per grammar feature over a window, weakest first. Features seen fewer than
+ * `minAttempts` times are left out, so one unlucky answer does not make a feature "weak".
+ */
+export function featureStats(events: readonly LearningEvent[], since = 0, minAttempts = 3): FeatureStat[] {
+  const stats = new Map<FeatureKey, { attempts: number; errors: number }>();
+  for (const event of events) {
+    if (event.ts < since) continue;
+    const errors = new Set(event.featureErrors ?? []);
+    for (const feature of new Set([...(event.features ?? []), ...errors])) {
+      const entry = stats.get(feature) ?? { attempts: 0, errors: 0 };
+      entry.attempts += 1;
+      if (errors.has(feature)) entry.errors += 1;
+      stats.set(feature, entry);
+    }
+  }
+  return [...stats]
+    .filter(([, entry]) => entry.attempts >= minAttempts)
+    .map(([feature, entry]) => ({ feature, ...entry, accuracy: 1 - entry.errors / entry.attempts }))
+    .sort((a, b) => a.accuracy - b.accuracy || b.attempts - a.attempts || a.feature.localeCompare(b.feature));
+}
