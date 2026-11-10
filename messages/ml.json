@@ -354,5 +354,14 @@
   "invite_share": "ക്ഷണ ലിങ്ക് പങ്കിടൂ",
   "invite_copied": "ലിങ്ക് പകർത്തി",
   "invite_count": "{count} സുഹൃത്തുക്കളെ ക്ഷണിച്ചു",
-  "invite_share_text": "WordCircle-ൽ എന്റെ കൂടെ വാക്കുകൾ പഠിക്കൂ!"
+  "invite_share_text": "WordCircle-ൽ എന്റെ കൂടെ വാക്കുകൾ പഠിക്കൂ!",
+  "achievement_streak_14": "തുടർച്ചയായി 14 ദിവസം",
+  "achievement_vocab_500": "500 വാക്കുകൾ ശരി",
+  "achievement_perfect_30": "30 തവണ കൃത്യമായ ഉച്ചാരണം",
+  "achievement_reading_15": "15 പാഠങ്ങൾ വായിച്ചു",
+  "achievement_story_15": "15 കഥകൾ വായിച്ചു",
+  "achievement_grammar_200": "200 വ്യാകരണ പരിശീലനങ്ങൾ",
+  "achievement_mastered_200": "200 വാക്കുകൾ പഠിച്ചു",
+  "achievement_streak_30": "തുടർച്ചയായി 30 ദിവസം",
+  "cosmetic_hint_language": "{language} ഭാഷയിൽ {count} വാക്കുകൾ പരിശീലിക്കുക."
 }

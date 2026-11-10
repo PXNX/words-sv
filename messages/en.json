@@ -632,5 +632,14 @@
   "readiness_errors": "Most frequent mistakes",
   "target_exam": "Target exam",
   "target_exam_none": "None",
-  "changelog_v1_2_0": "Your progress per skill, smarter reviews and a definition for every German word."
+  "changelog_v1_2_0": "Your progress per skill, smarter reviews and a definition for every German word.",
+  "achievement_streak_14": "14 days in a row",
+  "achievement_vocab_500": "500 words correct",
+  "achievement_perfect_30": "30 perfect pronunciations",
+  "achievement_reading_15": "15 texts read",
+  "achievement_story_15": "15 stories read",
+  "achievement_grammar_200": "200 grammar tasks",
+  "achievement_mastered_200": "200 words mastered",
+  "achievement_streak_30": "30 days in a row",
+  "cosmetic_hint_language": "Practise {count} words in {language}."
 }

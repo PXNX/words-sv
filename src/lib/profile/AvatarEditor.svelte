@@ -56,13 +56,22 @@
     streak_3: m.achievement_streak_3({}, locale),
     streak_7: m.achievement_streak_7({}, locale),
     mastered_50: m.achievement_mastered_50({}, locale),
-    all_rounder: m.achievement_all_rounder({}, locale)
+    all_rounder: m.achievement_all_rounder({}, locale),
+    streak_14: m.achievement_streak_14({}, locale),
+    vocab_500: m.achievement_vocab_500({}, locale),
+    perfect_30: m.achievement_perfect_30({}, locale),
+    reading_15: m.achievement_reading_15({}, locale),
+    story_15: m.achievement_story_15({}, locale),
+    grammar_200: m.achievement_grammar_200({}, locale),
+    mastered_200: m.achievement_mastered_200({}, locale),
+    streak_30: m.achievement_streak_30({}, locale)
   });
   // How each reward is earned: its mode's own hint, the badge it comes with, or the high score.
   function rewardHint(id: RewardId): string {
     const source = cosmetics[id].source;
     if (source.kind === 'mode') return modeHints[source.mode];
     if (source.kind === 'achievement') return m.cosmetic_hint_achievement({ name: achievementNames[source.achievement] }, locale);
+    if (source.kind === 'language') return m.cosmetic_hint_language({ count: source.target, language: new Intl.DisplayNames([settings.interfaceLocale], { type: 'language' }).of(source.language) ?? source.language }, locale);
     if (source.score === 'wordle_two') return m.cosmetic_hint_score_wordle({}, locale);
     if (source.score === 'hangman_five') return m.cosmetic_hint_score_hangman({}, locale);
     return m.cosmetic_hint_score_vocab({}, locale);

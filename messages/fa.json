@@ -360,5 +360,14 @@
   "format_calendar_persian": "خورشیدی",
   "format_digits": "ارقام",
   "format_digits_latn": "0–9",
-  "format_digits_native": "فارسی"
+  "format_digits_native": "فارسی",
+  "achievement_streak_14": "۱۴ روز پشت سر هم",
+  "achievement_vocab_500": "۵۰۰ کلمه درست",
+  "achievement_perfect_30": "۳۰ تلفظ بی‌نقص",
+  "achievement_reading_15": "۱۵ متن خوانده‌شده",
+  "achievement_story_15": "۱۵ داستان خوانده‌شده",
+  "achievement_grammar_200": "۲۰۰ تمرین دستور زبان",
+  "achievement_mastered_200": "۲۰۰ کلمه آموخته‌شده",
+  "achievement_streak_30": "۳۰ روز پشت سر هم",
+  "cosmetic_hint_language": "{count} کلمه به زبان {language} تمرین کن."
 }

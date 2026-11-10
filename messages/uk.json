@@ -353,5 +353,14 @@
   "invite_share": "Поділитися посиланням",
   "invite_copied": "Посилання скопійовано",
   "invite_count": "Запрошено друзів: {count}",
-  "invite_share_text": "Вчи зі мною слова у WordCircle!"
+  "invite_share_text": "Вчи зі мною слова у WordCircle!",
+  "achievement_streak_14": "14 днів поспіль",
+  "achievement_vocab_500": "500 слів правильно",
+  "achievement_perfect_30": "30 ідеальних вимов",
+  "achievement_reading_15": "15 текстів прочитано",
+  "achievement_story_15": "15 історій прочитано",
+  "achievement_grammar_200": "200 завдань з граматики",
+  "achievement_mastered_200": "200 слів опановано",
+  "achievement_streak_30": "30 днів поспіль",
+  "cosmetic_hint_language": "Потренуй {count} слів мовою: {language}."
 }

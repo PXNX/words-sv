@@ -5,9 +5,10 @@
  * mode is open.
  */
 import type { AvatarPart } from './avatar.js';
-import { COSMETICS_KEY, earnedAchievementRewards, lockedIn, nextHangmanRun, nextRun, parseUnlocked, type CosmeticMode, type RewardId } from './cosmetics.js';
+import { COSMETICS_KEY, earnedAchievementRewards, earnedLanguageRewards, lockedIn, nextHangmanRun, nextRun, parseUnlocked, type CosmeticMode, type RewardId } from './cosmetics.js';
 import { buildAchievements } from '#lib/progress/achievements.js';
 import { readActivity } from '#lib/progress/activity.js';
+import type { Language } from '#lib/data/vocabulary.js';
 
 export { cosmetics, cosmeticModes, rewardFor, rewardIds, LISTEN_TARGET, WORDLE_TOP_TRIES, type CosmeticMode, type RewardId } from './cosmetics.js';
 
@@ -68,6 +69,11 @@ export function recordHangmanResult(won: boolean): void {
 export function checkAchievementRewards({ bestStreak, masteredWords }: { bestStreak: number; masteredWords: number }): void {
   const achievements = buildAchievements({ activity: readActivity(), bestStreak, masteredWords });
   for (const id of earnedAchievementRewards(achievements, cosmeticState.unlocked)) unlockCosmetic(id);
+}
+
+/** Language items: practising enough words of a learning language unlocks the one tied to it. */
+export function checkLanguageRewards(wordsPracticed: Partial<Record<Language, number>>): void {
+  for (const id of earnedLanguageRewards(wordsPracticed, cosmeticState.unlocked)) unlockCosmetic(id);
 }
 
 export function dismissUnlock() {
