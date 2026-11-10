@@ -4,7 +4,8 @@
   import { settings } from '#lib/state/settings.svelte.js';
   import type { GradeResult } from '#lib/sentence/grading.js';
   import { shortPromptForToday } from '#lib/sentence/prompt.js';
-  import { grader, modelLoading, modelProgress, runGrade } from '#lib/sentence/graderClient.svelte.js';
+  import { canGrade, grader, runGrade } from '#lib/sentence/graderClient.svelte.js';
+  import GraderGate from '#lib/sentence/GraderGate.svelte';
   import GradeResultCard from '#lib/sentence/GradeResultCard.svelte';
 
   const labels = $derived({
@@ -13,12 +14,7 @@
     placeholder: m.sentence_placeholder({}, { locale: settings.interfaceLocale }),
     submit: m.sentence_submit({}, { locale: settings.interfaceLocale }),
     reset: m.sentence_reset({}, { locale: settings.interfaceLocale }),
-    aiToggle: m.grade_ai_toggle({}, { locale: settings.interfaceLocale }),
-    aiHint: m.grade_ai_hint({}, { locale: settings.interfaceLocale }),
-    aiUnavailable: m.grade_ai_unavailable({}, { locale: settings.interfaceLocale }),
-    aiFailed: m.grade_ai_failed({}, { locale: settings.interfaceLocale }),
     aiSubmitting: m.grade_ai_submitting({}, { locale: settings.interfaceLocale }),
-    aiLoading: (percent: number) => m.grade_ai_loading({ percent: String(percent) }, { locale: settings.interfaceLocale })
   });
 
   const prompt = shortPromptForToday();
@@ -30,7 +26,7 @@
   const canSubmit = $derived(wordCount >= 2);
 
   async function submit() {
-    if (!canSubmit || grader.busy) return;
+    if (!canSubmit || grader.busy || !canGrade()) return;
     result = await runGrade(answer, settings.lang, 'short', prompt.topic);
     // The rubric score feeds the writing readiness on /progress.
     logAnswer(settings.lang, 'write', `WRITE:SHORT:${prompt.topic}`, null, { level: settings.vocabularyLevel, score: result.score });
@@ -83,20 +79,10 @@
     <span>{m.sentence_words({ count: String(wordCount) }, { locale: settings.interfaceLocale })}</span>
   </div>
 
-  <div class="ai-grade">
-    <label class="ai-toggle">
-      <input type="checkbox" bind:checked={grader.enabled} />
-      <span>{labels.aiToggle}</span>
-    </label>
-    {#if grader.enabled}
-      <p class="ai-note">{modelLoading() ? labels.aiLoading(Math.round(modelProgress() * 100)) : labels.aiHint}</p>
-    {/if}
-    {#if grader.notice === 'unavailable'}<p class="ai-note ai-note-warn">{labels.aiUnavailable}</p>{/if}
-    {#if grader.notice === 'failed'}<p class="ai-note ai-note-warn">{labels.aiFailed}</p>{/if}
-  </div>
+  <GraderGate />
 
   <div class="writing-actions">
-    <button class="btn-play btn-play-ink" onclick={submit} disabled={!canSubmit || grader.busy}>
+    <button class="btn-play btn-play-ink" onclick={submit} disabled={!canSubmit || grader.busy || !canGrade()}>
       {grader.busy ? labels.aiSubmitting : labels.submit}
     </button>
     {#if result}
@@ -122,17 +108,10 @@
   .writing-area:focus-visible { outline: 2px solid #e6a527; outline-offset: 2px; }
   .writing-meta { display: flex; justify-content: flex-end; color: #7b8494; font-family: 'DM Sans', sans-serif; font-size: 0.64rem; font-weight: 700; }
   .writing-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; }
-  .ai-grade { display: grid; gap: 0.25rem; }
-  .ai-toggle { display: inline-flex; align-items: center; gap: 0.4rem; color: #596477; font-family: 'DM Sans', sans-serif; font-size: 0.68rem; font-weight: 800; cursor: pointer; }
-  .ai-toggle input { accent-color: #a45e38; }
-  .ai-note { margin: 0; color: #7b8494; font-family: 'DM Sans', sans-serif; font-size: 0.62rem; font-weight: 700; line-height: 1.4; }
-  .ai-note-warn { color: #a45e38; }
   :global(html.dark) .writing-header h1 { color: #fffdf7; }
   :global(html.dark) .writing-intro { color: rgba(255, 253, 247, 0.68); }
   :global(html.dark) .writing-prompt { border-color: rgba(255, 253, 247, 0.24); background: rgba(255, 253, 247, 0.06); }
   :global(html.dark) .writing-prompt-topic { color: #fffdf7; }
   :global(html.dark) .writing-prompt-hint { color: rgba(255, 253, 247, 0.7); }
   :global(html.dark) .writing-area { border-color: rgba(255, 253, 247, 0.24); background: #152b47; color: rgba(255, 253, 247, 0.9); }
-  :global(html.dark) .ai-toggle { color: rgba(255, 253, 247, 0.68); }
-  :global(html.dark) .ai-note { color: rgba(255, 253, 247, 0.55); }
 </style>

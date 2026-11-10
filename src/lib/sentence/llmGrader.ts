@@ -2,7 +2,7 @@
  * The language-model grader behind `grade()`.
  *
  * The rule-based scorer in `grading.ts` stays the deterministic fallback. When the
- * learner turns on AI grading, the writing mode sends the text to the on-device
+ * writing modes grade (always, once the model is downloaded), they send the text to the on-device
  * WebLLM model that the conversation mode already uses — nothing leaves the phone.
  * The model answers with JSON (score, issue codes, one short comment); this module
  * turns that into the same `GradeResult` shape the rule scorer produces.

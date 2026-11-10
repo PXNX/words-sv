@@ -569,10 +569,6 @@
   "factor_paragraphGood": "{value} Absätze – schön gegliedert.",
   "factor_spacingOdd": "Doppelte oder überflüssige Leerzeichen.",
   "factor_allGood": "Keine offensichtlichen Fehler – gut geschrieben!",
-  "grade_ai_toggle": "KI-Bewertung",
-  "grade_ai_hint": "Bewertet mit dem Sprachmodell auf diesem Gerät.",
-  "grade_ai_loading": "Sprachmodell wird geladen … {percent} %",
-  "grade_ai_unavailable": "Die KI-Bewertung braucht WebGPU und ein geladenes Sprachmodell. Nutze die Regelbewertung.",
   "grade_ai_failed": "Die KI-Bewertung hat nicht geklappt. Hier ist die Regelbewertung.",
   "grade_ai_submitting": "Wird bewertet …",
   "grade_source_llm": "KI-Bewertung",
@@ -748,5 +744,10 @@
   "today_feature": "Übe {feature} – da passieren dir gerade die meisten Fehler",
   "progress_download": "Wird heruntergeladen",
   "progress_load": "Wird in den Speicher geladen",
-  "progress_update": "Neue Version wird geholt"
+  "progress_update": "Neue Version wird geholt",
+  "grade_model_needed": "Deine Texte bewertet ein KI-Modell direkt auf deinem Gerät. Lade es einmal herunter ({model}, {size}), dann bewertet es jeden Text.",
+  "grade_model_download": "KI-Modell laden",
+  "grade_model_failed": "Das Modell konnte nicht geladen werden. Versuch es noch einmal.",
+  "grade_model_unsupported": "Dein Gerät kann das KI-Modell nicht ausführen (kein WebGPU). Deine Texte werden deshalb nach festen Regeln bewertet.",
+  "grade_model_ready": "Bewertet von {model} auf deinem Gerät."
 }

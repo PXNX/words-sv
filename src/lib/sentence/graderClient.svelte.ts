@@ -1,37 +1,47 @@
 /*
- * Shared grading client for the two writing modes. It keeps the AI-grading toggle
- * and the in-flight state, and decides between the on-device language model and
- * the deterministic rule scorer. Every failure falls back to the rules, so the
- * learner always gets a grade.
+ * Shared grading client for the two writing modes. Every text is graded by the on-device language
+ * model; GraderGate asks the learner to download it once before the first grade. Only a device
+ * that cannot run the model at all (no WebGPU) gets the deterministic rule scorer instead, and a
+ * failed model run falls back to it too, so the learner always gets a grade.
  */
-import { localModel } from '#lib/conversation/localModel.svelte.js';
+import { checkLocalModel, localModel } from '#lib/conversation/localModel.svelte.js';
 import type { Language } from '#lib/data/vocabulary.js';
 import { grade, type GradeMode, type GradeResult } from './grading.js';
 import { ensureLlmGraderLoaded, gradeWithLlm } from './llmGrader.js';
 
 export type GraderNotice = '' | 'unavailable' | 'failed';
+/** unsupported: no WebGPU · missing: not downloaded yet · loading: downloading or loading into memory. */
+export type GraderAvailability = 'checking' | 'unsupported' | 'missing' | 'loading' | 'ready';
 
 export const grader = $state({
-  /** The learner opted into the language-model grade. */
-  enabled: false,
-  /** A grade is being produced (model download included). */
+  /** A grade is being produced. */
   busy: false,
-  /** Why the last AI grade fell back to the rules, if it did. */
+  /** Why the last grade came from the rules, if it did. */
   notice: '' as GraderNotice
 });
 
-export async function runGrade(
-  text: string,
-  language: Language,
-  mode: GradeMode,
-  topic: string
-): Promise<GradeResult> {
-  if (!grader.enabled) return grade(text, language, mode);
+/** Whether grading can start: the model is downloaded (or loaded), or the device cannot run it. */
+export function graderAvailability(): GraderAvailability {
+  if (localModel.status === 'unsupported') return 'unsupported';
+  if (localModel.status === 'loading') return 'loading';
+  if (localModel.status === 'checking' || (localModel.status === 'idle' && !localModel.device)) return 'checking';
+  return localModel.status === 'ready' || localModel.cached ? 'ready' : 'missing';
+}
+
+export function canGrade(): boolean {
+  const availability = graderAvailability();
+  return availability === 'ready' || availability === 'unsupported';
+}
+
+export async function prepareGrader(): Promise<void> {
+  await checkLocalModel();
+}
+
+export async function runGrade(text: string, language: Language, mode: GradeMode, topic: string): Promise<GradeResult> {
   grader.busy = true;
   grader.notice = '';
   try {
-    const ready = await ensureLlmGraderLoaded();
-    if (!ready) {
+    if (localModel.status === 'unsupported' || !(await ensureLlmGraderLoaded())) {
       grader.notice = 'unavailable';
       return grade(text, language, mode);
     }
@@ -42,13 +52,4 @@ export async function runGrade(
   } finally {
     grader.busy = false;
   }
-}
-
-/** The model download's progress, 0–1, while it loads. */
-export function modelLoading(): boolean {
-  return localModel.status === 'loading';
-}
-
-export function modelProgress(): number {
-  return Math.max(0, Math.min(1, localModel.progress));
 }
