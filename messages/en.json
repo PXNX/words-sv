@@ -646,5 +646,17 @@
   "whats_new_go": "Let's go!",
   "update_app_button": "Update",
   "update_app_dismiss": "Later",
-  "changelog_v1_3_0": "New faces, eyes and noses to unlock, a progress page just for the language you learn, and updates with Lilith."
+  "changelog_v1_3_0": "New faces, eyes and noses to unlock, a progress page just for the language you learn, and updates with Lilith.",
+  "welcome_kicker": "Hello!",
+  "welcome_title": "Welcome to WordCircle",
+  "welcome_body": "A few minutes a day, and new words stick. Three friends learn with you.",
+  "welcome_start": "Let's go",
+  "welcome_meet_title": "Your learning friends",
+  "welcome_meet_tom": "Hi, I'm Tom! With me you practise new words until they stick.",
+  "welcome_meet_mia": "And I'm Mia. I take you into stories and show you the grammar behind them.",
+  "welcome_meet_lilith": "Meow! I'm Lilith. I'm happy about every day you practise – and you're allowed to pet me, too.",
+  "welcome_skip": "Skip",
+  "welcome_done_title": "Nice to meet you, {name}!",
+  "welcome_done_body": "Mia, Tom and Lilith are waiting. Start with a short game.",
+  "welcome_done_go": "Let's start"
 }

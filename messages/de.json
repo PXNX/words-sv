@@ -646,5 +646,17 @@
   "whats_new_go": "Los geht's!",
   "update_app_button": "Aktualisieren",
   "update_app_dismiss": "Später",
-  "changelog_v1_3_0": "Neue Gesichter, Augen und Nasen zum Freispielen, eine Fortschrittsseite nur für deine Lernsprache und Updates mit Lilith."
+  "changelog_v1_3_0": "Neue Gesichter, Augen und Nasen zum Freispielen, eine Fortschrittsseite nur für deine Lernsprache und Updates mit Lilith.",
+  "welcome_kicker": "Hallo!",
+  "welcome_title": "Willkommen bei WordCircle",
+  "welcome_body": "Ein paar Minuten am Tag, und neue Wörter bleiben hängen. Drei Freunde lernen mit dir.",
+  "welcome_start": "Los geht's",
+  "welcome_meet_title": "Deine Lernfreunde",
+  "welcome_meet_tom": "Hi, ich bin Tom! Mit mir übst du neue Wörter, bis sie sitzen.",
+  "welcome_meet_mia": "Und ich bin Mia. Ich nehme dich mit in Geschichten und zeige dir die Grammatik dahinter.",
+  "welcome_meet_lilith": "Miau! Ich bin Lilith. Ich freue mich über jeden Tag, an dem du übst – und streicheln darfst du mich auch.",
+  "welcome_skip": "Überspringen",
+  "welcome_done_title": "Schön, dich kennenzulernen, {name}!",
+  "welcome_done_body": "Mia, Tom und Lilith warten schon. Fang mit einem kurzen Spiel an.",
+  "welcome_done_go": "Zum Start"
 }
