@@ -1,6 +1,7 @@
 <!--
   Shown once after an update: a joyful Lilith, the release's highlight and its new features, with
-  one button to carry on. Opening it marks the release as seen, like visiting /changelog.
+  one button to carry on and a link to /changelog. A release without features or fixes gets a
+  small "Updated to …" snackbar instead. Either marks the release as seen, like visiting /changelog.
 -->
 <script lang="ts">
   import { onMount } from 'svelte';
@@ -12,9 +13,12 @@
   import { lastSeenVersion, markVersionSeen } from './changelogSeen.js';
   import { releaseHighlight } from './highlight.js';
   import { releases } from './releases.js';
-  import { whatsNew, type WhatsNew } from './whatsNew.js';
+  import { releaseAnchor } from './changelog.js';
+  import { updateNotice, type WhatsNew } from './whatsNew.js';
 
+  const SNACKBAR_MS = 5000;
   let news = $state<WhatsNew | null>(null);
+  let updatedTo = $state<string | null>(null);
   let button = $state<HTMLButtonElement | null>(null);
   const locale = $derived({ locale: settings.interfaceLocale });
   // Confetti in the storybook palette; each piece gets its own lane, delay and spin.
@@ -33,10 +37,21 @@
     try {
       returning = Boolean(localStorage.getItem('wordcircle-interface-locale-v1') || localStorage.getItem('wordcircle-activity-v1'));
     } catch {}
-    news = whatsNew(releases, lastSeenVersion(), returning);
+    const notice = updateNotice(releases, lastSeenVersion(), returning);
     // A fresh install starts with everything seen, so only later updates are celebrated.
     markVersionSeen(newest.version);
-    if (news) haptic('success');
+    if (notice?.kind === 'sheet') {
+      news = notice.news;
+      haptic('success');
+    } else if (notice) {
+      updatedTo = notice.version;
+    }
+  });
+
+  $effect(() => {
+    if (!updatedTo) return;
+    const timer = window.setTimeout(() => (updatedTo = null), SNACKBAR_MS);
+    return () => window.clearTimeout(timer);
   });
 
   $effect(() => {
@@ -65,14 +80,19 @@
           {#each news.features as feature, index}<li style={`--i:${index}`}>{feature}</li>{/each}
         </ul>
       {/if}
-      {#if news.fixes || news.moreFeatures}
-        <p class="news-extra">
-          {#if news.fixes}{m.whats_new_fixes({ count: news.fixes }, locale)}{/if}
-          <a href="/changelog" onclick={close}>{m.whats_new_more({}, locale)}</a>
-        </p>
-      {/if}
+      <p class="news-extra">
+        {#if news.fixes}{m.whats_new_fixes({ count: news.fixes }, locale)}{/if}
+        <a href={`/changelog#${releaseAnchor(newest.version)}`} onclick={close}>{m.whats_new_more({}, locale)}</a>
+      </p>
       <button type="button" class="btn-play btn-play-ink news-go" bind:this={button} onclick={close}>{m.whats_new_go({}, locale)}</button>
     </div>
+  </div>
+{/if}
+
+{#if updatedTo}
+  <div class="news-snackbar" role="status" aria-live="polite" dir={getTextDirection(settings.interfaceLocale)} lang={settings.interfaceLocale}>
+    <span>{m.update_snackbar({ version: updatedTo }, locale)}</span>
+    <a href={`/changelog#v${updatedTo}`} onclick={() => (updatedTo = null)}>{m.update_snackbar_link({}, locale)}</a>
   </div>
 {/if}
 
@@ -96,6 +116,10 @@
   .news-extra { display:flex;flex-wrap:wrap;justify-content:center;gap:.25rem .6rem;margin:0;font-size:.68rem;font-weight:800;opacity:.75; }
   .news-extra a { color:#a45e38; }
   .news-go { width:100%;justify-content:center;margin-top:.35rem;animation:news-in .4s ease-out .8s both; }
+  .news-snackbar { position:fixed;z-index:79;bottom:calc(1rem + env(safe-area-inset-bottom));left:50%;translate:-50% 0;display:flex;align-items:center;gap:.8rem;max-width:calc(100% - 2rem);padding:.55rem .6rem .55rem 1rem;border:2px solid #172a45;border-radius:999px;background:#fffdf7;color:#172a45;box-shadow:3px 3px 0 #172a45;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:900;animation:news-in .4s ease-out; }
+  .news-snackbar a { padding:.25rem .65rem;border-radius:999px;background:#172a45;color:#fffdf7;text-decoration:none;white-space:nowrap; }
+  :global(html.dark) .news-snackbar { background:#152b47;border-color:#fffdf7;color:#fffdf7;box-shadow:3px 3px 0 #0a1626; }
+  :global(html.dark) .news-snackbar a { background:#e6a527;color:#172a45; }
   @keyframes news-fade { from { opacity:0; } }
   @keyframes news-rise { from { transform:translateY(100%); } }
   @keyframes news-pop { from { transform:scale(.3) rotate(-12deg);opacity:0; } }
@@ -106,6 +130,7 @@
   @media (prefers-reduced-motion:reduce) {
     .news-sheet,.news-backdrop,.news-lilith,.news-sheet h2,.news-highlight,.news-features li,.news-go { animation:none; }
     .news-confetti,.news-hearts { display:none; }
+    .news-snackbar { animation:none; }
   }
   :global(html.dark) .news-sheet { background:#152b47; }
   :global(html.dark) .news-sheet h2,:global(html.dark) .news-highlight,:global(html.dark) .news-features { color:#fffdf7; }

@@ -624,6 +624,8 @@
   "whats_new_title": "Neu in {version}",
   "whats_new_fixes": "Fehlerbehebungen: {count}",
   "whats_new_more": "Alle Neuerungen",
+  "update_snackbar": "Aktualisiert auf {version}",
+  "update_snackbar_link": "Was ist neu?",
   "whats_new_go": "Los geht's! 🔥",
   "update_app_button": "Aktualisieren",
   "update_app_dismiss": "Später",

@@ -624,6 +624,8 @@
   "whats_new_title": "New in {version}",
   "whats_new_fixes": "Fixes: {count}",
   "whats_new_more": "Everything new",
+  "update_snackbar": "Updated to {version}",
+  "update_snackbar_link": "What's new",
   "whats_new_go": "Let's go! 🔥",
   "update_app_button": "Update",
   "update_app_dismiss": "Later",
