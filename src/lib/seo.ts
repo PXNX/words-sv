@@ -62,6 +62,12 @@ export const pages: Record<string, PageMeta> = {
     kicker: 'Niveau',
     icon: 'fact-check-rounded'
   },
+  '/store': {
+    title: 'Laden',
+    description: 'Gestalte deine Figur und unterstütze WordCircle mit Telegram Stars.',
+    kicker: 'Figur',
+    icon: 'storefront-rounded'
+  },
   '/changelog': {
     title: 'Was ist neu',
     description: 'Alle Versionen von WordCircle mit ihren Neuerungen und Korrekturen.',
