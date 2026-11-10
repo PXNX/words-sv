@@ -675,5 +675,6 @@
   "placement_unavailable": "There aren't enough words in this language for a placement test yet.",
   "placement_link": "Take the placement test",
   "checkpoint_due": "due",
-  "checkpoint_trend": "Your recent tests"
+  "checkpoint_trend": "Your recent tests",
+  "readiness_forecast": "At this pace you'll know 80 % of the {level} words in about {weeks} weeks ({low}–{high})."
 }

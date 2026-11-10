@@ -14,7 +14,8 @@
   import { readEvents } from './eventLog.js';
   import type { LearningEvent } from './events.js';
   import { buildOverview } from './overview.js';
-  import { EXAM_NAMES, readinessPercent, type ReadinessRange } from './skillState.js';
+  import { EXAM_NAMES, forecastWeeks, readinessPercent, type ReadinessRange } from './skillState.js';
+  import { storeSnapshot, weeklySeries, type MasterySnapshot } from './masteryHistory.js';
   import { readLevelStates } from '#lib/vocab/spacedRepetition.js';
 
   const DAY_MS = 24 * 60 * 60 * 1000;
@@ -35,6 +36,14 @@
     exam: settings.targetExam,
     now: Date.now()
   }));
+  // This week's share of the current level, and how long the recent pace needs to reach 80 %.
+  const FORECAST_TARGET = 0.8;
+  let history = $state<MasterySnapshot[]>([]);
+  const currentRung = $derived(overview.ladder.find((rung) => rung.level === settings.vocabularyLevel));
+  $effect(() => {
+    if (currentRung) history = storeSnapshot(settings.lang, settings.vocabularyLevel, currentRung.mastery);
+  });
+  const forecast = $derived(forecastWeeks(weeklySeries(history, settings.lang, settings.vocabularyLevel), FORECAST_TARGET));
   const skillName = $derived<Record<Skill, string>>({
     vocab: m.skill_vocab({}, locale),
     grammar: m.skill_grammar({}, locale),
@@ -84,6 +93,9 @@
     {/each}
   </ul>
   <p class="readiness-hint">{m.readiness_hint({}, locale)}</p>
+  {#if forecast && forecast.weeks > 0}
+    <p class="readiness-forecast">{m.readiness_forecast({ weeks: formatNumber(settings.formatContext, forecast.weeks), low: formatNumber(settings.formatContext, forecast.low), high: formatNumber(settings.formatContext, forecast.high), level: settings.vocabularyLevel.toUpperCase() }, locale)}</p>
+  {/if}
 
   <h3>{m.readiness_ladder({}, locale)}</h3>
   <ol class="readiness-ladder">
@@ -110,6 +122,7 @@
 <style>
   .readiness-known { margin: .35rem 0 0; font-size: 1.05rem; font-weight: 900; }
   .readiness-due { margin-inline-start: .4rem; padding: .05rem .4rem; border-radius: 999px; background: #e6a527; color: #172a45; font-size: .55rem; }
+  .readiness-forecast { margin: .55rem 0 0; padding: .5rem .65rem; border-radius: .6rem; background: color-mix(in oklch, var(--color-success, #2f8f5b) 12%, transparent); font-size: .68rem; font-weight: 800; line-height: 1.4; }
   .readiness-trend { display: flex; gap: .5rem; margin: .5rem 0 0; padding: 0; list-style: none; }
   .readiness-trend li { display: grid; gap: .1rem; padding: .35rem .6rem; border-radius: .6rem; background: color-mix(in oklch, currentColor 8%, transparent); font-size: .74rem; font-weight: 900; text-align: center; }
   .readiness-trend small { font-size: .56rem; font-weight: 700; opacity: .65; }
