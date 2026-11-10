@@ -33,7 +33,8 @@
 
   // `voiceOptions`: the settings that belong to the chosen voice (Piper quality, test, dialects),
   // shown under the voice cards; `onvoicechange` lets the panel stop a voice test that is playing.
-  let { voiceOptions, onvoicechange }: { voiceOptions?: Snippet; onvoicechange?: () => void } = $props();
+  // `bare`: inside a settings section that already has the card and the title.
+  let { voiceOptions, onvoicechange, bare = false }: { voiceOptions?: Snippet; onvoicechange?: () => void; bare?: boolean } = $props();
 
   const locale = $derived(settings.interfaceLocale);
   const engineNames: Record<VoiceEngineId, () => string> = {
@@ -169,8 +170,8 @@
   });
 </script>
 
-<section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play models" aria-labelledby="models-heading">
-  <h2 id="models-heading">{m.models_title({}, { locale })}</h2>
+<section class={bare ? 'models' : 'mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play models'} aria-labelledby={bare ? undefined : 'models-heading'}>
+  {#if !bare}<h2 id="models-heading">{m.models_title({}, { locale })}</h2>{/if}
   <p class="model-hint">{m.models_hint({}, { locale })}</p>
 
   <h3>{m.models_downloads({}, { locale })}</h3>

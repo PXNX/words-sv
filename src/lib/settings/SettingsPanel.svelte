@@ -1,25 +1,37 @@
 <script lang="ts">
   import ModelManager from './ModelManager.svelte';
   import { num } from '#lib/format/num.svelte.js';
-  import { deviceAbilities, speaksLanguage } from '#lib/voice/engines.js';
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings, interfaceLocales } from '#lib/state/settings.svelte.js';
   import { playableLanguages, vocabularyLevels, isLanguage, type VocabularyLevel } from '#lib/data/vocabulary.js';
   import { disablePush, enablePush, pushEnabled, pushSupported } from './pushClient';
   import { openTelegramLink, telegramDevice, type TelegramStatus } from './telegramClient';
-  import { cloudSync, noteLinked } from '#lib/sync/cloudSync.svelte.js';
+  import { noteLinked } from '#lib/sync/cloudSync.svelte.js';
   import TelegramAccount from './TelegramAccount.svelte';
+  import WebGpuStatus from './WebGpuStatus.svelte';
+  import SettingsSection from './ui/SettingsSection.svelte';
+  import SettingRow from './ui/SettingRow.svelte';
+  import Segmented from './ui/Segmented.svelte';
+  import { webgpu } from '#lib/app/webgpuCheck.svelte.js';
+  import IconSchool from '~icons/material-symbols/school-rounded';
+  import IconTune from '~icons/material-symbols/tune-rounded';
+  import IconCalendar from '~icons/material-symbols/calendar-month-rounded';
+  import IconBell from '~icons/material-symbols/notifications-rounded';
+  import IconMemory from '~icons/material-symbols/memory-rounded';
+  import IconVoices from '~icons/material-symbols/graphic-eq-rounded';
+  import IconGroup from '~icons/material-symbols/group-rounded';
+  import IconInfo from '~icons/material-symbols/info-rounded';
+  import IconUpdate from '~icons/material-symbols/update-rounded';
   import { checkInviteRewards } from '#lib/profile/cosmetics.svelte.js';
   import { INVITE_REWARD_TARGET } from '#lib/profile/cosmetics.js';
-  import IconCloud from '~icons/material-symbols/cloud-done-rounded';
-  import { naturalMegabytes, naturalReady, naturalState, naturalSupported, playNatural, prepareNatural, synthesizeNatural } from '#lib/story/naturalVoices.svelte.js';
+  import { naturalReady, naturalState, naturalSupported, playNatural, prepareNatural, synthesizeNatural } from '#lib/story/naturalVoices.svelte.js';
   import { onMount } from 'svelte';
   import SelectMenu from './SelectMenu.svelte';
   import { unseenReleases } from '#lib/app/changelog.js';
   import { lastSeenVersion } from '#lib/app/changelogSeen.js';
   import { releases } from '#lib/app/releases.js';
-  import { formatMoment, nativeDigitsFor, offersCalendarChoice, type FormatCalendar, type FormatDigits, type FormatSource } from '#lib/format/format.js';
+  import { nativeDigitsFor, offersCalendarChoice, type FormatCalendar, type FormatDigits, type FormatSource } from '#lib/format/format.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import { defaultAvatar } from '#lib/profile/avatar.js';
   import IconChevronRight from '~icons/material-symbols/chevron-right-rounded';
@@ -165,6 +177,37 @@
   ]);
   const interfaceOptions = interfaceLocales.map((locale) => ({ value: locale.code as string, label: locale.label }));
 
+  const levelOptions = vocabularyLevels.map((level) => ({ value: level, label: level.toUpperCase() }));
+  const themeOptions = $derived([{ value: 'light' as const, label: labels.light }, { value: 'dark' as const, label: labels.dark }]);
+  const voiceModelOptions = $derived([{ value: 'standard' as const, label: labels.voiceModelStandard }, { value: 'high' as const, label: labels.voiceModelHigh }]);
+  const sectionTitles = $derived({
+    learning: m.settings_section_learning({}, { locale: settings.interfaceLocale }),
+    app: m.settings_section_app({}, { locale: settings.interfaceLocale }),
+    formats: m.settings_section_formats({}, { locale: settings.interfaceLocale }),
+    reminders: m.settings_section_reminders({}, { locale: settings.interfaceLocale }),
+    device: m.settings_section_device({}, { locale: settings.interfaceLocale }),
+    voices: m.settings_section_voices({}, { locale: settings.interfaceLocale }),
+    friends: m.settings_section_friends({}, { locale: settings.interfaceLocale }),
+    about: m.settings_section_about({}, { locale: settings.interfaceLocale })
+  });
+  // What a folded section shows, so most settings can be read without opening anything.
+  const summaries = $derived.by(() => {
+    const locale = { locale: settings.interfaceLocale };
+    const on = m.settings_on({}, locale);
+    const off = m.settings_off({}, locale);
+    const optionLabel = (options: ReadonlyArray<{ value: string; label: string }>, value: string) => options.find((option) => option.value === value)?.label ?? value;
+    return {
+      learning: `${optionLabel(languageOptions, settings.lang)} · ${settings.vocabularyLevel.toUpperCase()}`,
+      app: `${optionLabel(interfaceOptions, settings.interfaceLocale)} · ${settings.theme === 'dark' ? labels.dark : labels.light} · ${labels.sound}: ${settings.sound ? on : off}`,
+      formats: optionLabel(formatSourceOptions, settings.formatSource),
+      reminders: `${labels.notifications}: ${notificationsEnabled ? on : off}${telegram ? ` · Telegram: ${telegram.reminders ? on : off}` : ''}`,
+      device: webgpu.result ? (webgpu.result.status === 'ok' ? m.webgpu_short_ok({}, locale) : m.webgpu_short_failed({}, locale)) : m.webgpu_not_run({}, locale),
+      voices: m.models_hint({}, locale),
+      friends: telegram ? labels.inviteCount(telegram.invited) : labels.shareApp,
+      about: m.changelog_version({ version: __APP_VERSION__ }, locale)
+    };
+  });
+
   function selectLanguage(value: string) {
     if (isLanguage(value)) settings.setLang(value);
   }
@@ -201,9 +244,6 @@
   // Between opening the bot and pressing Start there; coming back to the app checks again.
   let telegramWaiting = $state(false);
   let inviteCopied = $state(false);
-  function savedTime(at: number) {
-    return formatMoment(settings.formatContext, at);
-  }
   function refreshTelegram() {
     void telegramDevice('status').then((status) => {
       telegram = status;
@@ -243,8 +283,8 @@
     const url = typeof location !== 'undefined' ? location.origin + '/' : 'https://words-sv.vercel.app/';
     const title = m.home_title({}, { locale: settings.interfaceLocale });
     const text = m.share_app_text({}, { locale: settings.interfaceLocale });
-    if (typeof navigator !== 'undefined' && (navigator as any).share) {
-      (navigator as any).share({ title, text, url }).catch(() => {});
+    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+      navigator.share({ title, text, url }).catch(() => {});
       return;
     }
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
@@ -264,127 +304,173 @@
 
 <svelte:window onfocus={() => { if (telegramWaiting) refreshTelegram(); }} />
 
-<aside class="flex-1 min-h-0 m-0 px-[clamp(1rem,5vw,2rem)] pb-[clamp(1rem,5vw,2rem)] pt-[clamp(2.9rem,10vw,3.6rem)] overflow-y-auto border-0 bg-transparent animate-[drop-in_.2s_cubic-bezier(.23,1,.32,1)]" aria-label={labels.settingsHint} dir={interfaceDirection} lang={settings.interfaceLocale}>
-  <div class="flex items-center justify-center gap-3 text-base-content">
-    <span class="relative w-[34px] h-[34px] block flex-none" aria-hidden="true">
-      <i class="absolute block w-[21px] h-[21px] rounded-full border-2 border-neutral top-[1px] left-[1px]"></i>
-      <b class="absolute block w-[21px] h-[21px] rounded-full border-2 border-primary right-[1px] bottom-[1px]"></b>
-    </span>
-    <strong class="block font-['DM_Serif_Display',serif] text-[clamp(1.45rem,6vw,2rem)] font-normal tracking-[-.04em] leading-[.9]">WordCircle</strong>
-  </div>
+<aside class="settings" aria-label={labels.settingsHint} dir={interfaceDirection} lang={settings.interfaceLocale}>
+  <header class="settings-brand">
+    <span class="settings-logo" aria-hidden="true"><i></i><b></b></span>
+    <strong>WordCircle</strong>
+  </header>
 
-  <!-- The learner themselves: their own story character and name, edited on the progress page -->
-  <!-- On wide screens the sections flow into columns instead of one long, narrow list. -->
   <div class="settings-columns">
-  <a class="settings-me mt-[1.35rem] px-[.8rem] py-[.6rem] panel-play flex items-center gap-3 text-base-content no-underline" href="/progress">
-    <span class="settings-me-avatar" aria-hidden="true"><StoryCharacter id="kumar" avatar={settings.avatar ?? defaultAvatar} mood="happy" /></span>
-    <span class="min-w-0 flex-1">
-      <span class="block text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.profileTitle}</span>
-      <strong class="block truncate font-['DM_Serif_Display',serif] text-[1.35rem] font-normal tracking-[-.02em] leading-[1.1]">{settings.firstName || labels.profileNameEmpty}</strong>
-      <span class="block text-base-content/60 text-[.6rem] font-bold">{labels.profileEdit}</span>
-    </span>
-    <IconChevronRight aria-hidden="true" class="w-[1.2rem] h-[1.2rem] flex-none rtl:rotate-180" />
-  </a>
-
-  <section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play" aria-labelledby="account-heading">
-    <h2 id="account-heading" class="m-0 mb-[.55rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{m.account_title({}, { locale: settings.interfaceLocale })}</h2>
-    <TelegramAccount />
-  </section>
-
-  <section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play" aria-labelledby="content-settings-heading">
-    <h2 id="content-settings-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.contentGroup}</h2>
-    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.gameLanguage}</span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={settings.lang} options={languageOptions} label={labels.gameLanguage} onchange={selectLanguage} /></div>
-    <div class="flex items-start justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.vocabulary}</span><div class="seg-play">{#each vocabularyLevels as level}<button class={`min-h-[1.65rem] min-w-[1.65rem] px-[.32rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.vocabularyLevel === level ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} onclick={() => selectVocabularyLevel(level)}>{level.toUpperCase()}</button>{/each}</div></div>
-    <a class="flex items-center justify-end gap-1 mt-[.35rem] text-accent text-[.6rem] font-extrabold tracking-[.06em] uppercase no-underline" href="/placement">{m.placement_link({}, { locale: settings.interfaceLocale })}<IconChevronRight aria-hidden="true" class="w-[.9rem] h-[.9rem] rtl:rotate-180" /></a>
-    {#if settings.vocabularyLevel !== 'a1'}<div class="flex items-center justify-between gap-4 mt-[.25rem] pt-[.35rem] border-t-0 text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.includeLower}</span><input aria-label={labels.includeLower} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.includeLowerVocabulary} onchange={(event) => settings.setIncludeLowerVocabulary((event.currentTarget as HTMLInputElement).checked)} /></div>{/if}
-  </section>
-  <section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play" aria-labelledby="behavior-settings-heading">
-    <h2 id="behavior-settings-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.behaviorGroup}</h2>
-    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.35rem]"><IconLanguage aria-hidden="true" class="w-[.9rem] h-[.9rem]" />{labels.interfaceLanguage}</span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={settings.interfaceLocale} options={interfaceOptions} label={labels.interfaceLanguage} onchange={selectInterfaceLocale} /></div>
-    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{formatLabels.formatAs}</span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={settings.formatSource} options={formatSourceOptions} label={formatLabels.formatAs} onchange={(value) => settings.setFormatSource(value as FormatSource)} /></div>
-    <p class="m-0 mt-[.35rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{formatLabels.hint}</p>
-    {#if settings.formatSource === 'interface' && offersCalendarChoice(settings.interfaceLocale)}
-      <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{formatLabels.calendar}</span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={settings.interfaceCalendar} options={calendarOptions} label={formatLabels.calendar} onchange={(value) => settings.setInterfaceCalendar(value as FormatCalendar)} /></div>
-    {/if}
-    {#if settings.formatSource === 'interface' && nativeDigitsFor(settings.interfaceLocale)}
-      <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{formatLabels.digits}</span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={settings.interfaceDigits} options={digitOptions} label={formatLabels.digits} onchange={(value) => settings.setInterfaceDigits(value as FormatDigits)} /></div>
-    {/if}
-    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.appearance}</span><div class="seg-play"><button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.theme === 'light' ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} onclick={() => settings.setTheme('light')}><IconLight class="w-[.78rem] h-[.78rem]" />{labels.light}</button><button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.theme === 'dark' ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} onclick={() => settings.setTheme('dark')}><IconDark class="w-[.78rem] h-[.78rem]" />{labels.dark}</button></div></div>
-    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.35rem]"><IconVibrate class="w-[.9rem] h-[.9rem]" />{labels.vibration}</span><input aria-label={labels.vibration} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.vibration} onchange={(event) => settings.setVibration((event.currentTarget as HTMLInputElement).checked)} /></div>
-    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.35rem]">{#if settings.sound}<IconVolume class="w-[.9rem] h-[.9rem]" />{:else}<IconVolumeOff class="w-[.9rem] h-[.9rem]" />{/if}{labels.sound}</span><input aria-label={labels.sound} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.sound} onchange={(event) => settings.setSound((event.currentTarget as HTMLInputElement).checked)} /></div>
-    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.notifications}</span><input aria-label={labels.notifications} type="checkbox" class="toggle toggle-sm toggle-primary" checked={notificationsEnabled} disabled={notificationBusy} onchange={(event) => toggleNotifications((event.currentTarget as HTMLInputElement).checked)} /></div>
-    <p class="m-0 mt-[.35rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{labels.notificationsHint}</p>
-    {#if notificationMessage}<p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{notificationMessage}</p>{/if}
-    {#if telegram}
-      <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.35rem]"><IconTelegram aria-hidden="true" class="w-[.9rem] h-[.9rem]" />{labels.telegramReminders}</span><input aria-label={labels.telegramReminders} type="checkbox" class="toggle toggle-sm toggle-primary" checked={telegram.reminders} disabled={telegramBusy} onchange={(event) => toggleTelegram(event.currentTarget as HTMLInputElement)} /></div>
-      <p class="m-0 mt-[.35rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]" aria-live="polite">{telegramWaiting ? labels.telegramRemindersWaiting : labels.telegramRemindersHint}</p>
-      <!-- Linked: progress is saved to the Telegram account; otherwise say that connecting saves it. -->
-      {#if telegram.linked}
-        <p class="m-0 mt-[.45rem] inline-flex items-center gap-[.3rem] text-[#2a6fa8] dark:text-[#9cc8ec] text-[.58rem] font-extrabold leading-[1.35]"><IconCloud aria-hidden="true" class="w-[.85rem] h-[.85rem] flex-none" />{cloudSync.savedAt ? m.sync_saved_at({ time: savedTime(cloudSync.savedAt) }, { locale: settings.interfaceLocale }) : m.sync_saved({}, { locale: settings.interfaceLocale })}</p>
-      {:else}
-        <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{m.sync_hint({}, { locale: settings.interfaceLocale })}</p>
-      {/if}
-    {/if}
-  </section>
-  {#if telegram?.inviteUrl}
-    <section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play" aria-labelledby="invite-heading">
-      <h2 id="invite-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.inviteTitle}</h2>
-      <p class="m-0 mt-[.35rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{labels.inviteHint(telegram.inviteEmbers)}</p>
-      {#if telegram.invited < INVITE_REWARD_TARGET}<p class="m-0 mt-[.35rem] text-accent text-[.58rem] font-extrabold leading-[1.35]">{m.invite_goal({ count: num(telegram.invited), target: num(INVITE_REWARD_TARGET) }, { locale: settings.interfaceLocale })}</p>{/if}
-      <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>🔥 {labels.inviteCount(telegram.invited)}</span><button type="button" class="btn-play btn-play-sm flex-none gap-[.35rem] normal-case tracking-normal" onclick={shareInvite}><IconShare aria-hidden="true" class="w-[.85rem] h-[.85rem]" />{inviteCopied ? labels.inviteCopied : labels.inviteShare}</button></div>
+    <!-- The learner and their account first: who they are and whether their progress is saved -->
+    <section class="settings-me-card panel-play" aria-label={labels.profileTitle}>
+      <a class="settings-me" href="/progress">
+        <span class="settings-me-avatar" aria-hidden="true"><StoryCharacter id="kumar" avatar={settings.avatar ?? defaultAvatar} mood="happy" /></span>
+        <span class="settings-me-text">
+          <span class="settings-kicker">{labels.profileTitle}</span>
+          <strong>{settings.firstName || labels.profileNameEmpty}</strong>
+          <small>{labels.profileEdit}</small>
+        </span>
+        <IconChevronRight aria-hidden="true" class="settings-me-arrow rtl:rotate-180" />
+      </a>
+      <div class="settings-me-account"><TelegramAccount /></div>
     </section>
-  {/if}
-  <ModelManager onvoicechange={stopVoiceTest}>
-    {#snippet voiceOptions()}
-      {#if voicesSupported}
-        {#if piperVoices}
-          <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.voiceModel}</span><div class="seg-play">{#each [['standard', labels.voiceModelStandard], ['high', labels.voiceModelHigh]] as const as [model, label]}<button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.naturalModel === model ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} aria-pressed={settings.naturalModel === model} onclick={() => selectNaturalModel(model)}>{label}</button>{/each}</div></div>
-          <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{labels.voiceModelHint}</p>
-        {/if}
-        <div class="flex items-center justify-between gap-4 mt-[.55rem]"><button class="min-h-[1.65rem] px-[.7rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold tracking-[.06em] uppercase bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45] disabled:opacity-60" disabled={piperVoices && voiceStatus === 'loading'} onclick={() => (voiceTesting ? stopVoiceTest() : testVoice())}><IconVolume class="w-[.78rem] h-[.78rem]" />{voiceTesting ? labels.voiceTesting : labels.voiceTest}</button>{#if voiceTestFailed}<span class="text-base-content/60 text-[.58rem] font-bold leading-[1.35]" aria-live="polite">{labels.voiceTestFailed}</span>{/if}</div>
-      {/if}
-    {/snippet}
-  </ModelManager>
 
-  <div class="settings-foot">
-  {#if telegramHref}<a class="btn-play w-full mt-4 gap-[.48rem] normal-case tracking-normal text-[#237a26] dark:text-[#a9e8ab] text-[.72rem] font-bold leading-[1.45] text-center no-underline hover:bg-[#2aab2e] hover:text-[#fffdf7] focus-visible:bg-[#2aab2e] focus-visible:text-[#fffdf7] focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[3px]" href={telegramHref} target="_blank" rel="noreferrer" lang={settings.interfaceLocale} dir={interfaceDirection}><IconTelegram aria-hidden="true" class="w-[1.12rem] h-[1.12rem] flex-none" /><span>{labels.telegramShare}</span></a>{/if}
-  <button type="button" class="btn-play w-full mt-2 gap-[.48rem] normal-case tracking-normal text-[#172a45] dark:text-[#fffdf7] text-[.72rem] font-bold leading-[1.45] text-center" onclick={shareApp}><IconShare aria-hidden="true" class="w-[1.12rem] h-[1.12rem] flex-none" /><span>{labels.shareApp}</span></button>
-  <a class="flex items-center justify-between gap-3 mt-[1.35rem] px-[.8rem] py-[.7rem] panel-play text-base-content no-underline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[3px]" href="/changelog">
-    <span class="grid gap-[.1rem]">
-      <span class="inline-flex items-center gap-[.4rem] text-[.67rem] font-extrabold tracking-[.06em] uppercase">{m.changelog_settings({}, { locale: settings.interfaceLocale })}{#if hasUnseenRelease}<i class="block w-[.45rem] h-[.45rem] rounded-full bg-primary" aria-label={m.changelog_unseen({}, { locale: settings.interfaceLocale })}></i>{/if}</span>
-      <span class="text-base-content/60 text-[.6rem] font-bold" dir="ltr">{m.changelog_version({ version: __APP_VERSION__ }, { locale: settings.interfaceLocale })}</span>
-    </span>
-    <IconChevronRight aria-hidden="true" class="w-[1.2rem] h-[1.2rem] flex-none rtl:rotate-180" />
-  </a>
-  <a class="flex items-center justify-center gap-[.42rem] mt-4 text-accent text-[.66rem] font-extrabold tracking-[.05em] text-center no-underline uppercase focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-[3px]" href="https://github.com/PXNX/words-sv" target="_blank" rel="noreferrer"><IconGithub aria-hidden="true" class="w-4 h-4" /><span>GitHub · PXNX/words-sv</span></a>
-  </div>
+    <SettingsSection id="learning" index={1} defaultOpen accent="#34824d" title={sectionTitles.learning} summary={summaries.learning}>
+      {#snippet icon()}<IconSchool />{/snippet}
+      <SettingRow label={labels.gameLanguage}><SelectMenu class="w-[9.6rem]" value={settings.lang} options={languageOptions} label={labels.gameLanguage} onchange={selectLanguage} /></SettingRow>
+      <SettingRow label={labels.vocabulary} stacked>
+        <Segmented value={settings.vocabularyLevel} options={levelOptions} label={labels.vocabulary} onchange={selectVocabularyLevel} />
+        <a class="settings-link" href="/placement">{m.placement_link({}, { locale: settings.interfaceLocale })}<IconChevronRight aria-hidden="true" class="rtl:rotate-180" /></a>
+      </SettingRow>
+      {#if settings.vocabularyLevel !== 'a1'}
+        <SettingRow label={labels.includeLower} labelFor="setting-include-lower"><input id="setting-include-lower" type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.includeLowerVocabulary} onchange={(event) => settings.setIncludeLowerVocabulary((event.currentTarget as HTMLInputElement).checked)} /></SettingRow>
+      {/if}
+    </SettingsSection>
+
+    <SettingsSection id="app" index={2} accent="#4b78c2" title={sectionTitles.app} summary={summaries.app}>
+      {#snippet icon()}<IconTune />{/snippet}
+      <SettingRow label={labels.interfaceLanguage}>{#snippet icon()}<IconLanguage />{/snippet}<SelectMenu class="w-[9.6rem]" value={settings.interfaceLocale} options={interfaceOptions} label={labels.interfaceLanguage} onchange={selectInterfaceLocale} /></SettingRow>
+      <SettingRow label={labels.appearance}>
+        <Segmented value={settings.theme} options={themeOptions} label={labels.appearance} onchange={(value) => settings.setTheme(value)}>
+          {#snippet optionIcon(value)}{#if value === 'light'}<IconLight />{:else}<IconDark />{/if}{/snippet}
+        </Segmented>
+      </SettingRow>
+      <SettingRow label={labels.sound} labelFor="setting-sound">{#snippet icon()}{#if settings.sound}<IconVolume />{:else}<IconVolumeOff />{/if}{/snippet}<input id="setting-sound" type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.sound} onchange={(event) => settings.setSound((event.currentTarget as HTMLInputElement).checked)} /></SettingRow>
+      <SettingRow label={labels.vibration} labelFor="setting-vibration">{#snippet icon()}<IconVibrate />{/snippet}<input id="setting-vibration" type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.vibration} onchange={(event) => settings.setVibration((event.currentTarget as HTMLInputElement).checked)} /></SettingRow>
+    </SettingsSection>
+
+    <SettingsSection id="formats" index={3} accent="#8a62b6" title={sectionTitles.formats} summary={summaries.formats}>
+      {#snippet icon()}<IconCalendar />{/snippet}
+      <SettingRow label={formatLabels.formatAs} hint={formatLabels.hint}><SelectMenu class="w-[9.6rem]" value={settings.formatSource} options={formatSourceOptions} label={formatLabels.formatAs} onchange={(value) => settings.setFormatSource(value as FormatSource)} /></SettingRow>
+      {#if settings.formatSource === 'interface' && offersCalendarChoice(settings.interfaceLocale)}
+        <SettingRow label={formatLabels.calendar}><SelectMenu class="w-[9.6rem]" value={settings.interfaceCalendar} options={calendarOptions} label={formatLabels.calendar} onchange={(value) => settings.setInterfaceCalendar(value as FormatCalendar)} /></SettingRow>
+      {/if}
+      {#if settings.formatSource === 'interface' && nativeDigitsFor(settings.interfaceLocale)}
+        <SettingRow label={formatLabels.digits}><SelectMenu class="w-[9.6rem]" value={settings.interfaceDigits} options={digitOptions} label={formatLabels.digits} onchange={(value) => settings.setInterfaceDigits(value as FormatDigits)} /></SettingRow>
+      {/if}
+    </SettingsSection>
+
+    <SettingsSection id="reminders" index={4} accent="#d64b45" title={sectionTitles.reminders} summary={summaries.reminders}>
+      {#snippet icon()}<IconBell />{/snippet}
+      <SettingRow label={labels.notifications} hint={notificationMessage || labels.notificationsHint} labelFor="setting-notifications"><input id="setting-notifications" type="checkbox" class="toggle toggle-sm toggle-primary" checked={notificationsEnabled} disabled={notificationBusy} onchange={(event) => toggleNotifications((event.currentTarget as HTMLInputElement).checked)} /></SettingRow>
+      {#if telegram}
+        <SettingRow label={labels.telegramReminders} hint={telegramWaiting ? labels.telegramRemindersWaiting : labels.telegramRemindersHint} labelFor="setting-telegram">{#snippet icon()}<IconTelegram />{/snippet}<input id="setting-telegram" type="checkbox" class="toggle toggle-sm toggle-primary" checked={telegram.reminders} disabled={telegramBusy} onchange={(event) => toggleTelegram(event.currentTarget as HTMLInputElement)} /></SettingRow>
+      {/if}
+    </SettingsSection>
+
+    <SettingsSection id="device" index={5} accent="#3f9a9c" title={sectionTitles.device} summary={summaries.device}>
+      {#snippet icon()}<IconMemory />{/snippet}
+      <WebGpuStatus />
+    </SettingsSection>
+
+    <SettingsSection id="voices" index={6} accent="#e6a527" title={sectionTitles.voices} summary={summaries.voices}>
+      {#snippet icon()}<IconVoices />{/snippet}
+      <ModelManager bare onvoicechange={stopVoiceTest}>
+        {#snippet voiceOptions()}
+          {#if voicesSupported}
+            {#if piperVoices}
+              <SettingRow label={labels.voiceModel} hint={labels.voiceModelHint}><Segmented value={settings.naturalModel} options={voiceModelOptions} label={labels.voiceModel} onchange={selectNaturalModel} /></SettingRow>
+            {/if}
+            <div class="settings-voice-test">
+              <button type="button" class="btn-play btn-play-sm" disabled={piperVoices && voiceStatus === 'loading'} onclick={() => (voiceTesting ? stopVoiceTest() : testVoice())}><IconVolume aria-hidden="true" />{voiceTesting ? labels.voiceTesting : labels.voiceTest}</button>
+              {#if voiceTestFailed}<small aria-live="polite">{labels.voiceTestFailed}</small>{/if}
+            </div>
+          {/if}
+        {/snippet}
+      </ModelManager>
+    </SettingsSection>
+
+    <SettingsSection id="friends" index={7} accent="#e86a9a" title={sectionTitles.friends} summary={summaries.friends}>
+      {#snippet icon()}<IconGroup />{/snippet}
+      {#if telegram?.inviteUrl}
+        <SettingRow label={labels.inviteTitle} hint={labels.inviteHint(telegram.inviteEmbers)} stacked>
+          <div class="settings-invite">
+            <span>🔥 {labels.inviteCount(telegram.invited)}</span>
+            <button type="button" class="btn-play btn-play-sm" onclick={shareInvite}><IconShare aria-hidden="true" />{inviteCopied ? labels.inviteCopied : labels.inviteShare}</button>
+          </div>
+          {#if telegram.invited < INVITE_REWARD_TARGET}
+            <div class="settings-invite-goal" style:--share={telegram.invited / INVITE_REWARD_TARGET}><span aria-hidden="true"></span><small>{m.invite_goal({ count: num(telegram.invited), target: num(INVITE_REWARD_TARGET) }, { locale: settings.interfaceLocale })}</small></div>
+          {/if}
+        </SettingRow>
+      {/if}
+      <button type="button" class="settings-nav" onclick={shareApp}><IconShare aria-hidden="true" /><span>{labels.shareApp}</span><IconChevronRight aria-hidden="true" class="rtl:rotate-180" /></button>
+      {#if telegramHref}<a class="settings-nav" href={telegramHref} target="_blank" rel="noreferrer"><IconTelegram aria-hidden="true" /><span>{labels.telegramShare}</span><IconChevronRight aria-hidden="true" class="rtl:rotate-180" /></a>{/if}
+    </SettingsSection>
+
+    <SettingsSection id="about" index={8} accent="#a45e38" title={sectionTitles.about} summary={summaries.about}>
+      {#snippet icon()}<IconInfo />{/snippet}
+      <a class="settings-nav" href="/changelog">
+        <IconUpdate aria-hidden="true" />
+        <span>{m.changelog_settings({}, { locale: settings.interfaceLocale })}{#if hasUnseenRelease}<i class="settings-dot" aria-label={m.changelog_unseen({}, { locale: settings.interfaceLocale })}></i>{/if}<small dir="ltr">{m.changelog_version({ version: __APP_VERSION__ }, { locale: settings.interfaceLocale })}</small></span>
+        <IconChevronRight aria-hidden="true" class="rtl:rotate-180" />
+      </a>
+      <a class="settings-nav" href="https://github.com/PXNX/words-sv" target="_blank" rel="noreferrer"><IconGithub aria-hidden="true" /><span>GitHub · PXNX/words-sv</span><IconChevronRight aria-hidden="true" class="rtl:rotate-180" /></a>
+    </SettingsSection>
   </div>
 </aside>
 
 <style>
-  /* Tablets: the page fills the screen (see the layout's paper-full) and the sections fill the width
-     in balanced columns; each card stays whole. The aside keeps scrolling, the columns sit inside it. */
+  .settings { flex:1;min-height:0;overflow-y:auto;margin:0;padding:clamp(2.9rem,10vw,3.6rem) clamp(1rem,5vw,2rem) clamp(1.2rem,5vw,2rem);color:var(--color-base-content,#172a45);font-family:'DM Sans',sans-serif; }
+  .settings-brand { display:flex;align-items:center;justify-content:center;gap:.75rem;animation:settings-brand-in .5s cubic-bezier(.34,1.56,.64,1) both; }
+  .settings-brand strong { font-family:'DM Serif Display',serif;font-size:clamp(1.45rem,6vw,2rem);font-weight:400;letter-spacing:-.04em;line-height:.9; }
+  .settings-logo { position:relative;display:block;flex:none;width:34px;height:34px; }
+  .settings-logo i,.settings-logo b { position:absolute;display:block;width:21px;height:21px;border:2px solid;border-radius:50%; }
+  .settings-logo i { top:1px;left:1px;border-color:var(--color-neutral,#172a45);animation:settings-orbit 6s ease-in-out infinite; }
+  .settings-logo b { right:1px;bottom:1px;border-color:var(--color-primary,#e6a527);animation:settings-orbit 6s ease-in-out infinite reverse; }
+  .settings-columns { display:grid;gap:.85rem;margin-top:1.2rem; }
   @media (min-width:900px) {
-    .settings-columns { columns:20rem 3;column-gap:clamp(1.5rem,3vw,2.5rem); }
-    .settings-columns > :global(*) { break-inside:avoid; }
+    .settings-columns { display:block;columns:20rem 3;column-gap:clamp(1.5rem,3vw,2.5rem); }
+    .settings-columns > :global(*) { break-inside:avoid;margin-bottom:.85rem; }
   }
-  .settings-me { transition:transform .15s cubic-bezier(.34,1.56,.64,1); }
+  .settings-me-card { display:grid;gap:.7rem;padding:.7rem .85rem .85rem;animation:settings-me-in .45s cubic-bezier(.2,.9,.3,1.15) both; }
+  .settings-me { display:flex;align-items:center;gap:.8rem;color:inherit;text-decoration:none;transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
   .settings-me:hover { transform:translateY(-2px) rotate(-.4deg); }
   .settings-me:active { transform:scale(.98); }
   .settings-me-avatar { display:block;flex:none;width:3.6rem;height:4.5rem;margin-block:-.2rem -.6rem; }
-  .settings-me-avatar :global(.story-character) { width:100%;height:100%; }
-  @media (prefers-reduced-motion:reduce) { .settings-me { transition:none; } }
-  @keyframes sheet-up {
-    from {
-      opacity: 0;
-      transform: translateY(26px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  .sheet-in {
-    animation: sheet-up 0.28s cubic-bezier(0.23, 1, 0.32, 1);
+  .settings-me:hover .settings-me-avatar { animation:settings-wave .6s ease-in-out; }
+  .settings-me-text { display:grid;flex:1;min-width:0; }
+  .settings-me-text strong { overflow:hidden;font-family:'DM Serif Display',serif;font-size:1.35rem;font-weight:400;letter-spacing:-.02em;line-height:1.1;white-space:nowrap;text-overflow:ellipsis; }
+  .settings-me-text small { font-size:.6rem;font-weight:700;opacity:.6; }
+  .settings-kicker { color:#a45e38;font-size:.56rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
+  :global(html.dark) .settings-kicker { color:#e6a527; }
+  :global(.settings-me-arrow) { flex:none;width:1.2rem;height:1.2rem; }
+  .settings-me-account { padding-top:.7rem;border-top:1.5px dashed color-mix(in srgb,currentColor 18%,transparent); }
+  .settings-link { display:inline-flex;align-items:center;justify-content:flex-end;gap:.2rem;align-self:flex-end;color:#a45e38;font-size:.62rem;font-weight:900;text-decoration:none; }
+  :global(html.dark) .settings-link { color:#e6a527; }
+  .settings-link :global(svg) { width:.9rem;height:.9rem; }
+  .settings-nav { display:flex;align-items:center;gap:.6rem;width:100%;padding:.65rem 0;border:0;border-top:1px solid color-mix(in srgb,currentColor 12%,transparent);background:none;color:inherit;font:inherit;font-size:.72rem;font-weight:800;text-align:start;text-decoration:none;cursor:pointer;transition:padding .2s; }
+  .settings-nav:first-child { border-top:0; }
+  .settings-nav:hover { padding-inline-start:.25rem; }
+  .settings-nav > :global(svg) { flex:none;width:1rem;height:1rem;opacity:.75; }
+  .settings-nav > span { display:grid;flex:1;gap:.1rem; }
+  .settings-nav small { font-size:.58rem;font-weight:700;opacity:.6; }
+  .settings-dot { display:inline-block;width:.45rem;height:.45rem;margin-inline-start:.35rem;border-radius:50%;background:var(--color-primary,#e6a527);vertical-align:middle;animation:settings-pulse 1.6s ease-in-out infinite; }
+  .settings-invite { display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-size:.7rem;font-weight:900; }
+  .settings-invite :global(svg) { width:.85rem;height:.85rem; }
+  .settings-invite-goal { display:grid;gap:.3rem; }
+  .settings-invite-goal span { height:.35rem;border-radius:999px;background:linear-gradient(90deg,#2aabee calc(var(--share) * 100%),color-mix(in srgb,currentColor 12%,transparent) 0); }
+  .settings-invite-goal small { font-size:.6rem;font-weight:800;color:#2a6fa8; }
+  :global(html.dark) .settings-invite-goal small { color:#9cc8ec; }
+  .settings-voice-test { display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;margin-top:.55rem; }
+  .settings-voice-test :global(svg) { width:.85rem;height:.85rem; }
+  .settings-voice-test small { font-size:.6rem;font-weight:700;opacity:.65; }
+  @keyframes settings-brand-in { from { opacity:0;scale:.8; } }
+  @keyframes settings-me-in { from { opacity:0;translate:0 14px; } }
+  @keyframes settings-orbit { 0%,100% { translate:0 0; } 50% { translate:2px -2px; } }
+  @keyframes settings-wave { 0%,100% { rotate:0deg; } 30% { rotate:-6deg; } 60% { rotate:5deg; } }
+  @keyframes settings-pulse { 50% { scale:1.35;opacity:.6; } }
+  @media (prefers-reduced-motion:reduce) {
+    .settings-brand,.settings-me-card,.settings-logo i,.settings-logo b,.settings-dot,.settings-me:hover .settings-me-avatar { animation:none; }
+    .settings-me,.settings-nav { transition:none; }
   }
 </style>
