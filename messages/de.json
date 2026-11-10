@@ -874,5 +874,6 @@
   "background_offer_title": "Läuft im Hintergrund weiter",
   "background_offer_text": "Du kannst jetzt etwas anderes spielen – das hier wird weiter vorbereitet. Das kleine Abzeichen in der Ecke zeigt, wie weit es ist, und sagt Bescheid, wenn es fertig ist.",
   "background_offer_go": "Etwas anderes spielen",
-  "background_offer_stay": "Hier warten"
+  "background_offer_stay": "Hier warten",
+  "models_voices_count": "{count} Stimmen"
 }
