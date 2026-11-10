@@ -19,6 +19,7 @@
   import { deviceAbilities, speaksLanguage, voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
   import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
   import ModelStatus from '#lib/offline/ModelStatus.svelte';
+  import { confirmDownload } from '#lib/offline/downloadConsent.svelte.js';
   import { modelProgressPhase } from '#lib/offline/progressPhase.js';
   import { deleteGroup, formatBytes, groupBytes, groupStored, keepStoragePersistent, storageSummary, storedGroupIds, type StoredGroup } from '#lib/offline/storage.js';
   import IconDownload from '~icons/material-symbols/download-rounded';
@@ -86,8 +87,9 @@
     return 'none';
   }
 
-  function downloadVoices() {
+  async function downloadVoices() {
     const language = lang;
+    if (!(await confirmDownload(voiceDownloadMB(settings.voiceQuality), engineNames[activeEngine(language)]()))) return;
     void runJob(`voices|${activeEngine(language)}|${language}`, engineNames[activeEngine(language)](), '/settings', async (control) => {
       const report = window.setInterval(() => control.progress({ done: Math.round((naturalState.progress[language] ?? 0) * 100), total: 100 }), 500);
       try { await prepareNatural(language); } finally { window.clearInterval(report); }
@@ -96,7 +98,7 @@
   function chooseVoice(id: VoiceEngineId) {
     onvoicechange?.();
     settings.setVoiceQuality(id);
-    if (voiceGroups[id]) downloadVoices();
+    if (voiceGroups[id]) void downloadVoices();
   }
 
   // --- conversation model -----------------------------------------------------------------------
@@ -113,7 +115,8 @@
     return localModel.downloaded.includes(model.id) ? 'downloaded' : 'none';
   }
   // Downloads only (no GPU), so several can run side by side; the conversation loads the chosen one.
-  function downloadModel(model: ChatModel) {
+  async function downloadModel(model: ChatModel) {
+    if (!(await confirmDownload(model.downloadMB, model.label))) return;
     void downloadModelFiles(model.id).finally(refresh);
   }
   let confirmingModel = $state<string | null>(null);
