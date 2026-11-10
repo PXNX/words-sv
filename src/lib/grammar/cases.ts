@@ -1,4 +1,5 @@
 import type { VocabularyGender } from '#lib/data/vocabulary.js';
+import { featureKey, type FeatureKey } from './taxonomy.js';
 
 export type GrammarCase = 'nominative' | 'accusative' | 'dative';
 export type ArticleKind = 'definite' | 'indefinite';
@@ -60,7 +61,14 @@ const templatesByCase: Record<GrammarCase, NounTemplate[]> = {
   ]
 };
 
-export type GrammarPrompt = { before: string; after: string; correct: string; choices: string[]; question?: string; highlight?: string };
+// `features` names the grammar features a German prompt tests, so a wrong answer can be logged
+// against them (progress/events.ts, featureErrors).
+export type GrammarPrompt = { before: string; after: string; correct: string; choices: string[]; question?: string; highlight?: string; features?: FeatureKey[] };
+
+const CASE_FEATURE = { nominative: 'nominativ', accusative: 'akkusativ', dative: 'dativ' } as const satisfies Record<GrammarCase, string>;
+const GENDER_FEATURE = { masculine: 'maskulin', feminine: 'feminin', neuter: 'neutrum' } as const satisfies Record<VocabularyGender, string>;
+export const caseFeature = (grammarCase: GrammarCase): FeatureKey => featureKey('de', 'noun', 'case', CASE_FEATURE[grammarCase]);
+export const genderFeature = (gender: VocabularyGender): FeatureKey => featureKey('de', 'noun', 'gender', GENDER_FEATURE[gender]);
 
 export function pickCase(random: () => number): GrammarCase {
   return GRAMMAR_CASES[Math.floor(random() * GRAMMAR_CASES.length)]!;
@@ -86,7 +94,7 @@ export function buildNounCasePrompt(noun: string, gender: VocabularyGender, rand
   const choices = uniqueForms(articleKind, gender);
   const templates = templatesByCase[grammarCase];
   const { before, after } = templates[Math.floor(random() * templates.length)]!(noun);
-  return { before, after, correct, choices: shuffle(choices, random) };
+  return { before, after, correct, choices: shuffle(choices, random), features: [caseFeature(grammarCase), genderFeature(gender)] };
 }
 
 /** Ask for several properties at once instead of filling a sentence gap. */
@@ -105,7 +113,8 @@ export function buildNounPropertyPrompt(noun: string, gender: VocabularyGender, 
     `${labels[grammarCase]} · ${genders[gender === 'masculine' ? 'feminine' : 'masculine']} · Singular`,
     `${labels[grammarCase]} · ${genders[gender]} · Plural`
   ], random);
+  const features = [caseFeature(grammarCase), genderFeature(gender), featureKey('de', 'noun', 'number', 'singular')];
   return random() < 0.5
-    ? { before: `${capitalize(article)} `, after: noun, correct, choices, question: 'Bestimme Kasus, Genus und Numerus.' }
-    : { before, after: sentence.after, correct, choices, question: 'Bestimme Kasus, Genus und Numerus.', highlight: noun };
+    ? { before: `${capitalize(article)} `, after: noun, correct, choices, question: 'Bestimme Kasus, Genus und Numerus.', features }
+    : { before, after: sentence.after, correct, choices, question: 'Bestimme Kasus, Genus und Numerus.', highlight: noun, features };
 }
