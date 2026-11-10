@@ -178,7 +178,7 @@ async function checkStreakReminders() {
 	const { types, dateKey, minutesRemaining } = dueReminderTypes(state, new Date());
 	for (const type of types) {
 		if (await wasReminderDelivered(dateKey, type)) continue;
-		const text = reminderNotification(type, state.locale, minutesRemaining, { count: state.dueWords, title: state.readingTitle ?? undefined });
+		const text = reminderNotification(type, state.locale, minutesRemaining, { count: state.dueWords, title: state.readingTitle ?? undefined, nativeDigits: state.nativeDigits });
 		await self.registration.showNotification(text.title, {
 			body: text.body,
 			icon: '/icons/wordcircle-192.png',
