@@ -1,5 +1,6 @@
 import type { VocabularyGender } from '#lib/data/vocabulary.js';
-import { articleTable, capitalize, pickArticleKind, pickCase, uniqueEndingsAcrossGenders, type ArticleKind, type GrammarCase, type GrammarPrompt } from './cases';
+import { featureKey } from './taxonomy.js';
+import { articleTable, capitalize, caseFeature, genderFeature, pickArticleKind, pickCase, uniqueEndingsAcrossGenders, type ArticleKind, type GrammarCase, type GrammarPrompt } from './cases';
 
 // Endings for an attributive adjective after a der-word (weak declension) and after
 // an ein-word (mixed declension). Genitive is deliberately left out: it would also
@@ -81,5 +82,7 @@ export function buildAdjectivePrompt(
   const after = `${noun}${template.tail}`;
   const endings = uniqueEndingsAcrossGenders(endingsTable);
   const choices = shuffle(endings.map((ending) => inflect(adjective, ending)), random);
-  return { before, after, correct: inflect(adjective, correctEnding), choices };
+  // Weak endings after a definite article, mixed after an indefinite one.
+  const features = [featureKey('de', 'adjective', 'declension', articleKind === 'definite' ? 'schwach' : 'gemischt'), caseFeature(grammarCase), genderFeature(gender)];
+  return { before, after, correct: inflect(adjective, correctEnding), choices, features };
 }

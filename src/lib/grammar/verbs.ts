@@ -1,4 +1,11 @@
 import type { GrammarPrompt } from './cases';
+import { featureKey, type FeatureKey } from './taxonomy.js';
+
+// Person and number of each pronoun slot (ich, du, er, wir, ihr, sie), plus the tense asked.
+function personFeatures(personIndex: number): FeatureKey[] {
+  const person = (['1', '2', '3'] as const)[personIndex % 3]!;
+  return [featureKey('de', 'verb', 'person', person), featureKey('de', 'verb', 'number', personIndex < 3 ? 'singular' : 'plural'), featureKey('de', 'verb', 'tense', 'praesens')];
+}
 
 // Present-tense conjugation, hand-checked per verb: [ich, du, er/sie/es, wir, ihr, sie/Sie].
 // German stem-changing ("strong") verbs only ever deviate from the regular pattern in the
@@ -131,7 +138,8 @@ export function buildVerbPrompt(infinitive: string, random: () => number, shuffl
     before: `${VERB_PRONOUNS[personIndex]} `,
     after: entry.after,
     correct: entry.forms[personIndex]!,
-    choices: shuffle(forms, random)
+    choices: shuffle(forms, random),
+    features: personFeatures(personIndex)
   };
 }
 
@@ -150,5 +158,5 @@ export function buildVerbPropertyPrompt(infinitive: string, random: () => number
     `${persons[personIndex]} · ${tenses[(tenses.indexOf(tense) + 1) % tenses.length]}`,
     `${persons[(personIndex + 3) % persons.length]} · ${tenses[(tenses.indexOf(tense) + 2) % tenses.length]}`
   ], random);
-  return { before: `${VERB_PRONOUNS[personIndex]} `, after: `${entry.forms[personIndex]} ${entry.after}`, correct, choices, question: 'Bestimme Person und Tempus.', highlight: entry.forms[personIndex] };
+  return { before: `${VERB_PRONOUNS[personIndex]} `, after: `${entry.forms[personIndex]} ${entry.after}`, correct, choices, question: 'Bestimme Person und Tempus.', highlight: entry.forms[personIndex], features: personFeatures(personIndex) };
 }
