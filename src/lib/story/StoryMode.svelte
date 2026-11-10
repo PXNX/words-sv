@@ -1061,7 +1061,7 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
   .story-prompt--question .story-try-again { font-size:.62rem;font-weight:900; }
   .story-options { display:grid;gap:.42rem; }
   .story-options button { justify-content:space-between;line-height:1.3;text-align:start; }
-  .story-options button.missed { border-color:#c0392b;background:#fff2e8;color:#c0392b;box-shadow:none;opacity:.8;animation:story-shake .3s ease; }
+  .story-options button.missed { border-color:#c0392b;background:#fdecea;color:#b03224;box-shadow:none;opacity:1;animation:story-shake .3s ease; }
   .story-options button :global(svg) { width:1.1rem;height:1.1rem;flex:none; }
     .story-continue { justify-self:center;min-width:min(100%,14rem); }
   .story-finished { display:grid;justify-items:center;gap:.35rem;padding:.8rem;border:1px solid rgba(52,130,77,.4);border-top:3px solid #34824d;border-radius:1rem;background:#fffdf7;text-align:center;font-family:'DM Sans',sans-serif; }

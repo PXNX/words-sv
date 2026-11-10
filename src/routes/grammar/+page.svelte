@@ -224,9 +224,9 @@
   }
   function optionStateClasses(choice: string) {
     if (!prompt) return '';
-    if (answerStatus === 'wrong' && choice === prompt.correct) return 'bg-success text-[#fffdf7] learn-reveal';
-    if (answerStatus !== null && choice === prompt.correct) return 'bg-success text-[#fffdf7]';
-    if (answerStatus === 'wrong' && choice === selectedChoice) return 'border-accent bg-[#fff2e8] text-[#8e4322] shadow-none dark:bg-[#69332f] dark:text-[#fff7ed]';
+    if (answerStatus === 'wrong' && choice === prompt.correct) return 'bg-success text-[#fffdf7] !opacity-100 learn-reveal';
+    if (answerStatus !== null && choice === prompt.correct) return 'bg-success text-[#fffdf7] !opacity-100';
+    if (answerStatus === 'wrong' && choice === selectedChoice) return 'border-[#c0392b] bg-[#fdecea] text-[#b03224] shadow-none !opacity-100 dark:border-[#f08a7e] dark:bg-[#5a2420] dark:text-[#ffc2b8]';
     return '';
   }
 
@@ -297,7 +297,7 @@
               onclick={chooseAnswer}
               disabled={answerStatus !== null}
               class="btn-play btn-play-choice gap-[.4rem] text-[.85rem] touch-manipulation disabled:opacity-100 {optionStateClasses(choice)}"
-            >{choice}{#if answerStatus !== null && choice === prompt.correct}<IconCheck class="w-[1.15rem] h-[1.15rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && choice === selectedChoice}<IconClose class="w-[1.15rem] h-[1.15rem] flex-none text-error" aria-label={labels.tryAgain} />{/if}</button>
+            >{choice}{#if answerStatus !== null && choice === prompt.correct}<IconCheck class="w-[1.15rem] h-[1.15rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && choice === selectedChoice}<IconClose class="w-[1.15rem] h-[1.15rem] flex-none text-[#c0392b] dark:text-[#ffc2b8]" aria-label={labels.tryAgain} />{/if}</button>
           {/each}
         </div>
         {#if answerStatus}

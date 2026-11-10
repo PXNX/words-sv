@@ -575,7 +575,12 @@ import { page } from '$app/state';
   .reading-answer { display:inline-flex;align-items:center;gap:.3rem;margin-top:.35rem;color:#34824d;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:900; }
   .reading-options { display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.45rem; }
   .reading-options button { flex:1 1 10rem; }
-  .reading-options button.missed { opacity:.55;text-decoration:line-through; }
+  /* a wrong pick turns red and stays readable (not greyed out like a disabled button) */
+  .reading-options button.missed { opacity:1;border-color:#c0392b;background:#fdecea;color:#b03224;box-shadow:none;animation:reading-shake .3s ease; }
+  .reading-options button.missed :global(svg) { color:#c0392b; }
+  @keyframes reading-shake { 0%,100% { translate:0 0; } 25% { translate:-4px 0; } 60% { translate:3px 0; } }
+  :global(html.dark) .reading-options button.missed { border-color:#f08a7e;background:rgba(192,57,43,.22);color:#ffc2b8; }
+  @media (prefers-reduced-motion:reduce) { .reading-options button.missed { animation:none; } }
   .reading-score { margin:0;padding-top:.15rem;text-align:center;color:#596477;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:800; }
   .reading-recap { display:grid;gap:.5rem;padding:.35rem 0 .1rem;border-top:1px dashed rgba(23,42,69,.2); }
   .reading-recap-actions { display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem; }
