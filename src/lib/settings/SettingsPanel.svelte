@@ -12,6 +12,7 @@
   import { naturalMegabytes, naturalReady, naturalState, naturalSupported, playNatural, prepareNatural, synthesizeNatural } from '#lib/story/naturalVoices.svelte.js';
   import { onMount } from 'svelte';
   import SelectMenu from './SelectMenu.svelte';
+  import { formatMoment, nativeDigitsFor, offersCalendarChoice, type FormatCalendar, type FormatDigits, type FormatSource } from '#lib/format/format.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import { defaultAvatar } from '#lib/profile/avatar.js';
   import IconChevronRight from '~icons/material-symbols/chevron-right-rounded';
@@ -145,6 +146,24 @@
     settings.interfaceLocale === 'fa' ? 'https://t.me/yasamanabedin' : settings.interfaceLocale === 'de' || settings.interfaceLocale === 'en' ? 'https://t.me/deutschstunde1' : null
   );
   const languageOptions = playableLanguages.map((language) => ({ value: language.code as string, label: language.label }));
+  const formatLabels = $derived({
+    formatAs: m.format_as({}, { locale: settings.interfaceLocale }),
+    hint: m.format_hint({}, { locale: settings.interfaceLocale }),
+    calendar: m.format_calendar({}, { locale: settings.interfaceLocale }),
+    digits: m.format_digits({}, { locale: settings.interfaceLocale })
+  });
+  const formatSourceOptions = $derived([
+    { value: 'learning', label: m.format_learning({}, { locale: settings.interfaceLocale }) },
+    { value: 'interface', label: m.format_interface({}, { locale: settings.interfaceLocale }) }
+  ]);
+  const calendarOptions = $derived([
+    { value: 'gregory', label: m.format_calendar_gregory({}, { locale: settings.interfaceLocale }) },
+    { value: 'persian', label: m.format_calendar_persian({}, { locale: settings.interfaceLocale }) }
+  ]);
+  const digitOptions = $derived([
+    { value: 'latn', label: m.format_digits_latn({}, { locale: settings.interfaceLocale }) },
+    { value: 'native', label: m.format_digits_native({}, { locale: settings.interfaceLocale }) }
+  ]);
   const interfaceOptions = interfaceLocales.map((locale) => ({ value: locale.code as string, label: locale.label }));
   const wordleOptions = [3, 4, 5, 6, 7].map((length) => ({ value: String(length), label: String(length) }));
 
@@ -189,8 +208,7 @@
   let telegramWaiting = $state(false);
   let inviteCopied = $state(false);
   function savedTime(at: number) {
-    const sameDay = new Date(at).toDateString() === new Date().toDateString();
-    return new Intl.DateTimeFormat(settings.interfaceLocale, sameDay ? { hour: '2-digit', minute: '2-digit' } : { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(at);
+    return formatMoment(settings.formatContext, at);
   }
   function refreshTelegram() {
     void telegramDevice('status').then((status) => {
@@ -307,6 +325,14 @@
   <section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play" aria-labelledby="behavior-settings-heading">
     <h2 id="behavior-settings-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.behaviorGroup}</h2>
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.35rem]"><IconLanguage aria-hidden="true" class="w-[.9rem] h-[.9rem]" />{labels.interfaceLanguage}</span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={settings.interfaceLocale} options={interfaceOptions} label={labels.interfaceLanguage} onchange={selectInterfaceLocale} /></div>
+    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{formatLabels.formatAs}</span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={settings.formatSource} options={formatSourceOptions} label={formatLabels.formatAs} onchange={(value) => settings.setFormatSource(value as FormatSource)} /></div>
+    <p class="m-0 mt-[.35rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{formatLabels.hint}</p>
+    {#if settings.formatSource === 'interface' && offersCalendarChoice(settings.interfaceLocale)}
+      <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{formatLabels.calendar}</span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={settings.interfaceCalendar} options={calendarOptions} label={formatLabels.calendar} onchange={(value) => settings.setInterfaceCalendar(value as FormatCalendar)} /></div>
+    {/if}
+    {#if settings.formatSource === 'interface' && nativeDigitsFor(settings.interfaceLocale)}
+      <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{formatLabels.digits}</span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={settings.interfaceDigits} options={digitOptions} label={formatLabels.digits} onchange={(value) => settings.setInterfaceDigits(value as FormatDigits)} /></div>
+    {/if}
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.appearance}</span><div class="seg-play"><button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.theme === 'light' ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} onclick={() => settings.setTheme('light')}><IconLight class="w-[.78rem] h-[.78rem]" />{labels.light}</button><button class={`min-h-[1.65rem] px-[.55rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.theme === 'dark' ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} onclick={() => settings.setTheme('dark')}><IconDark class="w-[.78rem] h-[.78rem]" />{labels.dark}</button></div></div>
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.35rem]"><IconVibrate class="w-[.9rem] h-[.9rem]" />{labels.vibration}</span><input aria-label={labels.vibration} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.vibration} onchange={(event) => settings.setVibration((event.currentTarget as HTMLInputElement).checked)} /></div>
     <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.35rem]">{#if settings.sound}<IconVolume class="w-[.9rem] h-[.9rem]" />{:else}<IconVolumeOff class="w-[.9rem] h-[.9rem]" />{/if}{labels.sound}</span><input aria-label={labels.sound} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.sound} onchange={(event) => settings.setSound((event.currentTarget as HTMLInputElement).checked)} /></div>

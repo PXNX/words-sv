@@ -589,5 +589,15 @@
   "factor_llmStructure": "Gliedere den Text in sinnvolle Absätze.",
   "factor_llmSpacing": "Entferne doppelte Leerzeichen.",
   "factor_llmGrammar": "Es gibt noch Grammatikfehler.",
-  "factor_llmNoIssues": "Keine größeren Fehler – gut geschrieben!"
+  "factor_llmNoIssues": "Keine größeren Fehler – gut geschrieben!",
+  "format_as": "Format wie",
+  "format_learning": "Lernsprache",
+  "format_interface": "App-Sprache",
+  "format_hint": "Datum, Uhrzeit und Zahlen erscheinen wie in der Lernsprache, das übt nebenbei.",
+  "format_calendar": "Kalender",
+  "format_calendar_gregory": "Gregorianisch",
+  "format_calendar_persian": "Persisch",
+  "format_digits": "Ziffern",
+  "format_digits_latn": "0–9",
+  "format_digits_native": "Eigene"
 }

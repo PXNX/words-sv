@@ -354,5 +354,8 @@
   "invite_share": "شارك رابط الدعوة",
   "invite_copied": "تم نسخ الرابط",
   "invite_count": "دعوت {count} أصدقاء",
-  "invite_share_text": "تعلّم الكلمات معي في WordCircle!"
+  "invite_share_text": "تعلّم الكلمات معي في WordCircle!",
+  "format_digits": "الأرقام",
+  "format_digits_latn": "0–9",
+  "format_digits_native": "عربية"
 }

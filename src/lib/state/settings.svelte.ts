@@ -9,6 +9,7 @@ import { reminderExtras } from '#lib/reminders/reminderSnapshot.js';
 import type { Locale } from '#lib/paraglide/runtime.js';
 import { parseAvatar, type Avatar } from '#lib/profile/avatar.js';
 import { setKumarStandIn } from '#lib/story/standIn.js';
+import { resolveFormatContext, type FormatCalendar, type FormatContext, type FormatDigits, type FormatSource } from '#lib/format/format.js';
 
 const ACTIVITY_BY_EVENT: Partial<Record<StreakEvent, ActivityKind>> = {
   vocab_correct: 'vocab',
@@ -57,6 +58,9 @@ const ROUND_TOTAL_KEY = 'wordcircle-completed-rounds-v1';
 const WORDLE_LENGTH_KEY = 'wordcircle-wordle-length-v1';
 const FIRST_NAME_KEY = 'wordcircle-first-name-v1';
 const AVATAR_KEY = 'wordcircle-avatar-v1';
+const FORMAT_SOURCE_KEY = 'wordcircle-format-source-v1';
+const INTERFACE_CALENDAR_KEY = 'wordcircle-interface-calendar-v1';
+const INTERFACE_DIGITS_KEY = 'wordcircle-interface-digits-v1';
 export const FIRST_NAME_MAX_LENGTH = 30;
 
 function isInterfaceLocale(value: unknown): value is InterfaceLocale {
@@ -111,6 +115,12 @@ function readWordleLength(): WordleLength {
   return Number.isInteger(value) && value >= 3 && value <= 7 ? value as WordleLength : 5;
 }
 
+function readStored<T extends string>(key: string, values: readonly T[], fallback: T): T {
+  if (typeof localStorage === 'undefined') return fallback;
+  const value = localStorage.getItem(key);
+  return values.find((candidate) => candidate === value) ?? fallback;
+}
+
 class SettingsStore {
     theme = $state<Theme>(typeof localStorage !== 'undefined' && localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light');
     vibration = $state(typeof localStorage === 'undefined' || localStorage.getItem(VIBRATION_KEY) !== 'off');
@@ -130,6 +140,17 @@ class SettingsStore {
     firstName = $state(typeof localStorage === 'undefined' ? '' : localStorage.getItem(FIRST_NAME_KEY) ?? '');
     // The learner's own story character; null until they have made one in the intro or on the profile page.
     avatar = $state<Avatar | null>(parseAvatar(typeof localStorage === 'undefined' ? null : localStorage.getItem(AVATAR_KEY)));
+    // Dates, times and numbers follow the learned language unless the learner picks the app language.
+    formatSource = $state<FormatSource>(readStored(FORMAT_SOURCE_KEY, ['learning', 'interface'], 'learning'));
+    interfaceCalendar = $state<FormatCalendar>(readStored(INTERFACE_CALENDAR_KEY, ['gregory', 'persian'], 'gregory'));
+    interfaceDigits = $state<FormatDigits>(readStored(INTERFACE_DIGITS_KEY, ['latn', 'native'], 'latn'));
+    formatContext = $derived<FormatContext>(resolveFormatContext({
+      learningLanguage: this.lang,
+      interfaceLocale: this.interfaceLocale,
+      source: this.formatSource,
+      interfaceCalendar: this.interfaceCalendar,
+      interfaceDigits: this.interfaceDigits
+    }));
 
     constructor() {
       // Fetch the learner's vocabulary in the background so game modes that need it don't
@@ -221,6 +242,18 @@ class SettingsStore {
   // With a character of their own and a name, the learner plays Kumar's part in the stories.
   private castLearner() {
     setKumarStandIn(this.avatar ? this.firstName : null);
+  }
+  setFormatSource(next: FormatSource) {
+    this.formatSource = next;
+    localStorage.setItem(FORMAT_SOURCE_KEY, next);
+  }
+  setInterfaceCalendar(next: FormatCalendar) {
+    this.interfaceCalendar = next;
+    localStorage.setItem(INTERFACE_CALENDAR_KEY, next);
+  }
+  setInterfaceDigits(next: FormatDigits) {
+    this.interfaceDigits = next;
+    localStorage.setItem(INTERFACE_DIGITS_KEY, next);
   }
   setWordleLength(next: WordleLength) {
     this.wordleLength = next;
