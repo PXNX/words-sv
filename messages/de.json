@@ -745,5 +745,8 @@
   "grammar_value_en_positive": "Positiv",
   "grammar_value_en_comparative": "Komparativ",
   "grammar_value_en_superlative": "Superlativ",
-  "today_feature": "Übe {feature} – da passieren dir gerade die meisten Fehler"
+  "today_feature": "Übe {feature} – da passieren dir gerade die meisten Fehler",
+  "progress_download": "Wird heruntergeladen",
+  "progress_load": "Wird in den Speicher geladen",
+  "progress_update": "Neue Version wird geholt"
 }
