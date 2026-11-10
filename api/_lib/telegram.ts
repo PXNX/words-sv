@@ -59,12 +59,13 @@ export function verifyInitData(initData: unknown, token = process.env.TELEGRAM_B
 	}
 }
 
-/** `r_<code>` turns on reminders for the device that made the code; `i_<code>` is a player's invite. */
-export function parseStartPayload(payload: unknown): { kind: 'reminders' | 'invite'; code: string } | null {
-	const match = typeof payload === 'string' ? /^([ri])_([A-Za-z0-9_-]{8,40})$/.exec(payload) : null;
+/** `r_<code>` turns on reminders for the device that made the code, `l_<code>` signs that device in
+ * (links it to the Telegram account, so its progress is saved there); `i_<code>` is a player's invite. */
+export function parseStartPayload(payload: unknown): { kind: 'reminders' | 'login' | 'invite'; code: string } | null {
+	const match = typeof payload === 'string' ? /^([ril])_([A-Za-z0-9_-]{8,40})$/.exec(payload) : null;
 	if (!match) return null;
 	// The regex captures exactly two groups, so both are defined when `match` is non-null.
-	const kind = match[1] === 'r' ? 'reminders' : 'invite';
+	const kind = match[1] === 'r' ? 'reminders' : match[1] === 'l' ? 'login' : 'invite';
 	return { kind, code: match[2] ?? '' };
 }
 

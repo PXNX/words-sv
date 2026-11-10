@@ -9,9 +9,9 @@ type TelegramSender = (chatId: number, text: string, buttonUrl: string) => Promi
 
 const validId = (value: unknown): value is number => Number.isSafeInteger(value) && value !== 0;
 
-// Called by the ptb-words bot for every `/start r_…` or `/start i_…` it receives. Answers with what
-// happened, so the bot can reply in the player's language:
-// reminders_on | expired | invited | known | own_invite | unknown.
+// Called by the ptb-words bot for every `/start r_…`, `/start l_…` or `/start i_…` it receives.
+// Answers with what happened, so the bot can reply in the player's language:
+// reminders_on | signed_in | expired | invited | known | own_invite | unknown.
 export function createStartEndpoint({ databaseProvider = getDatabase, telegramSender = sendTelegram }: { databaseProvider?: () => Database; telegramSender?: TelegramSender } = {}) {
 	return async function telegramStart(req: ApiRequest, res: ApiResponse) {
 		if (!isMethod(req, 'POST')) return respond(res, 405, { ok: false, error: 'method_not_allowed' });
@@ -25,6 +25,11 @@ export function createStartEndpoint({ databaseProvider = getDatabase, telegramSe
 			if (start.kind === 'reminders') {
 				const [result] = await db.execute('UPDATE wordcircle_telegram_links SET chat_id = ?, telegram_user_id = ?, reminders = 1, link_code = NULL WHERE link_code = ?', [chatId, userId, start.code]);
 				return respond(res, 200, { ok: true, result: result.affectedRows === 1 ? 'reminders_on' : 'expired' });
+			}
+			if (start.kind === 'login') {
+				// Pressing Start lets the bot write to the player, so the chat is stored for reminders later.
+				const [result] = await db.execute('UPDATE wordcircle_telegram_links SET chat_id = ?, telegram_user_id = ?, link_code = NULL WHERE link_code = ?', [chatId, userId, start.code]);
+				return respond(res, 200, { ok: true, result: result.affectedRows === 1 ? 'signed_in' : 'expired' });
 			}
 			return respond(res, 200, { ok: true, result: await creditInvite(db, start.code, Number(userId), telegramSender) });
 		} catch (error) {

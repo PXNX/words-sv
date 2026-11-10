@@ -6,12 +6,14 @@ import type { Database } from '../_lib/database.js';
 import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 
 const validDeviceId = (value: unknown): value is string => typeof value === 'string' && /^[a-zA-Z0-9_-]{16,64}$/.test(value);
-const actions = new Set(['status', 'connect', 'disconnect', 'miniapp']);
+const actions = new Set(['status', 'connect', 'disconnect', 'miniapp', 'signin', 'signout']);
 
 // The app's side of Telegram: `status` returns the player's invite link and whether reminders are
 // on, `connect` turns them on (straight away when the bot can already write to the player, otherwise
 // through a one-time /start link), `disconnect` turns them off. `miniapp` links the device to the
-// Telegram user who opened WordCircle as a Mini App, from Telegram's signed `initData`.
+// Telegram user who opened WordCircle as a Mini App, from Telegram's signed `initData`. `signin`
+// returns a one-time /start link that links the device to whoever presses Start (outside the Mini
+// App), and `signout` unlinks this device again: its local progress stays, the account keeps its copy.
 export function createDeviceEndpoint({ databaseProvider = getDatabase }: { databaseProvider?: () => Database } = {}) {
 	return async function telegramDevice(req: ApiRequest, res: ApiResponse) {
 		if (!isMethod(req, 'POST')) return respond(res, 405, { ok: false, error: 'method_not_allowed' });
@@ -36,6 +38,12 @@ export function createDeviceEndpoint({ databaseProvider = getDatabase }: { datab
 					await db.execute('UPDATE wordcircle_telegram_links SET link_code = ? WHERE device_id = ?', [code, deviceId]);
 					connectUrl = startLink(`r_${code}`);
 				}
+			} else if (action === 'signin') {
+				const code = newCode(12);
+				await db.execute('UPDATE wordcircle_telegram_links SET link_code = ? WHERE device_id = ?', [code, deviceId]);
+				connectUrl = startLink(`l_${code}`);
+			} else if (action === 'signout') {
+				await db.execute('UPDATE wordcircle_telegram_links SET telegram_user_id = NULL, chat_id = NULL, reminders = 0, link_code = NULL WHERE device_id = ?', [deviceId]);
 			} else if (action === 'disconnect') {
 				await db.execute('UPDATE wordcircle_telegram_links SET reminders = 0, link_code = NULL WHERE device_id = ?', [deviceId]);
 			}
