@@ -262,7 +262,7 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [x] Per-feature accuracy keyed by `FeatureKey` (`featureStats`); German grammar prompts name the
   features they test, wrong answers count against them; labels for every feature in de/en.
 - [x] Writing scores and every hangman round are logged; the Today card suggests the weakest feature.
-- [ ] Log answers from the remaining modes (circle and wordle guesses, conversation).
+- [x] Log answers from the remaining modes (circle words, wordle rounds, words used in conversation).
 
 ### Phase B — assessment and visibility
 - [x] Readiness ranges per skill, level ladder, known words, error profile on `/progress`.
@@ -280,12 +280,14 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 ### Phases C, W, D, E, F, G, H, I
 - [ ] C: Formen verbs/adjectives (German first) on `FormItem`/`FeatureKey`, partial credit,
   feature errors as events; deeper gap-fill, Satzbau and B2–C2 content.
-- [ ] W: offline dictionary packs, tap-to-lookup, lemma index, compound split, add to review.
+- [x] W: offline dictionary (`/dictionary`): search across levels, inflected forms to their base word,
+  German cases and compound parts, listen, add to review; tap-to-lookup in reading opens it.
 - [ ] D: provider router (WebGPU first, OpenRouter BYOK opt-in), per-language model settings.
 - [ ] E: Persian/Arabic native-speaker path, RTL audit, L1 error priors.
-- [ ] F: writing rubric per exam, reading/listening exam formats, speaking simulation, mock exams.
+- [ ] F: writing rubric per level, reading/listening task formats, speaking simulation, mock tests per
+  level (no exam-specific formats).
 - [ ] G: offline audit.
-- [ ] H: leagues and duels with server-side scoring.
+- [x] H: group competition through Telegram games (`/games`, `/top` in a group), scored on the server.
 - [ ] I: dashboards, A/B framework, content QA loop.
 
 ### First run
