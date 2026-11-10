@@ -1,6 +1,7 @@
 import { getDatabase } from '../_lib/database.js';
 import { isMethod, readJson, respond } from '../_lib/http.js';
 import { applyStreakEvent, collectReward, isSupportedTimeZone, normalizeReminderLocale, normalizeVocabularyGoal, stateForToday, streakSummary } from '../_lib/streak.js';
+import { addWeeklyPoints, pointsEarned } from '../_lib/groups.js';
 import type { Database } from '../_lib/database.js';
 import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 
@@ -62,6 +63,8 @@ export default async function streakProgress(req: ApiRequest, res: ApiResponse) 
 		const [rows] = await db.execute('SELECT * FROM wordcircle_streak_devices WHERE device_id = ? LIMIT 1', [deviceId]);
 		const reminderLocale = normalizeReminderLocale(locale ?? rows[0]?.locale);
 		const merged = stateForToday(rows[0], timeZone, new Date());
+		// What today was worth before this call, for the group league's points.
+		const before = stateForToday(rows[0], timeZone, new Date());
 		const inviteFreezes = counter(rows[0]?.invite_freezes, 2);
 		// A device that played offline sends its snapshot along, so the server never loses progress and
 		// never awards the same day twice.
@@ -122,6 +125,8 @@ export default async function streakProgress(req: ApiRequest, res: ApiResponse) 
 			embers: next.embers
 		};
 		await upsert(db, row);
+		// League points never hold up the streak: a failure here only costs this call's points.
+		await addWeeklyPoints(db, deviceId, next.dateKey, pointsEarned(before, next)).catch(() => undefined);
 		// The device takes this answer as its new state, so it now counts the invite freezes itself.
 		if (inviteFreezes > 0) await db.execute('UPDATE wordcircle_streak_devices SET invite_freezes = 0 WHERE device_id = ?', [deviceId]);
 		return respond(res, 200, { ok: true, streak: streakSummary(row, timeZone) });
