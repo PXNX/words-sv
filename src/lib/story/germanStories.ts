@@ -3399,7 +3399,7 @@ export const germanStories: Story[] = [
     beats: [
       { kind: 'narration', text: german('einigen und einsam und einzelne und einzig und Element.') },
       { kind: 'line', speaker: 'mia', text: german('Empathie ist wichtig und Endung ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('eng und enstehen sind da.') },
+      { kind: 'line', speaker: 'tom', text: german('eng und entstehen sind da.') },
       { kind: 'narration', text: german('Epoche und erheben.') },
       { kind: 'question', prompt: german('Was ist Erlebnis?'), options: [german('erleiden'), german('erlernen'), german('erregen')] },
       { kind: 'question', prompt: german('Wer hat Erlebnis?'), options: [german('erleiden'), german('Anderes'), german('Nichts')] }
