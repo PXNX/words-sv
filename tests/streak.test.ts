@@ -105,3 +105,12 @@ describe('streak basic qualification', () => {
 		expect(state.embers).toBe(0);
 	});
 });
+describe('reminder numbers', async () => {
+	const { reminderNotification, reminderNumber } = await import('../api/_lib/streak.js');
+	it('uses Western digits unless the learner chose their own', () => {
+		expect(reminderNumber('fa', 45)).toBe('45');
+		expect(reminderNumber('fa', 45, true)).toBe('۴۵');
+		expect(reminderNotification('deadline', 'ar', 30, true).body).toContain('٣٠');
+		expect(reminderNotification('deadline', 'de', 30, true).body).toContain('30');
+	});
+});

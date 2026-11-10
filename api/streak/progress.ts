@@ -22,7 +22,7 @@ const events = new Set([
 ]);
 const validDeviceId = (value: unknown): value is string => typeof value === 'string' && /^[a-zA-Z0-9_-]{16,64}$/.test(value);
 
-const COLUMNS = ['device_id', 'timezone', 'locale', 'day_key', 'vocab_correct', 'circle_completed', 'definitions_completed', 'wordle_completed', 'reading_completed', 'story_completed', 'grammar_correct', 'listen_completed', 'pronunciation_attempts', 'hangman_completed', 'alltag_correct', 'sentence_completed', 'pro_shield_week', 'current_qualified', 'last_qualified_day', 'streak_count', 'best_streak', 'vocabulary_goal', 'freezes', 'qualified_days', 'reward_collected', 'embers'];
+const COLUMNS = ['device_id', 'timezone', 'locale', 'day_key', 'vocab_correct', 'circle_completed', 'definitions_completed', 'wordle_completed', 'reading_completed', 'story_completed', 'grammar_correct', 'listen_completed', 'pronunciation_attempts', 'hangman_completed', 'alltag_correct', 'sentence_completed', 'pro_shield_week', 'native_digits', 'current_qualified', 'last_qualified_day', 'streak_count', 'best_streak', 'vocabulary_goal', 'freezes', 'qualified_days', 'reward_collected', 'embers'];
 const UPSERT = `INSERT INTO wordcircle_streak_devices (${COLUMNS.join(', ')})
 	VALUES (${COLUMNS.map(() => '?').join(', ')})
 	ON DUPLICATE KEY UPDATE ${COLUMNS.slice(1).map((column) => `${column} = VALUES(${column})`).join(', ')}`;
@@ -31,7 +31,8 @@ const UPSERT = `INSERT INTO wordcircle_streak_devices (${COLUMNS.join(', ')})
 const MIGRATIONS = [
 	'ALTER TABLE wordcircle_streak_devices ADD COLUMN reward_collected TINYINT(1) NOT NULL DEFAULT 0, ADD COLUMN embers TINYINT UNSIGNED NULL',
 	'ALTER TABLE wordcircle_streak_devices ADD COLUMN sentence_completed TINYINT(1) NOT NULL DEFAULT 0',
-	'ALTER TABLE wordcircle_streak_devices ADD COLUMN pro_shield_week CHAR(8) NULL'
+	'ALTER TABLE wordcircle_streak_devices ADD COLUMN pro_shield_week CHAR(8) NULL',
+	'ALTER TABLE wordcircle_streak_devices ADD COLUMN native_digits TINYINT(1) NOT NULL DEFAULT 0'
 ];
 
 async function upsert(db: Database, row: Record<string, unknown>) {
@@ -65,7 +66,7 @@ async function readProUntil(db: Database, deviceId: string): Promise<number | nu
 export default async function streakProgress(req: ApiRequest, res: ApiResponse) {
 	if (!isMethod(req, 'POST')) return respond(res, 405, { ok: false, error: 'method_not_allowed' });
 	try {
-		const { deviceId, timeZone, event = 'sync', snapshot: rawSnapshot, locale } = await readJson(req);
+		const { deviceId, timeZone, event = 'sync', snapshot: rawSnapshot, locale, nativeDigits } = await readJson(req);
 		// The device's own streak state for today, sent as-is; every field is checked where it is read.
 		const snapshot = rawSnapshot as Record<string, unknown> | null | undefined;
 		if (!validDeviceId(deviceId) || typeof timeZone !== 'string' || !isSupportedTimeZone(timeZone) || typeof event !== 'string' || !events.has(event)) return respond(res, 400, { ok: false, error: 'invalid_request' });
@@ -126,6 +127,8 @@ export default async function streakProgress(req: ApiRequest, res: ApiResponse) 
 			alltag_correct: next.alltagCorrect,
 			sentence_completed: next.sentenceCompleted ? 1 : 0,
 			pro_shield_week: next.proShieldWeek,
+			// The app's digit choice, for the reminders' numbers (Telegram and push).
+			native_digits: nativeDigits === true ? 1 : 0,
 			current_qualified: next.qualified ? 1 : 0,
 			last_qualified_day: next.lastQualifiedDay,
 			streak_count: next.streakCount,

@@ -17,6 +17,8 @@ CREATE TABLE IF NOT EXISTS wordcircle_streak_devices (
   sentence_completed TINYINT(1) NOT NULL DEFAULT 0,
   -- The ISO week whose WordCircle Pro shield bridged a missed day.
   pro_shield_week CHAR(8) NULL,
+  -- Reminders use the interface's own digits (Persian, Arabic-Indic, …) when the learner chose them.
+  native_digits TINYINT(1) NOT NULL DEFAULT 0,
   current_qualified TINYINT(1) NOT NULL DEFAULT 0,
   last_qualified_day CHAR(10) NULL,
   streak_count INT UNSIGNED NOT NULL DEFAULT 0,
@@ -63,6 +65,7 @@ CREATE TABLE IF NOT EXISTS wordcircle_streak_devices (
 -- Migration for the writing goal (/sentence); api/streak/progress.ts runs it on its own as well.
 -- ALTER TABLE wordcircle_streak_devices ADD COLUMN sentence_completed TINYINT(1) NOT NULL DEFAULT 0;
 -- ALTER TABLE wordcircle_streak_devices ADD COLUMN pro_shield_week CHAR(8) NULL;
+-- ALTER TABLE wordcircle_streak_devices ADD COLUMN native_digits TINYINT(1) NOT NULL DEFAULT 0;
 
 CREATE TABLE IF NOT EXISTS wordcircle_push_subscriptions (
   endpoint_hash CHAR(64) NOT NULL PRIMARY KEY,

@@ -308,7 +308,7 @@ export function reminderTypes(stored: StoredStreak | null | undefined, timeZone:
 	return { summary, types };
 }
 
-const NOTIFICATIONS: Record<string, (type: string, minutes: number) => { title: string; body: string }> = {
+const NOTIFICATIONS: Record<string, (type: string, minutes: string) => { title: string; body: string }> = {
 	en: (type, minutes) => type === 'deadline'
 		? { title: 'Keep your WordCircle streak', body: `Only ${minutes} minutes remain to qualify today.` }
 		: { title: 'Continue your WordCircle streak', body: 'A new learning day has started.' },
@@ -338,9 +338,18 @@ const NOTIFICATIONS: Record<string, (type: string, minutes: number) => { title: 
 		: { title: 'Продовжте серію WordCircle', body: 'Почався новий навчальний день.' }
 };
 
-export function reminderNotification(type: string, locale: string, minutesRemaining: number) {
+const NATIVE_DIGITS: Record<string, string> = { fa: 'arabext', ar: 'arab', hi: 'deva', ml: 'mlym' };
+
+/** A number in the reminder's language, in its own digits when the learner chose them in the app. */
+export function reminderNumber(locale: string, value: number, nativeDigits = false): string {
+	const language = normalizeReminderLocale(locale);
+	return new Intl.NumberFormat(language, { numberingSystem: (nativeDigits && NATIVE_DIGITS[language]) || 'latn', maximumFractionDigits: 0 }).format(value);
+}
+
+export function reminderNotification(type: string, locale: string, minutesRemaining: number, nativeDigits = false) {
 	// Every supported locale has a notification set; unknown ones fall back to English.
 	const set = NOTIFICATIONS[normalizeReminderLocale(locale)] ?? NOTIFICATIONS.en;
-	if (!set) return { title: 'Keep your WordCircle streak', body: `Only ${minutesRemaining} minutes remain to qualify today.` };
-	return set(type, minutesRemaining);
+	const minutes = reminderNumber(locale, minutesRemaining, nativeDigits);
+	if (!set) return { title: 'Keep your WordCircle streak', body: `Only ${minutes} minutes remain to qualify today.` };
+	return set(type, minutes);
 }
