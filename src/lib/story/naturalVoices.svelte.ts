@@ -5,8 +5,8 @@ import { speechChunks } from './speech';
 import { settings, type NaturalModel } from '#lib/state/settings.svelte.js';
 import { loadRecordedVoice, useRecordedVoices } from '#lib/voice/recordedVoices.js';
 import { listEdgeVoices, speakEdge, type EdgeVoice } from '#lib/voice/edgeTts.js';
-import { engineFor, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
-import { prepareSupertonic, speakSupertonic, SUPERTONIC_VOICES } from '#lib/voice/supertonic.js';
+import { castEngineVoices, engineFor, voiceEngines, type EngineVoice, type VoiceEngineId } from '#lib/voice/engines.js';
+import { prepareSupertonic, speakSupertonic } from '#lib/voice/supertonic.js';
 import { prepareVoxCPM, speakVoxCPM } from '#lib/voice/voxcpm.js';
 import { createPriorityQueue, type Priority } from '#lib/audio/priorityQueue.js';
 
@@ -547,23 +547,22 @@ async function synthesizeEdge(text: string, speaker: Speaker, mood: Mood, cast: 
   return { buffer, playbackRate: 1, volume: Math.min(1, profile.volume * shape.volume) };
 }
 
-// Supertonic has five female and five male voices: the narrator and the cast take turns through
-// them in casting order, so the main characters never share one.
-function castSupertonic(cast: Speaker[]): Map<Speaker, string> {
+// Models with named voices (Supertonic's five female and five male ones): the narrator and the
+// cast take turns through them in casting order, so the main characters never share one.
+function castModelVoices(cast: Speaker[], voices: readonly EngineVoice[]): Map<Speaker, string> {
   const speakers = priority.filter((speaker) => speaker === 'narrator' || cast.includes(speaker));
-  const next = { female: 0, male: 0 };
-  const casting = new Map<Speaker, string>();
-  for (const speaker of speakers) {
-    const gender = profiles[speaker].gender;
-    const pool = SUPERTONIC_VOICES[gender];
-    casting.set(speaker, pool[next[gender]++ % pool.length]!);
-  }
-  return casting;
+  return castEngineVoices(speakers.map((id) => ({ id, gender: profiles[id].gender })), voices);
+}
+/** The voice `speaker` speaks with in a model engine, given the rest of the cast. */
+function modelVoice(speaker: Speaker, cast: Speaker[], voices: readonly EngineVoice[]): string {
+  const voice = castModelVoices(cast, voices).get(speaker) ?? castModelVoices([speaker], voices).get(speaker);
+  if (!voice) throw new Error('this voice engine has no voices');
+  return voice;
 }
 
 async function synthesizeSupertonic(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number, priority: SpeechPriority): Promise<NaturalClip> {
   const profile = profiles[speaker];
-  const voice = castSupertonic(cast).get(speaker) ?? castSupertonic([speaker]).get(speaker)!;
+  const voice = modelVoice(speaker, cast, voiceEngines.supertonic.voices ?? []);
   const shape = moodShape[mood];
   const accent = accentShape(profile.dialect, settings.dialects);
   const speed = Math.max(0.8, Math.min(1.2, baseRate * (profile.natural?.rate ?? profile.rate) * shape.rate * accent.rate));

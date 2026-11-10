@@ -8,7 +8,6 @@ import { createPriorityQueue, type Priority } from '#lib/audio/priorityQueue.js'
 import { createWorkerClient } from '#lib/workers/protocol.js';
 import type { SupertonicProtocol } from './supertonic.worker.js';
 
-export const SUPERTONIC_VOICES = { female: ['F1', 'F2', 'F3', 'F4', 'F5'], male: ['M1', 'M2', 'M3', 'M4', 'M5'] } as const;
 const SPEAK_TIMEOUT_MS = 60_000;
 
 const queue = createPriorityQueue();
