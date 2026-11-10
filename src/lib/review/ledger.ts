@@ -7,6 +7,7 @@
 import { logLearningEvent } from '#lib/progress/eventLog.js';
 import { skillForMode, type EventMode } from '#lib/progress/events.js';
 import type { ItemId, LangCode } from '#lib/domain/types.js';
+import type { FeatureKey } from '#lib/grammar/taxonomy.js';
 import { normalizeMemory, schedule, type Grade, type SchedulerState } from './scheduler.js';
 export type ReviewSource = 'vocab' | 'reading' | 'grammar' | 'pronunciation' | 'story' | 'listening';
 
@@ -101,7 +102,7 @@ export function applyReview(
 
 const MODE_BY_SOURCE: Record<ReviewSource, EventMode> = { vocab: 'vocab', reading: 'reading', grammar: 'grammar', pronunciation: 'speak', story: 'story', listening: 'listen' };
 
-export type ReviewDetails = { latencyMs?: number; score?: number };
+export type ReviewDetails = { latencyMs?: number; score?: number; featureErrors?: FeatureKey[] };
 
 /** Schedules an answer and appends it to the learning event log. */
 export function recordReview(language: string, item: string, correct: boolean, source: ReviewSource, now: number = Date.now(), grade?: Grade, details: ReviewDetails = {}): ReviewLedger {
@@ -117,7 +118,8 @@ export function recordReview(language: string, item: string, correct: boolean, s
 		correct,
 		rating: grade ?? (correct ? 'good' : 'again'),
 		...(details.latencyMs !== undefined ? { latencyMs: details.latencyMs } : {}),
-		...(details.score !== undefined ? { score: details.score } : {})
+		...(details.score !== undefined ? { score: details.score } : {}),
+		...(!correct && details.featureErrors?.length ? { featureErrors: details.featureErrors } : {})
 	});
 	return ledger;
 }

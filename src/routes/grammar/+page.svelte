@@ -11,7 +11,7 @@
   import { prioritizeLearningWords, updateReviewProgress } from '#lib/vocab/spacedRepetition.js';
   import { dueReviewEntries, recordReview } from '#lib/review/ledger.js';
   import { articleChoiceOptions, gapSentenceSuffixes, grammarArticles, pickRandomSection, shuffled, GRAMMAR_REVIEW_STORAGE_PREFIX } from '#lib/grammar/learning.js';
-  import { buildNounCasePrompt, buildNounPropertyPrompt, type GrammarPrompt } from '#lib/grammar/cases.js';
+  import { buildNounCasePrompt, buildNounPropertyPrompt, genderFeature, type GrammarPrompt } from '#lib/grammar/cases.js';
   import { buildAdjectivePrompt, isEligibleAdjective } from '#lib/grammar/adjectives.js';
   import { buildVerbPrompt, buildVerbPropertyPrompt, verbConjugations } from '#lib/grammar/verbs.js';
   import { buildFalseFriendPrompt, falseFriendPairs } from '#lib/grammar/falseFriends.js';
@@ -151,7 +151,8 @@
       const after = gapSentenceSuffixes[settings.lang]?.(spelling) ?? spelling;
       const choices = articleChoiceOptions(article, articleUniverse, random);
       if (choices.length < 2) return null;
-      return { before: '', after, correct: article, choices };
+      const gender = metadata[word]?.gender;
+      return { before: '', after, correct: article, choices, ...(settings.lang === 'de' && gender ? { features: [genderFeature(gender)] } : {}) };
     }
     if (kind === 'noun') {
       const gender = metadata[word]?.gender;
@@ -209,7 +210,7 @@
     const grade = gradeNow(correct);
     reviewProgress = updateReviewProgress(reviewProgress, currentKey, correct, Date.now(), grade);
     persistProgress();
-    recordReview(settings.lang, currentKey, correct, 'grammar', Date.now(), grade);
+    recordReview(settings.lang, currentKey, correct, 'grammar', Date.now(), grade, settings.lang === 'de' && prompt.features ? { featureErrors: prompt.features } : {});
     if (correct) { playSuccessSound(settings.sound, 'grammar'); void settings.recordStreak('grammar_correct'); }
     else { playErrorSound(settings.sound, 'grammar'); recordMissedGrammarWord(currentKey); requeue(currentKey); }
   }
