@@ -25,6 +25,7 @@
   import IconPause from '~icons/material-symbols/pause-rounded';
   import IconRewind from '~icons/material-symbols/fast-rewind-rounded';
   import IconForward from '~icons/material-symbols/fast-forward-rounded';
+  import { formatDateTime } from '#lib/format/format.js';
 
   const STORY_TARGETS: Record<string, number> = { a1: 200, a2: 250, b1: 320, b2: 380, c1: 420, c2: 480 };
   const LISTEN_PROGRESS_KEY = 'wordcircle-listen-progress-v1';
@@ -124,7 +125,10 @@
     });
   });
 
-  const dateFormat = $derived(new Intl.DateTimeFormat(settings.interfaceLocale, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }));
+  const dateFormat = $derived.by(() => {
+    const context = settings.formatContext;
+    return { format: (at: number) => formatDateTime(context, at) };
+  });
   const soundEnabled = $derived(settings.sound);
   // The audio that fits the current learning language best: this level first, then any level of the
   // same language. Another language's audio never opens on its own.

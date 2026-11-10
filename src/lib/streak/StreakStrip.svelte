@@ -13,6 +13,7 @@
   import IconFlame from '~icons/material-symbols/local-fire-department-rounded';
   import IconFreeze from '~icons/material-symbols/ac-unit-rounded';
   import IconCheck from '~icons/material-symbols/check-rounded';
+  import { formatWeekday } from '#lib/format/format.js';
 
   const locale = $derived({ locale: settings.interfaceLocale });
   const streak = $derived(settings.streak);
@@ -21,8 +22,8 @@
   // Today's ring: the vocabulary goal, or full once any mode qualified the day.
   const goalProgress = $derived(streak.qualified ? 1 : Math.min(1, streak.vocabCorrect / Math.max(1, streak.vocabularyGoal)));
   const weekdayName = $derived.by(() => {
-    const format = new Intl.DateTimeFormat(settings.interfaceLocale, { weekday: 'narrow', timeZone: 'UTC' });
-    return (key: string) => format.format(new Date(`${key}T12:00:00.000Z`));
+    const context = settings.formatContext;
+    return (key: string) => formatWeekday(context, new Date(`${key}T12:00:00.000Z`), 'narrow', 'UTC');
   });
 
   function formatTime(minutes: number) {

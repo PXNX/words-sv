@@ -354,5 +354,11 @@
   "invite_share": "اشتراک لینک دعوت",
   "invite_copied": "لینک کپی شد",
   "invite_count": "{count} دوست دعوت شده",
-  "invite_share_text": "با من در WordCircle واژه یاد بگیر!"
+  "invite_share_text": "با من در WordCircle واژه یاد بگیر!",
+  "format_calendar": "تقویم",
+  "format_calendar_gregory": "میلادی",
+  "format_calendar_persian": "خورشیدی",
+  "format_digits": "ارقام",
+  "format_digits_latn": "0–9",
+  "format_digits_native": "فارسی"
 }

@@ -28,6 +28,7 @@
   import SyncHint from '#lib/sync/SyncHint.svelte';
   import { defaultAvatar } from '#lib/profile/avatar.js';
   import type { Mood } from '#lib/story/stories.js';
+  import { formatWeekday } from '#lib/format/format.js';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   // Lilith turns loving at five days, happy once today is qualified, sad about a broken streak and
@@ -207,8 +208,8 @@
   const totals = $derived(lifetimeTotals(activity));
   const topModes = $derived(modeShares(activity, weekStartTimestamp()).slice(0, 4));
   const dayName = $derived.by(() => {
-    const format = new Intl.DateTimeFormat(settings.interfaceLocale, { weekday: 'short' });
-    return (start: number) => format.format(start);
+    const context = settings.formatContext;
+    return (start: number) => formatWeekday(context, start, 'short');
   });
   const minutesLabel = (count: number) => m.stats_minutes_short({ count }, { locale: settings.interfaceLocale });
   const kindNames = $derived<Record<ActivityKind, string>>({

@@ -589,5 +589,15 @@
   "factor_llmStructure": "Split the text into meaningful paragraphs.",
   "factor_llmSpacing": "Remove double spaces.",
   "factor_llmGrammar": "There are still grammar mistakes.",
-  "factor_llmNoIssues": "No bigger mistakes — well written!"
+  "factor_llmNoIssues": "No bigger mistakes — well written!",
+  "format_as": "Format like",
+  "format_learning": "Learned language",
+  "format_interface": "App language",
+  "format_hint": "Dates, times and numbers look like they do in the language you learn, which is practice on the side.",
+  "format_calendar": "Calendar",
+  "format_calendar_gregory": "Gregorian",
+  "format_calendar_persian": "Persian",
+  "format_digits": "Digits",
+  "format_digits_latn": "0–9",
+  "format_digits_native": "Native"
 }

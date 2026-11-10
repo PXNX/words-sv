@@ -56,6 +56,18 @@ export default tseslint.config(
     },
   },
   {
+    // Dates, times and numbers go through src/lib/format/format.ts so they follow the
+    // learner's "format like" setting; raw toLocale*String() would ignore it.
+    files: ['src/**/*.{ts,svelte}'],
+    ignores: ['src/lib/format/**'],
+    rules: {
+      'no-restricted-syntax': ['error', {
+        selector: "CallExpression[callee.property.name=/^toLocale(Date|Time)?String$/]",
+        message: 'Format dates, times and numbers with src/lib/format/format.ts.',
+      }],
+    },
+  },
+  {
     files: ['**/*.{ts,svelte}'],
     rules: {
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
