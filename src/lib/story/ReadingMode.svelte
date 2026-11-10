@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { logAnswer } from '#lib/progress/eventLog.js';
   import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { onMount, tick } from 'svelte';
 import { page } from '$app/state';
@@ -261,7 +262,9 @@ import { page } from '$app/state';
     const item = current;
     if (!item || currentSolved[index]) return;
     const question = item.questions[index]!;
-    if (isCorrectAnswer(question, option)) {
+    const correct = isCorrectAnswer(question, option);
+    logAnswer(item.language ?? settings.lang, 'reading', `READING:${item.id}:${index}`, correct, { level: item.level });
+    if (correct) {
       const nextSolved: Record<number, true> = { ...currentSolved, [index]: true };
       solved = { ...solved, [item.id]: nextSolved };
       // Every question answered ends the text, which is one of the ways to qualify the day.

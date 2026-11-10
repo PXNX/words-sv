@@ -93,6 +93,8 @@ onMount(() => {
     void autoUpdateOnStart();
     void updated.check();
     pwaInstall.init();
+    // Fold learning events older than a year into daily aggregates once the app is idle.
+    setTimeout(() => void import('#lib/progress/eventLog.js').then(({ compactEventLog }) => compactEventLog()), 10_000);
     // Linked to Telegram: merge with the account's progress, then keep saving it there.
     startCloudSync();
     hydrated = true;
