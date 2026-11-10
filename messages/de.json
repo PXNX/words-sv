@@ -496,8 +496,6 @@
   "wordle_length": "Wortlänge",
   "wordle_length_explain": "Die Wortlänge bestimmt, wie viele Buchstaben das gesuchte Wort hat. Kürzere Wörter sind schneller gelöst, längere bieten mehr Kombinationen.",
   "backwards_explain": "Ist das an, gelten auch rückwärts geschriebene Wörter. „STOP“ zählt dann genauso wie „POTS“.",
-  "explain_wordle_length": "Erklärung zur Wortlänge",
-  "explain_backwards": "Erklärung zur Rückwärtsschreibweise",
   "share_app": "App teilen",
   "share_app_text": "Übe Deutsch mit Vokabeln, Grammatik und Geschichten in kleinen Übungen.",
   "close": "Schließen",
