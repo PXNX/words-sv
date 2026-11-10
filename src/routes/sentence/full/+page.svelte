@@ -6,7 +6,7 @@
   import { settings } from '#lib/state/settings.svelte.js';
   import type { GradeResult } from '#lib/sentence/grading.js';
   import { fullPromptForToday } from '#lib/sentence/prompt.js';
-  import { canGrade, grader, runGrade } from '#lib/sentence/graderClient.svelte.js';
+  import { grader, runGrade } from '#lib/sentence/graderClient.svelte.js';
   import GraderGate from '#lib/sentence/GraderGate.svelte';
   import GradeResultCard from '#lib/sentence/GradeResultCard.svelte';
   import IconLightbulb from '~icons/material-symbols/lightbulb-rounded';
@@ -40,7 +40,7 @@
   const canSubmit = $derived(wordCount >= 10);
 
   async function submit() {
-    if (!canSubmit || grader.busy || !canGrade()) return;
+    if (!canSubmit || grader.busy) return;
     result = await runGrade(answer, settings.lang, 'full', prompt.topic);
     // The rubric score feeds the writing readiness on /progress.
     logAnswer(settings.lang, 'write', `WRITE:FULL:${prompt.topic}`, null, { level: settings.vocabularyLevel, score: result.score });
@@ -133,7 +133,7 @@
   <GraderGate />
 
   <div class="writing-actions">
-    <button class="btn-play btn-play-ink" onclick={submit} disabled={!canSubmit || grader.busy || !canGrade()}>
+    <button class="btn-play btn-play-ink" onclick={submit} disabled={!canSubmit || grader.busy}>
       {grader.busy ? labels.aiSubmitting : labels.submit}
     </button>
     {#if answer}
