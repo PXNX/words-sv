@@ -1,4 +1,6 @@
 import { publishReminderState, reminderLocale } from '../pwa/pwaReminders.js';
+import { callApi } from '../api/client.js';
+import { StreakReplySchema, type ServerStreak } from '../api/schemas.js';
 
 export type StreakEvent =
 	| 'sync'
@@ -202,6 +204,13 @@ export function readStreak(now = new Date()) {
 	} catch { return defaultState(now); }
 }
 
+/** The server's streak over the device's: every field the server sent wins, the rest stay. */
+export function mergeServerStreak(local: ClientStreak, server: ServerStreak): ClientStreak {
+	const merged: Record<string, unknown> = { ...local };
+	for (const [key, value] of Object.entries(server)) if (value !== undefined) merged[key] = value;
+	return merged as ClientStreak;
+}
+
 export function writeStreak(state: ClientStreak) {
 	if (typeof localStorage !== 'undefined') localStorage.setItem(STREAK_KEY, JSON.stringify(state));
 	return state;
@@ -376,13 +385,10 @@ export async function syncStreak(event: StreakEvent, fallback = readStreak()) {
 	// The /api functions only exist on Vercel; under `vite dev` every call would just 404.
 	if (import.meta.env?.DEV) return optimistic;
 	try {
-		const response = await fetch('/api/streak/progress', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), event, snapshot: optimistic }) });
-		const body = await response.json();
-		if (response.ok && body?.streak) {
-			const saved = writeStreak(body.streak);
-			void publishReminderState(saved);
-			return saved;
-		}
+		const { streak } = await callApi('/api/streak/progress', StreakReplySchema, { body: { deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), event, snapshot: optimistic } });
+		const saved = writeStreak(mergeServerStreak(optimistic, streak));
+		void publishReminderState(saved);
+		return saved;
 	} catch { /* Offline play retains the local cache and retries with the next event. */ }
 	return optimistic;
 }
@@ -392,9 +398,8 @@ export async function syncStreakGoal(goal: number, fallback = readStreak()) {
 	void publishReminderState(optimistic);
 	if (import.meta.env?.DEV) return optimistic;
 	try {
-		const response = await fetch('/api/streak/progress', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), event: 'sync', snapshot: optimistic }) });
-		const body = await response.json();
-		if (response.ok && body?.streak) return writeStreak(body.streak);
+		const { streak } = await callApi('/api/streak/progress', StreakReplySchema, { body: { deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), event: 'sync', snapshot: optimistic } });
+		return writeStreak(mergeServerStreak(optimistic, streak));
 	} catch { /* Local goal still applies; the next event retries it. */ }
 	return optimistic;
 }
