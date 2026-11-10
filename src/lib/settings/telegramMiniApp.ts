@@ -40,14 +40,23 @@ export function miniAppLaunch(): MiniAppLaunch | null {
 
 // In fullscreen, Telegram draws the status bar and its own close and menu buttons over the page.
 // Its script keeps --tg-safe-area-inset-* (status bar) and --tg-content-safe-area-inset-* (Telegram's
-// buttons) up to date on <html>; the layout moves the page below them. Outside Telegram nothing is
-// loaded and the variables stay unset.
+// buttons) up to date on <html>; the layout moves the page below them. Older clients report no
+// content inset, so `tg-fullscreen` on <html> lets the layout keep a header-sized strip free anyway.
+// Outside Telegram nothing is loaded and the variables stay unset.
+type TelegramWebApp = { ready(): void; isFullscreen?: boolean; onEvent?(event: string, handler: () => void): void };
 export function loadTelegramWebApp() {
 	if (typeof document === 'undefined' || document.getElementById('telegram-web-app')) return;
 	const script = document.createElement('script');
 	script.id = 'telegram-web-app';
 	script.src = 'https://telegram.org/js/telegram-web-app.js';
 	script.async = true;
-	script.addEventListener('load', () => (window as { Telegram?: { WebApp?: { ready(): void } } }).Telegram?.WebApp?.ready());
+	script.addEventListener('load', () => {
+		const webApp = (window as { Telegram?: { WebApp?: TelegramWebApp } }).Telegram?.WebApp;
+		if (!webApp) return;
+		const mark = () => document.documentElement.classList.toggle('tg-fullscreen', Boolean(webApp.isFullscreen));
+		mark();
+		webApp.onEvent?.('fullscreenChanged', mark);
+		webApp.ready();
+	});
 	document.head.append(script);
 }

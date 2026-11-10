@@ -178,6 +178,9 @@ onMount(() => {
 	   starts below them (variables from telegram-web-app.js, unset and 0 everywhere else). The shell takes the
 	   paper's colour so the strip behind Telegram's buttons looks like part of the page. */
 	:global(:root) { --tg-inset-top:calc(var(--tg-safe-area-inset-top,0px) + var(--tg-content-safe-area-inset-top,0px));--tg-inset-bottom:calc(var(--tg-safe-area-inset-bottom,0px) + var(--tg-content-safe-area-inset-bottom,0px)); }
+	/* Fullscreen in a client that reports no content inset: keep at least the status bar plus Telegram's
+	   header row (about 3.5rem) free, so the top bar's buttons are never under Telegram's own. */
+	:global(html.tg-fullscreen) { --tg-inset-top:max(calc(var(--tg-safe-area-inset-top,0px) + var(--tg-content-safe-area-inset-top,0px)), calc(env(safe-area-inset-top,0px) + 3.5rem)); }
 	.portrait-content { width:100%;min-height:100svh; }
 	:global(.game-shell) { box-sizing:border-box;min-height:100svh;padding:var(--tg-inset-top) 0 var(--tg-inset-bottom);display:flex;align-items:stretch;justify-content:center;background-color:#ede4d5; }
 	:global(html.dark .game-shell) { background-color:#213a5d; }
