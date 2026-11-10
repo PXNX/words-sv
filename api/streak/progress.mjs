@@ -15,17 +15,21 @@ const events = new Set([
 	'pronunciation_practised',
 	'hangman_completed',
 	'alltag_correct',
+	'sentence_completed',
 	'reward_collected'
 ]);
 const validDeviceId = (value) => typeof value === 'string' && /^[a-zA-Z0-9_-]{16,64}$/.test(value);
 
-const COLUMNS = ['device_id', 'timezone', 'locale', 'day_key', 'vocab_correct', 'circle_completed', 'definitions_completed', 'wordle_completed', 'reading_completed', 'story_completed', 'grammar_correct', 'listen_completed', 'pronunciation_attempts', 'hangman_completed', 'alltag_correct', 'current_qualified', 'last_qualified_day', 'streak_count', 'best_streak', 'vocabulary_goal', 'freezes', 'qualified_days', 'reward_collected', 'embers'];
+const COLUMNS = ['device_id', 'timezone', 'locale', 'day_key', 'vocab_correct', 'circle_completed', 'definitions_completed', 'wordle_completed', 'reading_completed', 'story_completed', 'grammar_correct', 'listen_completed', 'pronunciation_attempts', 'hangman_completed', 'alltag_correct', 'sentence_completed', 'current_qualified', 'last_qualified_day', 'streak_count', 'best_streak', 'vocabulary_goal', 'freezes', 'qualified_days', 'reward_collected', 'embers'];
 const UPSERT = `INSERT INTO wordcircle_streak_devices (${COLUMNS.join(', ')})
 	VALUES (${COLUMNS.map(() => '?').join(', ')})
 	ON DUPLICATE KEY UPDATE ${COLUMNS.slice(1).map((column) => `${column} = VALUES(${column})`).join(', ')}`;
-// Databases created before the daily reward get its columns on first use, so a deploy never
-// breaks streak syncing while the migration in database-schema.sql is still pending.
-const REWARD_MIGRATION = 'ALTER TABLE wordcircle_streak_devices ADD COLUMN reward_collected TINYINT(1) NOT NULL DEFAULT 0, ADD COLUMN embers TINYINT UNSIGNED NULL';
+// Databases created before the daily reward or the writing goal get their columns on first use, so
+// a deploy never breaks streak syncing while the migrations in database-schema.sql are still pending.
+const MIGRATIONS = [
+	'ALTER TABLE wordcircle_streak_devices ADD COLUMN reward_collected TINYINT(1) NOT NULL DEFAULT 0, ADD COLUMN embers TINYINT UNSIGNED NULL',
+	'ALTER TABLE wordcircle_streak_devices ADD COLUMN sentence_completed TINYINT(1) NOT NULL DEFAULT 0'
+];
 
 async function upsert(db, row) {
 	const values = COLUMNS.map((column) => row[column]);
@@ -33,7 +37,9 @@ async function upsert(db, row) {
 		await db.execute(UPSERT, values);
 	} catch (error) {
 		if (error?.code !== 'ER_BAD_FIELD_ERROR') throw error;
-		await db.execute(REWARD_MIGRATION).catch((migrationError) => { if (migrationError?.code !== 'ER_DUP_FIELDNAME') throw migrationError; });
+		for (const migration of MIGRATIONS) {
+			await db.execute(migration).catch((migrationError) => { if (migrationError?.code !== 'ER_DUP_FIELDNAME') throw migrationError; });
+		}
 		await db.execute(UPSERT, values);
 	}
 }
@@ -68,6 +74,7 @@ export default async function streakProgress(req, res) {
 			merged.storyCompleted = merged.storyCompleted || Boolean(snapshot.storyCompleted);
 			merged.listenCompleted = merged.listenCompleted || Boolean(snapshot.listenCompleted);
 			merged.hangmanCompleted = merged.hangmanCompleted || Boolean(snapshot.hangmanCompleted);
+			merged.sentenceCompleted = merged.sentenceCompleted || Boolean(snapshot.sentenceCompleted);
 			// The device is the only place that knows when a freeze was consumed, so take the lower count;
 			// freezes forged from invite embers (see /api/telegram/start) are new to it and come on top.
 			merged.freezes = Math.min(merged.freezes, counter(snapshot.freezes, 2) + inviteFreezes);
@@ -99,6 +106,7 @@ export default async function streakProgress(req, res) {
 			pronunciation_attempts: next.pronunciationAttempts,
 			hangman_completed: next.hangmanCompleted ? 1 : 0,
 			alltag_correct: next.alltagCorrect,
+			sentence_completed: next.sentenceCompleted ? 1 : 0,
 			current_qualified: next.qualified ? 1 : 0,
 			last_qualified_day: next.lastQualifiedDay,
 			streak_count: next.streakCount,
