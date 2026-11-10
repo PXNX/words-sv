@@ -1,7 +1,8 @@
 <!--
-  Writing is graded by the on-device language model, so before the first grade the learner
-  downloads it once (and it is loaded into memory). Shows the download button, its progress, or
-  why grading uses rules on a device without WebGPU, plus any fallback notice of the last grade.
+  Writing is graded by fixed rules until the on-device language model is downloaded; then by the
+  model, unless the learner switches it off. Shows the download button, its progress, why grading
+  uses rules on a device without WebGPU, or the "without AI / with AI" switch, plus any fallback
+  notice of the last grade.
 -->
 <script lang="ts">
   import { onMount } from 'svelte';
@@ -13,6 +14,8 @@
   import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
   import { modelProgressPhase } from '#lib/offline/progressPhase.js';
   import { formatBytes } from '#lib/offline/storage.js';
+  import AiSwitch from '#lib/conversation/AiSwitch.svelte';
+  import { prefersWithoutAi } from '#lib/conversation/aiChoice.svelte.js';
   import { grader, graderAvailability, prepareGrader } from './graderClient.svelte.js';
   import IconDownload from '~icons/material-symbols/download-rounded';
 
@@ -33,11 +36,17 @@
     {#if localModel.status === 'failed'}<p class="grader-warn">{m.grade_model_failed({}, locale)}</p>{/if}
   {:else if availability === 'loading'}
     <DownloadProgress progress={localModel.progress} phase={modelProgressPhase(localModel.text)} bytesPerSecond={localModel.bytesPerSecond} detail={model.label} />
+    <p>{m.grade_model_loading_rules({}, locale)}</p>
   {:else if availability === 'unsupported'}
     <p class="grader-warn">{m.grade_model_unsupported({}, locale)}</p>
   {:else if availability === 'ready'}
-    <ModelStatus downloaded inMemory={localModel.status === 'ready'} downloadMB={model.downloadMB} memoryMB={modelGpuMB(model)} hint={false} />
-    <p>{localModel.status === 'ready' ? m.grade_model_in_memory({ model: model.label }, locale) : m.grade_model_on_device({ model: model.label }, locale)}</p>
+    <AiSwitch mode="writing" />
+    {#if prefersWithoutAi('writing')}
+      <p>{m.grade_rules_chosen({}, locale)}</p>
+    {:else}
+      <ModelStatus downloaded inMemory={localModel.status === 'ready'} downloadMB={model.downloadMB} memoryMB={modelGpuMB(model)} hint={false} />
+      <p>{localModel.status === 'ready' ? m.grade_model_in_memory({ model: model.label }, locale) : m.grade_model_on_device({ model: model.label }, locale)}</p>
+    {/if}
   {/if}
   {#if grader.notice === 'failed'}<p class="grader-warn">{m.grade_ai_failed({}, locale)}</p>{/if}
 </div>
