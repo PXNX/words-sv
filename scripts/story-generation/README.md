@@ -1,12 +1,12 @@
 # Story generation helpers
 
-One-off Node scripts that were used to write the German stories that bring in unused vocabulary
+One-off Bun scripts that were used to write the German stories that bring in unused vocabulary
 (`src/lib/story/germanStories.ts`), kept with their working files for reference. They used to live
 in the repository root.
 
-Run them from anywhere, e.g. `node scripts/story-generation/compute_unused.cjs`: each script
+Run them from anywhere, e.g. `bun scripts/story-generation/compute_unused.ts`: each script
 switches to the repository root for paths under `src/`, and reads and writes its own working files
-(`unused_words.json`, `snippet_*.txt`, `stories_*.txt`, `original_germanStories.ts`) in this folder.
+(`unused_words.json`, `snippet_*.txt`, `stories_*.txt`, `germanStories.ts`) in this folder.
 
 Typical flow:
 
