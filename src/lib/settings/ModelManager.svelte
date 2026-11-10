@@ -17,7 +17,8 @@
   import { unloadSupertonic } from '#lib/voice/supertonic.js';
   import { unloadVoxCPM } from '#lib/voice/voxcpm.js';
   import { deviceAbilities, speaksLanguage, voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
-  import { formatSpeed } from '#lib/offline/downloadSpeed.js';
+  import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
+  import { modelProgressPhase } from '#lib/offline/progressPhase.js';
   import { deleteGroup, formatBytes, groupBytes, groupStored, keepStoragePersistent, storageSummary, storedGroupIds, type StoredGroup } from '#lib/offline/storage.js';
   import IconDownload from '~icons/material-symbols/download-rounded';
   import IconDelete from '~icons/material-symbols/delete-rounded';
@@ -187,9 +188,7 @@
             {#if group}<span class="model-facts">{m.models_facts({ download: `~${mb(voiceDownloadMB(id))}`, memory: `~${mb(voiceMemoryMB(id))}` }, { locale })}</span>{/if}
             <span class="model-about">{voiceHint(id)}</span>
             {#if state === 'downloading'}
-              {@const percent = Math.round((naturalState.progress[lang] ?? 0) * 100)}
-              <span class="model-progress"><span style:width={`${Math.max(2, percent)}%`}></span></span>
-              <span class="model-facts">{percent}% · {Math.round(naturalState.downloaded[lang] ?? 0)} / {Math.round(naturalState.total[lang] ?? voiceDownloadMB(id))} MB</span>
+              <DownloadProgress progress={naturalState.progress[lang] ?? 0} phase="download" detail={`${mb(naturalState.downloaded[lang] ?? 0)} / ${mb(naturalState.total[lang] ?? voiceDownloadMB(id))}`} />
             {:else if state === 'failed'}
               <span class="model-warn"><IconWarning aria-hidden="true" /> {m.models_download_failed({}, { locale })}</span>
               {#if naturalState.error[lang]}<span class="model-error">{naturalState.error[lang]}</span>{/if}
@@ -224,13 +223,11 @@
             {#if !fits(model)}<span class="model-warn"><IconWarning aria-hidden="true" /> {m.models_may_not_fit({}, { locale })}</span>{/if}
             {#if state === 'downloading'}
               {@const download = localModel.downloads[model.id]!}
-              <span class="model-progress"><span style:width={`${Math.max(2, Math.round(download.progress * 100))}%`}></span></span>
-              <span class="model-facts">{Math.round(download.progress * 100)}%{#if download.bytesPerSecond} · {formatSpeed(download.bytesPerSecond, settings.formatContext)}{/if}</span>
+              <DownloadProgress progress={download.progress} phase="download" bytesPerSecond={download.bytesPerSecond} />
             {:else if state === 'failed'}
               <span class="model-warn"><IconWarning aria-hidden="true" /> {m.models_download_failed({}, { locale })}</span>
             {:else if state === 'loading'}
-              <span class="model-progress"><span style:width={`${Math.round(localModel.progress * 100)}%`}></span></span>
-              <span>{Math.round(localModel.progress * 100)}%{#if localModel.bytesPerSecond} · {formatSpeed(localModel.bytesPerSecond, settings.formatContext)}{/if}</span>
+              <DownloadProgress progress={localModel.progress} phase={modelProgressPhase(localModel.text)} bytesPerSecond={localModel.bytesPerSecond} />
             {:else if state === 'loaded'}
               <span class="model-ok"><IconCheck aria-hidden="true" /> {m.models_in_use({ memory: mb(modelGpuMB(model)) }, { locale })}{#if localModel.tokensPerSecond} · {Math.round(localModel.tokensPerSecond)} tok/s{/if}</span>
             {:else if state === 'downloaded'}
@@ -292,8 +289,6 @@
   .model-about { font-size:.62rem;font-weight:700;line-height:1.4;opacity:.7; }
   .model-hint { margin:0 0 .2rem;font-size:.66rem;font-weight:700;opacity:.65;line-height:1.35; }
   .model-facts { font-size:.66rem;font-weight:700;opacity:.7;font-variant-numeric:tabular-nums; }
-  .model-progress { display:block;height:.45rem;border-radius:999px;background:color-mix(in srgb,currentColor 14%,transparent);overflow:hidden;opacity:1 !important; }
-  .model-progress span { display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#34824d,#6fcf8e);transition:width .25s ease; }
   .model-ok { display:inline-flex;align-items:center;gap:.25rem;color:#34824d;opacity:1 !important;font-size:.68rem;font-weight:800; }
   .model-ok :global(svg),.model-warn :global(svg),.model-best :global(svg),.model-device :global(svg) { width:.9rem;height:.9rem;flex:none; }
   .model-warn { display:inline-flex;align-items:center;gap:.25rem;color:#b5762a;font-size:.66rem;font-weight:800; }

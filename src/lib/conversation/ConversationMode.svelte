@@ -17,7 +17,8 @@
   import type { Mood } from '#lib/story/stories.js';
   import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { haptic } from '#lib/feedback/haptics.js';
-  import { formatSpeed } from '#lib/offline/downloadSpeed.js';
+  import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
+  import { modelProgressPhase } from '#lib/offline/progressPhase.js';
   import { voiceEngines } from '#lib/voice/engines.js';
   import { chatMessages, cleanReply, LEVEL_WORD_SAMPLE, pickTargetWords, usedWords, type Turn } from './conversation.js';
   import { pickPartner, type Partner } from './partners.js';
@@ -114,8 +115,6 @@
   // Always the level from the settings: the conversation practises what the learner is learning.
   const level = $derived(settings.vocabularyLevel);
   const used = $derived(usedWords(turns, targetWords, spellingOf, lang));
-  const loadingPercent = $derived(Math.round(localModel.progress * 100));
-  const downloadSpeed = $derived(formatSpeed(localModel.bytesPerSecond, settings.formatContext));
   const partnerMood = $derived<Mood>(cheer ? 'laughing' : phase === 'speaking' ? 'happy' : phase === 'listening' ? 'curious' : phase === 'thinking' ? 'sleepy' : 'neutral');
 
   // Every word the learner uses gets a cheer; all of them earn the conversation reward.
@@ -380,8 +379,7 @@
       {#if localModel.status === 'unsupported'}
         <p class="talk-error">{labels.unsupported}</p>
       {:else if localModel.status === 'loading'}
-        <div class="talk-progress" role="progressbar" aria-label={labels.loading} aria-valuemin="0" aria-valuemax="100" aria-valuenow={loadingPercent}><span style:width={`${loadingPercent}%`}></span></div>
-        <p class="talk-hint">{labels.loading} {loadingPercent}%{#if downloadSpeed} · {downloadSpeed}{/if}</p>
+        <DownloadProgress progress={localModel.progress} phase={modelProgressPhase(localModel.text)} bytesPerSecond={localModel.bytesPerSecond} detail={chosenModel().label} />
       {:else}
         {#if localModel.status === 'failed'}<p class="talk-error">{labels.failed}</p>{/if}
         <div class="talk-intro-actions">
@@ -487,8 +485,6 @@
   .talk-privacy :global(svg) { width:.85rem;height:.85rem; }
   .talk-error { margin:0;color:#b54442;font-size:.8rem;font-weight:800; }
   .talk-hint { margin:0;font-size:.7rem;font-weight:700;opacity:.7;text-align:center; }
-  .talk-progress { width:100%;height:.6rem;border-radius:999px;background:rgba(23,42,69,.12);overflow:hidden; }
-  .talk-progress span { display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#34824d,#6fcf8e);transition:width .25s ease; }
 
   /* In conversation: the partner on stage, the words to use, the transcript. */
   .talk-header { position:relative;width:min(100%,40rem);margin:0 auto;display:flex;align-items:flex-end;gap:.7rem;min-height:6.2rem;padding:.6rem .7rem 0;overflow:hidden;border:2px solid #172a45;border-radius:18px;box-shadow:3px 3px 0 #172a45; }
