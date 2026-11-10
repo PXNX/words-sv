@@ -762,5 +762,11 @@
   "mobile_data_body": "{name} downloads {size}. That can use up your data plan – on Wi-Fi it's free.",
   "mobile_data_go": "Download anyway",
   "mobile_data_wait": "Wait for Wi-Fi",
-  "checkpoint_next": "next from {date}"
+  "checkpoint_next": "next from {date}",
+  "placement_intro_exam": "Answer short exam questions on word meanings, articles and grammar. The test starts at your level and adapts. If you don't know something, tap “I don't know” – wrong guesses count against you. Takes about five minutes.",
+  "placement_meaning": "What does “{word}” mean?",
+  "placement_article": "Which article fits?",
+  "placement_grammar": "What goes in the gap?",
+  "placement_skip": "I don't know",
+  "placement_question": "Question {current} of {total}"
 }

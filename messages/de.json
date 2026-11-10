@@ -762,5 +762,11 @@
   "mobile_data_body": "{name} lädt {size} herunter. Das kann dein Datenvolumen aufbrauchen – im WLAN geht es kostenlos.",
   "mobile_data_go": "Trotzdem laden",
   "mobile_data_wait": "Im WLAN laden",
-  "checkpoint_next": "nächster ab {date}"
+  "checkpoint_next": "nächster ab {date}",
+  "placement_intro_exam": "Beantworte kurze Prüfungsfragen zu Wortbedeutungen, Artikeln und Grammatik. Der Test beginnt bei deinem Niveau und passt sich an. Weißt du etwas nicht, tippe „Weiß ich nicht“ – falsches Raten zählt gegen dich. Dauert etwa fünf Minuten.",
+  "placement_meaning": "Was bedeutet „{word}“?",
+  "placement_article": "Welcher Artikel passt?",
+  "placement_grammar": "Was gehört in die Lücke?",
+  "placement_skip": "Weiß ich nicht",
+  "placement_question": "Frage {current} von {total}"
 }
