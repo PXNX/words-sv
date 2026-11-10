@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS wordcircle_streak_devices (
   pronunciation_attempts INT UNSIGNED NOT NULL DEFAULT 0,
   hangman_completed TINYINT(1) NOT NULL DEFAULT 0,
   alltag_correct INT UNSIGNED NOT NULL DEFAULT 0,
+  sentence_completed TINYINT(1) NOT NULL DEFAULT 0,
   current_qualified TINYINT(1) NOT NULL DEFAULT 0,
   last_qualified_day CHAR(10) NULL,
   streak_count INT UNSIGNED NOT NULL DEFAULT 0,
@@ -56,6 +57,9 @@ CREATE TABLE IF NOT EXISTS wordcircle_streak_devices (
 -- ALTER TABLE wordcircle_streak_devices
 --   ADD COLUMN reward_collected TINYINT(1) NOT NULL DEFAULT 0,
 --   ADD COLUMN embers TINYINT UNSIGNED NULL;
+
+-- Migration for the writing goal (/sentence); api/streak/progress.mjs runs it on its own as well.
+-- ALTER TABLE wordcircle_streak_devices ADD COLUMN sentence_completed TINYINT(1) NOT NULL DEFAULT 0;
 
 CREATE TABLE IF NOT EXISTS wordcircle_push_subscriptions (
   endpoint_hash CHAR(64) NOT NULL PRIMARY KEY,
