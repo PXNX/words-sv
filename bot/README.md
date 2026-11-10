@@ -10,6 +10,8 @@ Telegram bot [@word_circle_bot](https://t.me/word_circle_bot) for the WordCircle
   `https://t.me/word_circle_bot?start=donate`). A donation unlocks nothing
   and is **never refunded**; `/paysupport` explains this, as Telegram requires for Stars payments.
 - Links the legal pages that live in WordCircle: `/bedingungen`, `/datenschutz`, `/impressum`.
+- `/version` shows the WordCircle version (from the repository's `package.json`, or `APP_VERSION`
+  when only `bot/` is deployed) with a link to its changelog entry.
 - `/set_cmd` (admins only) sets the profile photo (`bot/res/img/profile.jpg`), name, description and short description in German and English.
 
 ## Layout

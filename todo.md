@@ -299,4 +299,4 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [ ] One-time "Updated to …" snackbar and a link from the update prompt to `/changelog`.
 - [x] Forced updates with a Lilith sheet, a what's new sheet after each update (1.3.0).
 - [x] Service-worker caches are already keyed by the build version.
-- [ ] Version in the Telegram bot's `/version`.
+- [x] Version in the Telegram bot's `/version` (from `package.json`, `APP_VERSION` as override).

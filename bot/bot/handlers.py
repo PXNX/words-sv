@@ -10,6 +10,7 @@ from settings.config import ADMINS, MINIAPP_URL, WORDS_URL
 from bot_profile import set_cmd
 from store import record_donation
 from texts import lang_of, t
+from version import APP_VERSION
 
 logger = logging.getLogger(__name__)
 
@@ -85,6 +86,15 @@ async def paysupport(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(t(_lang(update), "paysupport"), parse_mode=ParseMode.HTML, disable_web_page_preview=True)
 
 
+async def version(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    lang = _lang(update)
+    if APP_VERSION is None:
+        await update.message.reply_text(t(lang, "version_unknown"))
+        return
+    changelog = f"{WORDS_URL.rstrip('/')}/changelog#v{APP_VERSION}"
+    await update.message.reply_text(t(lang, "version", version=APP_VERSION, changelog=changelog), parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+
+
 def _legal(key: str):
     async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(t(_lang(update), key))
@@ -101,4 +111,5 @@ def register_handlers(app: Application):
     app.add_handler(CommandHandler(["bedingungen", "terms"], _legal("legal_terms")))
     app.add_handler(CommandHandler(["datenschutz", "privacy"], _legal("legal_privacy")))
     app.add_handler(CommandHandler("impressum", _legal("legal_imprint")))
+    app.add_handler(CommandHandler("version", version))
     app.add_handler(CommandHandler("set_cmd", set_cmd, filters.Chat(ADMINS)))
