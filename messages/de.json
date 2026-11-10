@@ -837,5 +837,8 @@
   "webgpu_yes": "ja",
   "webgpu_no": "nein",
   "webgpu_short_ok": "WebGPU funktioniert",
-  "webgpu_short_failed": "Kein WebGPU"
+  "webgpu_short_failed": "Kein WebGPU",
+  "group_game_best": "Neue Bestleistung auf der Gruppen-Tabelle: {score}!",
+  "group_game_score": "{score} Punkte in dieser Runde",
+  "group_game_hint": "Deine beste Runde zählt auf der Bestenliste der Gruppe in Telegram."
 }

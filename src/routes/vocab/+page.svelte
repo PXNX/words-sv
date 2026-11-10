@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { reportGroupScore } from '#lib/games/groupGame.svelte.js';
+  import { vocabScore } from '#lib/games/groupGameRules.js';
   import { recordAnswer } from '#lib/profile/cosmetics.svelte.js';
   import { onMount, untrack } from 'svelte';
   import { playSuccessSound, playErrorSound } from '#lib/feedback/sounds.js';
@@ -96,6 +98,14 @@
   // A session now has an ending: after the second pass it stops and shows what to repeat,
   // instead of circling the same queue forever.
   let sessionDone = $state(false);
+  let groupRun = 0;
+  function endGroupRun() {
+    if (groupRun > 0) void reportGroupScore('vocab', vocabScore(groupRun));
+    groupRun = 0;
+  }
+  $effect(() => {
+    if (sessionDone) endGroupRun();
+  });
   let sessionId = $state(0);
   let attempted = $state<string[]>([]);
   let tricky = $state<string[]>([]);
@@ -239,6 +249,11 @@
     if (firstAttempt) attempted = [...attempted, word];
     // Only first attempts count towards the reward's run; a repeated card is practice.
     if (firstAttempt && !repairMode) recordAnswer('vocab', correct);
+    // A group game scores the run of first-try answers; it is reported when it breaks or the session ends.
+    if (firstAttempt && !repairMode) {
+      if (correct) groupRun += 1;
+      else endGroupRun();
+    }
     if (correct) {
       if (firstAttempt) {
         firstTry = [...firstTry, word];

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { reportGroupScore } from '#lib/games/groupGame.svelte.js';
+  import { wordleScore } from '#lib/games/groupGameRules.js';
   import { num } from '#lib/format/num.svelte.js';
   import { haptic } from '#lib/feedback/haptics.js';
   import { unlockCosmetic, WORDLE_TOP_TRIES } from '#lib/profile/cosmetics.svelte.js';
@@ -59,6 +61,7 @@
     haptic('win');
     if (!practice && attempts <= 3) unlockCosmetic('wordle');
     if (!practice && attempts <= WORDLE_TOP_TRIES) unlockCosmetic('score_wordle_two');
+    if (!practice) void reportGroupScore('wordle', wordleScore(attempts));
   }}
 />
 {/key}

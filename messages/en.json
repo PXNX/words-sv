@@ -837,5 +837,8 @@
   "webgpu_yes": "yes",
   "webgpu_no": "no",
   "webgpu_short_ok": "WebGPU works",
-  "webgpu_short_failed": "No WebGPU"
+  "webgpu_short_failed": "No WebGPU",
+  "group_game_best": "New best on the group's board: {score}!",
+  "group_game_score": "{score} points this round",
+  "group_game_hint": "Your best round counts on the group's leaderboard in Telegram."
 }

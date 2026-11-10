@@ -2,7 +2,7 @@
 // status and validates the reply against its schema.
 import * as v from 'valibot';
 
-export type ApiPath = '/api/telegram/device' | '/api/push/public-key' | '/api/push/subscribe' | '/api/push/unsubscribe' | '/api/streak/progress' | '/api/progress/sync';
+export type ApiPath = '/api/telegram/device' | '/api/push/public-key' | '/api/push/subscribe' | '/api/push/unsubscribe' | '/api/streak/progress' | '/api/progress/sync' | '/api/games/score';
 
 /** Why a call failed: the server's own `error` code where it sent one, else a generic reason. */
 export class ApiError extends Error {
