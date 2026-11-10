@@ -30,12 +30,12 @@ async function subscribeServer() {
 	const registration = await navigator.serviceWorker.ready;
 	let subscription = await registration.pushManager.getSubscription();
 	if (!subscription) {
-		const { publicKey } = await callApi('/api/push/public-key', PushKeySchema).catch(() => {
+		const { publicKey } = await callApi('/api/push', PushKeySchema).catch(() => {
 			throw new Error('push_unavailable');
 		});
 		subscription = await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: decodeApplicationServerKey(publicKey) });
 	}
-	await callApi('/api/push/subscribe', OkSchema, { body: { deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), subscription: subscription.toJSON() } }).catch(() => {
+	await callApi('/api/push', OkSchema, { body: { action: 'subscribe', deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), subscription: subscription.toJSON() } }).catch(() => {
 		throw new Error('subscription_failed');
 	});
 	return subscription;
@@ -45,7 +45,7 @@ async function unsubscribeServer() {
 	const registration = await navigator.serviceWorker.ready;
 	const subscription = await registration.pushManager.getSubscription();
 	if (!subscription) return;
-	await callApi('/api/push/unsubscribe', OkSchema, { body: { endpoint: subscription.endpoint } }).catch(() => undefined);
+	await callApi('/api/push', OkSchema, { body: { action: 'unsubscribe', endpoint: subscription.endpoint } }).catch(() => undefined);
 	await subscription.unsubscribe();
 }
 

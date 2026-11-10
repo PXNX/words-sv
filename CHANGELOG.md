@@ -9,6 +9,9 @@ its one-line summary; the localised highlight shown in the app lives in the mess
 
 ## Unreleased
 
+### Fixed
+- Serve Web Push from one serverless function so a deployment stays within the plan's function limit
+
 ## v1.3.0 - 2026-11-10
 
 New avatar parts to unlock, a language-focused progress page and automatic updates.
