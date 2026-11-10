@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { ReminderState } from '../src/lib/pwa/pwaReminders.js';
-import { dateKeyFor, dueReminderTypes, minutesUntilNextLocalDate, previousDateKey } from '../src/lib/pwa/pwaReminders.js';
+import { dateKeyFor, dueReminderTypes, minutesUntilNextLocalDate, previousDateKey, reminderNativeDigits, reminderNotification } from '../src/lib/pwa/pwaReminders.js';
 
 const base: ReminderState = {
 	enabled: true,
@@ -11,7 +11,8 @@ const base: ReminderState = {
 	locale: 'en',
 	dueWords: 0,
 	readingTitle: null,
-	weeklyReady: false
+	weeklyReady: false,
+	nativeDigits: false
 };
 
 describe('pwa streak reminders', () => {
@@ -58,5 +59,22 @@ describe('pwa streak reminders', () => {
 		const minutes = minutesUntilNextLocalDate('Europe/Berlin', new Date('2026-10-20T21:30:00Z'));
 		expect(minutes).toBeGreaterThanOrEqual(29);
 		expect(minutes).toBeLessThanOrEqual(31);
+	});
+});
+
+describe('reminder number format', () => {
+	it('uses Western digits unless the learner picked native ones', () => {
+		expect(reminderNotification('due', 'fa', 30, { count: 12 }).body).toContain('12');
+		const native = reminderNotification('due', 'fa', 30, { count: 12, nativeDigits: true }).body;
+		expect(native).toContain('۱۲');
+		expect(native).not.toContain('12');
+		expect(reminderNotification('deadline', 'ar', 45, { nativeDigits: true }).body).toContain('٤٥');
+	});
+
+	it('reads the digit choice the way the settings store it', () => {
+		const storage = (values: Record<string, string>) => ({ getItem: (key: string) => values[key] ?? null });
+		expect(reminderNativeDigits(storage({ 'wordcircle-format-source-v1': 'interface', 'wordcircle-interface-digits-v1': 'native' }))).toBe(true);
+		expect(reminderNativeDigits(storage({ 'wordcircle-format-source-v1': 'learning', 'wordcircle-interface-digits-v1': 'native' }))).toBe(false);
+		expect(reminderNativeDigits(null)).toBe(false);
 	});
 });

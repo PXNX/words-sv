@@ -23,6 +23,8 @@ export type ReminderState = {
   readingTitle: string | null;
   /** Set by the app on the day the weekly recap should be announced. */
   weeklyReady: boolean;
+  /** The learner chose their interface's own digits (Settings → format like the app language). */
+  nativeDigits: boolean;
 };
 
 export type ReminderExtras = {
@@ -87,7 +89,8 @@ export async function readReminderState(): Promise<ReminderState | null> {
     locale: normalizeReminderLocale(record.locale),
     dueWords: Math.max(0, Number(record.dueWords) || 0),
     readingTitle: typeof record.readingTitle === 'string' ? record.readingTitle : null,
-    weeklyReady: Boolean(record.weeklyReady)
+    weeklyReady: Boolean(record.weeklyReady),
+    nativeDigits: Boolean(record.nativeDigits)
   };
 }
 
@@ -109,6 +112,7 @@ async function writeReminderState(patch: Partial<ReminderState>): Promise<void> 
       dueWords: 0,
       readingTitle: null,
       weeklyReady: false,
+      nativeDigits: false,
       ...(request.result ?? {}),
       ...patch
     };
@@ -131,6 +135,26 @@ export function reminderLocale(): ReminderLocale {
   return normalizeReminderLocale(language);
 }
 
+/**
+ * Whether reminders should use the interface's own digits (Persian, Arabic-Indic, …): only when the
+ * learner formats like the app language and picked native digits, as the app itself does.
+ */
+export function reminderNativeDigits(storage: Pick<Storage, 'getItem'> | null = typeof localStorage === 'undefined' ? null : localStorage): boolean {
+  try {
+    return storage?.getItem('wordcircle-format-source-v1') === 'interface' && storage.getItem('wordcircle-interface-digits-v1') === 'native';
+  } catch {
+    return false;
+  }
+}
+
+const NATIVE_DIGITS: Partial<Record<ReminderLocale, string>> = { fa: 'arabext', ar: 'arab', hi: 'deva', ml: 'mlym' };
+
+/** Formats a number for a reminder in `locale`, with its own digits when `native`. */
+export function reminderNumber(locale: ReminderLocale, value: number, native = false): string {
+  const numberingSystem = (native && NATIVE_DIGITS[locale]) || 'latn';
+  return new Intl.NumberFormat(locale, { numberingSystem, maximumFractionDigits: 0 }).format(value);
+}
+
 export function normalizeReminderLocale(value: unknown): ReminderLocale {
   const language = String(value ?? '').toLowerCase();
   const match = REMINDER_LOCALES.find((locale) => language === locale || language.startsWith(`${locale}-`));
@@ -144,6 +168,7 @@ export async function publishReminderState(streak: StreakLike, extras: ReminderE
     qualified: streak.qualified,
     lastQualifiedDay: streak.lastQualifiedDay,
     locale: reminderLocale(),
+    nativeDigits: reminderNativeDigits(),
     ...(typeof extras.dueWords === 'number' ? { dueWords: Math.max(0, Math.round(extras.dueWords)) } : {}),
     ...(extras.readingTitle !== undefined ? { readingTitle: extras.readingTitle || null } : {}),
     ...(typeof extras.weeklyReady === 'boolean' ? { weeklyReady: extras.weeklyReady } : {})
@@ -219,68 +244,69 @@ export function dueReminderTypes(state: ReminderState, now = new Date()): { type
 }
 
 type NotificationText = { title: string; body: string };
-type NotificationContext = { count?: number; title?: string | undefined };
+type NotificationContext = { count?: number; title?: string | undefined; nativeDigits?: boolean | undefined };
+type Num = (value: number) => string;
 
-const NOTIFICATIONS: Record<ReminderLocale, (type: ReminderType, minutes: number, context: NotificationContext) => NotificationText> = {
-  en: (type, minutes, context) => {
+const NOTIFICATIONS: Record<ReminderLocale, (type: ReminderType, minutes: string, context: NotificationContext, n: Num) => NotificationText> = {
+  en: (type, minutes, context, n) => {
     if (type === 'deadline') return { title: 'Keep your WordCircle streak', body: `Only ${minutes} minutes remain to qualify today.` };
-    if (type === 'due') return { title: 'Reviews are waiting', body: `${context.count ?? 0} words are due — about 2 minutes.` };
+    if (type === 'due') return { title: 'Reviews are waiting', body: `${n(context.count ?? 0)} words are due — about ${n(2)} minutes.` };
     if (type === 'continue_text') return { title: 'Continue where you stopped', body: `“${context.title ?? ''}” is still waiting for you.` };
     if (type === 'weekly') return { title: 'Your week in review', body: 'See what worked this week and what comes next.' };
     return { title: 'Continue your WordCircle streak', body: 'A new learning day has started.' };
   },
-  de: (type, minutes, context) => {
+  de: (type, minutes, context, n) => {
     if (type === 'deadline') return { title: 'Deine WordCircle-Serie wartet', body: `Nur noch ${minutes} Minuten bis Mitternacht, um heute zu qualifizieren.` };
-    if (type === 'due') return { title: 'Wiederholungen warten', body: `${context.count ?? 0} Wörter sind fällig — etwa 2 Minuten.` };
+    if (type === 'due') return { title: 'Wiederholungen warten', body: `${n(context.count ?? 0)} Wörter sind fällig — etwa ${n(2)} Minuten.` };
     if (type === 'continue_text') return { title: 'Weiterlesen', body: `„${context.title ?? ''}“ wartet noch auf dich.` };
     if (type === 'weekly') return { title: 'Dein Wochenrückblick', body: 'Sieh dir an, was diese Woche geklappt hat.' };
     return { title: 'Weiter mit deiner WordCircle-Serie', body: 'Ein neuer Lerntag hat begonnen.' };
   },
-  ar: (type, minutes, context) => {
+  ar: (type, minutes, context, n) => {
     if (type === 'deadline') return { title: 'سلسلتك في WordCircle تنتظر', body: `تبقّى ${minutes} دقيقة حتى منتصف الليل لتُكمل اليوم.` };
-    if (type === 'due') return { title: 'مراجعات في الانتظار', body: `${context.count ?? 0} كلمات مستحقة — حوالي دقيقتين.` };
+    if (type === 'due') return { title: 'مراجعات في الانتظار', body: `${n(context.count ?? 0)} كلمات مستحقة — حوالي دقيقتين.` };
     if (type === 'continue_text') return { title: 'أكمل من حيث توقفت', body: `«${context.title ?? ''}» ما زال في انتظارك.` };
     if (type === 'weekly') return { title: 'ملخص أسبوعك', body: 'اطّلع على ما تحقق هذا الأسبوع وما هو التالي.' };
     return { title: 'واصل سلسلة WordCircle', body: 'بدأ يوم تعلّم جديد.' };
   },
-  fa: (type, minutes, context) => {
+  fa: (type, minutes, context, n) => {
     if (type === 'deadline') return { title: 'زنجیره WordCircle شما منتظر است', body: `فقط ${minutes} دقیقه تا نیمه‌شب برای امروز باقی مانده است.` };
-    if (type === 'due') return { title: 'مرورها در انتظارند', body: `${context.count ?? 0} واژه سررسید شده‌اند — حدود ۲ دقیقه.` };
+    if (type === 'due') return { title: 'مرورها در انتظارند', body: `${n(context.count ?? 0)} واژه سررسید شده‌اند — حدود ${n(2)} دقیقه.` };
     if (type === 'continue_text') return { title: 'از همان‌جا ادامه بده', body: `«${context.title ?? ''}» هنوز منتظر توست.` };
     if (type === 'weekly') return { title: 'مرور هفته شما', body: 'ببینید این هفته چه چیزی خوب پیش رفت و قدم بعدی چیست.' };
     return { title: 'زنجیره WordCircle خود را ادامه بده', body: 'روز یادگیری تازه‌ای آغاز شد.' };
   },
-  hi: (type, minutes, context) => {
+  hi: (type, minutes, context, n) => {
     if (type === 'deadline') return { title: 'आपकी WordCircle लय प्रतीक्षा में है', body: `आज पूरा करने के लिए मध्यरात्रि तक ${minutes} मिनट बाकी हैं।` };
-    if (type === 'due') return { title: 'दोहराव प्रतीक्षा में', body: `${context.count ?? 0} शब्द देय हैं — लगभग 2 मिनट।` };
+    if (type === 'due') return { title: 'दोहराव प्रतीक्षा में', body: `${n(context.count ?? 0)} शब्द देय हैं — लगभग ${n(2)} मिनट।` };
     if (type === 'continue_text') return { title: 'जहाँ छोड़ा था वहीं से जारी रखें', body: `«${context.title ?? ''}» अभी भी आपका इंतज़ार कर रहा है।` };
     if (type === 'weekly') return { title: 'आपका साप्ताहिक सारांश', body: 'देखें इस सप्ताह क्या काम आया और आगे क्या है।' };
     return { title: 'अपनी WordCircle लय जारी रखें', body: 'नया सीखने का दिन शुरू हुआ।' };
   },
-  ml: (type, minutes, context) => {
+  ml: (type, minutes, context, n) => {
     if (type === 'deadline') return { title: 'നിങ്ങളുടെ WordCircle തുടർച്ച കാത്തിരിക്കുന്നു', body: `ഇന്ന് പൂർത്തിയാക്കാൻ അർധരാത്രി വരെ ${minutes} മിനിറ്റ് ബാക്കി.` };
-    if (type === 'due') return { title: 'ആവർത്തനങ്ങൾ കാത്തിരിക്കുന്നു', body: `${context.count ?? 0} വാക്കുകൾ ബാക്കിയുണ്ട് — ഏകദേശം 2 മിനിറ്റ്.` };
+    if (type === 'due') return { title: 'ആവർത്തനങ്ങൾ കാത്തിരിക്കുന്നു', body: `${n(context.count ?? 0)} വാക്കുകൾ ബാക്കിയുണ്ട് — ഏകദേശം ${n(2)} മിനിറ്റ്.` };
     if (type === 'continue_text') return { title: 'നിർത്തിയിടത്തുനിന്ന് തുടരുക', body: `«${context.title ?? ''}» ഇപ്പോഴും നിങ്ങൾക്കായി കാത്തിരിക്കുന്നു.` };
     if (type === 'weekly') return { title: 'നിങ്ങളുടെ ആഴ്ചയിലെ സംഗ്രഹം', body: 'ഈ ആഴ്ച എന്ത് നേടി, അടുത്തത് എന്തെന്ന് കാണുക.' };
     return { title: 'നിങ്ങളുടെ WordCircle തുടർച്ച തുടരുക', body: 'പുതിയ പഠന ദിവസം തുടങ്ങി.' };
   },
-  pt: (type, minutes, context) => {
+  pt: (type, minutes, context, n) => {
     if (type === 'deadline') return { title: 'A sua sequência WordCircle está à espera', body: `Restam ${minutes} minutos até à meia-noite para qualificar hoje.` };
-    if (type === 'due') return { title: 'Revisões à espera', body: `${context.count ?? 0} palavras estão para rever — cerca de 2 minutos.` };
+    if (type === 'due') return { title: 'Revisões à espera', body: `${n(context.count ?? 0)} palavras estão para rever — cerca de ${n(2)} minutos.` };
     if (type === 'continue_text') return { title: 'Continue onde parou', body: `«${context.title ?? ''}» ainda está à sua espera.` };
     if (type === 'weekly') return { title: 'O seu resumo semanal', body: 'Veja o que resultou esta semana e o que vem a seguir.' };
     return { title: 'Continue a sua sequência WordCircle', body: 'Começou um novo dia de aprendizagem.' };
   },
-  ru: (type, minutes, context) => {
+  ru: (type, minutes, context, n) => {
     if (type === 'deadline') return { title: 'Ваша серия WordCircle ждёт', body: `До полуночи осталось ${minutes} минут, чтобы засчитать сегодняшний день.` };
-    if (type === 'due') return { title: 'Повторения ждут', body: `${context.count ?? 0} слов ждут повторения — около 2 минут.` };
+    if (type === 'due') return { title: 'Повторения ждут', body: `${n(context.count ?? 0)} слов ждут повторения — около ${n(2)} минут.` };
     if (type === 'continue_text') return { title: 'Продолжите с места остановки', body: `«${context.title ?? ''}» всё ещё ждёт вас.` };
     if (type === 'weekly') return { title: 'Ваши итоги недели', body: 'Посмотрите, что получилось на этой неделе и что дальше.' };
     return { title: 'Продолжите серию WordCircle', body: 'Начался новый учебный день.' };
   },
-  uk: (type, minutes, context) => {
+  uk: (type, minutes, context, n) => {
     if (type === 'deadline') return { title: 'Ваша серія WordCircle чекає', body: `До опівночі залишилося ${minutes} хвилин, щоб зарахувати сьогодні.` };
-    if (type === 'due') return { title: 'Повторення чекають', body: `${context.count ?? 0} слів чекають на повторення — близько 2 хвилин.` };
+    if (type === 'due') return { title: 'Повторення чекають', body: `${n(context.count ?? 0)} слів чекають на повторення — близько ${n(2)} хвилин.` };
     if (type === 'continue_text') return { title: 'Продовжте з місця зупинки', body: `«${context.title ?? ''}» досі чекає на вас.` };
     if (type === 'weekly') return { title: 'Ваш підсумок тижня', body: 'Подивіться, що вдалося цього тижня і що далі.' };
     return { title: 'Продовжте серію WordCircle', body: 'Почався новий навчальний день.' };
@@ -288,7 +314,8 @@ const NOTIFICATIONS: Record<ReminderLocale, (type: ReminderType, minutes: number
 };
 
 export function reminderNotification(type: ReminderType, locale: ReminderLocale, minutesRemaining: number, context: NotificationContext = {}): NotificationText {
-  return (NOTIFICATIONS[locale] ?? NOTIFICATIONS.en)(type, minutesRemaining, context);
+  const n: Num = (value) => reminderNumber(locale, value, context.nativeDigits);
+  return (NOTIFICATIONS[locale] ?? NOTIFICATIONS.en)(type, n(minutesRemaining), context, n);
 }
 
 export async function registerPeriodicReminders(): Promise<boolean> {
