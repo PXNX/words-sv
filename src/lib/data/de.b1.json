@@ -24,7 +24,8 @@
     "definition": "Ein Behälter, in den man Abfall wirft."
   },
   "abhängig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht frei; auf jemanden oder etwas angewiesen sein."
   },
   "Abitur": {
     "type": "noun",
@@ -33,10 +34,12 @@
     "definition": "Die Abschlussprüfung am Ende der Gymnasialzeit."
   },
   "abnehmen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Leichter werden, Körpergewicht verlieren; auch: etwas von einer Stelle wegnehmen."
   },
   "abonnieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Zeitung, einen Kanal oder einen Dienst regelmäßig beziehen."
   },
   "Abschied": {
     "type": "noun",
@@ -87,10 +90,12 @@
     "definition": "Eine Beschäftigung, bei der man aktiv wird."
   },
   "aktuell": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Gerade jetzt wichtig oder neu; zur heutigen Zeit gehörend."
   },
   "akzeptieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas annehmen oder als richtig gelten lassen."
   },
   "Alarm": {
     "type": "noun",
@@ -141,7 +146,8 @@
     "definition": "Eine staatliche Behörde, die bestimmte Aufgaben erledigt."
   },
   "analysieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas genau untersuchen, um es besser zu verstehen."
   },
   "Änderung": {
     "type": "noun",
@@ -156,7 +162,8 @@
     "definition": "Eine mitgeteilte Information zu einer bestimmten Sache."
   },
   "angeben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Information nennen, z. B. in einem Formular; auch: sich wichtig machen."
   },
   "Anlage": {
     "type": "noun",
@@ -237,7 +244,8 @@
     "definition": "Der Schutz, den ein Staat politisch Verfolgten gewährt."
   },
   "atmen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Luft in die Lunge holen und wieder ausstoßen."
   },
   "Aufenthalt": {
     "type": "noun",
@@ -252,7 +260,8 @@
     "definition": "Eine deutliche Bitte, etwas Bestimmtes zu tun."
   },
   "auflösen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas in Flüssigkeit verschwinden lassen; auch: etwas beenden oder klären."
   },
   "Aufnahme": {
     "type": "noun",
@@ -261,7 +270,8 @@
     "definition": "Das Festhalten von Bild oder Ton mit einem Gerät."
   },
   "aufschreiben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas notieren, damit man es nicht vergisst."
   },
   "Auftrag": {
     "type": "noun",
@@ -312,10 +322,12 @@
     "definition": "Ein Fall, der von der üblichen Regel abweicht."
   },
   "ausruhen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich nach einer Anstrengung erholen; sich ausruhen."
   },
   "außen": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Auf der äußeren Seite; nicht drinnen."
   },
   "Aussicht": {
     "type": "noun",
@@ -378,7 +390,8 @@
     "definition": "Ein landwirtschaftlicher Betrieb mit Tieren und Feldern."
   },
   "beantragen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Bei einem Amt oder einer Stelle offiziell um etwas bitten."
   },
   "Bedarf": {
     "type": "noun",
@@ -393,7 +406,8 @@
     "definition": "Der Sinn oder Inhalt, den ein Wort oder Zeichen hat."
   },
   "bedienen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Gästen oder Kunden etwas bringen; auch: ein Gerät benutzen."
   },
   "Bedienungsanleitung": {
     "type": "noun",
@@ -408,10 +422,12 @@
     "definition": "Eine Voraussetzung, die erfüllt sein muss."
   },
   "beeinflussen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Wirkung auf jemanden oder etwas haben und es dadurch verändern."
   },
   "begegnen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden zufällig treffen."
   },
   "Beginn": {
     "type": "noun",
@@ -420,7 +436,8 @@
     "definition": "Der Anfang von etwas."
   },
   "begleiten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit jemandem zusammen irgendwohin gehen."
   },
   "Begründung": {
     "type": "noun",
@@ -429,16 +446,20 @@
     "definition": "Eine Erklärung, warum etwas so ist oder entschieden wurde."
   },
   "begrüßen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden bei der Ankunft willkommen heißen, z. B. mit „Hallo“."
   },
   "behalten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas nicht abgeben, sondern weiter haben; sich etwas merken."
   },
   "behandeln": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit jemandem auf eine bestimmte Art umgehen; auch: einen Kranken versorgen."
   },
   "behaupten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas als wahr darstellen, ohne es zu beweisen."
   },
   "Behörde": {
     "type": "noun",
@@ -447,10 +468,12 @@
     "definition": "Eine staatliche Institution, die öffentliche Aufgaben erledigt."
   },
   "beiden": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "definition": "Die zwei; alle zwei zusammen, nicht nur einer."
   },
   "beißen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit den Zähnen in etwas hineindrücken."
   },
   "Beitrag": {
     "type": "noun",
@@ -465,16 +488,20 @@
     "definition": "Ein Dokument, das etwas nachweist, zum Beispiel eine Zahlung."
   },
   "beleidigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden mit Worten oder Taten kränken."
   },
   "beliebt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Von vielen Menschen gemocht."
   },
   "bemerken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas sehen oder merken; auch: kurz etwas sagen."
   },
   "benötigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas brauchen, weil man es nicht entbehren kann."
   },
   "Benzin": {
     "type": "noun",
@@ -483,7 +510,8 @@
     "definition": "Ein flüssiger Kraftstoff für Fahrzeuge mit Verbrennungsmotor."
   },
   "beobachten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden oder etwas längere Zeit genau ansehen."
   },
   "Beratung": {
     "type": "noun",
@@ -492,7 +520,8 @@
     "definition": "Ein Gespräch, in dem jemand fachkundig unterstützt wird."
   },
   "berechnen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit Zahlen ein Ergebnis ermitteln."
   },
   "Bereich": {
     "type": "noun",
@@ -507,13 +536,16 @@
     "definition": "Eine sachliche Beschreibung von Ereignissen oder Ergebnissen."
   },
   "beruhigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden ruhiger machen; sich beruhigen: wieder ruhig werden."
   },
   "beschädigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas kaputt machen oder ihm Schaden zufügen."
   },
   "beschäftigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem Arbeit geben; sich beschäftigen: sich mit etwas befassen."
   },
   "Beschäftigung": {
     "type": "noun",
@@ -522,34 +554,34 @@
     "definition": "Eine berufliche Tätigkeit oder etwas, womit man sich befasst."
   },
   "beschließen": {
-    "type": "verb"
-  },
-  "beschlossen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Nach Überlegung eine Entscheidung treffen."
   },
   "beschränken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas auf ein bestimmtes Maß begrenzen."
   },
   "besetzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen Platz oder Ort belegen oder einnehmen."
   },
   "besitzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas als Eigentum haben."
   },
   "besorgen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas kaufen oder holen und bringen."
   },
   "besprechen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Gemeinsam über ein Thema reden."
   },
   "Besprechung": {
     "type": "noun",
     "genus": "feminine",
     "article": "die",
     "definition": "Ein Treffen, bei dem etwas gemeinsam beraten wird."
-  },
-  "besprochen": {
-    "type": "verb"
   },
   "Besserung": {
     "type": "noun",
@@ -564,7 +596,8 @@
     "definition": "Die Mitteilung, dass etwas richtig oder sicher ist."
   },
   "bestrafen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem wegen eines Fehlers oder Verbrechens eine Strafe geben."
   },
   "Betrag": {
     "type": "noun",
@@ -600,14 +633,13 @@
     "article": "der",
     "definition": "Ein Unternehmen, in dem Menschen arbeiten."
   },
-  "betrogen": {
-    "type": "verb"
-  },
   "betrügen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden täuschen, um sich einen Vorteil zu verschaffen."
   },
   "betrunken": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Zu viel Alkohol getrunken haben und deshalb nicht mehr klar sein."
   },
   "Bevölkerung": {
     "type": "noun",
@@ -616,7 +648,8 @@
     "definition": "Alle Menschen, die in einem Gebiet leben."
   },
   "bewegen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Die Lage oder Stelle von etwas ändern; sich bewegen: nicht still sein."
   },
   "Bewegung": {
     "type": "noun",
@@ -625,10 +658,8 @@
     "definition": "Der Vorgang, bei dem sich etwas von einem Ort zum anderen verändert."
   },
   "beweisen": {
-    "type": "verb"
-  },
-  "bewiesen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Zeigen, dass etwas wirklich wahr ist."
   },
   "Bewohner": {
     "type": "noun",
@@ -655,7 +686,8 @@
     "definition": "Ein Gebäude, in dem Bücher gesammelt und ausgeliehen werden."
   },
   "bieten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem etwas geben oder zur Verfügung stellen."
   },
   "Bildschirm": {
     "type": "noun",
@@ -664,10 +696,12 @@
     "definition": "Die Fläche eines Geräts, auf der Bilder oder Texte angezeigt werden."
   },
   "blitzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Bei einem Gewitter hell aufleuchten."
   },
   "blühen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Blüten haben; Pflanzen öffnen ihre Blumen."
   },
   "Bluse": {
     "type": "noun",
@@ -676,7 +710,8 @@
     "definition": "Ein leichtes Oberteil, das meist Frauen tragen."
   },
   "bluten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Blut verlieren, z. B. aus einer Wunde."
   },
   "Bohne": {
     "type": "noun",
@@ -697,10 +732,12 @@
     "definition": "Eine wichtige Mitteilung oder die Vertretung eines Staates im Ausland."
   },
   "braten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Essen in einer Pfanne mit heißem Fett garen."
   },
   "brechen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas mit Kraft in Stücke teilen; auch: kaputtgehen."
   },
   "Breite": {
     "type": "noun",
@@ -715,10 +752,12 @@
     "definition": "Ein Teil eines Fahrzeugs, mit dem man es langsamer macht oder anhält."
   },
   "bremsen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Fahrzeug langsamer machen oder anhalten."
   },
   "brennen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "In Flammen stehen; Feuer haben."
   },
   "Brille": {
     "type": "noun",
@@ -823,7 +862,8 @@
     "definition": "Ein Tuch zum Wärmen oder die obere Begrenzung eines Raumes."
   },
   "dekorieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen Raum oder Gegenstand schön schmücken."
   },
   "Denkmal": {
     "type": "noun",
@@ -832,7 +872,8 @@
     "definition": "Ein Bauwerk zur Erinnerung an eine Person oder ein Ereignis."
   },
   "deswegen": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Aus diesem Grund; darum, deshalb."
   },
   "Detail": {
     "type": "noun",
@@ -842,7 +883,9 @@
   },
   "Deutsche": {
     "type": "noun",
-    "definition": "Eine Person, die aus Deutschland stammt."
+    "definition": "Eine Person, die aus Deutschland stammt.",
+    "genus": "masculine",
+    "article": "der"
   },
   "Dialekt": {
     "type": "noun",
@@ -869,7 +912,8 @@
     "definition": "Eine Person, die anderen heimlich etwas wegnimmt."
   },
   "dienen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Für jemanden arbeiten; einen Zweck haben."
   },
   "Dienst": {
     "type": "noun",
@@ -914,10 +958,12 @@
     "definition": "Das laute Geräusch, das bei einem Gewitter zu hören ist."
   },
   "donnern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Bei einem Gewitter laut krachen."
   },
   "doppelt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Zweimal so viel; zweifach vorhanden."
   },
   "Dreck": {
     "type": "noun",
@@ -926,7 +972,8 @@
     "definition": "Schmutz, der sich auf etwas ablagert."
   },
   "drehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas im Kreis bewegen; sich drehen: sich um sich selbst bewegen."
   },
   "Droge": {
     "type": "noun",
@@ -953,10 +1000,12 @@
     "definition": "Der mittlere Wert einer Reihe von Zahlen."
   },
   "duzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden mit „du“ ansprechen."
   },
   "eben": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Gerade eben, vor kurzer Zeit; auch: flach und ohne Hügel."
   },
   "Ehe": {
     "type": "noun",
@@ -971,7 +1020,8 @@
     "definition": "Zwei Menschen, die miteinander verheiratet sind."
   },
   "eilen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich schnell bewegen, weil man wenig Zeit hat."
   },
   "Einbahnstraße": {
     "type": "noun",
@@ -1028,7 +1078,8 @@
     "definition": "Eine erste Erklärung, die in ein Thema hineinführt."
   },
   "einig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Derselben Meinung sein wie jemand anderes."
   },
   "Einkommen": {
     "type": "noun",
@@ -1073,7 +1124,8 @@
     "definition": "Das Einzahlen von Geld auf ein Konto."
   },
   "einzeln": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Jedes für sich, nicht zusammen."
   },
   "Eisenbahn": {
     "type": "noun",
@@ -1082,7 +1134,8 @@
     "definition": "Ein Verkehrsmittel, das auf Schienen fährt."
   },
   "empfangen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas bekommen; Gäste begrüßen und hereinlassen."
   },
   "Empfehlung": {
     "type": "noun",
@@ -1097,7 +1150,8 @@
     "definition": "Die Kraft, die für Bewegung, Wärme oder Licht nötig ist."
   },
   "englisch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Zu England oder zur englischen Sprache gehörend."
   },
   "Enkel": {
     "type": "noun",
@@ -1112,13 +1166,16 @@
     "definition": "Die Tochter des eigenen Kindes."
   },
   "entdecken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas finden, das man vorher nicht kannte."
   },
   "entfernen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas wegnehmen oder weg machen."
   },
   "entfernt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Weit weg; in einiger Entfernung."
   },
   "Entfernung": {
     "type": "noun",
@@ -1127,13 +1184,16 @@
     "definition": "Der Abstand zwischen zwei Orten."
   },
   "entgegenkommen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Auf jemanden zugehen; jemandem bei einem Wunsch nachgeben."
   },
   "enthalten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas in sich haben, als Teil davon."
   },
   "entlassen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem die Arbeit kündigen; jemanden gehen lassen, z. B. aus dem Krankenhaus."
   },
   "Entlassung": {
     "type": "noun",
@@ -1142,7 +1202,8 @@
     "definition": "Das Beenden eines Arbeitsverhältnisses durch den Arbeitgeber."
   },
   "entscheiden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich nach Überlegung für eine Möglichkeit festlegen."
   },
   "Entscheidung": {
     "type": "noun",
@@ -1150,23 +1211,21 @@
     "article": "die",
     "definition": "Die Wahl zwischen mehreren Möglichkeiten."
   },
-  "entschieden": {
-    "type": "verb"
-  },
   "entschlossen": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Fest bereit, etwas zu tun; ohne zu zögern."
   },
   "entsorgen": {
-    "type": "verb"
-  },
-  "entstanden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Müll oder alte Dinge richtig wegwerfen."
   },
   "entstehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Neu anfangen zu existieren; sich bilden."
   },
   "enttäuschen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandes Hoffnung nicht erfüllen und ihn traurig machen."
   },
   "Enttäuschung": {
     "type": "noun",
@@ -1175,7 +1234,8 @@
     "definition": "Das Gefühl, wenn eine Erwartung nicht erfüllt wird."
   },
   "entwickeln": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas Neues schaffen oder verbessern; sich entwickeln: wachsen, sich ändern."
   },
   "Entwicklung": {
     "type": "noun",
@@ -1196,10 +1256,12 @@
     "definition": "Etwas, das an einem bestimmten Ort und zu einer bestimmten Zeit geschieht."
   },
   "erfahren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Von etwas Neuem hören oder es mitgeteilt bekommen."
   },
   "erfinden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas ganz Neues ausdenken und herstellen."
   },
   "Erfindung": {
     "type": "noun",
@@ -1208,25 +1270,28 @@
     "definition": "Etwas Neues, das erstmals von jemandem entwickelt wurde."
   },
   "erfordern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas nötig machen; verlangen."
   },
   "erfüllen": {
-    "type": "verb"
-  },
-  "erfunden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen Wunsch oder eine Aufgabe wahr machen oder erledigen."
   },
   "ergänzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas hinzufügen, damit es vollständig wird."
   },
   "ergeben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Als Ergebnis haben; sich ergeben: als Folge entstehen."
   },
   "erhalten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas bekommen, z. B. einen Brief oder ein Geschenk."
   },
   "erhöhen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas höher oder größer machen, z. B. einen Preis."
   },
   "Erhöhung": {
     "type": "noun",
@@ -1247,10 +1312,12 @@
     "definition": "Ein Gedanke an etwas, das in der Vergangenheit geschehen ist."
   },
   "erkennen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Wissen, wer oder was etwas ist, wenn man es sieht."
   },
   "erkundigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich erkundigen: nach Informationen fragen."
   },
   "Erlaubnis": {
     "type": "noun",
@@ -1259,13 +1326,16 @@
     "definition": "Die Zustimmung, etwas Bestimmtes tun zu dürfen."
   },
   "erleben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas selbst mitmachen oder durchmachen."
   },
   "erledigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Aufgabe zu Ende machen."
   },
   "erleichtern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas einfacher oder leichter machen."
   },
   "Ermäßigung": {
     "type": "noun",
@@ -1274,7 +1344,8 @@
     "definition": "Ein reduzierter Preis für eine bestimmte Gruppe von Menschen."
   },
   "ernähren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem Essen geben; sich ernähren: etwas Bestimmtes essen."
   },
   "Ernährung": {
     "type": "noun",
@@ -1289,7 +1360,8 @@
     "definition": "Das Einsammeln reifer Feldfrüchte."
   },
   "eröffnen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas zum ersten Mal öffnen, z. B. ein Geschäft."
   },
   "Eröffnung": {
     "type": "noun",
@@ -1304,16 +1376,20 @@
     "definition": "Etwas, das an die Stelle von etwas Fehlendem oder Kaputtem tritt."
   },
   "ersetzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas durch etwas anderes austauschen."
   },
   "erstellen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas machen oder anfertigen, z. B. eine Liste."
   },
   "erwachsen": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Kein Kind mehr; vollständig groß geworden."
   },
   "erwarten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Glauben, dass etwas passiert; auf jemanden warten."
   },
   "Erzählung": {
     "type": "noun",
@@ -1322,16 +1398,14 @@
     "definition": "Ein berichteter Text über ein Geschehen."
   },
   "erziehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einem Kind zeigen, wie es sich verhalten soll."
   },
   "Erziehung": {
     "type": "noun",
     "genus": "feminine",
     "article": "die",
     "definition": "Die Prägung von Kindern durch Eltern oder Lehrer."
-  },
-  "erzogen": {
-    "type": "verb"
   },
   "Essig": {
     "type": "noun",
@@ -1406,13 +1480,16 @@
     "definition": "Ein bestimmtes Ereignis oder eine bestimmte Situation."
   },
   "fangen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas, das fliegt oder läuft, mit den Händen festhalten."
   },
   "fassen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit der Hand nach etwas greifen und es halten."
   },
   "faulenzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Nichts tun und sich ausruhen."
   },
   "Feld": {
     "type": "noun",
@@ -1427,7 +1504,8 @@
     "definition": "Ein Gerät, mit dem man ein anderes Gerät aus der Ferne steuert."
   },
   "festhalten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas oder jemanden gut halten, damit es nicht wegkommt."
   },
   "Festplatte": {
     "type": "noun",
@@ -1448,7 +1526,8 @@
     "definition": "Die äußere Form eines Körpers oder eine dargestellte Person."
   },
   "finanzieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Das Geld für etwas bezahlen oder besorgen."
   },
   "Finger": {
     "type": "noun",
@@ -1469,16 +1548,20 @@
     "definition": "Eine verschmutzte oder andersfarbige Stelle."
   },
   "flexibel": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Leicht anpassungsfähig; nicht starr."
   },
   "fliehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Vor einer Gefahr schnell weglaufen."
   },
   "fließen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich als Flüssigkeit fortbewegen, wie Wasser in einem Fluss."
   },
   "fließend": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ohne Stocken und Fehler, z. B. eine Sprache sprechen."
   },
   "Flucht": {
     "type": "noun",
@@ -1499,13 +1582,16 @@
     "definition": "Etwas, das aus einem anderen Ereignis entsteht, oder eine Episode einer Serie."
   },
   "folgende": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Als Nächstes kommend; danach stehend."
   },
   "fordern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas mit Nachdruck verlangen."
   },
   "fördern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden oder etwas unterstützen, damit es besser wird."
   },
   "Forderung": {
     "type": "noun",
@@ -1568,7 +1654,8 @@
     "definition": "Der Zustand, frei von Zwang handeln zu können."
   },
   "fressen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Von Tieren: Nahrung zu sich nehmen."
   },
   "Freundschaft": {
     "type": "noun",
@@ -1583,7 +1670,8 @@
     "definition": "Der Zustand ohne Krieg oder Streit."
   },
   "frieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Kälte spüren; auch: zu Eis werden."
   },
   "Frist": {
     "type": "noun",
@@ -1604,10 +1692,12 @@
     "definition": "Der essbare Teil einer Pflanze, der Samen enthält."
   },
   "führen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem den Weg zeigen; eine Gruppe oder Firma leiten."
   },
   "füllen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas voll machen, z. B. ein Glas mit Wasser."
   },
   "Fundbüro": {
     "type": "noun",
@@ -1616,7 +1706,8 @@
     "definition": "Eine Stelle, bei der verlorene Gegenstände abgegeben werden."
   },
   "funktionieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Richtig arbeiten oder laufen, wie es soll."
   },
   "Fußgänger": {
     "type": "noun",
@@ -1637,7 +1728,8 @@
     "definition": "Ein Bereich in einer Stadt, in dem nur zu Fuß gegangen werden darf."
   },
   "füttern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einem Tier oder Kind Essen geben."
   },
   "Galerie": {
     "type": "noun",
@@ -1664,7 +1756,8 @@
     "definition": "Ein Versprechen, dass ein Produkt fehlerfrei ist oder ersetzt wird."
   },
   "garantieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Fest versprechen, dass etwas so ist oder geschieht."
   },
   "Garderobe": {
     "type": "noun",
@@ -1763,7 +1856,8 @@
     "definition": "Ein innerer Zustand wie Freude, Angst oder Wut."
   },
   "gegeben": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Schon vorhanden; bekannt und feststehend."
   },
   "Gegend": {
     "type": "noun",
@@ -1808,7 +1902,8 @@
     "definition": "Ein günstiger Moment, um etwas zu tun."
   },
   "gelingen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Gut ausgehen; so klappen, wie man es wollte."
   },
   "Gemeinschaft": {
     "type": "noun",
@@ -1817,7 +1912,8 @@
     "definition": "Eine Gruppe von Menschen mit gemeinsamen Zielen oder Werten."
   },
   "genannt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Vorher schon erwähnt; mit einem bestimmten Namen bezeichnet."
   },
   "Generation": {
     "type": "noun",
@@ -1832,7 +1928,8 @@
     "definition": "Ein technischer Gegenstand mit einer bestimmten Funktion."
   },
   "geraten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ohne Absicht in eine Lage kommen, z. B. in Not."
   },
   "Gericht": {
     "type": "noun",
@@ -1889,7 +1986,8 @@
     "definition": "Eine verbindliche Regel, die vom Staat festgelegt wird."
   },
   "getrennt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht zusammen; auseinander."
   },
   "Gewalt": {
     "type": "noun",
@@ -1934,7 +2032,8 @@
     "definition": "Eine Zutat, die Speisen einen bestimmten Geschmack gibt."
   },
   "gießen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Flüssigkeit aus einem Gefäß laufen lassen; Pflanzen Wasser geben."
   },
   "Gift": {
     "type": "noun",
@@ -1943,10 +2042,12 @@
     "definition": "Ein Stoff, der dem Körper schaden oder tödlich sein kann."
   },
   "gleiche": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Genau so wie etwas anderes; nicht verschieden."
   },
   "gleichen": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Genau so wie etwas anderes; nicht verschieden."
   },
   "Gold": {
     "type": "noun",
@@ -1985,7 +2086,8 @@
     "definition": "Ein Glückwunsch zu einem besonderen Anlass."
   },
   "greifen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit der Hand nach etwas fassen."
   },
   "Grenze": {
     "type": "noun",
@@ -2012,7 +2114,8 @@
     "definition": "Die Ursache oder der Anlass für etwas."
   },
   "gründen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas Neues schaffen, z. B. eine Firma oder einen Verein."
   },
   "Grundstück": {
     "type": "noun",
@@ -2021,7 +2124,8 @@
     "definition": "Ein Stück Land, das jemandem gehört."
   },
   "gucken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit den Augen schauen; sehen."
   },
   "Gymnastik": {
     "type": "noun",
@@ -2036,10 +2140,12 @@
     "definition": "Ein Ort am Wasser, an dem Schiffe anlegen."
   },
   "hageln": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eiskörner fallen vom Himmel."
   },
   "halb": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Einer von zwei gleichen Teilen; zur Hälfte."
   },
   "Hälfte": {
     "type": "noun",
@@ -2066,7 +2172,8 @@
     "definition": "Der Austausch von Waren gegen Geld."
   },
   "handeln": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas tun; auch: Waren kaufen und verkaufen."
   },
   "Händler": {
     "type": "noun",
@@ -2093,10 +2200,12 @@
     "definition": "Eine Frau, die ein handwerkliches Gewerbe ausübt."
   },
   "hassen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden oder etwas überhaupt nicht mögen."
   },
   "häufig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Oft; viele Male hintereinander."
   },
   "Hausmeister": {
     "type": "noun",
@@ -2123,7 +2232,8 @@
     "definition": "Die äußere Hülle des Körpers."
   },
   "heben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas von unten nach oben bewegen."
   },
   "Heim": {
     "type": "noun",
@@ -2138,7 +2248,8 @@
     "definition": "Die Sehnsucht nach der eigenen Heimat."
   },
   "heizen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen Raum oder ein Haus warm machen."
   },
   "Held": {
     "type": "noun",
@@ -2165,7 +2276,8 @@
     "definition": "Das Organ, das das Blut durch den Körper pumpt."
   },
   "hinterlassen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas zurücklassen, wenn man geht oder stirbt."
   },
   "Hinweise": {
     "type": "noun",
@@ -2216,7 +2328,8 @@
     "definition": "Die Fähigkeit, über etwas zu lachen oder Komisches zu erkennen."
   },
   "hupen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit dem Auto ein lautes Warnsignal geben."
   },
   "Hut": {
     "type": "noun",
@@ -2249,7 +2362,8 @@
     "definition": "Das Eindringen von Krankheitserregern in den Körper."
   },
   "informieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem Nachrichten oder Wissen geben; sich informieren: etwas herausfinden."
   },
   "Ingenieur": {
     "type": "noun",
@@ -2264,7 +2378,8 @@
     "definition": "Das, was sich in einem Behälter oder Text befindet."
   },
   "innen": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Auf der inneren Seite; drinnen."
   },
   "Inserat": {
     "type": "noun",
@@ -2273,7 +2388,8 @@
     "definition": "Eine Anzeige in einer Zeitung."
   },
   "installieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Programm oder Gerät einrichten, damit es funktioniert."
   },
   "Institut": {
     "type": "noun",
@@ -2294,7 +2410,8 @@
     "definition": "Die Eingliederung von Menschen in eine Gesellschaft."
   },
   "integrieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden oder etwas in eine Gruppe oder ein Ganzes aufnehmen."
   },
   "Intelligenz": {
     "type": "noun",
@@ -2309,7 +2426,8 @@
     "definition": "Ein Kurs, der in kurzer Zeit besonders viel Stoff vermittelt."
   },
   "inzwischen": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "In der Zeit dazwischen; mittlerweile."
   },
   "Jugend": {
     "type": "noun",
@@ -2360,7 +2478,8 @@
     "definition": "Eine körperliche oder geistige Auseinandersetzung zwischen Gegnern."
   },
   "kämpfen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit Kraft gegen jemanden oder für etwas eintreten."
   },
   "Kanal": {
     "type": "noun",
@@ -2471,19 +2590,24 @@
     "definition": "Ein weiches, gefülltes Polster zum Auflegen."
   },
   "klagen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Über etwas jammern; auch: vor Gericht gehen."
   },
   "klappen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Gelingen; so funktionieren, wie man wollte."
   },
   "klären": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Frage oder ein Problem lösen."
   },
   "kleben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas mit Klebstoff fest an etwas machen."
   },
   "klettern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit Händen und Füßen nach oben steigen."
   },
   "Klick": {
     "type": "noun",
@@ -2492,7 +2616,8 @@
     "definition": "Das kurze Betätigen einer Maustaste."
   },
   "klicken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit der Maus auf etwas am Bildschirm drücken."
   },
   "Klima": {
     "type": "noun",
@@ -2507,10 +2632,12 @@
     "definition": "Ein Gerät, das die Luft in einem Raum kühlt."
   },
   "klingeln": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Glocke oder Klingel ertönen lassen, z. B. an der Tür."
   },
   "klingen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen bestimmten Ton haben; sich so anhören."
   },
   "Klinik": {
     "type": "noun",
@@ -2519,7 +2646,8 @@
     "definition": "Ein Krankenhaus, oft auf ein Fachgebiet spezialisiert."
   },
   "klopfen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mehrmals leicht gegen etwas schlagen, z. B. an die Tür."
   },
   "Kneipe": {
     "type": "noun",
@@ -2588,10 +2716,12 @@
     "definition": "Eine diplomatische Vertretung eines Staates in einer anderen Stadt."
   },
   "konsumieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Waren kaufen und verbrauchen."
   },
   "kopieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas genau nachmachen oder vervielfältigen."
   },
   "Körper": {
     "type": "noun",
@@ -2672,7 +2802,8 @@
     "definition": "Eine schwierige, entscheidende Phase mit ungewissem Ausgang."
   },
   "kritisieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sagen, was an jemandem oder etwas schlecht ist."
   },
   "Kündigung": {
     "type": "noun",
@@ -2705,7 +2836,8 @@
     "definition": "Eine gebogene Linie oder ein Straßenabschnitt, der nicht gerade verläuft."
   },
   "kürzlich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Vor kurzer Zeit; neulich."
   },
   "Kuss": {
     "type": "noun",
@@ -2714,7 +2846,8 @@
     "definition": "Die Berührung mit den Lippen als Zeichen der Zuneigung."
   },
   "küssen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden mit den Lippen berühren, aus Liebe oder zum Gruß."
   },
   "Küste": {
     "type": "noun",
@@ -2723,7 +2856,8 @@
     "definition": "Der Streifen Land am Rand eines Meeres."
   },
   "lächeln": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Freundlich die Mundwinkel nach oben ziehen."
   },
   "Lage": {
     "type": "noun",
@@ -2762,7 +2896,8 @@
     "definition": "Das Maß einer Ausdehnung von einem Ende zum anderen."
   },
   "langweilen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden uninteressiert machen; sich langweilen: nichts Spannendes erleben."
   },
   "Lärm": {
     "type": "noun",
@@ -2825,7 +2960,8 @@
     "definition": "Eine Person, die eine handwerkliche Ausbildung macht."
   },
   "leiden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Schmerzen oder Kummer haben."
   },
   "leisten": {
     "type": "verb",
@@ -2838,7 +2974,8 @@
     "definition": "Das Ergebnis von Arbeit oder Anstrengung."
   },
   "leiten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Gruppe oder Firma führen und Verantwortung haben."
   },
   "Leiter": {
     "type": "noun",
@@ -2871,7 +3008,8 @@
     "definition": "Ein Nachschlagewerk mit Begriffen und Erklärungen."
   },
   "liefern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Waren zu jemandem bringen."
   },
   "Limonade": {
     "type": "noun",
@@ -2892,7 +3030,8 @@
     "definition": "Geschriebene Werke wie Romane, Gedichte oder Erzählungen."
   },
   "loben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem sagen, dass er etwas gut gemacht hat."
   },
   "Loch": {
     "type": "noun",
@@ -2907,7 +3046,8 @@
     "definition": "Ein Essbesteck mit einer runden Vertiefung."
   },
   "logisch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Klar und vernünftig gedacht; so, dass es Sinn ergibt."
   },
   "Lohn": {
     "type": "noun",
@@ -2916,10 +3056,12 @@
     "definition": "Das Geld, das für geleistete Arbeit bezahlt wird."
   },
   "löschen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Feuer ausmachen; auch: Daten oder Text entfernen."
   },
   "lösen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Für eine Aufgabe oder ein Problem die Antwort finden."
   },
   "Luft": {
     "type": "noun",
@@ -3000,7 +3142,8 @@
     "definition": "Ein Name oder Zeichen, das ein Produkt eines Herstellers kennzeichnet."
   },
   "markieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas mit einem Zeichen oder einer Farbe kennzeichnen."
   },
   "Marmelade": {
     "type": "noun",
@@ -3069,13 +3212,16 @@
     "definition": "Eine Steuer, die beim Kauf von Waren und Dienstleistungen erhoben wird."
   },
   "meinetwegen": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Von mir aus; ich habe nichts dagegen."
   },
   "meist": {
-    "type": "adverb"
+    "type": "adverb",
+    "definition": "Fast immer; in den meisten Fällen."
   },
   "meisten": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Der größte Teil von etwas; fast alle."
   },
   "Meister": {
     "type": "noun",
@@ -3084,7 +3230,8 @@
     "definition": "Jemand mit der höchsten fachlichen Qualifikation in einem Handwerksberuf."
   },
   "melden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem etwas mitteilen; sich bei einer Stelle anmelden."
   },
   "Meldung": {
     "type": "noun",
@@ -3157,7 +3304,8 @@
     "definition": "Ein Mitglied einer Regierung, das einen bestimmten Bereich leitet."
   },
   "mischen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Verschiedene Dinge zusammentun, sodass sie sich verbinden."
   },
   "Mitarbeiter": {
     "type": "noun",
@@ -3178,7 +3326,8 @@
     "definition": "Jemand, der zu einer Gruppe oder Organisation gehört."
   },
   "mitten": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Genau in der Mitte von etwas."
   },
   "Mobilbox": {
     "type": "noun",
@@ -3295,7 +3444,8 @@
     "definition": "Ein spitzer Metallstift zum Befestigen von Dingen."
   },
   "nähen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Stoff mit Nadel und Faden verbinden."
   },
   "Nahrungsmittel": {
     "type": "noun",
@@ -3321,11 +3471,9 @@
     "article": "der",
     "definition": "Der Sohn des Bruders oder der Schwester."
   },
-  "nen": {
-    "type": "verb"
-  },
   "nennen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen Namen sagen; jemandem oder etwas einen Namen geben."
   },
   "Nerv": {
     "type": "noun",
@@ -3388,7 +3536,8 @@
     "definition": "Eine Bewertung einer schulischen oder sportlichen Leistung."
   },
   "nötig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "So, dass man es unbedingt braucht."
   },
   "Notiz": {
     "type": "noun",
@@ -3403,16 +3552,20 @@
     "definition": "Eine Teigware aus Mehl und Wasser oder Eiern."
   },
   "nutzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas für einen Zweck gebrauchen."
   },
   "nützen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen Vorteil bringen; hilfreich sein."
   },
   "nützlich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "So, dass es hilft und einen Vorteil bringt."
   },
   "offen": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht geschlossen; man kann hinein oder hinaus."
   },
   "Onkel": {
     "type": "noun",
@@ -3433,7 +3586,8 @@
     "definition": "Ein medizinischer Eingriff am Körper."
   },
   "operieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Als Arzt den Körper öffnen, um eine Krankheit zu behandeln."
   },
   "Opfer": {
     "type": "noun",
@@ -3454,7 +3608,8 @@
     "definition": "Eine große Gruppe von Musikern, die zusammen spielt."
   },
   "ordnen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Dinge an den richtigen Platz oder in eine Reihenfolge bringen."
   },
   "Ordner": {
     "type": "noun",
@@ -3463,7 +3618,8 @@
     "definition": "Eine Mappe zum Sortieren und Aufbewahren von Papieren."
   },
   "organisieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas planen und vorbereiten, damit es gut abläuft."
   },
   "Original": {
     "type": "noun",
@@ -3490,7 +3646,8 @@
     "definition": "Ein Unglück oder Missgeschick."
   },
   "peinlich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "So, dass man sich schämt und sich unwohl fühlt."
   },
   "Pension": {
     "type": "noun",
@@ -3535,7 +3692,8 @@
     "definition": "Eine blaurote, süße Steinfrucht."
   },
   "pflegen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich um jemanden oder etwas kümmern, damit es gut geht."
   },
   "Pfleger": {
     "type": "noun",
@@ -3592,7 +3750,8 @@
     "definition": "Eine Frau, die beruflich in der Politik tätig ist."
   },
   "populär": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Bei vielen Menschen sehr beliebt und bekannt."
   },
   "Portion": {
     "type": "noun",
@@ -3601,7 +3760,8 @@
     "definition": "Eine für eine Person bestimmte Menge einer Speise."
   },
   "positiv": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Gut, angenehm oder zustimmend; nicht negativ."
   },
   "Präsentation": {
     "type": "noun",
@@ -3610,7 +3770,8 @@
     "definition": "Ein Vortrag, bei dem Informationen anschaulich vorgestellt werden."
   },
   "präsentieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas vor anderen zeigen und vorstellen."
   },
   "Presse": {
     "type": "noun",
@@ -3619,10 +3780,12 @@
     "definition": "Die Gesamtheit der Zeitungen und Zeitschriften."
   },
   "privat": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nur für eine Person oder Familie; nicht öffentlich."
   },
   "probieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas versuchen; Essen kosten, um den Geschmack zu prüfen."
   },
   "Produktion": {
     "type": "noun",
@@ -3631,7 +3794,8 @@
     "definition": "Die Herstellung von Waren oder Gütern."
   },
   "produzieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Waren oder Dinge herstellen."
   },
   "Profi": {
     "type": "noun",
@@ -3652,7 +3816,8 @@
     "definition": "Eine Sportlerin, die ihren Sport beruflich ausübt."
   },
   "protestieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Laut sagen oder zeigen, dass man gegen etwas ist."
   },
   "Prozess": {
     "type": "noun",
@@ -3661,7 +3826,8 @@
     "definition": "Ein fortlaufender Ablauf einer Entwicklung oder Veränderung."
   },
   "prüfen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Genau ansehen, ob etwas richtig oder in Ordnung ist."
   },
   "Publikum": {
     "type": "noun",
@@ -3730,7 +3896,8 @@
     "definition": "Eine mit kurzem Gras bewachsene Fläche."
   },
   "reagieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Auf etwas antworten oder etwas als Antwort tun."
   },
   "Reaktion": {
     "type": "noun",
@@ -3739,7 +3906,8 @@
     "definition": "Eine Antwort oder ein Verhalten auf einen Reiz."
   },
   "realisieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen Plan in die Tat umsetzen; auch: etwas bemerken."
   },
   "Realität": {
     "type": "noun",
@@ -3754,10 +3922,12 @@
     "definition": "Eine systematische Suche nach Informationen."
   },
   "rechnen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit Zahlen arbeiten, um ein Ergebnis zu finden."
   },
   "reduzieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Kleiner oder weniger machen."
   },
   "Referat": {
     "type": "noun",
@@ -3784,7 +3954,8 @@
     "definition": "Eine Vorschrift, die eingehalten werden muss."
   },
   "regeln": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas in Ordnung bringen oder festlegen, wie es läuft."
   },
   "Region": {
     "type": "noun",
@@ -3793,7 +3964,8 @@
     "definition": "Ein bestimmtes Gebiet eines Landes oder einer Landschaft."
   },
   "reichen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Genug sein; auch: jemandem etwas geben."
   },
   "Reifen": {
     "type": "noun",
@@ -3808,7 +3980,8 @@
     "definition": "Die bestimmte Abfolge, in der mehrere Dinge geschehen."
   },
   "reinigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas gründlich sauber machen."
   },
   "Reklame": {
     "type": "noun",
@@ -3829,7 +4002,8 @@
     "definition": "Ein Glaube an eine höhere Macht mit gemeinsamen Ritualen und Regeln."
   },
   "rennen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sehr schnell laufen, so schnell man kann."
   },
   "Rente": {
     "type": "noun",
@@ -3862,7 +4036,8 @@
     "definition": "Achtung und Wertschätzung gegenüber einer Person oder Sache."
   },
   "retten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden aus einer Gefahr holen."
   },
   "Richter": {
     "type": "noun",
@@ -3883,7 +4058,8 @@
     "definition": "Der Weg oder das Ziel, auf das sich etwas zubewegt."
   },
   "riesig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Sehr, sehr groß; viel größer als normal."
   },
   "Risiko": {
     "type": "noun",
@@ -3964,7 +4140,8 @@
     "definition": "Ein Geschäft für Schönheits- oder Haarpflege."
   },
   "sammeln": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Dinge suchen und zusammentragen."
   },
   "Sand": {
     "type": "noun",
@@ -3991,15 +4168,18 @@
     "definition": "Ein kleiner, meist eckiger Behälter aus Pappe oder Karton."
   },
   "Schaden": {
-    "type": "verb",
+    "type": "noun",
     "genus": "masculine",
-    "article": "der"
+    "article": "der",
+    "definition": "Etwas, das kaputt oder schlechter geworden ist; ein Verlust."
   },
   "schaffen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine schwierige Aufgabe erfolgreich zu Ende bringen."
   },
   "schalten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Gerät an- oder ausmachen; im Auto den Gang wechseln."
   },
   "Schatten": {
     "type": "noun",
@@ -4008,10 +4188,12 @@
     "definition": "Ein dunkler Bereich, der entsteht, wenn Licht blockiert wird."
   },
   "schätzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ungefähr sagen, wie viel etwas ist; auch: jemanden mögen."
   },
   "schauen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit den Augen auf etwas sehen."
   },
   "Schaufenster": {
     "type": "noun",
@@ -4044,7 +4226,8 @@
     "definition": "Ein Stück bedrucktes Papier als Geld oder Bescheinigung."
   },
   "schenken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem etwas geben, ohne Geld dafür zu verlangen."
   },
   "Schere": {
     "type": "noun",
@@ -4053,19 +4236,20 @@
     "definition": "Ein Werkzeug mit zwei Klingen zum Schneiden."
   },
   "schieben": {
-    "type": "verb"
-  },
-  "schien": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas mit Kraft vor sich her bewegen."
   },
   "schießen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit einer Waffe feuern; einen Ball kräftig treten."
   },
   "schimpfen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit lauter Stimme sagen, dass man sich ärgert."
   },
   "schlagen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden oder etwas mit der Hand oder einem Gegenstand treffen."
   },
   "Schlange": {
     "type": "noun",
@@ -4074,10 +4258,12 @@
     "definition": "Ein langes Reptil ohne Beine."
   },
   "schlank": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Dünn und mit schöner Figur."
   },
   "schlimm": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Sehr schlecht oder unangenehm."
   },
   "Schmerzmittel": {
     "type": "noun",
@@ -4086,7 +4272,8 @@
     "definition": "Ein Medikament, das Schmerzen lindert."
   },
   "schminken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Farbe ins Gesicht tun, um schöner auszusehen; sich schminken."
   },
   "Schmuck": {
     "type": "noun",
@@ -4113,7 +4300,8 @@
     "definition": "Eine Erkältung mit laufender oder verstopfter Nase."
   },
   "schreien": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sehr laut rufen oder rufen vor Angst oder Schmerz."
   },
   "Schrift": {
     "type": "noun",
@@ -4170,7 +4358,8 @@
     "definition": "Ein rundes Gefäß zum Servieren oder Zubereiten von Speisen."
   },
   "schütteln": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas schnell hin und her bewegen."
   },
   "Schutz": {
     "type": "noun",
@@ -4179,10 +4368,12 @@
     "definition": "Sicherheit vor Gefahr, Schaden oder Angriff."
   },
   "schützen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Dafür sorgen, dass jemandem nichts passiert."
   },
   "schwach": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit wenig Kraft; nicht stark."
   },
   "Schwangerschaft": {
     "type": "noun",
@@ -4191,7 +4382,8 @@
     "definition": "Die Zeit, in der eine Frau ein Kind im Bauch trägt."
   },
   "schweigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Nichts sagen; ruhig sein."
   },
   "Schwierigkeit": {
     "type": "noun",
@@ -4200,7 +4392,8 @@
     "definition": "Ein Problem, das eine Aufgabe erschwert."
   },
   "schwitzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Wasser über die Haut verlieren, weil einem heiß ist."
   },
   "Sekunde": {
     "type": "noun",
@@ -4209,10 +4402,12 @@
     "definition": "Eine sehr kurze Zeiteinheit, ein Sechzigstel einer Minute."
   },
   "selten": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Nicht oft; nur manchmal."
   },
   "seltsam": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Komisch und ungewöhnlich."
   },
   "Semester": {
     "type": "noun",
@@ -4227,7 +4422,8 @@
     "definition": "Eine Lehrveranstaltung, bei der die Teilnehmer aktiv mitarbeiten."
   },
   "senden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas an jemanden schicken."
   },
   "Senioren": {
     "type": "noun",
@@ -4242,7 +4438,8 @@
     "definition": "Eine Reihe von zusammengehörenden Folgen oder Ausgaben."
   },
   "sichern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas schützen oder Daten speichern, damit nichts verloren geht."
   },
   "Sieg": {
     "type": "noun",
@@ -4251,7 +4448,8 @@
     "definition": "Der erfolgreiche Ausgang eines Wettkampfs oder Kampfes."
   },
   "siegen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "In einem Kampf oder Spiel der Beste sein; gewinnen."
   },
   "Sieger": {
     "type": "noun",
@@ -4266,7 +4464,8 @@
     "definition": "Eine Frau, die einen Wettkampf gewinnt."
   },
   "sinken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Nach unten gehen; weniger werden."
   },
   "Sinn": {
     "type": "noun",
@@ -4275,7 +4474,8 @@
     "definition": "Die Bedeutung oder der Zweck einer Sache."
   },
   "sinnvoll": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "So, dass es Sinn ergibt und nützlich ist."
   },
   "Sitz": {
     "type": "noun",
@@ -4296,7 +4496,8 @@
     "definition": "Die Programme, die auf einem Computer laufen."
   },
   "sondern": {
-    "type": "verb"
+    "type": "conjunction",
+    "definition": "Verbindet zwei Aussagen nach einer Verneinung: nicht dies, aber das."
   },
   "Sorge": {
     "type": "noun",
@@ -4305,7 +4506,8 @@
     "definition": "Ein beunruhigendes Gefühl wegen eines möglichen Problems."
   },
   "sorgen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich um jemanden kümmern; sich sorgen: Angst um jemanden haben."
   },
   "Souvenir": {
     "type": "noun",
@@ -4326,7 +4528,8 @@
     "definition": "Eine Frau, die beruflich Menschen in sozialen Notlagen hilft."
   },
   "spanisch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Aus Spanien oder zur Sprache Spaniens gehörend."
   },
   "Speisewagen": {
     "type": "noun",
@@ -4359,7 +4562,8 @@
     "definition": "Eine Frau, die aktiv und regelmäßig Sport treibt."
   },
   "springen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich mit den Beinen kräftig vom Boden abdrücken."
   },
   "Spritze": {
     "type": "noun",
@@ -4368,7 +4572,8 @@
     "definition": "Ein medizinisches Gerät zum Verabreichen von Flüssigkeit unter die Haut."
   },
   "spülen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Geschirr mit Wasser sauber machen."
   },
   "Spur": {
     "type": "noun",
@@ -4377,7 +4582,8 @@
     "definition": "Ein sichtbares Zeichen, das auf etwas Vergangenes hinweist."
   },
   "spüren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas mit dem Körper oder mit den Gefühlen merken."
   },
   "Stadion": {
     "type": "noun",
@@ -4386,7 +4592,8 @@
     "definition": "Ein großer Sportplatz mit Rängen für Zuschauer."
   },
   "stammen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Von einem bestimmten Ort oder aus einer Zeit kommen."
   },
   "Standpunkt": {
     "type": "noun",
@@ -4401,7 +4608,8 @@
     "definition": "Eine berühmte und gefeierte Person, meist aus Kunst oder Sport."
   },
   "stark": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit viel Kraft; nicht schwach."
   },
   "Start": {
     "type": "noun",
@@ -4410,7 +4618,8 @@
     "definition": "Der Beginn einer Bewegung, eines Rennens oder Vorhabens."
   },
   "starten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit etwas anfangen; ein Fahrzeug losfahren lassen."
   },
   "Station": {
     "type": "noun",
@@ -4437,10 +4646,12 @@
     "definition": "Feine Partikel, die sich auf Oberflächen ablagern."
   },
   "staubsaugen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Den Boden mit einem elektrischen Gerät vom Staub befreien."
   },
   "stechen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit etwas Spitzem in etwas hineindringen."
   },
   "Steckdose": {
     "type": "noun",
@@ -4449,7 +4660,8 @@
     "definition": "Eine Vorrichtung an der Wand zum Anschließen elektrischer Geräte."
   },
   "stecken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas in eine Öffnung tun; irgendwo drin sein."
   },
   "Stecker": {
     "type": "noun",
@@ -4458,10 +4670,12 @@
     "definition": "Der Teil eines Kabels, der in eine Steckdose passt."
   },
   "stehlen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas nehmen, das einem nicht gehört."
   },
   "steigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Nach oben gehen; höher oder mehr werden."
   },
   "Stein": {
     "type": "noun",
@@ -4476,7 +4690,8 @@
     "definition": "Ein Werkzeug zum Aufdrucken eines Zeichens auf Papier."
   },
   "sterben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Aufhören zu leben; den Tod finden."
   },
   "Stern": {
     "type": "noun",
@@ -4515,7 +4730,8 @@
     "definition": "Der Laut, den ein Mensch beim Sprechen oder Singen erzeugt."
   },
   "stimmen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Richtig sein; bei einer Wahl seine Meinung abgeben."
   },
   "Stimmung": {
     "type": "noun",
@@ -4524,7 +4740,8 @@
     "definition": "Der momentane emotionale Zustand einer Person oder Gruppe."
   },
   "stinken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sehr schlecht riechen."
   },
   "Stoff": {
     "type": "noun",
@@ -4533,10 +4750,12 @@
     "definition": "Ein gewebtes Material, aus dem Kleidung hergestellt wird."
   },
   "stoppen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Anhalten; etwas zum Stehen bringen."
   },
   "stoßen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden oder etwas kräftig schieben oder dagegen treffen."
   },
   "Strafe": {
     "type": "noun",
@@ -4569,7 +4788,8 @@
     "definition": "Eine bewusste Arbeitsniederlegung zur Durchsetzung von Forderungen."
   },
   "streiken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Als Protest gemeinsam nicht zur Arbeit gehen."
   },
   "Streit": {
     "type": "noun",
@@ -4578,7 +4798,8 @@
     "definition": "Eine heftige Meinungsverschiedenheit zwischen Personen."
   },
   "streng": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit klaren Regeln, die man genau befolgen muss."
   },
   "Stress": {
     "type": "noun",
@@ -4623,7 +4844,8 @@
     "definition": "Ein sehr starker Wind mit hoher Geschwindigkeit."
   },
   "stürzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Plötzlich und heftig hinfallen."
   },
   "Sucht": {
     "type": "noun",
@@ -4734,10 +4956,12 @@
     "definition": "Etwas, das nachweislich wirklich der Fall ist."
   },
   "tauchen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Unter die Wasseroberfläche gehen und dort schwimmen."
   },
   "tauschen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas geben und dafür etwas anderes bekommen."
   },
   "Technik": {
     "type": "noun",
@@ -4806,7 +5030,8 @@
     "definition": "Eine befestigte Fläche im Freien direkt am Haus."
   },
   "testen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ausprobieren, ob etwas funktioniert oder gut ist."
   },
   "Theorie": {
     "type": "noun",
@@ -4833,7 +5058,8 @@
     "definition": "Ein nützlicher Hinweis oder Ratschlag."
   },
   "tippen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Auf einer Tastatur schreiben; leicht mit dem Finger berühren."
   },
   "Titel": {
     "type": "noun",
@@ -4860,7 +5086,8 @@
     "definition": "Ein süßes, meist mehrschichtiges Gebäck zu besonderen Anlässen."
   },
   "total": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ganz und gar; völlig, vollständig."
   },
   "Tourismus": {
     "type": "noun",
@@ -4887,7 +5114,8 @@
     "definition": "Eine Frau, die Sportler oder eine Mannschaft anleitet."
   },
   "trainieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Regelmäßig üben, um besser oder fitter zu werden."
   },
   "Treffpunkt": {
     "type": "noun",
@@ -4896,7 +5124,8 @@
     "definition": "Ein verabredeter Ort, an dem man zusammenkommt."
   },
   "treiben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden oder etwas vor sich her bewegen; Sport machen."
   },
   "Trend": {
     "type": "noun",
@@ -4905,7 +5134,8 @@
     "definition": "Eine aktuelle Entwicklung oder Mode, der viele folgen."
   },
   "treten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit dem Fuß gegen etwas stoßen; einen Schritt machen."
   },
   "Trinkgeld": {
     "type": "noun",
@@ -4914,7 +5144,8 @@
     "definition": "Zusätzliches Geld, das man als Dank für eine Dienstleistung gibt."
   },
   "trocken": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Ohne Wasser oder Feuchtigkeit; nicht nass."
   },
   "Tuch": {
     "type": "noun",
@@ -4929,13 +5160,16 @@
     "definition": "Eine Bahn, die meist unterirdisch durch eine Stadt fährt."
   },
   "überfahren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit einem Fahrzeug über jemanden oder etwas fahren."
   },
   "überholen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "An einem langsameren Fahrzeug vorbeifahren."
   },
   "überlegen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Über etwas nachdenken, bevor man entscheidet."
   },
   "Übernachtung": {
     "type": "noun",
@@ -4944,16 +5178,20 @@
     "definition": "Ein Aufenthalt für eine Nacht, meist in einer Unterkunft."
   },
   "überprüfen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Noch einmal genau kontrollieren, ob etwas stimmt."
   },
   "überqueren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Von einer Seite auf die andere gehen, z. B. über eine Straße."
   },
   "überraschen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas Unerwartetes tun oder bringen."
   },
   "überreden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden so lange bitten, bis er etwas tut."
   },
   "Überschrift": {
     "type": "noun",
@@ -4979,14 +5217,13 @@
     "article": "die",
     "definition": "Eine über die reguläre Arbeitszeit hinaus geleistete Arbeitsstunde."
   },
-  "übertrieben": {
-    "type": "verb"
-  },
-  "überübertreiben": {
-    "type": "verb"
+  "übertreiben": {
+    "type": "verb",
+    "definition": "Zu viel oder zu stark; mehr als normal."
   },
   "überzeugen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit guten Gründen bewirken, dass jemand etwas glaubt."
   },
   "Übung": {
     "type": "noun",
@@ -5001,7 +5238,8 @@
     "definition": "Das Land am Rand eines Flusses, Sees oder Meeres."
   },
   "umarmen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Die Arme um jemanden legen."
   },
   "Umfrage": {
     "type": "noun",
@@ -5028,7 +5266,8 @@
     "definition": "Die Rückgabe einer Ware gegen eine andere oder gegen Geld."
   },
   "umtauschen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine gekaufte Ware zurückgeben und etwas anderes dafür bekommen."
   },
   "Umwelt": {
     "type": "noun",
@@ -5072,8 +5311,9 @@
     "article": "die",
     "definition": "Eine Hochschule für wissenschaftliche Ausbildung und Forschung."
   },
-  "unterbrochen": {
-    "type": "verb"
+  "unterbrechen": {
+    "type": "verb",
+    "definition": "Gestoppt, bevor es zu Ende war; nicht fortgesetzt."
   },
   "Unterhaltung": {
     "type": "noun",
@@ -5094,7 +5334,8 @@
     "definition": "Schriftliche Dokumente, die zu einem Vorgang gehören."
   },
   "unterlassen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas nicht tun; mit etwas aufhören."
   },
   "Unternehmer": {
     "type": "noun",
@@ -5109,10 +5350,12 @@
     "definition": "Eine Frau, die ein Unternehmen leitet oder gegründet hat."
   },
   "unterrichten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Anderen etwas beibringen, z. B. in der Schule."
   },
   "unterscheiden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Erkennen, was bei zwei Dingen anders ist."
   },
   "Unterschied": {
     "type": "noun",
@@ -5120,20 +5363,13 @@
     "article": "der",
     "definition": "Ein Merkmal, das zwei Dinge voneinander unterscheidet."
   },
-  "unterschieden": {
-    "type": "verb"
-  },
-  "unterschrieben": {
-    "type": "verb"
-  },
   "unterstreichen": {
-    "type": "verb"
-  },
-  "unterstrichen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen Strich unter ein Wort ziehen; etwas betonen."
   },
   "unterstützen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem bei etwas helfen; für jemanden da sein."
   },
   "Untersuchung": {
     "type": "noun",
@@ -5172,7 +5408,8 @@
     "definition": "Die Pflicht, für die Folgen des eigenen Handelns einzustehen."
   },
   "verbinden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Zwei Dinge zusammenbringen; eine Wunde mit Stoff bedecken."
   },
   "Verbot": {
     "type": "noun",
@@ -5181,7 +5418,8 @@
     "definition": "Eine Regel, die etwas nicht erlaubt."
   },
   "verbrauchen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas benutzen, bis es weg ist."
   },
   "Verbrecher": {
     "type": "noun",
@@ -5196,10 +5434,8 @@
     "definition": "Eine Frau, die eine schwere Straftat begangen hat."
   },
   "verbringen": {
-    "type": "verb"
-  },
-  "verbunden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Zeit an einem Ort oder mit etwas zubringen."
   },
   "Verdacht": {
     "type": "noun",
@@ -5214,10 +5450,12 @@
     "definition": "Die Zeit, die vor der Gegenwart liegt."
   },
   "vergrößern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas größer machen oder erweitern."
   },
   "verhaften": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Als Polizei jemanden festnehmen."
   },
   "Verhalten": {
     "type": "noun",
@@ -5232,7 +5470,8 @@
     "definition": "Die Beziehung zwischen zwei oder mehreren Personen oder Dingen."
   },
   "verhindern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Dafür sorgen, dass etwas nicht passiert."
   },
   "Verkäuferin": {
     "type": "noun",
@@ -5253,13 +5492,16 @@
     "definition": "Ein Unternehmen, das Bücher oder Zeitschriften herausgibt."
   },
   "verlangen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas deutlich fordern."
   },
   "verlängern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas länger machen oder länger gelten lassen."
   },
   "verlassen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Von einem Ort oder einer Person weggehen."
   },
   "Verletzung": {
     "type": "noun",
@@ -5286,10 +5528,8 @@
     "definition": "Der Wegfall von etwas Wertvollem oder Wichtigem."
   },
   "vermeiden": {
-    "type": "verb"
-  },
-  "vermieden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas absichtlich nicht tun oder geschehen lassen."
   },
   "Vermieterin": {
     "type": "noun",
@@ -5304,7 +5544,8 @@
     "definition": "Die Überlassung einer Wohnung oder Sache gegen Bezahlung."
   },
   "vermissen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Traurig sein, weil jemand oder etwas fehlt."
   },
   "Vermittlung": {
     "type": "noun",
@@ -5313,19 +5554,24 @@
     "definition": "Die Herstellung eines Kontakts zwischen zwei Parteien."
   },
   "vermuten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas glauben, ohne es sicher zu wissen."
   },
   "veröffentlichen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas für alle zugänglich machen, z. B. drucken."
   },
   "verpacken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas in Papier oder eine Schachtel einpacken."
   },
   "verpflegen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden mit Essen und Trinken versorgen."
   },
   "verraten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Geheimnis weitersagen; jemanden im Stich lassen."
   },
   "Versammlung": {
     "type": "noun",
@@ -5334,25 +5580,24 @@
     "definition": "Ein Treffen mehrerer Personen zur gemeinsamen Beratung."
   },
   "versäumen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas verpassen oder nicht rechtzeitig tun."
   },
   "verschmutzen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas schmutzig machen."
   },
   "verschreiben": {
-    "type": "verb"
-  },
-  "verschrieben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Als Arzt ein Medikament anordnen."
   },
   "verschwinden": {
-    "type": "verb"
-  },
-  "verschwunden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Plötzlich nicht mehr zu sehen sein."
   },
   "versichern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen Vertrag gegen Schäden abschließen; fest zusagen."
   },
   "Verspätung": {
     "type": "noun",
@@ -5361,13 +5606,12 @@
     "definition": "Eine zeitliche Verzögerung gegenüber dem geplanten Zeitpunkt."
   },
   "versprechen": {
-    "type": "verb"
-  },
-  "versprochen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem fest sagen, dass man etwas tun wird."
   },
   "verteilen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas an mehrere Personen geben."
   },
   "Vertrag": {
     "type": "noun",
@@ -5376,13 +5620,16 @@
     "definition": "Eine schriftliche Vereinbarung zwischen zwei oder mehreren Parteien."
   },
   "vertrauen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Fest glauben, dass jemand ehrlich und zuverlässig ist."
   },
   "vertraut": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Gut bekannt; so, dass man sich sicher fühlt."
   },
   "vertreten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Für jemanden handeln oder seine Arbeit übernehmen."
   },
   "Vertretung": {
     "type": "noun",
@@ -5391,10 +5638,12 @@
     "definition": "Jemand, der vorübergehend die Aufgaben einer anderen Person übernimmt."
   },
   "verursachen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Der Grund für etwas sein; etwas auslösen."
   },
   "verurteilen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Als Gericht eine Strafe bestimmen."
   },
   "Verwaltung": {
     "type": "noun",
@@ -5403,19 +5652,24 @@
     "definition": "Eine Organisation, die behördliche oder betriebliche Aufgaben erledigt."
   },
   "verwechseln": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Zwei Dinge oder Personen irrtümlich für gleich halten."
   },
   "verwenden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas für einen bestimmten Zweck benutzen."
   },
   "verzeihen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem einen Fehler nicht mehr übel nehmen."
   },
   "verzichten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas freiwillig nicht nehmen oder nicht tun."
   },
   "verziehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Das Gesicht schief machen; sich verziehen: leise weggehen."
   },
   "Video": {
     "type": "noun",
@@ -5454,7 +5708,8 @@
     "definition": "Eine Bedingung, die für etwas erfüllt sein muss."
   },
   "vorbereiten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas im Voraus fertig machen."
   },
   "Vorbereitung": {
     "type": "noun",
@@ -5469,7 +5724,8 @@
     "definition": "Das Recht, im Straßenverkehr zuerst zu fahren."
   },
   "vorgestern": {
-    "type": "verb"
+    "type": "adverb",
+    "definition": "Am Tag vor gestern; vor zwei Tagen."
   },
   "Vorhaben": {
     "type": "noun",
@@ -5526,13 +5782,16 @@
     "definition": "Eine Aussage, die jemanden für ein Fehlverhalten verantwortlich macht."
   },
   "wachsen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Größer werden, z. B. als Kind oder Pflanze."
   },
   "wählen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich für etwas entscheiden; bei einer Wahl stimmen."
   },
   "wahr": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Richtig; so, wie es wirklich ist."
   },
   "Wahrheit": {
     "type": "noun",
@@ -5559,7 +5818,8 @@
     "definition": "Ein zum Verkauf bestimmter Gegenstand."
   },
   "warnen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem sagen, dass eine Gefahr droht."
   },
   "Wäsche": {
     "type": "noun",
@@ -5580,7 +5840,8 @@
     "definition": "Ein Angebot oder eine Seite im Internet."
   },
   "wechseln": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas durch etwas anderes ersetzen; ändern."
   },
   "Weise": {
     "type": "noun",
@@ -5595,10 +5856,12 @@
     "definition": "Eine zusätzliche Ausbildung nach der ursprünglichen Ausbildung."
   },
   "weltweit": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Auf der ganzen Erde; in allen Ländern."
   },
   "wenden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas auf die andere Seite drehen; umkehren."
   },
   "Werbung": {
     "type": "noun",
@@ -5637,7 +5900,8 @@
     "definition": "Eine Veranstaltung, bei der die beste Leistung ermittelt wird."
   },
   "wetten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Um Geld oder etwas anderes sagen, was passieren wird."
   },
   "Wetterbericht": {
     "type": "noun",
@@ -5652,10 +5916,8 @@
     "definition": "Eine Voraussage über die zu erwartende Wetterlage."
   },
   "widersprechen": {
-    "type": "verb"
-  },
-  "widersprochen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sagen, dass man anderer Meinung ist."
   },
   "Wiederholung": {
     "type": "noun",
@@ -5664,7 +5926,8 @@
     "definition": "Das erneute Ausführen oder Zeigen von etwas."
   },
   "wiegen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Das Gewicht von etwas feststellen; ein Gewicht haben."
   },
   "Wiese": {
     "type": "noun",
@@ -5673,10 +5936,12 @@
     "definition": "Eine mit Gras bewachsene Fläche im Freien."
   },
   "winken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Die Hand hin und her bewegen, um jemanden zu grüßen oder zu rufen."
   },
   "wirken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Wirkung haben; einen bestimmten Eindruck machen."
   },
   "Wirkung": {
     "type": "noun",
@@ -5745,7 +6010,8 @@
     "definition": "Ein unerklärliches und überraschendes Ereignis."
   },
   "zählen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Zahlen der Reihe nach nennen; feststellen, wie viele es sind."
   },
   "Zahlung": {
     "type": "noun",
@@ -5778,10 +6044,12 @@
     "definition": "Eine regelmäßig erscheinende Publikation mit Artikeln und Bildern."
   },
   "zelten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Im Zelt übernachten, zum Beispiel im Urlaub auf einem Campingplatz."
   },
   "zerstören": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas so kaputt machen, dass man es nicht mehr benutzen kann."
   },
   "Zertifikat": {
     "type": "noun",
@@ -5874,7 +6142,8 @@
     "definition": "Eine Verbindung zwischen mehreren Dingen oder Ereignissen."
   },
   "zuschauen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Aufmerksam sehen, was jemand anderes macht oder was passiert."
   },
   "Zuschauer": {
     "type": "noun",
@@ -5925,7 +6194,8 @@
     "definition": "Eine Unsicherheit über die Richtigkeit einer Sache."
   },
   "zweifeln": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Nicht sicher sein, ob etwas wahr oder richtig ist."
   },
   "Zwiebel": {
     "type": "noun",

@@ -1,6 +1,7 @@
 {
   "abhängen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Von etwas oder jemandem bestimmt werden; davon kommt es an."
   },
   "Absatz": {
     "type": "noun",
@@ -15,16 +16,20 @@
     "definition": "Der Zeitpunkt, an dem etwas erfolgreich beendet wird."
   },
   "abstrakt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nur gedacht, nicht konkret; man kann es nicht sehen oder anfassen."
   },
   "abwerten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas oder jemanden als weniger wichtig oder schlechter darstellen."
   },
   "ähnlich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Fast gleich; in vielen Punkten so wie etwas anderes."
   },
   "aktiv": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Viel tuend und tätig; nicht nur zuschauend."
   },
   "Analyse": {
     "type": "noun",
@@ -33,7 +38,8 @@
     "definition": "Eine gründliche Untersuchung, um etwas genauer zu verstehen."
   },
   "anführen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Gruppe leiten und vorne gehen; auch: einen Grund oder ein Beispiel nennen."
   },
   "Anhänger": {
     "type": "noun",
@@ -42,10 +48,12 @@
     "definition": "Jemand, der eine bestimmte Idee, Partei oder Person unterstützt."
   },
   "anordnen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas offiziell bestimmen oder befehlen; auch: Dinge in eine Ordnung bringen."
   },
   "anpassen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas so ändern, dass es passt; sich anpassen: sich nach anderen richten."
   },
   "Ansatz": {
     "type": "noun",
@@ -66,7 +74,8 @@
     "definition": "Der Teil einer Menge, der auf jemanden oder etwas entfällt."
   },
   "anwesend": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "An einem Ort da sein; nicht fehlend."
   },
   "Anzahl": {
     "type": "noun",
@@ -75,7 +84,8 @@
     "definition": "Die Menge einzelner Dinge oder Personen, ausgedrückt als Zahl."
   },
   "arabisch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Zu den arabischen Ländern, ihren Menschen oder ihrer Sprache gehörend."
   },
   "Argument": {
     "type": "noun",
@@ -84,7 +94,8 @@
     "definition": "Eine Aussage, mit der eine Meinung begründet wird."
   },
   "asozial": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Sich gegen die Regeln der Gemeinschaft verhaltend; rücksichtslos gegenüber anderen."
   },
   "Aufbau": {
     "type": "noun",
@@ -123,7 +134,8 @@
     "definition": "Der erste akademische Abschluss nach einem Hochschulstudium."
   },
   "basieren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Auf etwas beruhen; etwas als Grundlage haben."
   },
   "Basis": {
     "type": "noun",
@@ -132,29 +144,36 @@
     "definition": "Die Grundlage, auf der etwas aufgebaut ist."
   },
   "befassen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich mit etwas befassen: sich mit einem Thema genau beschäftigen."
   },
   "befinden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich an einem Ort befinden: an einem Ort sein."
   },
   "befragt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Von jemandem gefragt, zum Beispiel bei einer Umfrage oder vor Gericht."
   },
   "befreien": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden frei machen, zum Beispiel aus einem Gefängnis oder einer Gefahr."
   },
   "begabt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit besonderem Talent; etwas gut können, ohne viel zu lernen."
   },
   "begehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas Schlechtes tun, zum Beispiel einen Fehler oder ein Verbrechen."
   },
   "beklagen": {
     "definition": "Trauer oder Bedauern über etwas ausdrücken.",
     "type": "verb"
   },
   "belasten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Schwer auf etwas drücken; jemandem Sorgen oder Arbeit machen."
   },
   "Bemühung": {
     "type": "noun",
@@ -169,13 +188,16 @@
     "definition": "Die Art, wie sich jemand in Gesellschaft verhält."
   },
   "bereit": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Fertig vorbereitet; auch: willig, etwas zu tun."
   },
   "bereiten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas machen oder herstellen, zum Beispiel Essen; auch: Freude oder Probleme verursachen."
   },
   "bestimmt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Klar festgelegt; auch: sicher, ohne Zweifel."
   },
   "Betracht": {
     "type": "noun",
@@ -184,7 +206,8 @@
     "definition": "Nur in festen Wendungen gebräuchlich, etwa \"in Betracht ziehen\" (erwägen) oder \"in Betracht kommen\" (infrage kommen)."
   },
   "bewahren": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas behalten und schützen, damit es erhalten bleibt."
   },
   "Beweis": {
     "type": "noun",
@@ -193,13 +216,16 @@
     "definition": "Etwas, das die Wahrheit einer Aussage eindeutig belegt."
   },
   "bewerten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sagen, wie gut oder schlecht etwas ist; eine Note geben."
   },
   "bewirken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas zur Folge haben; eine Veränderung verursachen."
   },
   "beziehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "In eine Wohnung einziehen; auch: etwas regelmäßig bekommen, zum Beispiel Geld."
   },
   "Bezug": {
     "type": "noun",
@@ -208,7 +234,8 @@
     "definition": "Der Zusammenhang zwischen einer Aussage und einer bestimmten Sache."
   },
   "bilden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas formen oder entstehen lassen; auch: Wissen vermitteln."
   },
   "Bildung": {
     "type": "noun",
@@ -259,7 +286,8 @@
     "definition": "Eine schwierige Lage, in der man zwischen zwei Möglichkeiten wählen muss."
   },
   "dominant": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Stärker als andere; bestimmend und vorherrschend."
   },
   "Dozent": {
     "type": "noun",
@@ -274,7 +302,8 @@
     "definition": "Einer von drei gleich großen Teilen eines Ganzen."
   },
   "drohen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem sagen, dass man ihm etwas Schlimmes tun wird."
   },
   "Drohung": {
     "type": "noun",
@@ -289,28 +318,32 @@
     "definition": "Eine bestimmte Stufe oder ein Bereich, auf dem etwas stattfindet."
   },
   "ehemalig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Früher einmal gewesen, jetzt aber nicht mehr."
   },
   "einbauen": {
-    "type": "verb"
-  },
-  "eine": {
-    "type": "article"
+    "type": "verb",
+    "definition": "Ein Teil fest in etwas einsetzen, zum Beispiel eine Küche in eine Wohnung."
   },
   "eingehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ankommen, zum Beispiel Post; auch: eine Pflanze stirbt."
   },
   "einigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich einigen: nach einem Gespräch zu derselben Meinung kommen."
   },
   "einsam": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Allein und ohne Kontakt zu anderen Menschen; oft traurig darüber."
   },
   "einzelne": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Für sich allein, nicht zusammen mit anderen; nur wenige."
   },
   "einzig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nur einmal vorhanden; es gibt kein anderes."
   },
   "Element": {
     "type": "noun",
@@ -331,10 +364,8 @@
     "definition": "Der letzte Teil eines Wortes, der sich verändern kann."
   },
   "eng": {
-    "type": "adjective"
-  },
-  "enstehen": {
-    "type": "verb"
+    "type": "adjective",
+    "definition": "Mit wenig Platz; nicht breit oder weit."
   },
   "Epoche": {
     "type": "noun",
@@ -343,7 +374,8 @@
     "definition": "Ein bestimmter Zeitabschnitt der Geschichte mit eigenen Merkmalen."
   },
   "erheben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas nach oben heben; auch: Geld oder Daten verlangen und sammeln."
   },
   "Erlebnis": {
     "type": "noun",
@@ -352,13 +384,16 @@
     "definition": "Etwas, das jemand persönlich erlebt und in Erinnerung behält."
   },
   "erleiden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas Schlimmes erleben müssen, zum Beispiel Schmerzen oder einen Verlust."
   },
   "erlernen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Durch Üben eine Fähigkeit oder einen Beruf richtig beherrschen."
   },
   "erregen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein starkes Gefühl auslösen, zum Beispiel Aufmerksamkeit oder Ärger."
   },
   "Erwägung": {
     "type": "noun",
@@ -373,7 +408,8 @@
     "definition": "Das Erlangen von etwas, meist durch Kauf oder eigene Anstrengung."
   },
   "erwerben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas kaufen oder bekommen; auch: Wissen durch Lernen gewinnen."
   },
   "Essay": {
     "type": "noun",
@@ -388,10 +424,12 @@
     "definition": "Das Vorhandensein oder Dasein von etwas oder jemandem."
   },
   "extrem": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Sehr stark; weit über dem Normalen."
   },
   "fair": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Gerecht und ehrlich; nach den Regeln."
   },
   "Fakt": {
     "type": "noun",
@@ -430,7 +468,8 @@
     "definition": "Der Punkt, auf den sich die Aufmerksamkeit richtet."
   },
   "formal": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Die äußere Form oder die Regeln betreffend; auch: offiziell und nicht locker."
   },
   "Forscher": {
     "type": "noun",
@@ -439,7 +478,8 @@
     "definition": "Eine Person, die wissenschaftlich etwas untersucht."
   },
   "fraglich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Unsicher; man weiß noch nicht, ob es stimmt oder passiert."
   },
   "Franzose": {
     "type": "noun",
@@ -448,13 +488,16 @@
     "definition": "Ein männlicher Staatsangehöriger Frankreichs."
   },
   "fügen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Teile zusammensetzen; sich fügen: tun, was andere wollen."
   },
   "fürchten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Angst vor etwas oder jemandem haben."
   },
   "gebildet": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit viel Wissen und guter Schulbildung."
   },
   "Gedanke": {
     "type": "noun",
@@ -463,7 +506,8 @@
     "definition": "Eine Vorstellung oder Idee, die im Kopf entsteht."
   },
   "geeignet": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Passend für einen bestimmten Zweck oder eine Aufgabe."
   },
   "Gegner": {
     "type": "noun",
@@ -472,31 +516,40 @@
     "definition": "Eine Person, die gegen jemanden kämpft oder anderer Meinung ist."
   },
   "geistig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Das Denken und den Verstand betreffend, nicht den Körper."
   },
   "gelten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Gültig sein; auch: als etwas angesehen werden."
   },
   "gemischt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Aus verschiedenen Teilen oder Arten zusammengesetzt."
   },
   "genau": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ganz richtig und exakt; ohne Fehler."
   },
   "generell": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Allgemein; für alle Fälle gültig."
   },
   "genügend": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "So viel, wie man braucht; ausreichend."
   },
   "gering": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Klein oder wenig; nicht groß oder wichtig."
   },
   "gewiß": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Sicher und ohne Zweifel; alte Schreibweise von „gewiss“."
   },
   "gewohnt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Bekannt und normal, weil man es oft erlebt hat."
   },
   "Graphik": {
     "type": "noun",
@@ -529,7 +582,8 @@
     "definition": "Der Vorgang, bei dem zwei Menschen offiziell Ehepartner werden."
   },
   "heutig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Zu heute oder zu unserer Zeit gehörend."
   },
   "Hinsicht": {
     "type": "noun",
@@ -550,25 +604,32 @@
     "definition": "Ein Botenstoff im Körper, der bestimmte Prozesse steuert."
   },
   "ideal": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Perfekt passend; besser geht es nicht."
   },
   "illegal": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Vom Gesetz verboten; nicht erlaubt."
   },
   "indirekt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht direkt; über einen Umweg oder eine andere Person."
   },
   "inner": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Innen liegend; im Inneren von etwas."
   },
   "intensiv": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Sehr stark und konzentriert; mit viel Kraft oder Zeit."
   },
   "isoliert": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Getrennt von anderen; allein und ohne Kontakt."
   },
   "jeweilig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Zu dem gerade genannten Fall oder der Person gehörend."
   },
   "Jude": {
     "type": "noun",
@@ -583,7 +644,8 @@
     "definition": "Die Art, wie ein Ton oder eine Stimme akustisch wirkt."
   },
   "knapp": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Gerade noch genug; auch: kurz und ohne viele Worte."
   },
   "Kohäsion": {
     "type": "noun",
@@ -592,13 +654,16 @@
     "definition": "Der innere Zusammenhalt zwischen einzelnen Teilen oder Elementen."
   },
   "kommend": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "In der Zukunft liegend; als Nächstes folgend."
   },
   "komplett": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ganz und vollständig; ohne dass etwas fehlt."
   },
   "konkret": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Genau und klar; man kann es sich gut vorstellen."
   },
   "Konsens": {
     "type": "noun",
@@ -619,10 +684,12 @@
     "definition": "Ein durchdachter Plan oder eine grundlegende Idee für ein Vorhaben."
   },
   "korrekt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Richtig und ohne Fehler; auch: den Regeln entsprechend."
   },
   "kräftig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Stark und mit viel Kraft."
   },
   "Kritik": {
     "type": "noun",
@@ -643,20 +710,24 @@
     "definition": "Die Bewegung oder der Verlauf von etwas über die Zeit."
   },
   "lebend": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Am Leben; nicht tot."
   },
   "lebendig": {
     "definition": "Voller Leben, Bewegung oder Energie.",
     "type": "adjective"
   },
   "legal": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Vom Gesetz erlaubt; nach den geltenden Regeln."
   },
   "legitim": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Berechtigt und erlaubt; man kann es gut begründen."
   },
   "lehnen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas schräg an etwas stellen; sich an etwas lehnen: sich dagegen stützen."
   },
   "Lektor": {
     "type": "noun",
@@ -683,10 +754,12 @@
     "definition": "Eine offizielle Erlaubnis, etwas Bestimmtes zu tun oder zu nutzen."
   },
   "lohnen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich lohnen: einen Nutzen bringen; die Mühe ist es wert."
   },
   "mangelnd": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht ausreichend vorhanden; fehlend."
   },
   "Maß": {
     "type": "noun",
@@ -731,7 +804,8 @@
     "definition": "Die besondere Sprachform, die in einer bestimmten Region gesprochen wird."
   },
   "mündlich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Gesprochen, nicht geschrieben."
   },
   "Muster": {
     "type": "noun",
@@ -746,7 +820,8 @@
     "definition": "Ein Volk mit gemeinsamer Kultur, das meist einen eigenen Staat bildet."
   },
   "national": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Das ganze Land oder Volk betreffend."
   },
   "Neigung": {
     "type": "noun",
@@ -767,13 +842,16 @@
     "definition": "Ein Zustand großer Bedrängnis oder dringender Bedürftigkeit."
   },
   "nutzlos": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ohne Nutzen; es hilft nicht."
   },
   "optimal": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "So gut wie möglich; am besten."
   },
   "parallel": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Neben etwas in gleichem Abstand; auch: zur gleichen Zeit."
   },
   "Pflege": {
     "type": "noun",
@@ -794,7 +872,8 @@
     "definition": "Ein bestimmter Abschnitt innerhalb einer längeren Entwicklung."
   },
   "physisch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Den Körper betreffend; körperlich."
   },
   "Polen": {
     "type": "noun",
@@ -803,7 +882,8 @@
     "definition": "Ein Land in Mitteleuropa, östlich von Deutschland, mit der Hauptstadt Warschau."
   },
   "polnisch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Zu Polen, seinen Menschen oder seiner Sprache gehörend."
   },
   "Position": {
     "type": "noun",
@@ -812,13 +892,16 @@
     "definition": "Der Standpunkt oder die Stelle, die jemand oder etwas einnimmt."
   },
   "positive": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Gut und erfreulich; auch: zustimmend."
   },
   "prägen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Einen starken Einfluss auf jemanden oder etwas haben."
   },
   "präzis": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Sehr genau und exakt."
   },
   "Protest": {
     "type": "noun",
@@ -845,7 +928,8 @@
     "definition": "Der Ursprung, aus dem etwas stammt oder Information bezogen wird."
   },
   "radikal": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Sehr extrem; bis zum Äußersten gehend."
   },
   "Rahmen": {
     "type": "noun",
@@ -854,7 +938,8 @@
     "definition": "Die äußere Umgrenzung oder der Zusammenhang, in dem etwas stattfindet."
   },
   "rasch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Schnell; in kurzer Zeit."
   },
   "Rasse": {
     "type": "noun",
@@ -875,19 +960,24 @@
     "definition": "Ein mündlicher Vortrag vor einer Zuhörerschaft."
   },
   "regional": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Eine bestimmte Gegend betreffend; aus der Gegend."
   },
   "reif": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Fertig gewachsen und bereit zum Essen; auch: erwachsen und vernünftig."
   },
   "relativ": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Im Vergleich zu etwas anderem; ziemlich."
   },
   "relevant": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Wichtig für eine bestimmte Sache."
   },
   "religiös": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Die Religion betreffend; an Gott glaubend."
   },
   "Rentner": {
     "type": "noun",
@@ -908,7 +998,8 @@
     "definition": "Ein plötzlicher, heftiger seelischer oder körperlicher Zustand nach einem Ereignis."
   },
   "schuldig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Verantwortlich für etwas Schlechtes; auch: jemandem Geld zahlen müssen."
   },
   "Schwäche": {
     "type": "noun",
@@ -917,7 +1008,8 @@
     "definition": "Ein Mangel oder eine geringe Fähigkeit in einem bestimmten Bereich."
   },
   "seelisch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Die Gefühle und die Psyche betreffend."
   },
   "Sicht": {
     "type": "noun",
@@ -926,16 +1018,16 @@
     "definition": "Die Art und Weise, wie jemand etwas betrachtet oder wahrnimmt."
   },
   "sichtbar": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "So, dass man es mit den Augen sehen kann."
   },
   "sinnlos": {
-    "type": "adjective"
-  },
-  "sinvoll": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ohne Sinn oder Zweck; es bringt nichts."
   },
   "sozial": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Die Gesellschaft betreffend; auch: hilfsbereit gegenüber anderen."
   },
   "Spitze": {
     "type": "noun",
@@ -962,7 +1054,8 @@
     "definition": "Ein allgemein festgelegtes Niveau, an dem sich etwas messen lässt."
   },
   "ständig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Immer wieder; ohne Pause."
   },
   "Stärke": {
     "type": "noun",
@@ -971,7 +1064,8 @@
     "definition": "Eine besondere Fähigkeit oder Kraft, die jemand besitzt."
   },
   "stärken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Kräftiger oder fester machen."
   },
   "Status": {
     "type": "noun",
@@ -990,16 +1084,20 @@
     "definition": "Die Position, die jemand in einem Bereich oder einer Hierarchie innehat."
   },
   "stolz": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Froh und zufrieden über eine Leistung oder über jemanden."
   },
   "streben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich sehr bemühen, ein Ziel zu erreichen."
   },
   "stützen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas halten, damit es nicht fällt; auch: jemandem helfen."
   },
   "tätig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Aktiv; in einem Beruf oder Bereich arbeitend."
   },
   "Tendenz": {
     "type": "noun",
@@ -1014,7 +1112,8 @@
     "definition": "Eine Behauptung, die in einer Diskussion begründet werden soll."
   },
   "tief": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Weit nach unten gehend; nicht flach."
   },
   "Toleranz": {
     "type": "noun",
@@ -1023,7 +1122,8 @@
     "definition": "Die Bereitschaft, andere Meinungen oder Lebensweisen zu akzeptieren."
   },
   "trennen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Dinge oder Menschen auseinander bringen; sich trennen: nicht mehr zusammen sein."
   },
   "Trennung": {
     "type": "noun",
@@ -1032,13 +1132,16 @@
     "definition": "Das Auseinandergehen zweier Personen oder Dinge, die zuvor verbunden waren."
   },
   "typisch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "So, wie es für jemanden oder etwas normal und charakteristisch ist."
   },
   "üblich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Normal und gewöhnlich; so, wie man es meistens macht."
   },
   "umfassen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas enthalten oder einschließen; auch: mit den Armen umschließen."
   },
   "Umgang": {
     "type": "noun",
@@ -1047,7 +1150,8 @@
     "definition": "Die Art, wie man mit einer Person oder Sache verfährt."
   },
   "umgehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit etwas umgehen: etwas auf eine bestimmte Art behandeln."
   },
   "Umstand": {
     "type": "noun",
@@ -1056,10 +1160,12 @@
     "definition": "Eine begleitende Bedingung, die eine Situation beeinflusst."
   },
   "ungefähr": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht genau, aber fast; etwa."
   },
   "urban": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Zur Stadt gehörend; städtisch."
   },
   "Ursprung": {
     "type": "noun",
@@ -1080,10 +1186,12 @@
     "definition": "Eine besondere Erscheinungsform einer Sprache oder Sache."
   },
   "verfügen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Über etwas verfügen: etwas haben und benutzen können."
   },
   "vergehen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Vorbeigehen und zu Ende gehen, zum Beispiel Zeit oder Schmerzen."
   },
   "Vermögen": {
     "type": "noun",
@@ -1104,7 +1212,8 @@
     "definition": "Das Vorhandensein vieler unterschiedlicher Formen oder Arten."
   },
   "völlig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ganz und gar; vollständig."
   },
   "Vorfeld": {
     "type": "noun",
@@ -1131,10 +1240,12 @@
     "definition": "Eine Person, die bei einer Wahl ihre Stimme abgibt."
   },
   "wandeln": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas verändern; sich wandeln: anders werden."
   },
   "wertvoll": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Mit hohem Wert; viel Geld wert oder sehr nützlich."
   },
   "Wesen": {
     "type": "noun",
@@ -1155,10 +1266,12 @@
     "definition": "Die bewusste Entschlossenheit, etwas Bestimmtes zu tun oder zu erreichen."
   },
   "wirklich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Tatsächlich so; echt und nicht nur ausgedacht."
   },
   "zeitlich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Die Zeit betreffend; in Bezug auf Dauer oder Zeitpunkt."
   },
   "Zeitraum": {
     "type": "noun",
@@ -1179,9 +1292,11 @@
     "definition": "Eine wörtlich übernommene Aussage aus einem Text oder von einer Person."
   },
   "zunehmen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mehr oder größer werden; auch: schwerer werden."
   },
   "zwingen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden mit Druck oder Gewalt dazu bringen, etwas zu tun."
   }
 }

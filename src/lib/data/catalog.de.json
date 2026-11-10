@@ -101,12 +101,14 @@
     "levels": [
       "b2"
     ],
+    "definition": "Von etwas oder jemandem bestimmt werden; davon kommt es an.",
     "type": "verb"
   },
   "ABHÄNGIG": {
     "levels": [
       "b1"
     ],
+    "definition": "Nicht frei; auf jemanden oder etwas angewiesen sein.",
     "type": "adjective"
   },
   "ABHOLEN": {
@@ -129,12 +131,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Leichter werden, Körpergewicht verlieren; auch: etwas von einer Stelle wegnehmen.",
     "type": "verb"
   },
   "ABONNIEREN": {
     "levels": [
       "b1"
     ],
+    "definition": "Eine Zeitung, einen Kanal oder einen Dienst regelmäßig beziehen.",
     "type": "verb"
   },
   "ABSATZ": {
@@ -159,6 +163,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Eine Tür mit einem Schlüssel zumachen; etwas zu Ende bringen.",
     "type": "verb"
   },
   "ABSCHLUSS": {
@@ -211,6 +216,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Nur gedacht, nicht konkret; man kann es nicht sehen oder anfassen.",
     "type": "adjective"
   },
   "ABTEILUNG": {
@@ -226,6 +232,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Etwas oder jemanden als weniger wichtig oder schlechter darstellen.",
     "type": "verb"
   },
   "ACHT": {
@@ -257,6 +264,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Fast gleich; in vielen Punkten so wie etwas anderes.",
     "type": "adjective"
   },
   "AHNUNG": {
@@ -281,6 +289,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Viel tuend und tätig; nicht nur zuschauend.",
     "type": "adjective"
   },
   "AKTIVITÄT": {
@@ -296,12 +305,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Gerade jetzt wichtig oder neu; zur heutigen Zeit gehörend.",
     "type": "adjective"
   },
   "AKZEPTIEREN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas annehmen oder als richtig gelten lassen.",
     "type": "verb"
   },
   "ALARM": {
@@ -449,6 +460,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas genau untersuchen, um es besser zu verstehen.",
     "type": "verb"
   },
   "ANBIETEN": {
@@ -462,6 +474,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Etwas anders machen, als es vorher war.",
     "type": "verb"
   },
   "ÄNDERUNG": {
@@ -493,6 +506,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Eine Gruppe leiten und vorne gehen; auch: einen Grund oder ein Beispiel nennen.",
     "type": "verb"
   },
   "ANGABE": {
@@ -508,6 +522,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Eine Information nennen, z. B. in einem Formular; auch: sich wichtig machen.",
     "type": "verb"
   },
   "ANGEBOT": {
@@ -621,12 +636,14 @@
     "levels": [
       "b2"
     ],
+    "definition": "Etwas offiziell bestimmen oder befehlen; auch: Dinge in eine Ordnung bringen.",
     "type": "verb"
   },
   "ANPASSEN": {
     "levels": [
       "b2"
     ],
+    "definition": "Etwas so ändern, dass es passt; sich anpassen: sich nach anderen richten.",
     "type": "verb"
   },
   "ANREDE": {
@@ -694,6 +711,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Etwas oder jemanden mit den Augen genau betrachten.",
     "type": "verb"
   },
   "ANSICHT": {
@@ -761,6 +779,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "An einem Ort da sein; nicht fehlend.",
     "type": "adjective"
   },
   "ANZAHL": {
@@ -785,6 +804,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Etwas sichtbar machen oder zeigen; eine Tat der Polizei melden.",
     "type": "verb"
   },
   "ANZIEHEN": {
@@ -852,6 +872,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Zu den arabischen Ländern, ihren Menschen oder ihrer Sprache gehörend.",
     "type": "adjective"
   },
   "ARBEIT": {
@@ -926,6 +947,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Jemanden wütend machen; sich über etwas aufregen.",
     "type": "verb"
   },
   "ARGUMENT": {
@@ -977,6 +999,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Sich gegen die Regeln der Gemeinschaft verhaltend; rücksichtslos gegenüber anderen.",
     "type": "adjective"
   },
   "ASYL": {
@@ -992,6 +1015,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Luft in die Lunge holen und wieder ausstoßen.",
     "type": "verb"
   },
   "AUCH": {
@@ -1055,6 +1079,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas in Flüssigkeit verschwinden lassen; auch: etwas beenden oder klären.",
     "type": "verb"
   },
   "AUFNAHME": {
@@ -1079,6 +1104,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas notieren, damit man es nicht vergisst.",
     "type": "verb"
   },
   "AUFSTEHEN": {
@@ -1264,12 +1290,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Etwas aus einer Tasche, einem Koffer oder einem Paket herausnehmen.",
     "type": "verb"
   },
   "AUSRUHEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Sich nach einer Anstrengung erholen; sich ausruhen.",
     "type": "verb"
   },
   "AUSSAGE": {
@@ -1292,7 +1320,8 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
+    "definition": "Auf der äußeren Seite; nicht drinnen.",
+    "type": "adverb"
   },
   "ÄUSSERUNG": {
     "levels": [
@@ -1316,6 +1345,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Ein Wort mit dem Mund sagen, sodass man es hört.",
     "type": "verb"
   },
   "AUSSTEIGEN": {
@@ -1329,12 +1359,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Zeitungen oder Briefe zu den Leuten bringen.",
     "type": "verb"
   },
   "AUSÜBEN": {
     "levels": [
       "c1"
     ],
+    "definition": "Eine Tätigkeit oder einen Beruf machen; auch: Druck oder Einfluss wirken lassen.",
     "type": "verb"
   },
   "AUSWAHL": {
@@ -1400,6 +1432,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "Selbstständig und unabhängig; über sich selbst entscheidend.",
     "type": "adjective"
   },
   "AUTOR": {
@@ -1451,6 +1484,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Kuchen oder Brot im Ofen heiß machen und fertig garen.",
     "type": "verb"
   },
   "BÄCKEREI": {
@@ -1606,6 +1640,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Auf etwas beruhen; etwas als Grundlage haben.",
     "type": "verb"
   },
   "BASIS": {
@@ -1630,6 +1665,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Mit den Händen kleine Dinge aus Papier, Holz oder anderem Material machen.",
     "type": "verb"
   },
   "BATTERIE": {
@@ -1654,6 +1690,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Ein Haus oder etwas anderes aus Teilen herstellen.",
     "type": "verb"
   },
   "BAUER": {
@@ -1687,6 +1724,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Auf etwas achten und sich danach richten.",
     "type": "verb"
   },
   "BEAMTE": {
@@ -1702,24 +1740,21 @@
     "levels": [
       "b1"
     ],
+    "definition": "Bei einem Amt oder einer Stelle offiziell um etwas bitten.",
     "type": "verb"
   },
   "BEANTWORTEN": {
     "levels": [
       "a2"
     ],
+    "definition": "Auf eine Frage oder einen Brief eine Antwort geben.",
     "type": "verb"
   },
   "BEDANKEN": {
     "levels": [
       "a2"
     ],
-    "type": "verb"
-  },
-  "BEDANKT": {
-    "levels": [
-      "a2"
-    ],
+    "definition": "Sich bei jemandem bedanken: einer Person Danke sagen.",
     "type": "verb"
   },
   "BEDARF": {
@@ -1751,6 +1786,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Gästen oder Kunden etwas bringen; auch: ein Gerät benutzen.",
     "type": "verb"
   },
   "BEDIENUNGSANLEITUNG": {
@@ -1775,66 +1811,70 @@
     "levels": [
       "a2"
     ],
-    "type": "verb"
-  },
-  "BEEILT": {
-    "levels": [
-      "a2"
-    ],
+    "definition": "Sich beeilen: etwas schnell machen, um nicht zu spät zu sein.",
     "type": "verb"
   },
   "BEEINFLUSSEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Eine Wirkung auf jemanden oder etwas haben und es dadurch verändern.",
     "type": "verb"
   },
   "BEENDEN": {
     "levels": [
       "a2"
     ],
+    "definition": "Mit etwas aufhören; etwas zu Ende bringen.",
     "type": "verb"
   },
   "BEFASSEN": {
     "levels": [
       "b2"
     ],
+    "definition": "Sich mit etwas befassen: sich mit einem Thema genau beschäftigen.",
     "type": "verb"
   },
   "BEFINDEN": {
     "levels": [
       "b2"
     ],
+    "definition": "Sich an einem Ort befinden: an einem Ort sein.",
     "type": "verb"
   },
   "BEFRAGT": {
     "levels": [
       "b2"
     ],
+    "definition": "Von jemandem gefragt, zum Beispiel bei einer Umfrage oder vor Gericht.",
     "type": "adjective"
   },
   "BEFREIEN": {
     "levels": [
       "b2"
     ],
+    "definition": "Jemanden frei machen, zum Beispiel aus einem Gefängnis oder einer Gefahr.",
     "type": "verb"
   },
   "BEGABT": {
     "levels": [
       "b2"
     ],
+    "definition": "Mit besonderem Talent; etwas gut können, ohne viel zu lernen.",
     "type": "adjective"
   },
   "BEGEGNEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden zufällig treffen.",
     "type": "verb"
   },
   "BEGEHEN": {
     "levels": [
       "b2"
     ],
+    "definition": "Etwas Schlechtes tun, zum Beispiel einen Fehler oder ein Verbrechen.",
     "type": "verb"
   },
   "BEGINN": {
@@ -1857,18 +1897,14 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
-  },
-  "BEGONNEN": {
-    "levels": [
-      "a2"
-    ],
+    "definition": "Mit jemandem zusammen irgendwohin gehen.",
     "type": "verb"
   },
   "BEGRÜNDEN": {
     "levels": [
       "a2"
     ],
+    "definition": "Sagen, warum man etwas tut oder denkt.",
     "type": "verb"
   },
   "BEGRÜNDUNG": {
@@ -1884,24 +1920,28 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden bei der Ankunft willkommen heißen, z. B. mit „Hallo“.",
     "type": "verb"
   },
   "BEHALTEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas nicht abgeben, sondern weiter haben; sich etwas merken.",
     "type": "verb"
   },
   "BEHANDELN": {
     "levels": [
       "b1"
     ],
+    "definition": "Mit jemandem auf eine bestimmte Art umgehen; auch: einen Kranken versorgen.",
     "type": "verb"
   },
   "BEHAUPTEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas als wahr darstellen, ohne es zu beweisen.",
     "type": "verb"
   },
   "BEHÖRDE": {
@@ -1931,6 +1971,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Die zwei; alle zwei zusammen, nicht nur einer.",
     "type": "pronoun"
   },
   "BEIN": {
@@ -1955,6 +1996,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Mit den Zähnen in etwas hineindrücken.",
     "type": "verb"
   },
   "BEITRAG": {
@@ -1978,7 +2020,9 @@
       "a2"
     ],
     "definition": "Eine Person, die man kennt, aber nicht sehr gut.",
-    "type": "noun"
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
   },
   "BEKLAGEN": {
     "levels": [
@@ -1998,6 +2042,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Schwer auf etwas drücken; jemandem Sorgen oder Arbeit machen.",
     "type": "verb"
   },
   "BELEG": {
@@ -2013,18 +2058,21 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden mit Worten oder Taten kränken.",
     "type": "verb"
   },
   "BELIEBT": {
     "levels": [
       "b1"
     ],
+    "definition": "Von vielen Menschen gemocht.",
     "type": "adjective"
   },
   "BEMERKEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas sehen oder merken; auch: kurz etwas sagen.",
     "type": "verb"
   },
   "BEMÜHUNG": {
@@ -2049,6 +2097,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas brauchen, weil man es nicht entbehren kann.",
     "type": "verb"
   },
   "BENUTZEN": {
@@ -2071,12 +2120,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden oder etwas längere Zeit genau ansehen.",
     "type": "verb"
   },
   "BERATEN": {
     "levels": [
       "a2"
     ],
+    "definition": "Jemandem Tipps und Hilfe für eine Entscheidung geben.",
     "type": "verb"
   },
   "BERATUNG": {
@@ -2092,6 +2143,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Mit Zahlen ein Ergebnis ermitteln.",
     "type": "verb"
   },
   "BEREICH": {
@@ -2107,12 +2159,14 @@
     "levels": [
       "b2"
     ],
+    "definition": "Fertig vorbereitet; auch: willig, etwas zu tun.",
     "type": "adjective"
   },
   "BEREITEN": {
     "levels": [
       "b2"
     ],
+    "definition": "Etwas machen oder herstellen, zum Beispiel Essen; auch: Freude oder Probleme verursachen.",
     "type": "verb"
   },
   "BERG": {
@@ -2137,6 +2191,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Erzählen, was passiert ist; über etwas informieren.",
     "type": "verb"
   },
   "BERUF": {
@@ -2152,24 +2207,28 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden ruhiger machen; sich beruhigen: wieder ruhig werden.",
     "type": "verb"
   },
   "BERÜHMT": {
     "levels": [
       "a2"
     ],
+    "definition": "Sehr bekannt; viele Menschen kennen diese Person oder Sache.",
     "type": "adjective"
   },
   "BESCHÄDIGEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas kaputt machen oder ihm Schaden zufügen.",
     "type": "verb"
   },
   "BESCHÄFTIGEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Jemandem Arbeit geben; sich beschäftigen: sich mit etwas befassen.",
     "type": "verb"
   },
   "BESCHÄFTIGUNG": {
@@ -2194,36 +2253,28 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
-  },
-  "BESCHLOSSEN": {
-    "levels": [
-      "b1"
-    ],
+    "definition": "Nach Überlegung eine Entscheidung treffen.",
     "type": "verb"
   },
   "BESCHRÄNKEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas auf ein bestimmtes Maß begrenzen.",
     "type": "verb"
   },
   "BESCHREIBEN": {
     "levels": [
       "a2"
     ],
-    "type": "verb"
-  },
-  "BESCHRIEBEN": {
-    "levels": [
-      "a2"
-    ],
+    "definition": "Mit Worten sagen, wie etwas oder jemand aussieht oder ist.",
     "type": "verb"
   },
   "BESETZEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Einen Platz oder Ort belegen oder einnehmen.",
     "type": "verb"
   },
   "BESETZT": {
@@ -2244,18 +2295,21 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas als Eigentum haben.",
     "type": "verb"
   },
   "BESORGEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas kaufen oder holen und bringen.",
     "type": "verb"
   },
   "BESPRECHEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Gemeinsam über ein Thema reden.",
     "type": "verb"
   },
   "BESPRECHUNG": {
@@ -2266,12 +2320,6 @@
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "BESPROCHEN": {
-    "levels": [
-      "b1"
-    ],
-    "type": "verb"
   },
   "BESSER": {
     "levels": [
@@ -2289,16 +2337,11 @@
     "genus": "feminine",
     "article": "die"
   },
-  "BESTANDEN": {
-    "levels": [
-      "a2"
-    ],
-    "type": "verb"
-  },
   "BESTÄTIGEN": {
     "levels": [
       "a2"
     ],
+    "definition": "Sagen oder zeigen, dass etwas richtig oder sicher ist.",
     "type": "verb"
   },
   "BESTÄTIGUNG": {
@@ -2314,12 +2357,12 @@
     "levels": [
       "a2"
     ],
+    "definition": "Eine Prüfung schaffen; aus bestimmten Teilen gemacht sein.",
     "type": "verb"
   },
   "BESTELLEN": {
     "levels": [
-      "a1",
-      "a2"
+      "a1"
     ],
     "definition": "Etwas ordern; zum Beispiel Essen im Restaurant bestellen.",
     "type": "verb"
@@ -2328,18 +2371,21 @@
     "levels": [
       "a2"
     ],
-    "type": "verb"
+    "definition": "Am meisten gut; besser als alle anderen.",
+    "type": "adverb"
   },
   "BESTIMMT": {
     "levels": [
       "b2"
     ],
+    "definition": "Klar festgelegt; auch: sicher, ohne Zweifel.",
     "type": "adjective"
   },
   "BESTRAFEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Jemandem wegen eines Fehlers oder Verbrechens eine Strafe geben.",
     "type": "verb"
   },
   "BESUCH": {
@@ -2419,23 +2465,19 @@
     "genus": "masculine",
     "article": "der"
   },
-  "BETROGEN": {
-    "levels": [
-      "b1"
-    ],
-    "type": "verb"
-  },
   "BETRÜGEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden täuschen, um sich einen Vorteil zu verschaffen.",
     "type": "verb"
   },
   "BETRUNKEN": {
     "levels": [
       "b1"
     ],
-    "type": "verb"
+    "definition": "Zu viel Alkohol getrunken haben und deshalb nicht mehr klar sein.",
+    "type": "adjective"
   },
   "BETT": {
     "levels": [
@@ -2459,12 +2501,14 @@
     "levels": [
       "b2"
     ],
+    "definition": "Etwas behalten und schützen, damit es erhalten bleibt.",
     "type": "verb"
   },
   "BEWEGEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Die Lage oder Stelle von etwas ändern; sich bewegen: nicht still sein.",
     "type": "verb"
   },
   "BEWEGUNG": {
@@ -2489,6 +2533,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Zeigen, dass etwas wirklich wahr ist.",
+    "type": "verb"
+  },
+  "BEWERBEN": {
+    "levels": [
+      "a2"
+    ],
+    "definition": "Sich um eine Arbeitsstelle oder einen Platz bemühen.",
     "type": "verb"
   },
   "BEWERBUNG": {
@@ -2504,18 +2556,14 @@
     "levels": [
       "b2"
     ],
-    "type": "verb"
-  },
-  "BEWIESEN": {
-    "levels": [
-      "b1"
-    ],
+    "definition": "Sagen, wie gut oder schlecht etwas ist; eine Note geben.",
     "type": "verb"
   },
   "BEWIRKEN": {
     "levels": [
       "b2"
     ],
+    "definition": "Etwas zur Folge haben; eine Veränderung verursachen.",
     "type": "verb"
   },
   "BEWOHNER": {
@@ -2536,12 +2584,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "BEWORBEN": {
-    "levels": [
-      "a2"
-    ],
-    "type": "verb"
-  },
   "BEZAHLEN": {
     "levels": [
       "a1"
@@ -2553,6 +2595,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "In eine Wohnung einziehen; auch: etwas regelmäßig bekommen, zum Beispiel Geld.",
     "type": "verb"
   },
   "BEZIEHUNG": {
@@ -2595,6 +2638,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemandem etwas geben oder zur Verfügung stellen.",
     "type": "verb"
   },
   "BILD": {
@@ -2610,6 +2654,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Etwas formen oder entstehen lassen; auch: Wissen vermitteln.",
     "type": "verb"
   },
   "BILDSCHIRM": {
@@ -2641,6 +2686,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "Mit einem Band oder Seil fest verbinden; auch: jemanden verpflichten.",
     "type": "verb"
   },
   "BIOLOGIE": {
@@ -2711,6 +2757,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Die Farbe des Himmels bei schönem Wetter.",
     "type": "adjective"
   },
   "BLEIBEN": {
@@ -2742,18 +2789,21 @@
     "levels": [
       "b1"
     ],
+    "definition": "Bei einem Gewitter hell aufleuchten.",
     "type": "verb"
   },
   "BLOND": {
     "levels": [
       "a2"
     ],
+    "definition": "Mit hellen, gelblichen Haaren.",
     "type": "adjective"
   },
   "BLÜHEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Blüten haben; Pflanzen öffnen ihre Blumen.",
     "type": "verb"
   },
   "BLUME": {
@@ -2787,6 +2837,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Blut verlieren, z. B. aus einer Wunde.",
     "type": "verb"
   },
   "BODEN": {
@@ -2845,6 +2896,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Essen in einer Pfanne mit heißem Fett garen.",
     "type": "verb"
   },
   "BRAUCHEN": {
@@ -2858,12 +2910,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Die Farbe von Schokolade oder Erde.",
     "type": "adjective"
   },
   "BRECHEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas mit Kraft in Stücke teilen; auch: kaputtgehen.",
     "type": "verb"
   },
   "BREIT": {
@@ -2895,12 +2949,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Ein Fahrzeug langsamer machen oder anhalten.",
     "type": "verb"
   },
   "BRENNEN": {
     "levels": [
       "b1"
     ],
+    "definition": "In Flammen stehen; Feuer haben.",
     "type": "verb"
   },
   "BRIEF": {
@@ -2995,6 +3051,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "Sehr grausam und gewalttätig; ohne Rücksicht.",
     "type": "adjective"
   },
   "BUCH": {
@@ -3010,6 +3067,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Eine Reise, ein Zimmer oder einen Platz fest bestellen.",
     "type": "verb"
   },
   "BUCHHANDLUNG": {
@@ -3059,6 +3117,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Mit vielen verschiedenen Farben.",
     "type": "adjective"
   },
   "BURG": {
@@ -3405,12 +3464,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Einen Raum oder Gegenstand schön schmücken.",
     "type": "verb"
   },
   "DENKEN": {
     "levels": [
       "a2"
     ],
+    "definition": "Mit dem Kopf überlegen; eine Meinung haben.",
     "type": "verb"
   },
   "DENKMAL": {
@@ -3440,7 +3501,8 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
+    "definition": "Aus diesem Grund; darum, deshalb.",
+    "type": "adverb"
   },
   "DETAIL": {
     "levels": [
@@ -3465,7 +3527,9 @@
       "b1"
     ],
     "definition": "Eine Person, die aus Deutschland stammt.",
-    "type": "noun"
+    "type": "noun",
+    "genus": "masculine",
+    "article": "der"
   },
   "DIAGRAMM": {
     "levels": [
@@ -3514,6 +3578,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Mit viel Fett am Körper; nicht dünn.",
     "type": "adjective"
   },
   "DIEB": {
@@ -3529,6 +3594,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Für jemanden arbeiten; einen Zweck haben.",
     "type": "verb"
   },
   "DIENST": {
@@ -3578,6 +3644,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Ohne Umweg oder Pause; ohne eine Person dazwischen.",
     "type": "adjective"
   },
   "DISCO": {
@@ -3620,6 +3687,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Mit anderen über ein Thema sprechen und Meinungen austauschen.",
     "type": "verb"
   },
   "DISTANZ": {
@@ -3662,6 +3730,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Stärker als andere; bestimmend und vorherrschend.",
     "type": "adjective"
   },
   "DONNER": {
@@ -3677,12 +3746,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Bei einem Gewitter laut krachen.",
     "type": "verb"
   },
   "DOPPELT": {
     "levels": [
       "b1"
     ],
+    "definition": "Zweimal so viel; zweifach vorhanden.",
     "type": "adjective"
   },
   "DOPPELZIMMER": {
@@ -3732,6 +3803,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas im Kreis bewegen; sich drehen: sich um sich selbst bewegen.",
     "type": "verb"
   },
   "DREI": {
@@ -3745,13 +3817,15 @@
     "levels": [
       "a2"
     ],
+    "definition": "Sehr wichtig und eilig; muss sofort passieren.",
     "type": "adjective"
   },
   "DRINNEN": {
     "levels": [
       "a2"
     ],
-    "type": "verb"
+    "definition": "Im Haus oder in einem Raum; nicht draußen.",
+    "type": "adverb"
   },
   "DRITTEL": {
     "levels": [
@@ -3784,6 +3858,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Jemandem sagen, dass man ihm etwas Schlimmes tun wird.",
     "type": "verb"
   },
   "DROHUNG": {
@@ -3799,7 +3874,8 @@
     "levels": [
       "a2"
     ],
-    "type": "verb"
+    "definition": "Auf der anderen Seite; dort gegenüber.",
+    "type": "adverb"
   },
   "DRUCK": {
     "levels": [
@@ -3844,18 +3920,21 @@
     "levels": [
       "a2"
     ],
+    "definition": "Nicht klug; ohne viel Verstand.",
     "type": "adjective"
   },
   "DUNKEL": {
     "levels": [
       "a2"
     ],
+    "definition": "Ohne Licht oder mit wenig Licht; nicht hell.",
     "type": "adjective"
   },
   "DÜNN": {
     "levels": [
       "a2"
     ],
+    "definition": "Mit wenig Fett am Körper; schmal, nicht dick.",
     "type": "adjective"
   },
   "DURCH": {
@@ -3919,6 +3998,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden mit „du“ ansprechen.",
     "type": "verb"
   },
   "E-BOOK": {
@@ -3943,7 +4023,8 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
+    "definition": "Gerade eben, vor kurzer Zeit; auch: flach und ohne Hügel.",
+    "type": "adverb"
   },
   "EBENE": {
     "levels": [
@@ -3967,6 +4048,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Nicht wichtig; es macht keinen Unterschied.",
     "type": "adjective"
   },
   "EHE": {
@@ -3991,6 +4073,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Früher einmal gewesen, jetzt aber nicht mehr.",
     "type": "adjective"
   },
   "EHEMANN": {
@@ -4024,12 +4107,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Zu einer Person selbst gehörend.",
     "type": "adjective"
   },
   "EILEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Sich schnell bewegen, weil man wenig Zeit hat.",
     "type": "verb"
   },
   "EILIG": {
@@ -4059,6 +4144,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Ein Teil fest in etwas einsetzen, zum Beispiel eine Küche in eine Wohnung.",
     "type": "verb"
   },
   "EINBRECHER": {
@@ -4096,12 +4182,6 @@
     "type": "noun",
     "genus": "masculine",
     "article": "der"
-  },
-  "EINE": {
-    "levels": [
-      "b2"
-    ],
-    "type": "article"
   },
   "EINEN": {
     "levels": [
@@ -4166,6 +4246,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Ankommen, zum Beispiel Post; auch: eine Pflanze stirbt.",
     "type": "verb"
   },
   "EINHEIT": {
@@ -4181,12 +4262,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Derselben Meinung sein wie jemand anderes.",
     "type": "adjective"
   },
   "EINIGEN": {
     "levels": [
       "b2"
     ],
+    "definition": "Sich einigen: nach einem Gespräch zu derselben Meinung kommen.",
     "type": "verb"
   },
   "EINKAUFEN": {
@@ -4250,6 +4333,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Etwas in eine Tasche, einen Koffer oder in Papier tun.",
     "type": "verb"
   },
   "EINRICHTUNG": {
@@ -4265,6 +4349,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Allein und ohne Kontakt zu anderen Menschen; oft traurig darüber.",
     "type": "adjective"
   },
   "EINSATZ": {
@@ -4305,7 +4390,8 @@
     "levels": [
       "a2"
     ],
-    "type": "verb"
+    "definition": "Mit etwas zufrieden sein und Ja dazu sagen.",
+    "type": "adjective"
   },
   "EINWOHNER": {
     "levels": [
@@ -4338,12 +4424,14 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
+    "definition": "Jedes für sich, nicht zusammen.",
+    "type": "adjective"
   },
   "EINZELNE": {
     "levels": [
       "b2"
     ],
+    "definition": "Für sich allein, nicht zusammen mit anderen; nur wenige.",
     "type": "adjective"
   },
   "EINZELZIMMER": {
@@ -4359,12 +4447,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "In eine neue Wohnung gehen, um dort zu wohnen.",
     "type": "verb"
   },
   "EINZIG": {
     "levels": [
       "b2"
     ],
+    "definition": "Nur einmal vorhanden; es gibt kein anderes.",
     "type": "adjective"
   },
   "EIS": {
@@ -4416,6 +4506,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas bekommen; Gäste begrüßen und hereinlassen.",
     "type": "verb"
   },
   "EMPFÄNGER": {
@@ -4442,12 +4533,6 @@
     "type": "noun",
     "genus": "feminine",
     "article": "die"
-  },
-  "EMPFOHLEN": {
-    "levels": [
-      "a2"
-    ],
-    "type": "verb"
   },
   "ENDE": {
     "levels": [
@@ -4487,12 +4572,14 @@
     "levels": [
       "b2"
     ],
+    "definition": "Mit wenig Platz; nicht breit oder weit.",
     "type": "adjective"
   },
   "ENGLISCH": {
     "levels": [
       "b1"
     ],
+    "definition": "Zu England oder zur englischen Sprache gehörend.",
     "type": "adjective"
   },
   "ENKEL": {
@@ -4517,30 +4604,28 @@
     "levels": [
       "c1"
     ],
+    "definition": "Sehr groß oder sehr stark; außergewöhnlich viel.",
     "type": "adjective"
-  },
-  "ENSTEHEN": {
-    "levels": [
-      "b2"
-    ],
-    "type": "verb"
   },
   "ENTDECKEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas finden, das man vorher nicht kannte.",
     "type": "verb"
   },
   "ENTFERNEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas wegnehmen oder weg machen.",
     "type": "verb"
   },
   "ENTFERNT": {
     "levels": [
       "b1"
     ],
+    "definition": "Weit weg; in einiger Entfernung.",
     "type": "adjective"
   },
   "ENTFERNUNG": {
@@ -4556,18 +4641,21 @@
     "levels": [
       "b1"
     ],
+    "definition": "Auf jemanden zugehen; jemandem bei einem Wunsch nachgeben.",
     "type": "verb"
   },
   "ENTHALTEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas in sich haben, als Teil davon.",
     "type": "verb"
   },
   "ENTLASSEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Jemandem die Arbeit kündigen; jemanden gehen lassen, z. B. aus dem Krankenhaus.",
     "type": "verb"
   },
   "ENTLASSUNG": {
@@ -4583,6 +4671,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Sich nach Überlegung für eine Möglichkeit festlegen.",
     "type": "verb"
   },
   "ENTSCHEIDUNG": {
@@ -4594,29 +4683,18 @@
     "genus": "feminine",
     "article": "die"
   },
-  "ENTSCHIEDEN": {
-    "levels": [
-      "b1"
-    ],
-    "type": "verb"
-  },
   "ENTSCHLOSSEN": {
     "levels": [
       "b1"
     ],
-    "type": "verb"
+    "definition": "Fest bereit, etwas zu tun; ohne zu zögern.",
+    "type": "adjective"
   },
   "ENTSCHULDIGEN": {
     "levels": [
       "a1"
     ],
     "definition": "Um Verzeihung bitten; sagen, dass etwas leidtut.",
-    "type": "verb"
-  },
-  "ENTSCHULDIGT": {
-    "levels": [
-      "a2"
-    ],
     "type": "verb"
   },
   "ENTSCHULDIGUNG": {
@@ -4632,24 +4710,21 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
-  },
-  "ENTSTANDEN": {
-    "levels": [
-      "b1"
-    ],
+    "definition": "Müll oder alte Dinge richtig wegwerfen.",
     "type": "verb"
   },
   "ENTSTEHEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Neu anfangen zu existieren; sich bilden.",
     "type": "verb"
   },
   "ENTTÄUSCHEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Jemandes Hoffnung nicht erfüllen und ihn traurig machen.",
     "type": "verb"
   },
   "ENTTÄUSCHUNG": {
@@ -4665,6 +4740,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas Neues schaffen oder verbessern; sich entwickeln: wachsen, sich ändern.",
     "type": "verb"
   },
   "ENTWICKLUNG": {
@@ -4714,12 +4790,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Von etwas Neuem hören oder es mitgeteilt bekommen.",
     "type": "verb"
   },
   "ERFINDEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas ganz Neues ausdenken und herstellen.",
     "type": "verb"
   },
   "ERFINDUNG": {
@@ -4744,30 +4822,28 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas nötig machen; verlangen.",
     "type": "verb"
   },
   "ERFÜLLEN": {
     "levels": [
       "b1"
     ],
-    "type": "verb"
-  },
-  "ERFUNDEN": {
-    "levels": [
-      "b1"
-    ],
+    "definition": "Einen Wunsch oder eine Aufgabe wahr machen oder erledigen.",
     "type": "verb"
   },
   "ERGÄNZEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas hinzufügen, damit es vollständig wird.",
     "type": "verb"
   },
   "ERGEBEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Als Ergebnis haben; sich ergeben: als Folge entstehen.",
     "type": "verb"
   },
   "ERGEBNIS": {
@@ -4783,18 +4859,21 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas bekommen, z. B. einen Brief oder ein Geschenk.",
     "type": "verb"
   },
   "ERHEBEN": {
     "levels": [
       "b2"
     ],
+    "definition": "Etwas nach oben heben; auch: Geld oder Daten verlangen und sammeln.",
     "type": "verb"
   },
   "ERHÖHEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas höher oder größer machen, z. B. einen Preis.",
     "type": "verb"
   },
   "ERHÖHUNG": {
@@ -4819,12 +4898,7 @@
     "levels": [
       "a2"
     ],
-    "type": "verb"
-  },
-  "ERINNERT": {
-    "levels": [
-      "a2"
-    ],
+    "definition": "Etwas Vergangenes wieder im Kopf haben; sich erinnern.",
     "type": "verb"
   },
   "ERINNERUNG": {
@@ -4840,6 +4914,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Wissen, wer oder was etwas ist, wenn man es sieht.",
     "type": "verb"
   },
   "ERKLÄREN": {
@@ -4853,6 +4928,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Sich erkundigen: nach Informationen fragen.",
     "type": "verb"
   },
   "ERLAUBEN": {
@@ -4875,6 +4951,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas selbst mitmachen oder durchmachen.",
     "type": "verb"
   },
   "ERLEBNIS": {
@@ -4890,24 +4967,28 @@
     "levels": [
       "b1"
     ],
+    "definition": "Eine Aufgabe zu Ende machen.",
     "type": "verb"
   },
   "ERLEICHTERN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas einfacher oder leichter machen.",
     "type": "verb"
   },
   "ERLEIDEN": {
     "levels": [
       "b2"
     ],
+    "definition": "Etwas Schlimmes erleben müssen, zum Beispiel Schmerzen oder einen Verlust.",
     "type": "verb"
   },
   "ERLERNEN": {
     "levels": [
       "b2"
     ],
+    "definition": "Durch Üben eine Fähigkeit oder einen Beruf richtig beherrschen.",
     "type": "verb"
   },
   "ERMÄSSIGUNG": {
@@ -4923,6 +5004,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemandem Essen geben; sich ernähren: etwas Bestimmtes essen.",
     "type": "verb"
   },
   "ERNÄHRUNG": {
@@ -4938,6 +5020,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Nicht lustig; wichtig und schwer.",
     "type": "adjective"
   },
   "ERNTE": {
@@ -4953,6 +5036,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas zum ersten Mal öffnen, z. B. ein Geschäft.",
     "type": "verb"
   },
   "ERÖFFNUNG": {
@@ -4968,18 +5052,21 @@
     "levels": [
       "c1"
     ],
+    "definition": "Ein Thema gründlich besprechen und von allen Seiten betrachten.",
     "type": "verb"
   },
   "ERREGEN": {
     "levels": [
       "b2"
     ],
+    "definition": "Ein starkes Gefühl auslösen, zum Beispiel Aufmerksamkeit oder Ärger.",
     "type": "verb"
   },
   "ERREICHEN": {
     "levels": [
       "a2"
     ],
+    "definition": "An einem Ziel ankommen; ein Ziel schaffen.",
     "type": "verb"
   },
   "ERSATZ": {
@@ -4995,6 +5082,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas durch etwas anderes austauschen.",
     "type": "verb"
   },
   "ERST": {
@@ -5008,13 +5096,15 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas machen oder anfertigen, z. B. eine Liste.",
     "type": "verb"
   },
   "ERWACHSEN": {
     "levels": [
       "b1"
     ],
-    "type": "verb"
+    "definition": "Kein Kind mehr; vollständig groß geworden.",
+    "type": "adjective"
   },
   "ERWACHSENE": {
     "levels": [
@@ -5038,24 +5128,28 @@
     "levels": [
       "c1"
     ],
+    "definition": "Kurz genannt, ohne genauer darauf einzugehen.",
     "type": "adjective"
   },
   "ERWARTEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Glauben, dass etwas passiert; auf jemanden warten.",
     "type": "verb"
   },
   "ERWECKEN": {
     "levels": [
       "c1"
     ],
+    "definition": "Ein Gefühl oder einen Eindruck entstehen lassen.",
     "type": "verb"
   },
   "ERWEISEN": {
     "levels": [
       "c1"
     ],
+    "definition": "Sich als etwas erweisen: sich als etwas zeigen; auch: jemandem einen Dienst leisten.",
     "type": "verb"
   },
   "ERWERB": {
@@ -5071,6 +5165,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Etwas kaufen oder bekommen; auch: Wissen durch Lernen gewinnen.",
     "type": "verb"
   },
   "ERZÄHLEN": {
@@ -5093,6 +5188,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Einem Kind zeigen, wie es sich verhalten soll.",
     "type": "verb"
   },
   "ERZIEHUNG": {
@@ -5108,12 +5204,7 @@
     "levels": [
       "c1"
     ],
-    "type": "verb"
-  },
-  "ERZOGEN": {
-    "levels": [
-      "b1"
-    ],
+    "definition": "Ein Ergebnis oder Ziel erreichen, zum Beispiel ein Tor oder einen Gewinn.",
     "type": "verb"
   },
   "ES": {
@@ -5152,6 +5243,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "Die Moral betreffend; das, was richtig und gut ist.",
     "type": "adjective"
   },
   "EUER": {
@@ -5201,6 +5293,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Sehr stark; weit über dem Normalen.",
     "type": "adjective"
   },
   "FABRIK": {
@@ -5331,6 +5424,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Gerecht und ehrlich; nach den Regeln.",
     "type": "adjective"
   },
   "FAKT": {
@@ -5391,6 +5485,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Nach unten gehen, weil man den Halt verliert.",
     "type": "verb"
   },
   "FALSCH": {
@@ -5440,6 +5535,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas, das fliegt oder läuft, mit den Händen festhalten.",
     "type": "verb"
   },
   "FARBE": {
@@ -5455,18 +5551,21 @@
     "levels": [
       "b1"
     ],
+    "definition": "Mit der Hand nach etwas greifen und es halten.",
     "type": "verb"
   },
   "FAUL": {
     "levels": [
       "a2"
     ],
+    "definition": "Ohne Lust zu arbeiten; nicht fleißig.",
     "type": "adjective"
   },
   "FAULENZEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Nichts tun und sich ausruhen.",
     "type": "verb"
   },
   "FAX": {
@@ -5489,6 +5588,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "Nicht vorhanden, obwohl es da sein sollte.",
     "type": "adjective"
   },
   "FEHLER": {
@@ -5556,6 +5656,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Weit weg; nicht nah.",
     "type": "adjective"
   },
   "FERNBEDIENUNG": {
@@ -5596,6 +5697,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas oder jemanden gut halten, damit es nicht wegkommt.",
     "type": "verb"
   },
   "FESTPLATTE": {
@@ -5656,6 +5758,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Das Geld für etwas bezahlen oder besorgen.",
     "type": "verb"
   },
   "FINDEN": {
@@ -5696,6 +5799,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Gesund und mit viel Kraft, weil man Sport macht.",
     "type": "adjective"
   },
   "FLÄCHE": {
@@ -5738,12 +5842,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Viel und gern arbeitend; nicht faul.",
     "type": "adjective"
   },
   "FLEXIBEL": {
     "levels": [
       "b1"
     ],
+    "definition": "Leicht anpassungsfähig; nicht starr.",
     "type": "adjective"
   },
   "FLIEGEN": {
@@ -5757,18 +5863,21 @@
     "levels": [
       "b1"
     ],
+    "definition": "Vor einer Gefahr schnell weglaufen.",
     "type": "verb"
   },
   "FLIESSEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Sich als Flüssigkeit fortbewegen, wie Wasser in einem Fluss.",
     "type": "verb"
   },
   "FLIESSEND": {
     "levels": [
       "b1"
     ],
+    "definition": "Ohne Stocken und Fehler, z. B. eine Sprache sprechen.",
     "type": "adjective"
   },
   "FLUCHT": {
@@ -5854,18 +5963,21 @@
     "levels": [
       "b1"
     ],
+    "definition": "Als Nächstes kommend; danach stehend.",
     "type": "adjective"
   },
   "FORDERN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas mit Nachdruck verlangen.",
     "type": "verb"
   },
   "FÖRDERN": {
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden oder etwas unterstützen, damit es besser wird.",
     "type": "verb"
   },
   "FORDERUNG": {
@@ -5899,6 +6011,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Die äußere Form oder die Regeln betreffend; auch: offiziell und nicht locker.",
     "type": "adjective"
   },
   "FORMULAR": {
@@ -5986,6 +6099,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Mit einer Kamera oder dem Handy ein Bild machen.",
     "type": "verb"
   },
   "FRAGE": {
@@ -6008,6 +6122,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Unsicher; man weiß noch nicht, ob es stimmt oder passiert.",
     "type": "adjective"
   },
   "FRANZOSE": {
@@ -6064,6 +6179,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Von Tieren: Nahrung zu sich nehmen.",
     "type": "verb"
   },
   "FREUEN": {
@@ -6100,12 +6216,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "FREUT": {
-    "levels": [
-      "a2"
-    ],
-    "type": "verb"
-  },
   "FRIEDE": {
     "levels": [
       "b1"
@@ -6119,12 +6229,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Kälte spüren; auch: zu Eis werden.",
     "type": "verb"
   },
   "FRISCH": {
     "levels": [
       "a2"
     ],
+    "definition": "Neu und nicht alt; gerade erst gemacht oder geerntet.",
     "type": "adjective"
   },
   "FRIST": {
@@ -6158,6 +6270,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Am Anfang des Tages; vor der normalen Zeit.",
     "type": "adjective"
   },
   "FRÜHER": {
@@ -6196,24 +6309,21 @@
     "levels": [
       "b2"
     ],
+    "definition": "Teile zusammensetzen; sich fügen: tun, was andere wollen.",
     "type": "verb"
   },
   "FÜHLEN": {
     "levels": [
       "a2"
     ],
-    "type": "verb"
-  },
-  "FÜHLT": {
-    "levels": [
-      "a2"
-    ],
+    "definition": "Etwas mit dem Körper oder im Herzen merken; sich gut oder schlecht fühlen.",
     "type": "verb"
   },
   "FÜHREN": {
     "levels": [
       "b1"
     ],
+    "definition": "Jemandem den Weg zeigen; eine Gruppe oder Firma leiten.",
     "type": "verb"
   },
   "FÜHRERSCHEIN": {
@@ -6238,6 +6348,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas voll machen, z. B. ein Glas mit Wasser.",
     "type": "verb"
   },
   "FUNDBÜRO": {
@@ -6285,6 +6396,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Richtig arbeiten oder laufen, wie es soll.",
     "type": "verb"
   },
   "FÜR": {
@@ -6298,6 +6410,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Angst vor etwas oder jemandem haben.",
     "type": "verb"
   },
   "FUSS": {
@@ -6349,6 +6462,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Einem Tier oder Kind Essen geben.",
     "type": "verb"
   },
   "GABEL": {
@@ -6389,6 +6503,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "Vollständig, ohne dass etwas fehlt; alles von etwas.",
     "type": "adjective"
   },
   "GARAGE": {
@@ -6413,6 +6528,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Fest versprechen, dass etwas so ist oder geschieht.",
     "type": "verb"
   },
   "GARDEROBE": {
@@ -6516,6 +6632,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Mit viel Wissen und guter Schulbildung.",
     "type": "adjective"
   },
   "GEBIRGE": {
@@ -6635,6 +6752,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Passend für einen bestimmten Zweck oder eine Aufgabe.",
     "type": "adjective"
   },
   "GEFAHR": {
@@ -6675,6 +6793,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Schon vorhanden; bekannt und feststehend.",
     "type": "adjective"
   },
   "GEGEN": {
@@ -6765,12 +6884,14 @@
     "levels": [
       "b2"
     ],
+    "definition": "Das Denken und den Verstand betreffend, nicht den Körper.",
     "type": "adjective"
   },
   "GELB": {
     "levels": [
       "a2"
     ],
+    "definition": "Die Farbe von Zitronen oder der Sonne.",
     "type": "adjective"
   },
   "GELD": {
@@ -6795,12 +6916,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Gut ausgehen; so klappen, wie man es wollte.",
     "type": "verb"
   },
   "GELTEN": {
     "levels": [
       "b2"
     ],
+    "definition": "Gültig sein; auch: als etwas angesehen werden.",
     "type": "verb"
   },
   "GEMEINSCHAFT": {
@@ -6816,6 +6939,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Aus verschiedenen Teilen oder Arten zusammengesetzt.",
     "type": "adjective"
   },
   "GEMÜSE": {
@@ -6831,12 +6955,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Vorher schon erwähnt; mit einem bestimmten Namen bezeichnet.",
     "type": "adjective"
   },
   "GENAU": {
     "levels": [
       "b2"
     ],
+    "definition": "Ganz richtig und exakt; ohne Fehler.",
     "type": "adjective"
   },
   "GENERATION": {
@@ -6852,12 +6978,14 @@
     "levels": [
       "b2"
     ],
+    "definition": "Allgemein; für alle Fälle gültig.",
     "type": "adjective"
   },
   "GENÜGEND": {
     "levels": [
       "b2"
     ],
+    "definition": "So viel, wie man braucht; ausreichend.",
     "type": "adjective"
   },
   "GEÖFFNET": {
@@ -6896,12 +7024,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Ohne Absicht in eine Lage kommen, z. B. in Not.",
     "type": "verb"
   },
   "GERECHT": {
     "levels": [
       "c1"
     ],
+    "definition": "Fair; so, dass alle gleich behandelt werden.",
     "type": "adjective"
   },
   "GERICHT": {
@@ -6917,6 +7047,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Klein oder wenig; nicht groß oder wichtig.",
     "type": "adjective"
   },
   "GERN": {
@@ -6930,6 +7061,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "Ganz; alle Teile zusammen.",
     "type": "adjective"
   },
   "GESCHÄFT": {
@@ -7074,6 +7206,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Nicht krank; der Körper funktioniert gut.",
     "type": "adjective"
   },
   "GETRÄNK": {
@@ -7089,12 +7222,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Nicht zusammen; auseinander.",
     "type": "adjective"
   },
   "GEWÄHLT": {
     "levels": [
       "c1"
     ],
+    "definition": "Durch eine Wahl bestimmt; auch: sorgfältig und fein ausgedrückt.",
     "type": "adjective"
   },
   "GEWALT": {
@@ -7110,6 +7245,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "Sehr groß und mächtig; enorm.",
     "type": "adjective"
   },
   "GEWERKSCHAFT": {
@@ -7150,6 +7286,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Sicher und ohne Zweifel; alte Schreibweise von „gewiss“.",
     "type": "adjective"
   },
   "GEWISSEN": {
@@ -7183,6 +7320,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Bekannt und normal, weil man es oft erlebt hat.",
     "type": "adjective"
   },
   "GEWÜRZ": {
@@ -7198,6 +7336,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Flüssigkeit aus einem Gefäß laufen lassen; Pflanzen Wasser geben.",
     "type": "verb"
   },
   "GIFT": {
@@ -7254,12 +7393,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Genau so wie etwas anderes; nicht verschieden.",
     "type": "adjective"
   },
   "GLEICHEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Genau so wie etwas anderes; nicht verschieden.",
     "type": "adjective"
   },
   "GLEIS": {
@@ -7379,6 +7520,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Mit der Hand nach etwas fassen.",
     "type": "verb"
   },
   "GRENZE": {
@@ -7478,6 +7620,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas Neues schaffen, z. B. eine Firma oder einen Verein.",
     "type": "verb"
   },
   "GRUNDSTÜCK": {
@@ -7520,12 +7663,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Jemandem Hallo sagen, wenn man ihn trifft.",
     "type": "verb"
   },
   "GUCKEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Mit den Augen schauen; sehen.",
     "type": "verb"
   },
   "GÜLTIG": {
@@ -7587,6 +7732,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Eiskörner fallen vom Himmel.",
     "type": "verb"
   },
   "HÄHNCHEN": {
@@ -7602,12 +7748,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Einer von zwei gleichen Teilen; zur Hälfte.",
     "type": "adjective"
   },
   "HALBE": {
     "levels": [
       "a2"
     ],
+    "definition": "Ein Teil von zwei gleich großen Teilen.",
     "type": "adjective"
   },
   "HALBPENSION": {
@@ -7718,6 +7866,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas tun; auch: Waren kaufen und verkaufen.",
     "type": "verb"
   },
   "HÄNDLER": {
@@ -7778,6 +7927,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Etwas oben festmachen, sodass es nach unten zeigt; oben befestigt sein.",
     "type": "verb"
   },
   "HARMONIE": {
@@ -7793,18 +7943,21 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden oder etwas überhaupt nicht mögen.",
     "type": "verb"
   },
   "HÄSSLICH": {
     "levels": [
       "a2"
     ],
+    "definition": "Nicht schön; unangenehm anzusehen.",
     "type": "adjective"
   },
   "HÄUFIG": {
     "levels": [
       "b1"
     ],
+    "definition": "Oft; viele Male hintereinander.",
     "type": "adjective"
   },
   "HAUS": {
@@ -7892,6 +8045,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas von unten nach oben bewegen.",
     "type": "verb"
   },
   "HEFT": {
@@ -7907,6 +8061,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "Sehr stark und mit großer Kraft; auch: sehr emotional.",
     "type": "adjective"
   },
   "HEIM": {
@@ -7956,6 +8111,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Sehr warm.",
     "type": "adjective"
   },
   "HEISSEN": {
@@ -7969,12 +8125,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Einen Raum oder ein Haus warm machen.",
     "type": "verb"
   },
   "HEKTISCH": {
     "levels": [
       "c1"
     ],
+    "definition": "Voller Eile und Unruhe; ohne Ruhe.",
     "type": "adjective"
   },
   "HELD": {
@@ -8049,6 +8207,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Etwas machen oder produzieren, zum Beispiel in einer Fabrik.",
     "type": "verb"
   },
   "HERSTELLER": {
@@ -8087,6 +8246,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Zu heute oder zu unserer Zeit gehörend.",
     "type": "adjective"
   },
   "HIER": {
@@ -8134,6 +8294,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas zurücklassen, wenn man geht oder stirbt.",
     "type": "verb"
   },
   "HINWEIS": {
@@ -8201,6 +8362,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Wünschen und glauben, dass etwas Gutes passiert.",
     "type": "verb"
   },
   "HÖHE": {
@@ -8320,12 +8482,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Mit dem Auto ein lautes Warnsignal geben.",
     "type": "verb"
   },
   "HUSTEN": {
     "levels": [
       "a2"
     ],
+    "definition": "Plötzlich und laut Luft aus dem Hals stoßen, oft bei einer Erkältung.",
     "type": "verb"
   },
   "HUT": {
@@ -8357,6 +8521,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Perfekt passend; besser geht es nicht.",
     "type": "adjective"
   },
   "IDEE": {
@@ -8372,6 +8537,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Vom Gesetz verboten; nicht erlaubt.",
     "type": "adjective"
   },
   "IM": {
@@ -8408,6 +8574,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Nicht direkt; über einen Umweg oder eine andere Person.",
     "type": "adjective"
   },
   "INDUSTRIE": {
@@ -8441,6 +8608,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemandem Nachrichten oder Wissen geben; sich informieren: etwas herausfinden.",
     "type": "verb"
   },
   "INGENIEUR": {
@@ -8465,12 +8633,14 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
+    "definition": "Auf der inneren Seite; drinnen.",
+    "type": "adverb"
   },
   "INNER": {
     "levels": [
       "b2"
     ],
+    "definition": "Innen liegend; im Inneren von etwas.",
     "type": "adjective"
   },
   "INS": {
@@ -8502,6 +8672,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Ein Programm oder Gerät einrichten, damit es funktioniert.",
     "type": "verb"
   },
   "INSTITUT": {
@@ -8535,6 +8706,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden oder etwas in eine Gruppe oder ein Ganzes aufnehmen.",
     "type": "verb"
   },
   "INTELLIGENZ": {
@@ -8550,6 +8722,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Sehr stark und konzentriert; mit viel Kraft oder Zeit.",
     "type": "adjective"
   },
   "INTENSIVKURS": {
@@ -8599,12 +8772,14 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
+    "definition": "In der Zeit dazwischen; mittlerweile.",
+    "type": "adverb"
   },
   "ISOLIERT": {
     "levels": [
       "b2"
     ],
+    "definition": "Getrennt von anderen; allein und ohne Kontakt.",
     "type": "adjective"
   },
   "JA": {
@@ -8659,6 +8834,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Zu dem gerade genannten Fall oder der Person gehörend.",
     "type": "adjective"
   },
   "JOB": {
@@ -8789,6 +8965,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Mit niedriger Temperatur; nicht warm.",
     "type": "adjective"
   },
   "KÄLTE": {
@@ -8822,6 +8999,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Mit Kraft gegen jemanden oder für etwas eintreten.",
     "type": "verb"
   },
   "KANAL": {
@@ -9133,6 +9311,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Über etwas jammern; auch: vor Gericht gehen.",
     "type": "verb"
   },
   "KLANG": {
@@ -9148,6 +9327,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Gelingen; so funktionieren, wie man wollte.",
     "type": "verb"
   },
   "KLAR": {
@@ -9161,6 +9341,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Eine Frage oder ein Problem lösen.",
     "type": "verb"
   },
   "KLASSE": {
@@ -9185,6 +9366,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas mit Klebstoff fest an etwas machen.",
     "type": "verb"
   },
   "KLEID": {
@@ -9216,6 +9398,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Mit Händen und Füßen nach oben steigen.",
     "type": "verb"
   },
   "KLICK": {
@@ -9231,6 +9414,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Mit der Maus auf etwas am Bildschirm drücken.",
     "type": "verb"
   },
   "KLIMA": {
@@ -9255,12 +9439,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Eine Glocke oder Klingel ertönen lassen, z. B. an der Tür.",
     "type": "verb"
   },
   "KLINGEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Einen bestimmten Ton haben; sich so anhören.",
     "type": "verb"
   },
   "KLINIK": {
@@ -9276,6 +9462,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Mehrmals leicht gegen etwas schlagen, z. B. an die Tür.",
     "type": "verb"
   },
   "KLUB": {
@@ -9300,12 +9487,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Mit viel Verstand; intelligent.",
     "type": "adjective"
   },
   "KNAPP": {
     "levels": [
       "b2"
     ],
+    "definition": "Gerade noch genug; auch: kurz und ohne viele Worte.",
     "type": "adjective"
   },
   "KNEIPE": {
@@ -9389,6 +9578,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "In der Zukunft liegend; als Nächstes folgend.",
     "type": "adjective"
   },
   "KOMMUNIKATION": {
@@ -9404,6 +9594,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Ganz und vollständig; ohne dass etwas fehlt.",
     "type": "adjective"
   },
   "KOMPROMISS": {
@@ -9455,6 +9646,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Genau und klar; man kann es sich gut vorstellen.",
     "type": "adjective"
   },
   "KONKURRENZ": {
@@ -9486,6 +9678,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "Immer gleich bleibend; ohne Veränderung.",
     "type": "adjective"
   },
   "KONSULAT": {
@@ -9501,6 +9694,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Waren kaufen und verbrauchen.",
     "type": "verb"
   },
   "KONTAKT": {
@@ -9543,6 +9737,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Prüfen, ob etwas richtig oder in Ordnung ist.",
     "type": "verb"
   },
   "KONZEPT": {
@@ -9576,6 +9771,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas genau nachmachen oder vervielfältigen.",
     "type": "verb"
   },
   "KÖRPER": {
@@ -9591,6 +9787,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Richtig und ohne Fehler; auch: den Regeln entsprechend.",
     "type": "adjective"
   },
   "KOSTEN": {
@@ -9631,6 +9828,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Stark und mit viel Kraft.",
     "type": "adjective"
   },
   "KRAFTWERK": {
@@ -9786,12 +9984,14 @@
     "levels": [
       "c1"
     ],
+    "definition": "Genau prüfend und Fehler suchend; auch: gefährlich und schwierig.",
     "type": "adjective"
   },
   "KRITISIEREN": {
     "levels": [
       "b1"
     ],
+    "definition": "Sagen, was an jemandem oder etwas schlecht ist.",
     "type": "verb"
   },
   "KÜCHE": {
@@ -9825,6 +10025,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Ein bisschen kalt; nicht warm.",
     "type": "adjective"
   },
   "KÜHLSCHRANK": {
@@ -9859,12 +10060,6 @@
     "definition": "Sich um jemanden oder etwas sorgen.",
     "type": "verb"
   },
-  "KÜMMERT": {
-    "levels": [
-      "a2"
-    ],
-    "type": "verb"
-  },
   "KUNDE": {
     "levels": [
       "a1"
@@ -9878,6 +10073,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Einen Vertrag oder eine Arbeitsstelle beenden.",
     "type": "verb"
   },
   "KÜNDIGUNG": {
@@ -9893,6 +10089,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "In der Zukunft; von jetzt an.",
     "type": "adjective"
   },
   "KUNST": {
@@ -9960,6 +10157,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Vor kurzer Zeit; neulich.",
     "type": "adjective"
   },
   "KUSS": {
@@ -9975,6 +10173,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden mit den Lippen berühren, aus Liebe oder zum Gruß.",
     "type": "verb"
   },
   "KÜSTE": {
@@ -9990,6 +10189,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Freundlich die Mundwinkel nach oben ziehen.",
     "type": "verb"
   },
   "LACHEN": {
@@ -10048,6 +10248,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "Mit einem Flugzeug auf dem Boden ankommen; auch: irgendwo ankommen.",
     "type": "verb"
   },
   "LANDSCHAFT": {
@@ -10111,6 +10312,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden uninteressiert machen; sich langweilen: nichts Spannendes erleben.",
     "type": "verb"
   },
   "LÄRM": {
@@ -10208,12 +10410,14 @@
     "levels": [
       "b2"
     ],
+    "definition": "Am Leben; nicht tot.",
     "type": "adjective"
   },
   "LEBENDE": {
     "levels": [
       "c1"
     ],
+    "definition": "Am Leben; noch nicht gestorben.",
     "type": "adjective"
   },
   "LEBENDIG": {
@@ -10261,12 +10465,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Ohne Inhalt; nichts ist darin.",
     "type": "adjective"
   },
   "LEGAL": {
     "levels": [
       "b2"
     ],
+    "definition": "Vom Gesetz erlaubt; nach den geltenden Regeln.",
     "type": "adjective"
   },
   "LEGEN": {
@@ -10280,12 +10486,14 @@
     "levels": [
       "b2"
     ],
+    "definition": "Berechtigt und erlaubt; man kann es gut begründen.",
     "type": "adjective"
   },
   "LEHNEN": {
     "levels": [
       "b2"
     ],
+    "definition": "Etwas schräg an etwas stellen; sich an etwas lehnen: sich dagegen stützen.",
     "type": "verb"
   },
   "LEHRE": {
@@ -10342,6 +10550,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Schmerzen oder Kummer haben.",
     "type": "verb"
   },
   "LEIDER": {
@@ -10355,6 +10564,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Jemandem etwas für kurze Zeit geben; etwas für kurze Zeit bekommen.",
     "type": "verb"
   },
   "LEISE": {
@@ -10384,6 +10594,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Eine Gruppe oder Firma führen und Verantwortung haben.",
     "type": "verb"
   },
   "LEITER": {
@@ -10531,6 +10742,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Waren zu jemandem bringen.",
     "type": "verb"
   },
   "LIEGEN": {
@@ -10623,6 +10835,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemandem sagen, dass er etwas gut gemacht hat.",
     "type": "verb"
   },
   "LOCH": {
@@ -10647,6 +10860,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Klar und vernünftig gedacht; so, dass es Sinn ergibt.",
     "type": "adjective"
   },
   "LOHN": {
@@ -10662,6 +10876,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Sich lohnen: einen Nutzen bringen; die Mühe ist es wert.",
     "type": "verb"
   },
   "LÖHNEN": {
@@ -10684,12 +10899,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Ein Feuer ausmachen; auch: Daten oder Text entfernen.",
     "type": "verb"
   },
   "LÖSEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Für eine Aufgabe oder ein Problem die Antwort finden.",
     "type": "verb"
   },
   "LÖSUNG": {
@@ -10714,6 +10931,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Bewusst etwas Falsches sagen; nicht die Wahrheit sagen.",
     "type": "verb"
   },
   "LUST": {
@@ -10824,6 +11042,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Mit Farbe und Pinsel ein Bild machen.",
     "type": "verb"
   },
   "MAMA": {
@@ -10855,6 +11074,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Nicht ausreichend vorhanden; fehlend.",
     "type": "adjective"
   },
   "MANN": {
@@ -10931,6 +11151,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas mit einem Zeichen oder einer Farbe kennzeichnen.",
     "type": "verb"
   },
   "MARKT": {
@@ -11127,7 +11348,8 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
+    "definition": "Von mir aus; ich habe nichts dagegen.",
+    "type": "adverb"
   },
   "MEINUNG": {
     "levels": [
@@ -11142,12 +11364,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Fast immer; in den meisten Fällen.",
     "type": "adverb"
   },
   "MEISTEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Der größte Teil von etwas; fast alle.",
     "type": "adjective"
   },
   "MEISTER": {
@@ -11163,6 +11387,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemandem etwas mitteilen; sich bei einer Stelle anmelden.",
     "type": "verb"
   },
   "MELDUNG": {
@@ -11223,6 +11448,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Etwas bemerken; sich etwas im Kopf behalten.",
     "type": "verb"
   },
   "MERKMAL": {
@@ -11394,6 +11620,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Verschiedene Dinge zusammentun, sodass sie sich verbinden.",
     "type": "verb"
   },
   "MIT": {
@@ -11480,7 +11707,8 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
+    "definition": "Genau in der Mitte von etwas.",
+    "type": "adverb"
   },
   "MÖBEL": {
     "levels": [
@@ -11556,7 +11784,8 @@
     "levels": [
       "a2"
     ],
-    "type": "verb"
+    "definition": "Neu und passend zur heutigen Zeit; nicht alt.",
+    "type": "adjective"
   },
   "MÖGEN": {
     "levels": [
@@ -11698,6 +11927,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Gesprochen, nicht geschrieben.",
     "type": "adjective"
   },
   "MÜNZE": {
@@ -11896,6 +12126,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Stoff mit Nadel und Faden verbinden.",
     "type": "verb"
   },
   "NAHRUNGSMITTEL": {
@@ -11938,6 +12169,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Das ganze Land oder Volk betreffend.",
     "type": "adjective"
   },
   "NATUR": {
@@ -11962,7 +12194,8 @@
     "levels": [
       "a2"
     ],
-    "type": "verb"
+    "definition": "An der Seite von etwas; direkt daneben.",
+    "type": "preposition"
   },
   "NEFFE": {
     "levels": [
@@ -11984,6 +12217,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "Etwas schräg halten; zu etwas neigen: etwas oft tun oder haben.",
     "type": "verb"
   },
   "NEIGUNG": {
@@ -12002,16 +12236,11 @@
     "definition": "Wort, das Ablehnung oder Verneinung ausdrückt.",
     "type": "particle"
   },
-  "NEN": {
-    "levels": [
-      "b1"
-    ],
-    "type": "verb"
-  },
   "NENNEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Einen Namen sagen; jemandem oder etwas einen Namen geben.",
     "type": "verb"
   },
   "NERV": {
@@ -12027,12 +12256,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Unruhig und ein bisschen ängstlich.",
     "type": "adjective"
   },
   "NETT": {
     "levels": [
       "a2"
     ],
+    "definition": "Freundlich und angenehm zu anderen.",
     "type": "adjective"
   },
   "NETZ": {
@@ -12212,12 +12443,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Etwas aufschreiben, damit man es nicht vergisst.",
     "type": "verb"
   },
   "NÖTIG": {
     "levels": [
       "b1"
     ],
+    "definition": "So, dass man es unbedingt braucht.",
     "type": "adjective"
   },
   "NOTIZ": {
@@ -12258,24 +12491,28 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas für einen Zweck gebrauchen.",
     "type": "verb"
   },
   "NÜTZEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Einen Vorteil bringen; hilfreich sein.",
     "type": "verb"
   },
   "NÜTZLICH": {
     "levels": [
       "b1"
     ],
+    "definition": "So, dass es hilft und einen Vorteil bringt.",
     "type": "adjective"
   },
   "NUTZLOS": {
     "levels": [
       "b2"
     ],
+    "definition": "Ohne Nutzen; es hilft nicht.",
     "type": "adjective"
   },
   "OBEN": {
@@ -12305,6 +12542,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Nicht geschlossen; man kann hinein oder hinaus.",
     "type": "adjective"
   },
   "ÖFFNEN": {
@@ -12395,6 +12633,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Als Arzt den Körper öffnen, um eine Krankheit zu behandeln.",
     "type": "verb"
   },
   "OPFER": {
@@ -12410,6 +12649,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "So gut wie möglich; am besten.",
     "type": "adjective"
   },
   "ORANGE": {
@@ -12434,6 +12674,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Dinge an den richtigen Platz oder in eine Reihenfolge bringen.",
     "type": "verb"
   },
   "ORDNER": {
@@ -12458,6 +12699,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas planen und vorbereiten, damit es gut abläuft.",
     "type": "verb"
   },
   "ORIGINAL": {
@@ -12509,6 +12751,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Sachen in einen Koffer oder eine Tasche tun.",
     "type": "verb"
   },
   "PAKET": {
@@ -12551,12 +12794,14 @@
     "levels": [
       "c1"
     ],
+    "definition": "Scheinbar widersprüchlich; gegen die normale Logik.",
     "type": "adjective"
   },
   "PARALLEL": {
     "levels": [
       "b2"
     ],
+    "definition": "Neben etwas in gleichem Abstand; auch: zur gleichen Zeit.",
     "type": "adjective"
   },
   "PARFÜM": {
@@ -12581,6 +12826,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Ein Auto an einem Ort abstellen.",
     "type": "verb"
   },
   "PARTEI": {
@@ -12632,18 +12878,21 @@
     "levels": [
       "a2"
     ],
+    "definition": "Die richtige Größe haben; gut zu etwas oder jemandem gehören.",
     "type": "verb"
   },
   "PASSIEREN": {
     "levels": [
       "a2"
     ],
+    "definition": "Geschehen; sich ereignen.",
     "type": "verb"
   },
   "PASSIV": {
     "levels": [
       "c1"
     ],
+    "definition": "Nicht selbst handelnd; nur geschehen lassend.",
     "type": "adjective"
   },
   "PASSWORT": {
@@ -12686,6 +12935,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "So, dass man sich schämt und sich unwohl fühlt.",
     "type": "adjective"
   },
   "PENSION": {
@@ -12755,6 +13005,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Eine Pflanze oder einen Samen in die Erde setzen.",
     "type": "verb"
   },
   "PFLASTER": {
@@ -12788,6 +13039,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Sich um jemanden oder etwas kümmern, damit es gut geht.",
     "type": "verb"
   },
   "PFLEGER": {
@@ -12848,6 +13100,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Den Körper betreffend; körperlich.",
     "type": "adjective"
   },
   "PIZZA": {
@@ -12881,6 +13134,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Vorher überlegen, wie man etwas machen will.",
     "type": "verb"
   },
   "PLANUNG": {
@@ -12923,6 +13177,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "Wie ein Gedicht; schön und voller Gefühl ausgedrückt.",
     "type": "adjective"
   },
   "POLEN": {
@@ -12983,6 +13238,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Zu Polen, seinen Menschen oder seiner Sprache gehörend.",
     "type": "adjective"
   },
   "POMMES": {
@@ -12998,6 +13254,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Bei vielen Menschen sehr beliebt und bekannt.",
     "type": "adjective"
   },
   "PORTION": {
@@ -13022,12 +13279,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Gut, angenehm oder zustimmend; nicht negativ.",
     "type": "adjective"
   },
   "POSITIVE": {
     "levels": [
       "b2"
     ],
+    "definition": "Gut und erfreulich; auch: zustimmend.",
     "type": "adjective"
   },
   "POST": {
@@ -13052,6 +13311,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Einen starken Einfluss auf jemanden oder etwas haben.",
     "type": "verb"
   },
   "PRAKTIKUM": {
@@ -13076,6 +13336,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas vor anderen zeigen und vorstellen.",
     "type": "verb"
   },
   "PRAXIS": {
@@ -13091,6 +13352,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Sehr genau und exakt.",
     "type": "adjective"
   },
   "PREIS": {
@@ -13124,12 +13386,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Nur für eine Person oder Familie; nicht öffentlich.",
     "type": "adjective"
   },
   "PROBIEREN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas versuchen; Essen kosten, um den Geschmack zu prüfen.",
     "type": "verb"
   },
   "PROBLEM": {
@@ -13154,6 +13418,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Waren oder Dinge herstellen.",
     "type": "verb"
   },
   "PROFI": {
@@ -13223,6 +13488,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Laut sagen oder zeigen, dass man gegen etwas ist.",
     "type": "verb"
   },
   "PROZENT": {
@@ -13248,6 +13514,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Genau ansehen, ob etwas richtig oder in Ordnung ist.",
     "type": "verb"
   },
   "PRÜFUNG": {
@@ -13306,6 +13573,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Etwas sauber machen.",
     "type": "verb"
   },
   "QUAL": {
@@ -13411,6 +13679,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Sehr extrem; bis zum Äußersten gehend.",
     "type": "adjective"
   },
   "RADIO": {
@@ -13444,6 +13713,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Schnell; in kurzer Zeit.",
     "type": "adjective"
   },
   "RASEN": {
@@ -13486,6 +13756,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Eine Antwort sagen, ohne sie sicher zu wissen; jemandem einen Tipp geben.",
     "type": "verb"
   },
   "RATHAUS": {
@@ -13526,6 +13797,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Auf etwas antworten oder etwas als Antwort tun.",
     "type": "verb"
   },
   "REAKTION": {
@@ -13541,6 +13813,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Einen Plan in die Tat umsetzen; auch: etwas bemerken.",
     "type": "verb"
   },
   "REALITÄT": {
@@ -13574,6 +13847,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Mit Zahlen arbeiten, um ein Ergebnis zu finden.",
     "type": "verb"
   },
   "RECHNUNG": {
@@ -13589,7 +13863,8 @@
     "levels": [
       "a2"
     ],
-    "type": "adjective",
+    "definition": "Etwas, das man nach dem Gesetz tun oder bekommen darf.",
+    "type": "noun",
     "genus": "neuter",
     "article": "das"
   },
@@ -13613,12 +13888,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Mit anderen sprechen.",
     "type": "verb"
   },
   "REDUZIEREN": {
     "levels": [
       "b1"
     ],
+    "definition": "Kleiner oder weniger machen.",
     "type": "verb"
   },
   "REFERAT": {
@@ -13661,6 +13938,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas in Ordnung bringen oder festlegen, wie es läuft.",
     "type": "verb"
   },
   "REGELUNG": {
@@ -13694,6 +13972,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Eine bestimmte Gegend betreffend; aus der Gegend.",
     "type": "adjective"
   },
   "REGNEN": {
@@ -13707,18 +13986,21 @@
     "levels": [
       "a2"
     ],
+    "definition": "Mit viel Geld oder Besitz; nicht arm.",
     "type": "adjective"
   },
   "REICHEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Genug sein; auch: jemandem etwas geben.",
     "type": "verb"
   },
   "REIF": {
     "levels": [
       "b2"
     ],
+    "definition": "Fertig gewachsen und bereit zum Essen; auch: erwachsen und vernünftig.",
     "type": "adjective"
   },
   "REIFEN": {
@@ -13752,12 +14034,14 @@
     "levels": [
       "c1"
     ],
+    "definition": "Sauber und ohne Schmutz; auch: nicht gemischt.",
     "type": "adjective"
   },
   "REINIGEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas gründlich sauber machen.",
     "type": "verb"
   },
   "REINIGUNG": {
@@ -13816,6 +14100,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Auf einem Pferd sitzen und sich tragen lassen.",
     "type": "verb"
   },
   "REKLAME": {
@@ -13840,12 +14125,14 @@
     "levels": [
       "b2"
     ],
+    "definition": "Im Vergleich zu etwas anderem; ziemlich.",
     "type": "adjective"
   },
   "RELEVANT": {
     "levels": [
       "b2"
     ],
+    "definition": "Wichtig für eine bestimmte Sache.",
     "type": "adjective"
   },
   "RELIGION": {
@@ -13861,18 +14148,21 @@
     "levels": [
       "b2"
     ],
+    "definition": "Die Religion betreffend; an Gott glaubend.",
     "type": "adjective"
   },
   "RENNEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Sehr schnell laufen, so schnell man kann.",
     "type": "verb"
   },
   "RENOVIEREN": {
     "levels": [
       "a2"
     ],
+    "definition": "Eine Wohnung oder ein Haus neu machen, zum Beispiel streichen.",
     "type": "verb"
   },
   "RENTE": {
@@ -13940,6 +14230,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Einen Platz oder einen Tisch vorher bestellen.",
     "type": "verb"
   },
   "RESPEKT": {
@@ -13982,6 +14273,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden aus einer Gefahr holen.",
     "type": "verb"
   },
   "REZEPT": {
@@ -14006,6 +14298,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "Etwas in eine Richtung bringen; sich richten nach: sich an etwas orientieren.",
     "type": "verb"
   },
   "RICHTER": {
@@ -14053,6 +14346,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Sehr, sehr groß; viel größer als normal.",
     "type": "adjective"
   },
   "RIND": {
@@ -14122,6 +14416,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Die Farbe von Blut oder Tomaten.",
     "type": "adjective"
   },
   "RÜCKEN": {
@@ -14182,6 +14477,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Laut sprechen, damit jemand es hört oder kommt.",
     "type": "verb"
   },
   "RUFNUMMER": {
@@ -14328,6 +14624,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Dinge suchen und zusammentragen.",
     "type": "verb"
   },
   "SAND": {
@@ -14370,12 +14667,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Ohne Schmutz; nicht dreckig.",
     "type": "adjective"
   },
   "SAUER": {
     "levels": [
       "a2"
     ],
+    "definition": "Mit einem Geschmack wie Zitrone; auch: verärgert.",
     "type": "adjective"
   },
   "SCHACHTEL": {
@@ -14391,13 +14690,15 @@
     "levels": [
       "a2"
     ],
+    "definition": "Bedauerlich; man ist traurig, dass etwas nicht so ist.",
     "type": "adjective"
   },
   "SCHADEN": {
     "levels": [
       "b1"
     ],
-    "type": "verb",
+    "definition": "Etwas, das kaputt oder schlechter geworden ist; ein Verlust.",
+    "type": "noun",
     "genus": "masculine",
     "article": "der"
   },
@@ -14405,12 +14706,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Eine schwierige Aufgabe erfolgreich zu Ende bringen.",
     "type": "verb"
   },
   "SCHALTEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Ein Gerät an- oder ausmachen; im Auto den Gang wechseln.",
     "type": "verb"
   },
   "SCHALTER": {
@@ -14435,12 +14738,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Ungefähr sagen, wie viel etwas ist; auch: jemanden mögen.",
     "type": "verb"
   },
   "SCHAUEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Mit den Augen auf etwas sehen.",
     "type": "verb"
   },
   "SCHAUFENSTER": {
@@ -14499,6 +14804,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemandem etwas geben, ohne Geld dafür zu verlangen.",
     "type": "verb"
   },
   "SCHERE": {
@@ -14521,18 +14827,14 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
-  },
-  "SCHIEN": {
-    "levels": [
-      "b1"
-    ],
+    "definition": "Etwas mit Kraft vor sich her bewegen.",
     "type": "verb"
   },
   "SCHIESSEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Mit einer Waffe feuern; einen Ball kräftig treten.",
     "type": "verb"
   },
   "SCHIFF": {
@@ -14557,6 +14859,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Mit lauter Stimme sagen, dass man sich ärgert.",
     "type": "verb"
   },
   "SCHINKEN": {
@@ -14579,6 +14882,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden oder etwas mit der Hand oder einem Gegenstand treffen.",
     "type": "verb"
   },
   "SCHLANGE": {
@@ -14594,6 +14898,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Dünn und mit schöner Figur.",
     "type": "adjective"
   },
   "SCHLECHT": {
@@ -14614,6 +14919,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Sehr schlecht oder unangenehm.",
     "type": "adjective"
   },
   "SCHLOSS": {
@@ -14672,6 +14978,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Farbe ins Gesicht tun, um schöner auszusehen; sich schminken.",
     "type": "verb"
   },
   "SCHMUCK": {
@@ -14705,18 +15012,14 @@
     "levels": [
       "a2"
     ],
-    "type": "verb"
-  },
-  "SCHNEIDET": {
-    "levels": [
-      "a2"
-    ],
+    "definition": "Mit einem Messer oder einer Schere etwas teilen.",
     "type": "verb"
   },
   "SCHNEIEN": {
     "levels": [
       "a2"
     ],
+    "definition": "Wenn weiße, kalte Flocken vom Himmel fallen.",
     "type": "verb"
   },
   "SCHNELL": {
@@ -14796,6 +15099,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Sehr laut rufen oder rufen vor Angst oder Schmerz.",
     "type": "verb"
   },
   "SCHRIFT": {
@@ -14874,6 +15178,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Verantwortlich für etwas Schlechtes; auch: jemandem Geld zahlen müssen.",
     "type": "adjective"
   },
   "SCHULE": {
@@ -14925,6 +15230,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas schnell hin und her bewegen.",
     "type": "verb"
   },
   "SCHUTZ": {
@@ -14940,12 +15246,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Dafür sorgen, dass jemandem nichts passiert.",
     "type": "verb"
   },
   "SCHWACH": {
     "levels": [
       "b1"
     ],
+    "definition": "Mit wenig Kraft; nicht stark.",
     "type": "adjective"
   },
   "SCHWÄCHE": {
@@ -14970,12 +15278,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Die dunkelste Farbe, wie die Nacht.",
     "type": "adjective"
   },
   "SCHWEIGEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Nichts sagen; ruhig sein.",
     "type": "verb"
   },
   "SCHWER": {
@@ -15030,6 +15340,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Wasser über die Haut verlieren, weil einem heiß ist.",
     "type": "verb"
   },
   "SEE": {
@@ -15045,6 +15356,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Die Gefühle und die Psyche betreffend.",
     "type": "adjective"
   },
   "SEHEN": {
@@ -15129,12 +15441,14 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
+    "definition": "Nicht oft; nur manchmal.",
+    "type": "adverb"
   },
   "SELTSAM": {
     "levels": [
       "b1"
     ],
+    "definition": "Komisch und ungewöhnlich.",
     "type": "adjective"
   },
   "SEMESTER": {
@@ -15159,6 +15473,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas an jemanden schicken.",
     "type": "verb"
   },
   "SENDUNG": {
@@ -15183,12 +15498,14 @@
     "levels": [
       "c1"
     ],
+    "definition": "Etwas niedriger machen oder nach unten bewegen, zum Beispiel Preise.",
     "type": "verb"
   },
   "SEPARAT": {
     "levels": [
       "a2"
     ],
+    "definition": "Getrennt; für sich allein.",
     "type": "adjective"
   },
   "SERIE": {
@@ -15213,12 +15530,7 @@
     "levels": [
       "a2"
     ],
-    "type": "verb"
-  },
-  "SETZT": {
-    "levels": [
-      "a2"
-    ],
+    "definition": "Etwas oder jemanden an einen Ort bringen; sich hinsetzen.",
     "type": "verb"
   },
   "SICH": {
@@ -15232,6 +15544,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas schützen oder Daten speichern, damit nichts verloren geht.",
     "type": "verb"
   },
   "SICHT": {
@@ -15247,6 +15560,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "So, dass man es mit den Augen sehen kann.",
     "type": "adjective"
   },
   "SIE": {
@@ -15269,6 +15583,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "In einem Kampf oder Spiel der Beste sein; gewinnen.",
     "type": "verb"
   },
   "SIEGER": {
@@ -15293,6 +15608,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Mit der Stimme Musik machen; ein Lied machen.",
     "type": "verb"
   },
   "SINGLE": {
@@ -15308,6 +15624,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Nach unten gehen; weniger werden.",
     "type": "verb"
   },
   "SINN": {
@@ -15323,18 +15640,14 @@
     "levels": [
       "b2"
     ],
+    "definition": "Ohne Sinn oder Zweck; es bringt nichts.",
     "type": "adjective"
   },
   "SINNVOLL": {
     "levels": [
       "b1"
     ],
-    "type": "adjective"
-  },
-  "SINVOLL": {
-    "levels": [
-      "b2"
-    ],
+    "definition": "So, dass es Sinn ergibt und nützlich ist.",
     "type": "adjective"
   },
   "SITUATION": {
@@ -15441,7 +15754,8 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
+    "definition": "Verbindet zwei Aussagen nach einer Verneinung: nicht dies, aber das.",
+    "type": "conjunction"
   },
   "SONNE": {
     "levels": [
@@ -15456,6 +15770,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Mit viel Sonne; hell und warm.",
     "type": "adjective"
   },
   "SORGE": {
@@ -15471,6 +15786,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Sich um jemanden kümmern; sich sorgen: Angst um jemanden haben.",
     "type": "verb"
   },
   "SOUVENIR": {
@@ -15486,6 +15802,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Die Gesellschaft betreffend; auch: hilfsbereit gegenüber anderen.",
     "type": "adjective"
   },
   "SOZIALARBEITER": {
@@ -15510,18 +15827,21 @@
     "levels": [
       "b1"
     ],
+    "definition": "Aus Spanien oder zur Sprache Spaniens gehörend.",
     "type": "adjective"
   },
   "SPANNEND": {
     "levels": [
       "a2"
     ],
+    "definition": "So interessant, dass man wissen will, wie es weitergeht.",
     "type": "adjective"
   },
   "SPAREN": {
     "levels": [
       "a2"
     ],
+    "definition": "Geld nicht ausgeben, sondern behalten; wenig verbrauchen.",
     "type": "verb"
   },
   "SPASS": {
@@ -15560,6 +15880,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Daten auf einem Computer oder Handy sichern.",
     "type": "verb"
   },
   "SPEISEKARTE": {
@@ -15679,6 +16000,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Sich mit den Beinen kräftig vom Boden abdrücken.",
     "type": "verb"
   },
   "SPRITZE": {
@@ -15694,6 +16016,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Geschirr mit Wasser sauber machen.",
     "type": "verb"
   },
   "SPUR": {
@@ -15709,6 +16032,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas mit dem Körper oder mit den Gefühlen merken.",
     "type": "verb"
   },
   "STAAT": {
@@ -15742,6 +16066,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Von einem bestimmten Ort oder aus einer Zeit kommen.",
     "type": "verb"
   },
   "STAND": {
@@ -15766,6 +16091,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Immer wieder; ohne Pause.",
     "type": "adjective"
   },
   "STANDPUNKT": {
@@ -15790,6 +16116,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Mit viel Kraft; nicht schwach.",
     "type": "adjective"
   },
   "STÄRKE": {
@@ -15805,6 +16132,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Kräftiger oder fester machen.",
     "type": "verb"
   },
   "START": {
@@ -15820,6 +16148,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Mit etwas anfangen; ein Fahrzeug losfahren lassen.",
     "type": "verb"
   },
   "STATION": {
@@ -15871,12 +16200,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Den Boden mit einem elektrischen Gerät vom Staub befreien.",
     "type": "verb"
   },
   "STECHEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Mit etwas Spitzem in etwas hineindringen.",
     "type": "verb"
   },
   "STECKDOSE": {
@@ -15892,6 +16223,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas in eine Öffnung tun; irgendwo drin sein.",
     "type": "verb"
   },
   "STECKER": {
@@ -15914,12 +16246,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas nehmen, das einem nicht gehört.",
     "type": "verb"
   },
   "STEIGEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Nach oben gehen; höher oder mehr werden.",
     "type": "verb"
   },
   "STEIGERN": {
@@ -15976,6 +16310,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Aufhören zu leben; den Tod finden.",
     "type": "verb"
   },
   "STERN": {
@@ -16036,6 +16371,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Richtig sein; bei einer Wahl seine Meinung abgeben.",
     "type": "verb"
   },
   "STIMMUNG": {
@@ -16051,6 +16387,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Sehr schlecht riechen.",
     "type": "verb"
   },
   "STOCK": {
@@ -16075,24 +16412,28 @@
     "levels": [
       "b2"
     ],
+    "definition": "Froh und zufrieden über eine Leistung oder über jemanden.",
     "type": "adjective"
   },
   "STOPPEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Anhalten; etwas zum Stehen bringen.",
     "type": "verb"
   },
   "STÖREN": {
     "levels": [
       "a2"
     ],
+    "definition": "Jemanden bei etwas unterbrechen oder ärgern.",
     "type": "verb"
   },
   "STOSSEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden oder etwas kräftig schieben oder dagegen treffen.",
     "type": "verb"
   },
   "STRAFE": {
@@ -16108,6 +16449,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "Jemanden für ein falsches Verhalten büßen lassen.",
     "type": "verb"
   },
   "STRAFZETTEL": {
@@ -16150,6 +16492,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Sich sehr bemühen, ein Ziel zu erreichen.",
     "type": "verb"
   },
   "STRECKE": {
@@ -16174,6 +16517,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Als Protest gemeinsam nicht zur Arbeit gehen.",
     "type": "verb"
   },
   "STREIT": {
@@ -16196,6 +16540,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Mit klaren Regeln, die man genau befolgen muss.",
     "type": "adjective"
   },
   "STRESS": {
@@ -16326,12 +16671,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Plötzlich und heftig hinfallen.",
     "type": "verb"
   },
   "STÜTZEN": {
     "levels": [
       "b2"
     ],
+    "definition": "Etwas halten, damit es nicht fällt; auch: jemandem helfen.",
     "type": "verb"
   },
   "SUCHE": {
@@ -16408,12 +16755,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Auf einem Brett über Wellen fahren; im Internet Seiten ansehen.",
     "type": "verb"
   },
   "SÜSS": {
     "levels": [
       "a2"
     ],
+    "definition": "Mit dem Geschmack von Zucker; auch: niedlich.",
     "type": "adjective"
   },
   "SÜSSIGKEITEN": {
@@ -16508,6 +16857,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Jeden Tag.",
     "type": "adjective"
   },
   "TALENT": {
@@ -16611,6 +16961,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Aktiv; in einem Beruf oder Bereich arbeitend.",
     "type": "adjective"
   },
   "TÄTIGKEIT": {
@@ -16635,18 +16986,21 @@
     "levels": [
       "b1"
     ],
+    "definition": "Unter die Wasseroberfläche gehen und dort schwimmen.",
     "type": "verb"
   },
   "TAUSCHEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas geben und dafür etwas anderes bekommen.",
     "type": "verb"
   },
   "TAUSEND": {
     "levels": [
       "a2"
     ],
+    "definition": "Die Zahl 1000; zehnmal hundert.",
     "type": "numeral"
   },
   "TAXI": {
@@ -16707,6 +17061,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Etwas in Stücke trennen; anderen etwas von seinen Dingen geben.",
     "type": "verb"
   },
   "TEILNAHME": {
@@ -16855,6 +17210,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Ausprobieren, ob etwas funktioniert oder gut ist.",
     "type": "verb"
   },
   "TEUER": {
@@ -16931,6 +17287,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Weit nach unten gehend; nicht flach.",
     "type": "adjective"
   },
   "TIER": {
@@ -16964,6 +17321,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Auf einer Tastatur schreiben; leicht mit dem Finger berühren.",
     "type": "verb"
   },
   "TISCH": {
@@ -17006,6 +17364,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "So, dass man daran stirbt.",
     "type": "adjective"
   },
   "TOILETTE": {
@@ -17064,12 +17423,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Ganz und gar; völlig, vollständig.",
     "type": "adjective"
   },
   "TÖTEN": {
     "levels": [
       "c1"
     ],
+    "definition": "Ein Lebewesen sterben lassen; ihm das Leben nehmen.",
     "type": "verb"
   },
   "TOURISMUS": {
@@ -17103,6 +17464,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Etwas in der Hand oder auf dem Körper halten und mitnehmen; Kleidung anhaben.",
     "type": "verb"
   },
   "TRAINER": {
@@ -17127,12 +17489,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Regelmäßig üben, um besser oder fitter zu werden.",
     "type": "verb"
   },
   "TRAUEN": {
     "levels": [
       "c1"
     ],
+    "definition": "Jemandem vertrauen; sich trauen: den Mut haben, etwas zu tun.",
     "type": "verb"
   },
   "TRAUM": {
@@ -17148,6 +17512,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Im Schlaf Bilder und Geschichten sehen; sich etwas wünschen.",
     "type": "verb"
   },
   "TREFFEN": {
@@ -17170,6 +17535,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden oder etwas vor sich her bewegen; Sport machen.",
     "type": "verb"
   },
   "TREND": {
@@ -17185,6 +17551,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Dinge oder Menschen auseinander bringen; sich trennen: nicht mehr zusammen sein.",
     "type": "verb"
   },
   "TRENNUNG": {
@@ -17209,6 +17576,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Mit dem Fuß gegen etwas stoßen; einen Schritt machen.",
     "type": "verb"
   },
   "TRINKEN": {
@@ -17231,7 +17599,8 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
+    "definition": "Ohne Wasser oder Feuchtigkeit; nicht nass.",
+    "type": "adjective"
   },
   "TSCHÜSS": {
     "levels": [
@@ -17269,6 +17638,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "So, wie es für jemanden oder etwas normal und charakteristisch ist.",
     "type": "adjective"
   },
   "U-BAHN": {
@@ -17284,6 +17654,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Etwas oft machen, um es besser zu können.",
     "type": "verb"
   },
   "ÜBER": {
@@ -17297,25 +17668,29 @@
     "levels": [
       "b1"
     ],
+    "definition": "Mit einem Fahrzeug über jemanden oder etwas fahren.",
     "type": "verb"
   },
   "ÜBERHOLEN": {
     "levels": [
       "b1"
     ],
+    "definition": "An einem langsameren Fahrzeug vorbeifahren.",
     "type": "verb"
   },
   "ÜBERLEGEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Über etwas nachdenken, bevor man entscheidet.",
     "type": "verb"
   },
   "ÜBERMORGEN": {
     "levels": [
       "a2"
     ],
-    "type": "verb"
+    "definition": "Am Tag nach morgen; in zwei Tagen.",
+    "type": "adverb"
   },
   "ÜBERNACHTEN": {
     "levels": [
@@ -17337,24 +17712,28 @@
     "levels": [
       "b1"
     ],
+    "definition": "Noch einmal genau kontrollieren, ob etwas stimmt.",
     "type": "verb"
   },
   "ÜBERQUEREN": {
     "levels": [
       "b1"
     ],
+    "definition": "Von einer Seite auf die andere gehen, z. B. über eine Straße.",
     "type": "verb"
   },
   "ÜBERRASCHEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas Unerwartetes tun oder bringen.",
     "type": "verb"
   },
   "ÜBERREDEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden so lange bitten, bis er etwas tut.",
     "type": "verb"
   },
   "ÜBERSCHRIFT": {
@@ -17370,6 +17749,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Einen Text in eine andere Sprache bringen.",
     "type": "verb"
   },
   "ÜBERSETZER": {
@@ -17408,16 +17788,11 @@
     "genus": "feminine",
     "article": "die"
   },
-  "ÜBERTRIEBEN": {
+  "ÜBERTREIBEN": {
     "levels": [
       "b1"
     ],
-    "type": "verb"
-  },
-  "ÜBERÜBERTREIBEN": {
-    "levels": [
-      "b1"
-    ],
+    "definition": "Zu viel oder zu stark; mehr als normal.",
     "type": "verb"
   },
   "ÜBERWEISEN": {
@@ -17427,22 +17802,18 @@
     "definition": "Geld von einem Konto auf ein anderes Konto schicken.",
     "type": "verb"
   },
-  "ÜBERWIESEN": {
-    "levels": [
-      "a2"
-    ],
-    "type": "verb"
-  },
   "ÜBERZEUGEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Mit guten Gründen bewirken, dass jemand etwas glaubt.",
     "type": "verb"
   },
   "ÜBLICH": {
     "levels": [
       "b2"
     ],
+    "definition": "Normal und gewöhnlich; so, wie man es meistens macht.",
     "type": "adjective"
   },
   "ÜBUNG": {
@@ -17483,12 +17854,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Die Arme um jemanden legen.",
     "type": "verb"
   },
   "UMFASSEN": {
     "levels": [
       "b2"
     ],
+    "definition": "Etwas enthalten oder einschließen; auch: mit den Armen umschließen.",
     "type": "verb"
   },
   "UMFRAGE": {
@@ -17522,18 +17895,14 @@
     "levels": [
       "b2"
     ],
-    "type": "verb"
-  },
-  "UMGESTIEGEN": {
-    "levels": [
-      "a2"
-    ],
+    "definition": "Mit etwas umgehen: etwas auf eine bestimmte Art behandeln.",
     "type": "verb"
   },
   "UMGEZOGEN": {
     "levels": [
       "a2"
     ],
+    "definition": "In eine andere Wohnung gegangen; andere Kleidung angezogen.",
     "type": "verb"
   },
   "UMLEITUNG": {
@@ -17558,6 +17927,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Von einem Zug oder Bus in einen anderen wechseln.",
     "type": "verb"
   },
   "UMTAUSCH": {
@@ -17573,6 +17943,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Eine gekaufte Ware zurückgeben und etwas anderes dafür bekommen.",
     "type": "verb"
   },
   "UMWELT": {
@@ -17620,6 +17991,7 @@
     "levels": [
       "c1"
     ],
+    "definition": "Nicht in der Lage, etwas zu tun; ohne die nötigen Fähigkeiten.",
     "type": "adjective"
   },
   "UNFALL": {
@@ -17635,6 +18007,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Nicht genau, aber fast; etwa.",
     "type": "adjective"
   },
   "UNGLÜCK": {
@@ -17717,22 +18090,18 @@
     "definition": "Tiefer als etwas; an einer Stelle unterhalb.",
     "type": "preposition"
   },
-  "UNTERBROCHEN": {
+  "UNTERBRECHEN": {
     "levels": [
       "b1"
     ],
-    "type": "verb"
-  },
-  "UNTERHÄLT": {
-    "levels": [
-      "a2"
-    ],
+    "definition": "Gestoppt, bevor es zu Ende war; nicht fortgesetzt.",
     "type": "verb"
   },
   "UNTERHALTEN": {
     "levels": [
       "a2"
     ],
+    "definition": "Sich mit jemandem freundlich über etwas austauschen; miteinander sprechen.",
     "type": "verb"
   },
   "UNTERHALTUNG": {
@@ -17766,12 +18135,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas nicht tun; mit etwas aufhören.",
     "type": "verb"
   },
   "UNTERNEHMEN": {
     "levels": [
       "a2"
     ],
+    "definition": "Etwas tun oder machen, zum Beispiel einen Ausflug.",
     "type": "verb"
   },
   "UNTERNEHMER": {
@@ -17792,12 +18163,6 @@
     "genus": "feminine",
     "article": "die"
   },
-  "UNTERNOMMEN": {
-    "levels": [
-      "a2"
-    ],
-    "type": "verb"
-  },
   "UNTERRICHT": {
     "levels": [
       "a1"
@@ -17811,12 +18176,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Anderen etwas beibringen, z. B. in der Schule.",
     "type": "verb"
   },
   "UNTERSCHEIDEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Erkennen, was bei zwei Dingen anders ist.",
     "type": "verb"
   },
   "UNTERSCHIED": {
@@ -17828,23 +18195,11 @@
     "genus": "masculine",
     "article": "der"
   },
-  "UNTERSCHIEDEN": {
-    "levels": [
-      "b1"
-    ],
-    "type": "verb"
-  },
   "UNTERSCHREIBEN": {
     "levels": [
       "a1"
     ],
     "definition": "Seinen Namen unter ein Dokument schreiben.",
-    "type": "verb"
-  },
-  "UNTERSCHRIEBEN": {
-    "levels": [
-      "b1"
-    ],
     "type": "verb"
   },
   "UNTERSCHRIFT": {
@@ -17860,24 +18215,21 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
-  },
-  "UNTERSTRICHEN": {
-    "levels": [
-      "b1"
-    ],
+    "definition": "Einen Strich unter ein Wort ziehen; etwas betonen.",
     "type": "verb"
   },
   "UNTERSTÜTZEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Jemandem bei etwas helfen; für jemanden da sein.",
     "type": "verb"
   },
   "UNTERSUCHEN": {
     "levels": [
       "a2"
     ],
+    "definition": "Etwas genau prüfen; ein Arzt prüft den Körper.",
     "type": "verb"
   },
   "UNTERSUCHUNG": {
@@ -17893,6 +18245,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Zur Stadt gehörend; städtisch.",
     "type": "adjective"
   },
   "URKUNDE": {
@@ -17998,12 +18351,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Sagen, dass jemand etwas nicht tun darf.",
     "type": "verb"
   },
   "VERBINDEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Zwei Dinge zusammenbringen; eine Wunde mit Stoff bedecken.",
     "type": "verb"
   },
   "VERBOT": {
@@ -18026,6 +18381,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas benutzen, bis es weg ist.",
     "type": "verb"
   },
   "VERBRECHER": {
@@ -18050,12 +18406,7 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
-  },
-  "VERBUNDEN": {
-    "levels": [
-      "b1"
-    ],
+    "definition": "Zeit an einem Ort oder mit etwas zubringen.",
     "type": "verb"
   },
   "VERDACHT": {
@@ -18087,12 +18438,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Mit jemandem etwas fest ausmachen, zum Beispiel einen Termin.",
     "type": "verb"
   },
   "VERFÜGEN": {
     "levels": [
       "b2"
     ],
+    "definition": "Über etwas verfügen: etwas haben und benutzen können.",
     "type": "verb"
   },
   "VERGANGENHEIT": {
@@ -18108,36 +18461,35 @@
     "levels": [
       "b2"
     ],
+    "definition": "Vorbeigehen und zu Ende gehen, zum Beispiel Zeit oder Schmerzen.",
     "type": "verb"
   },
   "VERGESSEN": {
     "levels": [
       "a2"
     ],
+    "definition": "Etwas nicht mehr wissen oder nicht daran denken.",
     "type": "verb"
   },
   "VERGLEICHEN": {
     "levels": [
       "a2"
     ],
-    "type": "verb"
-  },
-  "VERGLICHEN": {
-    "levels": [
-      "a2"
-    ],
+    "definition": "Prüfen, was bei zwei Dingen gleich und was anders ist.",
     "type": "verb"
   },
   "VERGRÖSSERN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas größer machen oder erweitern.",
     "type": "verb"
   },
   "VERHAFTEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Als Polizei jemanden festnehmen.",
     "type": "verb"
   },
   "VERHALTEN": {
@@ -18169,6 +18521,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Dafür sorgen, dass etwas nicht passiert.",
     "type": "verb"
   },
   "VERKAUFEN": {
@@ -18236,31 +18589,36 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas deutlich fordern.",
     "type": "verb"
   },
   "VERLÄNGERN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas länger machen oder länger gelten lassen.",
     "type": "verb"
   },
   "VERLASSEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Von einem Ort oder einer Person weggehen.",
     "type": "verb"
   },
   "VERLETZEN": {
     "levels": [
       "a2"
     ],
+    "definition": "Jemandem oder sich wehtun, sodass eine Wunde entsteht.",
     "type": "verb"
   },
   "VERLETZT": {
     "levels": [
       "a2"
     ],
-    "type": "verb"
+    "definition": "Mit einer Wunde am Körper; nicht unversehrt.",
+    "type": "adjective"
   },
   "VERLETZUNG": {
     "levels": [
@@ -18275,18 +18633,21 @@
     "levels": [
       "a2"
     ],
+    "definition": "Sich verlieben: anfangen, eine Person sehr zu lieben.",
     "type": "verb"
   },
   "VERLIEBT": {
     "levels": [
       "a2"
     ],
-    "type": "verb"
+    "definition": "Voller Liebe zu einer anderen Person.",
+    "type": "adjective"
   },
   "VERLIEREN": {
     "levels": [
       "a2"
     ],
+    "definition": "Etwas nicht mehr finden; ein Spiel nicht gewinnen.",
     "type": "verb"
   },
   "VERLIERER": {
@@ -18311,7 +18672,8 @@
     "levels": [
       "a2"
     ],
-    "type": "verb"
+    "definition": "Nicht mehr da und nicht zu finden.",
+    "type": "adjective"
   },
   "VERLUST": {
     "levels": [
@@ -18326,12 +18688,7 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
-  },
-  "VERMIEDEN": {
-    "levels": [
-      "b1"
-    ],
+    "definition": "Etwas absichtlich nicht tun oder geschehen lassen.",
     "type": "verb"
   },
   "VERMIETEN": {
@@ -18372,6 +18729,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Traurig sein, weil jemand oder etwas fehlt.",
     "type": "verb"
   },
   "VERMITTLUNG": {
@@ -18396,42 +18754,49 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas glauben, ohne es sicher zu wissen.",
     "type": "verb"
   },
   "VERÖFFENTLICHEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas für alle zugänglich machen, z. B. drucken.",
     "type": "verb"
   },
   "VERPACKEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas in Papier oder eine Schachtel einpacken.",
     "type": "verb"
   },
   "VERPASSEN": {
     "levels": [
       "a2"
     ],
+    "definition": "Zu spät kommen und etwas nicht mehr bekommen, zum Beispiel den Bus.",
     "type": "verb"
   },
   "VERPFLEGEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Jemanden mit Essen und Trinken versorgen.",
     "type": "verb"
   },
   "VERRATEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Ein Geheimnis weitersagen; jemanden im Stich lassen.",
     "type": "verb"
   },
   "VERREISEN": {
     "levels": [
       "a2"
     ],
+    "definition": "Für eine Zeit an einen anderen Ort fahren.",
     "type": "verb"
   },
   "VERSAMMLUNG": {
@@ -18447,60 +18812,49 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas verpassen oder nicht rechtzeitig tun.",
     "type": "verb"
   },
   "VERSCHIEBEN": {
     "levels": [
       "a2"
     ],
+    "definition": "Etwas auf eine spätere Zeit legen; etwas an einen anderen Platz schieben.",
     "type": "verb"
   },
   "VERSCHIEDEN": {
     "levels": [
       "a2"
     ],
-    "type": "verb"
+    "definition": "Nicht gleich; anders als etwas anderes.",
+    "type": "adjective"
   },
   "VERSCHMUTZEN": {
     "levels": [
       "b1"
     ],
-    "type": "verb"
-  },
-  "VERSCHOBEN": {
-    "levels": [
-      "a2"
-    ],
+    "definition": "Etwas schmutzig machen.",
     "type": "verb"
   },
   "VERSCHREIBEN": {
     "levels": [
       "b1"
     ],
-    "type": "verb"
-  },
-  "VERSCHRIEBEN": {
-    "levels": [
-      "b1"
-    ],
+    "definition": "Als Arzt ein Medikament anordnen.",
     "type": "verb"
   },
   "VERSCHWINDEN": {
     "levels": [
       "b1"
     ],
-    "type": "verb"
-  },
-  "VERSCHWUNDEN": {
-    "levels": [
-      "b1"
-    ],
+    "definition": "Plötzlich nicht mehr zu sehen sein.",
     "type": "verb"
   },
   "VERSICHERN": {
     "levels": [
       "b1"
     ],
+    "definition": "Einen Vertrag gegen Schäden abschließen; fest zusagen.",
     "type": "verb"
   },
   "VERSPÄTUNG": {
@@ -18516,18 +18870,7 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
-  },
-  "VERSPROCHEN": {
-    "levels": [
-      "b1"
-    ],
-    "type": "verb"
-  },
-  "VERSTANDEN": {
-    "levels": [
-      "a2"
-    ],
+    "definition": "Jemandem fest sagen, dass man etwas tun wird.",
     "type": "verb"
   },
   "VERSTEHEN": {
@@ -18550,12 +18893,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Probieren, ob man etwas schafft.",
     "type": "verb"
   },
   "VERTEILEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas an mehrere Personen geben.",
     "type": "verb"
   },
   "VERTRAG": {
@@ -18571,18 +18916,21 @@
     "levels": [
       "b1"
     ],
+    "definition": "Fest glauben, dass jemand ehrlich und zuverlässig ist.",
     "type": "verb"
   },
   "VERTRAUT": {
     "levels": [
       "b1"
     ],
+    "definition": "Gut bekannt; so, dass man sich sicher fühlt.",
     "type": "adjective"
   },
   "VERTRETEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Für jemanden handeln oder seine Arbeit übernehmen.",
     "type": "verb"
   },
   "VERTRETUNG": {
@@ -18598,12 +18946,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Der Grund für etwas sein; etwas auslösen.",
     "type": "verb"
   },
   "VERURTEILEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Als Gericht eine Strafe bestimmen.",
     "type": "verb"
   },
   "VERWALTUNG": {
@@ -18628,30 +18978,35 @@
     "levels": [
       "b1"
     ],
+    "definition": "Zwei Dinge oder Personen irrtümlich für gleich halten.",
     "type": "verb"
   },
   "VERWENDEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas für einen bestimmten Zweck benutzen.",
     "type": "verb"
   },
   "VERZEIHEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Jemandem einen Fehler nicht mehr übel nehmen.",
     "type": "verb"
   },
   "VERZICHTEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Etwas freiwillig nicht nehmen oder nicht tun.",
     "type": "verb"
   },
   "VERZIEHEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Das Gesicht schief machen; sich verziehen: leise weggehen.",
     "type": "verb"
   },
   "VIDEO": {
@@ -18744,6 +19099,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Ganz gefüllt; es passt nichts mehr hinein.",
     "type": "adjective"
   },
   "VOLLEYBALL": {
@@ -18759,6 +19115,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Ganz und gar; vollständig.",
     "type": "adjective"
   },
   "VON": {
@@ -18788,6 +19145,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas im Voraus fertig machen.",
     "type": "verb"
   },
   "VORBEREITUNG": {
@@ -18830,7 +19188,8 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
+    "definition": "Am Tag vor gestern; vor zwei Tagen.",
+    "type": "adverb"
   },
   "VORHABEN": {
     "levels": [
@@ -18951,6 +19310,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Größer werden, z. B. als Kind oder Pflanze.",
     "type": "verb"
   },
   "WAFFE": {
@@ -18975,6 +19335,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Sich für etwas entscheiden; bei einer Wahl stimmen.",
     "type": "verb"
   },
   "WÄHLER": {
@@ -18990,6 +19351,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Richtig; so, wie es wirklich ist.",
     "type": "adjective"
   },
   "WAHRHEIT": {
@@ -19032,6 +19394,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Etwas verändern; sich wandeln: anders werden.",
     "type": "verb"
   },
   "WANDERN": {
@@ -19070,6 +19433,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Jemandem sagen, dass eine Gefahr droht.",
     "type": "verb"
   },
   "WARTEN": {
@@ -19140,12 +19504,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas durch etwas anderes ersetzen; ändern.",
     "type": "verb"
   },
   "WECKEN": {
     "levels": [
       "a2"
     ],
+    "definition": "Jemanden aus dem Schlaf holen.",
     "type": "verb"
   },
   "WEG": {
@@ -19161,7 +19527,8 @@
     "levels": [
       "a2"
     ],
-    "type": "verb"
+    "definition": "Aus diesem Grund; weil etwas so ist.",
+    "type": "preposition"
   },
   "WEH": {
     "levels": [
@@ -19190,6 +19557,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Tränen aus den Augen kommen lassen, weil man traurig ist.",
     "type": "verb"
   },
   "WEISE": {
@@ -19205,6 +19573,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Die Farbe von Schnee oder Milch.",
     "type": "adjective"
   },
   "WEIT": {
@@ -19243,6 +19612,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Auf der ganzen Erde; in allen Ländern.",
     "type": "adjective"
   },
   "WENDE": {
@@ -19258,6 +19628,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas auf die andere Seite drehen; umkehren.",
     "type": "verb"
   },
   "WENIG": {
@@ -19271,6 +19642,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Nicht so viel; eine kleinere Menge.",
     "type": "adverb"
   },
   "WER": {
@@ -19300,6 +19672,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Etwas mit Schwung durch die Luft fliegen lassen.",
     "type": "verb"
   },
   "WERK": {
@@ -19349,6 +19722,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Mit hohem Wert; viel Geld wert oder sehr nützlich.",
     "type": "adjective"
   },
   "WESEN": {
@@ -19382,6 +19756,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Um Geld oder etwas anderes sagen, was passieren wird.",
     "type": "verb"
   },
   "WETTER": {
@@ -19422,12 +19797,7 @@
     "levels": [
       "b1"
     ],
-    "type": "verb"
-  },
-  "WIDERSPROCHEN": {
-    "levels": [
-      "b1"
-    ],
+    "definition": "Sagen, dass man anderer Meinung ist.",
     "type": "verb"
   },
   "WIE": {
@@ -19475,6 +19845,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Das Gewicht von etwas feststellen; ein Gewicht haben.",
     "type": "verb"
   },
   "WIESE": {
@@ -19515,12 +19886,14 @@
     "levels": [
       "a2"
     ],
+    "definition": "Mit viel Wind.",
     "type": "adjective"
   },
   "WINKEN": {
     "levels": [
       "b1"
     ],
+    "definition": "Die Hand hin und her bewegen, um jemanden zu grüßen oder zu rufen.",
     "type": "verb"
   },
   "WINTER": {
@@ -19543,12 +19916,14 @@
     "levels": [
       "b1"
     ],
+    "definition": "Eine Wirkung haben; einen bestimmten Eindruck machen.",
     "type": "verb"
   },
   "WIRKLICH": {
     "levels": [
       "b2"
     ],
+    "definition": "Tatsächlich so; echt und nicht nur ausgedacht.",
     "type": "adjective"
   },
   "WIRKUNG": {
@@ -19784,6 +20159,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Etwas gern haben wollen; jemandem Gutes sagen.",
     "type": "verb"
   },
   "WÜRDE": {
@@ -19824,6 +20200,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Zahlen der Reihe nach nennen; feststellen, wie viele es sind.",
     "type": "verb"
   },
   "ZAHLUNG": {
@@ -19866,6 +20243,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Mit einem Stift ein Bild oder eine Form auf Papier machen.",
     "type": "verb"
   },
   "ZEIGEN": {
@@ -19897,6 +20275,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Die Zeit betreffend; in Bezug auf Dauer oder Zeitpunkt.",
     "type": "adjective"
   },
   "ZEITPUNKT": {
@@ -19948,6 +20327,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Im Zelt übernachten, zum Beispiel im Urlaub auf einem Campingplatz.",
     "type": "verb"
   },
   "ZENSUR": {
@@ -19972,6 +20352,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Etwas so kaputt machen, dass man es nicht mehr benutzen kann.",
     "type": "verb"
   },
   "ZERTIFIKAT": {
@@ -20005,6 +20386,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Etwas mit Kraft zu sich hin bewegen; auch: an einen anderen Wohnort gehen.",
     "type": "verb"
   },
   "ZIEL": {
@@ -20160,6 +20542,7 @@
     "levels": [
       "a2"
     ],
+    "definition": "Genau auf das achten, was jemand sagt.",
     "type": "verb"
   },
   "ZUHÖRER": {
@@ -20200,6 +20583,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Mehr oder größer werden; auch: schwerer werden.",
     "type": "verb"
   },
   "ZURÜCK": {
@@ -20245,6 +20629,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Aufmerksam sehen, was jemand anderes macht oder was passiert.",
     "type": "verb"
   },
   "ZUSCHAUER": {
@@ -20323,6 +20708,7 @@
     "levels": [
       "b1"
     ],
+    "definition": "Nicht sicher sein, ob etwas wahr oder richtig ist.",
     "type": "verb"
   },
   "ZWIEBEL": {
@@ -20338,6 +20724,7 @@
     "levels": [
       "b2"
     ],
+    "definition": "Jemanden mit Druck oder Gewalt dazu bringen, etwas zu tun.",
     "type": "verb"
   },
   "ZWISCHEN": {

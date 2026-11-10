@@ -6,16 +6,20 @@
     "definition": "Eine Person, die andere in rechtlichen Angelegenheiten vertritt und berät."
   },
   "ausüben": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Eine Tätigkeit oder einen Beruf machen; auch: Druck oder Einfluss wirken lassen."
   },
   "autonom": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Selbstständig und unabhängig; über sich selbst entscheidend."
   },
   "binden": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit einem Band oder Seil fest verbinden; auch: jemanden verpflichten."
   },
   "brutal": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Sehr grausam und gewalttätig; ohne Rücksicht."
   },
   "Dativ": {
     "type": "noun",
@@ -36,28 +40,36 @@
     "definition": "Der Gebrauch von Kraft, Mitteln oder Zeit für ein bestimmtes Ziel."
   },
   "enorm": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Sehr groß oder sehr stark; außergewöhnlich viel."
   },
   "erörtern": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Thema gründlich besprechen und von allen Seiten betrachten."
   },
   "erwähnt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Kurz genannt, ohne genauer darauf einzugehen."
   },
   "erwecken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Gefühl oder einen Eindruck entstehen lassen."
   },
   "erweisen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Sich als etwas erweisen: sich als etwas zeigen; auch: jemandem einen Dienst leisten."
   },
   "erzielen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Ergebnis oder Ziel erreichen, zum Beispiel ein Tor oder einen Gewinn."
   },
   "ethisch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Die Moral betreffend; das, was richtig und gut ist."
   },
   "fehlend": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht vorhanden, obwohl es da sein sollte."
   },
   "Funktion": {
     "type": "noun",
@@ -66,7 +78,8 @@
     "definition": "Die Aufgabe oder Wirkungsweise einer Sache oder Person."
   },
   "ganze": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Vollständig, ohne dass etwas fehlt; alles von etwas."
   },
   "Gebilde": {
     "type": "noun",
@@ -75,16 +88,20 @@
     "definition": "Etwas, das aus mehreren Teilen zu einer bestimmten Form zusammengesetzt ist."
   },
   "gerecht": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Fair; so, dass alle gleich behandelt werden."
   },
   "gesamt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Ganz; alle Teile zusammen."
   },
   "gewählt": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Durch eine Wahl bestimmt; auch: sorgfältig und fein ausgedrückt."
   },
   "gewaltig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Sehr groß und mächtig; enorm."
   },
   "Handlung": {
     "type": "noun",
@@ -93,10 +110,12 @@
     "definition": "Etwas, das jemand bewusst tut oder unternimmt."
   },
   "heftig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Sehr stark und mit großer Kraft; auch: sehr emotional."
   },
   "hektisch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Voller Eile und Unruhe; ohne Ruhe."
   },
   "Jura": {
     "type": "noun",
@@ -117,7 +136,8 @@
     "definition": "Ein tiefer Unterschied oder Abstand zwischen zwei Seiten."
   },
   "konstant": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Immer gleich bleibend; ohne Veränderung."
   },
   "Kontrast": {
     "type": "noun",
@@ -126,13 +146,16 @@
     "definition": "Ein auffälliger Unterschied zwischen zwei Dingen."
   },
   "kritisch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Genau prüfend und Fehler suchend; auch: gefährlich und schwierig."
   },
   "künftig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "In der Zukunft; von jetzt an."
   },
   "landen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Mit einem Flugzeug auf dem Boden ankommen; auch: irgendwo ankommen."
   },
   "Last": {
     "type": "noun",
@@ -141,7 +164,8 @@
     "definition": "Etwas Schweres, das getragen werden muss, oder eine große Belastung."
   },
   "lebende": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Am Leben; noch nicht gestorben."
   },
   "Menschen": {
     "type": "noun",
@@ -150,7 +174,8 @@
     "definition": "Plural von \"der Mensch\": Lebewesen mit Verstand, Sprache und Kultur."
   },
   "neigen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas schräg halten; zu etwas neigen: etwas oft tun oder haben."
   },
   "Neuzeit": {
     "type": "noun",
@@ -159,7 +184,8 @@
     "definition": "Die geschichtliche Epoche seit etwa dem fünfzehnten Jahrhundert bis heute."
   },
   "paradox": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Scheinbar widersprüchlich; gegen die normale Logik."
   },
   "Partei": {
     "definition": "Eine politische Gruppe mit gemeinsamen Zielen.",
@@ -168,7 +194,8 @@
     "article": "die"
   },
   "passiv": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht selbst handelnd; nur geschehen lassend."
   },
   "Patient": {
     "type": "noun",
@@ -183,7 +210,8 @@
     "definition": "Die Kunst, Gedichte zu schreiben, oder Dichtung im Allgemeinen."
   },
   "poetisch": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Wie ein Gedicht; schön und voller Gefühl ausgedrückt."
   },
   "Prinzip": {
     "type": "noun",
@@ -210,13 +238,16 @@
     "definition": "Eine verbindliche Vorschrift, die etwas ordnet oder festlegt."
   },
   "rein": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Sauber und ohne Schmutz; auch: nicht gemischt."
   },
   "richten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas in eine Richtung bringen; sich richten nach: sich an etwas orientieren."
   },
   "senken": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Etwas niedriger machen oder nach unten bewegen, zum Beispiel Preise."
   },
   "Single": {
     "type": "noun",
@@ -225,7 +256,8 @@
     "definition": "Eine Person, die ohne festen Partner lebt."
   },
   "strafen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemanden für ein falsches Verhalten büßen lassen."
   },
   "Strömung": {
     "type": "noun",
@@ -240,16 +272,20 @@
     "definition": "Das Zerlegen von etwas Ganzem in mehrere Teile."
   },
   "tödlich": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "So, dass man daran stirbt."
   },
   "töten": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Ein Lebewesen sterben lassen; ihm das Leben nehmen."
   },
   "trauen": {
-    "type": "verb"
+    "type": "verb",
+    "definition": "Jemandem vertrauen; sich trauen: den Mut haben, etwas zu tun."
   },
   "unfähig": {
-    "type": "adjective"
+    "type": "adjective",
+    "definition": "Nicht in der Lage, etwas zu tun; ohne die nötigen Fähigkeiten."
   },
   "Unrecht": {
     "type": "noun",
