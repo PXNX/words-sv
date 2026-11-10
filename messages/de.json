@@ -842,5 +842,7 @@
   "webgpu_short_failed": "Kein WebGPU",
   "group_game_best": "Neue Bestleistung auf der Gruppen-Tabelle: {score}!",
   "group_game_score": "{score} Punkte in dieser Runde",
-  "group_game_hint": "Deine beste Runde zählt auf der Bestenliste der Gruppe in Telegram."
+  "group_game_hint": "Deine beste Runde zählt auf der Bestenliste der Gruppe in Telegram.",
+  "cosmetic_hint_shop": "Gibt es im Laden.",
+  "cosmetic_from_shop": "Danke, dass du WordCircle unterstützt!"
 }

@@ -20,9 +20,9 @@ export const avatarChoices = {
   eyes: ['dots', 'big', 'lashes', 'tiny', 'sparkle', 'sleepy', 'almond', 'wink', 'starry'],
   nose: ['curve', 'button', 'round', 'pointy', 'wide', 'long', 'snub', 'heart', 'freckles'],
   hairStyle: ['short', 'curly', 'bob', 'bun', 'long', 'messy', 'spiky', 'mohawk', 'bald'],
-  hair: ['#15110e', '#3b2a20', '#7a4a2a', '#c4522e', '#e2c25a', '#d8d4cc', '#5b3a8a', '#3d6fd1', '#e86a9a', '#9fc6e8', '#2fae8f', '#ff7a3d'],
+  hair: ['#15110e', '#3b2a20', '#7a4a2a', '#c4522e', '#e2c25a', '#d8d4cc', '#5b3a8a', '#3d6fd1', '#e86a9a', '#9fc6e8', '#2fae8f', '#ff7a3d', '#39ff14', '#ff5e62', '#00ced1'],
   shirt: ['plain', 'stripes', 'checked', 'hoodie', 'shirt', 'blazer', 'cardigan', 'tshirt', 'waistcoat', 'tracht', 'overalls', 'tie', 'sweater', 'bowtie'],
-  top: ['#e6a527', '#d64b45', '#4b78c2', '#34824d', '#8a62b6', '#3f9a9c', '#172a45', '#fffdf7', '#f19a8a', '#d4af37', '#7fc8a9', '#7a2e4f', '#c0c6cf', '#2aabee'],
+  top: ['#e6a527', '#d64b45', '#4b78c2', '#34824d', '#8a62b6', '#3f9a9c', '#172a45', '#fffdf7', '#f19a8a', '#d4af37', '#7fc8a9', '#7a2e4f', '#c0c6cf', '#2aabee', '#98ff98', '#191970', '#b76e79'],
   extra: ['none', 'glasses', 'shades', 'beard', 'moustache', 'stubble', 'headphones', 'crown', 'monocle', 'tyrolean', 'pencil', 'kaiser', 'toque', 'straw', 'wizard', 'beret', 'star', 'party', 'laurel', 'mortarboard']
 } as const satisfies { [K in keyof Avatar]: readonly Avatar[K][] };
 
