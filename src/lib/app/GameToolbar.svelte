@@ -95,7 +95,7 @@
   :global(html.dark) .game-toolbar { background:rgba(23,42,69,.6); }
   .game-toolbar :global(svg) { width:1rem;height:1rem; }
   .game-tutorial { position:absolute;inset:0;z-index:110;display:flex;flex-direction:column;overflow:auto; }
-  .game-tutorial-close { position:absolute;z-index:2;top:max(32%, 4.5rem);inset-inline-end:.65rem; }
+  .game-tutorial-close { position:absolute;z-index:2;bottom:max(1rem, env(safe-area-inset-bottom));left:50%;translate:-50% 0; }
   .game-tutorial-close :global(svg) { width:1rem;height:1rem; }
 
   .game-sheet-layer { position:fixed;inset:0;z-index:120;display:flex;align-items:flex-end;justify-content:center; }
