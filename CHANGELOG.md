@@ -9,6 +9,19 @@ its one-line summary; the localised highlight shown in the app lives in the mess
 
 ## Unreleased
 
+## v1.3.0 - 2026-11-10
+
+New avatar parts to unlock, a language-focused progress page and automatic updates.
+
+### New
+- Draw three new face shapes, five eye styles and five noses
+- Unlock the new faces, eyes and noses with eight long-road achievements and per-language practice
+- Tag activity with its learning language
+- Focus the progress page on the selected learning language
+- Install updates automatically with a joyful Lilith instead of asking
+- Pick the unseen releases' features and fixes for the what's new sheet
+- Celebrate each update with a what's new sheet, confetti and a bouncing Lilith
+
 ## v1.2.0 - 2026-11-10
 
 Readiness per skill, FSRS scheduling and complete German definitions.
