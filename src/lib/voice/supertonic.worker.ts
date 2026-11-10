@@ -1,31 +1,58 @@
 /// <reference lib="webworker" />
-// Supertonic 2 text-to-speech, run entirely in this worker through transformers.js (WebGPU where
-// available, WebAssembly otherwise). The model (~260 MB) and voices download once from Hugging
-// Face and stay in the browser's cache. transformers.js is only ever imported here.
+// Supertonic text-to-speech (Supertone), run entirely in this worker through transformers.js: WebGPU
+// where the browser hands out an adapter, WebAssembly otherwise. Two models share the same three-graph
+// pipeline: Supertonic 2 (en, es, pt, fr) and Supertonic 3 (31 languages, every one the app teaches).
+// Each downloads once from Hugging Face and stays in the browser's cache. transformers.js is only
+// ever imported here.
 import { pipeline, type ProgressInfo, type TextToAudioPipeline } from '@huggingface/transformers';
 import { serveWorker, type Call } from '#lib/workers/protocol.js';
 
-// pipeline()'s generic return type is too large for TypeScript to resolve here; this is its TTS shape.
-const createPipeline = pipeline as unknown as (task: 'text-to-speech', model: string, options: { device: string; progress_callback: (info: ProgressInfo) => void }) => Promise<TextToAudioPipeline>;
+export type SupertonicModel = 'supertonic' | 'supertonic3';
 
-const MODEL_ID = 'onnx-community/Supertonic-TTS-2-ONNX';
-const VOICE_URL = `https://huggingface.co/${MODEL_ID}/resolve/main/voices`;
+type Dtype = string | Record<string, string>;
+// pipeline()'s generic return type is too large for TypeScript to resolve here; this is its TTS shape.
+const createPipeline = pipeline as unknown as (task: 'text-to-speech', model: string, options: { device: string; dtype?: Dtype; progress_callback: (info: ProgressInfo) => void }) => Promise<TextToAudioPipeline>;
+
+// The repository and precision of each model per backend. Supertonic 3's card: float16 on WebGPU
+// (~200 MB); on WebAssembly a q8 denoiser with float32 encoder and vocoder (same word error rate as
+// float32, 40 % less memory), since float16 would be upcast there; never a q8 vocoder (unintelligible).
+const MODELS: Record<SupertonicModel, { repo: string; webgpu?: Dtype; wasm?: Dtype }> = {
+  supertonic: { repo: 'onnx-community/Supertonic-TTS-2-ONNX' },
+  supertonic3: {
+    repo: 'open-world-group/Supertonic-3-ONNX',
+    webgpu: 'fp16',
+    wasm: { text_encoder: 'fp32', latent_denoiser: 'q8', voice_decoder: 'fp32' }
+  }
+};
 
 export type LoadProgress = { loaded: number; total: number };
 export type SupertonicProtocol = {
-  load: Call<object, void, LoadProgress>;
-  speak: Call<{ text: string; language: string; voice: string; speed: number }, { pcm: Float32Array; sampleRate: number }, LoadProgress>;
+  load: Call<{ model: SupertonicModel }, void, LoadProgress>;
+  speak: Call<{ model: SupertonicModel; text: string; language: string; voice: string; speed: number }, { pcm: Float32Array; sampleRate: number }, LoadProgress>;
 };
 
-let synthesizer: Promise<TextToAudioPipeline> | null = null;
+const synthesizers = new Map<SupertonicModel, Promise<TextToAudioPipeline>>();
 
-function load(onProgress: (progress: LoadProgress) => void) {
+// `navigator.gpu` alone is not enough: many browsers expose it without handing out an adapter.
+let gpu: Promise<boolean> | null = null;
+function hasWebGpu() {
+  const api = (self.navigator as Navigator & { gpu?: { requestAdapter: () => Promise<unknown> } }).gpu;
+  gpu ??= api ? api.requestAdapter().then(Boolean, () => false) : Promise.resolve(false);
+  return gpu;
+}
+
+function load(model: SupertonicModel, onProgress: (progress: LoadProgress) => void) {
+  let synthesizer = synthesizers.get(model);
+  if (synthesizer) return synthesizer;
   // Per-file byte counts, summed into one progress bar.
   const files = new Map<string, { loaded: number; total: number }>();
-  synthesizer ??= (async () => {
-    const hasGpu = 'gpu' in navigator;
-    return createPipeline('text-to-speech', MODEL_ID, {
-      device: hasGpu ? 'webgpu' : 'wasm',
+  synthesizer = (async () => {
+    const { repo, webgpu, wasm } = MODELS[model];
+    const device = (await hasWebGpu()) ? 'webgpu' : 'wasm';
+    const dtype = device === 'webgpu' ? webgpu : wasm;
+    return createPipeline('text-to-speech', repo, {
+      device,
+      ...(dtype ? { dtype } : {}),
       progress_callback: (info) => {
         if (info.status !== 'progress') return;
         files.set(info.file, { loaded: info.loaded, total: info.total });
@@ -36,18 +63,19 @@ function load(onProgress: (progress: LoadProgress) => void) {
       }
     });
   })();
-  synthesizer.catch(() => { synthesizer = null; });
+  synthesizers.set(model, synthesizer);
+  synthesizer.catch(() => synthesizers.delete(model));
   return synthesizer;
 }
 
 serveWorker<SupertonicProtocol>(self, {
-  async load(_, { update }) {
-    await load(update);
+  async load({ model }, { update }) {
+    await load(model, update);
   },
-  async speak({ text, language, voice, speed }, { update, transfer }) {
-    const tts = await load(update);
+  async speak({ model, text, language, voice, speed }, { update, transfer }) {
+    const tts = await load(model, update);
     const output = await tts(`<${language}>${text}</${language}>`, {
-      speaker_embeddings: `${VOICE_URL}/${voice}.bin`,
+      speaker_embeddings: `https://huggingface.co/${MODELS[model].repo}/resolve/main/voices/${voice}.bin`,
       num_inference_steps: 5,
       speed
     });

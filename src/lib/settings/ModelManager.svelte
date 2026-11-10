@@ -41,11 +41,13 @@
     natural: () => m.voice_quality_natural({}, { locale }),
     recorded: () => m.voice_quality_recorded({}, { locale }),
     supertonic: () => m.voice_quality_supertonic({}, { locale }),
+    supertonic3: () => voiceEngines.supertonic3.name,
     edge: () => 'Edge'
   };
   const groupNames: Record<StoredGroup, () => string> = {
     piper: () => m.models_group_piper({}, { locale }),
     supertonic: () => m.voice_quality_supertonic({}, { locale }),
+    supertonic3: () => voiceEngines.supertonic3.name,
     conversation: () => m.models_conversation({}, { locale }),
     wordAudio: () => m.models_group_word_audio({}, { locale }),
     listening: () => m.models_group_listening({}, { locale })
@@ -61,7 +63,7 @@
   const engine = $derived(activeEngine(lang));
   const voiceStatus = $derived(naturalReady(lang) ? 'ready' : naturalState.status[lang] ?? 'idle');
   const voicesSupported = $derived(typeof window !== 'undefined' && naturalSupported());
-  const voiceGroups: Partial<Record<VoiceEngineId, StoredGroup>> = { natural: 'piper', recorded: 'piper', supertonic: 'supertonic' };
+  const voiceGroups: Partial<Record<VoiceEngineId, StoredGroup>> = { natural: 'piper', recorded: 'piper', supertonic: 'supertonic', supertonic3: 'supertonic3' };
   // Engines that can speak the learning language on this device, plus the chosen one in any case.
   const voiceChoices = $derived(voiceEngineIds.filter((id) => id === settings.voiceQuality || (speaksLanguage(id, lang) && (!voiceEngines[id].webgpu || deviceAbilities().webgpu))));
   const voiceDownloadMB = (id: VoiceEngineId) => (voiceEngines[id].megabytes ?? (voiceGroups[id] === 'piper' ? piperMegabytes(lang) : 0));
@@ -71,6 +73,7 @@
     if (id === 'standard') return m.voice_quality_standard_hint({}, { locale });
     if (id === 'recorded') return m.voice_quality_recorded_hint({}, { locale });
     if (id === 'supertonic') return m.voice_quality_supertonic_hint({ size }, { locale });
+    if (id === 'supertonic3') return m.voice_quality_supertonic3_hint({ size }, { locale });
     if (id === 'edge') return m.voice_quality_edge_hint({}, { locale });
     return m.voice_quality_natural_hint({ size }, { locale });
   }
@@ -143,8 +146,8 @@
     if (confirming !== group) { confirming = group; return; }
     confirming = null;
     // Stop whatever uses the files before they go, so nothing reads half-deleted data.
-    if (group === 'piper' || group === 'supertonic') unloadNaturalVoices();
-    if (group === 'supertonic') unloadSupertonic();
+    if (group === 'piper' || group === 'supertonic' || group === 'supertonic3') unloadNaturalVoices();
+    if (group === 'supertonic' || group === 'supertonic3') unloadSupertonic();
     if (group === 'conversation') unloadLocalModel();
     if (group === 'wordAudio') forgetWordAudio();
     await deleteGroup(group);

@@ -10,6 +10,7 @@
  *   natural    – Piper neural voices, generated on the device in static/voices/piper-worker.js.
  *   recorded   – pre-recorded Piper clips for the cast's reference lines, live Piper for the rest.
  *   supertonic – Supertonic 2 (Supertone), generated on the device in voice/supertonic.worker.ts.
+ *   supertonic3 – Supertonic 3, the same worker: every language the app teaches, ten voices.
  *   edge       – Microsoft's Edge neural voices over the network (the only engine that is not local).
  *
  * Not wired in: see "Not wired in" in docs/voice-engines.md.
@@ -20,7 +21,7 @@
  */
 import type { Language } from '#lib/data/vocabulary.js';
 
-export type VoiceEngineId = 'standard' | 'natural' | 'recorded' | 'supertonic' | 'edge';
+export type VoiceEngineId = 'standard' | 'natural' | 'recorded' | 'supertonic' | 'supertonic3' | 'edge';
 
 export type VoiceGender = 'female' | 'male';
 
@@ -93,6 +94,13 @@ export const voiceEngines: Record<VoiceEngineId, VoiceEngine> = {
   supertonic: {
     id: 'supertonic', name: 'Supertonic 2', runtime: 'model', onDevice: true, clips: true, languages: ['en', 'es', 'pt', 'fr'], fallback: 'natural',
     tier: 'medium', megabytes: 260, memoryMB: 450, model: 'onnx-community/Supertonic-TTS-2-ONNX', licence: 'OpenRAIL-M', voices: supertonicVoices
+  },
+  // Repackaged for transformers.js from Supertone's archived release (weights unchanged). float16 on
+  // WebGPU; on WebAssembly a q8 denoiser with float32 encoder and vocoder (see supertonic.worker.ts).
+  supertonic3: {
+    id: 'supertonic3', name: 'Supertonic 3', runtime: 'model', onDevice: true, clips: true, languages: 'all', fallback: 'natural',
+    tier: 'medium', megabytes: 205, memoryMB: 350, wasm: { megabytes: 210, memoryMB: 420 },
+    model: 'open-world-group/Supertonic-3-ONNX', licence: 'OpenRAIL-M', voices: supertonicVoices
   },
   edge: { id: 'edge', name: 'Edge', runtime: 'network', onDevice: false, clips: true, languages: 'all', fallback: 'natural' }
 };
