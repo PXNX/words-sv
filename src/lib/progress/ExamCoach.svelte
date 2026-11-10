@@ -14,12 +14,11 @@
   import { labelKeys, type FeatureKey } from '#lib/grammar/taxonomy.js';
   import { dueReviewCount } from '#lib/review/ledger.js';
   import { readDueVocabulary, readLevelStates } from '#lib/vocab/spacedRepetition.js';
-  import SelectMenu from '#lib/settings/SelectMenu.svelte';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import { readEvents } from './eventLog.js';
   import { featureStats, type LearningEvent } from './events.js';
   import { buildOverview } from './overview.js';
-  import { EXAM_NAMES, examReadiness, forecastWeeks, isExamId, readinessPercent, type ReadinessRange } from './skillState.js';
+  import { forecastWeeks, readinessPercent, type ReadinessRange } from './skillState.js';
   import { storeSnapshot, weeklySeries, type MasterySnapshot } from './masteryHistory.js';
   import IconArrow from '~icons/material-symbols/arrow-forward-rounded';
   import IconQuiz from '~icons/material-symbols/fact-check-rounded';
@@ -44,11 +43,10 @@
     levels: Object.fromEntries(LEVELS.map((level) => [level, readLevelStates(settings.lang, level)])),
     events,
     level: settings.vocabularyLevel,
-    exam: settings.targetExam,
     now: Date.now()
   }));
-  // Without a target exam, readiness for the current level weighs all six skills equally.
-  const headline = $derived<ReadinessRange>(overview.exam ?? examReadiness(overview.skills, Object.fromEntries(SKILLS.map((skill) => [skill, 1 / SKILLS.length]))));
+  // Readiness for the current level, all six skills weighed equally.
+  const headline = $derived<ReadinessRange>(overview.readiness);
   const percent = $derived(readinessPercent(headline));
   const practised = $derived(SKILLS.some((skill) => overview.skills[skill].attempts > 0));
 
@@ -87,7 +85,6 @@
   // Up to three concrete next steps: the weakest practised skill, the weakest grammar feature and due words.
   const weakestSkill = $derived(SKILLS.filter((skill) => overview.skills[skill].attempts >= 5).sort((a, b) => overview.skills[a].point - overview.skills[b].point)[0]);
   const weakFeature = $derived(featureStats(events, Date.now() - 30 * DAY_MS).find((stat) => stat.accuracy < 0.7));
-  const examOptions = $derived([{ value: '', label: m.target_exam_none({}, locale) }, ...Object.entries(EXAM_NAMES).map(([value, label]) => ({ value, label }))]);
 </script>
 
 <!-- Hero: how ready, for what, and the next step to find out for sure -->
@@ -103,16 +100,13 @@
     </div>
     <div class="coach-hero-text">
       <p class="coach-kicker">{m.coach_title({}, locale)}</p>
-      <h2 id="coach-title">{overview.exam ? m.readiness_exam({ exam: EXAM_NAMES[overview.exam.id] }, locale) : m.coach_ready_level({ level: settings.vocabularyLevel.toUpperCase() }, locale)}</h2>
+      <h2 id="coach-title">{m.coach_ready_level({ level: settings.vocabularyLevel.toUpperCase() }, locale)}</h2>
       <p class="coach-sub">{practised ? m.readiness_known_words({ count: number(overview.knownWords) }, locale) : m.coach_no_data({}, locale)}</p>
     </div>
     <span class="coach-mia" aria-hidden="true"><StoryCharacter id="mia" mood={practised && headline.point >= 0.6 ? 'happy' : 'curious'} still /></span>
   </div>
   {#if forecast && forecast.weeks > 0}
     <p class="coach-forecast">{m.readiness_forecast({ weeks: number(forecast.weeks), low: number(forecast.low), high: number(forecast.high), level: settings.vocabularyLevel.toUpperCase() }, locale)}</p>
-  {/if}
-  {#if !settings.targetExam}
-    <div class="coach-exam-pick"><span>{m.coach_choose_exam({}, locale)}</span><SelectMenu class="w-[10rem]" value="" options={examOptions} label={m.target_exam({}, locale)} onchange={(value) => settings.setTargetExam(isExamId(value) ? value : null)} /></div>
   {/if}
   <a class="btn-play {due ? 'btn-play-ink' : 'btn-play-soft'} coach-test" href="/placement"><IconQuiz aria-hidden="true" />{due ? m.coach_test_now({}, locale) : m.coach_test_again({}, locale)}</a>
   {#if !due && nextAt}<p class="coach-next">{m.checkpoint_next({ date: formatDate(settings.formatContext, nextAt, 'dayMonthShort') }, locale)}</p>{/if}
@@ -199,7 +193,6 @@
   .coach-sub { margin:.25rem 0 0;font-size:.66rem;font-weight:800;opacity:.7; }
   .coach-mia { display:block;width:3.4rem;height:4.4rem;align-self:end; }
   .coach-forecast { margin:0;padding:.5rem .7rem;border-radius:.7rem;background:color-mix(in oklch,#34824d 12%,transparent);font-size:.68rem;font-weight:800;line-height:1.4; }
-  .coach-exam-pick { display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-size:.66rem;font-weight:800; }
   .coach-test { justify-content:center;min-height:2.8rem;text-decoration:none; }
   .coach-test :global(svg) { width:1.1rem;height:1.1rem; }
   .coach-next { margin:-.3rem 0 0;text-align:center;font-size:.6rem;font-weight:700;opacity:.65; }

@@ -266,7 +266,7 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 
 ### Phase B — assessment and visibility
 - [x] Readiness ranges per skill, level ladder, known words, error profile on `/progress`.
-- [x] Target exam in Settings with section-weighted readiness.
+- [x] Readiness per language level, all skills weighted the same (no exam-specific targets).
 - [x] Placement test (`/placement`, yes/no vocabulary format with invented words, any language
   with 40+ words per level), saved as four-weekly checkpoints with a trend on `/progress`.
 - [x] Forecast: weeks until 80 % of the current level is known, from weekly mastery snapshots.

@@ -3,7 +3,7 @@
  * score built on it. Pure functions over scheduler states and learning events; readiness is
  * always a range that narrows as more data supports it, never a single falsely precise number.
  */
-import type { Level, Skill } from '#lib/domain/types.js';
+import { SKILLS, type Level, type Skill } from '#lib/domain/types.js';
 import { isKnown, itemStage, type SchedulerState } from '#lib/review/scheduler.js';
 import type { LearningEvent } from './events.js';
 
@@ -93,26 +93,14 @@ export function readiness(skill: Skill, input: { coverage: number; accuracy: num
   return { low: clamp(point - spread), high: clamp(point + spread), point: clamp(point), confidence };
 }
 
-/** Section weights of an exam, summing to 1. */
-export type ExamWeights = Partial<Record<Skill, number>>;
+/** Weights per skill, summing to 1. */
+export type SkillWeights = Partial<Record<Skill, number>>;
 
-export const EXAMS = {
-  'goethe-b1': { level: 'b1', weights: { reading: 0.25, listening: 0.25, writing: 0.25, speaking: 0.25 } },
-  'telc-b1': { level: 'b1', weights: { reading: 0.25, grammar: 0.1, listening: 0.25, writing: 0.15, speaking: 0.25 } },
-  'testdaf': { level: 'c1', weights: { reading: 0.25, listening: 0.25, writing: 0.25, speaking: 0.25 } },
-  'cambridge-b2': { level: 'b2', weights: { reading: 0.2, grammar: 0.2, listening: 0.2, writing: 0.2, speaking: 0.2 } },
-  'ielts': { level: 'b2', weights: { reading: 0.25, listening: 0.25, writing: 0.25, speaking: 0.25 } }
-} as const satisfies Record<string, { level: Level; weights: ExamWeights }>;
-export type ExamId = keyof typeof EXAMS;
-/** Display names are proper names and stay untranslated. */
-export const EXAM_NAMES: Record<ExamId, string> = { 'goethe-b1': 'Goethe B1', 'telc-b1': 'telc B1', testdaf: 'TestDaF', 'cambridge-b2': 'Cambridge B2 First', ielts: 'IELTS' };
+/** Every skill counts the same: readiness is for a language level, not for one exam's format. */
+export const EQUAL_WEIGHTS: SkillWeights = Object.fromEntries(SKILLS.map((skill) => [skill, 1 / SKILLS.length]));
 
-export function isExamId(value: unknown): value is ExamId {
-  return typeof value === 'string' && value in EXAMS;
-}
-
-/** Weighted readiness over an exam's sections; missing skills count as zero with low confidence. */
-export function examReadiness(perSkill: Partial<Record<Skill, ReadinessRange>>, weights: ExamWeights): ReadinessRange {
+/** Weighted readiness over the skills; missing skills count as zero with low confidence. */
+export function levelReadiness(perSkill: Partial<Record<Skill, ReadinessRange>>, weights: SkillWeights = EQUAL_WEIGHTS): ReadinessRange {
   let low = 0;
   let high = 0;
   let point = 0;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { confidenceFor, examReadiness, EXAMS, forecastWeeks, levelCoverage, readiness, readinessPercent, retainedAccuracy, rubricAverage } from '../src/lib/progress/skillState';
+import { confidenceFor, forecastWeeks, levelReadiness, levelCoverage, readiness, readinessPercent, retainedAccuracy, rubricAverage } from '../src/lib/progress/skillState';
 import type { LearningEvent } from '../src/lib/progress/events';
 import { itemId, type SessionId } from '../src/lib/domain/types';
 
@@ -35,9 +35,9 @@ describe('skill state', () => {
 
   it('weights exam sections and forecasts with a range', () => {
     const full = { low: 0.6, high: 0.8, point: 0.7, confidence: 0.9 };
-    const exam = examReadiness({ reading: full, listening: full, writing: full, speaking: full }, EXAMS['goethe-b1'].weights);
-    expect(exam.point).toBeCloseTo(0.7);
-    expect(examReadiness({ reading: full }, EXAMS['goethe-b1'].weights).point).toBeCloseTo(0.175);
+    const all = { vocab: full, grammar: full, reading: full, listening: full, writing: full, speaking: full };
+    expect(levelReadiness(all).point).toBeCloseTo(0.7);
+    expect(levelReadiness({ reading: full }).point).toBeCloseTo(0.7 / 6);
     expect(forecastWeeks([0.1, 0.2, 0.25, 0.35], 0.75)).toEqual({ weeks: 5, low: 4, high: 8 });
     expect(forecastWeeks([0.3, 0.3], 0.75)).toBeNull();
     expect(forecastWeeks([0.8], 0.75)).toBeNull();
