@@ -7,12 +7,14 @@
  *   - high scores: a few standout results (Wordle in two tries, five Hangman wins in a row, forty
  *     first-try words in a row);
  *   - languages: practising 50 words of a learning language brings an item tied to it;
- *   - invites: ten friends who joined through the learner's invite link bring a Telegram-blue top.
+ *   - invites: ten friends who joined through the learner's invite link bring a Telegram-blue top;
+ *   - the store: items and sets bought with Telegram Stars (src/lib/store/catalog.ts).
  * The unlocked list itself lives in cosmetics.svelte.ts.
  */
 import type { Avatar, AvatarPart } from './avatar.js';
 import type { Achievement, AchievementId } from '#lib/progress/achievements.js';
 import type { Language } from '#lib/data/vocabulary.js';
+import { SHOP_ITEMS, type ShopItemId } from '#lib/store/catalog.js';
 
 export type CosmeticMode =
   | 'vocab' | 'circle' | 'definitions' | 'wordle' | 'hangman' | 'pronunciation' | 'alltag'
@@ -23,9 +25,9 @@ export type ScoreReward = `score_${ScoreId}`;
 export type LanguageReward = `language_${Language}`;
 export type InviteReward = 'invite_ten';
 // Mode rewards keep their plain mode id, so what was unlocked before stays unlocked.
-export type RewardId = CosmeticMode | AchievementReward | ScoreReward | LanguageReward | InviteReward;
+export type RewardId = CosmeticMode | AchievementReward | ScoreReward | LanguageReward | InviteReward | ShopItemId;
 
-export type RewardSource = { kind: 'mode'; mode: CosmeticMode } | { kind: 'achievement'; achievement: AchievementId } | { kind: 'score'; score: ScoreId } | { kind: 'language'; language: Language; target: number } | { kind: 'invite'; target: number };
+export type RewardSource = { kind: 'mode'; mode: CosmeticMode } | { kind: 'achievement'; achievement: AchievementId } | { kind: 'score'; score: ScoreId } | { kind: 'language'; language: Language; target: number } | { kind: 'invite'; target: number } | { kind: 'shop' };
 export type Cosmetic = { id: RewardId; part: AvatarPart; choice: string; source: RewardSource };
 
 const mode = (id: CosmeticMode, part: AvatarPart, choice: string): Cosmetic => ({ id, part, choice, source: { kind: 'mode', mode: id } });
@@ -78,7 +80,8 @@ const catalog: Cosmetic[] = [
   language('fr', 'nose', 'heart'),
   language('it', 'eyes', 'starry'),
   language('es', 'nose', 'freckles'),
-  { id: 'invite_ten', part: 'top', choice: '#2aabee', source: { kind: 'invite', target: INVITE_REWARD_TARGET } }
+  { id: 'invite_ten', part: 'top', choice: '#2aabee', source: { kind: 'invite', target: INVITE_REWARD_TARGET } },
+  ...SHOP_ITEMS.map((item): Cosmetic => ({ id: item.id, part: item.part, choice: item.choice, source: { kind: 'shop' } }))
 ];
 
 export const cosmetics = Object.fromEntries(catalog.map((item) => [item.id, item])) as Record<RewardId, Cosmetic>;
