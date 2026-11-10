@@ -528,7 +528,6 @@
   "models_facts": "Download {download} · memory while in use {memory}",
   "models_best_for": "Best for {language}",
   "models_may_not_fit": "May be too big for this device",
-  "models_in_use": "Loaded · using ~{memory} of GPU memory",
   "models_device": "GPU: {gpu} · {f16} shaders",
   "models_ram": "RAM {ram}",
   "models_last_reply": "Last reply: {decode} tokens/s writing · {prefill} tokens/s reading · {tokens} tokens",
@@ -749,6 +748,10 @@
   "grade_model_download": "Download the AI model",
   "grade_model_failed": "The model couldn't be loaded. Please try again.",
   "grade_model_unsupported": "Your device can't run the AI model (no WebGPU), so your texts are graded by fixed rules.",
-  "grade_model_ready": "Graded by {model} on your device.",
-  "progress_prepare": "Getting ready"
+  "progress_prepare": "Getting ready",
+  "models_state_downloaded": "Downloaded · {size}",
+  "models_state_in_memory": "In memory · {memory}",
+  "models_state_downloaded_hint": "Stored on the device. It loads into memory for a moment the first time it is used.",
+  "grade_model_in_memory": "{model} is in memory and grades right away.",
+  "grade_model_on_device": "{model} is downloaded. The first grade loads it into memory for a moment."
 }

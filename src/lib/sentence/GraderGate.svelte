@@ -7,7 +7,8 @@
   import { onMount } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { chosenModel, loadLocalModel, localModel } from '#lib/conversation/localModel.svelte.js';
+  import { chosenModel, loadLocalModel, localModel, modelGpuMB } from '#lib/conversation/localModel.svelte.js';
+  import ModelStatus from '#lib/offline/ModelStatus.svelte';
   import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
   import { modelProgressPhase } from '#lib/offline/progressPhase.js';
   import { formatBytes } from '#lib/offline/storage.js';
@@ -31,7 +32,8 @@
   {:else if availability === 'unsupported'}
     <p class="grader-warn">{m.grade_model_unsupported({}, locale)}</p>
   {:else if availability === 'ready'}
-    <p>{m.grade_model_ready({ model: model.label }, locale)}</p>
+    <ModelStatus downloaded inMemory={localModel.status === 'ready'} downloadMB={model.downloadMB} memoryMB={modelGpuMB(model)} hint={false} />
+    <p>{localModel.status === 'ready' ? m.grade_model_in_memory({ model: model.label }, locale) : m.grade_model_on_device({ model: model.label }, locale)}</p>
   {/if}
   {#if grader.notice === 'failed'}<p class="grader-warn">{m.grade_ai_failed({}, locale)}</p>{/if}
 </div>

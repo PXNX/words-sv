@@ -528,7 +528,6 @@
   "models_facts": "Download {download} · Speicher beim Nutzen {memory}",
   "models_best_for": "Am besten für {language}",
   "models_may_not_fit": "Könnte für dieses Gerät zu groß sein",
-  "models_in_use": "Geladen · belegt ~{memory} GPU-Speicher",
   "models_device": "GPU: {gpu} · {f16}-Shader",
   "models_ram": "Arbeitsspeicher {ram}",
   "models_last_reply": "Letzte Antwort: {decode} Tokens/s schreiben · {prefill} Tokens/s lesen · {tokens} Tokens",
@@ -749,6 +748,10 @@
   "grade_model_download": "KI-Modell laden",
   "grade_model_failed": "Das Modell konnte nicht geladen werden. Versuch es noch einmal.",
   "grade_model_unsupported": "Dein Gerät kann das KI-Modell nicht ausführen (kein WebGPU). Deine Texte werden deshalb nach festen Regeln bewertet.",
-  "grade_model_ready": "Bewertet von {model} auf deinem Gerät.",
-  "progress_prepare": "Wird vorbereitet"
+  "progress_prepare": "Wird vorbereitet",
+  "models_state_downloaded": "Heruntergeladen · {size}",
+  "models_state_in_memory": "Im Arbeitsspeicher · {memory}",
+  "models_state_downloaded_hint": "Liegt auf dem Gerät. Beim ersten Nutzen wird es kurz in den Arbeitsspeicher geladen.",
+  "grade_model_in_memory": "{model} ist im Arbeitsspeicher und bewertet sofort.",
+  "grade_model_on_device": "{model} ist heruntergeladen. Beim ersten Bewerten wird es kurz in den Arbeitsspeicher geladen."
 }
