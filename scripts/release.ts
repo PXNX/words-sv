@@ -37,6 +37,11 @@ export function cutChangelog(markdown: string, version: AppVersion, date: string
   return { changelog, notes: `${summary.trim()}\n\n${body}\n` };
 }
 
+/** GitHub's "Full Changelog" line: every commit between the previous release and this one. */
+export function fullChangelogLink(repository: string, previous: string, version: string): string {
+  return `**Full Changelog**: https://github.com/${repository}/compare/v${previous}...v${version}`;
+}
+
 function run(command: string, args: string[], dryRun: boolean) {
   console.log(`$ ${command} ${args.join(' ')}`);
   if (!dryRun) execFileSync(command, args, { stdio: 'inherit' });
@@ -63,7 +68,9 @@ if (import.meta.main) {
   const pkg = JSON.parse(readFileSync('package.json', 'utf8')) as { version: string };
   pkg.version = version;
 
-  console.log(`Releasing ${version}\n\n${notes}`);
+  const repository = execFileSync('gh', ['repo', 'view', '--json', 'nameWithOwner', '-q', '.nameWithOwner'], { encoding: 'utf8' }).trim();
+  const releaseNotes = `${notes}\n${fullChangelogLink(repository, previous, version)}\n`;
+  console.log(`Releasing ${version}\n\n${releaseNotes}`);
   if (!dryRun) {
     writeFileSync('CHANGELOG.md', changelog);
     writeFileSync('package.json', `${JSON.stringify(pkg, null, 2)}\n`);
@@ -72,5 +79,5 @@ if (import.meta.main) {
   run('git', ['commit', '-m', `chore(release): ${version}`], dryRun);
   run('git', ['tag', '-a', `v${version}`, '-m', `WordCircle ${version}: ${summary}`], dryRun);
   run('git', ['push', 'origin', 'HEAD', `v${version}`], dryRun);
-  run('gh', ['release', 'create', `v${version}`, '--title', `WordCircle ${version}`, '--notes', notes], dryRun);
+  run('gh', ['release', 'create', `v${version}`, '--title', `WordCircle ${version}`, '--notes', releaseNotes], dryRun);
 }

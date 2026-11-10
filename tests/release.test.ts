@@ -2,7 +2,7 @@ import { describe, expect, expectTypeOf, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { appVersion, compareVersions, isAppVersion, bumpVersion, latestVersion, parseVersion, type AppVersion } from '../src/lib/app/version';
 import { ChangelogError, highlightKey, parseChangelog, releaseAnchor, unseenReleases } from '../src/lib/app/changelog';
-import { cutChangelog } from '../scripts/release';
+import { cutChangelog, fullChangelogLink } from '../scripts/release';
 
 describe('versions', () => {
   it('parses versions and release candidates', () => {
@@ -109,5 +109,11 @@ describe('release notes from commits', () => {
     const { changelog } = cutChangelog('# C\n\n## Unreleased\n\n## v1.0.0 - 2026-11-10\n\nBase.\n\n### New\n- X\n', appVersion('1.1.0'), '2026-11-11', 'Next.', ['feat(a): add a', 'fix(b): fix b', 'chore(c): bump']);
     expect(changelog).toContain('## v1.1.0 - 2026-11-11\n\nNext.\n\n### New\n- Add a\n\n### Fixed\n- Fix b\n');
     expect(changelog).not.toContain('bump');
+  });
+});
+
+describe('full changelog link', () => {
+  it('compares the previous release with the new one', () => {
+    expect(fullChangelogLink('PXNX/words-sv', '1.2.0', '1.3.0')).toBe('**Full Changelog**: https://github.com/PXNX/words-sv/compare/v1.2.0...v1.3.0');
   });
 });
