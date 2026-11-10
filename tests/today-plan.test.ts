@@ -54,3 +54,12 @@ test('estimatedMinutes stays useful for small reviews and grows with the pile', 
 	expect(estimatedMinutes(3)).toBe(2);
 	expect(estimatedMinutes(12)).toBe(4);
 });
+
+describe('weak grammar feature', () => {
+  test('suggests the weakest feature once the essentials are done', () => {
+    const base = { dueWords: 0, markedWords: 2, reading: null, streakQualified: true, vocabCorrect: 8, vocabularyGoal: 8 };
+    expect(buildTodayPlan({ ...base, weakFeature: { feature: 'de:noun:case:dativ', accuracy: 0.4, errors: 6 } })).toEqual({ kind: 'feature', href: '/grammar', count: 6, feature: 'de:noun:case:dativ' });
+    expect(buildTodayPlan({ ...base, weakFeature: { feature: 'de:noun:case:dativ', accuracy: 0.9, errors: 1 } }).kind).toBe('marked');
+    expect(buildTodayPlan({ ...base, dueWords: 3, weakFeature: { feature: 'de:noun:case:dativ', accuracy: 0.4, errors: 6 } }).kind).toBe('due');
+  });
+});

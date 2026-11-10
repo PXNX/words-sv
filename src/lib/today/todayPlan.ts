@@ -1,5 +1,6 @@
 // The home screen shows one recommendation instead of fourteen equal cards. The data already lives
 // in localStorage, so the plan is a pure function over a small snapshot and can be unit tested.
+import type { FeatureKey } from '#lib/grammar/taxonomy.js';
 
 export type TodayReading = {
 	id: string;
@@ -15,12 +16,18 @@ export type TodayPlanInput = {
 	streakQualified: boolean;
 	vocabCorrect: number;
 	vocabularyGoal: number;
+	/** The weakest grammar feature from the event log, if one is clearly weak. */
+	weakFeature?: { feature: FeatureKey; accuracy: number; errors: number } | null;
 };
+
+/** Below this accuracy a grammar feature is worth a dedicated suggestion. */
+export const WEAK_FEATURE_ACCURACY = 0.7;
 
 export type TodayPlan =
 	| { kind: 'due'; href: string; count: number }
 	| { kind: 'reading'; href: string; count: number; answered: number; total: number; title: string }
 	| { kind: 'streak'; href: string; count: number }
+	| { kind: 'feature'; href: string; count: number; feature: FeatureKey }
 	| { kind: 'marked'; href: string; count: number }
 	| { kind: 'done'; href: string; count: 0 };
 
@@ -39,6 +46,9 @@ export function buildTodayPlan(input: TodayPlanInput): TodayPlan {
 	}
 	if (!input.streakQualified) {
 		return { kind: 'streak', href: '/vocab', count: Math.max(1, input.vocabularyGoal - input.vocabCorrect) };
+	}
+	if (input.weakFeature && input.weakFeature.accuracy < WEAK_FEATURE_ACCURACY) {
+		return { kind: 'feature', href: '/grammar', count: input.weakFeature.errors, feature: input.weakFeature.feature };
 	}
 	if (input.markedWords > 0) return { kind: 'marked', href: '/vocab', count: input.markedWords };
 	return { kind: 'done', href: '/progress', count: 0 };
