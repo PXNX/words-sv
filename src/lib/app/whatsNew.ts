@@ -23,3 +23,21 @@ export function whatsNew(releases: readonly ChangelogRelease[], lastSeen: string
   if (!features.length && !fixes) return null;
   return { releases: shown, features: features.slice(0, WHATS_NEW_MAX_FEATURES), moreFeatures: Math.max(0, features.length - WHATS_NEW_MAX_FEATURES), fixes };
 }
+
+/** What to show once after the app changed version: the full sheet, a small snackbar, or nothing. */
+export type UpdateNotice =
+  | { kind: 'sheet'; news: WhatsNew }
+  | { kind: 'snackbar'; version: ChangelogRelease['version'] };
+
+/**
+ * The sheet when a release brought features or fixes; otherwise a one-time "Updated to …"
+ * snackbar, so even a release with only improvements or migrations is acknowledged. A fresh
+ * install (nothing seen) and an unchanged version show nothing.
+ */
+export function updateNotice(releases: readonly ChangelogRelease[], lastSeen: string | null, returning: boolean): UpdateNotice | null {
+  const news = whatsNew(releases, lastSeen, returning);
+  if (news) return { kind: 'sheet', news };
+  const newest = releases[0];
+  if (!newest || !lastSeen || !unseenReleases(releases, lastSeen).length) return null;
+  return { kind: 'snackbar', version: newest.version };
+}
