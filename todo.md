@@ -148,7 +148,8 @@ tests/build, a focused commit and a push to `main`.
 - [x] Strict typing at the API/domain boundaries; enable `noImplicitOverride`,
   `verbatimModuleSyntax` and `noUncheckedIndexedAccess`.
 - [x] Shared `tests/support/api.ts` with `responseCapture()` typed against `api/_lib/http.mjs`.
-- [ ] Add ESLint and a CI gate that fails on `check` errors.
+- [x] Add ESLint and a CI gate that fails on `check` errors (`eslint.config.mjs`,
+  `.github/workflows/ci.yml`: lint → check → tests → build).
 
 ### Phase I — quick fixes
 - [x] Translate the remaining English Settings strings.
@@ -171,7 +172,10 @@ tests/build, a focused commit and a push to `main`.
   word/paragraph counts, localStorage draft autosave, reset.
 - [x] `GradeResultCard.svelte` renders the result as localised factors, not raw strings.
 - [x] Vitest coverage for the grader and the prompt index (`tests/sentence.test.ts`).
-- [ ] Hook an actual LLM grader behind `grade()` (the rule-based scorer is the scaffold).
+- [x] Hook an actual LLM grader behind `grade()`: `llmPrompt.ts` (pure JSON prompt/reply
+  parsing) + `llmGrader.ts` + `graderClient.svelte.ts`, using the on-device WebLLM model.
+  Every failure falls back to the rule scorer; the result card shows the source and comment.
+- [x] Vitest coverage for the LLM prompt and reply parsing (`tests/llm-grader.test.ts`).
 
 ### Reading word explainer
 - [x] Read the tapped word aloud from the word sheet: natural clip when neural voices are on,
@@ -180,5 +184,6 @@ tests/build, a focused commit and a push to `main`.
 
 ### Verification
 - [x] `bun run check` → 0 errors, 0 warnings.
-- [x] `bun run test` → 30 files, 198 tests passing.
+- [x] `bun run lint` → 0 errors (30 `no-explicit-any` warnings).
+- [x] `bun run test` → 31 files, 205 tests passing.
 - [x] `bun run build` → 24 routes, OG tags written.
