@@ -244,7 +244,7 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [x] Alltag drills for clock times, dates (ordinals), numbers and prices in German and English
   (`vocab/everyday.ts`); Satzbau got its sentence builder.
 - [x] Spoken forms of clock times and euro prices in German listening and story texts (`story/speech.ts`).
-- [ ] Interface formatting in Telegram reminder texts.
+- [x] Interface formatting in Telegram and push reminder texts (the app's digit choice travels with the streak).
 
 ### Phase P — content packs and fast loading
 - [ ] Measure where the per-level word files land in the bundle; move them to hashed, fetched,

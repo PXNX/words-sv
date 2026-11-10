@@ -1,4 +1,4 @@
-import { publishReminderState, reminderLocale } from '../pwa/pwaReminders.js';
+import { publishReminderState, reminderLocale, reminderNativeDigits } from '../pwa/pwaReminders.js';
 import { useProShield } from './proShield.js';
 import { callApi } from '../api/client.js';
 import { StreakReplySchema, type ServerStreak } from '../api/schemas.js';
@@ -416,7 +416,7 @@ export async function syncStreak(event: StreakEvent, fallback = readStreak()) {
 	// The /api functions only exist on Vercel; under `vite dev` every call would just 404.
 	if (import.meta.env?.DEV) return optimistic;
 	try {
-		const { streak } = await callApi('/api/streak/progress', StreakReplySchema, { body: { deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), event, snapshot: optimistic } });
+		const { streak } = await callApi('/api/streak/progress', StreakReplySchema, { body: { deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), nativeDigits: reminderNativeDigits(), event, snapshot: optimistic } });
 		const saved = writeStreak(mergeServerStreak(optimistic, streak));
 		void publishReminderState(saved);
 		return saved;
@@ -429,7 +429,7 @@ export async function syncStreakGoal(goal: number, fallback = readStreak()) {
 	void publishReminderState(optimistic);
 	if (import.meta.env?.DEV) return optimistic;
 	try {
-		const { streak } = await callApi('/api/streak/progress', StreakReplySchema, { body: { deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), event: 'sync', snapshot: optimistic } });
+		const { streak } = await callApi('/api/streak/progress', StreakReplySchema, { body: { deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), nativeDigits: reminderNativeDigits(), event: 'sync', snapshot: optimistic } });
 		return writeStreak(mergeServerStreak(optimistic, streak));
 	} catch { /* Local goal still applies; the next event retries it. */ }
 	return optimistic;

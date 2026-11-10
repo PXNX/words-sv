@@ -50,7 +50,7 @@ async function sendTelegramReminders(db: Database, telegramSender: TelegramSende
 		if (claim?.affectedRows !== 1) continue;
 		attempted += 1;
 		try {
-			await telegramSender(row.chat_id, htmlMessage(reminderNotification('deadline', row.locale, summary.minutesRemaining)), appUrl());
+			await telegramSender(row.chat_id, htmlMessage(reminderNotification('deadline', row.locale, summary.minutesRemaining, Boolean(row.native_digits))), appUrl());
 			delivered += 1;
 		} catch (error) {
 			// 403: the player blocked the bot or deleted the chat.
@@ -83,7 +83,7 @@ export function createRemindersEndpoint({ databaseProvider = getDatabase, pushSe
 					throw error;
 				}
 				attempted += 1;
-				const payload = { ...reminderNotification(type, row.locale, summary.minutesRemaining), url: '/' };
+				const payload = { ...reminderNotification(type, row.locale, summary.minutesRemaining, Boolean(row.native_digits)), url: '/' };
 				try {
 					await pushSender({ endpoint: row.endpoint, keys: { p256dh: row.p256dh_key, auth: row.auth_key } }, payload);
 					delivered += 1;
