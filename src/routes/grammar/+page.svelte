@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { recordAnswer } from '#lib/profile/cosmetics.svelte.js';
   import { untrack } from 'svelte';
   import { page } from '$app/state';
@@ -255,7 +256,7 @@
     <div class="text-center">
       <span class="text-accent text-[.58rem] font-extrabold tracking-[.14em] uppercase">{labels.title} · {settings.vocabularyLevel.toUpperCase()}</span>
       <h1 class="my-[.16rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,7vw,2.65rem)] font-normal leading-none">{modeTitle}</h1>
-      <p class="m-0 text-base-content/60 text-[.65rem] font-extrabold">{Math.min(position + 1, queue.length)} / {queue.length || 6}</p>
+      <p class="m-0 text-base-content/60 text-[.65rem] font-extrabold">{num(Math.min(position + 1, queue.length))} / {num(queue.length || 6)}</p>
     </div>
     <Companion id="tom" mood={answerStatus === 'correct' ? 'happy' : answerStatus === 'wrong' ? 'sad' : 'curious'} size="sm" />
   </header>

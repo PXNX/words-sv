@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { onMount } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
@@ -25,7 +26,7 @@
   import SyncHint from '#lib/sync/SyncHint.svelte';
   import { defaultAvatar } from '#lib/profile/avatar.js';
   import type { Mood } from '#lib/story/stories.js';
-  import { formatWeekday } from '#lib/format/format.js';
+  import { formatNumber, formatWeekday } from '#lib/format/format.js';
   import ExamCoach from '#lib/progress/ExamCoach.svelte';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
@@ -91,7 +92,7 @@
     profileNameCancel: m.profile_name_cancel({}, { locale: settings.interfaceLocale }),
     profileNameEmpty: m.profile_name_empty({}, { locale: settings.interfaceLocale }),
     achievementsTitle: m.achievements_title({}, { locale: settings.interfaceLocale }),
-    achievementsUnlocked: (done: number, total: number) => m.achievements_unlocked({ done, total }, { locale: settings.interfaceLocale }),
+    achievementsUnlocked: (done: number, total: number) => m.achievements_unlocked({ done: num(done), total: num(total) }, { locale: settings.interfaceLocale }),
     achievementsNone: m.achievements_none({}, { locale: settings.interfaceLocale })
   });
 
@@ -159,7 +160,7 @@
     const context = settings.formatContext;
     return (start: number) => formatWeekday(context, start, 'short');
   });
-  const minutesLabel = (count: number) => m.stats_minutes_short({ count }, { locale: settings.interfaceLocale });
+  const minutesLabel = (count: number) => m.stats_minutes_short({ count: num(count) }, { locale: settings.interfaceLocale });
   const kindNames = $derived<Record<ActivityKind, string>>({
     vocab: m.stats_vocab({}, { locale: settings.interfaceLocale }),
     grammar: m.mode_grammar({}, { locale: settings.interfaceLocale }),
@@ -188,7 +189,7 @@
   }));
 
   async function shareWeek() {
-    const text = `${labels.weekTitle}: ${labels.weekWords} ${weekly.wordsMastered} · ${labels.weekMinutes} ${weekly.minutes} · ${labels.weekBestStreak} ${weekly.bestStreak}`;
+    const text = `${labels.weekTitle}: ${labels.weekWords} ${num(weekly.wordsMastered)} · ${labels.weekMinutes} ${num(weekly.minutes)} · ${labels.weekBestStreak} ${num(weekly.bestStreak)}`;
     try {
       if (typeof navigator !== 'undefined' && navigator.share) {
         await navigator.share({ title: labels.weekTitle, text });
@@ -207,7 +208,7 @@
 
   function formatMinutes(minutes: number) {
     const hours = Math.floor(minutes / 60);
-    return hours > 0 ? `${hours}h ${String(minutes % 60).padStart(2, '0')}m` : `${minutes}m`;
+    return hours > 0 ? `${num(hours)}h ${formatNumber(settings.formatContext, minutes % 60, { minimumIntegerDigits: 2 })}m` : `${num(minutes)}m`;
   }
 
   function startNameEdit() {
@@ -302,7 +303,7 @@
     <div class="mt-[.8rem]">
       <div class="flex items-center justify-between gap-3 text-base-content text-[.64rem] font-extrabold">
         <span>{labels.dailyGoal}</span>
-        <span class="tabular-nums">{Math.min(settings.streak.vocabCorrect, settings.streak.vocabularyGoal)}/{settings.streak.vocabularyGoal}</span>
+        <span class="tabular-nums">{num(Math.min(settings.streak.vocabCorrect, settings.streak.vocabularyGoal))}/{num(settings.streak.vocabularyGoal)}</span>
       </div>
       <ol class="m-0 mt-[.35rem] p-0 list-none flex gap-[.3rem]" role="progressbar" aria-valuenow={settings.streak.vocabCorrect} aria-valuemin="0" aria-valuemax={settings.streak.vocabularyGoal} aria-label={labels.dailyGoal}>
         {#each Array.from({ length: settings.streak.vocabularyGoal }) as _, index (index)}
@@ -345,7 +346,7 @@
       <div class="week-bars" aria-hidden="true">
         {#each week as day (day.start)}
           <div class="week-bar" class:today={day.today} title={`${dayName(day.start)}: ${minutesLabel(day.minutes)}`}>
-            <span class="week-value tabular-nums">{#if day.minutes > 0 && (day.today || day.minutes === weekMax)}{day.minutes}{/if}</span>
+            <span class="week-value tabular-nums">{#if day.minutes > 0 && (day.today || day.minutes === weekMax)}{num(day.minutes)}{/if}</span>
             <span class="week-fill" class:empty={day.minutes === 0} style:height={`${day.minutes > 0 ? Math.max(6, (day.minutes / weekMax) * 100) : 0}%`}></span>
             <span class="week-day">{dayName(day.start)}</span>
           </div>
@@ -357,16 +358,16 @@
       </table>
     </figure>
     <dl class="m-0 mt-[.6rem] grid grid-cols-2 gap-x-4 gap-y-[.55rem]">
-      <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{weekly.wordsMastered}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekWords}</dt></div>
-      <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{weekly.minutes}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekMinutes}</dt></div>
-      <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{weekly.bestStreak}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekBestStreak}</dt></div>
+      <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{num(weekly.wordsMastered)}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekWords}</dt></div>
+      <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{num(weekly.minutes)}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekMinutes}</dt></div>
+      <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{num(weekly.bestStreak)}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekBestStreak}</dt></div>
       <div class="grid gap-[.1rem] min-w-0"><dd class="m-0 order-1 truncate text-base-content text-[.8rem] font-extrabold leading-[1.9]">{weekly.hardestWord ?? '—'}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekHardest}</dt></div>
     </dl>
     {#if topModes.length > 0}
       <p class="m-0 mt-[.7rem] text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{m.stats_most_played({}, { locale: settings.interfaceLocale })}</p>
       <ul class="mode-shares">
         {#each topModes as mode (mode.kind)}
-          <li><span class="mode-share-name">{kindNames[mode.kind]}</span><span class="mode-share-bar" aria-hidden="true"><span style:width={`${Math.round(mode.share * 100)}%`}></span></span><b class="tabular-nums">{mode.count}</b></li>
+          <li><span class="mode-share-name">{kindNames[mode.kind]}</span><span class="mode-share-bar" aria-hidden="true"><span style:width={`${Math.round(mode.share * 100)}%`}></span></span><b class="tabular-nums">{num(mode.count)}</b></li>
         {/each}
       </ul>
     {/if}
@@ -381,7 +382,7 @@
   <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4" aria-labelledby="progress-words-heading">
     <div class="flex items-baseline justify-between gap-3">
       <h2 id="progress-words-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{m.coach_words({ language: learningLanguage.label }, { locale: settings.interfaceLocale })}</h2>
-      {#if vocabProgress[settings.lang]}<span class="text-base-content/55 text-[.58rem] font-extrabold tabular-nums">{labels.wordsPracticed}: {vocabProgress[settings.lang]!.wordsPracticed}</span>{/if}
+      {#if vocabProgress[settings.lang]}<span class="text-base-content/55 text-[.58rem] font-extrabold tabular-nums">{labels.wordsPracticed}: {num(vocabProgress[settings.lang]!.wordsPracticed)}</span>{/if}
     </div>
     <div class="grid grid-cols-2 gap-4 mt-[.6rem]">
       {#each [{ heading: labels.trickyWords, words: practicedLanguages[0]!.trickyWords.map((entry) => ({ word: entry.word, count: entry.count })) }, { heading: labels.topWords, words: vocabProgress[settings.lang]?.mostRepeated.map((entry) => ({ word: entry.word, count: entry.repetitions })) ?? [] }] as list (list.heading)}
@@ -390,7 +391,7 @@
           {#if list.words.length > 0}
             <ol class="m-0 mt-[.3rem] p-0 list-none grid gap-[.2rem]">
               {#each list.words as entry (entry.word)}
-                <li class="flex items-center justify-between gap-2 text-base-content text-[.68rem] font-bold"><span class="truncate" lang={settings.lang}>{spellingOf(settings.lang, entry.word)}</span><span class="text-base-content/50 tabular-nums">{entry.count}×</span></li>
+                <li class="flex items-center justify-between gap-2 text-base-content text-[.68rem] font-bold"><span class="truncate" lang={settings.lang}>{spellingOf(settings.lang, entry.word)}</span><span class="text-base-content/50 tabular-nums">{num(entry.count)}×</span></li>
               {/each}
             </ol>
           {:else}
@@ -414,7 +415,7 @@
           <span class="achievement-look" aria-hidden="true"><StoryCharacter id="kumar" avatar={rewardLook(achievement.id)} mood={achievement.done ? 'happy' : 'curious'} /></span>
           <span class="achievement-label">{#if achievement.done}<IconCheck class="achievement-check" aria-hidden="true" />{/if}{achievementLabels[achievement.id]}</span>
           <span class="achievement-meter" aria-hidden="true"><span style:width={`${Math.round((achievement.value / achievement.target) * 100)}%`}></span></span>
-          <span class="achievement-progress tabular-nums">{achievement.value}/{achievement.target}</span>
+          <span class="achievement-progress tabular-nums">{num(achievement.value)}/{num(achievement.target)}</span>
         </li>
       {/each}
     </ul>

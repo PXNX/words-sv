@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { haptic } from '#lib/feedback/haptics.js';
   import { unlockCosmetic, WORDLE_TOP_TRIES } from '#lib/profile/cosmetics.svelte.js';
   import WordleMode from '#lib/wordle/WordleMode.svelte';
@@ -26,7 +27,7 @@
   const labels = $derived({
     title: m.wordle_title({}, { locale: settings.interfaceLocale }),
     // The original texts say "five letters"; other lengths get their own, so translated five-letter texts stay in use.
-    empty: settings.wordleLength === 5 ? m.wordle_empty({}, { locale: settings.interfaceLocale }) : m.wordle_empty_length({ length: settings.wordleLength }, { locale: settings.interfaceLocale }),
+    empty: settings.wordleLength === 5 ? m.wordle_empty({}, { locale: settings.interfaceLocale }) : m.wordle_empty_length({ length: num(settings.wordleLength) }, { locale: settings.interfaceLocale }),
     input: m.wordle_input({}, { locale: settings.interfaceLocale }),
     win: m.wordle_win({}, { locale: settings.interfaceLocale }),
     invalid: m.wordle_invalid({}, { locale: settings.interfaceLocale }),

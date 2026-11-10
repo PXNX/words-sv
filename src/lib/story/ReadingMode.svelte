@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { logAnswer } from '#lib/progress/eventLog.js';
   import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { onMount, tick } from 'svelte';
@@ -383,7 +384,7 @@ import { page } from '$app/state';
     <details class="reading-shelf">
       <summary>
         <span><IconMenuBook aria-hidden="true" />{labels.shelf}</span>
-        <small>{catalog.length}</small>
+        <small>{num(catalog.length)}</small>
       </summary>
       <ul>
         {#each catalog as item (item.id)}
@@ -406,7 +407,7 @@ import { page } from '$app/state';
 
     {#if current.keyWords.length}
       <details class="reading-words">
-        <summary>{labels.words} <small>{current.keyWords.length}</small></summary>
+        <summary>{labels.words} <small>{num(current.keyWords.length)}</small></summary>
         <ul>{#each current.keyWords as word (word)}<li>{word}</li>{/each}</ul>
       </details>
     {/if}
@@ -436,7 +437,7 @@ import { page } from '$app/state';
         </ol>
         {#if answered === current.questions.length}
           <div class="reading-recap">
-            <p class="reading-score">{m.story_score({ correct: String(firstTry), total: String(current.questions.length) }, { locale: settings.interfaceLocale })}</p>
+            <p class="reading-score">{m.story_score({ correct: num(firstTry), total: num(current.questions.length) }, { locale: settings.interfaceLocale })}</p>
             <div class="reading-recap-actions">
               {#if current.keyWords.length}
                 <button type="button" class="btn-play btn-play-soft reading-nav" onclick={markKeyWords}>{labels.recapMark}</button>
@@ -447,7 +448,7 @@ import { page } from '$app/state';
             </div>
           </div>
         {:else}
-          <p class="reading-score">{m.story_reading_progress({ answered: String(answered), total: String(current.questions.length) }, { locale: settings.interfaceLocale })}</p>
+          <p class="reading-score">{m.story_reading_progress({ answered: num(answered), total: num(current.questions.length) }, { locale: settings.interfaceLocale })}</p>
         {/if}
       </section>
     {/if}

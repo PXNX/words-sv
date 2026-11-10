@@ -4,6 +4,7 @@
   small "Updated to …" snackbar instead. Either marks the release as seen, like visiting /changelog.
 -->
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { onMount } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
@@ -81,7 +82,7 @@
         </ul>
       {/if}
       <p class="news-extra">
-        {#if news.fixes}{m.whats_new_fixes({ count: news.fixes }, locale)}{/if}
+        {#if news.fixes}{m.whats_new_fixes({ count: num(news.fixes) }, locale)}{/if}
         <a href={`/changelog#${releaseAnchor(newest.version)}`} onclick={close}>{m.whats_new_more({}, locale)}</a>
       </p>
       <button type="button" class="btn-play btn-play-ink news-go" bind:this={button} onclick={close}>{m.whats_new_go({}, locale)}</button>

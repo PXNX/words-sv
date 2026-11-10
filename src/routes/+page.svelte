@@ -12,6 +12,7 @@
   <meta name="twitter:image" content="https://words-sv.vercel.app/pwa-512x512.png" />
 </svelte:head>
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { onMount } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
@@ -192,12 +193,12 @@
       next.push({
         href: `/reading?text=${encodeURIComponent(reading.id)}`,
         label: labels.homeContinueReading(reading.title),
-        detail: `${reading.answered}/${reading.total}`
+        detail: `${num(reading.answered)}/${num(reading.total)}`
       });
     }
     const story = storyToday();
     if (story) {
-      next.push({ href: '/stories', label: labels.homeContinueStory(story.title), detail: `${story.revealed}/${story.total}` });
+      next.push({ href: '/stories', label: labels.homeContinueStory(story.title), detail: `${num(story.revealed)}/${num(story.total)}` });
     }
     homeContinue = next;
   }

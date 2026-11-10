@@ -6,6 +6,7 @@
   settings (naturalVoices.svelte.ts), and every line can be heard again from the transcript.
 -->
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { onMount, tick } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
@@ -71,7 +72,7 @@
     unsupported: m.conversation_unsupported({}, { locale }),
     failed: m.conversation_failed({}, { locale }),
     words: m.conversation_words({}, { locale }),
-    wordsUsed: (count: number, total: number) => m.conversation_words_used({ count: String(count), total: String(total) }, { locale }),
+    wordsUsed: (count: number, total: number) => m.conversation_words_used({ count: num(count), total: num(total) }, { locale }),
     listening: m.conversation_listening({}, { locale }),
     thinking: (name: string) => m.conversation_thinking({ name }, { locale }),
     speaking: (name: string) => m.conversation_speaking({ name }, { locale }),

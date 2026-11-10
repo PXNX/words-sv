@@ -265,6 +265,7 @@
   "story_reading_mode": "Lesemodus",
   "story_reading_mode_hint": "Die ganze Geschichte auf einmal lesen und die Fragen direkt im Text beantworten.",
   "story_reading_progress": "{answered} von {total} Fragen beantwortet",
+  "listen_audio_batch": "Audio {current} von {total} \u00b7 {percent} %",
   "story_loader_parts": "{done} von {total} Abschnitten",
   "story_loader_questions": "{count} Fragen",
   "story_loader_cast": "Mit {names}",

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import WalkingLilith from './WalkingLilith.svelte';
   import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
   import { playSoundEffect } from '#lib/feedback/sounds.js';
@@ -30,11 +31,11 @@
       return names.join(', ');
     }
   });
-  const partLabel = $derived(part > 0 && total > 0 ? m.story_loader_parts({ done: String(part), total: String(total) }, { locale: settings.interfaceLocale }) : '');
-  const questionLabel = $derived(questions ? m.story_loader_questions({ count: String(questions) }, { locale: settings.interfaceLocale }) : '');
+  const partLabel = $derived(part > 0 && total > 0 ? m.story_loader_parts({ done: num(part), total: num(total) }, { locale: settings.interfaceLocale }) : '');
+  const questionLabel = $derived(questions ? m.story_loader_questions({ count: num(questions) }, { locale: settings.interfaceLocale }) : '');
   const castLabel = $derived(castNames ? m.story_loader_cast({ names: castNames }, { locale: settings.interfaceLocale }) : '');
   const voiceLabel = $derived(voice ? m.story_loader_voice({ voice }, { locale: settings.interfaceLocale }) : '');
-  const etaLabel = $derived(eta > 0 ? m.story_loader_eta({ seconds: String(Math.ceil(eta)) }, { locale: settings.interfaceLocale }) : '');
+  const etaLabel = $derived(eta > 0 ? m.story_loader_eta({ seconds: num(Math.ceil(eta)) }, { locale: settings.interfaceLocale }) : '');
 </script>
 
 <section class="story-audio-loader" aria-label={label} aria-busy="true">

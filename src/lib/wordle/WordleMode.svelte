@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { evaluateWordleGuess, fiveLetterWords, isValidWordleGuess, normalizePlayableWord } from './wordleWords';
   import { readWordleState, WORDLE_STATE_KEY, writeWordleState } from './wordleState';
   import { keyboardLayoutFor, keyboardMarksFrom, layoutLetters, physicalKeyAction, typeableWords, type WordleMark } from './keyboardLayouts';
@@ -72,7 +73,7 @@
   const noDefinitionLabel = $derived(m.wordle_no_definition({}, { locale: settings.interfaceLocale }));
   const deleteLabel = $derived(m.wordle_delete({}, { locale: settings.interfaceLocale }));
   const revealLabel = $derived(m.wordle_reveal({}, { locale: settings.interfaceLocale }));
-  const solvedLabel = $derived(m.wordle_solved_in({ attempts: entries.length, max: maxAttempts }, { locale: settings.interfaceLocale }));
+  const solvedLabel = $derived(m.wordle_solved_in({ attempts: num(entries.length), max: num(maxAttempts) }, { locale: settings.interfaceLocale }));
   const explanation = $derived(explanationWord ? wordInfo(explanationWord) : null);
   // Once a round is over, the answer is shown with its article and meaning, won or lost.
   const roundOver = $derived(won || exhausted);

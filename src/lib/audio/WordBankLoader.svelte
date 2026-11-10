@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import WalkingLilith from '#lib/story/WalkingLilith.svelte';
   import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
   import { playSoundEffect } from '#lib/feedback/sounds.js';
@@ -16,9 +17,9 @@
     eta?: number;
     oncontinue?: () => void;
   } = $props();
-  const progressLabel = $derived(total > 0 ? m.word_bank_progress({ done: String(done), total: String(total) }, { locale: settings.interfaceLocale }) : '');
+  const progressLabel = $derived(total > 0 ? m.word_bank_progress({ done: num(done), total: num(total) }, { locale: settings.interfaceLocale }) : '');
   const voiceLabel = $derived(voice ? m.story_loader_voice({ voice }, { locale: settings.interfaceLocale }) : '');
-  const etaLabel = $derived(eta > 0 ? m.story_loader_eta({ seconds: String(Math.ceil(eta)) }, { locale: settings.interfaceLocale }) : '');
+  const etaLabel = $derived(eta > 0 ? m.story_loader_eta({ seconds: num(Math.ceil(eta)) }, { locale: settings.interfaceLocale }) : '');
   const continueLabel = $derived(m.word_bank_continue({}, { locale: settings.interfaceLocale }));
 </script>
 

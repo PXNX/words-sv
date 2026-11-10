@@ -4,6 +4,7 @@
   says what today is about. Collecting the day's ember is a small button on that line.
 -->
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { playSuccessSound } from '#lib/feedback/sounds.js';
@@ -32,10 +33,10 @@
   }
   const nudgeText = $derived.by(() => {
     if (nudge.kind === 'done') return m.streak_nudge_done({}, locale);
-    if (nudge.kind === 'milestone') return m.streak_nudge_milestone({ count: nudge.count }, locale);
-    if (nudge.kind === 'urgent') return m.streak_nudge_urgent({ count: nudge.count, time: formatTime(nudge.minutes) }, locale);
-    if (nudge.kind === 'keep') return m.streak_nudge_keep({ count: nudge.count }, locale);
-    return nudge.best > 0 ? m.streak_nudge_start_best({ count: nudge.best }, locale) : m.streak_nudge_start({}, locale);
+    if (nudge.kind === 'milestone') return m.streak_nudge_milestone({ count: num(nudge.count) }, locale);
+    if (nudge.kind === 'urgent') return m.streak_nudge_urgent({ count: num(nudge.count), time: formatTime(nudge.minutes) }, locale);
+    if (nudge.kind === 'keep') return m.streak_nudge_keep({ count: num(nudge.count) }, locale);
+    return nudge.best > 0 ? m.streak_nudge_start_best({ count: num(nudge.best) }, locale) : m.streak_nudge_start({}, locale);
   });
 
   let collecting = $state(false);
@@ -53,8 +54,8 @@
 </script>
 
 <div class="streak-strip" class:qualified={streak.qualified}>
-  <a class="streak-main" href="/progress" aria-label={`${m.streak({}, locale)}: ${streak.streakCount}`}>
-    <span class="streak-flame" aria-hidden="true"><IconFlame /><strong>{streak.streakCount}</strong></span>
+  <a class="streak-main" href="/progress" aria-label={`${m.streak({}, locale)}: ${num(streak.streakCount)}`}>
+    <span class="streak-flame" aria-hidden="true"><IconFlame /><strong>{num(streak.streakCount)}</strong></span>
     <ol class="streak-days" aria-label={m.streak_week_label({}, locale)}>
       {#each week as day (day.dateKey)}
         <li class="streak-day {day.status}">
@@ -70,7 +71,7 @@
       {/each}
     </ol>
     {#if streak.freezes > 0}
-      <span class="streak-freeze" title={m.streak_freeze_title({ count: streak.freezes, embers: streak.embers, total: FREEZE_EVERY }, locale)}><IconFreeze aria-hidden="true" />{streak.freezes}</span>
+      <span class="streak-freeze" title={m.streak_freeze_title({ count: num(streak.freezes), embers: num(streak.embers), total: num(FREEZE_EVERY) }, locale)}><IconFreeze aria-hidden="true" />{num(streak.freezes)}</span>
     {/if}
   </a>
   <p class="streak-nudge" class:urgent={nudge.kind === 'urgent'} aria-live="polite">

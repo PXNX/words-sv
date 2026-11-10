@@ -5,6 +5,7 @@
   Closes on tap, Escape, or after a while, so it never blocks a game for long.
 -->
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { fade } from 'svelte/transition';
   import { haptic } from '#lib/feedback/haptics.js';
   import { m } from '#lib/paraglide/messages.js';
@@ -33,7 +34,7 @@
     if (!reward) return '';
     const from = reward.source;
     if (from.kind === 'achievement') return m.cosmetic_from_badge({ name: messages[`achievement_${from.achievement}`]?.({}, locale) ?? from.achievement }, locale);
-    if (from.kind === 'language') return m.cosmetic_from_language({ count: from.target, language: new Intl.DisplayNames([settings.interfaceLocale], { type: 'language' }).of(from.language) ?? from.language }, locale);
+    if (from.kind === 'language') return m.cosmetic_from_language({ count: num(from.target), language: new Intl.DisplayNames([settings.interfaceLocale], { type: 'language' }).of(from.language) ?? from.language }, locale);
     return m.cosmetic_unlocked_body({}, locale);
   });
   const partName = $derived(reward ? messages[PART_LABEL[reward.part]]?.({}, locale) ?? reward.part : '');

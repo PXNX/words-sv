@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { num } from '#lib/format/num.svelte.js';
   import { haptic } from '#lib/feedback/haptics.js';
   import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { m } from '#lib/paraglide/messages.js';
@@ -183,7 +184,7 @@
     showDefinition: m.circle_cell_definition({}, { locale: settings.interfaceLocale }),
     correct: m.circle_correct({}, { locale: settings.interfaceLocale }),
     wrong: m.circle_wrong({}, { locale: settings.interfaceLocale }),
-    progress: m.circle_progress({ found: solvedWords.length, total: currentRound.words.length }, { locale: settings.interfaceLocale })
+    progress: m.circle_progress({ found: num(solvedWords.length), total: num(currentRound.words.length) }, { locale: settings.interfaceLocale })
   });
 
   const grid = $derived(currentRound.grid);
