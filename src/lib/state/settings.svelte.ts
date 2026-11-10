@@ -4,12 +4,26 @@ import { voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/eng
 import { wordPools, isLanguage, isVocabularyLevel, type Language, type VocabularyLevel, warmLanguage, refreshHintableBaseWords } from '#lib/data/vocabulary.js';
 import { normalizeVocabularyGoal, dateKey, readStreak, repairCandidate, repairStreak as repairStoredStreak, syncStreak, syncStreakGoal, type ClientStreak, type StreakRepair, type StreakEvent } from '#lib/streak/clientStreak.js';
 import { recordActivity, type ActivityKind } from '#lib/progress/activity.js';
+import { logAnswer } from '#lib/progress/eventLog.js';
+import type { EventMode } from '#lib/progress/events.js';
 import { publishReminderState } from '#lib/pwa/pwaReminders.js';
 import { reminderExtras } from '#lib/reminders/reminderSnapshot.js';
 import type { Locale } from '#lib/paraglide/runtime.js';
 import { parseAvatar, type Avatar } from '#lib/profile/avatar.js';
 import { setKumarStandIn } from '#lib/story/standIn.js';
 import { resolveFormatContext, type FormatCalendar, type FormatContext, type FormatDigits, type FormatSource } from '#lib/format/format.js';
+
+// Completions logged here; answers in vocab, grammar and reading are logged where they happen.
+const EVENT_MODE_BY_STREAK: Partial<Record<StreakEvent, EventMode>> = {
+  circle_completed: 'circle',
+  definitions_completed: 'circle',
+  wordle_completed: 'wordle',
+  hangman_completed: 'hangman',
+  alltag_correct: 'alltag',
+  story_completed: 'story',
+  listen_completed: 'listen',
+  sentence_completed: 'write'
+};
 
 const ACTIVITY_BY_EVENT: Partial<Record<StreakEvent, ActivityKind>> = {
   vocab_correct: 'vocab',
@@ -284,6 +298,8 @@ class SettingsStore {
     // Reading, story and listening completions are logged where their ids are known.
     const kind = ACTIVITY_BY_EVENT[event];
     if (kind) recordActivity(kind);
+    const mode = EVENT_MODE_BY_STREAK[event];
+    if (mode) logAnswer(this.lang, mode, `${event.toUpperCase()}:${dateKey()}`, mode === 'alltag' ? true : null, { level: this.vocabularyLevel });
     this.streak = await syncStreak(event, this.streak);
   }
   // The goal lives in the streak state, so it travels with the snapshot and survives a reload.

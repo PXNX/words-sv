@@ -4,6 +4,9 @@
  * The older per-mode stores stay readable; this ledger is what the Repeat hub and the mixed
  * session read, so marked reading words, grammar answers and pronunciation results meet there.
  */
+import { logLearningEvent } from '#lib/progress/eventLog.js';
+import { skillForMode, type EventMode } from '#lib/progress/events.js';
+import type { ItemId, LangCode } from '#lib/domain/types.js';
 import { normalizeMemory, schedule, type Grade, type SchedulerState } from './scheduler.js';
 export type ReviewSource = 'vocab' | 'reading' | 'grammar' | 'pronunciation' | 'story' | 'listening';
 
@@ -96,15 +99,34 @@ export function applyReview(
 	};
 }
 
-export function recordReview(language: string, item: string, correct: boolean, source: ReviewSource, now: number = Date.now(), grade?: Grade): ReviewLedger {
+const MODE_BY_SOURCE: Record<ReviewSource, EventMode> = { vocab: 'vocab', reading: 'reading', grammar: 'grammar', pronunciation: 'speak', story: 'story', listening: 'listen' };
+
+export type ReviewDetails = { latencyMs?: number; score?: number };
+
+/** Schedules an answer and appends it to the learning event log. */
+export function recordReview(language: string, item: string, correct: boolean, source: ReviewSource, now: number = Date.now(), grade?: Grade, details: ReviewDetails = {}): ReviewLedger {
 	const ledger = applyReview(readReviewLedger(), language, item, correct, source, now, grade);
 	writeReviewLedger(ledger);
+	const mode = MODE_BY_SOURCE[source];
+	logLearningEvent({
+		ts: now,
+		lang: language as LangCode,
+		mode,
+		skill: skillForMode(mode),
+		itemId: reviewKey(language, item) as ItemId,
+		correct,
+		rating: grade ?? (correct ? 'good' : 'again'),
+		...(details.latencyMs !== undefined ? { latencyMs: details.latencyMs } : {}),
+		...(details.score !== undefined ? { score: details.score } : {})
+	});
 	return ledger;
 }
 
-/** Marks an item as hard without an answer, e.g. from the reading word sheet. */
+/** Marks an item as hard without an answer, e.g. from the reading word sheet (not an event). */
 export function markReviewItem(language: string, item: string, source: ReviewSource, now: number = Date.now()): ReviewLedger {
-	return recordReview(language, item, false, source, now);
+	const ledger = applyReview(readReviewLedger(), language, item, false, source, now);
+	writeReviewLedger(ledger);
+	return ledger;
 }
 
 /** Takes a manual mark back and returns the item to normal rotation. */
