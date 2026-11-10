@@ -2,6 +2,7 @@
   import { num } from '#lib/format/num.svelte.js';
   import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { onMount, tick, untrack } from 'svelte';
+  import { runJob } from '#lib/audio/backgroundJobs.svelte.js';
   import { flip } from 'svelte/animate';
   import { fly } from 'svelte/transition';
   import { goto } from '$app/navigation';
@@ -598,21 +599,23 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
   function storyNaturalRate() {
     return (levelRates[settings.vocabularyLevel] ?? 1) * (naturalLevelPace[settings.vocabularyLevel] ?? 1);
   }
-  async function prepareNaturalText(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, token: number) {
-    if (token !== audioPreparation) return;
+  // `token` null: the background job (see prepareStoryAudio), which keeps going after the page closed.
+  const stale = (token: number | null) => token !== null && token !== audioPreparation;
+  async function prepareNaturalText(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, token: number | null) {
+    if (stale(token)) return;
     try {
       await synthesizeNatural(pronounceable(text, language).text, speaker, mood, cast, language, storyNaturalRate());
     } catch {
       // Playback falls back to the system voice.
     }
   }
-  async function prepareNaturalRead(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, token: number) {
+  async function prepareNaturalRead(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, token: number | null) {
     for (const part of splitSounds(text, language)) {
-      if (token !== audioPreparation) return;
+      if (stale(token)) return;
       if (part.kind === 'say') await prepareNaturalText(part.text, speaker, mood, cast, language, token);
     }
   }
-  async function prepareBeatAudio(beat: StoryBeat, cast: Speaker[], language: Language, token: number) {
+  async function prepareBeatAudio(beat: StoryBeat, cast: Speaker[], language: Language, token: number | null) {
     if (beat.kind === 'narration' && beat.announcement) {
       const text = say(beat.text[language]);
       const quote = text.match(/^(.*?)[„“"«»]([^„“”"«»]+)[“”"«»]\s*$/su);
@@ -622,7 +625,7 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
       }
       const intro = quote[1]!.replace(/[\s:,–—-]+$/u, '');
       if (/\p{L}/u.test(intro)) await prepareNaturalText(intro, 'narrator', 'neutral', cast, language, token);
-      if (token !== audioPreparation) return;
+      if (stale(token)) return;
       await prepareNaturalText(quote[2]!, 'narrator', 'neutral', cast, language, token);
       return;
     }
@@ -630,26 +633,37 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
       await prepareNaturalRead(say(beat.text[language]), 'narrator', 'neutral', cast, language, token);
     } else if (beat.kind === 'line') {
       await prepareNaturalRead(say(beat.text[language]), beat.speaker, moodFor(beat), cast, language, token);
-      if (token !== audioPreparation) return;
+      if (stale(token)) return;
       if (beat.word) await prepareNaturalText(beat.word, beat.speaker, moodFor(beat), cast, language, token);
     } else if (beat.kind === 'question') {
       await prepareNaturalText(say(beat.prompt[language]), beat.asker ?? 'narrator', 'curious', cast, language, token);
     }
   }
+  // A background job per playthrough (its texts, details filled in), so leaving the story does not
+  // stop it: the clips land in the voice cache, and coming back joins the job that is still running.
+  function storyAudioJobKey(next: Story, language: Language) {
+    let hash = 0;
+    for (const char of JSON.stringify(next.beats)) hash = (Math.imul(hash, 31) + char.charCodeAt(0)) | 0;
+    return `story-audio|${language}|${settings.clipVoiceKey}|${next.id}|${hash >>> 0}`;
+  }
   async function prepareStoryAudio(next: Story, cast: Speaker[], language: Language, token: number, from = 0) {
     if (!audioGenerationStart) audioGenerationStart = performance.now();
-    for (const [index, beat] of next.beats.entries()) {
-      if (index < from) continue;
-      if (token !== audioPreparation || left || !naturalReady(language) || !settings.clipVoices) return;
-      await prepareBeatAudio(beat, cast, language, token);
-      if (token !== audioPreparation || left) return;
-      audioDone += 1;
-      // Estimate how long the remaining beats will take based on the ones already prepared.
+    const counted = audioDone;
+    await runJob(storyAudioJobKey(next, language), next.title[language], '/stories', async (control) => {
+      for (const [index, beat] of next.beats.entries()) {
+        if (index < from) continue;
+        if (control.cancelled() || !naturalReady(language) || !settings.clipVoices) return;
+        await prepareBeatAudio(beat, cast, language, null);
+        control.progress({ done: index + 1, total: next.beats.length });
+      }
+    }, (progress) => {
+      if (token !== audioPreparation || left || !progress.total) return;
+      audioDone = Math.max(audioDone, progress.done);
+      // Estimate how long the remaining beats will take based on the ones prepared in this visit.
       const elapsed = performance.now() - audioGenerationStart;
-      const perBeat = audioDone > 0 ? elapsed / audioDone : 0;
-      const remaining = Math.max(0, (audioTotal - audioDone) * perBeat);
-      audioGenerationEta = remaining;
-    }
+      const prepared = Math.max(1, audioDone - counted);
+      audioGenerationEta = Math.max(0, (audioTotal - audioDone) * (elapsed / prepared));
+    });
   }
   // Loads the voices and prepares the story's clips up to the last beat. `from` lets a restored
   // playthrough continue where its loading stopped instead of preparing everything again.
@@ -850,7 +864,7 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
 {/snippet}
 
 {#if story && !audioReady}
-    <StoryAudioLoader {story} title={story.title[lang]} level={story.level} label={audioLoadingLabel} lang={lang} progress={audioLoadingProgress} part={audioDone} total={audioTotal} voice={naturalNarratorVoice(lang)} eta={audioLoadingEta} />
+    <StoryAudioLoader {story} title={story.title[lang]} level={story.level} label={audioLoadingLabel} lang={lang} progress={audioLoadingProgress} part={audioDone} total={audioTotal} voice={naturalNarratorVoice(lang)} eta={audioLoadingEta} jobKey={storyAudioJobKey(story, lang)} />
   {/if}
 
 {#if story && audioReady}

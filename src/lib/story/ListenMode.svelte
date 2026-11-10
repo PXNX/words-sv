@@ -21,6 +21,7 @@
   import { playBing, playChime, playSoundEffect, soundEffectSeconds, type SoundEffect } from '#lib/feedback/sounds.js';
   import StoryCharacter from './StoryCharacter.svelte';
   import StoryScene from './StoryScene.svelte';
+  import BackgroundOffer from '#lib/audio/BackgroundOffer.svelte';
   import IconHeadphones from '~icons/material-symbols/headphones-rounded';
   import IconPlay from '~icons/material-symbols/play-arrow-rounded';
   import IconPause from '~icons/material-symbols/pause-rounded';
@@ -55,6 +56,8 @@
   type Segment = { text: string; speaker: Speaker; mood: Mood; gap: number; story: number; sound: SoundEffect | null; soundLead: number };
   type LiveSession = { story: Story; segments: Segment[]; starts: number[]; sounds: SavedSound[]; duration: number };
 
+  // The background job rendering the story on screen, for "do something else meanwhile".
+  let generatingJobKey = $state('');
   let phase = $state<Phase>('idle');
   let progress = $state(0);
   let done = $state(0);
@@ -650,7 +653,8 @@
         const elapsed = (performance.now() - startedAt) / 1000;
         eta = progress > 0 ? Math.max(0, elapsed / progress - elapsed) : null;
       };
-      const generated = await runJob(`listen|${storyKey(raw)}`, generatingTitle, '/listen', (control) => generateNaturalStory(raw, control, (partDone, partTotal) => control.progress({ done: partDone, total: partTotal, detail: generatingTitle })), onProgress);
+      generatingJobKey = `listen|${storyKey(raw)}`;
+      const generated = await runJob(generatingJobKey, generatingTitle, '/listen', (control) => generateNaturalStory(raw, control, (partDone, partTotal) => control.progress({ done: partDone, total: partTotal, detail: generatingTitle })), onProgress);
       if (!generated || token !== generation) return;
       playBing(soundEnabled);
       const { saved, blob } = generated;
@@ -1051,6 +1055,7 @@
             {#if eta !== null && eta >= 1}<small>{m.voice_quality_remaining({ time: formatTime(eta) }, { locale: settings.interfaceLocale })}</small>{/if}
           </div>
           <small class="listen-part">{m.story_loader_parts({ done: num(done), total: num(total) }, { locale: settings.interfaceLocale })}</small>
+          {#if generatingJobKey}<BackgroundOffer jobKey={generatingJobKey} label={generatingTitle || labels.audio} />{/if}
         </div>
       </div>
     {:else if phase === 'loading'}

@@ -9,8 +9,9 @@
   import { characterNames, type Story } from './stories';
   import type { VocabularyLevel } from '#lib/data/vocabulary.js';
   import StoryScene from './StoryScene.svelte';
+  import BackgroundOffer from '#lib/audio/BackgroundOffer.svelte';
 
-  let { story, title, level, label, lang, progress, part, total, voice, eta = 0 }: {
+  let { story, title, level, label, lang, progress, part, total, voice, eta = 0, jobKey = '' }: {
     story: Story;
     title: string;
     level: VocabularyLevel;
@@ -21,6 +22,8 @@
     total: number;
     voice: string;
     eta?: number;
+    /** The background job preparing the audio; offers to do something else meanwhile. */
+    jobKey?: string;
   } = $props();
   const questions = $derived(story.beats.filter((beat) => beat.kind === 'question' || beat.kind === 'reply').length);
   const castNames = $derived.by(() => {
@@ -55,6 +58,7 @@
       </ul>
       <p class="story-loader-meta" dir="auto"><span>{voiceLabel || '\u00a0'}</span></p>
       <p class="story-loader-meta" dir="auto" aria-live="polite"><span>{etaLabel || '\u00a0'}</span></p>
+      {#if jobKey}<BackgroundOffer {jobKey} label={title} />{/if}
       <span class="story-loader-wave" aria-hidden="true">{#each [0, 1, 2, 3, 4] as bar (bar)}<i style={`--bar:${bar}`}></i>{/each}</span>
     </div>
   </div>
