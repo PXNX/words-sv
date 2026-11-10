@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { logAnswer } from '#lib/progress/eventLog.js';
   import { num } from '#lib/format/num.svelte.js';
   import { evaluateWordleGuess, fiveLetterWords, isValidWordleGuess, normalizePlayableWord } from './wordleWords';
   import { readWordleState, WORDLE_STATE_KEY, writeWordleState } from './wordleState';
@@ -167,6 +168,9 @@ target = candidates.length > 0 ? (candidates[Math.floor(Math.random() * candidat
     if (marks.some((mark) => mark === 'correct')) onGreen();
     notice = '';
     const row = describeRow(entries[entries.length - 1]!);
+    // A finished round goes into the learning log: solved or not, scored by the tries it took.
+    const finished = normalized === target || entries.length >= maxAttempts;
+    if (finished && !practiceActive) logAnswer(language, 'wordle', `WORDLE:${target}`, normalized === target, { level, score: normalized === target ? (maxAttempts + 1 - entries.length) / maxAttempts : 0 });
     if (normalized === target) {
       announcement = `${row}. ${labels.win} ${solvedLabel}`;
       onWin(entries.length);
