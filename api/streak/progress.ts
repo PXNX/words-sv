@@ -1,6 +1,8 @@
-import { getDatabase } from '../_lib/database.mjs';
-import { isMethod, readJson, respond } from '../_lib/http.mjs';
-import { applyStreakEvent, collectReward, isSupportedTimeZone, normalizeReminderLocale, normalizeVocabularyGoal, stateForToday, streakSummary } from '../_lib/streak.mjs';
+import { getDatabase } from '../_lib/database.js';
+import { isMethod, readJson, respond } from '../_lib/http.js';
+import { applyStreakEvent, collectReward, isSupportedTimeZone, normalizeReminderLocale, normalizeVocabularyGoal, stateForToday, streakSummary } from '../_lib/streak.js';
+import type { Database } from '../_lib/database.js';
+import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 
 const events = new Set([
 	'sync',
@@ -18,7 +20,7 @@ const events = new Set([
 	'sentence_completed',
 	'reward_collected'
 ]);
-const validDeviceId = (value) => typeof value === 'string' && /^[a-zA-Z0-9_-]{16,64}$/.test(value);
+const validDeviceId = (value: unknown): value is string => typeof value === 'string' && /^[a-zA-Z0-9_-]{16,64}$/.test(value);
 
 const COLUMNS = ['device_id', 'timezone', 'locale', 'day_key', 'vocab_correct', 'circle_completed', 'definitions_completed', 'wordle_completed', 'reading_completed', 'story_completed', 'grammar_correct', 'listen_completed', 'pronunciation_attempts', 'hangman_completed', 'alltag_correct', 'sentence_completed', 'current_qualified', 'last_qualified_day', 'streak_count', 'best_streak', 'vocabulary_goal', 'freezes', 'qualified_days', 'reward_collected', 'embers'];
 const UPSERT = `INSERT INTO wordcircle_streak_devices (${COLUMNS.join(', ')})
@@ -31,29 +33,31 @@ const MIGRATIONS = [
 	'ALTER TABLE wordcircle_streak_devices ADD COLUMN sentence_completed TINYINT(1) NOT NULL DEFAULT 0'
 ];
 
-async function upsert(db, row) {
+async function upsert(db: Database, row: Record<string, unknown>) {
 	const values = COLUMNS.map((column) => row[column]);
 	try {
 		await db.execute(UPSERT, values);
 	} catch (error) {
-		if (error?.code !== 'ER_BAD_FIELD_ERROR') throw error;
+		if ((error as { code?: string } | null)?.code !== 'ER_BAD_FIELD_ERROR') throw error;
 		for (const migration of MIGRATIONS) {
-			await db.execute(migration).catch((migrationError) => { if (migrationError?.code !== 'ER_DUP_FIELDNAME') throw migrationError; });
+			await db.execute(migration).catch((migrationError: unknown) => { if ((migrationError as { code?: string } | null)?.code !== 'ER_DUP_FIELDNAME') throw migrationError; });
 		}
 		await db.execute(UPSERT, values);
 	}
 }
 
-function counter(value, max = 999) {
+function counter(value: unknown, max = 999) {
 	const number = Number(value);
 	return Number.isSafeInteger(number) && number >= 0 ? Math.min(max, number) : 0;
 }
 
-export default async function streakProgress(req, res) {
+export default async function streakProgress(req: ApiRequest, res: ApiResponse) {
 	if (!isMethod(req, 'POST')) return respond(res, 405, { ok: false, error: 'method_not_allowed' });
 	try {
-		const { deviceId, timeZone, event = 'sync', snapshot, locale } = await readJson(req);
-		if (!validDeviceId(deviceId) || !isSupportedTimeZone(timeZone) || !events.has(event)) return respond(res, 400, { ok: false, error: 'invalid_request' });
+		const { deviceId, timeZone, event = 'sync', snapshot: rawSnapshot, locale } = await readJson(req);
+		// The device's own streak state for today, sent as-is; every field is checked where it is read.
+		const snapshot = rawSnapshot as Record<string, unknown> | null | undefined;
+		if (!validDeviceId(deviceId) || typeof timeZone !== 'string' || !isSupportedTimeZone(timeZone) || typeof event !== 'string' || !events.has(event)) return respond(res, 400, { ok: false, error: 'invalid_request' });
 		const db = getDatabase();
 		const [rows] = await db.execute('SELECT * FROM wordcircle_streak_devices WHERE device_id = ? LIMIT 1', [deviceId]);
 		const reminderLocale = normalizeReminderLocale(locale ?? rows[0]?.locale);
@@ -89,7 +93,7 @@ export default async function streakProgress(req, res) {
 		let next = applyStreakEvent(merged, timeZone, event);
 		// An ember collected offline is collected here too; collecting is idempotent per day.
 		if (snapshot?.rewardCollected && snapshot.dateKey === next.dateKey) next = collectReward(next);
-		const bestStreak = Math.max(counter(rows[0]?.best_streak), counter(snapshot?.bestStreak, 100000), next.bestStreak, next.streakCount);
+		const bestStreak = Math.max(counter(rows[0]?.best_streak), counter(snapshot?.bestStreak, 100000), next.bestStreak as number, next.streakCount);
 		const row = {
 			device_id: deviceId,
 			timezone: timeZone,

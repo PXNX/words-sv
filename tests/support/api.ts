@@ -1,4 +1,4 @@
-type ApiResponse = import('../../api/_lib/http.mjs').ApiResponse;
+import type { ApiResponse } from '../../api/_lib/http.js';
 
 /**
  * A response stand-in that is structurally an `ApiResponse` (Vercel's helpers) and also exposes the

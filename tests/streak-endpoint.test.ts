@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import streakProgress from '../api/streak/progress.js';
 import { responseCapture } from './support/api';
 
 // An in-memory stand-in for the streak table: SELECT returns the stored row, the upsert stores the
@@ -20,10 +21,7 @@ const execute = vi.fn(async (sql: string, values: unknown[] = []) => {
   }
   return [{}];
 });
-vi.mock('../api/_lib/database.mjs', () => ({ getDatabase: () => ({ execute }) }));
-// Loaded through a variable so the type check does not pull the untyped endpoint file in.
-const endpoint = '../api/streak/progress.mjs';
-const { default: streakProgress } = (await import(/* @vite-ignore */ endpoint)) as { default: (req: unknown, res: unknown) => Promise<unknown> };
+vi.mock('../api/_lib/database.js', () => ({ getDatabase: () => ({ execute }) }));
 
 const deviceId = 'device_0123456789abcdef';
 async function post(body: Record<string, unknown>) {

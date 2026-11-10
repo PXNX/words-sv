@@ -52,13 +52,13 @@ CREATE TABLE IF NOT EXISTS wordcircle_streak_devices (
 --   ADD COLUMN hangman_completed TINYINT(1) NOT NULL DEFAULT 0,
 --   ADD COLUMN alltag_correct INT UNSIGNED NOT NULL DEFAULT 0;
 
--- Migration for the collectable daily reward. api/streak/progress.mjs also runs this on its own
+-- Migration for the collectable daily reward. api/streak/progress.ts also runs this on its own
 -- the first time it meets a database without these columns.
 -- ALTER TABLE wordcircle_streak_devices
 --   ADD COLUMN reward_collected TINYINT(1) NOT NULL DEFAULT 0,
 --   ADD COLUMN embers TINYINT UNSIGNED NULL;
 
--- Migration for the writing goal (/sentence); api/streak/progress.mjs runs it on its own as well.
+-- Migration for the writing goal (/sentence); api/streak/progress.ts runs it on its own as well.
 -- ALTER TABLE wordcircle_streak_devices ADD COLUMN sentence_completed TINYINT(1) NOT NULL DEFAULT 0;
 
 CREATE TABLE IF NOT EXISTS wordcircle_push_subscriptions (
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS wordcircle_push_subscriptions (
 );
 
 -- Telegram: a player's link to @word_circle_bot (streak reminders) and their invite code. Created on
--- first use by api/_lib/telegram.mjs, which also adds the column below.
+-- first use by api/_lib/telegram.ts, which also adds the column below.
 -- ALTER TABLE wordcircle_streak_devices ADD COLUMN invite_freezes TINYINT UNSIGNED NOT NULL DEFAULT 0;
 CREATE TABLE IF NOT EXISTS wordcircle_telegram_links (
   device_id VARCHAR(64) NOT NULL PRIMARY KEY,
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS wordcircle_reminder_deliveries (
 );
 
 -- Progress saved to a player's Telegram account: one JSON snapshot of the app's storage per Telegram
--- user, written compare-and-set on `revision`. Created on first use by api/progress/sync.mjs.
+-- user, written compare-and-set on `revision`. Created on first use by api/progress/sync.ts.
 CREATE TABLE IF NOT EXISTS wordcircle_progress_snapshots (
   telegram_user_id BIGINT NOT NULL PRIMARY KEY,
   revision INT UNSIGNED NOT NULL DEFAULT 0,
