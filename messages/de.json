@@ -445,9 +445,8 @@
   "conversation_no_recognition": "Dein Browser kann keine Sprache erkennen – du kannst deine Antworten aber tippen.",
   "conversation_cloud_recognition": "Hinweis: Die Spracherkennung dieses Browsers läuft eventuell nicht auf dem Gerät.",
   "cosmetic_locked": "Gesperrt",
-  "cosmetic_unlocked_title": "Neuer Look freigeschaltet!",
+  "cosmetic_unlocked_title": "Freigeschaltet!",
   "cosmetic_unlocked_body": "Richtig stark gespielt – dein Charakter hat ein neues Teil.",
-  "cosmetic_unlocked_badge": "Neues Abzeichen – dein Charakter hat ein neues Teil.",
   "cosmetic_try_on": "Gleich anprobieren",
   "cosmetic_close": "Schließen",
   "cosmetic_hint_vocab": "Beantworte im Word Quiz 15 Fragen hintereinander beim ersten Versuch richtig.",
@@ -753,5 +752,10 @@
   "models_state_in_memory": "Im Arbeitsspeicher · {memory}",
   "models_state_downloaded_hint": "Liegt auf dem Gerät. Beim ersten Nutzen wird es kurz in den Arbeitsspeicher geladen.",
   "grade_model_in_memory": "{model} ist im Arbeitsspeicher und bewertet sofort.",
-  "grade_model_on_device": "{model} ist heruntergeladen. Beim ersten Bewerten wird es kurz in den Arbeitsspeicher geladen."
+  "grade_model_on_device": "{model} ist heruntergeladen. Beim ersten Bewerten wird es kurz in den Arbeitsspeicher geladen.",
+  "cosmetic_new_part": "Neu: {part}",
+  "cosmetic_from_badge": "Für das Abzeichen „{name}“ – richtig stark!",
+  "cosmetic_from_language": "Für {count} geübte Wörter auf {language}.",
+  "cosmetic_wear": "Gleich anziehen",
+  "cosmetic_worn": "Steht dir!"
 }
