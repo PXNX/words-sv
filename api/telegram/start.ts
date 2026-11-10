@@ -1,7 +1,7 @@
 import { getDatabase } from '../_lib/database.js';
 import { isMethod, readJson, respond } from '../_lib/http.js';
 import { FREEZE_EVERY, normalizeReminderLocale } from '../_lib/streak.js';
-import { INVITE_EMBERS, addEmbers, appUrl, bridgeAuthorized, ensureTelegramTables, htmlMessage, inviteThanks, parseStartPayload, sendTelegram } from '../_lib/telegram.js';
+import { INVITE_EMBERS, INVITE_REWARD_TARGET, addEmbers, inviteMilestone, appUrl, bridgeAuthorized, ensureTelegramTables, htmlMessage, inviteThanks, parseStartPayload, sendTelegram } from '../_lib/telegram.js';
 import type { Database } from '../_lib/database.js';
 import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 
@@ -61,6 +61,10 @@ async function creditInvite(db: Database, code: string, userId: number, telegram
 		const [result] = await db.execute('UPDATE wordcircle_streak_devices SET embers = ?, freezes = ?, invite_freezes = LEAST(2, invite_freezes + ?) WHERE device_id = ? AND embers <=> ? AND freezes = ?', [next.embers, next.freezes, next.freezes - freezes, inviter.device_id, device.embers ?? null, freezes]);
 		if (result.affectedRows !== 1) continue;
 		if (inviter.chat_id) await telegramSender(inviter.chat_id, htmlMessage(inviteThanks(normalizeReminderLocale(device.locale), INVITE_EMBERS)), appUrl()).catch(() => undefined);
+		const [[invites]] = await db.execute('SELECT COUNT(*) AS count FROM wordcircle_telegram_invites WHERE inviter_device_id = ?', [inviter.device_id]);
+		if (inviter.chat_id && Number(invites?.count ?? 0) === INVITE_REWARD_TARGET) {
+			await telegramSender(inviter.chat_id, htmlMessage(inviteMilestone(normalizeReminderLocale(device.locale), INVITE_REWARD_TARGET)), appUrl()).catch(() => undefined);
+		}
 		break;
 	}
 	return 'invited';

@@ -824,5 +824,8 @@
   "readiness_how_col_answers": "Antworten",
   "readiness_how_col_range": "Bereitschaft",
   "readiness_how_rubric": "Bewertung {percent}",
-  "readiness_how_overall": "Zusammen: {range}."
+  "readiness_how_overall": "Zusammen: {range}.",
+  "cosmetic_hint_invite": "Lade {count} Freunde ein, die über deinen Link zu WordCircle kommen.",
+  "cosmetic_from_invite": "Dafür, dass du {count} Freunde zu WordCircle gebracht hast.",
+  "invite_goal": "{count} von {target} Freunden · dann bekommt deine Figur ein exklusives Oberteil in Telegram-Blau"
 }

@@ -824,5 +824,8 @@
   "readiness_how_col_answers": "Answers",
   "readiness_how_col_range": "Readiness",
   "readiness_how_rubric": "score {percent}",
-  "readiness_how_overall": "Together: {range}."
+  "readiness_how_overall": "Together: {range}.",
+  "cosmetic_hint_invite": "Invite {count} friends who join WordCircle through your link.",
+  "cosmetic_from_invite": "For bringing {count} friends to WordCircle.",
+  "invite_goal": "{count} of {target} friends · then your character gets an exclusive Telegram-blue top"
 }

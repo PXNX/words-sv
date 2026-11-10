@@ -70,3 +70,13 @@ describe('cosmetic rewards', () => {
     expect(earnedLanguageRewards({ it: 500, de: 80 }, ['language_it'])).toEqual(['language_de']);
   });
 });
+
+describe('invite reward', async () => {
+  const { earnedInviteRewards, INVITE_REWARD_TARGET, cosmetics } = await import('../src/lib/profile/cosmetics');
+  it('unlocks the Telegram-blue top at ten friends, once', () => {
+    expect(earnedInviteRewards(INVITE_REWARD_TARGET - 1, [])).toEqual([]);
+    expect(earnedInviteRewards(INVITE_REWARD_TARGET, [])).toEqual(['invite_ten']);
+    expect(earnedInviteRewards(25, ['invite_ten'])).toEqual([]);
+    expect(cosmetics.invite_ten).toMatchObject({ part: 'top', choice: '#2aabee' });
+  });
+});
