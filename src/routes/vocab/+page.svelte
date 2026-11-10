@@ -441,7 +441,8 @@
         <p class="m-0 text-accent text-[.62rem] font-extrabold leading-[1.35]">{labels.audioPrompt}</p>
       {/if}
       {#if speechStatus && promptKind === 'audio'}<p class="m-0 text-accent text-[.62rem] font-extrabold leading-[1.35]">{speechStatus}</p>{/if}
-      {#if answerStatus !== null && !isDefinitionPrompt && currentDefinition}<p class="learn-fade-in m-0 max-w-[22rem] text-base-content/65 text-[.72rem] font-bold leading-[1.4]">{currentDefinition}</p>{/if}
+      <!-- The definition's space is kept from the start (invisible until answered), so the choices never move. -->
+      {#if !isDefinitionPrompt && currentDefinition}<p class="m-0 max-w-[22rem] text-base-content/65 text-[.72rem] font-bold leading-[1.4] {answerStatus !== null ? 'learn-fade-in' : 'invisible'}" aria-hidden={answerStatus === null}>{currentDefinition}</p>{/if}
     </article>
     {/key}
     {#if choiceWords.length >= 3}
@@ -458,6 +459,8 @@
             ><span class="flex-1">{optionText(word)}</span>{#if answerStatus !== null && word === currentWord}<IconCheck class="w-[1.25rem] h-[1.25rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && word === selectedChoice}<IconClose class="w-[1.25rem] h-[1.25rem] flex-none text-[#c0392b] dark:text-[#ffc2b8]" aria-label={labels.tryAgain} />{/if}</button>
           {/each}
         </div>
+        <!-- One fixed slot for the answer buttons, so nothing jumps when they appear. -->
+        <div class="answer-slot">
         {#if answerStatus === 'correct'}
           <div class="grid gap-[.35rem]">
             <p class="m-0 text-center text-base-content/60 text-[.58rem] font-extrabold">{labels.rateHint}</p>
@@ -472,7 +475,12 @@
             <button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>
           </div>
         {/if}
+        </div>
       </section>
     {:else}<p class="max-w-[24rem] m-0 text-base-content/60 text-[.75rem] font-bold leading-[1.45] text-center">{currentDefinition || labels.unavailable}</p>{/if}
   {/if}
 </section>
+
+<style>
+  .answer-slot { min-height:4.6rem;display:grid;align-content:start; }
+</style>

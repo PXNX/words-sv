@@ -30,25 +30,21 @@
       <p class="word-bank-status" dir="auto">{label}</p>
       <p class="word-bank-level">{m.vocabulary({}, { locale: settings.interfaceLocale })} {level.toUpperCase()}</p>
       <div class="word-bank-progress"><DownloadProgress {progress} phase="load" label={m.progress_prepare({}, { locale: settings.interfaceLocale })} compact /></div>
-      {#if progressLabel}
-        <p class="word-bank-count" dir="auto">{progressLabel}</p>
-      {/if}
+      <p class="word-bank-count" dir="auto">{progressLabel || '\u00a0'}</p>
       <p class="word-bank-hint" dir="auto">{m.word_bank_hint({}, { locale: settings.interfaceLocale })}</p>
-      {#if voiceLabel}
-        <p class="word-bank-voice" dir="auto">{voiceLabel}</p>
-      {/if}
-      {#if etaLabel}
-        <p class="word-bank-voice" dir="auto">{etaLabel}</p>
-      {/if}
+      <p class="word-bank-voice" dir="auto">{voiceLabel || '\u00a0'}</p>
+      <p class="word-bank-voice" dir="auto" aria-live="polite">{etaLabel || '\u00a0'}</p>
       <span class="word-bank-wave" aria-hidden="true">{#each [0, 1, 2, 3, 4] as bar (bar)}<i style={`--bar:${bar}`}></i>{/each}</span>
-      {#if oncontinue && total > 0 && done < total}
-        <button type="button" class="word-bank-continue" onclick={oncontinue}>{continueLabel}</button>
+      {#if oncontinue}
+        <!-- Always in place (hidden until there is something to skip), so nothing moves when it appears. -->
+        <button type="button" class="word-bank-continue" class:waiting={!(total > 0 && done < total)} tabindex={total > 0 && done < total ? 0 : -1} aria-hidden={!(total > 0 && done < total)} onclick={oncontinue}>{continueLabel}</button>
       {/if}
     </div>
   </div>
 </section>
 
 <style>
+  .word-bank-continue.waiting { visibility:hidden; }
   .word-bank-loader { position:relative;isolation:isolate;flex:1 1 auto;min-height:0;width:100%;display:grid;place-items:center;padding:clamp(.7rem,3.4vw,1.2rem);overflow-y:auto;background:radial-gradient(circle at 50% 18%,rgba(247,226,176,.5),transparent 62%); }
   .word-bank-card { position:relative;overflow:hidden;width:min(100%,26rem);padding:clamp(1.1rem,5.4vw,1.7rem) clamp(1rem,5vw,1.6rem) clamp(1.15rem,5.4vw,1.8rem);border:1px solid rgba(23,42,69,.22);border-radius:1.15rem;background:#cfe6f2;box-shadow:0 8px 20px rgba(23,42,69,.08);text-align:center;animation:word-bank-in .35s cubic-bezier(.23,1,.32,1); }
   .word-bank-card::after { content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,253,247,.72),rgba(255,253,247,.9)); }

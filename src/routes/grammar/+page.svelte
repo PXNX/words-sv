@@ -286,6 +286,8 @@
         <p class="m-0 min-h-[2.2rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.35rem,6vw,2.1rem)] leading-[1.3]" lang={settings.lang}>{orderPreview()}</p>
       </article>{/key}
       <div class="w-[min(100%,28rem)] flex flex-wrap justify-center gap-[.45rem]" lang={settings.lang}>{#each orderWords as word, index}<button type="button" class="btn-play btn-play-choice min-h-[2.55rem] px-[.75rem] text-[.75rem] {selectedOrder.includes(index) ? 'border-neutral/30 bg-neutral/20 text-base-content/35 shadow-none' : ''}" onclick={() => chooseOrderWord(index)} disabled={selectedOrder.includes(index) || answerStatus !== null}>{word}</button>{/each}</div>
+      <!-- The feedback has its own slot, so the word tiles above stay where they are. -->
+      <div class="grid justify-items-center content-start gap-[.45rem] min-h-[5.4rem]">
       {#if answerStatus === 'wrong'}
         <div class="flex items-center gap-[.35rem] text-error text-[.7rem] font-extrabold"><IconClose class="w-[1rem] h-[1rem]" aria-hidden="true" />{labels.tryAgain}</div>
         <div class="flex flex-wrap justify-center gap-[.45rem]">
@@ -297,6 +299,7 @@
           <button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>
         </div>
       {/if}
+      </div>
     {:else}
     {#key position}<article class="learn-card-in w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center" class:learn-correct={answerStatus === 'correct'} class:learn-wrong={answerStatus === 'wrong'}>
             {#if prompt.question}<p class="m-0 text-accent text-[.62rem] font-black tracking-[.08em] uppercase">{prompt.question}</p>{/if}
@@ -317,11 +320,10 @@
             >{choice}{#if answerStatus !== null && choice === prompt.correct}<IconCheck class="w-[1.15rem] h-[1.15rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && choice === selectedChoice}<IconClose class="w-[1.15rem] h-[1.15rem] flex-none text-[#c0392b] dark:text-[#ffc2b8]" aria-label={labels.tryAgain} />{/if}</button>
           {/each}
         </div>
-        {#if answerStatus}
-          <div class="flex flex-wrap justify-center gap-[.45rem]">
-            <button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>
-          </div>
-        {/if}
+        <!-- Kept in place (invisible until answered), so the choices above never move. -->
+        <div class="flex flex-wrap justify-center gap-[.45rem] {answerStatus ? '' : 'invisible'}" aria-hidden={!answerStatus}>
+          <button class="btn-play btn-play-ink" onclick={continueLearning} tabindex={answerStatus ? 0 : -1}>{labels.continue}</button>
+        </div>
       </section>
     {/if}
     {/if}

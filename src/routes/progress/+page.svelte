@@ -283,8 +283,11 @@
       <span class="progress-store-text"><strong>{m.store_link({}, { locale: settings.interfaceLocale })}</strong><small>{m.store_link_hint({}, { locale: settings.interfaceLocale })}</small></span>
       <IconChevron aria-hidden="true" class="progress-store-arrow rtl:rotate-180" />
     </a>
-  {:else}
+  {:else if cloudSync.linked === false}
     <div class="mt-4"><SyncHint /></div>
+  {:else}
+    <!-- Still asking the server: hold the card's place so nothing below jumps when it answers. -->
+    <div class="panel-play progress-store pending" aria-hidden="true"><span class="progress-store-icon"></span><span class="progress-store-text"><strong>&nbsp;</strong><small>&nbsp;</small></span></div>
   {/if}
 
   <ExamCoach />
@@ -438,6 +441,8 @@
 
 <style>
   .progress-store { display:flex;align-items:center;gap:.75rem;margin-top:1rem;padding:.75rem .85rem;color:inherit;text-decoration:none; }
+  .progress-store.pending { opacity:.45; }
+  .progress-store.pending .progress-store-icon { animation:none; }
   .progress-store-icon { display:grid;place-items:center;flex:none;width:2.4rem;height:2.4rem;border-radius:.8rem;background:#fff4d9;color:#a45e38;animation:progress-store-bob 3.2s ease-in-out infinite; }
   :global(html.dark) .progress-store-icon { background:#4a3a1a;color:#e6a527; }
   .progress-store-icon :global(svg) { width:1.3rem;height:1.3rem; }
