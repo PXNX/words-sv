@@ -1,4 +1,5 @@
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
+import * as v from 'valibot';
 import { FREEZE_EVERY, MAX_FREEZES } from './streak.mjs';
 
 // @word_circle_bot (the ptb-words repo) polls for updates on its own server. It forwards `/start`
@@ -31,6 +32,14 @@ export function bridgeAuthorized(authorization, secret = process.env.TELEGRAM_BR
 	return token.length === expected.length && timingSafeEqual(token, expected);
 }
 
+// The `user` field of signed Mini App launch data; other fields Telegram adds are kept.
+const InitDataUser = v.looseObject({
+	id: v.pipe(v.number(), v.safeInteger(), v.minValue(1)),
+	first_name: v.optional(v.string()),
+	language_code: v.optional(v.string()),
+	allows_write_to_pm: v.optional(v.boolean())
+});
+
 /** The Telegram user behind a Mini App launch, once Telegram's signature over `initData` checks out
  * against the bot token; null for anything forged, unsigned or older than `maxAgeSeconds`.
  * @param {unknown} initData @param {string} [token] @param {number} [now] @param {number} [maxAgeSeconds]
@@ -47,8 +56,8 @@ export function verifyInitData(initData, token = process.env.TELEGRAM_BOT_TOKEN 
 	const authDate = Number(params.get('auth_date'));
 	if (!Number.isFinite(authDate) || now / 1000 - authDate > maxAgeSeconds) return null;
 	try {
-		const user = JSON.parse(params.get('user') ?? '');
-		return Number.isSafeInteger(user?.id) && user.id > 0 ? user : null;
+		const user = v.safeParse(InitDataUser, JSON.parse(params.get('user') ?? ''));
+		return user.success ? user.output : null;
 	} catch {
 		return null;
 	}

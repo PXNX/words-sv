@@ -54,6 +54,14 @@ describe('LLM grader reply parsing', () => {
     expect(parseLlmGrade('I cannot help with that.', fallback)).toBe(fallback);
     expect(parseLlmGrade('{"issues": []}', fallback)).toBe(fallback);
     expect(parseLlmGrade('{"score": "nope"}', fallback)).toBe(fallback);
+    expect(parseLlmGrade('{"score": ""}', fallback)).toBe(fallback);
+    expect(parseLlmGrade('{"score": null}', fallback)).toBe(fallback);
+  });
+
+  it('tolerates sloppy issues and comments', () => {
+    const result = parseLlmGrade('{"score": 60, "issues": "nouns", "comment": 7}', fallback);
+    expect(result.score).toBeCloseTo(0.6);
+    expect(result.comment ?? '').toBe('');
   });
 
   it('clamps scores outside 0–100', () => {
