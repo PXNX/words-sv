@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { checkpointDue, checkpointTrend, CHECKPOINT_INTERVAL_MS, parseCheckpoints, type CheckpointResult } from '../src/lib/assessment/checkpoints';
+import { checkpointDue, checkpointIntervalDays, checkpointTrend, CHECKPOINT_INTERVAL_MS, nextCheckpointAt, parseCheckpoints, type CheckpointResult } from '../src/lib/assessment/checkpoints';
 
 const NOW = Date.UTC(2026, 10, 10);
 const result = (at: number, level: CheckpointResult['level'], lang: CheckpointResult['lang'] = 'de'): CheckpointResult => ({ at, lang, level, scores: { a1: 1 } });
@@ -16,6 +16,17 @@ describe('checkpoints', () => {
     const results = [result(NOW - CHECKPOINT_INTERVAL_MS + 1000, 'a2'), result(NOW - 2 * CHECKPOINT_INTERVAL_MS, 'b1', 'en')];
     expect(checkpointDue(results, 'de', NOW)).toBe(false);
     expect(checkpointDue(results, 'en', NOW)).toBe(true);
+  });
+
+  it('comes due sooner the more words a day the learner aims for', () => {
+    expect([5, 8, 12].map(checkpointIntervalDays)).toEqual([24, 15, 10]);
+    expect(checkpointIntervalDays(1)).toBe(28);
+    expect(checkpointIntervalDays(50)).toBe(7);
+    const results = [result(NOW - 12 * 86_400_000, 'a2')];
+    expect(checkpointDue(results, 'de', NOW, 12)).toBe(true);
+    expect(checkpointDue(results, 'de', NOW, 5)).toBe(false);
+    expect(nextCheckpointAt(results, 'de', 5)).toBe(NOW + 12 * 86_400_000);
+    expect(nextCheckpointAt([], 'de', 5)).toBeNull();
   });
 
   it('shows the last three results with their change', () => {
