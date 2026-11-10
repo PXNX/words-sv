@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { engineFor, speaksLanguage, voiceEngineIds, voiceEngines } from '../src/lib/voice/engines.js';
+import { castEngineVoices, engineFootprint, engineFor, speaksLanguage, voiceEngineIds, voiceEngines, type EngineVoice } from '../src/lib/voice/engines.js';
 import { createPriorityQueue } from '../src/lib/audio/priorityQueue.js';
 
 describe('voice engines', () => {
@@ -17,6 +17,81 @@ describe('voice engines', () => {
 
   it('marks only Edge as leaving the device', () => {
     expect(voiceEngineIds.filter((id) => !voiceEngines[id].onDevice)).toEqual(['edge']);
+  });
+});
+
+describe('voice engine registry', () => {
+  it('keys every engine by its own id and gives it a name', () => {
+    for (const id of voiceEngineIds) {
+      expect(voiceEngines[id].id).toBe(id);
+      expect(voiceEngines[id].name).not.toBe('');
+    }
+  });
+
+  it('ends every fallback chain at an engine that runs everywhere', () => {
+    for (const id of voiceEngineIds) {
+      for (const language of ['de', 'en', 'fr', 'it', 'es', 'pt', 'uk'] as const) {
+        const engine = engineFor(id, language, { webgpu: false });
+        expect(voiceEngines[engine].webgpu).toBeFalsy();
+        expect(speaksLanguage(engine, language)).toBe(true);
+      }
+    }
+  });
+
+  it('describes every downloaded model completely', () => {
+    for (const engine of Object.values(voiceEngines).filter((candidate) => candidate.runtime === 'model')) {
+      expect(engine.megabytes, engine.id).toBeGreaterThan(0);
+      expect(engine.memoryMB, engine.id).toBeGreaterThan(0);
+      expect(engine.tier, engine.id).toBeDefined();
+      expect(engine.model, engine.id).toMatch(/^[\w-]+\/[\w.-]+$/);
+      expect(engine.licence, engine.id).toBeTruthy();
+      const tier = engine.megabytes! < 100 ? 'small' : engine.megabytes! < 500 ? 'medium' : 'large';
+      expect(engine.tier, engine.id).toBe(tier);
+    }
+  });
+
+  it('gives voices unique ids within an engine', () => {
+    for (const engine of Object.values(voiceEngines)) {
+      const ids = (engine.voices ?? []).map((voice) => voice.id);
+      expect(new Set(ids).size, engine.id).toBe(ids.length);
+    }
+  });
+
+  it('reports the WebAssembly footprint where an engine has one and there is no WebGPU', () => {
+    for (const id of voiceEngineIds) {
+      const { wasm, megabytes } = voiceEngines[id];
+      if (wasm) expect(engineFootprint(id, { webgpu: false })).toEqual(wasm);
+      if (megabytes) expect(engineFootprint(id, { webgpu: true })?.megabytes).toBe(megabytes);
+    }
+    expect(engineFootprint('standard', { webgpu: true })).toBeNull();
+  });
+});
+
+describe('casting model voices', () => {
+  const voices: EngineVoice[] = [
+    { id: 'f1', name: 'F1', gender: 'female' }, { id: 'f2', name: 'F2', gender: 'female' },
+    { id: 'm1', name: 'M1', gender: 'male' }
+  ];
+
+  it('gives each speaker the next unused voice of their gender, best first', () => {
+    const casting = castEngineVoices([{ id: 'narrator', gender: 'female' }, { id: 'tom', gender: 'male' }, { id: 'mia', gender: 'female' }], voices);
+    expect([...casting]).toEqual([['narrator', 'f1'], ['tom', 'm1'], ['mia', 'f2']]);
+  });
+
+  it('shares voices only once the pool runs out', () => {
+    const casting = castEngineVoices([{ id: 'a', gender: 'male' }, { id: 'b', gender: 'male' }], voices);
+    expect([...casting.values()]).toEqual(['m1', 'm1']);
+  });
+
+  it('borrows from the other gender when the model has none of a speaker\'s', () => {
+    const female = voices.filter((voice) => voice.gender === 'female');
+    expect(castEngineVoices([{ id: 'paul', gender: 'male' }], female).get('paul')).toBe('f1');
+    expect(castEngineVoices([{ id: 'paul', gender: 'male' }], []).size).toBe(0);
+  });
+
+  it('casts Supertonic\'s ten voices without sharing for ten speakers', () => {
+    const speakers = Array.from({ length: 10 }, (_, index) => ({ id: index, gender: index % 2 ? 'male' as const : 'female' as const }));
+    expect(new Set(castEngineVoices(speakers, voiceEngines.supertonic.voices ?? []).values()).size).toBe(10);
   });
 });
 
