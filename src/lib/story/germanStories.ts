@@ -3169,14 +3169,30 @@ export const germanStories: Story[] = [
     scene: 'office',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Extra A2 1'),
+    title: german('Der letzte Tag vor dem Urlaub'),
     beats: [
-      { kind: 'narration', text: german('abschließen und Ahnung und ändern und anzeigen und ärgern.') },
-      { kind: 'line', speaker: 'mia', text: german('auspacken ist wichtig und aussprechen ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('austragen und beachten sind da.') },
-      { kind: 'narration', text: german('bedanken und beeilt.') },
-      { kind: 'question', prompt: german('Was ist beenden?'), options: [german('begonnen'), german('begründen'), german('Bekannte')] },
-      { kind: 'question', prompt: german('Wer hat beenden?'), options: [german('begonnen'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Es ist Freitag, halb fünf. Morgen fliegt Mia in den Urlaub. Vorher muss sie noch einen Bericht für ihre Chefin beenden.') },
+      { kind: 'line', speaker: 'mia', mood: 'worried', text: german('Oh nein! Der Computer hat etwas geändert. Meine Tabelle sieht ganz anders aus.') },
+      { kind: 'narration', enters: ['tom'], text: german('Tom kommt mit zwei Tassen Kaffee ins Büro.') },
+      { kind: 'line', speaker: 'tom', text: german('Was ist los? Du siehst so ärgerlich aus.') },
+      { kind: 'line', speaker: 'mia', mood: 'angry', text: german('Ich ärgere mich so! Ich habe den Bericht heute Morgen begonnen, und jetzt zeigt der Computer nur noch Zahlen an. Keine Wörter, keine Bilder.') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Hm, ich habe keine Ahnung von Tabellen. Aber vielleicht hast du nur auf die falsche Taste gedrückt. Darf ich mal?') },
+      { kind: 'narration', text: german('Tom klickt zweimal. Plötzlich sind alle Wörter und Bilder wieder da.') },
+      { kind: 'line', speaker: 'tom', mood: 'laughing', text: german('Siehst du? Nur die Ansicht war falsch. Jetzt musst du dich aber beeilen.') },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Danke, Tom! Ich bedanke mich mit einem Stück Schokolade aus Italien – nach dem Urlaub.') },
+      { kind: 'line', speaker: 'tom', text: german('Abgemacht. {name}, was wünschst du Mia für den Urlaub?') },
+      { kind: 'reply', to: 'tom', options: [
+        german('Ich wünsche dir einen schönen Urlaub und viel Sonne!'),
+        german('Ich wünsche dir einen schönen Bericht und viele Zahlen!'),
+        german('Ich wünsche dir eine gute Tabelle für morgen!')
+      ] },
+      { kind: 'narration', text: german('Um sechs Uhr ist der Bericht fertig. Mia schickt ihn an die Chefin, macht den Computer aus und schließt das Büro ab.') },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Geschafft! Jetzt beginnt endlich mein Urlaub.') },
+      { kind: 'question', prompt: german('Was muss Mia vor dem Urlaub beenden?'), options: [german('Einen Bericht'), german('Einen Brief an Tom'), german('Ein Buch über Italien')] },
+      { kind: 'question', prompt: german('Warum ärgert sich Mia?'), options: [german('Der Computer zeigt nur noch Zahlen an.'), german('Tom hat ihren Kaffee getrunken.'), german('Ihr Flug ist ausgefallen.')] },
+      { kind: 'question', prompt: german('Was war das Problem mit der Tabelle?'), options: [german('Die Ansicht war falsch.'), german('Die Tabelle war gelöscht.'), german('Der Computer war kaputt.')] },
+      { kind: 'question', prompt: german('Wie bedankt sich Mia bei Tom?'), options: [german('Mit Schokolade aus Italien'), german('Mit einem Kaffee'), german('Mit einem Abendessen')] },
+      { kind: 'question', prompt: german('Was macht Mia am Ende?'), options: [german('Sie schließt das Büro ab.'), german('Sie beginnt einen neuen Bericht.'), german('Sie ruft ihre Chefin an.')] }
     ]
   },
   {
@@ -3185,14 +3201,31 @@ export const germanStories: Story[] = [
     scene: 'town',
     cast: ['kim', 'leo'],
     languages: ['de'],
-    title: german('Extra A2 2'),
+    weathers: ['sunny', 'cloudy'],
+    title: german('Die Prüfung ist bestanden'),
     beats: [
-      { kind: 'narration', text: german('beraten und berichten und berühmt und beschrieben und bestanden.') },
-      { kind: 'line', speaker: 'mia', text: german('beworben ist wichtig und Biologie ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('Chefin und Ding sind da.') },
-      { kind: 'narration', text: german('direkt und Disko.') },
-      { kind: 'question', prompt: german('Was ist diskutieren?'), options: [german('Dollar'), german('dringend'), german('dumm')] },
-      { kind: 'question', prompt: german('Wer hat diskutieren?'), options: [german('Dollar'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Mittags in der Stadt. Leo sitzt auf einer Bank am Brunnen. Kim kommt direkt aus der Uni und läuft schnell auf ihn zu.') },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Leo! Ich habe es geschafft! Ich habe die Prüfung in Biologie bestanden!') },
+      { kind: 'line', speaker: 'leo', mood: 'surprised', text: german('Wirklich? Herzlichen Glückwunsch! Du hattest doch so viel Angst.') },
+      { kind: 'line', speaker: 'kim', text: german('Ja, aber die Fragen waren gar nicht so schwer. Ich musste eine Pflanze beschreiben und über Zellen berichten.') },
+      { kind: 'line', speaker: 'leo', text: german('Und was machst du jetzt? Suchst du einen Job?') },
+      { kind: 'line', speaker: 'kim', text: german('Ich habe mich schon beworben – im Naturkundemuseum. Die Chefin dort ist eine berühmte Forscherin. Sie hat mich gestern gut beraten.') },
+      { kind: 'line', speaker: 'leo', mood: 'curious', text: german('Das klingt toll. Und wann weißt du, ob du die Stelle bekommst?') },
+      { kind: 'line', speaker: 'kim', text: german('Nächste Woche. Aber heute will ich nicht mehr an die Arbeit denken. Heute will ich feiern!') },
+      { kind: 'line', speaker: 'leo', mood: 'laughing', text: german('Dann gehen wir heute Abend in die Disko! Oder ist das eine dumme Idee?') },
+      { kind: 'line', speaker: 'kim', mood: 'laughing', text: german('Das ist keine dumme Idee. Da müssen wir nicht lange diskutieren. {name}, kommst du auch mit?') },
+      { kind: 'reply', to: 'kim', options: [
+        german('Ja, gern! Um wie viel Uhr treffen wir uns?'),
+        german('Ja, ich habe die Prüfung auch nicht bestanden.'),
+        german('Nein, ich bin ein Museum.')
+      ] },
+      { kind: 'line', speaker: 'kim', text: german('Um neun Uhr hier am Brunnen. Aber jetzt brauche ich dringend etwas zu essen!') },
+      { kind: 'narration', text: german('Kim und Leo gehen zusammen zum Imbiss an der Ecke.') },
+      { kind: 'question', prompt: german('Welche Prüfung hat Kim bestanden?'), options: [german('Biologie'), german('Mathematik'), german('Englisch')] },
+      { kind: 'question', prompt: german('Was musste Kim in der Prüfung beschreiben?'), options: [german('Eine Pflanze'), german('Ein Tier'), german('Ein Museum')] },
+      { kind: 'question', prompt: german('Wo hat sich Kim beworben?'), options: [german('Im Naturkundemuseum'), german('In einer Disko'), german('An der Uni')] },
+      { kind: 'question', prompt: german('Wer hat Kim gestern beraten?'), options: [german('Die Chefin des Museums'), german('Leo'), german('Ihre Mutter')] },
+      { kind: 'question', prompt: german('Wann treffen sich alle am Abend?'), options: [german('Um neun Uhr am Brunnen'), german('Um sieben Uhr an der Uni'), german('Um zehn Uhr im Museum')] }
     ]
   },
   {
@@ -3201,14 +3234,31 @@ export const germanStories: Story[] = [
     scene: 'shop',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Extra A2 3'),
+    title: german('Eine Jacke für den Winter'),
     beats: [
-      { kind: 'narration', text: german('dünn und E-Book und eigen und Einkaufszentrum und einpacken.') },
-      { kind: 'line', speaker: 'mia', text: german('einverstanden ist wichtig und einziehen ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('empfohlen und entschuldigt sind da.') },
-      { kind: 'narration', text: german('Erfolg und erinnern.') },
-      { kind: 'question', prompt: german('Was ist erinnert?'), options: [german('ernst'), german('erreichen'), german('Fach')] },
-      { kind: 'question', prompt: german('Wer hat erinnert?'), options: [german('ernst'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Tom zieht nächste Woche in seine eigene Wohnung ein. Vorher braucht er noch eine warme Jacke. Mia geht mit ihm ins Einkaufszentrum.') },
+      { kind: 'line', speaker: 'tom', text: german('Schau mal, diese schwarze Jacke gefällt mir. Und sie kostet nur dreißig Euro.') },
+      { kind: 'line', speaker: 'mia', mood: 'curious', text: german('Zeig mal … Die ist aber sehr dünn. Im Winter frierst du darin.') },
+      { kind: 'line', speaker: 'tom', text: german('Hm, du hast recht. Welche Jacke würdest du mir empfehlen?') },
+      { kind: 'line', speaker: 'mia', text: german('Die grüne da hinten. Sie ist dick und hat eine Kapuze. Meine Schwester hat die gleiche, und sie ist sehr zufrieden.') },
+      { kind: 'narration', text: german('Tom probiert die grüne Jacke an. Sie passt perfekt, kostet aber achtzig Euro.') },
+      { kind: 'line', speaker: 'tom', mood: 'worried', text: german('Achtzig Euro … Das ist viel Geld. Ich brauche doch auch noch Möbel für die Wohnung.') },
+      { kind: 'line', speaker: 'mia', text: german('Aber eine gute Jacke hast du viele Jahre. Eine dünne Jacke kaufst du jeden Winter neu.') },
+      { kind: 'line', speaker: 'tom', mood: 'happy', text: german('Okay, einverstanden. Ich nehme die grüne.') },
+      { kind: 'narration', text: german('An der Kasse packt die Verkäuferin die Jacke ein. Plötzlich wird Tom ganz ernst.') },
+      { kind: 'line', speaker: 'tom', mood: 'surprised', text: german('Oh! Jetzt erinnere ich mich: Morgen hat meine Mutter Geburtstag, und ich habe noch kein Geschenk!') },
+      { kind: 'line', speaker: 'mia', mood: 'laughing', text: german('Kein Problem. Hier gibt es auch eine Buchhandlung. {name}, was schenken wir Toms Mutter? Sie liest gern.') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Wir können ihr ein E-Book oder einen schönen Roman schenken.'),
+        german('Wir können ihr eine dünne Jacke für den Winter schenken.'),
+        german('Wir können ihr Toms neue Wohnung schenken.')
+      ] },
+      { kind: 'line', speaker: 'tom', mood: 'happy', text: german('Gute Idee! Danke, ihr zwei. Heute war der Einkauf ein voller Erfolg.') },
+      { kind: 'question', prompt: german('Warum braucht Tom eine neue Jacke?'), options: [german('Er braucht eine warme Jacke für den Winter.'), german('Seine alte Jacke ist zu groß.'), german('Er hat seine Jacke verloren.')] },
+      { kind: 'question', prompt: german('Was ist das Problem mit der schwarzen Jacke?'), options: [german('Sie ist zu dünn.'), german('Sie ist zu teuer.'), german('Sie ist zu klein.')] },
+      { kind: 'question', prompt: german('Wie viel kostet die grüne Jacke?'), options: [german('Achtzig Euro'), german('Dreißig Euro'), german('Fünfzig Euro')] },
+      { kind: 'question', prompt: german('Woran erinnert sich Tom an der Kasse?'), options: [german('An den Geburtstag seiner Mutter'), german('An seinen Termin beim Arzt'), german('An seinen Schlüssel')] },
+      { kind: 'question', prompt: german('Was macht Tom nächste Woche?'), options: [german('Er zieht in seine eigene Wohnung ein.'), german('Er fährt in den Urlaub.'), german('Er beginnt eine neue Arbeit.')] }
     ]
   },
   {
@@ -3217,14 +3267,32 @@ export const germanStories: Story[] = [
     scene: 'market',
     cast: ['kim', 'leo'],
     languages: ['de'],
-    title: german('Extra A2 4'),
+    weathers: ['sunny', 'cloudy'],
+    title: german('Einkaufen für die Feier'),
     beats: [
-      { kind: 'narration', text: german('Fahrplan und Fan und faul und Feier und Feiertag.') },
-      { kind: 'line', speaker: 'mia', text: german('fern ist wichtig und Fest ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('fit und fleißig sind da.') },
-      { kind: 'narration', text: german('Flug und Fluss.') },
-      { kind: 'question', prompt: german('Was ist fotografieren?'), options: [german('frisch'), german('fühlen'), german('Führerschein')] },
-      { kind: 'question', prompt: german('Wer hat fotografieren?'), options: [german('frisch'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Samstagmorgen auf dem Markt. Morgen ist ein Feiertag, und Leo macht heute Abend eine Feier für seine Freunde. Kim hilft ihm beim Einkaufen.') },
+      { kind: 'line', speaker: 'leo', text: german('Wir brauchen frisches Obst, Tomaten, Brot und Käse. Und vielleicht Blumen für den Tisch.') },
+      { kind: 'line', speaker: 'kim', mood: 'curious', text: german('Wie viele Leute kommen denn?') },
+      { kind: 'line', speaker: 'leo', text: german('Zwölf. Meine Schwester kommt sogar aus der Ferne – sie hat einen Flug aus Spanien genommen.') },
+      { kind: 'narration', text: german('Kim nimmt ihr Handy und fotografiert die bunten Stände mit Äpfeln, Erdbeeren und Kürbissen.') },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Ich bin ein großer Fan von diesem Markt. Hier ist alles frisch, und die Leute sind so nett.') },
+      { kind: 'line', speaker: 'leo', mood: 'laughing', text: german('Du bist heute aber fleißig! Und ich dachte, du bist am Wochenende immer faul.') },
+      { kind: 'line', speaker: 'kim', mood: 'laughing', text: german('Faul? Ich bin jeden Morgen am Fluss joggen. Ich bin total fit!') },
+      { kind: 'narration', text: german('Nach einer Stunde haben die beiden vier schwere Taschen.') },
+      { kind: 'line', speaker: 'leo', mood: 'worried', text: german('Oh je, wie bringen wir das alles nach Hause? Der Bus fährt laut Fahrplan erst in vierzig Minuten.') },
+      { kind: 'line', speaker: 'kim', text: german('Kein Problem. Ich habe seit letztem Monat meinen Führerschein. Das Auto von meinem Vater steht gleich hier um die Ecke.') },
+      { kind: 'line', speaker: 'leo', mood: 'happy', text: german('Super! {name}, du kommst heute Abend doch auch zum Fest, oder?') },
+      { kind: 'reply', to: 'leo', options: [
+        german('Ja, natürlich! Ich bringe einen Kuchen mit.'),
+        german('Ja, ich fahre mit dem Fluss.'),
+        german('Nein, ich bin heute ein Feiertag.')
+      ] },
+      { kind: 'line', speaker: 'leo', text: german('Wunderbar. Ich fühle mich schon wie im Urlaub!') },
+      { kind: 'question', prompt: german('Warum geht Leo auf den Markt?'), options: [german('Er macht heute Abend eine Feier.'), german('Er verkauft dort Obst.'), german('Er sucht ein neues Auto.')] },
+      { kind: 'question', prompt: german('Wie viele Leute kommen zur Feier?'), options: [german('Zwölf'), german('Vier'), german('Vierzig')] },
+      { kind: 'question', prompt: german('Woher kommt Leos Schwester?'), options: [german('Aus Spanien'), german('Aus Italien'), german('Vom Markt')] },
+      { kind: 'question', prompt: german('Was macht Kim jeden Morgen?'), options: [german('Sie joggt am Fluss.'), german('Sie fährt mit dem Bus.'), german('Sie schläft lange.')] },
+      { kind: 'question', prompt: german('Wie bringen Kim und Leo die Taschen nach Hause?'), options: [german('Mit dem Auto von Kims Vater'), german('Mit dem Bus'), german('Zu Fuß')] }
     ]
   },
   {
@@ -3233,14 +3301,32 @@ export const germanStories: Story[] = [
     scene: 'park',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Extra A2 5'),
+    weathers: ['sunny', 'cloudy'],
+    title: german('Picknick im Herbst'),
     beats: [
-      { kind: 'narration', text: german('Fundsachen und Gabel und Gesicht und grüßen und Hals.') },
-      { kind: 'line', speaker: 'mia', text: german('hängen ist wichtig und hässlich ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('Haushalt und Hemd sind da.') },
-      { kind: 'narration', text: german('Herbst und herstellen.') },
-      { kind: 'question', prompt: german('Was ist hoffen?'), options: [german('Homepage'), german('Idee'), german('Interesse')] },
-      { kind: 'question', prompt: german('Wer hat hoffen?'), options: [german('Homepage'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Es ist Herbst. Die Blätter sind gelb und rot. Mia und Tom machen ein Picknick im Park.') },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Ich habe Kartoffelsalat und Würstchen mitgebracht. Hast du die Gabeln?') },
+      { kind: 'line', speaker: 'tom', mood: 'surprised', text: german('Die Gabeln? Oh nein, die liegen noch zu Hause auf dem Tisch.') },
+      { kind: 'line', speaker: 'mia', mood: 'laughing', text: german('Typisch! Na gut, dann essen wir die Würstchen eben mit den Fingern.') },
+      { kind: 'narration', text: german('Plötzlich sieht Tom etwas an einem Baum. Ein blauer Schal hängt an einem Ast.') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Schau mal, da hängt ein Schal. Vielleicht hat ihn jemand verloren.') },
+      { kind: 'line', speaker: 'mia', text: german('Der ist aber hässlich. Blau mit orangen Punkten!') },
+      { kind: 'line', speaker: 'tom', text: german('Vielleicht, aber im Herbst ist es kalt. Bestimmt sucht jemand seinen Schal. Ohne Schal tut mir immer gleich der Hals weh.') },
+      { kind: 'line', speaker: 'mia', mood: 'curious', text: german('Und was machen wir jetzt mit ihm?') },
+      { kind: 'line', speaker: 'tom', text: german('Ich habe eine Idee: Wir bringen ihn morgen ins Fundbüro. Auf der Homepage der Stadt steht eine Liste mit allen Fundsachen.') },
+      { kind: 'narration', text: german('In diesem Moment kommt eine alte Frau vorbei. Sie grüßt freundlich und schaut auf den Schal. Ihr Gesicht strahlt.') },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Ich glaube, wir brauchen das Fundbüro nicht mehr. {name}, was sagen wir zu der Frau?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Ist das Ihr Schal? Er hing an diesem Baum.'),
+        german('Ist das Ihre Gabel? Sie lag auf dem Tisch.'),
+        german('Ist das Ihr Baum? Er ist sehr hässlich.')
+      ] },
+      { kind: 'narration', text: german('Die Frau lacht. Ihr Enkel hat den Schal für sie gestrickt. Gestern hat sie ihn verloren und gehofft, dass jemand ihn findet. Jetzt hat sie ihn wieder.') },
+      { kind: 'question', prompt: german('Was hat Tom vergessen?'), options: [german('Die Gabeln'), german('Den Kartoffelsalat'), german('Seinen Schal')] },
+      { kind: 'question', prompt: german('Wo hängt der Schal?'), options: [german('An einem Baum'), german('An einer Bank'), german('An Toms Hals')] },
+      { kind: 'question', prompt: german('Wie findet Mia den Schal?'), options: [german('Hässlich'), german('Wunderschön'), german('Zu teuer')] },
+      { kind: 'question', prompt: german('Wohin will Tom den Schal bringen?'), options: [german('Ins Fundbüro'), german('Nach Hause'), german('In ein Geschäft')] },
+      { kind: 'question', prompt: german('Wer hat den Schal gestrickt?'), options: [german('Der Enkel der Frau'), german('Mia'), german('Die alte Frau selbst')] }
     ]
   },
 
