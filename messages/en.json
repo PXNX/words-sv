@@ -807,5 +807,22 @@
   "groups_error_too_many_groups": "You are already in five groups.",
   "groups_error_invalid_request": "Please check the name or code.",
   "groups_error_unavailable": "Groups can't be reached right now.",
-  "groups_home": "Compete with friends in a weekly league."
+  "groups_home": "Compete with friends in a weekly league.",
+  "readiness_how_title": "How is this calculated?",
+  "readiness_how_coverage_title": "1. Coverage.",
+  "readiness_how_coverage": "The share of the {level} words you have started learning: you can't understand a text whose words you never met. Right now: {percent} %.",
+  "readiness_how_accuracy_title": "2. Accuracy.",
+  "readiness_how_accuracy": "For each skill, the share of your answers in the last {days} days that were right. Recent answers count more: an answer from ten days ago counts half. Without any answers, 50 % is assumed.",
+  "readiness_how_skill_title": "3. Per skill.",
+  "readiness_how_skill": "Readiness = coverage × accuracy. For writing and speaking, half of it is the average score of your last three texts or pronunciations.",
+  "readiness_how_range_title": "4. A range, not a guess.",
+  "readiness_how_range": "With no answers the range is ±25 points; it narrows to ±5 as answers come in (certainty {answers40} % after 40 answers, {answers100} % after 100).",
+  "readiness_how_level_title": "5. Your level.",
+  "readiness_how_level": "The big number averages the six skills, each counting the same, rounded to steps of 5 %. It is about the language level, not one particular exam.",
+  "readiness_how_col_skill": "Skill",
+  "readiness_how_col_accuracy": "Accuracy",
+  "readiness_how_col_answers": "Answers",
+  "readiness_how_col_range": "Readiness",
+  "readiness_how_rubric": "score {percent}",
+  "readiness_how_overall": "Together: {range}."
 }
