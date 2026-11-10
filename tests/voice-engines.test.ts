@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { castEngineVoices, engineFootprint, engineFor, speaksLanguage, voiceEngineIds, voiceEngines, type EngineVoice } from '../src/lib/voice/engines.js';
+import { castEngineVoices, engineFootprint, engineFor, ownsClipKey, retiredVoiceEngines, speaksLanguage, storedVoiceEngine, voiceEngineIds, voiceEngines, type EngineVoice } from '../src/lib/voice/engines.js';
 import { createPriorityQueue } from '../src/lib/audio/priorityQueue.js';
 
 describe('voice engines', () => {
@@ -10,9 +10,24 @@ describe('voice engines', () => {
     expect(speaksLanguage('supertonic', 'it')).toBe(false);
   });
 
-  it('uses VoxCPM only where WebGPU is available', () => {
-    expect(engineFor('voxcpm', 'de', { webgpu: true })).toBe('voxcpm');
-    expect(engineFor('voxcpm', 'de', { webgpu: false })).toBe('natural');
+  it('moves a stored VoxCPM setting to Piper and keeps current ones', () => {
+    expect(storedVoiceEngine('voxcpm')).toBe('natural');
+    expect(storedVoiceEngine('supertonic')).toBe('supertonic');
+    expect(storedVoiceEngine('edge')).toBe('edge');
+    expect(storedVoiceEngine(null)).toBe('standard');
+    expect(storedVoiceEngine('nonsense')).toBe('standard');
+    expect(storedVoiceEngine('toString')).toBe('standard');
+    for (const [retired, replacement] of Object.entries(retiredVoiceEngines)) {
+      expect(voiceEngineIds).not.toContain(retired);
+      expect(voiceEngineIds).toContain(replacement);
+    }
+  });
+
+  it('keys rendered audio by the engine for models and Edge, by the Piper pack otherwise', () => {
+    expect(ownsClipKey('supertonic')).toBe(true);
+    expect(ownsClipKey('edge')).toBe(true);
+    expect(ownsClipKey('natural')).toBe(false);
+    expect(ownsClipKey('recorded')).toBe(false);
   });
 
   it('marks only Edge as leaving the device', () => {

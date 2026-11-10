@@ -5,9 +5,8 @@ import { speechChunks } from './speech';
 import { settings, type NaturalModel } from '#lib/state/settings.svelte.js';
 import { loadRecordedVoice, useRecordedVoices } from '#lib/voice/recordedVoices.js';
 import { listEdgeVoices, speakEdge, type EdgeVoice } from '#lib/voice/edgeTts.js';
-import { castEngineVoices, engineFor, voiceEngines, type EngineVoice, type VoiceEngineId } from '#lib/voice/engines.js';
+import { castEngineVoices, engineFootprint, engineFor, voiceEngines, type EngineVoice, type VoiceEngineId } from '#lib/voice/engines.js';
 import { prepareSupertonic, speakSupertonic } from '#lib/voice/supertonic.js';
-import { prepareVoxCPM, speakVoxCPM } from '#lib/voice/voxcpm.js';
 import { createPriorityQueue, type Priority } from '#lib/audio/priorityQueue.js';
 
 /*
@@ -166,12 +165,12 @@ export function activeEngine(language: Language): VoiceEngineId {
 // What a language's loaded voices belong to, so switching engine or Piper pack loads them again.
 function voicesKey(language: Language) {
   const engine = activeEngine(language);
-  return engine === 'supertonic' || engine === 'voxcpm' ? engine : settings.naturalModel;
+  return voiceEngines[engine].runtime === 'model' ? engine : settings.naturalModel;
 }
 
 export function naturalMegabytes(language: Language, model: NaturalModel = settings.naturalModel) {
   const engine = activeEngine(language);
-  if (engine === 'supertonic' || engine === 'voxcpm') return voiceEngines[engine].megabytes ?? 0;
+  if (voiceEngines[engine].runtime === 'model') return engineFootprint(engine)?.megabytes ?? 0;
   return piperMegabytes(language, model);
 }
 
@@ -279,7 +278,6 @@ export function prepareNatural(language: Language): Promise<void> {
 
 async function loadNatural(language: Language) {
   if (activeEngine(language) === 'supertonic') return loadModelEngine(language, 'supertonic', prepareSupertonic);
-  if (activeEngine(language) === 'voxcpm') return loadModelEngine(language, 'voxcpm', prepareVoxCPM);
   const model = settings.naturalModel;
   const models = modelsOf(language, model);
   const totalMegabytes = naturalMegabytes(language, model);
@@ -320,9 +318,9 @@ async function loadNatural(language: Language) {
   }
 }
 
-// Engines with one model for every language (Supertonic, VoxCPM): one download, shown per language.
-async function loadModelEngine(language: Language, engine: 'supertonic' | 'voxcpm', prepare: (onProgress: (loaded: number, total: number) => void) => Promise<void>) {
-  const totalMegabytes = voiceEngines[engine].megabytes ?? 0;
+// Engines with one model for every language (Supertonic): one download, shown per language.
+async function loadModelEngine(language: Language, engine: VoiceEngineId, prepare: (onProgress: (loaded: number, total: number) => void) => Promise<void>) {
+  const totalMegabytes = engineFootprint(engine)?.megabytes ?? 0;
   naturalState.status[language] = 'loading';
   delete naturalState.error[language];
   naturalState.model[language] = engine;
@@ -485,7 +483,6 @@ async function renderNatural(text: string, speaker: Speaker, mood: Mood, cast: S
 async function synthesizeChunk(text: string, speaker: Speaker, mood: Mood, cast: Speaker[], language: Language, baseRate: number, priority: SpeechPriority): Promise<NaturalClip> {
   if (settings.voiceQuality === 'edge') return synthesizeEdge(text, speaker, mood, cast, language, baseRate);
   if (activeEngine(language) === 'supertonic') return synthesizeSupertonic(text, speaker, mood, cast, language, baseRate, priority);
-  if (activeEngine(language) === 'voxcpm') return synthesizeVoxCPM(text, speaker, mood, priority);
   const profile = profiles[speaker];
   const { voice, shared, borrowed } = castNatural(cast, language).get(speaker) ?? castNatural([speaker], language).get(speaker)!;
   const shape = moodShape[mood];
@@ -569,19 +566,6 @@ async function synthesizeSupertonic(text: string, speaker: Speaker, mood: Mood, 
   // Pitch is shifted on playback, like Piper's shared voices; animals keep their cartoon pitch.
   const playbackRate = animals.includes(speaker) ? Math.min(1.4, Math.max(0.75, profile.pitch)) : (profile.natural?.pitch ?? 1) * accent.pitch;
   const { pcm, sampleRate } = await speakSupertonic(text, language, voice, speed, priority);
-  const buffer = audio().createBuffer(1, pcm.length, sampleRate);
-  buffer.copyToChannel(pcm as Float32Array<ArrayBuffer>, 0);
-  return { buffer, playbackRate, volume: Math.min(1, profile.volume * shape.volume) };
-}
-
-// VoxCPM has no voice or speed control: each character keeps its own noise seed (its voice), and
-// pitch and mood are shaped on playback.
-async function synthesizeVoxCPM(text: string, speaker: Speaker, mood: Mood, priority: SpeechPriority): Promise<NaturalClip> {
-  const profile = profiles[speaker];
-  const shape = moodShape[mood];
-  const accent = accentShape(profile.dialect, settings.dialects);
-  const playbackRate = animals.includes(speaker) ? Math.min(1.4, Math.max(0.75, profile.pitch)) : (profile.natural?.pitch ?? 1) * accent.pitch;
-  const { pcm, sampleRate } = await speakVoxCPM(text, speaker, priority);
   const buffer = audio().createBuffer(1, pcm.length, sampleRate);
   buffer.copyToChannel(pcm as Float32Array<ArrayBuffer>, 0);
   return { buffer, playbackRate, volume: Math.min(1, profile.volume * shape.volume) };

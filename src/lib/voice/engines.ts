@@ -10,8 +10,6 @@
  *   natural    – Piper neural voices, generated on the device in static/voices/piper-worker.js.
  *   recorded   – pre-recorded Piper clips for the cast's reference lines, live Piper for the rest.
  *   supertonic – Supertonic 2 (Supertone), generated on the device in voice/supertonic.worker.ts.
- *   voxcpm     – VoxCPM2 (OpenBMB), generated on the device in voice/voxcpm.worker.ts. Experimental:
- *                WebGPU only, ~1.6 GB, slow on phones.
  *   edge       – Microsoft's Edge neural voices over the network (the only engine that is not local).
  *
  * Not wired in: see "Not wired in" in docs/voice-engines.md.
@@ -22,7 +20,7 @@
  */
 import type { Language } from '#lib/data/vocabulary.js';
 
-export type VoiceEngineId = 'standard' | 'natural' | 'recorded' | 'supertonic' | 'voxcpm' | 'edge';
+export type VoiceEngineId = 'standard' | 'natural' | 'recorded' | 'supertonic' | 'edge';
 
 export type VoiceGender = 'female' | 'male';
 
@@ -96,13 +94,27 @@ export const voiceEngines: Record<VoiceEngineId, VoiceEngine> = {
     id: 'supertonic', name: 'Supertonic 2', runtime: 'model', onDevice: true, clips: true, languages: ['en', 'es', 'pt', 'fr'], fallback: 'natural',
     tier: 'medium', megabytes: 260, memoryMB: 450, model: 'onnx-community/Supertonic-TTS-2-ONNX', licence: 'OpenRAIL-M', voices: supertonicVoices
   },
-  voxcpm: {
-    id: 'voxcpm', name: 'VoxCPM2', runtime: 'model', onDevice: true, clips: true, languages: 'all', fallback: 'natural',
-    tier: 'large', megabytes: 1600, webgpu: true, memoryMB: 2300, model: 'danyalmalik/VoxCPM2-ONNX-WebGPU', licence: 'Apache-2.0'
-  },
   edge: { id: 'edge', name: 'Edge', runtime: 'network', onDevice: false, clips: true, languages: 'all', fallback: 'natural' }
 };
 export const voiceEngineIds = Object.keys(voiceEngines) as VoiceEngineId[];
+
+/**
+ * Engines that were removed, and what a setting stored for them speaks with now. VoxCPM2 never
+ * loaded in a stock browser runtime (see docs/voice-engines.md); its learners get Piper back.
+ */
+export const retiredVoiceEngines: Readonly<Record<string, VoiceEngineId>> = { voxcpm: 'natural' };
+
+/** The engine a stored setting names: a current id as is, a retired one by its replacement, else the browser's voices. */
+export function storedVoiceEngine(value: string | null): VoiceEngineId {
+  if (value && Object.hasOwn(voiceEngines, value)) return value as VoiceEngineId;
+  return value && Object.hasOwn(retiredVoiceEngines, value) ? retiredVoiceEngines[value]! : 'standard';
+}
+
+/** Whether audio rendered by `engine` is keyed by the engine itself (models, Edge) rather than by the Piper pack. */
+export function ownsClipKey(engine: VoiceEngineId): boolean {
+  const { runtime } = voiceEngines[engine];
+  return runtime === 'model' || runtime === 'network';
+}
 
 export function speaksLanguage(engine: VoiceEngineId, language: Language): boolean {
   const { languages } = voiceEngines[engine];

@@ -15,7 +15,6 @@
   import { cancelModelDownload, checkLocalModel, chooseModel, deleteModel, downloadModelFiles, localModel, modelGpuMB, pageMemoryMB, unloadLocalModel } from '#lib/conversation/localModel.svelte.js';
   import { chatModels, isRecommended, likelyFits, type ChatModel } from '#lib/conversation/models.js';
   import { unloadSupertonic } from '#lib/voice/supertonic.js';
-  import { unloadVoxCPM } from '#lib/voice/voxcpm.js';
   import { deviceAbilities, speaksLanguage, voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
   import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
   import ModelStatus from '#lib/offline/ModelStatus.svelte';
@@ -42,13 +41,11 @@
     natural: () => m.voice_quality_natural({}, { locale }),
     recorded: () => m.voice_quality_recorded({}, { locale }),
     supertonic: () => m.voice_quality_supertonic({}, { locale }),
-    voxcpm: () => m.voice_quality_voxcpm({}, { locale }),
     edge: () => 'Edge'
   };
   const groupNames: Record<StoredGroup, () => string> = {
     piper: () => m.models_group_piper({}, { locale }),
     supertonic: () => m.voice_quality_supertonic({}, { locale }),
-    voxcpm: () => m.voice_quality_voxcpm({}, { locale }),
     conversation: () => m.models_conversation({}, { locale }),
     wordAudio: () => m.models_group_word_audio({}, { locale }),
     listening: () => m.models_group_listening({}, { locale })
@@ -64,7 +61,7 @@
   const engine = $derived(activeEngine(lang));
   const voiceStatus = $derived(naturalReady(lang) ? 'ready' : naturalState.status[lang] ?? 'idle');
   const voicesSupported = $derived(typeof window !== 'undefined' && naturalSupported());
-  const voiceGroups: Partial<Record<VoiceEngineId, StoredGroup>> = { natural: 'piper', recorded: 'piper', supertonic: 'supertonic', voxcpm: 'voxcpm' };
+  const voiceGroups: Partial<Record<VoiceEngineId, StoredGroup>> = { natural: 'piper', recorded: 'piper', supertonic: 'supertonic' };
   // Engines that can speak the learning language on this device, plus the chosen one in any case.
   const voiceChoices = $derived(voiceEngineIds.filter((id) => id === settings.voiceQuality || (speaksLanguage(id, lang) && (!voiceEngines[id].webgpu || deviceAbilities().webgpu))));
   const voiceDownloadMB = (id: VoiceEngineId) => (voiceEngines[id].megabytes ?? (voiceGroups[id] === 'piper' ? piperMegabytes(lang) : 0));
@@ -74,7 +71,6 @@
     if (id === 'standard') return m.voice_quality_standard_hint({}, { locale });
     if (id === 'recorded') return m.voice_quality_recorded_hint({}, { locale });
     if (id === 'supertonic') return m.voice_quality_supertonic_hint({ size }, { locale });
-    if (id === 'voxcpm') return m.voice_quality_voxcpm_hint({ size }, { locale });
     if (id === 'edge') return m.voice_quality_edge_hint({}, { locale });
     return m.voice_quality_natural_hint({ size }, { locale });
   }
@@ -147,9 +143,8 @@
     if (confirming !== group) { confirming = group; return; }
     confirming = null;
     // Stop whatever uses the files before they go, so nothing reads half-deleted data.
-    if (group === 'piper' || group === 'supertonic' || group === 'voxcpm') unloadNaturalVoices();
+    if (group === 'piper' || group === 'supertonic') unloadNaturalVoices();
     if (group === 'supertonic') unloadSupertonic();
-    if (group === 'voxcpm') unloadVoxCPM();
     if (group === 'conversation') unloadLocalModel();
     if (group === 'wordAudio') forgetWordAudio();
     await deleteGroup(group);
