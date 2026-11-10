@@ -91,6 +91,13 @@ function readLevelProgress(language: Language, level: VocabularyLevel): Record<s
   }
 }
 
+/** The scheduler state of every word in a level's pool (undefined for words never answered). */
+export function readLevelStates(language: Language, level: VocabularyLevel): { states: Array<ReviewProgress | undefined>; total: number } {
+  const words = wordPools[language]?.[level] ?? [];
+  const progress = readLevelProgress(language, level);
+  return { states: words.map((word) => (word in progress ? normalizeReviewProgress(progress[word]) : undefined)), total: words.length };
+}
+
 function writeLevelProgress(language: Language, level: VocabularyLevel, progress: Record<string, unknown>) {
   if (typeof localStorage === 'undefined') return;
   try {
