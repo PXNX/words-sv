@@ -46,13 +46,41 @@ function activateWaiting(registration: ServiceWorkerRegistration) {
 	});
 }
 
-export async function takeOverUpdate() {
-	const registration = await getRegistration();
-	if (registration) {
-		await registration.update().catch(() => undefined);
-		await waitForInstalled(registration);
-		await activateWaiting(registration);
+export type UpdateOptions = {
+	/** 0..1 while the new version's files are cached (reported by the service worker's install). */
+	onProgress?: (share: number) => void;
+	/** Reload no earlier than this, so a quick update still shows its animation. */
+	minDurationMs?: number;
+};
+
+/** The new version's install progress from the service worker, or null for other messages. */
+export function installShare(data: unknown): number | null {
+	if (!data || typeof data !== 'object' || (data as { type?: unknown }).type !== 'INSTALL_PROGRESS') return null;
+	const { done, total } = data as { done?: unknown; total?: unknown };
+	return typeof done === 'number' && typeof total === 'number' && total > 0 ? Math.min(1, Math.max(0, done / total)) : null;
+}
+
+export async function takeOverUpdate({ onProgress, minDurationMs = 0 }: UpdateOptions = {}) {
+	const started = Date.now();
+	const listen = (event: MessageEvent) => {
+		const share = installShare(event.data);
+		if (share !== null) onProgress?.(share);
+	};
+	if ('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('message', listen);
+	try {
+		const registration = await getRegistration();
+		if (registration) {
+			await registration.update().catch(() => undefined);
+			await waitForInstalled(registration);
+			// Installed (or nothing to install): the download part is done.
+			onProgress?.(1);
+			await activateWaiting(registration);
+		} else onProgress?.(1);
+	} finally {
+		if ('serviceWorker' in navigator) navigator.serviceWorker.removeEventListener('message', listen);
 	}
+	const wait = minDurationMs - (Date.now() - started);
+	if (wait > 0) await new Promise((resolve) => window.setTimeout(resolve, wait));
 	location.reload();
 }
 

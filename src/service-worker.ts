@@ -34,14 +34,29 @@ const onDemandPaths = new Set(immutable.map(({ path }) => pathnameOf(path)).filt
 const NAVIGATION_TIMEOUT_MS = 3500;
 const precached = new Set([...immutable, ...assets].map(({ path }) => pathnameOf(path)).filter((path) => !ON_DEMAND.some((pattern) => pattern.test(path))));
 
+// Tells open tabs how far the new version's download is (UpdateAppHint shows it while Lilith fetches it).
+async function reportInstallProgress(done: number, total: number) {
+	for (const client of await self.clients.matchAll({ includeUncontrolled: true, type: 'window' })) client.postMessage({ type: 'INSTALL_PROGRESS', done, total });
+}
+const INSTALL_BATCH = 8;
+
 self.addEventListener('install', (event) => {
 	event.waitUntil(
 		(async () => {
 			const cache = await caches.open(CACHE);
-			await cache.addAll([...precached]);
-			await cache.add(SHELL);
+			const files = [...precached, SHELL];
+			const total = files.length + pages.length;
+			let done = 0;
+			// In small batches rather than one addAll, so progress can be reported; any failed file still fails the install.
+			for (let index = 0; index < files.length; index += INSTALL_BATCH) {
+				const batch = files.slice(index, index + INSTALL_BATCH);
+				await Promise.all(batch.map((file) => cache.add(file)));
+				done += batch.length;
+				void reportInstallProgress(done, total);
+			}
 			// Not every page route has a page of its own (e.g. /stats only redirects); those fall back to the shell.
 			await Promise.all(pages.map((page) => cache.add(page).catch(() => undefined)));
+			void reportInstallProgress(total, total);
 		})()
 	);
 });
