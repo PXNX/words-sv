@@ -10,13 +10,14 @@
 import { LEVELS, SKILLS, type Level, type Skill } from '#lib/domain/types.js';
 import type { SchedulerState } from '#lib/review/scheduler.js';
 import { featureErrorProfile, type LearningEvent } from './events.js';
-import { examReadiness, EXAMS, levelCoverage, readiness, retainedAccuracy, rubricAverage, type ExamId, type LevelCoverage, type ReadinessRange } from './skillState.js';
+import { levelCoverage, levelReadiness, readiness, retainedAccuracy, rubricAverage, type LevelCoverage, type ReadinessRange } from './skillState.js';
 
 export interface ProgressOverview {
   ladder: Array<LevelCoverage & { level: Level }>;
   skills: Record<Skill, ReadinessRange & { attempts: number }>;
   knownWords: number;
-  exam: (ReadinessRange & { id: ExamId; level: Level }) | null;
+  /** Readiness for the learner's level, every skill weighted the same. */
+  readiness: ReadinessRange;
   errors: ReturnType<typeof featureErrorProfile>;
 }
 
@@ -24,7 +25,6 @@ export function buildOverview(input: {
   levels: Partial<Record<Level, { states: Iterable<SchedulerState | undefined>; total: number }>>;
   events: readonly LearningEvent[];
   level: Level;
-  exam: ExamId | null;
   now: number;
 }): ProgressOverview {
   const ladder = LEVELS.flatMap((level) => {
@@ -37,16 +37,11 @@ export function buildOverview(input: {
     return [skill, { ...readiness(skill, { coverage: coverageAt(level), accuracy, attempts, rubric: rubricAverage(input.events, skill) }), attempts }];
   })) as ProgressOverview['skills'];
   const skills = skillAt(input.level);
-  let exam: ProgressOverview['exam'] = null;
-  if (input.exam) {
-    const { level, weights } = EXAMS[input.exam];
-    exam = { id: input.exam, level, ...examReadiness(level === input.level ? skills : skillAt(level), weights) };
-  }
   return {
     ladder,
     skills,
     knownWords: ladder.reduce((sum, rung) => sum + rung.known, 0),
-    exam,
+    readiness: levelReadiness(skills),
     errors: featureErrorProfile(input.events, input.now - 30 * 24 * 60 * 60 * 1000).slice(0, 5)
   };
 }
