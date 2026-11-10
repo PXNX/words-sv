@@ -241,7 +241,9 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [x] Byte sizes and download speeds follow the format setting.
 - [x] Route the remaining numbers through `format.ts` (quiz counters, scores, recap minutes, ETAs,
   PWA reminder texts; there is no reminder time picker).
-- [ ] Alltag/Satzbau drills for dates, times, ordinals, prices; spoken forms wired into listening.
+- [x] Alltag drills for clock times, dates (ordinals), numbers and prices in German and English
+  (`vocab/everyday.ts`); Satzbau got its sentence builder.
+- [ ] Spoken forms of numbers and times wired into listening texts.
 - [ ] Interface formatting in Telegram reminder texts.
 
 ### Phase P — content packs and fast loading

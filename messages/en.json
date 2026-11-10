@@ -904,5 +904,10 @@
   "goal_behind": "{weeks} weeks left – at this pace it takes longer. Practise more often or pick a later date.",
   "goal_unknown": "{weeks} weeks left – practise a few days so the coach can tell your pace.",
   "goal_passed": "The date has passed – pick a new one.",
-  "placement_listening": "Listen: what does the word mean?"
+  "placement_listening": "Listen: what does the word mean?",
+  "alltag_time": "How do you say this time?",
+  "alltag_date": "How do you say this date?",
+  "alltag_number": "How do you say this number?",
+  "alltag_price": "How do you say this price?",
+  "alltag_continue": "Continue"
 }
