@@ -239,8 +239,8 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 
 ### Phase L leftovers
 - [x] Byte sizes and download speeds follow the format setting.
-- [ ] Route the remaining numbers through `format.ts` (quiz counters, recap minutes, reminder
-  time picker, Telegram messages).
+- [x] Route the remaining numbers through `format.ts` (quiz counters, scores, recap minutes, ETAs,
+  PWA reminder texts; there is no reminder time picker).
 - [ ] Alltag/Satzbau drills for dates, times, ordinals, prices; spoken forms wired into listening.
 - [ ] Interface formatting in Telegram reminder texts.
 
@@ -263,7 +263,6 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
   features they test, wrong answers count against them; labels for every feature in de/en.
 - [x] Writing scores and every hangman round are logged; the Today card suggests the weakest feature.
 - [ ] Log answers from the remaining modes (circle and wordle guesses, conversation).
-- [ ] Level tags on texts, listening clips and grammar items (coverage currently uses vocabulary).
 
 ### Phase B — assessment and visibility
 - [x] Readiness ranges per skill, level ladder, known words, error profile on `/progress`.
@@ -271,7 +270,7 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [x] Placement test (`/placement`, yes/no vocabulary format with invented words, any language
   with 40+ words per level), saved as four-weekly checkpoints with a trend on `/progress`.
 - [x] Forecast: weeks until 80 % of the current level is known, from weekly mastery snapshots.
-- [ ] Exam date, recap with real learning numbers, grammar/listening items in checkpoints.
+- [ ] Exam date, listening items in checkpoints.
 
 ### Phase V — visual layer
 - [ ] V1 tokens (OKLCH, gender colours with shape cue, motion tokens), V2 word→picture map with
@@ -285,8 +284,8 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [ ] D: provider router (WebGPU first, OpenRouter BYOK opt-in), per-language model settings.
 - [ ] E: Persian/Arabic native-speaker path, RTL audit, L1 error priors.
 - [ ] F: writing rubric per exam, reading/listening exam formats, speaking simulation, mock exams.
-- [ ] G: offline audit, progress-aware reminders.
-- [ ] H: Telegram Mini App sign-in and sync, leagues and duels with server-side scoring.
+- [ ] G: offline audit.
+- [ ] H: leagues and duels with server-side scoring.
 - [ ] I: dashboards, A/B framework, content QA loop.
 
 ### First run
