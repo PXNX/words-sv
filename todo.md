@@ -288,7 +288,7 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [ ] E: Persian/Arabic native-speaker path, RTL audit, L1 error priors.
 - [ ] F: writing rubric per level, reading/listening task formats, speaking simulation, mock tests per
   level (no exam-specific formats).
-- [ ] G: offline audit.
+- [x] G: offline audit (`docs/offline.md`), an offline pill, and network-only buttons disabled offline.
 - [x] H: group competition through Telegram games (`/games`, `/top` in a group), scored on the server.
 - [ ] I: dashboards, A/B framework, content QA loop.
 

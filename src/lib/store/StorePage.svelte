@@ -22,6 +22,7 @@
   import { cloudSync } from '#lib/sync/cloudSync.svelte.js';
   import { PRODUCTS, SHOP_ITEMS, stillUseful, ownedItems, type Product, type ShopItemId } from './catalog.js';
   import { buy, refreshStore, storeState } from './storeClient.svelte.js';
+  import { network } from '#lib/offline/network.svelte.js';
   import IconPro from '~icons/material-symbols/workspace-premium-rounded';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconStar from '~icons/material-symbols/star-rounded';
@@ -91,6 +92,7 @@
     </div>
   </header>
 
+  {#if !network.online}<p class="store-offline">{m.offline_needs_network({}, locale)}</p>{/if}
   {#if notice}<p class="store-notice" role="status" transition:fly={{ y: -8, duration: ms(180) }}>{notice}</p>{/if}
 
   <details class="panel-play store-editor" open>
@@ -106,7 +108,7 @@
       <small>{proActive ? m.store_pro_active({ date: formatDate(settings.formatContext, storeState.proUntil!, 'dayMonth') }, locale) : m.store_pro_terms({ stars: num(pro.stars) }, locale)}</small>
     </div>
     {#if linked && !proActive}
-      <button type="button" class="btn-play btn-play-ink store-buy" disabled={storeState.buying !== null} onclick={() => purchase(pro)}><IconStar aria-hidden="true" />{m.store_buy({ stars: num(pro.stars) }, locale)}</button>
+      <button type="button" class="btn-play btn-play-ink store-buy" disabled={storeState.buying !== null || !network.online} onclick={() => purchase(pro)}><IconStar aria-hidden="true" />{m.store_buy({ stars: num(pro.stars) }, locale)}</button>
     {/if}
   </section>
 
@@ -133,7 +135,7 @@
               {#if trying?.id === product.id}<button type="button" class="btn-play btn-play-sm btn-play-soft" onclick={wear}><IconCheck aria-hidden="true" />{m.store_wear({}, locale)}</button>
               {:else}<span class="store-owned"><IconCheck aria-hidden="true" />{m.store_owned({}, locale)}</span>{/if}
             {:else if linked}
-              <button type="button" class="btn-play btn-play-sm store-buy" disabled={storeState.buying !== null} onclick={() => purchase(product)}><IconStar aria-hidden="true" />{m.store_buy({ stars: num(product.stars) }, locale)}</button>
+              <button type="button" class="btn-play btn-play-sm store-buy" disabled={storeState.buying !== null || !network.online} onclick={() => purchase(product)}><IconStar aria-hidden="true" />{m.store_buy({ stars: num(product.stars) }, locale)}</button>
             {/if}
           </li>
         {/each}
@@ -158,6 +160,7 @@
   .store-hero p:last-child { margin:0;font-size:.66rem;font-weight:700;line-height:1.45;opacity:.7; }
   .store-notice { position:fixed;z-index:85;inset-inline:max(.75rem,calc(50% - 14rem));bottom:calc(1rem + env(safe-area-inset-bottom));margin:0;padding:.55rem .75rem;box-shadow:0 8px 24px rgba(23,42,69,.18);border-radius:.8rem;background:#dcebf7;color:#1d4f7a;font-size:.68rem;font-weight:800; }
   :global(html.dark) .store-notice { background:#213a5d;color:#cfe4f5; }
+  .store-offline { margin:0;font-size:.66rem;font-weight:800;opacity:.7; }
   .store-editor { padding:.75rem .85rem; }
   .store-editor summary { cursor:pointer;font-size:.8rem;font-weight:900; }
   .store-editor[open] summary { margin-bottom:.6rem; }
