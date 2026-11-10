@@ -64,7 +64,7 @@
       <div class="changelog-details" dir="ltr" lang="en">
         {#each CHANGE_TYPES as type}
           {#if release.entries[type]?.length}
-            <h2 lang={settings.interfaceLocale} dir={direction}>{sectionTitle[type]}</h2>
+            <h2 class={type} lang={settings.interfaceLocale} dir={direction}>{sectionTitle[type]}</h2>
             <ul>{#each release.entries[type] ?? [] as entry}<li>{entry}</li>{/each}</ul>
           {/if}
         {/each}
@@ -90,7 +90,10 @@
   .changelog-date { margin-inline-start: auto; font-size: 0.68rem; font-weight: 800; opacity: 0.6; }
   .changelog-highlight { margin: 0.55rem 0 0; font-weight: 800; font-size: 0.85rem; line-height: 1.4; }
   .changelog-details h2 { margin: 0.7rem 0 0.2rem; color: var(--color-accent); font-size: 0.58rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; }
-  .changelog-details ul { margin: 0; padding-inline-start: 1.1rem; font-size: 0.78rem; line-height: 1.45; }
+  .changelog-details ul { margin: 0; padding-inline-start: 1.1rem; list-style: disc; font-size: 0.78rem; line-height: 1.45; }
+  .changelog-details li { margin-block: 0.15rem; }
+  .changelog-details li::marker { color: var(--color-accent); }
+  .changelog-details h2.fixed { color: var(--color-success, #2f8f5b); }
   .changelog-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; margin: 0.7rem 0 0; font-size: 0.62rem; font-weight: 800; opacity: 0.7; }
   .changelog-footer a { display: inline-flex; align-items: center; gap: 0.25rem; color: inherit; }
   @media (prefers-reduced-motion: no-preference) {
