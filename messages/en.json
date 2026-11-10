@@ -469,6 +469,8 @@
   "voice_quality_supertonic": "Supertonic",
   "voice_quality_supertonic_hint": "Supertonic 2: very natural voices generated on your device. Downloaded once (about {size} MB).",
   "voice_quality_supertonic3_hint": "Supertonic 3: natural voices in every language here, ten of them, generated on your device. Downloaded once (about {size} MB).",
+  "voice_quality_kokoro_hint": "Kokoro: very natural English voices, 28 American and British ones, generated on your device; other languages use Piper. Downloaded once (about {size} MB).",
+  "voice_quality_kitten_hint": "Kitten TTS: a tiny English model with eight voices, quick on any device; other languages use Piper. Downloaded once (about {size} MB).",
   "voice_quality_supertonic_fallback": "Supertonic does not speak this language (only English, Spanish, Portuguese and French), so the natural Piper voices are used here.",
   "conversation_meet": "Today you meet",
   "conversation_from_story": "from “{title}”",

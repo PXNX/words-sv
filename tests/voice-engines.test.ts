@@ -37,6 +37,26 @@ describe('voice engines', () => {
     expect(engineFootprint('supertonic3', { webgpu: false })).toEqual(voiceEngines.supertonic3.wasm);
   });
 
+  it('speaks English with Kokoro and Kitten and hands other languages to Piper', () => {
+    for (const engine of ['kokoro', 'kitten'] as const) {
+      expect(engineFor(engine, 'en', { webgpu: false })).toBe(engine);
+      expect(engineFor(engine, 'de', { webgpu: true })).toBe('natural');
+    }
+  });
+
+  it('gives Kokoro and Kitten enough voices of each gender for a full cast', () => {
+    for (const engine of ['kokoro', 'kitten'] as const) {
+      const voices = voiceEngines[engine].voices ?? [];
+      expect(voices.filter((voice) => voice.gender === 'female').length, engine).toBeGreaterThanOrEqual(4);
+      expect(voices.filter((voice) => voice.gender === 'male').length, engine).toBeGreaterThanOrEqual(4);
+      for (const voice of voices) expect(['en-us', 'en-gb']).toContain(voice.accent);
+    }
+    const kokoro = voiceEngines.kokoro.voices ?? [];
+    expect(kokoro).toHaveLength(28);
+    expect(kokoro.find((voice) => voice.id === 'bm_george')).toEqual({ id: 'bm_george', name: 'George', gender: 'male', accent: 'en-gb' });
+    expect(kokoro[0]?.id).toBe('af_heart');
+  });
+
   it('marks only Edge as leaving the device', () => {
     expect(voiceEngineIds.filter((id) => !voiceEngines[id].onDevice)).toEqual(['edge']);
   });

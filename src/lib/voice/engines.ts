@@ -11,6 +11,8 @@
  *   recorded   – pre-recorded Piper clips for the cast's reference lines, live Piper for the rest.
  *   supertonic – Supertonic 2 (Supertone), generated on the device in voice/supertonic.worker.ts.
  *   supertonic3 – Supertonic 3, the same worker: every language the app teaches, ten voices.
+ *   kokoro     – Kokoro-82M (hexgrad), English, 28 American and British voices, voice/styleTts.worker.ts.
+ *   kitten     – Kitten TTS nano (KittenML), English, eight voices, ~24 MB, the same worker.
  *   edge       – Microsoft's Edge neural voices over the network (the only engine that is not local).
  *
  * Not wired in: see "Not wired in" in docs/voice-engines.md.
@@ -21,7 +23,7 @@
  */
 import type { Language } from '#lib/data/vocabulary.js';
 
-export type VoiceEngineId = 'standard' | 'natural' | 'recorded' | 'supertonic' | 'supertonic3' | 'edge';
+export type VoiceEngineId = 'standard' | 'natural' | 'recorded' | 'supertonic' | 'supertonic3' | 'kokoro' | 'kitten' | 'edge';
 
 export type VoiceGender = 'female' | 'male';
 
@@ -87,6 +89,25 @@ const supertonicVoices: readonly EngineVoice[] = [
   ...(['M1', 'M2', 'M3', 'M4', 'M5'] as const).map((id) => ({ id, name: `Male ${id.slice(1)}`, gender: 'male' as const }))
 ];
 
+// Kokoro's English voices, best first by the grades in its VOICES.md, so the narrator and the main
+// characters get the clearest ones; American (en-us) and British (en-gb) voices mixed.
+const kokoroVoice = (id: string): EngineVoice => ({
+  id,
+  name: id.slice(3, 4).toUpperCase() + id.slice(4),
+  gender: id[1] === 'f' ? 'female' : 'male',
+  accent: id[0] === 'b' ? 'en-gb' : 'en-us'
+});
+const kokoroVoices: readonly EngineVoice[] = [
+  'af_heart', 'af_bella', 'af_nicole', 'bf_emma', 'af_aoede', 'af_kore', 'af_sarah', 'bf_isabella', 'af_nova', 'af_alloy', 'af_sky', 'af_jessica', 'af_river', 'bf_alice', 'bf_lily',
+  'am_fenrir', 'am_michael', 'am_puck', 'bm_george', 'bm_fable', 'bm_lewis', 'am_echo', 'am_eric', 'am_liam', 'am_onyx', 'bm_daniel', 'am_adam', 'am_santa'
+].map(kokoroVoice);
+
+// Kitten's voices, with the names KittenML gave them in release 0.8.
+const kittenVoices: readonly EngineVoice[] = ([
+  ['expr-voice-2-f', 'Bella'], ['expr-voice-3-f', 'Luna'], ['expr-voice-4-f', 'Rosie'], ['expr-voice-5-f', 'Kiki'],
+  ['expr-voice-2-m', 'Jasper'], ['expr-voice-3-m', 'Bruno'], ['expr-voice-4-m', 'Hugo'], ['expr-voice-5-m', 'Leo']
+] as const).map(([id, name]) => ({ id, name, gender: id.endsWith('-f') ? 'female' as const : 'male' as const, accent: 'en-us' }));
+
 export const voiceEngines: Record<VoiceEngineId, VoiceEngine> = {
   standard: { id: 'standard', name: 'Browser', runtime: 'browser', onDevice: true, clips: false, languages: 'all', fallback: 'standard' },
   natural: { id: 'natural', name: 'Piper', runtime: 'piper', onDevice: true, clips: true, languages: 'all', fallback: 'standard', tier: 'small', licence: 'per voice (MIT, CC0, CC-BY)' },
@@ -101,6 +122,18 @@ export const voiceEngines: Record<VoiceEngineId, VoiceEngine> = {
     id: 'supertonic3', name: 'Supertonic 3', runtime: 'model', onDevice: true, clips: true, languages: 'all', fallback: 'natural',
     tier: 'medium', megabytes: 205, memoryMB: 350, wasm: { megabytes: 210, memoryMB: 420 },
     model: 'open-world-group/Supertonic-3-ONNX', licence: 'OpenRAIL-M', voices: supertonicVoices
+  },
+  // float32 on WebGPU (as the official Kokoro WebGPU demo), q8 on WebAssembly; voice files (0.5 MB each)
+  // load as characters need them.
+  kokoro: {
+    id: 'kokoro', name: 'Kokoro', runtime: 'model', onDevice: true, clips: true, languages: ['en'], fallback: 'natural',
+    tier: 'medium', megabytes: 330, memoryMB: 600, wasm: { megabytes: 95, memoryMB: 300 },
+    model: 'onnx-community/Kokoro-82M-v1.0-ONNX', licence: 'Apache-2.0', voices: kokoroVoices
+  },
+  // int8 only, which runs on WebAssembly (its quantized ops have no WebGPU kernels).
+  kitten: {
+    id: 'kitten', name: 'Kitten TTS', runtime: 'model', onDevice: true, clips: true, languages: ['en'], fallback: 'natural',
+    tier: 'small', megabytes: 25, memoryMB: 120, model: 'onnx-community/kitten-tts-nano-0.1-ONNX', licence: 'Apache-2.0', voices: kittenVoices
   },
   edge: { id: 'edge', name: 'Edge', runtime: 'network', onDevice: false, clips: true, languages: 'all', fallback: 'natural' }
 };

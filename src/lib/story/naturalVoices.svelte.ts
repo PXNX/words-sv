@@ -7,6 +7,7 @@ import { loadRecordedVoice, useRecordedVoices } from '#lib/voice/recordedVoices.
 import { listEdgeVoices, speakEdge, type EdgeVoice } from '#lib/voice/edgeTts.js';
 import { castEngineVoices, engineFootprint, engineFor, voiceEngines, type EngineVoice, type VoiceEngineId } from '#lib/voice/engines.js';
 import { prepareSupertonic, speakSupertonic } from '#lib/voice/supertonic.js';
+import { prepareStyleTts, speakStyleTts } from '#lib/voice/styleTts.js';
 import { createPriorityQueue, type Priority } from '#lib/audio/priorityQueue.js';
 
 /*
@@ -334,6 +335,14 @@ const modelEngines: Partial<Record<VoiceEngineId, ModelEngine>> = {
   supertonic3: {
     prepare: (onProgress) => prepareSupertonic(onProgress, 'supertonic3'),
     speak: (text, language, voice, speed, priority) => speakSupertonic(text, language, voice, speed, priority, 'supertonic3')
+  },
+  kokoro: {
+    prepare: (onProgress) => prepareStyleTts('kokoro', onProgress),
+    speak: (text, _language, voice, speed, priority) => speakStyleTts('kokoro', text, voice, speed, priority)
+  },
+  kitten: {
+    prepare: (onProgress) => prepareStyleTts('kitten', onProgress),
+    speak: (text, _language, voice, speed, priority) => speakStyleTts('kitten', text, voice, speed, priority)
   }
 };
 
