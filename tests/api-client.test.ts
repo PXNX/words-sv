@@ -21,7 +21,7 @@ describe('api client', () => {
 
   it('GETs without a body', async () => {
     const calls: RequestInit[] = [];
-    await callApi('/api/push/public-key', PushKeySchema, { fetcher: reply(200, { publicKey: 'abc' }, calls) });
+    await callApi('/api/push', PushKeySchema, { fetcher: reply(200, { publicKey: 'abc' }, calls) });
     expect(calls[0]?.method).toBeUndefined();
   });
 
@@ -37,8 +37,8 @@ describe('api client', () => {
 
   it('rejects replies that do not match the schema, and HTML error pages', async () => {
     await expect(callApi('/api/telegram/device', TelegramStatusSchema, { fetcher: reply(200, { ok: true, linked: 'yes' }) })).rejects.toBeInstanceOf(ApiError);
-    await expect(callApi('/api/push/public-key', PushKeySchema, { fetcher: reply(200, '<html>Gateway</html>') })).rejects.toMatchObject({ code: 'invalid_response' });
-    await expect(callApi('/api/push/public-key', PushKeySchema, { fetcher: reply(502, '<html>Gateway</html>') })).rejects.toMatchObject({ code: 'unavailable' });
+    await expect(callApi('/api/push', PushKeySchema, { fetcher: reply(200, '<html>Gateway</html>') })).rejects.toMatchObject({ code: 'invalid_response' });
+    await expect(callApi('/api/push', PushKeySchema, { fetcher: reply(502, '<html>Gateway</html>') })).rejects.toMatchObject({ code: 'unavailable' });
   });
 
   it('keeps the streak fields it knows and drops the rest', async () => {
