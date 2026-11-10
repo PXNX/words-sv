@@ -496,8 +496,6 @@
   "wordle_length": "Wordle length",
   "wordle_length_explain": "Wordle length sets how many letters the target word has. Shorter words are quicker to solve, longer words give you more combinations to think through.",
   "backwards_explain": "When this is on, the game also accepts words spelled in reverse. For example, “STOP” counts the same as “POTS”.",
-  "explain_wordle_length": "Show explanation for wordle length",
-  "explain_backwards": "Show explanation for reverse spelling",
   "share_app": "Share app",
   "share_app_text": "Practise German with vocabulary, grammar and stories in short exercises.",
   "close": "Close",

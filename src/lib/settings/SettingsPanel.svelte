@@ -3,7 +3,7 @@
   import { deviceAbilities, speaksLanguage } from '#lib/voice/engines.js';
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
-  import { settings, interfaceLocales, type WordleLength } from '#lib/state/settings.svelte.js';
+  import { settings, interfaceLocales } from '#lib/state/settings.svelte.js';
   import { playableLanguages, vocabularyLevels, isLanguage, type VocabularyLevel } from '#lib/data/vocabulary.js';
   import { disablePush, enablePush, pushEnabled, pushSupported } from './pushClient';
   import { openTelegramLink, telegramDevice, type TelegramStatus } from './telegramClient';
@@ -20,10 +20,8 @@
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import { defaultAvatar } from '#lib/profile/avatar.js';
   import IconChevronRight from '~icons/material-symbols/chevron-right-rounded';
-  import IconClose from '~icons/material-symbols/close-rounded';
   import IconDark from '~icons/material-symbols/dark-mode-rounded';
   import IconGithub from '~icons/fa6-brands/github';
-  import IconHelp from '~icons/material-symbols/question-mark-rounded';
   import IconLanguage from '~icons/material-symbols/language-rounded';
   import IconShare from '~icons/material-symbols/share-rounded';
   import IconTelegram from '~icons/fa6-brands/telegram';
@@ -42,9 +40,7 @@
     behaviorGroup: m.behavior_group({}, { locale: settings.interfaceLocale }),
     gameLanguage: m.game_language({}, { locale: settings.interfaceLocale }),
     vocabulary: m.vocabulary({}, { locale: settings.interfaceLocale }),
-    wordleLength: m.wordle_length({}, { locale: settings.interfaceLocale }),
     includeLower: m.include_lower({}, { locale: settings.interfaceLocale }),
-    backwards: m.backwards({}, { locale: settings.interfaceLocale }),
     interfaceLanguage: m.interface_language({}, { locale: settings.interfaceLocale }),
     appearance: m.appearance({}, { locale: settings.interfaceLocale }),
     light: m.light({}, { locale: settings.interfaceLocale }),
@@ -58,8 +54,6 @@
     voiceModelStandard: m.voice_model_standard({}, { locale: settings.interfaceLocale }),
     voiceModelHigh: m.voice_model_high({}, { locale: settings.interfaceLocale }),
     voiceModelHint: m.voice_model_hint({}, { locale: settings.interfaceLocale }),
-    dialects: m.dialects({}, { locale: settings.interfaceLocale }),
-    dialectsHint: m.dialects_hint({}, { locale: settings.interfaceLocale }),
     notifications: m.notifications({}, { locale: settings.interfaceLocale }),
     notificationsEnabled: m.notifications_enabled({}, { locale: settings.interfaceLocale }),
     notificationsDenied: m.notifications_denied({}, { locale: settings.interfaceLocale }),
@@ -78,8 +72,6 @@
     inviteCopied: m.invite_copied({}, { locale: settings.interfaceLocale }),
     inviteCount: (count: number) => m.invite_count({ count }, { locale: settings.interfaceLocale }),
     inviteShareText: m.invite_share_text({}, { locale: settings.interfaceLocale }),
-    explainWordleLength: m.explain_wordle_length({}, { locale: settings.interfaceLocale }),
-    explainBackwards: m.explain_backwards({}, { locale: settings.interfaceLocale }),
     shareApp: m.share_app({}, { locale: settings.interfaceLocale })
   });
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
@@ -173,7 +165,6 @@
     { value: 'native', label: m.format_digits_native({}, { locale: settings.interfaceLocale }) }
   ]);
   const interfaceOptions = interfaceLocales.map((locale) => ({ value: locale.code as string, label: locale.label }));
-  const wordleOptions = [3, 4, 5, 6, 7].map((length) => ({ value: String(length), label: String(length) }));
 
   function selectLanguage(value: string) {
     if (isLanguage(value)) settings.setLang(value);
@@ -183,10 +174,6 @@
   }
   function selectVocabularyLevel(level: VocabularyLevel) {
     settings.setVocabularyLevel(level);
-  }
-  function selectWordleLength(next: string) {
-    const value = Number(next);
-    if (value >= 3 && value <= 7) settings.setWordleLength(value as WordleLength);
   }
   async function toggleNotifications(next: boolean) {
     notificationBusy = true;
@@ -252,22 +239,6 @@
     setTimeout(() => (inviteCopied = false), 2000);
   }
 
-  const explanations = $derived<Record<'wordleLength' | 'backwards', string>>({
-    wordleLength: m.wordle_length_explain({}, { locale: settings.interfaceLocale }),
-    backwards: m.backwards_explain({}, { locale: settings.interfaceLocale })
-  });
-  let explanationType = $state<'wordleLength' | 'backwards' | null>(null);
-  const explanationTitle = $derived(explanationType === 'wordleLength' ? labels.wordleLength : labels.backwards);
-  const explanationText = $derived(explanationType ? explanations[explanationType] : '');
-  let closeButton = $state<HTMLButtonElement | null>(null);
-
-  function openExplanation(type: 'wordleLength' | 'backwards') {
-    explanationType = type;
-  }
-
-  function closeExplanation() {
-    explanationType = null;
-  }
   function shareApp() {
     const url = typeof location !== 'undefined' ? location.origin + '/' : 'https://words-sv.vercel.app/';
     const title = m.home_title({}, { locale: settings.interfaceLocale });
@@ -281,16 +252,6 @@
     }
   }
 
-  $effect(() => {
-    if (!explanationType) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    closeButton?.focus();
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  });
-
   // A dot on the version row until the learner has opened /changelog for the newest release.
   let hasUnseenRelease = $state(false);
   onMount(() => {
@@ -301,7 +262,7 @@
   });
 </script>
 
-<svelte:window onkeydown={(event) => { if (event.key === 'Escape') closeExplanation(); }} onfocus={() => { if (telegramWaiting) refreshTelegram(); }} />
+<svelte:window onfocus={() => { if (telegramWaiting) refreshTelegram(); }} />
 
 <aside class="flex-1 min-h-0 m-0 px-[clamp(1rem,5vw,2rem)] pb-[clamp(1rem,5vw,2rem)] pt-[clamp(2.9rem,10vw,3.6rem)] overflow-y-auto border-0 bg-transparent animate-[drop-in_.2s_cubic-bezier(.23,1,.32,1)]" aria-label={labels.settingsHint} dir={interfaceDirection} lang={settings.interfaceLocale}>
   <div class="flex items-center justify-center gap-3 text-base-content">
@@ -332,8 +293,6 @@
     <div class="flex items-start justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.vocabulary}</span><div class="seg-play">{#each vocabularyLevels as level}<button class={`min-h-[1.65rem] min-w-[1.65rem] px-[.32rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold ${settings.vocabularyLevel === level ? 'bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45]' : 'bg-transparent text-base-content/[.62] dark:text-base-content/[.64]'}`} onclick={() => selectVocabularyLevel(level)}>{level.toUpperCase()}</button>{/each}</div></div>
     <a class="flex items-center justify-end gap-1 mt-[.35rem] text-accent text-[.6rem] font-extrabold tracking-[.06em] uppercase no-underline" href="/placement">{m.placement_link({}, { locale: settings.interfaceLocale })}<IconChevronRight aria-hidden="true" class="w-[.9rem] h-[.9rem] rtl:rotate-180" /></a>
     {#if settings.vocabularyLevel !== 'a1'}<div class="flex items-center justify-between gap-4 mt-[.25rem] pt-[.35rem] border-t-0 text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.includeLower}</span><input aria-label={labels.includeLower} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.includeLowerVocabulary} onchange={(event) => settings.setIncludeLowerVocabulary((event.currentTarget as HTMLInputElement).checked)} /></div>{/if}
-    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.4rem]">{labels.wordleLength}<button type="button" class="btn-play btn-play-round btn-play-sm btn-play-soft flex-none" aria-label={labels.explainWordleLength} aria-haspopup="dialog" onclick={() => openExplanation('wordleLength')}><IconHelp aria-hidden="true" /></button></span><SelectMenu class="w-[9.6rem] max-w-[48%]" value={String(settings.wordleLength)} options={wordleOptions} label={labels.wordleLength} onchange={selectWordleLength} /></div>
-    <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span class="inline-flex items-center gap-[.4rem]">{labels.backwards}<button type="button" class="btn-play btn-play-round btn-play-sm btn-play-soft flex-none" aria-label={labels.explainBackwards} aria-haspopup="dialog" onclick={() => openExplanation('backwards')}><IconHelp aria-hidden="true" /></button></span><input aria-label={labels.backwards} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.allowBackwardWords} onchange={(event) => settings.setAllowBackwardWords((event.currentTarget as HTMLInputElement).checked)} /></div>
   </section>
   <section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play" aria-labelledby="behavior-settings-heading">
     <h2 id="behavior-settings-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.behaviorGroup}</h2>
@@ -378,8 +337,6 @@
           <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{labels.voiceModelHint}</p>
         {/if}
         <div class="flex items-center justify-between gap-4 mt-[.55rem]"><button class="min-h-[1.65rem] px-[.7rem] inline-flex items-center gap-[.25rem] border-0 rounded-full text-[.62rem] font-extrabold tracking-[.06em] uppercase bg-[#172a45] text-[#fffdf7] dark:bg-[#e6a527] dark:text-[#172a45] disabled:opacity-60" disabled={piperVoices && voiceStatus === 'loading'} onclick={() => (voiceTesting ? stopVoiceTest() : testVoice())}><IconVolume class="w-[.78rem] h-[.78rem]" />{voiceTesting ? labels.voiceTesting : labels.voiceTest}</button>{#if voiceTestFailed}<span class="text-base-content/60 text-[.58rem] font-bold leading-[1.35]" aria-live="polite">{labels.voiceTestFailed}</span>{/if}</div>
-        <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>{labels.dialects}</span><input aria-label={labels.dialects} type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.dialects} onchange={(event) => settings.setDialects((event.currentTarget as HTMLInputElement).checked)} /></div>
-        <p class="m-0 mt-[.45rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{labels.dialectsHint}</p>
       {/if}
     {/snippet}
   </ModelManager>
@@ -398,40 +355,6 @@
   </div>
   </div>
 </aside>
-
-{#if explanationType}
-  <div
-    class="fixed inset-0 z-[150] flex items-end justify-center bg-[rgba(23,42,69,.42)] dark:bg-[rgba(11,22,38,.6)]"
-    role="presentation"
-    dir={interfaceDirection}
-    lang={settings.interfaceLocale}
-    onclick={(event) => { if (event.target === event.currentTarget) closeExplanation(); }}
-    onkeydown={(event) => { if (event.key === 'Escape') closeExplanation(); }}
-  >
-    <div
-      class="sheet-in w-full max-w-[34rem] max-h-[min(80vh,34rem)] overflow-y-auto rounded-t-[1.6rem] border-2 border-b-0 border-[var(--play-line)] bg-[#fffdf7] px-[clamp(1rem,5vw,1.6rem)] pt-[.6rem] pb-[calc(1.1rem+env(safe-area-inset-bottom))] shadow-[0_-8px_28px_rgba(23,42,69,.22)] dark:bg-[#213a5d]"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="settings-explanation-title"
-      tabindex="-1"
-    >
-      <div class="mx-auto mb-[.85rem] h-[.3rem] w-[2.7rem] rounded-full bg-base-content/25" aria-hidden="true"></div>
-      <div class="flex items-start justify-between gap-3">
-        <h2 id="settings-explanation-title" class="m-0 text-[.58rem] font-black tracking-[.12em] text-accent uppercase">{explanationTitle}</h2>
-        <button
-          bind:this={closeButton}
-          type="button"
-          class="-mt-[.35rem] -mr-[.35rem] grid h-[2rem] w-[2rem] flex-none place-items-center rounded-full border-0 bg-transparent text-base-content/60 hover:bg-base-content/10 hover:text-base-content focus-visible:outline-2 focus-visible:outline-primary"
-          aria-label={m.close({}, { locale: settings.interfaceLocale })}
-          onclick={closeExplanation}
-        >
-          <IconClose aria-hidden="true" class="h-[1.15rem] w-[1.15rem]" />
-        </button>
-      </div>
-      <p class="m-0 mt-[.55rem] text-[.88rem] font-semibold leading-[1.5] text-base-content">{explanationText}</p>
-    </div>
-  </div>
-{/if}
 
 <style>
   /* Tablets: the page fills the screen (see the layout's paper-full) and the sections fill the width
