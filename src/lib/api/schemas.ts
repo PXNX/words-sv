@@ -58,14 +58,3 @@ export type SyncReply = v.InferOutput<typeof SyncReplySchema>;
 
 /** A reply that came back but is not what the endpoint promises. */
 export const OkSchema = v.object({ ok: v.optional(v.boolean()) });
-
-export const GroupStandingSchema = v.object({
-  name: v.string(),
-  avatar: v.nullable(v.string()),
-  points: count,
-  rank: v.pipe(v.number(), v.integer(), v.minValue(1)),
-  you: v.boolean()
-});
-export const GroupViewSchema = v.object({ code: v.string(), name: v.string(), week: v.string(), members: v.array(GroupStandingSchema) });
-export type GroupView = v.InferOutput<typeof GroupViewSchema>;
-export const GroupsReplySchema = v.object({ ok: v.literal(true), groups: v.array(GroupViewSchema) });

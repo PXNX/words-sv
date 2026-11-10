@@ -36,7 +36,6 @@
   import { dueReviewEntries } from '#lib/review/ledger.js';
   import IconSettings from '~icons/material-symbols/settings-rounded';
   import IconChevronRight from '~icons/material-symbols/chevron-right-rounded';
-  import IconGroups from '~icons/material-symbols/groups-rounded';
   import IconCrossword from '~icons/material-symbols/crossword-rounded';
   import IconSpellcheck from '~icons/material-symbols/spellcheck-rounded';
   import IconQuiz from '~icons/material-symbols/quiz-rounded';
@@ -303,11 +302,6 @@
           <IconChevronRight class="home-continue-arrow" aria-hidden="true" />
         </a>
       {/each}
-      <a class="home-daily-row home-continue" href="/groups">
-        <span class="home-continue-label"><IconGroups aria-hidden="true" class="home-groups-icon" />{m.groups_title({}, { locale: settings.interfaceLocale })}</span>
-        <span class="home-continue-detail">{m.groups_home({}, { locale: settings.interfaceLocale })}</span>
-        <IconChevronRight class="home-continue-arrow" aria-hidden="true" />
-      </a>
     </section>
     </div>
     <div class="home-main">
@@ -353,7 +347,6 @@
 
 <style>
   .home-view { flex:1 1 auto;min-height:0;display:grid;grid-auto-rows:max-content;align-content:safe center;gap:clamp(1rem,4vw,1.8rem);padding:clamp(.6rem,3vw,1.1rem) clamp(.7rem,3.4vw,1.25rem);overflow-x:hidden;overflow-y:auto; }
-  :global(.home-groups-icon) { width:1rem;height:1rem;margin-inline-end:.3rem;vertical-align:-.18rem;color:#c9832f; }
   .home-header { display:grid;gap:.35rem;text-align:center; }.home-group-heading { margin:0 -.1rem -.35rem;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase; }.home-header p { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }.home-header h1 { margin:0;color:#172a45 !important;text-shadow:0 1px 0 rgba(255,253,247,.72);font-family:'DM Serif Display',serif;font-size:clamp(2.1rem,10vw,3.35rem);font-weight:400;letter-spacing:-.05em;line-height:.9; }
   .home-settings-link { justify-self:center; }
   /* overflow clips the row backgrounds to the rounded corners; min-height keeps the scrolling home grid from squeezing the card to nothing */

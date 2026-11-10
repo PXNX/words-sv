@@ -116,31 +116,3 @@ CREATE TABLE IF NOT EXISTS wordcircle_progress_snapshots (
   updated_by_device VARCHAR(64) NULL,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-
--- Group leagues (api/groups/index.ts creates these on first use): groups joined by a code, their
--- members as shown in the ranking, and each device's points per ISO week (scored in api/streak/progress.ts).
-CREATE TABLE IF NOT EXISTS wordcircle_groups (
-  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  code CHAR(6) NOT NULL UNIQUE,
-  name VARCHAR(40) NOT NULL,
-  created_by_device VARCHAR(64) NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS wordcircle_group_members (
-  group_id INT UNSIGNED NOT NULL,
-  device_id VARCHAR(64) NOT NULL,
-  display_name VARCHAR(30) NOT NULL,
-  avatar VARCHAR(400) NULL,
-  joined_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (group_id, device_id),
-  INDEX wordcircle_group_members_device_idx (device_id),
-  CONSTRAINT wordcircle_group_members_group_fk FOREIGN KEY (group_id) REFERENCES wordcircle_groups(id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS wordcircle_weekly_points (
-  device_id VARCHAR(64) NOT NULL,
-  week_key CHAR(8) NOT NULL,
-  points INT UNSIGNED NOT NULL DEFAULT 0,
-  PRIMARY KEY (device_id, week_key)
-);
