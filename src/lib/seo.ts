@@ -68,6 +68,12 @@ export const pages: Record<string, PageMeta> = {
     kicker: 'Figur',
     icon: 'storefront-rounded'
   },
+  '/dictionary': {
+    title: 'Wörterbuch',
+    description: 'Schlag jedes Wort deiner Lernsprache nach, mit Formen und Zusammensetzungen – auch offline.',
+    kicker: 'Nachschlagen',
+    icon: 'menu-book-rounded'
+  },
   '/changelog': {
     title: 'Was ist neu',
     description: 'Alle Versionen von WordCircle mit ihren Neuerungen und Korrekturen.',

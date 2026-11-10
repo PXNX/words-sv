@@ -2,7 +2,7 @@ export type Language = 'de' | 'en' | 'fr' | 'it' | 'es' | 'pt' | 'uk';
 export type VocabularyLevel = 'a1' | 'a2' | 'b1' | 'b2' | 'c1' | 'c2';
 export type VocabularyGender = 'masculine' | 'feminine' | 'neuter';
 export type VocabularyMetadata = { spelling: string; type: string; gender?: VocabularyGender | undefined; article?: string | undefined };
-type VocabularyEntry = { definition?: string; type?: string; genus?: VocabularyGender; article?: string };
+export type VocabularyEntry = { definition?: string; type?: string; genus?: VocabularyGender; article?: string };
 
 export const vocabularyLevels: VocabularyLevel[] = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
 
