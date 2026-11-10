@@ -244,17 +244,23 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [ ] Budgets: bundle size and pack size in CI, Lighthouse CI.
 
 ### Phase A — progress foundation
-- [ ] Append-only `LearningEvent` log (IndexedDB) with one writer used by every mode; backfill
-  from the activity log and ledger; 12-month compaction.
-- [ ] FSRS scheduler (`ts-fsrs`) behind the ledger interface; migrate SM-2 state
-  (`repetitions`, `ease`, `intervalDays`, `dueAt`, `lapses`) without losing due dates.
-- [ ] Item states `new → learning → young → mature`, leeches; "known" = R ≥ 0.9 and S ≥ 21 d.
-- [ ] Per-feature state keyed by `FeatureKey`; skill × level state (coverage, mastery,
-  retained accuracy, confidence).
+- [x] Append-only `LearningEvent` log in IndexedDB (`progress/events.ts`, `progress/eventLog.ts`)
+  with 12-month compaction into daily aggregates; review answers, reading questions and mode
+  completions are logged. No backfill: the ledger keeps its state, events start now.
+- [x] FSRS-5 scheduler (own implementation, no dependency) behind `schedule()`; SM-2 entries
+  migrate on their next review without moving due dates.
+- [x] Item stages `new → learning → young → mature`, leeches (6 lapses); "known" = R ≥ 0.9 and
+  S ≥ 21 days.
+- [x] Skill × level state (coverage, mastery, retained accuracy, confidence) in
+  `progress/skillState.ts`.
+- [ ] Per-feature state keyed by `FeatureKey` (needs Formen items that report feature errors).
+- [ ] Log answers from the remaining modes (circle/wordle guesses, conversation, writing scores).
+- [ ] Level tags on texts, listening clips and grammar items (coverage currently uses vocabulary).
 
 ### Phase B — assessment and visibility
-- [ ] Placement test, 4-weekly checkpoints, readiness ranges and forecast, target exam/date,
-  `/progress` redesign, recap with real learning numbers.
+- [x] Readiness ranges per skill, level ladder, known words, error profile on `/progress`.
+- [x] Target exam in Settings with section-weighted readiness.
+- [ ] Placement test, 4-weekly checkpoints, forecast display, exam date, recap with real numbers.
 
 ### Phase V — visual layer
 - [ ] V1 tokens (OKLCH, gender colours with shape cue, motion tokens), V2 word→picture map with
@@ -271,6 +277,12 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [ ] G: offline audit, progress-aware reminders.
 - [ ] H: Telegram Mini App sign-in and sync, leagues and duels with server-side scoring.
 - [ ] I: dashboards, A/B framework, content QA loop.
+
+### German vocabulary
+- [x] Every German entry has a definition (686 written), mistyped adverbs/adjectives fixed,
+  conjugated forms, participles and misspellings replaced by their infinitives or removed;
+  `tests/data/german-vocabulary.test.ts` keeps it that way.
+- [ ] The 25 "Extra" stories in `story/germanStories.ts` are word lists, not stories; rewrite.
 
 ### Release process leftovers
 - [ ] `tests/fixtures/v1.0.0/` snapshot of a learner's local data for migration tests.
