@@ -5,7 +5,7 @@
  * only knows their names, so keep it in step when an engine changes where it stores things.
  */
 import { formatNumber, learningContext, type FormatContext } from '#lib/format/format.js';
-export type StoredGroup = 'piper' | 'supertonic' | 'supertonic3' | 'conversation' | 'wordAudio' | 'listening';
+export type StoredGroup = 'piper' | 'supertonic' | 'supertonic3' | 'kokoro' | 'kitten' | 'conversation' | 'wordAudio' | 'listening';
 
 type CacheStore = { cache: string; match?: (url: string) => boolean };
 type Store = { caches?: CacheStore[]; databases?: string[] };
@@ -16,6 +16,9 @@ export const storedGroups: Record<StoredGroup, Store> = {
   // transformers.js keeps every model it loads in one cache, keyed by URL.
   supertonic: { caches: [{ cache: 'transformers-cache', match: (url) => url.includes('Supertonic-TTS-2') }] },
   supertonic3: { caches: [{ cache: 'transformers-cache', match: (url) => url.includes('Supertonic-3') }] },
+  // voice/styleTts.worker.ts keeps the voice files there too.
+  kokoro: { caches: [{ cache: 'transformers-cache', match: (url) => url.includes('Kokoro-82M') }] },
+  kitten: { caches: [{ cache: 'transformers-cache', match: (url) => url.includes('kitten-tts') }] },
   // WebLLM (conversation/llm.worker.ts)
   conversation: { caches: [{ cache: 'webllm/model' }, { cache: 'webllm/wasm' }, { cache: 'webllm/config' }] },
   // audio/wordAudioStore.ts and story/audioLibrary.ts

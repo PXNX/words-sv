@@ -15,6 +15,7 @@
   import { cancelModelDownload, checkLocalModel, chooseModel, deleteModel, downloadModelFiles, localModel, modelGpuMB, pageMemoryMB, unloadLocalModel } from '#lib/conversation/localModel.svelte.js';
   import { chatModels, isRecommended, likelyFits, type ChatModel } from '#lib/conversation/models.js';
   import { unloadSupertonic } from '#lib/voice/supertonic.js';
+  import { unloadStyleTts } from '#lib/voice/styleTts.js';
   import { deviceAbilities, speaksLanguage, voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
   import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
   import ModelStatus from '#lib/offline/ModelStatus.svelte';
@@ -42,12 +43,16 @@
     recorded: () => m.voice_quality_recorded({}, { locale }),
     supertonic: () => m.voice_quality_supertonic({}, { locale }),
     supertonic3: () => voiceEngines.supertonic3.name,
+    kokoro: () => voiceEngines.kokoro.name,
+    kitten: () => voiceEngines.kitten.name,
     edge: () => 'Edge'
   };
   const groupNames: Record<StoredGroup, () => string> = {
     piper: () => m.models_group_piper({}, { locale }),
     supertonic: () => m.voice_quality_supertonic({}, { locale }),
     supertonic3: () => voiceEngines.supertonic3.name,
+    kokoro: () => voiceEngines.kokoro.name,
+    kitten: () => voiceEngines.kitten.name,
     conversation: () => m.models_conversation({}, { locale }),
     wordAudio: () => m.models_group_word_audio({}, { locale }),
     listening: () => m.models_group_listening({}, { locale })
@@ -63,7 +68,7 @@
   const engine = $derived(activeEngine(lang));
   const voiceStatus = $derived(naturalReady(lang) ? 'ready' : naturalState.status[lang] ?? 'idle');
   const voicesSupported = $derived(typeof window !== 'undefined' && naturalSupported());
-  const voiceGroups: Partial<Record<VoiceEngineId, StoredGroup>> = { natural: 'piper', recorded: 'piper', supertonic: 'supertonic', supertonic3: 'supertonic3' };
+  const voiceGroups: Partial<Record<VoiceEngineId, StoredGroup>> = { natural: 'piper', recorded: 'piper', supertonic: 'supertonic', supertonic3: 'supertonic3', kokoro: 'kokoro', kitten: 'kitten' };
   // Engines that can speak the learning language on this device, plus the chosen one in any case.
   const voiceChoices = $derived(voiceEngineIds.filter((id) => id === settings.voiceQuality || (speaksLanguage(id, lang) && (!voiceEngines[id].webgpu || deviceAbilities().webgpu))));
   const voiceDownloadMB = (id: VoiceEngineId) => (voiceEngines[id].megabytes ?? (voiceGroups[id] === 'piper' ? piperMegabytes(lang) : 0));
@@ -74,6 +79,8 @@
     if (id === 'recorded') return m.voice_quality_recorded_hint({}, { locale });
     if (id === 'supertonic') return m.voice_quality_supertonic_hint({ size }, { locale });
     if (id === 'supertonic3') return m.voice_quality_supertonic3_hint({ size }, { locale });
+    if (id === 'kokoro') return m.voice_quality_kokoro_hint({ size }, { locale });
+    if (id === 'kitten') return m.voice_quality_kitten_hint({ size }, { locale });
     if (id === 'edge') return m.voice_quality_edge_hint({}, { locale });
     return m.voice_quality_natural_hint({ size }, { locale });
   }
@@ -146,7 +153,8 @@
     if (confirming !== group) { confirming = group; return; }
     confirming = null;
     // Stop whatever uses the files before they go, so nothing reads half-deleted data.
-    if (group === 'piper' || group === 'supertonic' || group === 'supertonic3') unloadNaturalVoices();
+    if (group === 'piper' || group === 'supertonic' || group === 'supertonic3' || group === 'kokoro' || group === 'kitten') unloadNaturalVoices();
+    if (group === 'kokoro' || group === 'kitten') unloadStyleTts();
     if (group === 'supertonic' || group === 'supertonic3') unloadSupertonic();
     if (group === 'conversation') unloadLocalModel();
     if (group === 'wordAudio') forgetWordAudio();
