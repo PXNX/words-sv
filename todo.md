@@ -243,7 +243,7 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
   PWA reminder texts; there is no reminder time picker).
 - [x] Alltag drills for clock times, dates (ordinals), numbers and prices in German and English
   (`vocab/everyday.ts`); Satzbau got its sentence builder.
-- [ ] Spoken forms of numbers and times wired into listening texts.
+- [x] Spoken forms of clock times and euro prices in German listening and story texts (`story/speech.ts`).
 - [ ] Interface formatting in Telegram reminder texts.
 
 ### Phase P — content packs and fast loading

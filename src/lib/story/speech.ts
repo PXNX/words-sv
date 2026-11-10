@@ -111,6 +111,8 @@ function germanNumber(value: number): string {
   return rest ? `${words} ${germanBelowMillion(rest)}` : words;
 }
 
+const countedNumber = (value: number) => (value === 1 ? 'ein' : germanNumber(value));
+
 export function pronounceable(sentence: string, language: Language): { text: string; written: (spoken: number) => number } {
   if (language === 'en') {
     return { text: sentence.replace(/(\d)\.(\d{3})/g, '$1,$2'), written: (spoken) => spoken };
@@ -118,7 +120,9 @@ export function pronounceable(sentence: string, language: Language): { text: str
   if (language !== 'de') return { text: sentence, written: (spoken) => spoken };
   // Words and numbers that are said differently from how they are written. Grouped German numbers
   // ("3 800", "240.000") become words, so no voice can read the separator as "Punkt" or split them.
-  const tokenPattern = /(?<!\p{L})(?:\d{1,3}(?:[.\s\u00A0\u202F]\d{3})+(?!\d)|\d{4,}|\p{L}+)(?!\p{L})/gu;
+  // Clock times ("14:30 Uhr" → "vierzehn Uhr dreißig") and euro prices ("3,50 €" → "drei Euro
+  // fünfzig") are said the way announcements and shops say them, before the plain numbers.
+  const tokenPattern = /(?<!\p{L})(?:\d{1,3},\d{2}\s?€|\d{1,6}\s?€|(?:[01]?\d|2[0-3]):[0-5]\d(?:\s?Uhr)?|\d{1,3}(?:[.\s\u00A0\u202F]\d{3})+(?!\d)|\d{4,}|\p{L}+)(?!\p{L})/gu;
   const swaps: { spoken: number; said: number; written: number; length: number }[] = [];
   let text = '';
   let last = 0;
@@ -127,7 +131,16 @@ export function pronounceable(sentence: string, language: Language): { text: str
     const at = match.index ?? 0;
     text += sentence.slice(last, at);
     let said = original;
-    if (/^\d/.test(original)) {
+    const price = /^(\d+)(?:,(\d{2}))?\s?€$/u.exec(original);
+    const clock = /^(\d{1,2}):(\d{2})(?:\s?Uhr)?$/u.exec(original);
+    if (price) {
+      const cents = Number(price[2] ?? 0);
+      // "ein Euro", "ein Uhr": a counted one loses its -s.
+      said = `${countedNumber(Number(price[1]))} Euro${cents ? ` ${germanNumber(cents)}` : ''}`;
+    } else if (clock) {
+      const minutes = Number(clock[2]);
+      said = `${countedNumber(Number(clock[1]))} Uhr${minutes ? ` ${germanNumber(minutes)}` : ''}`;
+    } else if (/^\d/.test(original)) {
       const digits = original.replace(/[.\s\u00A0\u202F]/g, '');
       const value = Number(digits);
       if (Number.isSafeInteger(value) && value >= 1000) said = germanNumber(value);
