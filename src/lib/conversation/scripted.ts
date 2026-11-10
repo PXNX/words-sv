@@ -12,7 +12,7 @@ import { dialogues, partnerTopics, type DialogueContent, type DialogueStep, type
  * and asks again, or moves on after a second miss. Pure and serialisable, so it can be tested.
  */
 
-export type ScriptWord = { word: string; type?: string; article?: string; definition?: string };
+export type ScriptWord = { word: string; type?: string | undefined; article?: string | undefined; definition?: string | undefined };
 
 export type ScriptSetup = {
   language: Language;
