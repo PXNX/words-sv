@@ -631,5 +631,6 @@
   "readiness_exam": "Bereit für {exam}",
   "readiness_errors": "Häufigste Fehler",
   "target_exam": "Ziel-Prüfung",
-  "target_exam_none": "Keine"
+  "target_exam_none": "Keine",
+  "changelog_v1_2_0": "Dein Lernstand pro Fertigkeit, klügere Wiederholungen und Erklärungen für jedes deutsche Wort."
 }
