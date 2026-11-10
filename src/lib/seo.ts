@@ -77,6 +77,12 @@ export const pages: Record<string, PageMeta> = {
     kicker: 'Vokabeln',
     icon: 'quiz-rounded'
   },
+  '/placement': {
+    title: 'Einstufungstest',
+    description: 'Finde in drei Minuten heraus, welches Niveau zu dir passt.',
+    kicker: 'Niveau',
+    icon: 'fact-check-rounded'
+  },
   '/changelog': {
     title: 'Was ist neu',
     description: 'Alle Versionen von WordCircle mit ihren Neuerungen und Korrekturen.',

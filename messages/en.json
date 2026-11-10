@@ -658,5 +658,20 @@
   "welcome_skip": "Skip",
   "welcome_done_title": "Nice to meet you, {name}!",
   "welcome_done_body": "Mia, Tom and Lilith are waiting. Start with a short game.",
-  "welcome_done_go": "Let's start"
+  "welcome_done_go": "Let's start",
+  "placement_title": "Placement test",
+  "placement_heading": "Which level suits you?",
+  "placement_intro": "Lilith shows you words. Tap “I know it” if you know what a word means. A few words are made up – for those tap “Don't know”. Takes about three minutes.",
+  "placement_start": "Start the test",
+  "placement_known": "I know it",
+  "placement_unknown": "Don't know",
+  "placement_note": "Guessing doesn't pay: made-up words count against you.",
+  "placement_result_title": "Your level: {level}",
+  "placement_result_body": "That's how many words you already know. Your practice adapts to it.",
+  "placement_apply": "Use {level}",
+  "placement_applied": "Your level is set.",
+  "placement_done": "To the start",
+  "placement_again": "Try again",
+  "placement_unavailable": "There aren't enough words in this language for a placement test yet.",
+  "placement_link": "Take the placement test"
 }
