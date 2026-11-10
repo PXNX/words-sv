@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { logAnswer } from '#lib/progress/eventLog.js';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import type { GradeResult } from '#lib/sentence/grading.js';
@@ -31,6 +32,8 @@
   async function submit() {
     if (!canSubmit || grader.busy) return;
     result = await runGrade(answer, settings.lang, 'short', prompt.topic);
+    // The rubric score feeds the writing readiness on /progress.
+    logAnswer(settings.lang, 'write', `WRITE:SHORT:${prompt.topic}`, null, { level: settings.vocabularyLevel, score: result.score });
     void settings.recordStreak('sentence_completed');
   }
 

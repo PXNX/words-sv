@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { logAnswer } from '#lib/progress/eventLog.js';
   import { untrack } from 'svelte';
   import { haptic } from '#lib/feedback/haptics.js';
   import { playErrorSound, playSuccessSound } from '#lib/feedback/sounds.js';
@@ -120,6 +121,7 @@
   $effect(() => {
     if (!finished || !target || recordedCompletion === target) return;
     recordedCompletion = target;
+    logAnswer(language, 'hangman', `HANGMAN:${target}`, won);
     void settings.recordStreak('hangman_completed');
     if (won) playSuccessSound(settings.sound, 'pronunciation');
     haptic(won ? 'win' : 'error');
