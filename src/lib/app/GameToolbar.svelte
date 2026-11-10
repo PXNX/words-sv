@@ -89,10 +89,13 @@
 {/if}
 
 <style>
-  .game-toolbar { position:absolute;z-index:105;top:.62rem;right:.62rem;display:flex;gap:.4rem; }
+  /* A small rail on the edge, a third of the way down: within thumb reach and clear of Telegram's
+     header buttons (and the status bar), which cover the top corners of a Mini App. */
+  .game-toolbar { position:absolute;z-index:105;top:max(32%, 4.5rem);inset-inline-end:.35rem;display:flex;flex-direction:column;gap:.4rem;padding:.3rem;border-radius:999px;background:rgba(255,253,247,.72);box-shadow:0 2px 10px rgba(23,42,69,.12);backdrop-filter:blur(6px); }
+  :global(html.dark) .game-toolbar { background:rgba(23,42,69,.6); }
   .game-toolbar :global(svg) { width:1rem;height:1rem; }
   .game-tutorial { position:absolute;inset:0;z-index:110;display:flex;flex-direction:column;overflow:auto; }
-  .game-tutorial-close { position:absolute;z-index:2;top:.62rem;right:.62rem; }
+  .game-tutorial-close { position:absolute;z-index:2;top:max(32%, 4.5rem);inset-inline-end:.65rem; }
   .game-tutorial-close :global(svg) { width:1rem;height:1rem; }
 
   .game-sheet-layer { position:fixed;inset:0;z-index:120;display:flex;align-items:flex-end;justify-content:center; }
