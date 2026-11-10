@@ -16,6 +16,8 @@ import CosmeticUnlockToast from '#lib/profile/CosmeticUnlockToast.svelte';
 import WhatsNewSheet from '#lib/app/WhatsNewSheet.svelte';
 import MobileDataDialog from '#lib/offline/MobileDataDialog.svelte';
 import StreakToast from '#lib/streak/StreakToast.svelte';
+import GroupScoreSheet from '#lib/games/GroupScoreSheet.svelte';
+import { initGroupGame } from '#lib/games/groupGame.svelte.js';
 import { startCloudSync } from '#lib/sync/cloudSync.svelte.js';
 import { probeWebGpu } from '#lib/voice/engines.js';
 import { checkAchievementRewards, checkLanguageRewards } from '#lib/profile/cosmetics.svelte.js';
@@ -91,6 +93,8 @@ $effect(() => {
 });
 
 onMount(() => {
+    // Opened from a Telegram group game's Play button: rounds report to that group's scoreboard.
+    initGroupGame(new URL(page.url.href));
     // Whether WebGPU really has an adapter, so VoxCPM falls back to Piper where it cannot run.
     void probeWebGpu();
     void autoUpdateOnStart();
@@ -155,6 +159,7 @@ onMount(() => {
 		</main>
 		<CosmeticUnlockToast />
 		<StreakToast />
+		<GroupScoreSheet />
 		<WhatsNewSheet />
 		<MobileDataDialog />
 		<BackgroundJobsBadge />
