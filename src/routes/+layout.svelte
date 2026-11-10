@@ -20,7 +20,8 @@ import GroupScoreSheet from '#lib/games/GroupScoreSheet.svelte';
 import { initGroupGame } from '#lib/games/groupGame.svelte.js';
 import { cloudSync, startCloudSync } from '#lib/sync/cloudSync.svelte.js';
 import { refreshStore } from '#lib/store/storeClient.svelte.js';
-import { probeWebGpu } from '#lib/voice/engines.js';
+import { probeWebGpu, setWebGpuUsable } from '#lib/voice/engines.js';
+import { webgpu } from '#lib/app/webgpuCheck.svelte.js';
 import { checkAchievementRewards, checkLanguageRewards } from '#lib/profile/cosmetics.svelte.js';
 import { readVocabularyProgressByLanguage } from '#lib/vocab/spacedRepetition.js';
 import BackgroundJobsBadge from '#lib/audio/BackgroundJobsBadge.svelte';
@@ -106,7 +107,9 @@ onMount(() => {
     // Opened from a Telegram group game's Play button: rounds report to that group's scoreboard.
     initGroupGame(new URL(page.url.href));
     // Whether WebGPU really has an adapter, so voice engines that need it fall back to Piper in time.
-    void probeWebGpu();
+    // A finished WebGPU check (it runs before the first model) decides; otherwise a quick adapter probe.
+    if (webgpu.result) setWebGpuUsable(webgpu.result.status === 'ok');
+    else void probeWebGpu();
     // Removed voice engines' downloads (VoxCPM's 1.6 GB) are dead weight; free them once idle.
     setTimeout(() => void import('#lib/offline/storage.js').then(({ deleteRetiredStorage }) => deleteRetiredStorage()), 15_000);
     void autoUpdateOnStart();

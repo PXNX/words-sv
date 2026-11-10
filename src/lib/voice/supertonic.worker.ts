@@ -27,7 +27,8 @@ const MODELS: Record<SupertonicModel, { repo: string; webgpu?: Dtype; wasm?: Dty
 
 export type LoadProgress = { loaded: number; total: number };
 export type SupertonicProtocol = {
-  load: Call<{ model: SupertonicModel }, void, LoadProgress>;
+  /** `webgpu`: whether the app's WebGPU check passed; without it the model runs on WebAssembly. */
+  load: Call<{ model: SupertonicModel; webgpu?: boolean }, void, LoadProgress>;
   speak: Call<{ model: SupertonicModel; text: string; language: string; voice: string; speed: number }, { pcm: Float32Array; sampleRate: number }, LoadProgress>;
 };
 
@@ -35,7 +36,9 @@ const synthesizers = new Map<SupertonicModel, Promise<TextToAudioPipeline>>();
 
 // `navigator.gpu` alone is not enough: many browsers expose it without handing out an adapter.
 let gpu: Promise<boolean> | null = null;
+let webgpuAllowed = true;
 function hasWebGpu() {
+  if (!webgpuAllowed) return Promise.resolve(false);
   const api = (self.navigator as Navigator & { gpu?: { requestAdapter: () => Promise<unknown> } }).gpu;
   gpu ??= api ? api.requestAdapter().then(Boolean, () => false) : Promise.resolve(false);
   return gpu;
@@ -69,7 +72,8 @@ function load(model: SupertonicModel, onProgress: (progress: LoadProgress) => vo
 }
 
 serveWorker<SupertonicProtocol>(self, {
-  async load({ model }, { update }) {
+  async load({ model, webgpu }, { update }) {
+    if (webgpu === false) webgpuAllowed = false;
     await load(model, update);
   },
   async speak({ model, text, language, voice, speed }, { update, transfer }) {
