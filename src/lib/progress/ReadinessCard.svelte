@@ -7,7 +7,8 @@
   import { onMount } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { formatNumber, formatPercent } from '#lib/format/format.js';
+  import { formatDate, formatNumber, formatPercent } from '#lib/format/format.js';
+  import { checkpointDue, checkpointTrend, readCheckpoints, type CheckpointResult } from '#lib/assessment/checkpoints.js';
   import { SKILLS, LEVELS, type Skill } from '#lib/domain/types.js';
   import { parseFeatureKey } from '#lib/grammar/taxonomy.js';
   import { readEvents } from './eventLog.js';
@@ -18,7 +19,11 @@
 
   const DAY_MS = 24 * 60 * 60 * 1000;
   let events = $state<LearningEvent[]>([]);
+  let checkpoints = $state<CheckpointResult[]>([]);
+  const due = $derived(checkpointDue(checkpoints, settings.lang, Date.now()));
+  const trend = $derived(checkpointTrend(checkpoints, settings.lang));
   onMount(() => {
+    checkpoints = readCheckpoints();
     void readEvents(Date.now() - 31 * DAY_MS).then((loaded) => (events = loaded.filter((event) => event.lang === settings.lang)));
   });
 
@@ -51,7 +56,15 @@
 <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4 readiness" aria-labelledby="progress-readiness-heading">
   <h2 id="progress-readiness-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{m.readiness_title({}, locale)} · {settings.vocabularyLevel.toUpperCase()}</h2>
   <p class="readiness-known">{m.readiness_known_words({ count: formatNumber(settings.formatContext, overview.knownWords) }, locale)}</p>
-  <a class="readiness-placement" href="/placement">{m.placement_link({}, locale)}</a>
+  <a class="readiness-placement" href="/placement">{m.placement_link({}, locale)}{#if due}<span class="readiness-due">{m.checkpoint_due({}, locale)}</span>{/if}</a>
+  {#if trend.length}
+    <h3>{m.checkpoint_trend({}, locale)}</h3>
+    <ol class="readiness-trend">
+      {#each trend as entry (entry.at)}
+        <li><span class="readiness-level">{entry.level.toUpperCase()}{#if entry.change > 0} ↑{:else if entry.change < 0} ↓{/if}</span><small>{formatDate(settings.formatContext, entry.at, 'dayMonthShort')}</small></li>
+      {/each}
+    </ol>
+  {/if}
 
   {#if overview.exam}
     <div class="readiness-exam">
@@ -96,6 +109,10 @@
 
 <style>
   .readiness-known { margin: .35rem 0 0; font-size: 1.05rem; font-weight: 900; }
+  .readiness-due { margin-inline-start: .4rem; padding: .05rem .4rem; border-radius: 999px; background: #e6a527; color: #172a45; font-size: .55rem; }
+  .readiness-trend { display: flex; gap: .5rem; margin: .5rem 0 0; padding: 0; list-style: none; }
+  .readiness-trend li { display: grid; gap: .1rem; padding: .35rem .6rem; border-radius: .6rem; background: color-mix(in oklch, currentColor 8%, transparent); font-size: .74rem; font-weight: 900; text-align: center; }
+  .readiness-trend small { font-size: .56rem; font-weight: 700; opacity: .65; }
   .readiness-placement { display: inline-block; margin-top: .3rem; color: #a45e38; font-size: .64rem; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; }
   :global(html.dark) .readiness-placement { color: #e6a527; }
   .readiness-exam { display: flex; justify-content: space-between; gap: .5rem; margin-top: .6rem; padding: .55rem .7rem; border-radius: .7rem; background: color-mix(in oklch, var(--color-primary) 14%, transparent); font-size: .72rem; font-weight: 800; }
