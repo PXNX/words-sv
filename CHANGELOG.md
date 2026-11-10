@@ -8,6 +8,10 @@ its one-line summary; the localised highlight shown in the app lives in the mess
 
 ## Unreleased
 
+## v2026.11.1 - 2026-11-10
+
+Dates and numbers follow the learned language; version history in Settings.
+
 ### New
 - Dates, times and numbers follow the learned language; Settings → "Format like" switches back to the app language, with calendar and digit choices for Persian and Arabic.
 - Spoken forms for German and English numbers, ordinals and clock times.
