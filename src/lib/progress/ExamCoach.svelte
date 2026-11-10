@@ -18,7 +18,7 @@
   import { readEvents } from './eventLog.js';
   import { featureStats, type LearningEvent } from './events.js';
   import { buildOverview } from './overview.js';
-  import { forecastWeeks, readinessPercent, type ReadinessRange } from './skillState.js';
+  import { ACCURACY_WINDOW_DAYS, confidenceFor, forecastWeeks, readinessPercent, retainedAccuracy, rubricAverage, type ReadinessRange } from './skillState.js';
   import { storeSnapshot, weeklySeries, type MasterySnapshot } from './masteryHistory.js';
   import IconArrow from '~icons/material-symbols/arrow-forward-rounded';
   import IconQuiz from '~icons/material-symbols/fact-check-rounded';
@@ -148,6 +148,35 @@
   <p class="coach-hint">{m.readiness_hint({}, locale)}</p>
 </section>
 
+<!-- How the numbers come about, with the learner's own inputs, so the score is never a black box -->
+<details class="panel-play coach-card coach-how">
+  <summary class="coach-heading">{m.readiness_how_title({}, locale)}</summary>
+  <ol class="coach-how-steps">
+    <li><strong>{m.readiness_how_coverage_title({}, locale)}</strong> {m.readiness_how_coverage({ level: settings.vocabularyLevel.toUpperCase(), percent: number(Math.round((currentRung?.coverage ?? 0) * 100)) }, locale)}</li>
+    <li><strong>{m.readiness_how_accuracy_title({}, locale)}</strong> {m.readiness_how_accuracy({ days: number(ACCURACY_WINDOW_DAYS) }, locale)}</li>
+    <li><strong>{m.readiness_how_skill_title({}, locale)}</strong> {m.readiness_how_skill({}, locale)}</li>
+    <li><strong>{m.readiness_how_range_title({}, locale)}</strong> {m.readiness_how_range({ answers40: number(Math.round(confidenceFor(40) * 100)), answers100: number(Math.round(confidenceFor(100) * 100)) }, locale)}</li>
+    <li><strong>{m.readiness_how_level_title({}, locale)}</strong> {m.readiness_how_level({}, locale)}</li>
+  </ol>
+  <table class="coach-how-table">
+    <thead><tr><th scope="col">{m.readiness_how_col_skill({}, locale)}</th><th scope="col">{m.readiness_how_col_accuracy({}, locale)}</th><th scope="col">{m.readiness_how_col_answers({}, locale)}</th><th scope="col">{m.readiness_how_col_range({}, locale)}</th></tr></thead>
+    <tbody>
+      {#each SKILLS as skill (skill)}
+        {@const range = overview.skills[skill]}
+        {@const accuracy = retainedAccuracy(events, Date.now(), { skill }).accuracy}
+        {@const rubric = rubricAverage(events, skill)}
+        <tr>
+          <th scope="row">{skillName[skill]}</th>
+          <td>{accuracy === null ? '–' : formatPercent(settings.formatContext, accuracy)}{#if rubric !== null} · {m.readiness_how_rubric({ percent: formatPercent(settings.formatContext, rubric) }, locale)}{/if}</td>
+          <td>{number(range.attempts)}</td>
+          <td>{rangeLabel(range)}</td>
+        </tr>
+      {/each}
+    </tbody>
+  </table>
+  <p class="coach-hint">{m.readiness_how_overall({ range: rangeLabel(headline) }, locale)}</p>
+</details>
+
 <!-- Levels and tests: where the words stand per level, and how the last checkpoints went -->
 <section class="panel-play coach-card" aria-labelledby="coach-levels-title">
   <h2 id="coach-levels-title" class="coach-heading">{m.coach_levels({}, locale)}</h2>
@@ -205,6 +234,18 @@
   .coach-step small { font-size:.62rem;font-weight:700;opacity:.65; }
   .coach-step :global(svg) { flex:none;width:1.2rem;height:1.2rem;color:var(--color-accent); }
 
+  .coach-how summary { cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between; }
+  .coach-how summary::after { content:'+';font-size:1rem;transition:rotate .25s; }
+  .coach-how[open] summary::after { rotate:45deg; }
+  .coach-how-steps { display:grid;gap:.45rem;margin:.6rem 0 0;padding-inline-start:1.1rem;font-size:.66rem;font-weight:700;line-height:1.45; }
+  .coach-how-steps strong { font-weight:900; }
+  .coach-how[open] .coach-how-steps li { animation:coach-how-in .3s ease-out both; }
+  .coach-how-steps li:nth-child(2) { animation-delay:.05s; } .coach-how-steps li:nth-child(3) { animation-delay:.1s; } .coach-how-steps li:nth-child(4) { animation-delay:.15s; } .coach-how-steps li:nth-child(5) { animation-delay:.2s; }
+  @keyframes coach-how-in { from { opacity:0;translate:0 .3rem; } }
+  .coach-how-table { width:100%;margin-top:.7rem;border-collapse:collapse;font-size:.62rem;font-variant-numeric:tabular-nums; }
+  .coach-how-table th,.coach-how-table td { padding:.3rem .25rem;border-bottom:1px solid color-mix(in oklch,currentColor 12%,transparent);text-align:start; }
+  .coach-how-table thead th { font-size:.55rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;opacity:.65; }
+  @media (prefers-reduced-motion:reduce) { .coach-how[open] .coach-how-steps li { animation:none; } .coach-how summary::after { transition:none; } }
   .coach-skills { display:grid;grid-template-columns:repeat(auto-fill,minmax(8.5rem,1fr));gap:.5rem;margin:.6rem 0 0;padding:0;list-style:none; }
   .coach-skill { display:grid;gap:.3rem;padding:.6rem .65rem;border:1.5px solid color-mix(in oklch,currentColor 16%,transparent);border-radius:.8rem;color:inherit;text-decoration:none;transition:border-color .2s,translate .2s; }
   .coach-skill:hover { border-color:#e6a527;translate:0 -1px; }

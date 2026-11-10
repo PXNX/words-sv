@@ -807,5 +807,22 @@
   "groups_error_too_many_groups": "Du bist schon in fünf Gruppen.",
   "groups_error_invalid_request": "Bitte prüf den Namen oder Code.",
   "groups_error_unavailable": "Gruppen sind gerade nicht erreichbar.",
-  "groups_home": "Tritt in einer Wochenliga gegen Freunde an."
+  "groups_home": "Tritt in einer Wochenliga gegen Freunde an.",
+  "readiness_how_title": "Wie wird das berechnet?",
+  "readiness_how_coverage_title": "1. Abdeckung.",
+  "readiness_how_coverage": "Der Anteil der {level}-Wörter, die du schon angefangen hast: Einen Text, dessen Wörter du nie gesehen hast, verstehst du nicht. Gerade: {percent} %.",
+  "readiness_how_accuracy_title": "2. Treffsicherheit.",
+  "readiness_how_accuracy": "Pro Fähigkeit der Anteil deiner richtigen Antworten der letzten {days} Tage. Neue Antworten zählen mehr: Eine Antwort von vor zehn Tagen zählt halb. Ohne Antworten werden 50 % angenommen.",
+  "readiness_how_skill_title": "3. Pro Fähigkeit.",
+  "readiness_how_skill": "Bereitschaft = Abdeckung × Treffsicherheit. Bei Schreiben und Sprechen ist die Hälfte davon die Durchschnittsbewertung deiner letzten drei Texte bzw. Aussprachen.",
+  "readiness_how_range_title": "4. Ein Bereich statt einer Schätzung.",
+  "readiness_how_range": "Ohne Antworten ist der Bereich ±25 Punkte breit; mit jeder Antwort wird er schmaler, bis ±5 (Sicherheit {answers40} % nach 40 Antworten, {answers100} % nach 100).",
+  "readiness_how_level_title": "5. Dein Niveau.",
+  "readiness_how_level": "Die große Zahl ist der Durchschnitt der sechs Fähigkeiten, jede zählt gleich, gerundet auf 5-%-Schritte. Sie gilt für das Sprachniveau, nicht für eine bestimmte Prüfung.",
+  "readiness_how_col_skill": "Fähigkeit",
+  "readiness_how_col_accuracy": "Treffsicherheit",
+  "readiness_how_col_answers": "Antworten",
+  "readiness_how_col_range": "Bereitschaft",
+  "readiness_how_rubric": "Bewertung {percent}",
+  "readiness_how_overall": "Zusammen: {range}."
 }
