@@ -16,12 +16,8 @@
   import { webgpu } from '#lib/app/webgpuCheck.svelte.js';
   import IconSchool from '~icons/material-symbols/school-rounded';
   import IconTune from '~icons/material-symbols/tune-rounded';
-  import IconCalendar from '~icons/material-symbols/calendar-month-rounded';
-  import IconBell from '~icons/material-symbols/notifications-rounded';
-  import IconMemory from '~icons/material-symbols/memory-rounded';
   import IconVoices from '~icons/material-symbols/graphic-eq-rounded';
   import IconGroup from '~icons/material-symbols/group-rounded';
-  import IconInfo from '~icons/material-symbols/info-rounded';
   import IconUpdate from '~icons/material-symbols/update-rounded';
   import { checkInviteRewards } from '#lib/profile/cosmetics.svelte.js';
   import { INVITE_REWARD_TARGET } from '#lib/profile/cosmetics.js';
@@ -185,9 +181,9 @@
     app: m.settings_section_app({}, { locale: settings.interfaceLocale }),
     formats: m.settings_section_formats({}, { locale: settings.interfaceLocale }),
     reminders: m.settings_section_reminders({}, { locale: settings.interfaceLocale }),
-    device: m.settings_section_device({}, { locale: settings.interfaceLocale }),
     voices: m.settings_section_voices({}, { locale: settings.interfaceLocale }),
-    friends: m.settings_section_friends({}, { locale: settings.interfaceLocale }),
+    more: m.settings_section_friends({}, { locale: settings.interfaceLocale }),
+    models: m.models_title({}, { locale: settings.interfaceLocale }),
     about: m.settings_section_about({}, { locale: settings.interfaceLocale })
   });
   // What a folded section shows, so most settings can be read without opening anything.
@@ -198,13 +194,9 @@
     const optionLabel = (options: ReadonlyArray<{ value: string; label: string }>, value: string) => options.find((option) => option.value === value)?.label ?? value;
     return {
       learning: `${optionLabel(languageOptions, settings.lang)} · ${settings.vocabularyLevel.toUpperCase()}`,
-      app: `${optionLabel(interfaceOptions, settings.interfaceLocale)} · ${settings.theme === 'dark' ? labels.dark : labels.light} · ${labels.sound}: ${settings.sound ? on : off}`,
-      formats: optionLabel(formatSourceOptions, settings.formatSource),
-      reminders: `${labels.notifications}: ${notificationsEnabled ? on : off}${telegram ? ` · Telegram: ${telegram.reminders ? on : off}` : ''}`,
-      device: webgpu.result ? (webgpu.result.status === 'ok' ? m.webgpu_short_ok({}, locale) : m.webgpu_short_failed({}, locale)) : m.webgpu_not_run({}, locale),
-      voices: m.models_hint({}, locale),
-      friends: telegram ? labels.inviteCount(telegram.invited) : labels.shareApp,
-      about: m.changelog_version({ version: __APP_VERSION__ }, locale)
+      app: `${optionLabel(interfaceOptions, settings.interfaceLocale)} · ${settings.theme === 'dark' ? labels.dark : labels.light} · ${labels.notifications}: ${notificationsEnabled ? on : off}`,
+      voices: webgpu.result ? (webgpu.result.status === 'ok' ? m.webgpu_short_ok({}, locale) : m.webgpu_short_failed({}, locale)) : m.webgpu_not_run({}, locale),
+      more: `${telegram ? `${labels.inviteCount(telegram.invited)} · ` : ''}${m.changelog_version({ version: __APP_VERSION__ }, locale)}`
     };
   });
 
@@ -347,10 +339,7 @@
       </SettingRow>
       <SettingRow label={labels.sound} labelFor="setting-sound">{#snippet icon()}{#if settings.sound}<IconVolume />{:else}<IconVolumeOff />{/if}{/snippet}<input id="setting-sound" type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.sound} onchange={(event) => settings.setSound((event.currentTarget as HTMLInputElement).checked)} /></SettingRow>
       <SettingRow label={labels.vibration} labelFor="setting-vibration">{#snippet icon()}<IconVibrate />{/snippet}<input id="setting-vibration" type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.vibration} onchange={(event) => settings.setVibration((event.currentTarget as HTMLInputElement).checked)} /></SettingRow>
-    </SettingsSection>
-
-    <SettingsSection id="formats" index={3} accent="#8a62b6" title={sectionTitles.formats} summary={summaries.formats}>
-      {#snippet icon()}<IconCalendar />{/snippet}
+      <h3 class="settings-sub">{sectionTitles.formats}</h3>
       <SettingRow label={formatLabels.formatAs} hint={formatLabels.hint}><SelectMenu class="w-[9.6rem]" value={settings.formatSource} options={formatSourceOptions} label={formatLabels.formatAs} onchange={(value) => settings.setFormatSource(value as FormatSource)} /></SettingRow>
       {#if settings.formatSource === 'interface' && offersCalendarChoice(settings.interfaceLocale)}
         <SettingRow label={formatLabels.calendar}><SelectMenu class="w-[9.6rem]" value={settings.interfaceCalendar} options={calendarOptions} label={formatLabels.calendar} onchange={(value) => settings.setInterfaceCalendar(value as FormatCalendar)} /></SettingRow>
@@ -358,23 +347,17 @@
       {#if settings.formatSource === 'interface' && nativeDigitsFor(settings.interfaceLocale)}
         <SettingRow label={formatLabels.digits}><SelectMenu class="w-[9.6rem]" value={settings.interfaceDigits} options={digitOptions} label={formatLabels.digits} onchange={(value) => settings.setInterfaceDigits(value as FormatDigits)} /></SettingRow>
       {/if}
-    </SettingsSection>
-
-    <SettingsSection id="reminders" index={4} accent="#d64b45" title={sectionTitles.reminders} summary={summaries.reminders}>
-      {#snippet icon()}<IconBell />{/snippet}
+      <h3 class="settings-sub">{sectionTitles.reminders}</h3>
       <SettingRow label={labels.notifications} hint={notificationMessage || labels.notificationsHint} labelFor="setting-notifications"><input id="setting-notifications" type="checkbox" class="toggle toggle-sm toggle-primary" checked={notificationsEnabled} disabled={notificationBusy} onchange={(event) => toggleNotifications((event.currentTarget as HTMLInputElement).checked)} /></SettingRow>
       {#if telegram}
         <SettingRow label={labels.telegramReminders} hint={telegramWaiting ? labels.telegramRemindersWaiting : labels.telegramRemindersHint} labelFor="setting-telegram">{#snippet icon()}<IconTelegram />{/snippet}<input id="setting-telegram" type="checkbox" class="toggle toggle-sm toggle-primary" checked={telegram.reminders} disabled={telegramBusy} onchange={(event) => toggleTelegram(event.currentTarget as HTMLInputElement)} /></SettingRow>
       {/if}
     </SettingsSection>
 
-    <SettingsSection id="device" index={5} accent="#3f9a9c" title={sectionTitles.device} summary={summaries.device}>
-      {#snippet icon()}<IconMemory />{/snippet}
-      <WebGpuStatus />
-    </SettingsSection>
-
-    <SettingsSection id="voices" index={6} accent="#e6a527" title={sectionTitles.voices} summary={summaries.voices}>
+    <SettingsSection id="voices" index={3} accent="#e6a527" title={sectionTitles.voices} summary={summaries.voices}>
       {#snippet icon()}<IconVoices />{/snippet}
+      <WebGpuStatus />
+      <h3 class="settings-sub">{sectionTitles.models}</h3>
       <ModelManager bare onvoicechange={stopVoiceTest}>
         {#snippet voiceOptions()}
           {#if voicesSupported}
@@ -390,7 +373,7 @@
       </ModelManager>
     </SettingsSection>
 
-    <SettingsSection id="friends" index={7} accent="#e86a9a" title={sectionTitles.friends} summary={summaries.friends}>
+    <SettingsSection id="more" index={4} accent="#e86a9a" title={sectionTitles.more} summary={summaries.more}>
       {#snippet icon()}<IconGroup />{/snippet}
       {#if telegram?.inviteUrl}
         <SettingRow label={labels.inviteTitle} hint={labels.inviteHint(telegram.inviteEmbers)} stacked>
@@ -405,10 +388,7 @@
       {/if}
       <button type="button" class="settings-nav" onclick={shareApp}><IconShare aria-hidden="true" /><span>{labels.shareApp}</span><IconChevronRight aria-hidden="true" class="rtl:rotate-180" /></button>
       {#if telegramHref}<a class="settings-nav" href={telegramHref} target="_blank" rel="noreferrer"><IconTelegram aria-hidden="true" /><span>{labels.telegramShare}</span><IconChevronRight aria-hidden="true" class="rtl:rotate-180" /></a>{/if}
-    </SettingsSection>
-
-    <SettingsSection id="about" index={8} accent="#a45e38" title={sectionTitles.about} summary={summaries.about}>
-      {#snippet icon()}<IconInfo />{/snippet}
+      <h3 class="settings-sub">{sectionTitles.about}</h3>
       <a class="settings-nav" href="/changelog">
         <IconUpdate aria-hidden="true" />
         <span>{m.changelog_settings({}, { locale: settings.interfaceLocale })}{#if hasUnseenRelease}<i class="settings-dot" aria-label={m.changelog_unseen({}, { locale: settings.interfaceLocale })}></i>{/if}<small dir="ltr">{m.changelog_version({ version: __APP_VERSION__ }, { locale: settings.interfaceLocale })}</small></span>
@@ -445,6 +425,8 @@
   :global(html.dark) .settings-kicker { color:#e6a527; }
   :global(.settings-me-arrow) { flex:none;width:1.2rem;height:1.2rem; }
   .settings-me-account { padding-top:.7rem;border-top:1.5px dashed color-mix(in srgb,currentColor 18%,transparent); }
+  .settings-sub { margin:.9rem 0 .1rem;padding-top:.7rem;border-top:1.5px dashed color-mix(in srgb,currentColor 18%,transparent);color:#a45e38;font-size:.56rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
+  :global(html.dark) .settings-sub { color:#e6a527; }
   .settings-link { display:inline-flex;align-items:center;justify-content:flex-end;gap:.2rem;align-self:flex-end;color:#a45e38;font-size:.62rem;font-weight:900;text-decoration:none; }
   :global(html.dark) .settings-link { color:#e6a527; }
   .settings-link :global(svg) { width:.9rem;height:.9rem; }
