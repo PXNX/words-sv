@@ -1,5 +1,6 @@
-// App versions: the one-off `1.0.0` baseline, then CalVer `YYYY.M.N` (N counts releases in a
-// month, no leading zeros so it stays valid semver), with `-rc.N` for previews. Pure module.
+// App versions: semantic versioning `MAJOR.MINOR.PATCH` starting at the `1.0.0` baseline, with
+// `-rc.N` for previews. A feature release bumps MINOR, a fix PATCH, a breaking change MAJOR.
+// Pure module.
 import type { Brand } from '#lib/domain/types.js';
 
 export type AppVersion = Brand<string, 'AppVersion'>;
@@ -43,14 +44,25 @@ export function compareVersions(a: string, b: string): number {
     || (left.rc ?? Infinity) - (right.rc ?? Infinity) || 0;
 }
 
-/** The next CalVer for `now`: one more than the final releases already tagged in that month. */
-export function nextCalVer(now: Date, tags: readonly string[]): AppVersion {
-  const year = now.getUTCFullYear();
-  const month = now.getUTCMonth() + 1;
-  let count = 0;
+export type VersionBump = 'major' | 'minor' | 'patch';
+
+/** The highest final release among git tags (`v1.2.3`), or 1.0.0 when none is tagged yet. */
+export function latestVersion(tags: readonly string[]): AppVersion {
+  let latest: AppVersion | null = null;
   for (const tag of tags) {
     const parsed = parseVersion(tag);
-    if (parsed && parsed.rc === null && parsed.major === year && parsed.minor === month) count = Math.max(count, parsed.patch);
+    if (!parsed || parsed.rc !== null) continue;
+    const version = formatVersion(parsed);
+    if (!latest || compareVersions(version, latest) > 0) latest = version;
   }
-  return formatVersion({ major: year, minor: month, patch: count + 1, rc: null });
+  return latest ?? ('1.0.0' as AppVersion);
+}
+
+/** The next version after `current`: features bump MINOR, fixes PATCH, breaking changes MAJOR. */
+export function bumpVersion(current: string, bump: VersionBump): AppVersion {
+  const parsed = parseVersion(current);
+  if (!parsed) throw new Error(`Not a version: ${current}`);
+  if (bump === 'major') return formatVersion({ major: parsed.major + 1, minor: 0, patch: 0, rc: null });
+  if (bump === 'minor') return formatVersion({ major: parsed.major, minor: parsed.minor + 1, patch: 0, rc: null });
+  return formatVersion({ ...parsed, patch: parsed.patch + 1, rc: null });
 }

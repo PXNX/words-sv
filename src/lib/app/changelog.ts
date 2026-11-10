@@ -42,7 +42,7 @@ export function parseChangelog(markdown: string): ChangelogRelease[] {
         continue;
       }
       const match = RELEASE_HEADING.exec(line);
-      if (!match || !isAppVersion(match[1]) || Number.isNaN(Date.parse(match[2]!))) throw new ChangelogError(`${at}: expected "## vYYYY.M.N - YYYY-MM-DD", got "${line}"`);
+      if (!match || !isAppVersion(match[1]) || Number.isNaN(Date.parse(match[2]!))) throw new ChangelogError(`${at}: expected "## vMAJOR.MINOR.PATCH - YYYY-MM-DD", got "${line}"`);
       skipping = false;
       current = { version: match[1], date: match[2]!, summary: '', entries: {} };
       releases.push(current);
@@ -70,12 +70,12 @@ export function unseenReleases(releases: readonly ChangelogRelease[], lastSeen: 
   return releases.filter((release) => compareVersions(release.version, lastSeen) > 0);
 }
 
-/** Anchor id for a release, e.g. `v2026.11.1`. */
+/** Anchor id for a release, e.g. `v1.2.0`. */
 export function releaseAnchor(version: AppVersion): string {
   return `v${version}`;
 }
 
-/** Message key of a release's localised highlight, e.g. `changelog_v2026_11_1`. */
+/** Message key of a release's localised highlight, e.g. `changelog_v1_2_0`. */
 export function highlightKey(version: AppVersion): string {
   return `changelog_v${version.replace(/[^0-9a-z]+/gu, '_')}`;
 }
