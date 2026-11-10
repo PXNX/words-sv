@@ -12,7 +12,7 @@ const EN_TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy
 function deBelowThousand(n: number): string {
   const hundreds = Math.floor(n / 100);
   const rest = n % 100;
-  let text = hundreds ? `${hundreds === 1 ? 'ein' : deUnit(hundreds)}hundert` : '';
+  let text = hundreds ? `${hundreds === 1 ? 'ein' : DE_ONES[hundreds]!}hundert` : '';
   if (rest) {
     if (rest < 20) text += rest === 1 ? 'eins' : DE_ONES[rest]!;
     else {
@@ -22,7 +22,6 @@ function deBelowThousand(n: number): string {
   }
   return text;
 }
-function deUnit(n: number) { return DE_ONES[n]!; }
 
 function deInteger(n: number): string {
   if (n === 0) return 'null';

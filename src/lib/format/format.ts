@@ -69,12 +69,8 @@ export type FormatKind = 'date' | 'time' | 'dateTime' | 'weekday' | 'number' | '
 
 const cache = new Map<string, unknown>();
 function cached<T>(key: string, create: () => T): T {
-  let value = cache.get(key) as T | undefined;
-  if (!value) {
-    value = create();
-    cache.set(key, value);
-  }
-  return value;
+  if (!cache.has(key)) cache.set(key, create());
+  return cache.get(key) as T;
 }
 function localeTag(context: FormatContext) {
   return `${context.locale}-u-ca-${context.calendar}-nu-${context.numberingSystem}`;
@@ -111,7 +107,9 @@ export function formatDateTime(context: FormatContext, value: Date | number, tim
 
 /** Today shows only the time, any other day the short date and time. */
 export function formatMoment(context: FormatContext, value: number, now = Date.now()): string {
-  const sameDay = new Date(value).toDateString() === new Date(now).toDateString();
+  const a = new Date(value);
+  const b = new Date(now);
+  const sameDay = a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
   return sameDay ? formatTime(context, value) : formatDateTime(context, value);
 }
 
@@ -160,8 +158,10 @@ export function formatOrdinal(context: FormatContext, value: number): string {
 
 /** First day of the week (1 = Monday … 7 = Sunday) for calendars and recaps. */
 export function weekStart(context: FormatContext): number {
-  const locale = new Intl.Locale(context.locale) as Intl.Locale & { getWeekInfo?: () => { firstDay: number }; weekInfo?: { firstDay: number } };
-  return locale.getWeekInfo?.().firstDay ?? locale.weekInfo?.firstDay ?? 1;
+  return cached(`w|${context.locale}`, () => {
+    const locale = new Intl.Locale(context.locale) as Intl.Locale & { getWeekInfo?: () => { firstDay: number }; weekInfo?: { firstDay: number } };
+    return locale.getWeekInfo?.().firstDay ?? locale.weekInfo?.firstDay ?? 1;
+  });
 }
 
 /** Unicode isolate so learned-language numbers and dates keep their order inside RTL text. */
