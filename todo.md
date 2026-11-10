@@ -229,12 +229,13 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [ ] Schema library (Valibot) at the boundaries: API, IndexedDB/localStorage reads, LLM JSON,
   Telegram `initData`; typed fetch client for `api/`.
 - [ ] Typed worker protocol (discriminated union) for LLM, TTS and scoring workers.
-- [ ] Locale-completeness CI check (every key in every locale, or an explicit fallback list).
+- [x] Locale check (`tests/locales.test.ts`): English complete, no stray keys, same placeholders.
 - [ ] Type-aware lint rules (`no-floating-promises`, `switch-exhaustiveness-check`).
 
 ### Phase L leftovers
-- [ ] Route the remaining numbers through `format.ts` (byte sizes in the model manager, quiz
-  counters, recap minutes, reminder time picker, Telegram messages).
+- [x] Byte sizes and download speeds follow the format setting.
+- [ ] Route the remaining numbers through `format.ts` (quiz counters, recap minutes, reminder
+  time picker, Telegram messages).
 - [ ] Alltag/Satzbau drills for dates, times, ordinals, prices; spoken forms wired into listening.
 - [ ] Interface formatting in Telegram reminder texts.
 
@@ -253,14 +254,19 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
   S ≥ 21 days.
 - [x] Skill × level state (coverage, mastery, retained accuracy, confidence) in
   `progress/skillState.ts`.
-- [ ] Per-feature state keyed by `FeatureKey` (needs Formen items that report feature errors).
-- [ ] Log answers from the remaining modes (circle/wordle guesses, conversation, writing scores).
+- [x] Per-feature accuracy keyed by `FeatureKey` (`featureStats`); German grammar prompts name the
+  features they test, wrong answers count against them; labels for every feature in de/en.
+- [x] Writing scores and every hangman round are logged; the Today card suggests the weakest feature.
+- [ ] Log answers from the remaining modes (circle and wordle guesses, conversation).
 - [ ] Level tags on texts, listening clips and grammar items (coverage currently uses vocabulary).
 
 ### Phase B — assessment and visibility
 - [x] Readiness ranges per skill, level ladder, known words, error profile on `/progress`.
 - [x] Target exam in Settings with section-weighted readiness.
-- [ ] Placement test, 4-weekly checkpoints, forecast display, exam date, recap with real numbers.
+- [x] Placement test (`/placement`, yes/no vocabulary format with invented words, any language
+  with 40+ words per level), saved as four-weekly checkpoints with a trend on `/progress`.
+- [x] Forecast: weeks until 80 % of the current level is known, from weekly mastery snapshots.
+- [ ] Exam date, recap with real learning numbers, grammar/listening items in checkpoints.
 
 ### Phase V — visual layer
 - [ ] V1 tokens (OKLCH, gender colours with shape cue, motion tokens), V2 word→picture map with
@@ -278,6 +284,10 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [ ] H: Telegram Mini App sign-in and sync, leagues and duels with server-side scoring.
 - [ ] I: dashboards, A/B framework, content QA loop.
 
+### First run
+- [x] Animated welcome flow: Mia, Tom and Lilith walk in and introduce themselves, then language,
+  name, character and a confetti finale.
+
 ### German vocabulary
 - [x] Every German entry has a definition (686 written), mistyped adverbs/adjectives fixed,
   conjugated forms, participles and misspellings replaced by their infinitives or removed;
@@ -287,4 +297,6 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 ### Release process leftovers
 - [ ] `tests/fixtures/v1.0.0/` snapshot of a learner's local data for migration tests.
 - [ ] One-time "Updated to …" snackbar and a link from the update prompt to `/changelog`.
-- [ ] Version in the service-worker cache name and in the Telegram bot's `/version`.
+- [x] Forced updates with a Lilith sheet, a what's new sheet after each update (1.3.0).
+- [x] Service-worker caches are already keyed by the build version.
+- [ ] Version in the Telegram bot's `/version`.
