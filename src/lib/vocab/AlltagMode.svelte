@@ -3,6 +3,9 @@
   import { settings } from '#lib/state/settings.svelte.js';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
+  import { m } from '#lib/paraglide/messages.js';
+  import { logAnswer } from '#lib/progress/eventLog.js';
+  import { everydayRound, type EverydayItem } from './everyday.js';
 
   type Item = { word: string; meaning: string; category: 'Präpositionen' | 'Zahlen' | 'Farben' | 'Tiere' };
   const items: Item[] = [
@@ -37,19 +40,49 @@
     const distractors = shuffle(items.filter((item) => item.category === current.category && item.word !== current.word)).slice(0, 2);
     choices = shuffle([current.meaning, ...distractors.map((item) => item.meaning)]);
   }
+  // In German and English every other card is an everyday drill: a time, date, number or price.
+  const spoken = $derived(settings.lang === 'de' || settings.lang === 'en' ? settings.lang : null);
+  let drill = $state<EverydayItem | null>(null);
+  let step = 0;
+  let drillsShown = 0;
+  const expected = $derived(drill ? drill.correct : numberReverse ? current.word : current.meaning);
+  const options = $derived(drill ? drill.options : choices);
+  const drillQuestion = $derived(drill ? { time: m.alltag_time, date: m.alltag_date, number: m.alltag_number, price: m.alltag_price }[drill.kind]({}, { locale: settings.interfaceLocale }) : '');
   function choose(value: string) {
     if (answer) return;
     answer = value;
-    recordAnswer('alltag', value === (numberReverse ? current.word : current.meaning));
-    if (value === (numberReverse ? current.word : current.meaning)) void settings.recordStreak('alltag_correct');
+    const right = value === expected;
+    recordAnswer('alltag', right);
+    if (drill) logAnswer(settings.lang, 'alltag', `EVERYDAY:${drill.kind}:${drill.prompt}`, right);
+    if (right) void settings.recordStreak('alltag_correct');
   }
-  function next() { answer = null; index = (index + 1) % items.length; resetChoices(); }
+  function next() {
+    answer = null;
+    step += 1;
+    if (spoken && step % 2 === 1) {
+      // The four kinds take turns: time, date, number, price.
+      drill = everydayRound(spoken, 4, Math.random)[drillsShown++ % 4] ?? null;
+      return;
+    }
+    drill = null;
+    index = (index + 1) % items.length;
+    resetChoices();
+  }
   $effect(() => { current; resetChoices(); });
 </script>
 
 <section class="flex-1 min-h-0 grid content-center justify-items-center gap-4 p-[clamp(1rem,4vw,2rem)] overflow-y-auto bg-[color:#ede4d5] dark:bg-[color:#213a5d]" aria-label="Emoji vocabulary">
   <header class="text-center"><span class="text-accent text-[.58rem] font-extrabold tracking-[.14em] uppercase">Emoji · {current.category}</span><h1 class="my-[.16rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,7vw,2.65rem)] font-normal leading-none">Everyday German</h1><p class="m-0 text-base-content/60 text-[.65rem] font-extrabold">Präpositionen, Zahlen, Farben und Tiere.</p></header>
+  {#if drill}
+    <article class="w-[min(100%,28rem)] grid justify-items-center gap-4 p-[clamp(1.4rem,7vw,2.2rem)] panel-play">
+      <span class="text-[1.8rem]" aria-hidden="true">{({ time: '🕒', date: '📅', number: '🔢', price: '🏷️' })[drill.kind]}</span>
+      <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(2rem,10vw,3.3rem)] tracking-[.05em]" lang={settings.lang}>{drill.prompt}</p>
+      <p class="m-0 text-accent text-[.62rem] font-extrabold">{drillQuestion}</p>
+    </article>
+  {:else}
   <article class="w-[min(100%,28rem)] grid justify-items-center gap-4 p-[clamp(1.4rem,7vw,2.2rem)] panel-play">{#if current.category === 'Farben' || current.category === 'Tiere'}<span class="text-[clamp(4rem,18vw,5.5rem)] leading-none" aria-hidden="true">{currentEmoji}</span><p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(2rem,10vw,3.3rem)] tracking-[.05em]">{current.word}</p><p class="m-0 text-accent text-[.62rem] font-extrabold">Choose the meaning.</p>{:else if current.category === 'Zahlen'}<span class="text-[1.8rem]" aria-hidden="true">{currentEmoji}</span><p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(2rem,10vw,3.3rem)] tracking-[.05em]">{numberReverse ? current.meaning : current.word}</p><p class="m-0 text-accent text-[.62rem] font-extrabold">{numberReverse ? 'Which number is this?' : 'How is this number spelled?'}</p>{:else}<span class="text-[1.8rem]" aria-hidden="true">{currentEmoji}</span><p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(2rem,10vw,3.3rem)] tracking-[.05em]">{current.word}</p><p class="m-0 text-accent text-[.62rem] font-extrabold">Choose the meaning.</p>{/if}</article>
-  <div class="w-[min(100%,28rem)] grid gap-[.45rem]">{#each choices as choice}<button type="button" value={choice} onclick={() => choose(choice)} disabled={answer !== null} class="btn-play btn-play-choice w-full gap-[.4rem] disabled:opacity-100 {answer !== null && choice === (numberReverse ? current.word : current.meaning) ? 'bg-success text-[#fffdf7]' : answer === choice ? 'border-error bg-[#fff2e8] text-error shadow-none' : ''}">{choice}{#if answer !== null && choice === (numberReverse ? current.word : current.meaning)}<IconCheck class="w-[1.15rem] h-[1.15rem]" aria-hidden="true" />{:else if answer === choice}<IconClose class="w-[1.15rem] h-[1.15rem] text-error" aria-hidden="true" />{/if}</button>{/each}</div>
-  {#if answer}<button class="btn-play btn-play-ink" onclick={next}>Continue</button>{/if}
+  {/if}
+  <div class="w-[min(100%,28rem)] grid gap-[.45rem]" lang={drill ? settings.lang : undefined}>{#each options as choice}<button type="button" value={choice} onclick={() => choose(choice)} disabled={answer !== null} class="btn-play btn-play-choice w-full gap-[.4rem] disabled:opacity-100 {answer !== null && choice === expected ? 'bg-success text-[#fffdf7]' : answer === choice ? 'border-error bg-[#fff2e8] text-error shadow-none' : ''}">{choice}{#if answer !== null && choice === expected}<IconCheck class="w-[1.15rem] h-[1.15rem]" aria-hidden="true" />{:else if answer === choice}<IconClose class="w-[1.15rem] h-[1.15rem] text-error" aria-hidden="true" />{/if}</button>{/each}</div>
+  <!-- Always in place, so the choices do not move when it appears. -->
+  <button class="btn-play btn-play-ink {answer ? '' : 'invisible'}" onclick={next} tabindex={answer ? 0 : -1} aria-hidden={!answer}>{m.alltag_continue({}, { locale: settings.interfaceLocale })}</button>
 </section>
