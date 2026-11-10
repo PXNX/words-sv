@@ -658,5 +658,20 @@
   "welcome_skip": "Überspringen",
   "welcome_done_title": "Schön, dich kennenzulernen, {name}!",
   "welcome_done_body": "Mia, Tom und Lilith warten schon. Fang mit einem kurzen Spiel an.",
-  "welcome_done_go": "Zum Start"
+  "welcome_done_go": "Zum Start",
+  "placement_title": "Einstufungstest",
+  "placement_heading": "Welches Niveau passt zu dir?",
+  "placement_intro": "Lilith zeigt dir Wörter. Tippe „Kenne ich“, wenn du weißt, was ein Wort bedeutet. Ein paar Wörter sind erfunden – bei denen tippst du „Kenne ich nicht“. Dauert etwa drei Minuten.",
+  "placement_start": "Test starten",
+  "placement_known": "Kenne ich",
+  "placement_unknown": "Kenne ich nicht",
+  "placement_note": "Raten lohnt sich nicht: Erfundene Wörter zählen gegen dich.",
+  "placement_result_title": "Dein Niveau: {level}",
+  "placement_result_body": "So viele Wörter kennst du schon. Deine Übungen passen sich daran an.",
+  "placement_apply": "{level} übernehmen",
+  "placement_applied": "Dein Niveau ist eingestellt.",
+  "placement_done": "Zum Start",
+  "placement_again": "Noch einmal",
+  "placement_unavailable": "Für diese Sprache gibt es noch nicht genug Wörter für einen Einstufungstest.",
+  "placement_link": "Einstufungstest machen"
 }
