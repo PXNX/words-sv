@@ -18,11 +18,12 @@
   import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
   import { haptic } from '#lib/feedback/haptics.js';
   import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
+  import ModelStatus from '#lib/offline/ModelStatus.svelte';
   import { modelProgressPhase } from '#lib/offline/progressPhase.js';
   import { voiceEngines } from '#lib/voice/engines.js';
   import { chatMessages, cleanReply, LEVEL_WORD_SAMPLE, pickTargetWords, usedWords, type Turn } from './conversation.js';
   import { pickPartner, type Partner } from './partners.js';
-  import { checkLocalModel, chosenModel, generateReply, interruptReply, loadLocalModel, localModel } from './localModel.svelte.js';
+  import { checkLocalModel, chosenModel, generateReply, interruptReply, loadLocalModel, localModel, modelGpuMB } from './localModel.svelte.js';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
   import IconMic from '~icons/material-symbols/mic-rounded';
   import IconStop from '~icons/material-symbols/stop-rounded';
@@ -376,6 +377,7 @@
       <p class="talk-text">{labels.intro}</p>
       <span class="talk-level">Level {level.toUpperCase()}</span>
       <p class="talk-model">{labels.model(chosenModel().label)} · <a href="/settings">{labels.changeModel}</a></p>
+      <ModelStatus downloaded={localModel.cached} inMemory={localModel.status === 'ready'} downloadMB={chosenModel().downloadMB} memoryMB={modelGpuMB(chosenModel())} />
       {#if localModel.status === 'unsupported'}
         <p class="talk-error">{labels.unsupported}</p>
       {:else if localModel.status === 'loading'}

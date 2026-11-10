@@ -18,6 +18,7 @@
   import { unloadVoxCPM } from '#lib/voice/voxcpm.js';
   import { deviceAbilities, speaksLanguage, voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
   import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
+  import ModelStatus from '#lib/offline/ModelStatus.svelte';
   import { modelProgressPhase } from '#lib/offline/progressPhase.js';
   import { deleteGroup, formatBytes, groupBytes, groupStored, keepStoragePersistent, storageSummary, storedGroupIds, type StoredGroup } from '#lib/offline/storage.js';
   import IconDownload from '~icons/material-symbols/download-rounded';
@@ -228,10 +229,9 @@
               <span class="model-warn"><IconWarning aria-hidden="true" /> {m.models_download_failed({}, { locale })}</span>
             {:else if state === 'loading'}
               <DownloadProgress progress={localModel.progress} phase={modelProgressPhase(localModel.text)} bytesPerSecond={localModel.bytesPerSecond} />
-            {:else if state === 'loaded'}
-              <span class="model-ok"><IconCheck aria-hidden="true" /> {m.models_in_use({ memory: mb(modelGpuMB(model)) }, { locale })}{#if localModel.tokensPerSecond} · {Math.round(localModel.tokensPerSecond)} tok/s{/if}</span>
-            {:else if state === 'downloaded'}
-              <span class="model-ok"><IconCheck aria-hidden="true" /> {m.models_downloaded({}, { locale })}</span>
+            {:else if state === 'loaded' || state === 'downloaded'}
+              <ModelStatus downloaded inMemory={state === 'loaded'} downloadMB={model.downloadMB} memoryMB={modelGpuMB(model)} />
+              {#if state === 'loaded' && localModel.tokensPerSecond}<span class="model-facts">{Math.round(localModel.tokensPerSecond)} tok/s</span>{/if}
             {/if}
           </button>
           <div class="model-actions">
