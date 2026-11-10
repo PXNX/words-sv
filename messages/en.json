@@ -749,5 +749,6 @@
   "grade_model_download": "Download the AI model",
   "grade_model_failed": "The model couldn't be loaded. Please try again.",
   "grade_model_unsupported": "Your device can't run the AI model (no WebGPU), so your texts are graded by fixed rules.",
-  "grade_model_ready": "Graded by {model} on your device."
+  "grade_model_ready": "Graded by {model} on your device.",
+  "progress_prepare": "Getting ready"
 }

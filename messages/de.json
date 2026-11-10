@@ -749,5 +749,6 @@
   "grade_model_download": "KI-Modell laden",
   "grade_model_failed": "Das Modell konnte nicht geladen werden. Versuch es noch einmal.",
   "grade_model_unsupported": "Dein Gerät kann das KI-Modell nicht ausführen (kein WebGPU). Deine Texte werden deshalb nach festen Regeln bewertet.",
-  "grade_model_ready": "Bewertet von {model} auf deinem Gerät."
+  "grade_model_ready": "Bewertet von {model} auf deinem Gerät.",
+  "progress_prepare": "Wird vorbereitet"
 }
