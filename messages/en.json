@@ -445,9 +445,8 @@
   "conversation_no_recognition": "Your browser cannot recognise speech – you can still type your answers.",
   "conversation_cloud_recognition": "Note: this browser’s speech recognition may not run on the device.",
   "cosmetic_locked": "Locked",
-  "cosmetic_unlocked_title": "New look unlocked!",
+  "cosmetic_unlocked_title": "Unlocked!",
   "cosmetic_unlocked_body": "Brilliant play – your character has a new piece.",
-  "cosmetic_unlocked_badge": "New badge – your character has a new piece.",
   "cosmetic_try_on": "Try it on",
   "cosmetic_close": "Close",
   "cosmetic_hint_vocab": "Answer 15 Word Quiz questions in a row right on the first try.",
@@ -753,5 +752,10 @@
   "models_state_in_memory": "In memory · {memory}",
   "models_state_downloaded_hint": "Stored on the device. It loads into memory for a moment the first time it is used.",
   "grade_model_in_memory": "{model} is in memory and grades right away.",
-  "grade_model_on_device": "{model} is downloaded. The first grade loads it into memory for a moment."
+  "grade_model_on_device": "{model} is downloaded. The first grade loads it into memory for a moment.",
+  "cosmetic_new_part": "New: {part}",
+  "cosmetic_from_badge": "For the badge “{name}” – well done!",
+  "cosmetic_from_language": "For practising {count} words in {language}.",
+  "cosmetic_wear": "Put it on",
+  "cosmetic_worn": "Looks great!"
 }
