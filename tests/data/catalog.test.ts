@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
 const dataDir = join(dirname(new URL(import.meta.url).pathname), '..', '..', 'src', 'lib', 'data');
