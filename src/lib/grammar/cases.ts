@@ -27,6 +27,50 @@ export function capitalize(word: string) {
   return word.length > 0 ? word[0]!.toLocaleUpperCase() + word.slice(1) : word;
 }
 
+// Weak masculine nouns (n-Deklination) take -n/-en in every case but the nominative singular:
+// "der Junge", but "den Jungen", "dem Jungen". Listed by their last part, so compounds such as
+// "Stammkunde" or "Familienname" follow their head noun. A plain word list, not a suffix rule:
+// "-ent" and "-at" also end "Moment", "Monat" or "Salat", which decline normally.
+const WEAK_MASCULINE_OBLIQUE: Record<string, string> = {
+  affe: 'affen', architekt: 'architekten', assistent: 'assistenten', automat: 'automaten', bär: 'bären', bauer: 'bauern',
+  biologe: 'biologen', bote: 'boten', buchstabe: 'buchstaben', christ: 'christen', däne: 'dänen', demonstrant: 'demonstranten',
+  dozent: 'dozenten', elefant: 'elefanten', erbe: 'erben', experte: 'experten', fotograf: 'fotografen', franzose: 'franzosen',
+  friede: 'frieden', gedanke: 'gedanken', glaube: 'glauben', graf: 'grafen', grieche: 'griechen', hase: 'hasen', held: 'helden',
+  herr: 'herrn', journalist: 'journalisten', junge: 'jungen', kandidat: 'kandidaten', kollege: 'kollegen', komet: 'kometen',
+  kunde: 'kunden', laie: 'laien', linguist: 'linguisten', löwe: 'löwen', mensch: 'menschen', nachbar: 'nachbarn', name: 'namen',
+  neffe: 'neffen', patient: 'patienten', pilot: 'piloten', planet: 'planeten', pole: 'polen', polizist: 'polizisten',
+  praktikant: 'praktikanten', präsident: 'präsidenten', prinz: 'prinzen', psychologe: 'psychologen', rabe: 'raben', riese: 'riesen',
+  russe: 'russen', schwede: 'schweden', soldat: 'soldaten', student: 'studenten', tourist: 'touristen', türke: 'türken',
+  wille: 'willen', zeuge: 'zeugen'
+};
+
+// Nouns made from adjectives decline like adjectives ("der Bekannte", but "ein Bekannter"), so
+// a fixed noun form can't follow an indefinite article; the drills leave them out.
+const ADJECTIVAL_NOUNS = new Set([
+  'angestellte', 'arbeitslose', 'beamte', 'bekannte', 'deutsche', 'erwachsene', 'fremde', 'jugendliche', 'kranke', 'reisende',
+  'verlobte', 'verwandte', 'vorgesetzte', 'vorsitzende', 'abgeordnete', 'alte', 'tote', 'überlebende'
+]);
+
+function weakHead(lower: string): string | undefined {
+  return Object.keys(WEAK_MASCULINE_OBLIQUE).find((head) => lower === head || (lower.endsWith(head) && lower.length > head.length + 2));
+}
+
+/** Whether the noun keeps one fixed form after der/ein in the singular, so the drills can use it. */
+export function isDeclinableNoun(noun: string): boolean {
+  return !ADJECTIVAL_NOUNS.has(noun.toLocaleLowerCase());
+}
+
+/** The singular noun as it stands in a case: "Junge" becomes "Jungen" outside the nominative. */
+export function declineNoun(noun: string, gender: VocabularyGender, grammarCase: GrammarCase): string {
+  if (gender !== 'masculine' || grammarCase === 'nominative') return noun;
+  const lower = noun.toLocaleLowerCase();
+  const head = weakHead(lower);
+  if (!head) return noun;
+  // Keep the compound's own first letters (and their case), swap in the head's oblique form.
+  const start = noun.length - head.length;
+  return noun.slice(0, start + 1) + WEAK_MASCULINE_OBLIQUE[head]!.slice(1);
+}
+
 // Each template describes a full sentence built around the noun (already correctly
 // cased); `before` is the sentence-initial lead-in (empty when the blank itself opens
 // the sentence) and `after` is everything from the noun onward. The blank always
@@ -93,7 +137,7 @@ export function buildNounCasePrompt(noun: string, gender: VocabularyGender, rand
   const correct = articleTable(articleKind)[grammarCase][gender];
   const choices = uniqueForms(articleKind, gender);
   const templates = templatesByCase[grammarCase];
-  const { before, after } = templates[Math.floor(random() * templates.length)]!(noun);
+  const { before, after } = templates[Math.floor(random() * templates.length)]!(declineNoun(noun, gender, grammarCase));
   return { before, after, correct, choices: shuffle(choices, random), features: [caseFeature(grammarCase), genderFeature(gender)] };
 }
 
@@ -102,7 +146,8 @@ export function buildNounPropertyPrompt(noun: string, gender: VocabularyGender, 
   const grammarCase = pickCase(random);
   const article = definiteArticlesByCase[grammarCase][gender];
   const templates = templatesByCase[grammarCase];
-  const sentence = templates[Math.floor(random() * templates.length)]!(noun);
+  const declined = declineNoun(noun, gender, grammarCase);
+  const sentence = templates[Math.floor(random() * templates.length)]!(declined);
   const before = sentence.before.length === 0 ? `${capitalize(article)} ` : `${sentence.before}${article} `;
   const labels: Record<GrammarCase, string> = { nominative: 'Nominativ', accusative: 'Akkusativ', dative: 'Dativ' };
   const genders: Record<VocabularyGender, string> = { masculine: 'Maskulinum', feminine: 'Femininum', neuter: 'Neutrum' };
@@ -115,6 +160,6 @@ export function buildNounPropertyPrompt(noun: string, gender: VocabularyGender, 
   ], random);
   const features = [caseFeature(grammarCase), genderFeature(gender), featureKey('de', 'noun', 'number', 'singular')];
   return random() < 0.5
-    ? { before: `${capitalize(article)} `, after: noun, correct, choices, question: 'Bestimme Kasus, Genus und Numerus.', features }
-    : { before, after: sentence.after, correct, choices, question: 'Bestimme Kasus, Genus und Numerus.', highlight: noun, features };
+    ? { before: `${capitalize(article)} `, after: declined, correct, choices, question: 'Bestimme Kasus, Genus und Numerus.', features }
+    : { before, after: sentence.after, correct, choices, question: 'Bestimme Kasus, Genus und Numerus.', highlight: declined, features };
 }
