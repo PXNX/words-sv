@@ -156,7 +156,7 @@
   :global(html.dark) .store-kicker,:global(html.dark) .store-heading { color:#e6a527; }
   .store-hero h1 { margin:0;font-family:'DM Serif Display',serif;font-size:1.7rem;font-weight:400;line-height:1.05; }
   .store-hero p:last-child { margin:0;font-size:.66rem;font-weight:700;line-height:1.45;opacity:.7; }
-  .store-notice { margin:0;padding:.55rem .75rem;border-radius:.8rem;background:#dcebf7;color:#1d4f7a;font-size:.68rem;font-weight:800; }
+  .store-notice { position:fixed;z-index:85;inset-inline:max(.75rem,calc(50% - 14rem));bottom:calc(1rem + env(safe-area-inset-bottom));margin:0;padding:.55rem .75rem;box-shadow:0 8px 24px rgba(23,42,69,.18);border-radius:.8rem;background:#dcebf7;color:#1d4f7a;font-size:.68rem;font-weight:800; }
   :global(html.dark) .store-notice { background:#213a5d;color:#cfe4f5; }
   .store-editor { padding:.75rem .85rem; }
   .store-editor summary { cursor:pointer;font-size:.8rem;font-weight:900; }

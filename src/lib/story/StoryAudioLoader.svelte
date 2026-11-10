@@ -47,19 +47,14 @@
       <p class="story-loader-title" dir="auto">{title}</p>
       <p class="story-loader-level">Level {level.toUpperCase()}</p>
       <div class="story-loader-progress"><DownloadProgress {progress} phase="load" label={m.progress_prepare({}, { locale: settings.interfaceLocale })} compact /></div>
-      {#if partLabel || questionLabel || castLabel}
-        <ul class="story-loader-facts" dir="auto">
-          {#if partLabel}<li>{partLabel}</li>{/if}
-          {#if questionLabel}<li>{questionLabel}</li>{/if}
-          {#if castLabel}<li>{castLabel}</li>{/if}
-        </ul>
-      {/if}
-      {#if voiceLabel}
-        <p class="story-loader-meta" dir="auto"><span>{voiceLabel}</span></p>
-      {/if}
-      {#if etaLabel}
-        <p class="story-loader-meta" dir="auto"><span>{etaLabel}</span></p>
-      {/if}
+      <!-- Lines that fill in while loading keep their place, so the card never jumps. -->
+      <ul class="story-loader-facts" dir="auto">
+        {#if partLabel}<li>{partLabel}</li>{/if}
+        {#if questionLabel}<li>{questionLabel}</li>{/if}
+        {#if castLabel}<li>{castLabel}</li>{/if}
+      </ul>
+      <p class="story-loader-meta" dir="auto"><span>{voiceLabel || '\u00a0'}</span></p>
+      <p class="story-loader-meta" dir="auto" aria-live="polite"><span>{etaLabel || '\u00a0'}</span></p>
       <span class="story-loader-wave" aria-hidden="true">{#each [0, 1, 2, 3, 4] as bar (bar)}<i style={`--bar:${bar}`}></i>{/each}</span>
     </div>
   </div>
@@ -78,7 +73,7 @@
   .story-loader-title { color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.1rem,4.8vw,1.35rem);font-weight:400;line-height:1.15; }
   .story-loader-level { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
   .story-loader-progress { width:min(100%,14rem);color:#a45e38; }
-  .story-loader-facts { display:flex;flex-wrap:wrap;justify-content:center;gap:.22rem .55rem;margin:.05rem 0 0;padding:0;list-style:none;color:#596477;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:800;line-height:1.3; }
+  .story-loader-facts { min-height:.85rem;display:flex;flex-wrap:wrap;justify-content:center;gap:.22rem .55rem;margin:.05rem 0 0;padding:0;list-style:none;color:#596477;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:800;line-height:1.3; }
   .story-loader-facts li { display:flex;align-items:center;gap:.32rem;min-width:0; }
   .story-loader-facts li + li::before { content:'';flex:none;width:.22rem;height:.22rem;border-radius:50%;background:#e6a527; }
   .story-loader-meta { display:flex;flex-wrap:wrap;justify-content:center;gap:.15rem .6rem;color:#7a6a58;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:700;line-height:1.3; }

@@ -1017,16 +1017,14 @@
     <h1 lang={settings.lang}>{phase === 'ready' ? currentStory : labels.listen}</h1>
   </header>
 
-  <div class="listen-card">
+  <div class="listen-card" class:alone={phase !== 'ready'}>
     {#if phase === 'preparing'}
       <div class="listen-state" aria-live="polite">
         <span class="listen-pulse" aria-hidden="true"><IconHeadphones /></span>
         <p>{labels.download}</p>
         <div class="listen-bar"><span style={`width:${download}%`}></span></div>
         <small>{num(downloadMegabytes)} / {num(downloadTotalMegabytes)} MB</small>
-        {#if downloadRemaining !== null && downloadRemaining >= 1}
-          <small>{m.voice_quality_remaining({ time: formatTime(downloadRemaining) }, { locale: settings.interfaceLocale })}</small>
-        {/if}
+        <small aria-live="polite">{downloadRemaining !== null && downloadRemaining >= 1 ? m.voice_quality_remaining({ time: formatTime(downloadRemaining) }, { locale: settings.interfaceLocale }) : '\u00a0'}</small>
       </div>
     {:else if phase === 'words'}
       <WordBankLoader
@@ -1149,6 +1147,8 @@
   .listen-header p { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase; }
   .listen-header h1 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.55rem,7vw,2.2rem);font-weight:400;letter-spacing:-.03em;line-height:1; }
   .listen-card { flex:none;display:grid;place-items:center;padding:.4rem 0; }
+  /* While only the loader is on screen, it sits in the middle of the free space. */
+  .listen-card.alone { flex:1 1 auto;align-content:center; }
   .listen-state,.listen-player { width:min(100%,26rem);display:grid;justify-items:center;gap:.65rem;padding:clamp(1.25rem,6vw,2rem);border:1px solid rgba(23,42,69,.22);border-radius:1.15rem;background:#fffdf7;box-shadow:0 8px 20px rgba(23,42,69,.08);text-align:center; }
   .listen-state p,.listen-now p { margin:0;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:800;line-height:1.4; }
   .listen-state small { color:#596477;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:800; }
@@ -1175,7 +1175,7 @@
   .listen-walk { position:relative;display:block;width:100%;height:5.4rem;overflow:hidden; }
   .listen-walker { position:absolute;bottom:0;left:0;width:3.6rem;height:5.2rem;transform-origin:50% 100%;animation:listen-walk 8s ease-in-out infinite; }
   .listen-walker :global(.story-character) { display:block;width:100%;height:100%;transform-origin:50% 100%;animation:listen-bob .34s ease-in-out infinite alternate; }
-  .listen-eta { display:flex;justify-content:space-between;gap:.5rem;width:min(100%,16rem); }
+  .listen-eta { min-height:1.1em;display:flex;justify-content:space-between;gap:.5rem;width:min(100%,16rem); }
   .listen-player { gap:.55rem; }
   .listen-recap { justify-items:center; }
   .listen-recap-title { font-family:'DM Serif Display',serif !important;font-size:1.25rem !important;font-weight:400 !important;line-height:1.15 !important; }

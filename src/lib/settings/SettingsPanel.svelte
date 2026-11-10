@@ -349,9 +349,8 @@
       {/if}
       <h3 class="settings-sub">{sectionTitles.reminders}</h3>
       <SettingRow label={labels.notifications} hint={notificationMessage || labels.notificationsHint} labelFor="setting-notifications"><input id="setting-notifications" type="checkbox" class="toggle toggle-sm toggle-primary" checked={notificationsEnabled} disabled={notificationBusy} onchange={(event) => toggleNotifications((event.currentTarget as HTMLInputElement).checked)} /></SettingRow>
-      {#if telegram}
-        <SettingRow label={labels.telegramReminders} hint={telegramWaiting ? labels.telegramRemindersWaiting : labels.telegramRemindersHint} labelFor="setting-telegram">{#snippet icon()}<IconTelegram />{/snippet}<input id="setting-telegram" type="checkbox" class="toggle toggle-sm toggle-primary" checked={telegram.reminders} disabled={telegramBusy} onchange={(event) => toggleTelegram(event.currentTarget as HTMLInputElement)} /></SettingRow>
-      {/if}
+      <!-- Always shown; the switch waits (disabled) until the server answered. -->
+        <SettingRow label={labels.telegramReminders} hint={telegramWaiting ? labels.telegramRemindersWaiting : labels.telegramRemindersHint} labelFor="setting-telegram">{#snippet icon()}<IconTelegram />{/snippet}<input id="setting-telegram" type="checkbox" class="toggle toggle-sm toggle-primary" checked={telegram?.reminders ?? false} disabled={telegramBusy || !telegram} onchange={(event) => toggleTelegram(event.currentTarget as HTMLInputElement)} /></SettingRow>
     </SettingsSection>
 
     <SettingsSection id="voices" index={3} accent="#e6a527" title={sectionTitles.voices} summary={summaries.voices}>
