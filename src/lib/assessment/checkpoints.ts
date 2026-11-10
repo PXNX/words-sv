@@ -1,12 +1,27 @@
 /*
- * Checkpoints: every placement test is stored, and four weeks after the last one the next is due.
+ * Checkpoints: every placement test is stored, and the next is due after an interval that follows
+ * the daily word goal (checkpointIntervalDays).
  * The last three results show whether "known" really stays known. Pure parts plus a small
  * localStorage store; results never leave the device.
  */
 import { isLevel, LEVELS, type LangCode, type Level } from '#lib/domain/types.js';
 import { isLanguage } from '#lib/data/vocabulary.js';
 
-export const CHECKPOINT_INTERVAL_MS = 28 * 24 * 60 * 60 * 1000;
+const DAY_MS = 24 * 60 * 60 * 1000;
+/** Words per day × days between checkpoints: about 120 new words of practice per checkpoint. */
+const WORDS_PER_CHECKPOINT = 120;
+const MIN_INTERVAL_DAYS = 7;
+const MAX_INTERVAL_DAYS = 28;
+
+/**
+ * Days until the next checkpoint for a daily word goal: a learner aiming for 12 words a day has
+ * enough new material for a meaningful test after 10 days, one aiming for 5 after 24.
+ */
+export function checkpointIntervalDays(dailyGoal: number): number {
+  const goal = Number.isFinite(dailyGoal) && dailyGoal > 0 ? dailyGoal : 8;
+  return Math.min(MAX_INTERVAL_DAYS, Math.max(MIN_INTERVAL_DAYS, Math.round(WORDS_PER_CHECKPOINT / goal)));
+}
+export const CHECKPOINT_INTERVAL_MS = checkpointIntervalDays(8) * DAY_MS;
 export const CHECKPOINTS_KEY = 'wordcircle-checkpoints-v1';
 const MAX_STORED = 40;
 
@@ -43,10 +58,16 @@ export function checkpointsFor(results: readonly CheckpointResult[], lang: LangC
   return results.filter((result) => result.lang === lang).sort((a, b) => b.at - a.at);
 }
 
-/** Due when there is no result yet or the last one is four weeks old. */
-export function checkpointDue(results: readonly CheckpointResult[], lang: LangCode, now: number): boolean {
+/** Due when there is no result yet or the interval for the daily goal has passed. */
+export function checkpointDue(results: readonly CheckpointResult[], lang: LangCode, now: number, dailyGoal = 8): boolean {
   const last = checkpointsFor(results, lang)[0];
-  return !last || now - last.at >= CHECKPOINT_INTERVAL_MS;
+  return !last || now - last.at >= checkpointIntervalDays(dailyGoal) * DAY_MS;
+}
+
+/** When the next checkpoint is due (now when there is none yet). */
+export function nextCheckpointAt(results: readonly CheckpointResult[], lang: LangCode, dailyGoal = 8): number | null {
+  const last = checkpointsFor(results, lang)[0];
+  return last ? last.at + checkpointIntervalDays(dailyGoal) * DAY_MS : null;
 }
 
 /** The last three results, oldest first, with the change from one to the next in levels. */
