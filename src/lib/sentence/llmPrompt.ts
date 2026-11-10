@@ -3,6 +3,7 @@
  * the model plumbing in `llmGrader.ts` so it can be tested without WebGPU.
  */
 import type { ChatMessage } from '#lib/conversation/conversation.js';
+import * as v from 'valibot';
 import type { GradeFactor, GradeFactorKey, GradeMode, GradeResult } from './grading.js';
 
 /** Issue codes the model may report; each has a count-free message in the UI. */
@@ -34,12 +35,16 @@ const ISSUE_KEYS: Record<LlmIssue, GradeFactorKey> = {
   grammar: 'llmGrammar'
 };
 
-/** What the model should return. */
-export type LlmGradePayload = {
-  score?: unknown;
-  issues?: unknown;
-  comment?: unknown;
-};
+/**
+ * What the model should return. Small models are sloppy, so the score may come as a string
+ * ("82") and unknown issues or a missing comment are tolerated; only a usable score is required.
+ */
+const LlmGradeSchema = v.object({
+  score: v.pipe(v.union([v.number(), v.pipe(v.string(), v.trim(), v.nonEmpty(), v.transform(Number))]), v.finite()),
+  issues: v.optional(v.fallback(v.array(v.unknown()), []), []),
+  comment: v.optional(v.fallback(v.string(), ''), '')
+});
+export type LlmGradePayload = v.InferOutput<typeof LlmGradeSchema>;
 
 /** The messages sent to the model. */
 export function buildGradeMessages(text: string, mode: GradeMode, topic: string, language: string): ChatMessage[] {
@@ -71,8 +76,8 @@ function extractPayload(raw: string): LlmGradePayload | null {
   const end = raw.lastIndexOf('}');
   if (start < 0 || end <= start) return null;
   try {
-    const parsed: unknown = JSON.parse(raw.slice(start, end + 1));
-    return typeof parsed === 'object' && parsed !== null ? (parsed as LlmGradePayload) : null;
+    const parsed = v.safeParse(LlmGradeSchema, JSON.parse(raw.slice(start, end + 1)));
+    return parsed.success ? parsed.output : null;
   } catch {
     return null;
   }
@@ -86,13 +91,11 @@ function extractPayload(raw: string): LlmGradePayload | null {
 export function parseLlmGrade(raw: string, fallback: GradeResult): GradeResult {
   const payload = extractPayload(raw);
   if (!payload) return fallback;
-  const score = typeof payload.score === 'number' ? payload.score : Number(payload.score);
-  if (!Number.isFinite(score)) return fallback;
+  const { score } = payload;
 
   const normalized = Math.min(1, Math.max(0, score / 100));
   const factors: GradeFactor[] = [];
-  const reported = Array.isArray(payload.issues) ? payload.issues : [];
-  for (const issue of reported) {
+  for (const issue of payload.issues) {
     if (typeof issue !== 'string') continue;
     const key = ISSUE_KEYS[issue as LlmIssue];
     if (!key) continue;
@@ -100,7 +103,7 @@ export function parseLlmGrade(raw: string, fallback: GradeResult): GradeResult {
   }
   if (factors.length === 0 && normalized >= 0.75) factors.push({ key: 'llmNoIssues' });
 
-  const comment = typeof payload.comment === 'string' ? payload.comment.trim().slice(0, 240) : '';
+  const comment = payload.comment.trim().slice(0, 240);
   return {
     score: normalized,
     factors,

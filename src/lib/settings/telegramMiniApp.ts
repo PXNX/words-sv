@@ -2,7 +2,14 @@
 // hash (`#tgWebAppData=…`). It is read once at start and kept for the session (the router replaces the
 // hash on the first navigation). Telegram's script is only loaded for the screen insets, see
 // loadTelegramWebApp.
-export type MiniAppUser = { id: number; first_name: string; language_code?: string };
+import * as v from 'valibot';
+
+const MiniAppUserSchema = v.object({
+	id: v.pipe(v.number(), v.safeInteger(), v.minValue(1)),
+	first_name: v.optional(v.string(), ''),
+	language_code: v.optional(v.string())
+});
+export type MiniAppUser = v.InferOutput<typeof MiniAppUserSchema>;
 export type MiniAppLaunch = { initData: string; user: MiniAppUser };
 
 const SESSION_KEY = 'wordcircle-telegram-init-data-v1';
@@ -11,8 +18,8 @@ let launch: MiniAppLaunch | null | undefined;
 function parse(initData: string | null): MiniAppLaunch | null {
 	if (!initData) return null;
 	try {
-		const user = JSON.parse(new URLSearchParams(initData).get('user') ?? '') as MiniAppUser;
-		return Number.isSafeInteger(user?.id) ? { initData, user } : null;
+		const user = v.safeParse(MiniAppUserSchema, JSON.parse(new URLSearchParams(initData).get('user') ?? ''));
+		return user.success ? { initData, user: user.output } : null;
 	} catch {
 		return null;
 	}
