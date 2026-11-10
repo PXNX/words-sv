@@ -270,7 +270,7 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [x] Placement test (`/placement`, yes/no vocabulary format with invented words, any language
   with 40+ words per level), saved as four-weekly checkpoints with a trend on `/progress`.
 - [x] Forecast: weeks until 80 % of the current level is known, from weekly mastery snapshots.
-- [ ] Exam date, listening items in checkpoints.
+- [x] Goal date per level against the forecast, listening items in checkpoints.
 
 ### Phase V — visual layer
 - [ ] V1 tokens (OKLCH, gender colours with shape cue, motion tokens), V2 word→picture map with
