@@ -11,6 +11,7 @@
   import { cloudSync } from '#lib/sync/cloudSync.svelte.js';
   import { miniAppLaunch } from './telegramMiniApp.js';
   import { signInWithTelegram, signOutOfTelegram } from './telegramClient.js';
+  import { network } from '#lib/offline/network.svelte.js';
   import IconTelegram from '~icons/fa6-brands/telegram';
   import IconCloud from '~icons/material-symbols/cloud-done-rounded';
 
@@ -55,7 +56,7 @@
     {#if !inMiniApp}<button type="button" class="account-action quiet" onclick={signOut}>{m.account_sign_out({}, locale)}</button>{/if}
   {:else}
     <!-- Shown (disabled) while the status is still loading, so the card keeps its height. -->
-    <button type="button" class="btn-play btn-play-sm account-action" disabled={phase === 'waiting' || cloudSync.linked === null} onclick={signIn}><IconTelegram aria-hidden="true" />{m.sync_connect({}, locale)}</button>
+    <button type="button" class="btn-play btn-play-sm account-action" disabled={phase === 'waiting' || cloudSync.linked === null || !network.online} onclick={signIn}><IconTelegram aria-hidden="true" />{m.sync_connect({}, locale)}</button>
   {/if}
 </div>
 

@@ -909,5 +909,7 @@
   "alltag_date": "Wie sagt man dieses Datum?",
   "alltag_number": "Wie sagt man diese Zahl?",
   "alltag_price": "Wie sagt man diesen Preis?",
-  "alltag_continue": "Weiter"
+  "alltag_continue": "Weiter",
+  "offline_pill": "Offline – lern einfach weiter, alles wird gespeichert",
+  "offline_needs_network": "Dafür brauchst du eine Internetverbindung."
 }

@@ -909,5 +909,7 @@
   "alltag_date": "How do you say this date?",
   "alltag_number": "How do you say this number?",
   "alltag_price": "How do you say this price?",
-  "alltag_continue": "Continue"
+  "alltag_continue": "Continue",
+  "offline_pill": "Offline – keep learning, everything is saved",
+  "offline_needs_network": "This needs an internet connection."
 }

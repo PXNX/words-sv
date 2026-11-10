@@ -17,6 +17,8 @@ import WhatsNewSheet from '#lib/app/WhatsNewSheet.svelte';
 import MobileDataDialog from '#lib/offline/MobileDataDialog.svelte';
 import StreakToast from '#lib/streak/StreakToast.svelte';
 import GroupScoreSheet from '#lib/games/GroupScoreSheet.svelte';
+import OfflinePill from '#lib/offline/OfflinePill.svelte';
+import { watchNetwork } from '#lib/offline/network.svelte.js';
 import { initGroupGame } from '#lib/games/groupGame.svelte.js';
 import { cloudSync, startCloudSync } from '#lib/sync/cloudSync.svelte.js';
 import { refreshStore } from '#lib/store/storeClient.svelte.js';
@@ -106,6 +108,7 @@ $effect(() => {
 onMount(() => {
     // Opened from a Telegram group game's Play button: rounds report to that group's scoreboard.
     initGroupGame(new URL(page.url.href));
+    watchNetwork();
     // Whether WebGPU really has an adapter, so voice engines that need it fall back to Piper in time.
     // A finished WebGPU check (it runs before the first model) decides; otherwise a quick adapter probe.
     if (webgpu.result) setWebGpuUsable(webgpu.result.status === 'ok');
@@ -175,6 +178,7 @@ onMount(() => {
 		<CosmeticUnlockToast />
 		<StreakToast />
 		<GroupScoreSheet />
+		<OfflinePill />
 		<WhatsNewSheet />
 		<MobileDataDialog />
 		<BackgroundJobsBadge />
