@@ -6,8 +6,8 @@
 <script lang="ts">
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { connectTelegram, telegramDevice } from '#lib/settings/telegramClient.js';
-  import { cloudSync, noteLinked } from './cloudSync.svelte.js';
+  import { signInWithTelegram } from '#lib/settings/telegramClient.js';
+  import { cloudSync } from './cloudSync.svelte.js';
   import IconTelegram from '~icons/fa6-brands/telegram';
   import IconCloud from '~icons/material-symbols/cloud-done-rounded';
 
@@ -30,28 +30,20 @@
     try { localStorage.setItem(DISMISS_KEY, String(Date.now())); } catch { /* shown again next time */ }
     dismissed = true;
   }
+  // Signing in only links the account (no reminders); the sync then moves the progress over.
   async function connect() {
     busy = true;
+    waiting = true;
     try {
-      const status = await connectTelegram();
-      waiting = !status.linked;
+      await signInWithTelegram();
     } catch {
-      waiting = false;
+      /* offline or no server: the hint stays for another try */
     } finally {
+      waiting = false;
       busy = false;
     }
   }
-  // Back from Telegram: ask whether the bot linked this device meanwhile.
-  function recheck() {
-    if (!waiting) return;
-    void telegramDevice('status').then((status) => {
-      noteLinked(status.linked);
-      if (status.linked) waiting = false;
-    }, () => undefined);
-  }
 </script>
-
-<svelte:window onfocus={recheck} />
 
 {#if cloudSync.linked === false && !dismissed}
   <aside class="sync-hint" aria-labelledby="sync-hint-title">
