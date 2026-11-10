@@ -119,3 +119,15 @@ describe('domain types', () => {
     expect(() => assertNever('x' as never)).toThrow('Unexpected value: "x"');
   });
 });
+
+describe('feature labels', () => {
+  it('has a German and English label for every category and value', async () => {
+    const { readFileSync } = await import('node:fs');
+    const { labelKeys } = await import('../src/lib/grammar/taxonomy');
+    for (const locale of ['de', 'en']) {
+      const messages = JSON.parse(readFileSync(new URL(`../messages/${locale}.json`, import.meta.url), 'utf8')) as Record<string, string>;
+      const missing = ALL_FEATURE_KEYS.flatMap((key) => Object.values(labelKeys(key)).filter((label) => !messages[label]));
+      expect(missing).toEqual([]);
+    }
+  });
+});
