@@ -10,6 +10,9 @@ Telegram bot [@word_circle_bot](https://t.me/word_circle_bot) for the WordCircle
   `https://t.me/word_circle_bot?start=donate`). A donation unlocks nothing
   and is **never refunded**; `/paysupport` explains this, as Telegram requires for Stars payments.
 - Links the legal pages that live in WordCircle: `/bedingungen`, `/datenschutz`, `/impressum`.
+- Forwards the app's one-time `/start` links (`l_…` sign-in, `r_…` reminders, `i_…` invites) to
+  WordCircle's `/api/telegram/start` and replies with the result. Needs `TELEGRAM_BRIDGE_SECRET`, the
+  same value the app's server has.
 - `/version` shows the WordCircle version (from the repository's `package.json`, or `APP_VERSION`
   when only `bot/` is deployed) with a link to its changelog entry.
 - `/set_cmd` (admins only) sets the profile photo (`bot/res/img/profile.jpg`), name, description and short description in German and English.
@@ -40,7 +43,7 @@ venv\Scripts\python -m pytest test
 ## Deploy the bot
 
 The bot is a long-running process (`python main.py` in `bot/`, see `run.bat`) next to a PostgreSQL database;
-it creates its table on start. It needs `.env` with `TELEGRAM`, `ADMINS` and `DATABASE_URL` (see
+it creates its table on start. It needs `.env` with `TELEGRAM`, `ADMINS`, `DATABASE_URL` and `TELEGRAM_BRIDGE_SECRET` (see
 `example.env`). After pulling new code, restart it: the code is only read at start-up.
 
 ## Deploy the Mini App on Telegram Serverless
