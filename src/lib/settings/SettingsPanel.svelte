@@ -1,5 +1,6 @@
 <script lang="ts">
   import ModelManager from './ModelManager.svelte';
+  import { num } from '#lib/format/num.svelte.js';
   import { deviceAbilities, speaksLanguage } from '#lib/voice/engines.js';
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
@@ -9,6 +10,8 @@
   import { openTelegramLink, telegramDevice, type TelegramStatus } from './telegramClient';
   import { cloudSync, noteLinked } from '#lib/sync/cloudSync.svelte.js';
   import TelegramAccount from './TelegramAccount.svelte';
+  import { checkInviteRewards } from '#lib/profile/cosmetics.svelte.js';
+  import { INVITE_REWARD_TARGET } from '#lib/profile/cosmetics.js';
   import IconCloud from '~icons/material-symbols/cloud-done-rounded';
   import { naturalMegabytes, naturalReady, naturalState, naturalSupported, playNatural, prepareNatural, synthesizeNatural } from '#lib/story/naturalVoices.svelte.js';
   import { onMount } from 'svelte';
@@ -204,6 +207,7 @@
   function refreshTelegram() {
     void telegramDevice('status').then((status) => {
       telegram = status;
+      checkInviteRewards(status.invited);
       noteLinked(status.linked);
       if (status.reminders) telegramWaiting = false;
     }).catch(() => undefined);
@@ -326,6 +330,7 @@
     <section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play" aria-labelledby="invite-heading">
       <h2 id="invite-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.inviteTitle}</h2>
       <p class="m-0 mt-[.35rem] text-base-content/60 text-[.58rem] font-bold leading-[1.35]">{labels.inviteHint(telegram.inviteEmbers)}</p>
+      {#if telegram.invited < INVITE_REWARD_TARGET}<p class="m-0 mt-[.35rem] text-accent text-[.58rem] font-extrabold leading-[1.35]">{m.invite_goal({ count: num(telegram.invited), target: num(INVITE_REWARD_TARGET) }, { locale: settings.interfaceLocale })}</p>{/if}
       <div class="flex items-center justify-between gap-4 pt-[.72rem] mt-[.72rem] border-t border-base-content/[.14] dark:border-base-content/[.22] text-base-content text-[.67rem] font-extrabold tracking-[.06em] uppercase"><span>🔥 {labels.inviteCount(telegram.invited)}</span><button type="button" class="btn-play btn-play-sm flex-none gap-[.35rem] normal-case tracking-normal" onclick={shareInvite}><IconShare aria-hidden="true" class="w-[.85rem] h-[.85rem]" />{inviteCopied ? labels.inviteCopied : labels.inviteShare}</button></div>
     </section>
   {/if}

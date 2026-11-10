@@ -127,6 +127,17 @@ export function inviteThanks(locale: string, count: number) {
 	return chosen ? chosen(count) : { title: 'A friend joined WordCircle', body: `Thanks for inviting them! You got ${count} embers.` };
 }
 
+// Friends who joined through one invite link that bring the inviter's character its exclusive top
+// (the app unlocks it from the invite count; this only says so in Telegram).
+export const INVITE_REWARD_TARGET = 10;
+const INVITE_MILESTONE: Record<string, (count: number) => { title: string; body: string }> = {
+	en: (count) => ({ title: `${count} friends joined through you!`, body: 'Your character has earned an exclusive Telegram-blue top. Open WordCircle to put it on.' }),
+	de: (count) => ({ title: `${count} Freunde sind über dich dabei!`, body: 'Deine Figur hat ein exklusives Oberteil in Telegram-Blau verdient. Öffne WordCircle und zieh es an.' })
+};
+export function inviteMilestone(locale: string, count: number) {
+	return (INVITE_MILESTONE[locale] ?? INVITE_MILESTONE.en!)(count);
+}
+
 const TABLES = [
 	`CREATE TABLE IF NOT EXISTS wordcircle_telegram_links (
 		device_id VARCHAR(64) NOT NULL PRIMARY KEY,

@@ -6,7 +6,8 @@
  *   - achievements: every badge on the progress page brings an item (progress/achievements.ts);
  *   - high scores: a few standout results (Wordle in two tries, five Hangman wins in a row, forty
  *     first-try words in a row);
- *   - languages: practising 50 words of a learning language brings an item tied to it.
+ *   - languages: practising 50 words of a learning language brings an item tied to it;
+ *   - invites: ten friends who joined through the learner's invite link bring a Telegram-blue top.
  * The unlocked list itself lives in cosmetics.svelte.ts.
  */
 import type { Avatar, AvatarPart } from './avatar.js';
@@ -20,10 +21,11 @@ export type ScoreId = 'wordle_two' | 'hangman_five' | 'vocab_forty';
 export type AchievementReward = `achievement_${AchievementId}`;
 export type ScoreReward = `score_${ScoreId}`;
 export type LanguageReward = `language_${Language}`;
+export type InviteReward = 'invite_ten';
 // Mode rewards keep their plain mode id, so what was unlocked before stays unlocked.
-export type RewardId = CosmeticMode | AchievementReward | ScoreReward | LanguageReward;
+export type RewardId = CosmeticMode | AchievementReward | ScoreReward | LanguageReward | InviteReward;
 
-export type RewardSource = { kind: 'mode'; mode: CosmeticMode } | { kind: 'achievement'; achievement: AchievementId } | { kind: 'score'; score: ScoreId } | { kind: 'language'; language: Language; target: number };
+export type RewardSource = { kind: 'mode'; mode: CosmeticMode } | { kind: 'achievement'; achievement: AchievementId } | { kind: 'score'; score: ScoreId } | { kind: 'language'; language: Language; target: number } | { kind: 'invite'; target: number };
 export type Cosmetic = { id: RewardId; part: AvatarPart; choice: string; source: RewardSource };
 
 const mode = (id: CosmeticMode, part: AvatarPart, choice: string): Cosmetic => ({ id, part, choice, source: { kind: 'mode', mode: id } });
@@ -32,6 +34,9 @@ const score = (id: ScoreId, part: AvatarPart, choice: string): Cosmetic => ({ id
 // Words practised in one learning language that unlock its item.
 export const LANGUAGE_REWARD_TARGET = 50;
 const language = (code: Language, part: AvatarPart, choice: string): Cosmetic => ({ id: `language_${code}`, part, choice, source: { kind: 'language', language: code, target: LANGUAGE_REWARD_TARGET } });
+
+// Friends who joined through the invite link (counted by the server) that unlock the invite item.
+export const INVITE_REWARD_TARGET = 10;
 
 // Every reward is a distinct avatar choice that StoryCharacter can draw.
 const catalog: Cosmetic[] = [
@@ -72,7 +77,8 @@ const catalog: Cosmetic[] = [
   language('en', 'eyes', 'wink'),
   language('fr', 'nose', 'heart'),
   language('it', 'eyes', 'starry'),
-  language('es', 'nose', 'freckles')
+  language('es', 'nose', 'freckles'),
+  { id: 'invite_ten', part: 'top', choice: '#2aabee', source: { kind: 'invite', target: INVITE_REWARD_TARGET } }
 ];
 
 export const cosmetics = Object.fromEntries(catalog.map((item) => [item.id, item])) as Record<RewardId, Cosmetic>;
@@ -120,6 +126,11 @@ export function earnedAchievementRewards(achievements: readonly Achievement[], u
 /** Language rewards whose language has reached its practice target but are not unlocked yet. */
 export function earnedLanguageRewards(wordsPracticed: Partial<Record<Language, number>>, unlocked: readonly RewardId[]): LanguageReward[] {
   return catalog.flatMap((item) => item.source.kind === 'language' && (wordsPracticed[item.source.language] ?? 0) >= item.source.target && !unlocked.includes(item.id) ? [item.id as LanguageReward] : []);
+}
+
+/** The invite reward once enough friends joined, unless it is unlocked already. */
+export function earnedInviteRewards(invited: number, unlocked: readonly RewardId[]): InviteReward[] {
+  return invited >= INVITE_REWARD_TARGET && !unlocked.includes('invite_ten') ? ['invite_ten'] : [];
 }
 
 export function lockedIn(part: AvatarPart, choice: string, unlocked: readonly RewardId[]): boolean {

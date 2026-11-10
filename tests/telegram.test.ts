@@ -67,6 +67,7 @@ function fakeDatabase({ devices = {}, links = [], invites = [] }: { devices?: Re
 				if (link) link.reminders = 0;
 				return [{}];
 			}
+			if (sql.startsWith('SELECT COUNT(*) AS count FROM wordcircle_telegram_invites')) return [[{ count: invites.filter((entry) => entry.inviter_device_id === params[0]).length }]];
 			if (sql.includes('wordcircle_push_subscriptions')) return [[]];
 			throw new Error(`unexpected statement: ${sql}`);
 		}
@@ -123,6 +124,18 @@ describe('telegram start bridge', () => {
 		expect((await start(db, { payload: 'l_logincode123', userId: 11, chatId: 11 })).body.result).toBe('signed_in');
 		expect(db.links[0]).toMatchObject({ chat_id: 11, telegram_user_id: 11, reminders: 0, link_code: null });
 		expect((await start(db, { payload: 'l_logincode123', userId: 11, chatId: 11 })).body.result).toBe('expired');
+	});
+
+	it('says so in Telegram when the tenth friend joins', async () => {
+		const db = fakeDatabase({
+			devices: { 'device-a': { embers: 0, freezes: 2, qualified_days: 0, locale: 'en' } },
+			links: [{ device_id: 'device-a', invite_code: 'inviteCodeB1', chat_id: 11, telegram_user_id: 11 }]
+		});
+		const sent: SentMessage[] = [];
+		for (let userId = 100; userId < 111; userId += 1) await start(db, { payload: 'i_inviteCodeB1', userId, chatId: userId }, sent);
+		// Eleven thanks plus one milestone message, sent right after the tenth.
+		expect(sent).toHaveLength(12);
+		expect(sent[10]![1]).toContain('10 friends');
 	});
 
 	it('pays embers for every new player, once per player, without a limit', async () => {

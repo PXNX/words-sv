@@ -34,6 +34,7 @@
     if (!reward) return '';
     const from = reward.source;
     if (from.kind === 'achievement') return m.cosmetic_from_badge({ name: messages[`achievement_${from.achievement}`]?.({}, locale) ?? from.achievement }, locale);
+    if (from.kind === 'invite') return m.cosmetic_from_invite({ count: num(from.target) }, locale);
     if (from.kind === 'language') return m.cosmetic_from_language({ count: num(from.target), language: new Intl.DisplayNames([settings.interfaceLocale], { type: 'language' }).of(from.language) ?? from.language }, locale);
     return m.cosmetic_unlocked_body({}, locale);
   });

@@ -5,7 +5,7 @@
  * mode is open.
  */
 import type { AvatarPart } from './avatar.js';
-import { COSMETICS_KEY, earnedAchievementRewards, earnedLanguageRewards, lockedIn, nextHangmanRun, nextRun, parseUnlocked, type CosmeticMode, type RewardId } from './cosmetics.js';
+import { COSMETICS_KEY, earnedAchievementRewards, earnedInviteRewards, earnedLanguageRewards, lockedIn, nextHangmanRun, nextRun, parseUnlocked, type CosmeticMode, type RewardId } from './cosmetics.js';
 import { buildAchievements } from '#lib/progress/achievements.js';
 import { readActivity } from '#lib/progress/activity.js';
 import type { Language } from '#lib/data/vocabulary.js';
@@ -74,6 +74,11 @@ export function checkAchievementRewards({ bestStreak, masteredWords }: { bestStr
 /** Language items: practising enough words of a learning language unlocks the one tied to it. */
 export function checkLanguageRewards(wordsPracticed: Partial<Record<Language, number>>): void {
   for (const id of earnedLanguageRewards(wordsPracticed, cosmeticState.unlocked)) unlockCosmetic(id);
+}
+
+/** The invite item: ten friends joined through the invite link (the count comes from the server). */
+export function checkInviteRewards(invited: number): void {
+  for (const id of earnedInviteRewards(invited, cosmeticState.unlocked)) unlockCosmetic(id);
 }
 
 export function dismissUnlock() {
