@@ -18,7 +18,9 @@ export async function connectTelegram(): Promise<TelegramStatus> {
 // The player's link to @word_circle_bot: streak reminders in Telegram and their invite link.
 export type TelegramStatus = { reminders: boolean; linked: boolean; connectUrl: string | null; inviteUrl: string | null; invited: number; inviteEmbers: number };
 
-export async function telegramDevice(action: 'status' | 'connect' | 'disconnect' | 'miniapp', initData?: string): Promise<TelegramStatus> {
+export type TelegramAction = 'status' | 'connect' | 'disconnect' | 'miniapp' | 'signin' | 'signout';
+
+export async function telegramDevice(action: TelegramAction, initData?: string): Promise<TelegramStatus> {
 	// The /api functions only exist on Vercel; under `vite dev` every call would just 404.
 	if (import.meta.env?.DEV) throw new Error('telegram_unavailable');
 	try {
@@ -26,6 +28,41 @@ export async function telegramDevice(action: 'status' | 'connect' | 'disconnect'
 	} catch {
 		throw new Error('telegram_unavailable');
 	}
+}
+
+const SIGN_IN_POLL_MS = 2500;
+const SIGN_IN_TIMEOUT_MS = 5 * 60 * 1000;
+
+/**
+ * Signs this device in to the player's Telegram account: opens a one-time link to the bot, and once
+ * the player pressed Start there, the device is linked and its progress moves to the account. Resolves
+ * true when linked (checked every few seconds and whenever the app is shown again), false on timeout.
+ */
+export async function signInWithTelegram(signal?: AbortSignal): Promise<boolean> {
+	const started = await telegramDevice('signin');
+	if (started.linked) {
+		noteLinked(true);
+		return true;
+	}
+	if (started.connectUrl) openTelegramLink(started.connectUrl);
+	const until = Date.now() + SIGN_IN_TIMEOUT_MS;
+	while (Date.now() < until && !signal?.aborted) {
+		await new Promise((resolve) => setTimeout(resolve, SIGN_IN_POLL_MS));
+		if (typeof document !== 'undefined' && document.visibilityState === 'hidden') continue;
+		const status = await telegramDevice('status').catch(() => null);
+		if (status?.linked) {
+			noteLinked(true);
+			return true;
+		}
+	}
+	return false;
+}
+
+/** Unlinks this device: its local progress stays, and the account keeps the copy saved so far. */
+export async function signOutOfTelegram(): Promise<TelegramStatus> {
+	const status = await telegramDevice('signout');
+	noteLinked(false);
+	return status;
 }
 
 // Opened as the Mini App, the player's Telegram profile fills in what they have not set yet: their

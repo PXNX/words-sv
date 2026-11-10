@@ -8,6 +8,7 @@
   import { disablePush, enablePush, pushEnabled, pushSupported } from './pushClient';
   import { openTelegramLink, telegramDevice, type TelegramStatus } from './telegramClient';
   import { cloudSync, noteLinked } from '#lib/sync/cloudSync.svelte.js';
+  import TelegramAccount from './TelegramAccount.svelte';
   import IconCloud from '~icons/material-symbols/cloud-done-rounded';
   import { naturalMegabytes, naturalReady, naturalState, naturalSupported, playNatural, prepareNatural, synthesizeNatural } from '#lib/story/naturalVoices.svelte.js';
   import { onMount } from 'svelte';
@@ -280,6 +281,11 @@
     </span>
     <IconChevronRight aria-hidden="true" class="w-[1.2rem] h-[1.2rem] flex-none rtl:rotate-180" />
   </a>
+
+  <section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play" aria-labelledby="account-heading">
+    <h2 id="account-heading" class="m-0 mb-[.55rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{m.account_title({}, { locale: settings.interfaceLocale })}</h2>
+    <TelegramAccount />
+  </section>
 
   <section class="mt-[1.35rem] px-[.8rem] pt-[.7rem] pb-[.85rem] panel-play" aria-labelledby="content-settings-heading">
     <h2 id="content-settings-heading" class="m-0 mb-[.1rem] text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.contentGroup}</h2>
