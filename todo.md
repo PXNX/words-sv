@@ -298,7 +298,7 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
   test per level (`/mock`: reading, listening, language, writing; no exam-specific formats).
 - [x] F: speaking simulation (a spoken task in the mock test, transcribed by the browser and scored
   with the spoken rubric).
-- [ ] F: longer reading/listening task formats in the mock test (a text with questions).
+- [x] F: reading comprehension in the mock test (one of the level's texts with its questions).
 - [x] G: offline audit (`docs/offline.md`), an offline pill, and network-only buttons disabled offline.
 - [x] H: group competition through Telegram games (`/games`, `/top` in a group), scored on the server.
 - [ ] I: dashboards, A/B framework, content QA loop.
