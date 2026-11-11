@@ -247,9 +247,12 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [x] Interface formatting in Telegram and push reminder texts (the app's digit choice travels with the streak).
 
 ### Phase P — content packs and fast loading
-- [ ] Measure where the per-level word files land in the bundle; move them to hashed, fetched,
-  validated packs with a manifest; `loadPack()` with cache, idle prefetch, download manager.
-- [ ] Budgets: bundle size and pack size in CI, Lighthouse CI.
+- [x] Measured: the per-level word files are already hashed chunks loaded on demand (42 packs, 156 KB
+  gzip in all, largest de.b1 37 KB). The story corpus (160 KB gzip) was pulled into every page that
+  named a character; split out (`story/storyKit.ts`), home 489 → 320 KB.
+- [x] Budgets: shell, route and pack sizes (gzip) checked in CI (`bun run budget`).
+- [ ] The shell carries every interface language's messages (~300 KB gzip with fa/ar complete);
+  load messages per locale. Lighthouse CI.
 
 ### Phase A — progress foundation
 - [x] Append-only `LearningEvent` log in IndexedDB (`progress/events.ts`, `progress/eventLog.ts`)
@@ -288,7 +291,9 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [ ] D: provider router (WebGPU first, OpenRouter BYOK opt-in), per-language model settings.
 - [x] E: RTL audit (`docs/rtl.md`, `tests/rtl-css.test.ts`) and L1 error priors (`progress/l1Priors.ts`,
   the coach's first grammar focus).
-- [ ] E: Persian/Arabic native-speaker path (full fa/ar interface translations).
+- [x] E: full Persian and Arabic interface translations.
+- [ ] E: fa/ar: older entries write character names and Telegram in local script, newer ones in Latin;
+  have a native speaker review the grammar terms.
 - [x] F: writing rubric per level (`sentence/levelRubric.ts`, under the full-text grade) and a mock
   test per level (`/mock`: reading, listening, language, writing; no exam-specific formats).
 - [ ] F: longer reading/listening task formats (texts with questions), speaking simulation.
