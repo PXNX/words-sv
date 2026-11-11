@@ -929,7 +929,7 @@
   "rubric_connectors_used": "Linking words: {words}",
   "mock_title": "Mock test {level}",
   "mock_heading": "A mock test for your level",
-  "mock_intro": "Reading, listening, language and a writing task, as in an exam: you only see what was right at the end. You pass from {pass}, and no part may be under {min}. Takes about 15 minutes.",
+  "mock_intro": "Reading, listening, language, a writing task and, where your browser can listen, speaking – as in an exam: you only see what was right at the end. You pass from {pass}, and no part may be under {min}. Takes about 15 to 20 minutes.",
   "mock_level_label": "Level",
   "mock_best": "Your best result at this level: {percent}",
   "mock_start": "Start the {level} test",
@@ -954,5 +954,12 @@
   "grammar_forms_spelling": "Almost: it's “{correct}” (umlaut or ß).",
   "grammar_forms_typo": "One letter off: “{correct}”.",
   "grammar_forms_wrong": "It's “{correct}”.",
-  "home_forms": "Conjugate verbs and decline adjectives yourself, with partial credit for small slips."
+  "home_forms": "Conjugate verbs and decline adjectives yourself, with partial credit for small slips.",
+  "mock_section_speaking": "Speaking",
+  "mock_next": "On to speaking",
+  "mock_speaking_hint": "Tap the microphone and speak for about a minute. Your words appear below.",
+  "mock_speaking_start": "Start recording",
+  "mock_speaking_stop": "Stop recording",
+  "mock_speaking_empty": "Nothing heard yet.",
+  "mock_speaking_skip": "Hand in without speaking"
 }
