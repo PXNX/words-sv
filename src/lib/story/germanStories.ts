@@ -3667,14 +3667,31 @@ export const germanStories: Story[] = [
     scene: 'office',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Extra C1 1'),
+    title: german('Roboter auf dem Gehweg'),
     beats: [
-      { kind: 'narration', text: german('Anwalt und ausüben und autonom und binden und brutal.') },
-      { kind: 'line', speaker: 'mia', text: german('Dativ ist wichtig und Einheit ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('Einsatz und enorm sind da.') },
-      { kind: 'narration', text: german('erörtern und erwähnt.') },
-      { kind: 'question', prompt: german('Was ist erwecken?'), options: [german('erweisen'), german('erzielen'), german('ethisch')] },
-      { kind: 'question', prompt: german('Wer hat erwecken?'), options: [german('erweisen'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Besprechungsraum eines Lieferdienstes, Donnerstag, 16 Uhr. Tom leitet die Produktentwicklung und möchte ab Frühjahr autonome Lieferroboter in der Innenstadt einsetzen. Mia ist Anwältin in der Rechtsabteilung und soll das Vorhaben vorab prüfen.') },
+      { kind: 'line', speaker: 'tom', mood: 'happy', text: german('Die Zahlen sind enorm: In der Testphase haben zwanzig Roboter über 4 000 Bestellungen ausgeliefert, mit einer Pünktlichkeit von 97 Prozent. Pro Lieferung sparen wir fast die Hälfte der Kosten.') },
+      { kind: 'line', speaker: 'mia', text: german('Das bestreite ich gar nicht. Aber bevor wir über den Einsatz in der ganzen Stadt sprechen, müssen wir einige Punkte erörtern, die in deiner Präsentation mit keinem Wort erwähnt werden.') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Zum Beispiel?') },
+      { kind: 'line', speaker: 'mia', text: german('Die Haftung. Wenn ein Roboter einem Kind über den Fuß fährt oder ein Rollstuhlfahrer seinetwegen auf die Straße ausweichen muss – wer haftet dann? Der Hersteller, wir als Betreiber oder der Mitarbeiter, der die Flotte aus der Ferne überwacht?') },
+      { kind: 'line', speaker: 'tom', text: german('Jede Einheit wird ja überwacht. Ein Mitarbeiter betreut zehn Roboter gleichzeitig und kann jederzeit eingreifen.') },
+      { kind: 'line', speaker: 'mia', mood: 'worried', text: german('Genau das könnte sich vor Gericht als Schwachstelle erweisen. Wer zehn Geräte gleichzeitig überwachen soll, kann seine Aufsicht kaum wirksam ausüben. Man würde ihm vorwerfen, dass er gar nicht rechtzeitig reagieren konnte.') },
+      { kind: 'line', speaker: 'tom', text: german('Und die ethische Seite? Ich vermute, darauf willst du auch noch hinaus.') },
+      { kind: 'line', speaker: 'mia', text: german('Allerdings. Gehwege sind öffentlicher Raum. Wenn wir dort dauerhaft Platz beanspruchen, erweckt das schnell den Eindruck, ein Unternehmen eigne sich etwas an, das allen gehört. Das kann brutal auf unseren Ruf zurückschlagen.') },
+      { kind: 'line', speaker: 'tom', mood: 'sad', text: german('Also stirbt das Projekt, bevor es begonnen hat?') },
+      { kind: 'line', speaker: 'mia', text: german('Nein. Aber wir sollten uns nicht vorschnell an einen stadtweiten Start binden. {name}, du hast den Pilotbericht gelesen. Was würdest du der Geschäftsführung empfehlen?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Einen zweiten, begrenzten Testlauf in einem Stadtteil, mit weniger Robotern pro Aufsicht, einer geklärten Haftungsfrage und einer Abstimmung mit der Stadt.'),
+        german('Sofort hundert Roboter in der ganzen Stadt einzusetzen, bevor die Konkurrenz es tut.'),
+        german('Das Projekt geheim zu halten, damit niemand Fragen stellt.')
+      ] },
+      { kind: 'line', speaker: 'tom', text: german('Einverstanden. Lieber ein halbes Jahr später starten als im ersten Monat einen Unfall und einen Skandal erleben. Ich spreche morgen mit der Stadtverwaltung.') },
+      { kind: 'question', prompt: german('Wie pünktlich waren die Roboter in der Testphase?'), options: [german('Zu 97 Prozent'), german('Zu 50 Prozent'), german('Zu 100 Prozent')] },
+      { kind: 'question', prompt: german('Welchen Punkt erwähnt Toms Präsentation nicht?'), options: [german('Die Haftung bei Unfällen'), german('Die Kostenersparnis'), german('Die Zahl der Bestellungen')] },
+      { kind: 'question', prompt: german('Wie viele Roboter betreut ein Mitarbeiter gleichzeitig?'), options: [german('Zehn'), german('Zwanzig'), german('Einen')] },
+      { kind: 'question', prompt: german('Warum könnte sich die Überwachung laut Mia vor Gericht als Schwachstelle erweisen?'), options: [german('Weil eine Person zehn Geräte kaum wirksam beaufsichtigen kann'), german('Weil die Roboter keine Kameras haben'), german('Weil die Mitarbeiter nicht geschult sind')] },
+      { kind: 'question', prompt: german('Welches ethische Problem nennt Mia?'), options: [german('Ein Unternehmen beansprucht dauerhaft öffentlichen Raum.'), german('Die Roboter verbrauchen zu viel Strom.'), german('Die Kunden werden zu bequem.')] },
+      { kind: 'question', prompt: german('Wozu entschließt sich Tom am Ende?'), options: [german('Später zu starten und mit der Stadtverwaltung zu sprechen'), german('Das Projekt ganz aufzugeben'), german('Sofort in der ganzen Stadt zu starten')] }
     ]
   },
   {
@@ -3683,14 +3700,30 @@ export const germanStories: Story[] = [
     scene: 'town',
     cast: ['kim', 'leo'],
     languages: ['de'],
-    title: german('Extra C1 2'),
+    title: german('Ein neuer Platz für die Altstadt'),
     beats: [
-      { kind: 'narration', text: german('fehlend und Funktion und Gebilde und gerecht und gesamt.') },
-      { kind: 'line', speaker: 'mia', text: german('gewaltig ist wichtig und Handlung ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('heftig und hektisch sind da.') },
-      { kind: 'narration', text: german('Jura und Kasus.') },
-      { kind: 'question', prompt: german('Was ist Kluft?'), options: [german('konstant'), german('Kontrast'), german('kritisch')] },
-      { kind: 'question', prompt: german('Wer hat Kluft?'), options: [german('konstant'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Auf dem Marktplatz hängen seit gestern große Plakate: Die Stadt will den Platz für zwölf Millionen Euro umgestalten. Mittelpunkt des Entwurfs ist ein gewaltiges Dach aus Glas und Stahl. Kim, die Jura studiert, und der Architekt Leo stehen vor dem Modell.') },
+      { kind: 'line', speaker: 'leo', mood: 'happy', text: german('Ich finde den Entwurf mutig. Das Dach erfüllt eine klare Funktion: Es spendet im Sommer Schatten, im Winter schützt es vor Regen, und der Markt kann das ganze Jahr stattfinden.') },
+      { kind: 'line', speaker: 'kim', text: german('Mag sein, aber dieses Gebilde passt doch überhaupt nicht zu den Fachwerkhäusern ringsum. Der Kontrast ist mir zu hart.') },
+      { kind: 'line', speaker: 'leo', text: german('Gerade der Kontrast ist gewollt. Gute Architektur muss sich nicht verstecken. Denk an die Glaspyramide vor dem Louvre – anfangs heftig kritisiert, heute ein Wahrzeichen.') },
+      { kind: 'line', speaker: 'kim', mood: 'curious', text: german('Mich stört weniger die Ästhetik als die Frage, wem der Platz künftig gehört. Im Entwurf ist die Hälfte der Fläche für Cafés mit Außengastronomie vorgesehen. Wer sich keinen Cappuccino für fünf Euro leisten kann, findet kaum noch eine Bank.') },
+      { kind: 'line', speaker: 'leo', mood: 'surprised', text: german('Das ist ein berechtigter Punkt. Die fehlenden Sitzplätze ohne Konsumzwang sind mir gar nicht aufgefallen.') },
+      { kind: 'line', speaker: 'kim', text: german('Und genau so wächst die Kluft zwischen denen, die sich die Innenstadt leisten können, und denen, die nur noch hindurchgehen. Ein öffentlicher Platz sollte gerecht verteilt sein, nicht nur schön aussehen.') },
+      { kind: 'line', speaker: 'leo', text: german('Juristisch gesehen: Könnte die Stadt denn überhaupt so viel Fläche an private Betreiber vergeben?') },
+      { kind: 'line', speaker: 'kim', mood: 'laughing', text: german('Wie wir im Studium sagen: Es kommt darauf an. Rechtlich ist das zulässig, politisch aber eine Frage des Willens. Deshalb gibt es nächste Woche eine Bürgerversammlung, und ich werde dort sprechen.') },
+      { kind: 'line', speaker: 'leo', mood: 'curious', text: german('Dann solltest du einen konstruktiven Vorschlag mitbringen, nicht nur Kritik. {name}, was würdest du an dem Entwurf ändern?') },
+      { kind: 'reply', to: 'leo', options: [
+        german('Ich würde das Dach behalten, aber einen größeren Teil der Fläche für öffentliche Bänke und Spielgeräte ohne Konsumzwang reservieren.'),
+        german('Ich würde den Platz komplett an ein einziges Café verkaufen.'),
+        german('Ich würde die Fachwerkhäuser abreißen, damit das Dach besser zur Geltung kommt.')
+      ] },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Das ist ein Kompromiss, mit dem beide Seiten leben könnten. Leo, hilfst du mir, eine Skizze dafür zu zeichnen? Dann wirkt mein Beitrag weniger wie die hektische Rede einer Jurastudentin.') },
+      { kind: 'question', prompt: german('Wie viel soll die Umgestaltung des Platzes kosten?'), options: [german('Zwölf Millionen Euro'), german('Fünf Millionen Euro'), german('Zwanzig Millionen Euro')] },
+      { kind: 'question', prompt: german('Welche Funktion hat das Dach laut Leo?'), options: [german('Es schützt vor Sonne und Regen, damit der Markt das ganze Jahr stattfinden kann.'), german('Es erzeugt Strom für die Altstadt.'), german('Es soll Touristen anlocken.')] },
+      { kind: 'question', prompt: german('Warum erwähnt Leo die Glaspyramide vor dem Louvre?'), options: [german('Als Beispiel für ein anfangs kritisiertes Bauwerk, das heute ein Wahrzeichen ist'), german('Weil er sie selbst entworfen hat'), german('Weil sie aus Fachwerk besteht')] },
+      { kind: 'question', prompt: german('Was stört Kim vor allem an dem Entwurf?'), options: [german('Dass zu wenige Plätze ohne Konsumzwang vorgesehen sind'), german('Dass das Dach zu klein ist'), german('Dass der Markt abgeschafft wird')] },
+      { kind: 'question', prompt: german('Was studiert Kim?'), options: [german('Jura'), german('Architektur'), german('Kunstgeschichte')] },
+      { kind: 'question', prompt: german('Was passiert nächste Woche?'), options: [german('Eine Bürgerversammlung'), german('Die Eröffnung des Platzes'), german('Kims Abschlussprüfung')] }
     ]
   },
   {
@@ -3699,14 +3732,30 @@ export const germanStories: Story[] = [
     scene: 'shop',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Extra C1 3'),
+    title: german('Gedichte verkaufen sich nicht'),
     beats: [
-      { kind: 'narration', text: german('künftig und landen und Last und lebende und neigen.') },
-      { kind: 'line', speaker: 'mia', text: german('Neuzeit ist wichtig und paradox ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('Partei und passiv sind da.') },
-      { kind: 'narration', text: german('Patient und Poesie.') },
-      { kind: 'question', prompt: german('Was ist poetisch?'), options: [german('Rache'), german('Raucher'), german('Regelung')] },
-      { kind: 'question', prompt: german('Wer hat poetisch?'), options: [german('Rache'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Eine kleine Buchhandlung in der Fußgängerzone, eine halbe Stunde vor Ladenschluss. Mia führt das Geschäft seit acht Jahren. Tom, ihr Steuerberater und alter Schulfreund, blättert in der Monatsbilanz.') },
+      { kind: 'line', speaker: 'tom', mood: 'worried', text: german('Mia, ich will ehrlich sein: Dein Regal mit Lyrik ist ein Verlustgeschäft. Im letzten Halbjahr hast du dort genau elf Bände verkauft. Die Regalmeter könntest du mit Krimis viel besser nutzen.') },
+      { kind: 'line', speaker: 'mia', text: german('Ich weiß, ich weiß. Aber eine Buchhandlung ohne Poesie ist für mich wie ein Garten ohne Blumen. Und das Paradoxe ist: Die Leute lieben Gedichte. Nur nicht als Buch.') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Wie meinst du das?') },
+      { kind: 'line', speaker: 'mia', text: german('Meine Gedichtkalender und Postkarten mit Rilke-Versen sind jedes Jahr ausverkauft. Die Menschen neigen offenbar dazu, Poesie in kleinen Dosen zu genießen – eine Zeile am Kühlschrank, nicht zweihundert Seiten am Stück.') },
+      { kind: 'line', speaker: 'tom', text: german('Dann senk doch die Preise für die Gedichtbände. Mit einem Rabatt würden sie sich vielleicht schneller verkaufen.') },
+      { kind: 'line', speaker: 'mia', mood: 'laughing', text: german('Das darf ich gar nicht. In Deutschland gilt die Buchpreisbindung: Der Verlag legt den Preis für neue Bücher fest, und jeder Händler muss ihn einhalten – ob kleiner Laden oder großer Onlinehändler.') },
+      { kind: 'line', speaker: 'tom', mood: 'surprised', text: german('Ach ja, stimmt. Diese Regelung schützt euch ja vor einem Preiskrieg mit den großen Ketten. Paradoxerweise nimmt sie dir aber in diesem Fall ein Werkzeug aus der Hand.') },
+      { kind: 'line', speaker: 'mia', text: german('Genau. Ich kann also nicht über den Preis gehen, sondern nur über Erlebnisse. Ich denke an einen Lyrikabend einmal im Monat: Eine Dichterin aus der Region liest, die Leute trinken ein Glas Wein und kaufen danach vielleicht ein signiertes Buch.') },
+      { kind: 'line', speaker: 'tom', text: german('Das klingt nach mehr Arbeit, aber auch nach etwas, das kein Onlinehändler bieten kann. {name}, du kaufst hier ja regelmäßig ein. Würdest du zu so einem Abend kommen?') },
+      { kind: 'reply', to: 'tom', options: [
+        german('Ja, gern. Ein Abend, an dem man die Gedichte von der Dichterin selbst hört, ist etwas ganz anderes, als sie allein zu lesen.'),
+        german('Nur wenn die Bücher an dem Abend die Hälfte kosten.'),
+        german('Nein, Gedichte sollten verboten werden, weil sie sich nicht verkaufen.')
+      ] },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Siehst du, Tom? Die Poesie ist noch nicht verloren. Du rechnest mir aus, was der Abend kosten darf, und ich lade die erste Dichterin ein.') },
+      { kind: 'question', prompt: german('Wie viele Gedichtbände hat Mia im letzten Halbjahr verkauft?'), options: [german('Elf'), german('Zweihundert'), german('Acht')] },
+      { kind: 'question', prompt: german('Was ist laut Mia das Paradoxe?'), options: [german('Die Leute lieben Gedichte, aber nicht als Buch.'), german('Krimis verkaufen sich schlechter als Gedichte.'), german('Gedichte sind teurer als Romane.')] },
+      { kind: 'question', prompt: german('Was verkauft sich bei Mia jedes Jahr sehr gut?'), options: [german('Gedichtkalender und Postkarten mit Versen'), german('Signierte Gedichtbände'), german('Wein')] },
+      { kind: 'question', prompt: german('Warum kann Mia die Preise für neue Gedichtbände nicht senken?'), options: [german('Wegen der Buchpreisbindung'), german('Weil ihr Steuerberater es verbietet'), german('Weil die Bücher schon reduziert sind')] },
+      { kind: 'question', prompt: german('Wer legt in Deutschland den Preis für neue Bücher fest?'), options: [german('Der Verlag'), german('Der Händler'), german('Der Staat')] },
+      { kind: 'question', prompt: german('Was plant Mia?'), options: [german('Einen monatlichen Lyrikabend mit einer Dichterin aus der Region'), german('Das Lyrikregal durch Krimis zu ersetzen'), german('Ihre Buchhandlung zu verkaufen')] }
     ]
   },
   {
@@ -3715,14 +3764,32 @@ export const germanStories: Story[] = [
     scene: 'market',
     cast: ['kim', 'leo'],
     languages: ['de'],
-    title: german('Extra C1 4'),
+    weathers: ['cloudy', 'rainy'],
+    title: german('Wo früher die Mauer stand'),
     beats: [
-      { kind: 'narration', text: german('rein und richten und senken und Single und strafen.') },
-      { kind: 'line', speaker: 'mia', text: german('Strömung ist wichtig und Teilung ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('tödlich und töten sind da.') },
-      { kind: 'narration', text: german('trauen und unfähig.') },
-      { kind: 'question', prompt: german('Was ist Unrecht?'), options: [german('Wandel'), german('Wende'), german('Wohnraum')] },
-      { kind: 'question', prompt: german('Wer hat Unrecht?'), options: [german('Wandel'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Ein grauer Novembersamstag in Berlin. Auf einem Platz, der bis 1989 zum Grenzstreifen gehörte, findet heute ein Wochenmarkt statt. Leo, 62, verkauft hier seit über zwanzig Jahren Honig. Kim, eine Studentin aus Süddeutschland, hält an seinem Stand.') },
+      { kind: 'line', speaker: 'kim', mood: 'curious', text: german('Auf der Tafel dort steht, dass hier früher die Mauer verlief. Das kann man sich heute kaum vorstellen – mit den Marktständen und den Kindern auf den Fahrrädern.') },
+      { kind: 'line', speaker: 'leo', text: german('Ich bin keine zweihundert Meter von hier aufgewachsen, auf der Ostseite. Als Kind durfte ich nicht einmal in die Nähe. Der Streifen war beleuchtet, bewacht und für Flüchtende tödlich.') },
+      { kind: 'line', speaker: 'kim', mood: 'sad', text: german('Wie viele Menschen sind an der Berliner Mauer ums Leben gekommen?') },
+      { kind: 'line', speaker: 'leo', text: german('Nach den Forschungen der Historiker mindestens 140 – in den 28 Jahren von 1961 bis 1989. Die meisten wollten nur in den Westen. Für dieses Unrecht wurden später einige Grenzsoldaten und Politiker verurteilt, aber viele Familien finden bis heute, dass die Strafen zu mild waren.') },
+      { kind: 'line', speaker: 'kim', text: german('Und wie haben Sie den Fall der Mauer erlebt?') },
+      { kind: 'line', speaker: 'leo', mood: 'happy', text: german('Am Abend des 9. November saß ich mit meiner Frau vor dem Fernseher. Erst haben wir unseren Ohren nicht getraut. Dann sind wir in unseren Hausschuhen losgelaufen. Um Mitternacht standen wir auf der anderen Seite und haben mit Fremden Sekt getrunken.') },
+      { kind: 'line', speaker: 'kim', mood: 'curious', text: german('Und nach der Wende? Hat sich Ihr Leben zum Besseren verändert?') },
+      { kind: 'line', speaker: 'leo', text: german('Teils, teils. Die Freiheit war ein Geschenk. Aber mein Betrieb wurde aufgelöst, und mit Ende zwanzig musste ich ganz neu anfangen. Nach ein paar Umwegen bin ich beim Honig gelandet. Und dieser Platz hat einen enormen Wandel durchgemacht. Wo früher Brache war, stehen heute Wohnungen, die sich viele Alteingesessene nicht mehr leisten können. Wohnraum ist hier knapp geworden.') },
+      { kind: 'line', speaker: 'kim', text: german('Das ist fast die Ironie der Geschichte: Erst trennte eine Mauer die Menschen, jetzt trennt sie die Miete.') },
+      { kind: 'line', speaker: 'leo', mood: 'laughing', text: german('Gut gesagt, das schreibe ich mir auf. {name}, Sie hören ja schon eine Weile zu. Was nehmen Sie aus so einem Ort mit?') },
+      { kind: 'reply', to: 'leo', options: [
+        german('Dass die Teilung erst eine Generation her ist und dass man solche Orte erhalten sollte, damit sie nicht vergessen wird.'),
+        german('Dass die Mauer eigentlich gar nicht so schlimm war.'),
+        german('Dass man auf einem Markt nicht über Geschichte sprechen sollte.')
+      ] },
+      { kind: 'narration', text: german('Kim kauft ein Glas Lindenhonig. Leo legt ihr eine alte Postkarte vom Grenzübergang dazu – „für Ihr Studium“, sagt er.') },
+      { kind: 'question', prompt: german('Was befand sich bis 1989 auf dem Platz des heutigen Marktes?'), options: [german('Der Grenzstreifen der Berliner Mauer'), german('Ein Bahnhof'), german('Ein großer Park')] },
+      { kind: 'question', prompt: german('Wie viele Menschen sind laut Leo mindestens an der Berliner Mauer ums Leben gekommen?'), options: [german('140'), german('28'), german('1 000')] },
+      { kind: 'question', prompt: german('Wie lange stand die Berliner Mauer?'), options: [german('28 Jahre'), german('40 Jahre'), german('Zwölf Jahre')] },
+      { kind: 'question', prompt: german('Wie hat Leo vom Fall der Mauer erfahren?'), options: [german('Aus dem Fernsehen'), german('Von einem Grenzsoldaten'), german('Aus der Zeitung am nächsten Morgen')] },
+      { kind: 'question', prompt: german('Warum verkauft Leo heute Honig?'), options: [german('Sein Betrieb wurde nach der Wende aufgelöst, und er musste neu anfangen.'), german('Er hat schon immer Bienen gehalten.'), german('Er hat den Stand von seinem Vater geerbt.')] },
+      { kind: 'question', prompt: german('Was meint Kim mit „jetzt trennt sie die Miete“?'), options: [german('Dass hohe Mieten heute viele Menschen aus dem Viertel verdrängen'), german('Dass die Mauer wieder aufgebaut wird'), german('Dass die Marktstände zu teuer sind')] }
     ]
   },
   {
@@ -3731,14 +3798,32 @@ export const germanStories: Story[] = [
     scene: 'park',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Extra C1 5'),
+    weathers: ['sunny'],
+    title: german('Hitze in der Stadt'),
     beats: [
-      { kind: 'narration', text: german('.') },
-      { kind: 'line', speaker: 'mia', text: german('undefined ist wichtig und undefined ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('undefined und undefined sind da.') },
-      { kind: 'narration', text: german('undefined und undefined.') },
-      { kind: 'question', prompt: german('Was ist Wort?'), options: [german('Option'), german('Option'), german('Option')] },
-      { kind: 'question', prompt: german('Wer hat Wort?'), options: [german('Option'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Ende Juli, die dritte Hitzewelle des Sommers. Am Nachmittag zeigt das Thermometer in der Innenstadt 36 Grad. Mia und Tom haben sich in den Schatten der alten Linden im Stadtpark geflüchtet.') },
+      { kind: 'line', speaker: 'tom', mood: 'sleepy', text: german('Es ist unglaublich: Hier unter den Bäumen ist es gefühlt zehn Grad kühler als auf dem Marktplatz.') },
+      { kind: 'line', speaker: 'mia', text: german('Das ist nicht nur gefühlt. Ich arbeite ja im Umweltamt, und wir haben gemessen: Auf dem gepflasterten Platz heizt sich die Oberfläche auf über fünfzig Grad auf, hier im Gras bleibt sie unter dreißig. Ein großer Baum verdunstet an einem heißen Tag Hunderte Liter Wasser und kühlt so wie eine natürliche Klimaanlage.') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Und warum werden dann nicht einfach überall Bäume gepflanzt?') },
+      { kind: 'line', speaker: 'mia', text: german('Weil der Untergrund voller Leitungen ist, weil Bäume Platz brauchen, der heute von Parkplätzen belegt ist, und weil ein junger Baum zwanzig Jahre braucht, bis er wirklich Schatten spendet. Klimaanpassung ist ein Marathon, kein Sprint.') },
+      { kind: 'line', speaker: 'tom', text: german('Aber Parkplätze abzuschaffen, ist politisch heikel. Jeder, der das vorschlägt, hat sofort den halben Stadtrat gegen sich.') },
+      { kind: 'line', speaker: 'mia', mood: 'worried', text: german('Ich weiß. Nur ist Hitze kein Komfortproblem, sondern ein Gesundheitsrisiko. In heißen Sommern sterben in Deutschland nach Schätzungen des Robert Koch-Instituts mehrere Tausend Menschen zusätzlich, vor allem Ältere und chronisch Kranke.') },
+      { kind: 'line', speaker: 'tom', mood: 'surprised', text: german('Mehrere Tausend? Das war mir nicht bewusst. Darüber wird viel weniger berichtet als über Verkehrsunfälle.') },
+      { kind: 'line', speaker: 'mia', text: german('Weil Hitzetote unsichtbar sind. Niemand stirbt dramatisch auf der Straße; es ist das geschwächte Herz in einer stickigen Dachwohnung. Deshalb planen wir einen Hitzeaktionsplan: Trinkbrunnen, kühle Räume in öffentlichen Gebäuden und Nachbarn, die bei älteren Menschen klingeln.') },
+      { kind: 'line', speaker: 'tom', text: german('Das klingt vernünftig, aber es behandelt nur die Symptome. Ist das nicht eine Ausrede, um die eigentlichen Ursachen nicht anzugehen?') },
+      { kind: 'line', speaker: 'mia', text: german('Das eine schließt das andere nicht aus. Wir müssen Emissionen senken und uns gleichzeitig an das Klima anpassen, das wir schon haben. {name}, was hältst du für die wirksamste Maßnahme in einer Stadt wie dieser?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Ich würde gepflasterte Flächen entsiegeln und mehr Bäume pflanzen, auch wenn dafür Parkplätze wegfallen, und kurzfristig kühle Räume für ältere Menschen einrichten.'),
+        german('Ich würde jedem Haushalt eine Klimaanlage schenken, dann ist das Problem gelöst.'),
+        german('Ich würde gar nichts tun; im Sommer ist es nun einmal heiß.')
+      ] },
+      { kind: 'line', speaker: 'tom', mood: 'happy', text: german('Ich gebe mich geschlagen. Aber bevor wir die Stadt retten, hole ich uns zwei Wasser. Auch das gehört zum Hitzeschutz.') },
+      { kind: 'question', prompt: german('Wie warm ist es in der Innenstadt?'), options: [german('36 Grad'), german('30 Grad'), german('50 Grad')] },
+      { kind: 'question', prompt: german('Wie kühlt ein großer Baum seine Umgebung?'), options: [german('Er verdunstet viel Wasser.'), german('Er hält den Wind ab.'), german('Er speichert die Wärme im Holz.')] },
+      { kind: 'question', prompt: german('Warum werden nicht einfach überall Bäume gepflanzt?'), options: [german('Wegen Leitungen im Boden, fehlendem Platz und weil Bäume lange wachsen müssen'), german('Weil Bäume zu teuer sind'), german('Weil die Bürger keine Bäume wollen')] },
+      { kind: 'question', prompt: german('Wer ist laut Mia durch Hitze besonders gefährdet?'), options: [german('Ältere und chronisch kranke Menschen'), german('Kinder auf Spielplätzen'), german('Autofahrer')] },
+      { kind: 'question', prompt: german('Warum nennt Mia Hitzetote „unsichtbar“?'), options: [german('Weil sie still in ihren Wohnungen sterben, nicht dramatisch in der Öffentlichkeit'), german('Weil es sie gar nicht gibt'), german('Weil die Statistik geheim ist')] },
+      { kind: 'question', prompt: german('Was kritisiert Tom am Hitzeaktionsplan?'), options: [german('Er behandle nur die Symptome, nicht die Ursachen.'), german('Er sei zu teuer.'), german('Er komme zu früh.')] }
     ]
   },
 
