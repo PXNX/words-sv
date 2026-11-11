@@ -3317,17 +3317,30 @@ export const germanStories: Story[] = [
     scene: 'square',
     cast: ['simon', 'jana'],
     languages: ['de'],
-    title: german('Demokratie'),
+    weathers: ['sunny', 'cloudy'],
+    title: german('Per Los in den Bürgerrat'),
     beats: [
-      { kind: 'narration', text: german('Sim und Jana diskutieren Demokratie. Sie sprechen über eine Funktion und einen Einsatz.') },
-      { kind: 'line', speaker: 'simon', text: german('Hallo {name}! Ich sehe eine Funktion und einen Einsatz.') },
-      { kind: 'line', speaker: 'jana', text: german('Gut. Ich sehe eine Einheit und eine Handlung.') },
-      { kind: 'reply', to: 'simon', options: [german('Ich bin eine Funktion.'), german('Ich bin ein Einsatz.'), german('Ich habe eine Einheit.')] },
-      { kind: 'line', speaker: 'jana', text: german('Danke! Wir müssen eine Handlung analysieren und einen Kontrast finden.') },
-      { kind: 'question', prompt: german('Was sieht Sim?'), options: [german('Funktion und Einsatz'), german('Einheit und Handlung'), german('Apparat und Auto')] },
-      { kind: 'question', prompt: german('Was sieht Jana?'), options: [german('Einheit und Handlung'), german('Funktion und Einsatz'), german('Band und Baby')] },
-      { kind: 'question', prompt: german('Was müssen sie analysieren?'), options: [german('Eine Handlung'), german('Einen Apparat'), german('Ein Auto')] },
-      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Kontrast'), german('Einen Abschluss'), german('Einen Apparat')] }
+      { kind: 'narration', text: german('Samstagvormittag auf dem Marktplatz. Die Stadt hat hundertsechzig Einwohnerinnen und Einwohner per Los ausgewählt, die in einem Bürgerrat Empfehlungen zur Verkehrsplanung erarbeiten sollen. Jana ist eine davon und betreut heute den Infostand. Simon bleibt skeptisch davor stehen.') },
+      { kind: 'line', speaker: 'simon', mood: 'curious', text: german('Moin, Jana. Ich versteh das nicht ganz. Wir haben doch einen gewählten Gemeinderat. Wozu braucht es da noch hundertsechzig zufällig ausgeloste Leute?') },
+      { kind: 'line', speaker: 'jana', text: german('Gerade weil sie zufällig ausgewählt wurden. Im Gemeinderat sitzen überwiegend Akademiker über fünfzig. Im Bürgerrat sitzt die Pflegekraft im Schichtdienst neben dem Azubi und der Rentnerin vom Dorfrand – Menschen, die sonst nie für ein Amt kandidieren würden.') },
+      { kind: 'line', speaker: 'simon', text: german('Schön und gut. Aber niemand hat diese Leute gewählt. Wem gegenüber sind sie denn rechenschaftspflichtig? Ein Gemeinderat, der Mist baut, wird abgewählt. Ein ausgeloster Bürger geht einfach wieder nach Hause.') },
+      { kind: 'line', speaker: 'jana', text: german('Deshalb entscheidet der Bürgerrat auch nichts. Er gibt Empfehlungen ab, und der Gemeinderat muss öffentlich begründen, ob und warum er ihnen folgt. Die Verantwortung bleibt also dort, wo sie hingehört.') },
+      { kind: 'narration', text: german('Jana zeigt Simon den Ablauf: vier Wochenenden, an denen Fachleute aus Verkehrsplanung, Handel und Umweltverbänden vortragen. Erst danach wird in kleinen, moderierten Gruppen diskutiert.') },
+      { kind: 'line', speaker: 'simon', mood: 'curious', text: german('Und was soll dabei rauskommen, was nicht auch bei einer Bürgerversammlung rauskäme?') },
+      { kind: 'line', speaker: 'jana', text: german('Zu einer Bürgerversammlung kommen vor allem die, die ohnehin schon eine feste Meinung haben – meist die Lautesten. Hier dagegen müssen sich Leute, die mit einer Position kommen, wochenlang mit Argumenten auseinandersetzen. Studien zeigen, dass viele dabei ihre Meinung tatsächlich ändern.') },
+      { kind: 'line', speaker: 'simon', mood: 'laughing', text: german('Dat wär ja mal wat. Im Internet ändert keiner seine Meinung. {name}, wat meinst du: Hat so ein ausgeloster Rat überhaupt eine demokratische Legitimation?') },
+      { kind: 'reply', to: 'simon', options: [
+        german('Er ersetzt das Parlament nicht, kann aber dessen Entscheidungen durch gut begründete Empfehlungen verbessern.'),
+        german('Ja, er sollte den Gemeinderat ersetzen, weil Losen gerechter ist als Wählen.'),
+        german('Nein, denn ausgeloste Menschen dürfen in Deutschland gar nicht wählen gehen.')
+      ] },
+      { kind: 'line', speaker: 'simon', text: german('Na gut. Unter einer Bedingung lass ich mich überzeugen: Wenn der Gemeinderat die Empfehlungen ignoriert, will ich eine öffentliche Begründung lesen – nicht nur einen Satz im Protokoll.') },
+      { kind: 'line', speaker: 'jana', mood: 'happy', text: german('Genau das steht in der Satzung. Komm doch zur Abschlusspräsentation im Mai. Dann kannst du dir selbst ein Urteil bilden.') },
+      { kind: 'question', prompt: german('Wie wurden die Mitglieder des Bürgerrats ausgewählt?'), options: [german('Per Los'), german('Durch eine Wahl'), german('Vom Gemeinderat ernannt')] },
+      { kind: 'question', prompt: german('Was ist laut Jana ein Vorteil des Losverfahrens?'), options: [german('Es bringt Menschen zusammen, die sonst nie für ein Amt kandidieren würden.'), german('Es ist billiger als eine Wahl.'), german('Es ersetzt den Gemeinderat.')] },
+      { kind: 'question', prompt: german('Was kritisiert Simon zunächst?'), options: [german('Die ausgelosten Mitglieder seien niemandem gegenüber rechenschaftspflichtig.'), german('Der Bürgerrat tage zu selten.'), german('Es seien zu viele Akademiker dabei.')] },
+      { kind: 'question', prompt: german('Welche Befugnis hat der Bürgerrat?'), options: [german('Er gibt Empfehlungen ab, über die der Gemeinderat entscheidet.'), german('Er beschließt verbindliche Gesetze.'), german('Er kann den Gemeinderat absetzen.')] },
+      { kind: 'question', prompt: german('Worin unterscheidet sich der Bürgerrat laut Jana von einer Bürgerversammlung?'), options: [german('Die Teilnehmer setzen sich wochenlang mit Argumenten auseinander.'), german('Dort dürfen nur Fachleute sprechen.'), german('Er findet ausschließlich online statt.')] }
     ]
   },
   {
@@ -3336,17 +3349,29 @@ export const germanStories: Story[] = [
     scene: 'cafe',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Social Media'),
+    title: german('Ab sechzehn?'),
     beats: [
-      { kind: 'narration', text: german('Mia und Tom diskutieren Social Media. Sie haben eine Ansicht und einen Ausdruck.') },
-      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Ich habe eine Ansicht und einen Ausdruck.') },
-      { kind: 'line', speaker: 'tom', text: german('Gut. Ich habe einen Einsatz und eine Einheit.') },
-      { kind: 'reply', to: 'mia', options: [german('Ich bin eine Ansicht.'), german('Ich bin ein Ausdruck.'), german('Ich habe einen Einsatz.')] },
-      { kind: 'line', speaker: 'tom', text: german('Danke! Wir müssen eine Analyse machen und einen Kontrast finden.') },
-      { kind: 'question', prompt: german('Was hat Mia?'), options: [german('Ansicht und Ausdruck'), german('Einsatz und Einheit'), german('Apparat und Auto')] },
-      { kind: 'question', prompt: german('Was hat Tom?'), options: [german('Einsatz und Einheit'), german('Ansicht und Ausdruck'), german('Band und Baby')] },
-      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Analyse'), german('Abschluss'), german('Apparat')] },
-      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Kontrast'), german('Einen Abschluss'), german('Einen Apparat')] }
+      { kind: 'narration', text: german('Ein Café nahe der Gesamtschule, Freitagnachmittag. Mia unterrichtet dort Deutsch und Politik. Tom ist Vater einer dreizehnjährigen Tochter. Auf dem Tisch liegt eine Zeitung mit der Schlagzeile: „Soziale Netzwerke erst ab 16? Bundesregierung prüft Verbot“.') },
+      { kind: 'line', speaker: 'tom', text: german('Ehrlich gesagt wäre ich erleichtert. Meine Tochter verbringt täglich vier Stunden mit kurzen Videos. Seitdem schläft sie schlecht und vergleicht sich ständig mit irgendwelchen Influencerinnen.') },
+      { kind: 'line', speaker: 'mia', text: german('Das Problem sehe ich jeden Tag im Unterricht. Trotzdem bezweifle ich, dass ein Verbot es löst. Wie willst du denn kontrollieren, wie alt jemand ist?') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Über eine Altersverifikation, etwa mit dem Personalausweis. Beim Online-Banking funktioniert das ja auch.') },
+      { kind: 'line', speaker: 'mia', text: german('Dann müssten aber alle Nutzer, auch Erwachsene, ihre Identität gegenüber Plattformen nachweisen, deren Geschäftsmodell auf dem Sammeln von Daten beruht. Datenschutzrechtlich halte ich das für hochproblematisch. Und technisch versierte Jugendliche umgehen so etwas mit einem VPN in fünf Minuten.') },
+      { kind: 'line', speaker: 'tom', mood: 'angry', text: german('Also sollen wir einfach zusehen? Wir verbieten Dreizehnjährigen auch Alkohol, obwohl manche trotzdem trinken.') },
+      { kind: 'line', speaker: 'mia', text: german('Der Vergleich hinkt ein wenig. Soziale Medien sind für Jugendliche auch ein Ort, an dem sie sich informieren, Freundschaften pflegen und – gerade wenn sie in ihrem Umfeld ausgegrenzt werden – Gleichgesinnte finden. Ein pauschales Verbot nimmt ihnen das alles.') },
+      { kind: 'narration', text: german('Tom rührt eine Weile schweigend in seinem Kaffee. Dann erzählt er, dass seine Tochter über eine Plattform Anschluss an eine Gruppe queerer Jugendlicher gefunden habe, die ihr sehr geholfen habe.') },
+      { kind: 'line', speaker: 'tom', text: german('Vielleicht ist das Problem weniger das Alter als die Art, wie die Plattformen gebaut sind. Endloses Scrollen, Algorithmen, die auf maximale Verweildauer optimiert sind … {name}, wo würdest du ansetzen?') },
+      { kind: 'reply', to: 'tom', options: [
+        german('Bei den Plattformen: süchtig machende Funktionen für Minderjährige einschränken und zugleich Medienkompetenz in der Schule stärken.'),
+        german('Bei den Jugendlichen: Man sollte ihnen ihre Handys bis zum achtzehnten Geburtstag wegnehmen.'),
+        german('Gar nicht, denn Algorithmen haben keinerlei Einfluss darauf, was Jugendliche sehen.')
+      ] },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Genau so sehe ich es auch. Und wir Erwachsenen sollten ehrlich sein: Wer beim Abendessen selbst ständig aufs Handy schaut, kann von seinen Kindern schwer etwas anderes erwarten.') },
+      { kind: 'line', speaker: 'tom', mood: 'laughing', text: german('Touché. Dann fange ich heute Abend bei mir selbst an: Handys bleiben beim Essen in der Küche – meins eingeschlossen.') },
+      { kind: 'question', prompt: german('Worüber wird in der Zeitung berichtet?'), options: [german('Über ein mögliches Verbot sozialer Netzwerke unter 16 Jahren'), german('Über eine neue Schule in der Stadt'), german('Über Datenschutz beim Online-Banking')] },
+      { kind: 'question', prompt: german('Warum macht sich Tom Sorgen um seine Tochter?'), options: [german('Sie verbringt täglich vier Stunden mit Videos, schläft schlecht und vergleicht sich ständig.'), german('Sie hat keine Freunde in der Schule.'), german('Sie möchte Influencerin werden.')] },
+      { kind: 'question', prompt: german('Welche Bedenken hat Mia gegenüber einer Altersverifikation?'), options: [german('Alle Nutzer müssten Plattformen ihre Identität nachweisen, und Jugendliche könnten sie leicht umgehen.'), german('Sie wäre zu teuer für die Schulen.'), german('Sie würde nur für Erwachsene gelten.')] },
+      { kind: 'question', prompt: german('Warum hält Mia den Vergleich mit Alkohol für unpassend?'), options: [german('Soziale Medien bieten Jugendlichen auch Information, Freundschaft und Gemeinschaft.'), german('Alkohol ist für Jugendliche erlaubt.'), german('Soziale Medien sind völlig ungefährlich.')] },
+      { kind: 'question', prompt: german('Was beschließt Tom am Ende?'), options: [german('Beim Abendessen bleiben alle Handys in der Küche, auch seins.'), german('Er verbietet seiner Tochter alle sozialen Netzwerke.'), german('Er schreibt einen Brief an die Bundesregierung.')] }
     ]
   },
   {
@@ -3355,17 +3380,28 @@ export const germanStories: Story[] = [
     scene: 'office',
     cast: ['simon', 'jana'],
     languages: ['de'],
-    title: german('Workshop'),
+    title: german('Wer ist schuld?'),
     beats: [
-      { kind: 'narration', text: german('Sim und Jana sind in einem Workshop. Sie haben eine Funktion und einen Einsatz.') },
-      { kind: 'line', speaker: 'simon', text: german('Hallo {name}! Ich sehe eine Funktion und einen Einsatz.') },
-      { kind: 'line', speaker: 'jana', text: german('Gut. Ich sehe eine Einheit und eine Handlung.') },
-      { kind: 'reply', to: 'simon', options: [german('Ich bin eine Funktion.'), german('Ich bin ein Einsatz.'), german('Ich habe eine Einheit.')] },
-      { kind: 'line', speaker: 'jana', text: german('Danke! Wir müssen eine Handlung analysieren und einen Kontrast finden.') },
-      { kind: 'question', prompt: german('Was sieht Sim?'), options: [german('Funktion und Einsatz'), german('Einheit und Handlung'), german('Apparat und Auto')] },
-      { kind: 'question', prompt: german('Was sieht Jana?'), options: [german('Einheit und Handlung'), german('Funktion und Einsatz'), german('Band und Baby')] },
-      { kind: 'question', prompt: german('Was müssen sie analysieren?'), options: [german('Eine Handlung'), german('Einen Apparat'), german('Ein Auto')] },
-      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Kontrast'), german('Einen Abschluss'), german('Einen Apparat')] }
+      { kind: 'narration', text: german('Montag, 9 Uhr, Besprechungsraum eines Herstellers von Medizintechnik. Vor drei Wochen musste die Firma tausend Blutzuckermessgeräte zurückrufen, weil ein Sensor falsch kalibriert war. Jana moderiert heute einen Workshop zur Fehleranalyse. Simons Team hat den Sensor entwickelt.') },
+      { kind: 'line', speaker: 'simon', mood: 'angry', text: german('Bevor wir anfangen: Mein Team hat sauber gearbeitet. Die Kalibrierwerte stammen aus der Spezifikation, die wir vom Vertrieb bekommen haben. Wenn da Fehler drin waren, ist das nicht unsere Schuld.') },
+      { kind: 'line', speaker: 'jana', text: german('Simon, genau darum geht es heute nicht. Ich möchte nicht wissen, wer schuld ist, sondern wie es dazu kommen konnte, dass ein falscher Wert durch vier Abteilungen gegangen ist, ohne dass es jemandem auffiel.') },
+      { kind: 'line', speaker: 'simon', text: german('Nö, Moment. Wenn wir keinen Verantwortlichen benennen, lernt doch niemand etwas daraus.') },
+      { kind: 'line', speaker: 'jana', text: german('Im Gegenteil. Wenn Menschen Angst haben, für Fehler bestraft zu werden, verschweigen sie Probleme – und dann wiederholen sie sich. In der Luftfahrt gilt das schon seit Jahrzehnten: Wer einen Beinahe-Unfall meldet, wird nicht bestraft. Deshalb ist Fliegen heute so sicher.') },
+      { kind: 'narration', text: german('An der Wand entsteht eine Zeitleiste. Schritt für Schritt wird deutlich: Der falsche Wert stammte aus einer veralteten Excel-Tabelle. Zwei Mitarbeiterinnen hatten Zweifel – aber niemand war offiziell für die Prüfung zuständig.') },
+      { kind: 'line', speaker: 'simon', mood: 'surprised', text: german('Kiek mal an. Eine Kollegin aus meinem Team hat damals sogar nachgefragt, aber die Antwort war nur: „Passt schon, die Werte sind freigegeben.“ Und dann hat sie nicht weiter gebohrt.') },
+      { kind: 'line', speaker: 'jana', text: german('Und genau das ist der Punkt: Der Fehler lag nicht bei einer einzelnen Person, sondern im Prozess. Es gab keine klare Zuständigkeit und keine Kultur, in der Zweifel ernst genommen werden. {name}, Sie waren damals in der Qualitätssicherung. Was wäre aus Ihrer Sicht die wichtigste Konsequenz?') },
+      { kind: 'reply', to: 'jana', options: [
+        german('Eine unabhängige Prüfung der Kalibrierwerte und ein Weg, Zweifel ohne Angst vor Nachteilen zu melden.'),
+        german('Die Kollegin, die nachgefragt hat, sollte abgemahnt werden.'),
+        german('Man sollte künftig auf Sensoren verzichten, dann kann auch nichts falsch kalibriert werden.')
+      ] },
+      { kind: 'line', speaker: 'simon', text: german('Dat kann ich unterschreiben. Und ich nehme meinen Satz von vorhin zurück. Es ging mir weniger um den Sensor als darum, mein Team zu schützen.') },
+      { kind: 'line', speaker: 'jana', mood: 'happy', text: german('Das ehrt dich. Aber dein Team schützt du am besten, indem es Fehler offen ansprechen kann – ohne dass jemand den Kopf hinhalten muss.') },
+      { kind: 'question', prompt: german('Warum musste die Firma Geräte zurückrufen?'), options: [german('Ein Sensor war falsch kalibriert.'), german('Die Akkus waren zu schwach.'), german('Die Geräte waren zu teuer.')] },
+      { kind: 'question', prompt: german('Wie reagiert Simon zu Beginn des Workshops?'), options: [german('Er verteidigt sein Team und schiebt die Schuld auf den Vertrieb.'), german('Er entschuldigt sich sofort.'), german('Er schlägt vor, den Workshop abzusagen.')] },
+      { kind: 'question', prompt: german('Welches Beispiel nennt Jana für eine gute Fehlerkultur?'), options: [german('Die Luftfahrt, in der Beinahe-Unfälle straffrei gemeldet werden'), german('Die Autoindustrie, die Fehler immer verschweigt'), german('Die Bahn, die nie Fehler macht')] },
+      { kind: 'question', prompt: german('Woher stammte der falsche Wert?'), options: [german('Aus einer veralteten Excel-Tabelle'), german('Von einem Fehler im Sensor selbst'), german('Aus einer Kundenreklamation')] },
+      { kind: 'question', prompt: german('Wo lag laut Jana die eigentliche Ursache?'), options: [german('Im Prozess: keine klare Zuständigkeit und keine Kultur, in der Zweifel ernst genommen werden'), german('Bei der Kollegin, die nachgefragt hat'), german('Bei Simon persönlich')] }
     ]
   },
   {
@@ -3374,17 +3410,30 @@ export const germanStories: Story[] = [
     scene: 'park',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Klima'),
+    weathers: ['sunny', 'cloudy'],
+    title: german('Fliegen oder nicht fliegen'),
     beats: [
-      { kind: 'narration', text: german('Mia und Tom sprechen über Klima. Sie haben einen Kontrast und eine Funktion.') },
-      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Ich sehe einen Kontrast und eine Funktion.') },
-      { kind: 'line', speaker: 'tom', text: german('Gut. Ich sehe einen Einsatz und eine Einheit.') },
-      { kind: 'reply', to: 'mia', options: [german('Ich bin ein Kontrast.'), german('Ich bin eine Funktion.'), german('Ich habe einen Einsatz.')] },
-      { kind: 'line', speaker: 'tom', text: german('Danke! Wir müssen eine Analyse machen und einen Kontrast finden.') },
-      { kind: 'question', prompt: german('Was sieht Mia?'), options: [german('Kontrast und Funktion'), german('Einsatz und Einheit'), german('Apparat und Auto')] },
-      { kind: 'question', prompt: german('Was sieht Tom?'), options: [german('Einsatz und Einheit'), german('Kontrast und Funktion'), german('Band und Baby')] },
-      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Analyse'), german('Abschluss'), german('Apparat')] },
-      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Kontrast'), german('Einen Abschluss'), german('Einen Apparat')] }
+      { kind: 'narration', text: german('Ein lauer Abend im Mai. Mia und Tom joggen eine Runde durch den Park und setzen sich danach auf eine Bank am Teich. Tom hat seit einem Jahr kein Flugzeug mehr betreten – aus Überzeugung.') },
+      { kind: 'line', speaker: 'mia', mood: 'worried', text: german('Ich muss dir was sagen. Im Dezember fliege ich nach Santiago. Meine Großmutter wird neunzig, und die ganze Familie kommt zusammen.') },
+      { kind: 'line', speaker: 'tom', mood: 'surprised', text: german('Nach Chile? Weißt du, wie viel CO2 so ein Flug verursacht? Hin und zurück kommst du locker auf vier bis fünf Tonnen. Das ist mehr als doppelt so viel, wie ein Mensch in Indien im ganzen Jahr ausstößt.') },
+      { kind: 'line', speaker: 'mia', text: german('Das weiß ich. Und ich habe ehrlich gesagt ein schlechtes Gewissen. Aber es ist vielleicht die letzte Gelegenheit, meine Großmutter zu sehen. Soll ich darauf verzichten, damit meine Bilanz stimmt?') },
+      { kind: 'line', speaker: 'tom', text: german('Nein, so meinte ich das nicht. Aber man könnte die Emissionen wenigstens kompensieren – über ein Projekt, das Wälder aufforstet oder Solaranlagen finanziert.') },
+      { kind: 'line', speaker: 'mia', text: german('Kompensation ist leider oft ein Ablasshandel. Untersuchungen haben gezeigt, dass viele Zertifikate weit weniger CO2 einsparen, als sie versprechen. Ich halte es für ehrlicher, weniger zu fliegen, statt weiterzufliegen und sich freizukaufen.') },
+      { kind: 'narration', text: german('Tom schweigt eine Weile. Auf dem Teich landen zwei Enten.') },
+      { kind: 'line', speaker: 'tom', mood: 'sad', text: german('Manchmal frage ich mich ohnehin, ob mein Verzicht etwas bringt. Solange Kohlekraftwerke laufen und Kerosin steuerfrei ist, ist das doch ein Tropfen auf den heißen Stein.') },
+      { kind: 'line', speaker: 'mia', text: german('Ich glaube, beides gehört zusammen: Politische Rahmenbedingungen verändern am meisten, aber persönliche Entscheidungen verschieben, was gesellschaftlich als normal gilt. {name}, wie siehst du das: Bringt individueller Verzicht etwas?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Allein reicht er nicht, aber er kann Normen verändern und politischen Wandel glaubwürdiger machen.'),
+        german('Ja, wenn alle aufhören zu fliegen, braucht man keine Klimapolitik mehr.'),
+        german('Nein, denn Flugzeuge verursachen überhaupt kein CO2.')
+      ] },
+      { kind: 'line', speaker: 'tom', mood: 'happy', text: german('Dann schlage ich dir einen Kompromiss vor: Du fliegst zu deiner Großmutter, bleibst aber gleich vier Wochen statt zehn Tagen. Und für den Rest des Jahres machen wir alle Reisen mit dem Zug.') },
+      { kind: 'line', speaker: 'mia', mood: 'laughing', text: german('Abgemacht. Und du hörst auf, mir ständig Tonnen vorzurechnen.') },
+      { kind: 'question', prompt: german('Warum möchte Mia nach Chile fliegen?'), options: [german('Ihre Großmutter wird neunzig, und die Familie kommt zusammen.'), german('Sie hat dort eine neue Stelle.'), german('Sie möchte dort Urlaub am Meer machen.')] },
+      { kind: 'question', prompt: german('Wie viel CO2 verursacht der Flug laut Tom ungefähr?'), options: [german('Vier bis fünf Tonnen'), german('Eine halbe Tonne'), german('Fünfzig Tonnen')] },
+      { kind: 'question', prompt: german('Was hält Mia von Kompensation?'), options: [german('Sie hält sie oft für einen Ablasshandel, weil viele Zertifikate weniger einsparen als versprochen.'), german('Sie findet sie die beste Lösung.'), german('Sie weiß nicht, was das ist.')] },
+      { kind: 'question', prompt: german('Warum zweifelt Tom an seinem Verzicht?'), options: [german('Weil Kohlekraftwerke laufen und Kerosin steuerfrei ist'), german('Weil er gern wieder fliegen möchte'), german('Weil Züge zu teuer sind')] },
+      { kind: 'question', prompt: german('Welchen Kompromiss schlägt Tom vor?'), options: [german('Mia bleibt länger in Chile, und alle anderen Reisen des Jahres machen sie mit dem Zug.'), german('Mia fliegt nur in eine Richtung.'), german('Tom fliegt mit nach Chile.')] }
     ]
   },
   {
@@ -3393,17 +3442,29 @@ export const germanStories: Story[] = [
     scene: 'library',
     cast: ['simon', 'jana'],
     languages: ['de'],
-    title: german('Wissenschaft'),
+    title: german('Ein Ergebnis, das keiner will'),
     beats: [
-      { kind: 'narration', text: german('Sim und Jana diskutieren Wissenschaft. Sie haben eine Einheit und einen Einsatz.') },
-      { kind: 'line', speaker: 'simon', text: german('Hallo {name}! Ich sehe eine Einheit und einen Einsatz.') },
-      { kind: 'line', speaker: 'jana', text: german('Gut. Ich sehe eine Handlung und einen Kontrast.') },
-      { kind: 'reply', to: 'simon', options: [german('Ich bin eine Einheit.'), german('Ich bin ein Einsatz.'), german('Ich habe eine Handlung.')] },
-      { kind: 'line', speaker: 'jana', text: german('Danke! Wir müssen einen Ausdruck finden und eine Funktion analysieren.') },
-      { kind: 'question', prompt: german('Was sieht Sim?'), options: [german('Einheit und Einsatz'), german('Handlung und Kontrast'), german('Apparat und Auto')] },
-      { kind: 'question', prompt: german('Was sieht Jana?'), options: [german('Handlung und Kontrast'), german('Einheit und Einsatz'), german('Band und Baby')] },
-      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Ausdruck'), german('Einen Abschluss'), german('Einen Apparat')] },
-      { kind: 'question', prompt: german('Was müssen sie analysieren?'), options: [german('Eine Funktion'), german('Einen Abschluss'), german('Einen Abfall')] }
+      { kind: 'narration', text: german('Die Universitätsbibliothek, kurz vor Mitternacht. Jana sitzt seit Stunden vor ihrem Laptop. Für ihre Masterarbeit hat sie eine berühmte psychologische Studie wiederholt – mit dreimal so vielen Versuchspersonen wie im Original. Simon bringt ihr einen Kaffee.') },
+      { kind: 'line', speaker: 'simon', text: german('Moin, oder besser: Gute Nacht. Du siehst aus, als hättest du ein Gespenst gesehen.') },
+      { kind: 'line', speaker: 'jana', mood: 'sad', text: german('Schlimmer. Ich habe gar nichts gesehen. Der Effekt aus der Originalstudie taucht in meinen Daten schlicht nicht auf. Null. Monatelange Arbeit – und kein Ergebnis.') },
+      { kind: 'line', speaker: 'simon', mood: 'curious', text: german('Moment mal. Kein Effekt ist doch auch ein Ergebnis. Bist du sicher, dass du alles genauso gemacht hast wie im Original?') },
+      { kind: 'line', speaker: 'jana', text: german('Ich habe mein Vorgehen sogar vorher öffentlich registriert: Hypothese, Stichprobengröße, Auswertungsmethode. Ich konnte also gar nicht nachträglich an den Daten herumdrehen, bis irgendwas signifikant wird.') },
+      { kind: 'line', speaker: 'simon', text: german('Dann ist dein Ergebnis wahrscheinlich belastbarer als die Originalstudie. Die hatte, wenn ich mich recht entsinne, gerade mal vierzig Versuchspersonen.') },
+      { kind: 'narration', text: german('Jana öffnet einen Artikel über die sogenannte Replikationskrise. In einem großen Projekt ließen sich nur knapp vierzig Prozent von hundert psychologischen Studien erfolgreich wiederholen.') },
+      { kind: 'line', speaker: 'jana', mood: 'worried', text: german('Aber Fachzeitschriften veröffentlichen fast nur positive Ergebnisse. Mit einem „Hat nicht funktioniert“ lockt man niemanden hinter dem Ofen hervor. Meine Betreuerin hat selbst auf dieser Studie aufgebaut. Die wird nicht begeistert sein.') },
+      { kind: 'line', speaker: 'simon', text: german('Wenn nur Erfolge veröffentlicht werden, entsteht ein völlig schiefes Bild. Dann glauben alle an Effekte, die es gar nicht gibt. {name}, du schreibst gerade deine Doktorarbeit über Forschungsmethoden. Sollte Jana ihr Ergebnis veröffentlichen?') },
+      { kind: 'reply', to: 'simon', options: [
+        german('Ja, gerade Nullergebnisse sind wichtig, damit die Forschung kein verzerrtes Bild von der Wirklichkeit bekommt.'),
+        german('Nein, sie sollte lieber so lange weitere Versuchspersonen testen, bis der Effekt doch noch auftaucht.'),
+        german('Nein, eine Studie mit mehr Versuchspersonen ist grundsätzlich weniger aussagekräftig.')
+      ] },
+      { kind: 'line', speaker: 'jana', mood: 'happy', text: german('Ihr habt recht. Es gibt inzwischen sogar Zeitschriften, die Studien nach der Registrierung annehmen – unabhängig davon, was herauskommt. Dort reiche ich sie ein.') },
+      { kind: 'narration', text: german('Zwei Wochen später antwortet ihre Betreuerin überraschend positiv: Sie wolle die Arbeit gemeinsam mit Jana veröffentlichen – und ihre eigene These überdenken.') },
+      { kind: 'question', prompt: german('Was hat Jana in ihrer Masterarbeit gemacht?'), options: [german('Sie hat eine berühmte psychologische Studie mit mehr Versuchspersonen wiederholt.'), german('Sie hat eine völlig neue Theorie entwickelt.'), german('Sie hat eine Umfrage in der Bibliothek durchgeführt.')] },
+      { kind: 'question', prompt: german('Was ist Janas Ergebnis?'), options: [german('Der Effekt aus der Originalstudie tritt nicht auf.'), german('Der Effekt ist doppelt so stark wie im Original.'), german('Ihre Daten sind verloren gegangen.')] },
+      { kind: 'question', prompt: german('Warum konnte Jana ihre Daten nicht nachträglich manipulieren?'), options: [german('Sie hatte ihr Vorgehen vorher öffentlich registriert.'), german('Simon hat sie kontrolliert.'), german('Ihr Laptop war gesperrt.')] },
+      { kind: 'question', prompt: german('Wie viele der hundert Studien ließen sich im großen Projekt erfolgreich wiederholen?'), options: [german('Knapp vierzig Prozent'), german('Fast alle'), german('Keine einzige')] },
+      { kind: 'question', prompt: german('Wie reagiert Janas Betreuerin?'), options: [german('Sie will die Arbeit gemeinsam mit Jana veröffentlichen.'), german('Sie lehnt die Arbeit ab.'), german('Sie verlangt eine neue Auswertung.')] }
     ]
   },
 
