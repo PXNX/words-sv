@@ -21,6 +21,11 @@ export const storeState = $state<{ linked: boolean | null; bought: string[]; pro
   failed: false
 });
 
+/** Whether WordCircle Pro runs right now for the signed-in account. */
+export function proActive(): boolean {
+  return Boolean(storeState.proUntil && storeState.proUntil > Date.now());
+}
+
 /** Asks what the account owns; unlocks the items and remembers Pro for the streak. */
 export async function refreshStore(): Promise<void> {
   if (import.meta.env?.DEV) return;
