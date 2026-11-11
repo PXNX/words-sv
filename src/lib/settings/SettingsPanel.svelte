@@ -24,6 +24,7 @@
   import { naturalReady, naturalState, naturalSupported, playNatural, prepareNatural, synthesizeNatural } from '#lib/story/naturalVoices.svelte.js';
   import { onMount } from 'svelte';
   import SelectMenu from './SelectMenu.svelte';
+  import LearningStylePicker from '#lib/learn/LearningStylePicker.svelte';
   import { unseenReleases } from '#lib/app/changelog.js';
   import { lastSeenVersion } from '#lib/app/changelogSeen.js';
   import { releases } from '#lib/app/releases.js';
@@ -324,6 +325,7 @@
         <Segmented value={settings.vocabularyLevel} options={levelOptions} label={labels.vocabulary} onchange={selectVocabularyLevel} />
         <a class="settings-link" href="/placement">{m.placement_link({}, { locale: settings.interfaceLocale })}<IconChevronRight aria-hidden="true" class="rtl:rotate-180" /></a>
       </SettingRow>
+      <SettingRow label={m.style_title({}, { locale: settings.interfaceLocale })} stacked><LearningStylePicker /></SettingRow>
       {#if settings.vocabularyLevel !== 'a1'}
         <SettingRow label={labels.includeLower} labelFor="setting-include-lower"><input id="setting-include-lower" type="checkbox" class="toggle toggle-sm toggle-primary" checked={settings.includeLowerVocabulary} onchange={(event) => settings.setIncludeLowerVocabulary((event.currentTarget as HTMLInputElement).checked)} /></SettingRow>
       {/if}

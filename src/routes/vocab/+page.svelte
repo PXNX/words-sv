@@ -24,8 +24,13 @@
   import SessionDots, { type DotState } from '#lib/learn/SessionDots.svelte';
   import { gradeFromAnswer, type Grade } from '#lib/review/scheduler.js';
   import type { ReviewProgress } from '#lib/vocab/spacedRepetition.js';
+  import { checkTyped, isBuildable, isRecall, pickPromptKind, scrambleLetters, type PromptKind } from '#lib/learn/modality.js';
+  import { pictureFor } from '#lib/learn/pictures.js';
+  import { wordMetadata } from '#lib/data/vocabulary.js';
+  import PhysicsTiles from '#lib/app/PhysicsTiles.svelte';
+  import IconHint from '~icons/material-symbols/lightbulb-rounded';
+  import IconBackspace from '~icons/material-symbols/backspace-rounded';
 
-  type PromptKind = 'word' | 'audio';
   type AnswerStatus = 'correct' | 'wrong' | null;
 
   const REVIEW_STORAGE_KEY = VOCABULARY_REVIEW_STORAGE_PREFIX;
@@ -39,6 +44,16 @@
     chooseDefinition: m.learning_choose_definition({}, { locale: settings.interfaceLocale }),
     chooseWord: m.learning_choose_word({}, { locale: settings.interfaceLocale }),
     audioPrompt: m.learning_audio_prompt({}, { locale: settings.interfaceLocale }),
+    picturePrompt: m.learning_picture_prompt({}, { locale: settings.interfaceLocale }),
+    typePrompt: m.learning_type_prompt({}, { locale: settings.interfaceLocale }),
+    dictationPrompt: m.learning_dictation_prompt({}, { locale: settings.interfaceLocale }),
+    buildPrompt: m.learning_build_prompt({}, { locale: settings.interfaceLocale }),
+    check: m.learning_check({}, { locale: settings.interfaceLocale }),
+    hint: m.learning_hint({}, { locale: settings.interfaceLocale }),
+    almost: m.learning_almost({}, { locale: settings.interfaceLocale }),
+    answerWas: m.learning_answer_was({}, { locale: settings.interfaceLocale }),
+    typePlaceholder: m.learning_type_placeholder({}, { locale: settings.interfaceLocale }),
+    removeLetter: m.learning_remove_letter({}, { locale: settings.interfaceLocale }),
     continue: m.continue({}, { locale: settings.interfaceLocale }),
     correct: m.learning_correct({}, { locale: settings.interfaceLocale }),
     tryAgain: m.learning_try_again({}, { locale: settings.interfaceLocale }),
@@ -85,7 +100,16 @@
   let voices = $state<SpeechSynthesisVoice[]>([]);
   let speechStatus = $state('');
   let choiceWords = $state<string[]>([]);
-  let promptKind = $state<PromptKind>('word');
+  let promptKind = $state<PromptKind>('meaning');
+  // Recall cards: what was typed, how many letters the hint gave away, and the tiles placed so far.
+  let typed = $state('');
+  let typedClose = $state(false);
+  let hintLetters = $state(0);
+  let tiles = $state<string[]>([]);
+  let placed = $state<number[]>([]);
+  let buildWrong = $state(false);
+  // What each word's first card asked, so its second card uses another channel.
+  let firstKinds: Record<string, PromptKind> = {};
   let answerStatus = $state<AnswerStatus>(null);
   let selectedChoice = $state<string | null>(null);
   let sourceKey = $state('');
@@ -131,7 +155,15 @@
   const currentDefinition = $derived(definitions[currentWord] ?? '');
   const currentDisplayWord = $derived(displayWord(currentWord));
   const definitionWords = $derived(words.map((word) => word.trim().toUpperCase()).filter((word) => Boolean(definitions[word])));
-  const isDefinitionPrompt = $derived(promptKind === 'word');
+  const isDefinitionPrompt = $derived(promptKind === 'meaning');
+  // The word as it is written, without its article: what a recall card asks for.
+  const currentSpelling = $derived(wordMetadata[settings.lang]?.[currentWord]?.spelling ?? currentWord);
+  const currentPicture = $derived(currentWord ? pictureFor(settings.lang, currentWord) : null);
+  const recall = $derived(isRecall(promptKind));
+  const heardFirst = $derived(promptKind === 'listen' || promptKind === 'dictation');
+  const builtWord = $derived(placed.map((index) => tiles[index]).join(''));
+  const promptLabel = $derived(promptKind === 'meaning' ? labels.chooseDefinition : promptKind === 'picture' ? labels.picturePrompt : promptKind === 'listen' ? labels.chooseWord
+    : promptKind === 'type' ? labels.typePrompt : promptKind === 'dictation' ? labels.dictationPrompt : labels.buildPrompt);
 
   function random() { return Math.random(); }
   function speechLocale() { return ({ de: 'de-DE', en: 'en-US', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', pt: 'pt-PT', uk: 'uk-UA' } as Record<string, string>)[settings.lang] ?? settings.lang; }
@@ -201,6 +233,7 @@
     firstTry = [];
     repairCount = 0;
     repairDone = false;
+    firstKinds = {};
     sessionId += 1;
   }
   function startSection() {
@@ -232,19 +265,75 @@
   function resetPrompt() {
     answerStatus = null;
     selectedChoice = null;
+    typed = '';
+    typedClose = false;
+    hintLetters = 0;
+    placed = [];
+    buildWrong = false;
     shownAt = performance.now();
     if (!currentWord || !currentDefinition) { choiceWords = []; return; }
-    promptKind = position % 2 === 0 ? 'word' : 'audio';
-    choiceWords = definitionChoiceWords(currentWord, [...section, ...definitionWords], definitions, random);
+    const word = currentWord;
+    const pass = firstKinds[word] ? 2 : 1;
+    promptKind = pickPromptKind({
+      style: settings.learningStyle,
+      pass,
+      index: position,
+      repetitions: reviewProgress[word]?.repetitions ?? 0,
+      hasPicture: Boolean(currentPicture),
+      canHear,
+      buildable: isBuildable(currentSpelling),
+      firstKind: firstKinds[word]
+    });
+    if (pass === 1) firstKinds[word] = promptKind;
+    tiles = promptKind === 'build' ? scrambleLetters(currentSpelling, random) : [];
+    choiceWords = definitionChoiceWords(word, [...section, ...definitionWords], definitions, random);
+    // A card that starts with the ear plays by itself; the button is there to hear it again.
+    if (promptKind === 'listen' || promptKind === 'dictation') void speak();
   }
   function chooseAnswer(event: MouseEvent) {
     if (answerStatus || !currentWord || sessionDone) return;
     const chosenWord = (event.currentTarget as HTMLButtonElement).value;
     if (!chosenWord) return;
-    const word = currentWord;
-    const correct = chosenWord === word;
-    const firstAttempt = !attempted.includes(word);
     selectedChoice = chosenWord;
+    resolveAnswer(chosenWord === currentWord);
+  }
+  // Typed answers: capitals and the article do not matter, one slip in a longer word still counts.
+  function checkTypedAnswer(event?: Event) {
+    event?.preventDefault();
+    if (answerStatus || !currentWord || sessionDone || !typed.trim()) return;
+    const result = checkTyped(currentSpelling, typed, settings.lang);
+    typedClose = result === 'close';
+    resolveAnswer(result !== 'wrong', result === 'close' || hintLetters > 0);
+  }
+  function showHint() {
+    if (answerStatus) return;
+    hintLetters = Math.min(hintLetters + 1, Math.max(1, [...currentSpelling].length - 1));
+    typed = [...currentSpelling].slice(0, hintLetters).join('');
+  }
+  function placeTile(index: number) {
+    if (answerStatus || placed.includes(index)) return;
+    buildWrong = false;
+    placed = [...placed, index];
+    if (placed.length < tiles.length) return;
+    if (builtWord === currentSpelling) { resolveAnswer(true, hintLetters > 0); return; }
+    // A full but wrong row shakes and clears once; the second wrong row counts as a miss.
+    if (!buildWrong && hintLetters === 0) {
+      buildWrong = true;
+      hintLetters = 1;
+      playErrorSound(settings.sound, 'vocab');
+      setTimeout(() => { if (buildWrong) { placed = []; buildWrong = false; } }, 520);
+      return;
+    }
+    resolveAnswer(false);
+  }
+  function removeTile() {
+    if (answerStatus || buildWrong) return;
+    placed = placed.slice(0, -1);
+  }
+  /** Books an answer; `shaky` marks a right answer that needed help, so it comes back sooner. */
+  function resolveAnswer(correct: boolean, shaky = false) {
+    const word = currentWord;
+    const firstAttempt = !attempted.includes(word);
     answerStatus = correct ? 'correct' : 'wrong';
     if (firstAttempt) attempted = [...attempted, word];
     // Only first attempts count towards the reward's run; a repeated card is practice.
@@ -267,7 +356,8 @@
       tricky = [...tricky, word];
     }
     // Quick and sure spaces the word further out, a long hesitation keeps it close (review/scheduler.ts).
-    const grade = gradeFromAnswer(correct, shownAt ? performance.now() - shownAt : null, firstAttempt);
+    const timed = gradeFromAnswer(correct, shownAt ? performance.now() - shownAt : null, firstAttempt);
+    const grade: Grade = correct && shaky ? 'hard' : timed;
     beforeAnswer = reviewProgress[word];
     reviewProgress = updateReviewProgress(reviewProgress, word, correct, Date.now(), grade);
     persistProgress();
@@ -278,6 +368,8 @@
       if (!(repairMode && repairAvailable)) void settings.recordStreak('vocab_correct');
     }
     else { playErrorSound(settings.sound, 'vocab'); recordMissedWord(settings.lang, word); queue = insertLearningRepeat(queue, position, word); }
+    // Hearing the word once more with its answer ties sound to spelling; skipped where it was just heard.
+    if (settings.sound && canHear && !(heardFirst && correct)) setTimeout(() => { if (queue[position] === word && answerStatus) void speak(); }, correct ? 420 : 650);
   }
   function finishRepair() {
     repairDone = true;
@@ -359,17 +451,19 @@
     untrack(() => startSection());
   });
   $effect(() => {
-    const nextChoiceKey = `${currentWord}|${section.join('|')}|${position}|${sessionId}`;
+    const nextChoiceKey = `${currentWord}|${section.join('|')}|${position}|${sessionId}|${settings.learningStyle}`;
     if (nextChoiceKey === choiceKey) return;
     choiceKey = nextChoiceKey;
     untrack(() => resetPrompt());
   });
   import GameToolbar from '#lib/app/GameToolbar.svelte';
   import AiModeSettings from '#lib/app/AiModeSettings.svelte';
+  import GameSetting from '#lib/app/GameSetting.svelte';
+  import LearningStylePicker from '#lib/learn/LearningStylePicker.svelte';
 </script>
 
 <GameToolbar>
-  {#snippet gameSettings()}<AiModeSettings voice />{/snippet}
+  {#snippet gameSettings()}<GameSetting label={m.style_title({}, { locale: settings.interfaceLocale })}><span></span></GameSetting><LearningStylePicker /><AiModeSettings voice />{/snippet}
 </GameToolbar>
 
 <section
@@ -416,7 +510,8 @@
       </div>
     </div>
   {:else if sessionDone}
-    <div class="w-[min(100%,28rem)] grid justify-items-center gap-[.7rem] p-[clamp(1.2rem,6vw,2rem)] panel-play text-center">
+    <div class="recap w-[min(100%,28rem)] grid justify-items-center gap-[.7rem] p-[clamp(1.2rem,6vw,2rem)] panel-play text-center">
+      {#if firstTry.length}<PhysicsTiles mode="rain" letters={[...(firstTry[0] ?? '')].slice(0, 9)} size={30} />{/if}
       <p class="m-0 text-accent text-[.8125rem] font-black tracking-[.12em] uppercase">{labels.recapTitle}</p>
       <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.3rem,6vw,1.9rem)] leading-[1.15]">{labels.recapScore(firstTry.length, attempted.length)}</p>
       {#if tricky.length}
@@ -435,58 +530,162 @@
   {:else}
     {#key `${position}|${sessionId}`}
     <article
-      class="learn-card-in w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center {promptKind === 'audio' ? 'bg-[linear-gradient(145deg,#fffdf7,#fff4d9)] dark:bg-[linear-gradient(145deg,#172a45,#294666)]' : ''}"
+      class="quiz-card learn-card-in panel-play kind-{promptKind}"
       class:learn-correct={answerStatus === 'correct'}
       class:learn-wrong={answerStatus === 'wrong'}
     >
-      {#if promptKind === 'word' || answerStatus !== null}
-        <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.9rem,9vw,3.2rem)] font-normal tracking-[.06em] leading-none" class:learn-fade-in={promptKind === 'audio'}><GenderedWord word={currentWord} language={settings.lang} /></p>
-        {#if promptKind === 'audio'}<button class="btn-play btn-play-soft btn-play-sm" onclick={speak} disabled={!canHear}><IconVolume class="w-[1rem] h-[1rem]" aria-hidden="true" />{labels.listen}</button>{/if}
+      {#if answerStatus !== null || promptKind === 'meaning'}
+        <!-- The word itself: on a meaning card from the start, on every other card as the answer. -->
+        {#if currentPicture && answerStatus !== null}<span class="quiz-picture small pop-in" aria-hidden="true">{currentPicture}</span>{/if}
+        <p class="quiz-word" class:learn-fade-in={promptKind !== 'meaning'}><GenderedWord word={currentWord} language={settings.lang} /></p>
+        {#if answerStatus !== null || heardFirst}<button class="btn-play btn-play-soft btn-play-sm" onclick={speak} disabled={!canHear}><IconVolume aria-hidden="true" />{labels.listen}</button>{/if}
+        {#if !isDefinitionPrompt && currentDefinition}<p class="quiz-definition learn-fade-in">{currentDefinition}</p>{/if}
+      {:else if promptKind === 'picture'}
+        <span class="quiz-picture pop-in" role="img" aria-label={labels.picturePrompt}>{currentPicture}</span>
+      {:else if heardFirst}
+        <button class="quiz-listen" onclick={speak} disabled={!canHear} aria-label={labels.listen}><IconVolume aria-hidden="true" /><i></i><i></i><i></i></button>
+        <p class="quiz-cue">{labels.audioPrompt}</p>
       {:else}
-        <button class="btn-play btn-play-ink" onclick={speak} disabled={!canHear}><IconVolume class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />{labels.listen}</button>
-        <p class="m-0 text-accent text-[.84rem] font-extrabold leading-[1.35]">{labels.audioPrompt}</p>
+        <!-- Type or build: the meaning (and the picture, when there is one) is the cue. -->
+        {#if currentPicture}<span class="quiz-picture small pop-in" aria-hidden="true">{currentPicture}</span>{/if}
+        <p class="quiz-definition cue">{currentDefinition}</p>
       {/if}
-      {#if promptKind === 'audio'}<p class="m-0 min-h-[1.35em] text-accent text-[.84rem] font-extrabold leading-[1.35]" aria-live="polite">{speechStatus}</p>{/if}
-      <!-- The definition's space is kept from the start (invisible until answered), so the choices never move. -->
-      {#if !isDefinitionPrompt && currentDefinition}<p class="m-0 max-w-[22rem] text-base-content/65 text-[.9rem] font-bold leading-[1.4] {answerStatus !== null ? 'learn-fade-in' : 'invisible'}" aria-hidden={answerStatus === null}>{currentDefinition}</p>{/if}
+      {#if speechStatus}<p class="quiz-cue" aria-live="polite">{speechStatus}</p>{/if}
     </article>
     {/key}
-    {#if choiceWords.length >= 3}
-      <section class="w-[min(100%,28rem)] grid gap-[.55rem]" aria-label={isDefinitionPrompt ? labels.chooseDefinition : labels.chooseWord}>
-        <p class="m-0 text-accent text-[.8125rem] font-black tracking-[.1em] text-center uppercase">{isDefinitionPrompt ? labels.chooseDefinition : labels.chooseWord}</p>
-        <div class="grid gap-[.45rem]">
+    <section class="quiz-answer" aria-label={promptLabel}>
+      <p class="quiz-prompt">{answerStatus === 'correct' && typedClose ? labels.almost : promptLabel}</p>
+      {#if promptKind === 'type' || promptKind === 'dictation'}
+        <form class="quiz-type" onsubmit={checkTypedAnswer}>
+          <!-- svelte-ignore a11y_autofocus -->
+          <input
+            class="field-play"
+            class:right={answerStatus === 'correct'}
+            class:wrong={answerStatus === 'wrong'}
+            type="text"
+            bind:value={typed}
+            readonly={answerStatus !== null}
+            placeholder={labels.typePlaceholder}
+            aria-label={promptLabel}
+            lang={settings.lang}
+            autocomplete="off"
+            autocapitalize="off"
+            autocorrect="off"
+            spellcheck="false"
+            enterkeyhint="done"
+            autofocus
+          />
+          {#if answerStatus === null}
+            <button type="button" class="btn-play btn-play-soft btn-play-round" onclick={showHint} aria-label={labels.hint} title={labels.hint}><IconHint aria-hidden="true" /></button>
+            <button type="submit" class="btn-play btn-play-ink" disabled={!typed.trim()}>{labels.check}</button>
+          {/if}
+        </form>
+        {#if answerStatus === 'wrong'}<p class="quiz-solution learn-fade-in">{labels.answerWas} <strong>{currentSpelling}</strong></p>{/if}
+      {:else if promptKind === 'build'}
+        <div class="quiz-slots" class:learn-wrong={buildWrong} class:right={answerStatus === 'correct'} class:wrong={answerStatus === 'wrong'} aria-live="polite" aria-label={builtWord}>
+          {#each tiles as _, slot (slot)}
+            <span class:filled={slot < placed.length}>{slot < placed.length ? tiles[placed[slot]!] : ''}</span>
+          {/each}
+        </div>
+        {#if answerStatus === 'wrong'}<p class="quiz-solution learn-fade-in">{labels.answerWas} <strong>{currentSpelling}</strong></p>{/if}
+        {#if answerStatus === null}
+          <div class="quiz-tiles">
+            {#each tiles as letter, index (index)}
+              <button type="button" class="quiz-tile" class:used={placed.includes(index)} disabled={placed.includes(index)} onclick={() => placeTile(index)}>{letter}</button>
+            {/each}
+            <button type="button" class="quiz-tile back" onclick={removeTile} disabled={!placed.length} aria-label={labels.removeLetter}><IconBackspace aria-hidden="true" /></button>
+          </div>
+        {/if}
+      {:else if choiceWords.length >= 3}
+        <div class="grid gap-[.55rem]">
           {#each choiceWords as word}
             <button
               type="button"
               value={word}
               onclick={chooseAnswer}
               disabled={answerStatus !== null}
-              class="btn-play btn-play-choice justify-between gap-[.65rem] text-[.9rem] font-bold leading-[1.3] text-left touch-manipulation disabled:opacity-100 {optionStateClasses(word)}"
-            ><span class="flex-1">{optionText(word)}</span>{#if answerStatus !== null && word === currentWord}<IconCheck class="w-[1.25rem] h-[1.25rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && word === selectedChoice}<IconClose class="w-[1.25rem] h-[1.25rem] flex-none text-[#c0392b] dark:text-[#ffc2b8]" aria-label={labels.tryAgain} />{/if}</button>
+              class="btn-play btn-play-choice justify-between gap-[.65rem] text-left touch-manipulation disabled:opacity-100 {optionStateClasses(word)}"
+            ><span class="flex-1">{#if isDefinitionPrompt}{definitions[word]}{:else}<GenderedWord {word} language={settings.lang} />{/if}</span>{#if answerStatus !== null && word === currentWord}<IconCheck class="w-[1.25rem] h-[1.25rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && word === selectedChoice}<IconClose class="w-[1.25rem] h-[1.25rem] flex-none text-[#c0392b] dark:text-[#ffc2b8]" aria-label={labels.tryAgain} />{/if}</button>
           {/each}
         </div>
-        <!-- One fixed slot for the answer buttons, so nothing jumps when they appear. -->
-        <div class="answer-slot">
-        {#if answerStatus === 'correct'}
-          <div class="grid gap-[.35rem]">
-            <p class="m-0 text-center text-base-content/60 text-[.8125rem] font-extrabold">{labels.rateHint}</p>
-            <div class="flex flex-wrap justify-center gap-[.45rem]">
-              <button class="btn-play btn-play-soft" onclick={() => rateAnswer('again')}>{labels.again}</button>
-              <button class="btn-play btn-play-soft" onclick={() => rateAnswer('hard')}>{labels.hard}</button>
-              <button class="btn-play btn-play-ink" onclick={() => rateAnswer('good')}>{labels.known}</button>
-            </div>
+      {:else}
+        <p class="quiz-definition">{currentDefinition || labels.unavailable}</p>
+      {/if}
+      <!-- One fixed slot for the answer buttons, so nothing jumps when they appear. -->
+      <div class="answer-slot">
+      {#if answerStatus === 'correct'}
+        <div class="grid gap-[.4rem]">
+          <p class="m-0 text-center text-base-content/60 text-[.8125rem] font-extrabold">{labels.rateHint}</p>
+          <div class="flex flex-wrap justify-center gap-[.5rem]">
+            <button class="btn-play btn-play-soft" onclick={() => rateAnswer('again')}>{labels.again}</button>
+            <button class="btn-play btn-play-soft" onclick={() => rateAnswer('hard')}>{labels.hard}</button>
+            <button class="btn-play btn-play-ink" onclick={() => rateAnswer('good')}>{labels.known}</button>
           </div>
-        {:else if answerStatus === 'wrong'}
-          <div class="flex justify-center">
-            <button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>
-          </div>
-        {/if}
         </div>
-      </section>
-    {:else}<p class="max-w-[24rem] m-0 text-base-content/60 text-[.9rem] font-bold leading-[1.45] text-center">{currentDefinition || labels.unavailable}</p>{/if}
+      {:else if answerStatus === 'wrong'}
+        <div class="flex justify-center">
+          <button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>
+        </div>
+      {/if}
+      </div>
+    </section>
   {/if}
 </section>
 
 <style>
-  .answer-slot { min-height:4.6rem;display:grid;align-content:start; }
+  .answer-slot { min-height:5.2rem;display:grid;align-content:start; }
+  .quiz-card { width:min(100%,28rem);min-height:10rem;display:grid;align-content:center;justify-items:center;gap:.8rem;padding:clamp(1.2rem,6vw,2rem);text-align:center; }
+  .quiz-card.kind-listen,.quiz-card.kind-dictation { background-image:linear-gradient(145deg,transparent,color-mix(in oklch,var(--skill-hear) 16%,transparent)); }
+  .quiz-card.kind-picture { background-image:linear-gradient(145deg,transparent,color-mix(in oklch,var(--skill-words) 20%,transparent)); }
+  .quiz-word { margin:0;color:var(--text);font-family:var(--font-display);font-size:clamp(1.9rem,9vw,3rem);font-weight:400;letter-spacing:.03em;line-height:1.05;overflow-wrap:anywhere; }
+  .quiz-picture { font-size:clamp(4.2rem,22vw,6rem);line-height:1.1;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif; }
+  .quiz-picture.small { font-size:clamp(2.4rem,12vw,3.2rem); }
+  .quiz-definition { margin:0;max-width:22rem;color:var(--text-soft);font-size:var(--text-sm);font-weight:700;line-height:1.45; }
+  .quiz-definition.cue { color:var(--text);font-size:1.05rem;font-weight:700; }
+  .quiz-cue { margin:0;color:var(--clay);font-size:var(--text-xs);font-weight:800;line-height:1.35; }
+  /* The big listen button: a speaker with three bars that move while the learner decides. */
+  .quiz-listen { position:relative;display:flex;align-items:center;justify-content:center;gap:.28rem;width:6.2rem;height:6.2rem;border:2px solid var(--ink);border-radius:50% 46% 52% 48% / 48% 52% 46% 50%;background:var(--skill-hear);box-shadow:var(--play-shadow);color:var(--paper);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:translate var(--dur-move) var(--ease-spring),box-shadow var(--dur-move) var(--ease-spring); }
+  .quiz-listen:active { translate:2px 2px;box-shadow:var(--play-shadow-press); }
+  .quiz-listen:disabled { opacity:.5;cursor:not-allowed; }
+  .quiz-listen:focus-visible { outline:3px dashed var(--sun);outline-offset:4px; }
+  .quiz-listen :global(svg) { width:2.2rem;height:2.2rem; }
+  .quiz-listen i { width:.26rem;height:.9rem;border-radius:99px;background:currentColor;animation:quiz-bar 1.1s ease-in-out infinite; }
+  .quiz-listen i:nth-of-type(2) { height:1.5rem;animation-delay:.15s; }
+  .quiz-listen i:nth-of-type(3) { animation-delay:.3s; }
+  @keyframes quiz-bar { 0%,100% { scale:1 .45; } 50% { scale:1 1; } }
+  .quiz-answer { width:min(100%,28rem);display:grid;gap:.65rem; }
+  .quiz-answer :global(.btn-play-choice.bg-success .gender-article) { color:inherit; }
+  .quiz-answer :global(.btn-play-choice.bg-success .gender-shape) { background:currentColor; }
+  .quiz-prompt { margin:0;color:var(--clay);font-size:var(--text-xs);font-weight:900;letter-spacing:.08em;text-align:center;text-transform:uppercase; }
+  .quiz-type { display:flex;align-items:center;gap:.5rem; }
+  .quiz-type input { flex:1;min-width:0;height:3.1rem;padding:0 .9rem;border-width:2px;border-color:var(--ink);color:var(--ink);font-size:1.15rem;font-weight:700;box-shadow:var(--play-shadow); }
+  .quiz-type input.right { border-color:var(--go);background:var(--go-soft); }
+  .quiz-type input.wrong { border-color:var(--no);background:var(--no-soft);text-decoration:line-through;text-decoration-thickness:.08em; }
+  .quiz-solution { margin:0;color:var(--text-soft);font-size:var(--text-sm);font-weight:700;text-align:center; }
+  .quiz-solution strong { color:var(--go);font-size:1.15rem; }
+  .quiz-slots { display:flex;flex-wrap:wrap;justify-content:center;gap:.3rem;min-height:2.9rem; }
+  .quiz-slots span { display:grid;place-items:center;width:2.1rem;height:2.6rem;border-bottom:3px solid var(--ink);color:var(--text);font-family:var(--font-display);font-size:1.6rem;line-height:1; }
+  .quiz-slots span.filled { animation:play-pop .28s var(--ease-spring) both; }
+  .quiz-slots.right span { border-bottom-color:var(--go);color:var(--go); }
+  .quiz-slots.wrong span { border-bottom-color:var(--no);color:var(--no); }
+  .quiz-tiles { display:flex;flex-wrap:wrap;justify-content:center;gap:.45rem; }
+  .quiz-tile { display:grid;place-items:center;width:2.9rem;height:2.9rem;border:2px solid var(--ink);border-radius:12px 8px 11px 9px / 9px 11px 8px 12px;background:var(--paper);box-shadow:var(--play-shadow);color:var(--ink);font-family:var(--font-display);font-size:1.5rem;line-height:1;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:translate var(--dur-move) var(--ease-spring),scale var(--dur-move) var(--ease-spring),opacity var(--dur-quick) ease,box-shadow var(--dur-move) var(--ease-spring); }
+  .quiz-tile:nth-child(odd) { rotate:-2deg; } .quiz-tile:nth-child(3n) { rotate:2.5deg; }
+  .quiz-tile:not(:disabled):active { translate:2px 2px;scale:.94;box-shadow:var(--play-shadow-press); }
+  .quiz-tile.used { opacity:.18;box-shadow:none;scale:.9; }
+  .quiz-tile.back { background:var(--paper-3);rotate:0deg; }
+  .quiz-tile.back:disabled { opacity:.35; }
+  .quiz-tile :global(svg) { width:1.3rem;height:1.3rem; }
+  .quiz-tile:focus-visible { outline:3px dashed var(--sun);outline-offset:3px; }
+  .recap { position:relative;overflow:hidden; }
+  .recap > :global(:not(.physics-tiles)) { position:relative;z-index:1; }
+  :global(html.dark) .quiz-type input { border-color:var(--ink-deep);background:var(--surface-2);color:var(--paper); }
+  :global(html.dark) .quiz-type input.right { background:color-mix(in oklch,var(--go) 35%,var(--surface-2)); }
+  :global(html.dark) .quiz-type input.wrong { background:color-mix(in oklch,var(--no) 35%,var(--surface-2)); }
+  :global(html.dark) .quiz-slots span { border-bottom-color:var(--paper); }
+  :global(html.dark) .quiz-solution strong,:global(html.dark) .quiz-slots.right span { color:#8ed8a2; }
+  :global(html.dark) .quiz-listen { border-color:var(--ink-deep);color:var(--ink); }
+  :global(html.dark) .quiz-tile { border-color:var(--ink-deep);background:var(--surface);color:var(--paper); }
+  :global(html.dark) .quiz-tile.back { background:var(--surface-2); }
+  @media (prefers-reduced-motion:reduce) { .quiz-listen i,.quiz-slots span.filled { animation:none; } .quiz-tile { rotate:0deg;transition:none; } }
 </style>

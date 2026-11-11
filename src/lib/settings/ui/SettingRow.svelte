@@ -37,5 +37,5 @@
   .setting-row-icon { display:inline-grid;place-items:center;opacity:.75; }
   .setting-row-icon :global(svg) { width:.95rem;height:.95rem; }
   .setting-row-control { display:flex;flex:none;align-items:center;justify-content:flex-end;max-width:58%; }
-  .stacked .setting-row-control { max-width:none;justify-content:flex-start; }
+  .stacked .setting-row-control { max-width:none;justify-content:flex-start;flex-wrap:wrap;gap:.5rem .9rem; }
 </style>
