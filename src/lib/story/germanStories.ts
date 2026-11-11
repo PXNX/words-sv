@@ -3833,14 +3833,30 @@ export const germanStories: Story[] = [
     scene: 'office',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Extra C2 1'),
+    title: german('Drei Wochen bis zur Insolvenz'),
     beats: [
-      { kind: 'narration', text: german('löhnen und wertlos.') },
-      { kind: 'line', speaker: 'mia', text: german('undefined ist wichtig und undefined ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('undefined und undefined sind da.') },
-      { kind: 'narration', text: german('undefined und undefined.') },
-      { kind: 'question', prompt: german('Was ist Wort?'), options: [german('Option'), german('Option'), german('Option')] },
-      { kind: 'question', prompt: german('Wer hat Wort?'), options: [german('Option'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Ein verglastes Büro in einem Start-up für Lernsoftware, kurz nach 22 Uhr. Gründer Tom starrt auf eine E-Mail: Der wichtigste Investor steigt aus, die zugesagte Finanzierungsrunde über drei Millionen Euro platzt. Mia, die Finanzchefin, hat gerade die Liquiditätsplanung durchgerechnet.') },
+      { kind: 'line', speaker: 'tom', mood: 'sad', text: german('Sag mir bitte, dass es nicht so schlimm ist, wie es aussieht.') },
+      { kind: 'line', speaker: 'mia', text: german('Ich wünschte, ich könnte es. Ende des Monats müssen wir 180 000 Euro an Gehältern löhnen, auf dem Konto liegen 64 000. Ohne frisches Geld sind wir in neun Tagen zahlungsunfähig.') },
+      { kind: 'line', speaker: 'tom', text: german('Dann überbrücken wir das eben. Ich rufe morgen die anderen Investoren an, und bis dahin zögern wir die Lieferantenrechnungen hinaus. Das hat beim letzten Mal auch funktioniert.') },
+      { kind: 'line', speaker: 'mia', mood: 'worried', text: german('Tom, genau davor muss ich dich warnen. Sobald wir zahlungsunfähig sind, hast du als Geschäftsführer höchstens drei Wochen Zeit, um entweder die Lage zu bereinigen oder den Insolvenzantrag zu stellen. Wer das verschleppt, macht sich strafbar – und haftet unter Umständen mit seinem Privatvermögen für Zahlungen, die er danach noch leistet.') },
+      { kind: 'line', speaker: 'tom', mood: 'angry', text: german('Insolvenz – das Wort allein klingt wie ein Todesurteil. Dann sind unsere Anteile wertlos, und die Arbeit von vier Jahren war umsonst.') },
+      { kind: 'line', speaker: 'mia', text: german('Nicht zwangsläufig. Das deutsche Insolvenzrecht ist längst kein reines Abwicklungsverfahren mehr. In einer Insolvenz in Eigenverwaltung behältst du die Geschäftsführung, ein Sachwalter schaut dir über die Schulter, und die Agentur für Arbeit zahlt den Mitarbeitern bis zu drei Monate lang Insolvenzgeld. Das verschafft uns Luft für eine Sanierung.') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Und das Stigma? Wer einmal pleite war, bekommt in diesem Land doch nie wieder einen Kredit.') },
+      { kind: 'line', speaker: 'mia', text: german('Das ist eine sehr deutsche Angst. In den USA gilt ein gescheitertes Unternehmen fast als Lehrjahr. Hierzulande wird Scheitern eher als Charakterfehler gelesen – aber was dir viel nachhaltiger schadet, ist eine Verschleppung, nicht ein rechtzeitig gestellter Antrag.') },
+      { kind: 'line', speaker: 'tom', text: german('Also: Entweder ich finde in den nächsten Tagen einen Investor mit belastbarer Zusage, oder wir gehen den geordneten Weg. {name}, du sitzt im Beirat. Wie siehst du das?') },
+      { kind: 'reply', to: 'tom', options: [
+        german('Sprich parallel mit den Investoren und mit einem Sanierungsanwalt, aber setz dir eine harte Frist. Ohne schriftliche Zusage bis dahin stellst du den Antrag – rechtzeitig, statt auf ein Wunder zu hoffen.'),
+        german('Bezahl einfach die Gehälter nicht und sag den Mitarbeitern nichts, bis sich etwas ergibt.'),
+        german('Schieb den Antrag so lange hinaus wie möglich; vielleicht bemerkt es ja niemand.')
+      ] },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Danke. Dann rufe ich morgen um acht die Anwältin an, und du die Investoren. Und Tom – wir sagen es dem Team selbst, bevor sie es aus der Zeitung erfahren.') },
+      { kind: 'question', prompt: german('Warum ist das Start-up plötzlich in Not?'), options: [german('Der wichtigste Investor ist ausgestiegen.'), german('Ein Kunde hat das Unternehmen verklagt.'), german('Die Software funktioniert nicht.')] },
+      { kind: 'question', prompt: german('Wie viel Geld liegt noch auf dem Konto?'), options: [german('64 000 Euro'), german('180 000 Euro'), german('Drei Millionen Euro')] },
+      { kind: 'question', prompt: german('Wie lange hat ein Geschäftsführer nach Eintritt der Zahlungsunfähigkeit höchstens Zeit?'), options: [german('Drei Wochen'), german('Drei Monate'), german('Neun Tage')] },
+      { kind: 'question', prompt: german('Was droht bei einer Insolvenzverschleppung?'), options: [german('Strafbarkeit und unter Umständen die Haftung mit dem Privatvermögen'), german('Nur eine kleine Verwaltungsgebühr'), german('Gar nichts, wenn man später zahlt')] },
+      { kind: 'question', prompt: german('Was kennzeichnet die Insolvenz in Eigenverwaltung?'), options: [german('Die Geschäftsführung bleibt im Amt und wird von einem Sachwalter beaufsichtigt.'), german('Das Unternehmen wird sofort aufgelöst.'), german('Die Mitarbeiter übernehmen die Leitung.')] },
+      { kind: 'question', prompt: german('Wie unterscheidet sich laut Mia der Blick auf das Scheitern in den USA?'), options: [german('Dort gilt ein gescheitertes Unternehmen fast als Lehrjahr.'), german('Dort ist Insolvenz verboten.'), german('Dort bekommt man nach einer Pleite nie wieder Kredit.')] }
     ]
   },
   {
@@ -3849,14 +3865,29 @@ export const germanStories: Story[] = [
     scene: 'town',
     cast: ['kim', 'leo'],
     languages: ['de'],
-    title: german('Extra C2 2'),
+    title: german('Ein Straßenschild und seine Geschichte'),
     beats: [
-      { kind: 'narration', text: german('.') },
-      { kind: 'line', speaker: 'mia', text: german('undefined ist wichtig und undefined ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('undefined und undefined sind da.') },
-      { kind: 'narration', text: german('undefined und undefined.') },
-      { kind: 'question', prompt: german('Was ist Wort?'), options: [german('Option'), german('Option'), german('Option')] },
-      { kind: 'question', prompt: german('Wer hat Wort?'), options: [german('Option'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Ein Infostand am Rand der Fußgängerzone. Der Gemeinderat will die Wissmannstraße umbenennen, benannt nach einem Kolonialoffizier, der Ende des 19. Jahrhunderts in Deutsch-Ostafrika Aufstände blutig niederschlagen ließ. Kim, Historikerin an der Universität, wirbt für die Umbenennung. Leo, der in der Straße seit dreißig Jahren ein Schreibwarengeschäft führt, ist skeptisch.') },
+      { kind: 'line', speaker: 'leo', text: german('Verstehen Sie mich nicht falsch, ich habe nichts für Kolonialherren übrig. Aber muss man denn die Geschichte gleich aus dem Stadtbild tilgen? Sonst vergisst doch erst recht jeder, was damals geschehen ist.') },
+      { kind: 'line', speaker: 'kim', text: german('Das Argument höre ich oft, aber es verwechselt Erinnern mit Ehren. Ein Straßenname ist kein Geschichtsbuch, sondern eine Auszeichnung. Niemand käme auf die Idee, eine Straße nach einem Kriegsverbrecher zu benennen, um an seine Verbrechen zu erinnern.') },
+      { kind: 'line', speaker: 'leo', mood: 'curious', text: german('Zugegeben. Nur: Wo zieht man die Grenze? Wenn wir jeden Namen an den moralischen Maßstäben von heute messen, bleibt am Ende kaum einer übrig. Auch Luther hat sich übel über Juden geäußert.') },
+      { kind: 'line', speaker: 'kim', text: german('Ein berechtigter Einwand, den man nicht mit einem Schlagwort abtun sollte. Der Unterschied liegt für mich darin, wofür jemand geehrt wird. Luther steht für die Reformation und die Bibelübersetzung, trotz seiner Schattenseiten. Bei Wissmann ist der koloniale Feldzug kein Makel am Rand der Biografie, sondern genau der Grund, weshalb man ihm damals eine Straße gewidmet hat.') },
+      { kind: 'line', speaker: 'leo', mood: 'worried', text: german('Und ganz pragmatisch: Ich müsste Briefpapier, Stempel und Visitenkarten neu drucken lassen, meine Kunden müssten sich umgewöhnen. Das kostet Geld, das ich nicht übrig habe.') },
+      { kind: 'line', speaker: 'kim', text: german('Das nehme ich ernst. In anderen Städten hat man Übergangsfristen von mehreren Jahren eingeräumt und den Gewerbetreibenden die Kosten erstattet. Genau so etwas sollten wir in den Antrag aufnehmen.') },
+      { kind: 'line', speaker: 'leo', text: german('Und der neue Name? Wenn nur ausgetauscht wird, ohne dass jemand erfährt, warum, hat doch niemand etwas gelernt.') },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Da sind wir uns näher, als ich dachte. Unser Vorschlag ist, die Straße nach einer Person aus dem Widerstand gegen die Kolonialherrschaft zu benennen und unter dem neuen Schild eine Tafel anzubringen, die den alten Namen und seine Geschichte erklärt. {name}, Sie hören schon eine Weile zu. Überzeugt Sie dieser Kompromiss?') },
+      { kind: 'reply', to: 'kim', options: [
+        german('Weitgehend. Die Erklärtafel nimmt Leos Sorge ums Vergessen auf, und wenn die Stadt die Kosten trägt, wird niemand für die Umbenennung bestraft.'),
+        german('Nein, Straßennamen sollte man grundsätzlich alle hundert Jahre auslosen.'),
+        german('Ja, aber nur, wenn die Straße nach dem Gemeinderat selbst benannt wird.')
+      ] },
+      { kind: 'line', speaker: 'leo', mood: 'laughing', text: german('Na gut. Unterschreiben werde ich erst, wenn das mit den Kosten schwarz auf weiß drinsteht. Aber den Kugelschreiber dafür verkaufe ich Ihnen gern.') },
+      { kind: 'question', prompt: german('Warum soll die Wissmannstraße umbenannt werden?'), options: [german('Ihr Namensgeber ließ als Kolonialoffizier Aufstände blutig niederschlagen.'), german('Der Name ist zu schwer auszusprechen.'), german('Die Straße soll verbreitert werden.')] },
+      { kind: 'question', prompt: german('Welche Unterscheidung trifft Kim zu Beginn?'), options: [german('Zwischen Erinnern und Ehren'), german('Zwischen Kunst und Politik'), german('Zwischen Stadt und Land')] },
+      { kind: 'question', prompt: german('Welchen Einwand bringt Leo mit dem Beispiel Luther vor?'), options: [german('Dass kaum ein Name übrig bliebe, wenn man alle an heutigen Maßstäben misst'), german('Dass Luther ebenfalls Kolonialoffizier war'), german('Dass Straßen nur nach Theologen benannt werden sollten')] },
+      { kind: 'question', prompt: german('Worin liegt für Kim der Unterschied zwischen Luther und Wissmann?'), options: [german('Wissmann wurde gerade für das geehrt, was heute kritisiert wird.'), german('Luther lebte früher als Wissmann.'), german('Wissmann war bekannter als Luther.')] },
+      { kind: 'question', prompt: german('Welche praktische Sorge hat Leo?'), options: [german('Die Kosten für neue Drucksachen seines Geschäfts'), german('Dass seine Miete steigt'), german('Dass die Straße gesperrt wird')] },
+      { kind: 'question', prompt: german('Was sieht der Kompromissvorschlag vor?'), options: [german('Einen neuen Namen aus dem antikolonialen Widerstand und eine Tafel, die den alten Namen erklärt'), german('Den alten Namen zu behalten und eine Tafel anzubringen'), german('Die Straße nummeriert statt benannt')] }
     ]
   },
   {
@@ -3865,14 +3896,30 @@ export const germanStories: Story[] = [
     scene: 'shop',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Extra C2 3'),
+    title: german('Das T-Shirt für fünf Euro'),
     beats: [
-      { kind: 'narration', text: german('.') },
-      { kind: 'line', speaker: 'mia', text: german('undefined ist wichtig und undefined ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('undefined und undefined sind da.') },
-      { kind: 'narration', text: german('undefined und undefined.') },
-      { kind: 'question', prompt: german('Was ist Wort?'), options: [german('Option'), german('Option'), german('Option')] },
-      { kind: 'question', prompt: german('Wer hat Wort?'), options: [german('Option'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Eine Modeboutique, die nur fair produzierte Kleidung führt. Mia hat sie vor drei Jahren eröffnet. Ihr Bruder Tom, Betriebswirt bei einer großen Handelskette, hält ein schlichtes T-Shirt hoch und liest ungläubig das Preisschild: 39 Euro.') },
+      { kind: 'line', speaker: 'tom', mood: 'surprised', text: german('Neununddreißig Euro für ein weißes T-Shirt? Bei uns gibt es das im Dreierpack für fünfzehn. Wer soll sich das leisten?') },
+      { kind: 'line', speaker: 'mia', text: german('Die Frage ist eher, wer sich deine fünf Euro leisten kann. Nämlich die Näherin, die es für einen Hungerlohn genäht hat. Bei einem T-Shirt für fünf Euro landet nur ein winziger Bruchteil des Preises bei den Menschen, die es herstellen.') },
+      { kind: 'line', speaker: 'tom', text: german('Das ist mir zu moralisierend. Für viele Familien in Bangladesch ist die Textilindustrie der einzige Weg aus der Armut. Wenn alle so einkaufen würden wie deine Kundschaft, wären diese Arbeitsplätze weg.') },
+      { kind: 'line', speaker: 'mia', mood: 'angry', text: german('Niemand will die Arbeitsplätze abschaffen, sondern menschenwürdig machen. Erinnerst du dich an Rana Plaza? 2013 ist in Bangladesch ein Fabrikgebäude eingestürzt, mehr als 1 100 Menschen sind gestorben. Die Risse in den Wänden waren am Vortag bekannt, und trotzdem wurden die Arbeiterinnen wieder hineingeschickt.') },
+      { kind: 'line', speaker: 'tom', text: german('Das war entsetzlich, keine Frage. Aber seitdem hat sich viel getan: Es gibt ein Abkommen über Brandschutz und Gebäudesicherheit, und auch in Deutschland verpflichtet das Lieferkettengesetz große Unternehmen, Menschenrechtsrisiken in ihren Lieferketten zu prüfen.') },
+      { kind: 'line', speaker: 'mia', text: german('Das ist ein Fortschritt, aber das Gesetz gilt nur für große Konzerne, und es verlangt Sorgfalt, nicht Erfolg. Ein Unternehmen muss nachweisen, dass es sich bemüht hat – nicht, dass in seinen Fabriken tatsächlich niemand ausgebeutet wird.') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Und dein Siegel garantiert mehr? Auch Zertifikate werden gefälscht oder nachlässig kontrolliert.') },
+      { kind: 'line', speaker: 'mia', text: german('Vollkommene Gewissheit gibt es nicht, da hast du recht. Deshalb arbeite ich nur mit vier Werkstätten, die ich selbst besucht habe. Aber der Kern ist ein anderer: Ein T-Shirt für fünf Euro ist nicht billig, sondern es sind andere, die den Preis dafür bezahlen.') },
+      { kind: 'line', speaker: 'tom', text: german('Ein starker Satz, nur ändert er nichts am Budget einer alleinerziehenden Mutter. {name}, wie siehst du das: Ist faire Mode ein Luxus?') },
+      { kind: 'reply', to: 'tom', options: [
+        german('Für manche ist sie leider ein Luxus. Gerade deshalb müssen verbindliche Standards für die ganze Branche gelten, statt die Verantwortung allein auf die Kaufentscheidung Einzelner abzuwälzen.'),
+        german('Nein, wer billig kauft, ist selbst schuld an allem, was in den Fabriken passiert.'),
+        german('Ja, deshalb sollte man am besten gar keine Kleidung mehr tragen.')
+      ] },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Da kann ich mitgehen. Und Tom – vielleicht erzählst du deinem Einkaufsleiter einmal von meinen Werkstätten. Veränderung im Großen beginnt manchmal mit einem Gespräch unter Geschwistern.') },
+      { kind: 'question', prompt: german('Was kostet das T-Shirt in Mias Boutique?'), options: [german('39 Euro'), german('15 Euro'), german('5 Euro')] },
+      { kind: 'question', prompt: german('Welches Argument bringt Tom für die Textilindustrie in Bangladesch vor?'), options: [german('Sie sei für viele Familien der einzige Weg aus der Armut.'), german('Sie sei umweltfreundlicher als die europäische.'), german('Sie zahle höhere Löhne als in Deutschland.')] },
+      { kind: 'question', prompt: german('Was geschah 2013 in Rana Plaza?'), options: [german('Ein Fabrikgebäude stürzte ein, mehr als 1 100 Menschen starben.'), german('Eine Fabrik wurde fair zertifiziert.'), german('Die Arbeiterinnen streikten erfolgreich.')] },
+      { kind: 'question', prompt: german('Welche Schwäche des Lieferkettengesetzes nennt Mia?'), options: [german('Es verlangt nur Sorgfalt, nicht den tatsächlichen Erfolg.'), german('Es gilt nur für kleine Läden.'), german('Es verbietet Importe aus Bangladesch.')] },
+      { kind: 'question', prompt: german('Wie stellt Mia sicher, dass ihre Ware fair produziert wird?'), options: [german('Sie arbeitet nur mit vier Werkstätten, die sie selbst besucht hat.'), german('Sie verlässt sich vollständig auf Siegel.'), german('Sie näht alles selbst.')] },
+      { kind: 'question', prompt: german('Was meint Mia mit „es sind andere, die den Preis dafür bezahlen“?'), options: [german('Die niedrigen Kosten gehen zulasten der Menschen, die die Kleidung herstellen.'), german('Die Kunden zahlen später eine Gebühr.'), german('Der Staat übernimmt einen Teil des Preises.')] }
     ]
   },
   {
@@ -3881,14 +3928,30 @@ export const germanStories: Story[] = [
     scene: 'market',
     cast: ['kim', 'leo'],
     languages: ['de'],
-    title: german('Extra C2 4'),
+    weathers: ['sunny', 'cloudy'],
+    title: german('Gefühlte Inflation'),
     beats: [
-      { kind: 'narration', text: german('.') },
-      { kind: 'line', speaker: 'mia', text: german('undefined ist wichtig und undefined ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('undefined und undefined sind da.') },
-      { kind: 'narration', text: german('undefined und undefined.') },
-      { kind: 'question', prompt: german('Was ist Wort?'), options: [german('Option'), german('Option'), german('Option')] },
-      { kind: 'question', prompt: german('Wer hat Wort?'), options: [german('Option'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Wochenmarkt, Samstag kurz nach neun. Leo verkauft seit fünfzehn Jahren Käse. Kim, Volkswirtin bei einer Bank und Stammkundin, hat gerade die Zeitung aufgeschlagen: Die Inflationsrate ist auf 2,1 Prozent gesunken.') },
+      { kind: 'line', speaker: 'leo', mood: 'laughing', text: german('Zwei Prozent? Das glauben die doch selbst nicht. Fragen Sie mal meine Kundschaft. Jeder zweite sagt mir, dass er sich den Bergkäse kaum noch leisten kann.') },
+      { kind: 'line', speaker: 'kim', text: german('Beides kann zugleich stimmen. Die Inflationsrate misst, wie sich die Preise im Vergleich zum Vorjahr verändern, nicht, wie hoch sie sind. Wenn die Preise zwei Jahre lang stark steigen und dann nur noch langsam, bleibt das hohe Niveau – es wächst bloß nicht mehr so schnell.') },
+      { kind: 'line', speaker: 'leo', text: german('Also sinkt die Inflation, aber billiger wird nichts. Das ist ein Trost, den man niemandem an der Kasse erklären kann.') },
+      { kind: 'line', speaker: 'kim', mood: 'curious', text: german('Hinzu kommt die sogenannte gefühlte Inflation. Unsere Wahrnehmung orientiert sich an den Dingen, die wir oft kaufen: Butter, Brot, Käse, Kaffee. Gerade Lebensmittel waren zeitweise um mehr als zwanzig Prozent teurer als im Vorjahr. Dass Fernseher oder Laptops billiger geworden sind, merkt man dagegen kaum, weil man sie selten kauft.') },
+      { kind: 'line', speaker: 'leo', text: german('Da haben Sie einen Punkt. Meine Kunden kommen jede Woche, und jede Woche sehen sie meine Preisschilder. Den Fernseher kaufen sie alle zehn Jahre.') },
+      { kind: 'line', speaker: 'kim', text: german('Und wir neigen dazu, Preissteigerungen stärker zu gewichten als Preissenkungen – ein Verlust schmerzt uns mehr, als uns ein gleich großer Gewinn freut. Die Verhaltensökonomie nennt das Verlustaversion.') },
+      { kind: 'line', speaker: 'leo', mood: 'worried', text: german('Nur: Mein Käse ist nicht wegen der Psychologie teurer geworden. Die Milch kostet mich mehr, der Strom für die Kühlung kostet mich mehr, der Diesel für den Transporter auch. Ich habe nur einen Teil davon weitergegeben, sonst wären die Leute weggeblieben.') },
+      { kind: 'line', speaker: 'kim', text: german('Das ist der Teil, der in der Debatte oft untergeht: Kleine Händler wie Sie haben die Kostensteigerungen zum Teil aus der eigenen Marge bezahlt. {name}, Sie kaufen ja auch hier. Wie gehen Sie selbst mit den höheren Preisen um?') },
+      { kind: 'reply', to: 'kim', options: [
+        german('Ich kaufe bewusster ein: lieber ein kleineres Stück guten Käse vom Markt als viel billige Ware, die ich am Ende wegwerfe.'),
+        german('Ich warte, bis die Inflationsrate negativ wird, und kaufe dann alles auf einmal.'),
+        german('Ich kaufe nichts mehr, bis Käse wieder so viel kostet wie vor zwanzig Jahren.')
+      ] },
+      { kind: 'line', speaker: 'leo', mood: 'happy', text: german('Das höre ich gern. Und für die Volkswirtin heute ein Stück Bergkäse zum alten Preis – als Honorar für die Vorlesung.') },
+      { kind: 'question', prompt: german('Auf wie viel Prozent ist die Inflationsrate laut Zeitung gesunken?'), options: [german('Auf 2,1 Prozent'), german('Auf 20 Prozent'), german('Auf null Prozent')] },
+      { kind: 'question', prompt: german('Was misst die Inflationsrate laut Kim?'), options: [german('Die Veränderung der Preise im Vergleich zum Vorjahr'), german('Wie hoch die Preise insgesamt sind'), german('Wie viel die Menschen einkaufen')] },
+      { kind: 'question', prompt: german('Warum ist die gefühlte Inflation oft höher als die gemessene?'), options: [german('Weil wir uns an Dingen orientieren, die wir häufig kaufen, etwa Lebensmittel'), german('Weil die Statistik gefälscht wird'), german('Weil Fernseher teurer geworden sind')] },
+      { kind: 'question', prompt: german('Was versteht man unter Verlustaversion?'), options: [german('Ein Verlust schmerzt mehr, als ein gleich großer Gewinn freut.'), german('Man meidet Geschäfte, in denen man schon einmal betrogen wurde.'), german('Man spart lieber, als zu investieren.')] },
+      { kind: 'question', prompt: german('Warum ist Leos Käse teurer geworden?'), options: [german('Milch, Strom und Diesel kosten ihn mehr.'), german('Er möchte mehr verdienen.'), german('Die Kunden kaufen weniger.')] },
+      { kind: 'question', prompt: german('Wie hat Leo auf die gestiegenen Kosten reagiert?'), options: [german('Er hat nur einen Teil an die Kunden weitergegeben.'), german('Er hat die Kosten vollständig weitergegeben.'), german('Er hat die Preise gesenkt.')] }
     ]
   },
   {
@@ -3897,14 +3960,31 @@ export const germanStories: Story[] = [
     scene: 'park',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Extra C2 5'),
+    weathers: ['sunny', 'cloudy'],
+    title: german('Lob des Müßiggangs'),
     beats: [
-      { kind: 'narration', text: german('.') },
-      { kind: 'line', speaker: 'mia', text: german('undefined ist wichtig und undefined ist neu.') },
-      { kind: 'line', speaker: 'tom', text: german('undefined und undefined sind da.') },
-      { kind: 'narration', text: german('undefined und undefined.') },
-      { kind: 'question', prompt: german('Was ist Wort?'), options: [german('Option'), german('Option'), german('Option')] },
-      { kind: 'question', prompt: german('Wer hat Wort?'), options: [german('Option'), german('Anderes'), german('Nichts')] }
+      { kind: 'narration', text: german('Ein Dienstagnachmittag im Park. Tom hat sich zum ersten Mal seit Monaten einen halben Tag freigenommen, kann aber nicht aufhören, auf sein Handy zu schauen. Mia liegt neben ihm im Gras und betrachtet die Wolken.') },
+      { kind: 'line', speaker: 'mia', mood: 'laughing', text: german('Du hast jetzt viermal in zehn Minuten deine Mails gecheckt. Sogar dein Feierabend scheint ein Projekt mit Zielvorgaben zu sein.') },
+      { kind: 'line', speaker: 'tom', mood: 'worried', text: german('Ich weiß. Wenn ich nichts tue, habe ich das Gefühl, Zeit zu verschwenden. Selbst beim Joggen zähle ich Kilometer, damit es sich lohnt.') },
+      { kind: 'line', speaker: 'mia', text: german('Genau das beschreibt Byung-Chul Han in seinem Essay „Müdigkeitsgesellschaft“. Früher hat uns ein Vorgesetzter ausgebeutet, heute beuten wir uns selbst aus – und halten das auch noch für Freiheit. Der Antreiber sitzt nicht mehr im Chefbüro, sondern im eigenen Kopf.') },
+      { kind: 'line', speaker: 'tom', text: german('Klingt mir ein bisschen zu kulturpessimistisch. Ehrgeiz ist ja nicht per se krankhaft. Ohne Menschen, die mehr leisten wollten, gäbe es weder Impfstoffe noch Brücken.') },
+      { kind: 'line', speaker: 'mia', text: german('Einverstanden, und Han übertreibt sicher gern. Aber der Gedanke ist alt. Schon Aristoteles schrieb, dass wir arbeiten, um Muße zu haben – nicht umgekehrt. Muße war für ihn nicht Faulheit, sondern die Zeit, in der man denkt, sich bildet und überhaupt erst zu sich kommt.') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Und wie unterscheidet man Muße von bloßem Herumhängen? Mir kommt beides gleich unproduktiv vor.') },
+      { kind: 'line', speaker: 'mia', text: german('Vielleicht liegt da schon der Denkfehler: dass alles produktiv sein muss. Die Psychologie weiß übrigens seit Langem, dass dem Gehirn gerade in Phasen ohne Aufgabe oft die besten Einfälle kommen. Viele Ideen entstehen unter der Dusche, nicht im Meeting.') },
+      { kind: 'line', speaker: 'tom', mood: 'laughing', text: german('Jetzt rechtfertigst du die Muße mit ihrem Nutzen. Ist das nicht genau die Logik, die du kritisierst?') },
+      { kind: 'line', speaker: 'mia', mood: 'surprised', text: german('Touché. Du hast mich erwischt. Vielleicht muss man den Müßiggang gar nicht rechtfertigen, sondern sich einfach erlauben. {name}, wie siehst du das: Braucht Nichtstun eine Begründung?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Eigentlich nicht. Wer sich Ruhe nur gönnt, weil sie hinterher die Leistung steigert, hat das Prinzip der Leistung bloß in die Freizeit verlängert.'),
+        german('Ja, Nichtstun ist nur erlaubt, wenn man es vorher mit dem Chef abgesprochen hat.'),
+        german('Nein, weil man beim Nichtstun ohnehin die meisten Kilometer läuft.')
+      ] },
+      { kind: 'narration', text: german('Tom zögert, dann schaltet er sein Handy aus und legt sich neben Mia ins Gras. Eine Weile sagt keiner von beiden etwas. Über ihnen zieht eine Wolke vorbei, die aussieht wie ein Elefant.') },
+      { kind: 'question', prompt: german('Warum zieht Mia Tom am Anfang auf?'), options: [german('Weil er in kurzer Zeit mehrfach seine Mails kontrolliert hat'), german('Weil er beim Joggen zu langsam ist'), german('Weil er zu spät gekommen ist')] },
+      { kind: 'question', prompt: german('Was ist laut Byung-Chul Han das Neue an der heutigen Ausbeutung?'), options: [german('Man beutet sich selbst aus und hält das für Freiheit.'), german('Die Vorgesetzten sind strenger geworden.'), german('Niemand arbeitet mehr freiwillig.')] },
+      { kind: 'question', prompt: german('Welchen Einwand bringt Tom gegen Han vor?'), options: [german('Ehrgeiz sei nicht per se krankhaft und habe viel Gutes hervorgebracht.'), german('Han habe nie selbst gearbeitet.'), german('Muße sei ein modernes Phänomen.')] },
+      { kind: 'question', prompt: german('Was bedeutete Muße für Aristoteles?'), options: [german('Zeit zum Denken und Sich-Bilden, nicht Faulheit'), german('Die Belohnung für besonders harte Arbeit'), german('Eine Form der Faulheit')] },
+      { kind: 'question', prompt: german('Worin ertappt Tom Mia?'), options: [german('Sie rechtfertigt die Muße mit ihrem Nutzen.'), german('Sie hat selbst heimlich ihre Mails gelesen.'), german('Sie hat Aristoteles falsch zitiert.')] },
+      { kind: 'question', prompt: german('Was tut Tom am Ende?'), options: [german('Er schaltet sein Handy aus und legt sich ins Gras.'), german('Er geht zurück ins Büro.'), german('Er läuft noch ein paar Kilometer.')] }
     ]
   }
 
