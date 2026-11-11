@@ -2,6 +2,9 @@
   Puts together the learner's own story character: a big preview that reacts to every pick, a row of
   parts (face, skin, eyes, …) and the choices for the open part, drawn as little previews or swatches.
   Used in the intro and on the profile page; `onchange` gets every new look.
+  Colours sold for Telegram Stars carry a star instead of a lock; tapping one tries it on and the
+  information bar shows its price. With `shop` (the profile page) that bar also has the buy button,
+  and an extra "Sets" category lists the colour sets.
 -->
 <script lang="ts">
   import { num } from '#lib/format/num.svelte.js';
@@ -15,8 +18,14 @@
   import type { AchievementId } from '#lib/progress/achievements.js';
   import IconCasino from '~icons/material-symbols/casino-rounded';
   import IconLock from '~icons/material-symbols/lock-rounded';
+  import IconCheck from '~icons/material-symbols/check-rounded';
+  import { haptic } from '#lib/feedback/haptics.js';
+  import { network } from '#lib/offline/network.svelte.js';
+  import { cloudSync } from '#lib/sync/cloudSync.svelte.js';
+  import { PRODUCTS, SHOP_ITEMS, product as findProduct, withProduct, type Product } from '#lib/store/catalog.js';
+  import { buy, storeState } from '#lib/store/storeClient.svelte.js';
 
-  let { value, onchange }: { value: Avatar; onchange: (next: Avatar) => void } = $props();
+  let { value, onchange, shop = false }: { value: Avatar; onchange: (next: Avatar) => void; shop?: boolean } = $props();
 
   const locale = $derived({ locale: settings.interfaceLocale });
   const partLabels = $derived<Record<AvatarPart, string>>({
@@ -85,7 +94,46 @@
   const colourParts: AvatarPart[] = ['skin', 'hair', 'top'];
   const bodyParts: AvatarPart[] = ['shirt'];
 
-  let part = $state<AvatarPart>('face');
+  // --- for sale ------------------------------------------------------------------------------------
+  // What is tried on shows on the stage only; picking anything that is free ends the try-on.
+  let trying = $state<Product | null>(null);
+  let notice = $state('');
+  const stage = $derived(withProduct(value, trying));
+  const linked = $derived(cloudSync.linked === true || storeState.linked === true);
+  const sets = PRODUCTS.filter((entry) => entry.kind === 'set');
+  const setNames = $derived<Record<string, string>>({ set_neon: m.store_set_neon({}, locale), set_dusk: m.store_set_dusk({}, locale), set_rose: m.store_set_rose({}, locale) });
+  const productName = (entry: Product) => entry.kind === 'set' ? setNames[entry.id] ?? entry.id : partLabels[SHOP_ITEMS.find((item) => item.id === entry.id)!.part];
+  function forSale(choicePart: AvatarPart, choice: string): boolean {
+    const id = rewardFor(choicePart, choice);
+    return id !== null && cosmetics[id].source.kind === 'shop';
+  }
+  const owns = (entry: Product) => entry.unlocks.every((id) => cosmeticState.unlocked.includes(id));
+  function tryProduct(entry: Product) {
+    lockedHint = null;
+    notice = '';
+    if (owns(entry)) {
+      trying = null;
+      onchange(withProduct(value, entry));
+      playSoundEffect(settings.sound, 'pop');
+      react('surprised');
+      return;
+    }
+    trying = trying?.id === entry.id ? null : entry;
+    haptic('tap');
+    react('curious');
+  }
+  async function purchase(entry: Product) {
+    notice = m.store_waiting({}, locale);
+    const done = await buy(entry.id);
+    notice = done ? m.store_thanks({}, locale) : storeState.failed ? m.store_failed({}, locale) : '';
+    if (!done) return;
+    haptic('win');
+    trying = null;
+    onchange(withProduct(value, entry));
+    react('laughing');
+  }
+
+  let part = $state<AvatarPart | 'sets'>('face');
   let mood = $state<Mood>('happy');
   let bump = $state(0);
   let rolling = $state(false);
@@ -101,6 +149,13 @@
   $effect(() => () => window.clearTimeout(moodTimer));
 
   function choose(choice: string) {
+    if (part === 'sets') return;
+    if (isLocked(part, choice, cosmeticState.unlocked) && forSale(part, choice)) {
+      tryProduct(findProduct(rewardFor(part, choice)!)!);
+      return;
+    }
+    trying = null;
+    notice = '';
     if (isLocked(part, choice, cosmeticState.unlocked)) {
       lockedHint = rewardFor(part, choice);
       playSoundEffect(settings.sound, 'pop');
@@ -114,6 +169,7 @@
     react(part === 'extra' || part === 'hairStyle' ? 'surprised' : part === 'nose' ? 'laughing' : 'curious');
   }
   function roll() {
+    trying = null;
     onchange(randomAvatar(cosmeticState.unlocked));
     playSoundEffect(settings.sound, 'pop');
     rolling = false;
@@ -124,29 +180,53 @@
 
 <div class="avatar-editor">
   <div class="avatar-stage">
-    {#key bump}<span class="avatar-preview" aria-hidden="true"><StoryCharacter id="kumar" avatar={value} {mood} /></span>{/key}
+    {#key bump}<span class="avatar-preview" aria-hidden="true"><StoryCharacter id="kumar" avatar={stage} {mood} /></span>{/key}
     <button type="button" class="btn-play btn-play-round avatar-roll" class:rolling onanimationend={() => (rolling = false)} onclick={roll} aria-label={randomLabel} title={randomLabel}><IconCasino aria-hidden="true" /></button>
   </div>
   <div class="avatar-parts" role="tablist">
     {#each avatarParts as key (key)}
       <button type="button" role="tab" class="avatar-part" class:active={part === key} aria-selected={part === key} onclick={() => { part = key; lockedHint = null; }}>{partLabels[key]}</button>
     {/each}
+    {#if shop}<button type="button" role="tab" class="avatar-part" class:active={part === 'sets'} aria-selected={part === 'sets'} onclick={() => { part = 'sets'; lockedHint = null; }}>{m.store_sets({}, locale)}</button>{/if}
   </div>
-  <div class="avatar-choices" class:swatches={colourParts.includes(part)} role="radiogroup" aria-label={partLabels[part]}>
-    {#each avatarChoices[part] as choice, index (choice)}
-      {@const picked = value[part] === choice}
-      {@const locked = isLocked(part, choice, cosmeticState.unlocked)}
-      {#if colourParts.includes(part)}
-        <button type="button" role="radio" class="avatar-swatch" class:picked class:locked aria-checked={picked} aria-label={locked ? `${partLabels[part]} ${index + 1}: ${lockedLabel}` : `${partLabels[part]} ${index + 1}`} style:--swatch={choice} onclick={() => choose(choice)}>{#if locked}<IconLock class="avatar-lock" aria-hidden="true" />{/if}</button>
-      {:else}
-        <button type="button" role="radio" class="avatar-tile" class:picked class:locked class:zoom={!bodyParts.includes(part)} aria-checked={picked} aria-label={locked ? `${partLabels[part]} ${index + 1}: ${lockedLabel}` : `${partLabels[part]} ${index + 1}`} onclick={() => choose(choice)}>
-          <StoryCharacter id="kumar" avatar={{ ...value, [part]: choice }} still />
-          {#if locked}<IconLock class="avatar-lock" aria-hidden="true" />{/if}
+  {#if part === 'sets'}
+    <div class="avatar-choices avatar-sets" role="radiogroup" aria-label={m.store_sets({}, locale)}>
+      {#each sets as entry (entry.id)}
+        {@const mine = owns(entry)}
+        {@const picked = trying?.id === entry.id || (mine && entry.unlocks.every((id) => { const item = SHOP_ITEMS.find((shopItem) => shopItem.id === id)!; return value[item.part] === item.choice; }))}
+        <button type="button" role="radio" class="avatar-tile avatar-set" class:picked class:locked={!mine} aria-checked={picked} aria-label={mine ? productName(entry) : `${productName(entry)}: ${m.store_buy({ stars: num(entry.stars) }, locale)}`} onclick={() => tryProduct(entry)}>
+          <StoryCharacter id="kumar" avatar={withProduct(value, entry)} still />
+          <span class="avatar-set-name">{productName(entry)}</span>
+          {#if !mine}<img class="avatar-star" src="/telegram-star.svg" alt="" />{/if}
         </button>
-      {/if}
-    {/each}
-  </div>
-  {#if lockedHint}<p class="avatar-locked-hint" role="status"><IconLock aria-hidden="true" /> {rewardHint(lockedHint)}</p>{/if}
+      {/each}
+    </div>
+  {:else}
+    <div class="avatar-choices" class:swatches={colourParts.includes(part)} role="radiogroup" aria-label={partLabels[part]}>
+      {#each avatarChoices[part] as choice, index (choice)}
+        {@const picked = stage[part] === choice}
+        {@const locked = isLocked(part, choice, cosmeticState.unlocked)}
+        {@const sale = locked && forSale(part, choice)}
+        {#if colourParts.includes(part)}
+          <button type="button" role="radio" class="avatar-swatch" class:picked class:locked class:sale aria-checked={picked} aria-label={locked ? `${partLabels[part]} ${index + 1}: ${sale ? m.store_buy({ stars: num(findProduct(rewardFor(part, choice)!)!.stars) }, locale) : lockedLabel}` : `${partLabels[part]} ${index + 1}`} style:--swatch={choice} onclick={() => choose(choice)}>{#if sale}<img class="avatar-star" src="/telegram-star.svg" alt="" />{:else if locked}<IconLock class="avatar-lock" aria-hidden="true" />{/if}</button>
+        {:else}
+          <button type="button" role="radio" class="avatar-tile" class:picked class:locked class:zoom={!bodyParts.includes(part)} aria-checked={picked} aria-label={locked ? `${partLabels[part]} ${index + 1}: ${lockedLabel}` : `${partLabels[part]} ${index + 1}`} onclick={() => choose(choice)}>
+            <StoryCharacter id="kumar" avatar={{ ...value, [part]: choice }} still />
+            {#if sale}<img class="avatar-star" src="/telegram-star.svg" alt="" />{:else if locked}<IconLock class="avatar-lock" aria-hidden="true" />{/if}
+          </button>
+        {/if}
+      {/each}
+    </div>
+  {/if}
+  {#if trying}
+    <div class="avatar-locked-hint avatar-sale" role="status">
+      <img class="avatar-sale-star" src="/telegram-star.svg" alt="" />
+      <span class="avatar-sale-text"><strong>{productName(trying)} · {num(trying.stars)}</strong><small>{notice || (shop && !linked ? m.store_sign_in({}, locale) : m.cosmetic_hint_shop({}, locale))}</small></span>
+      {#if shop && linked}<button type="button" class="btn-play btn-play-ink btn-play-sm" disabled={storeState.buying !== null || !network.online} onclick={() => purchase(trying!)}>{m.store_buy_now({}, locale)}</button>{/if}
+    </div>
+  {:else if notice}
+    <p class="avatar-locked-hint" role="status"><IconCheck aria-hidden="true" /> {notice}</p>
+  {:else if lockedHint}<p class="avatar-locked-hint" role="status"><IconLock aria-hidden="true" /> {rewardHint(lockedHint)}</p>{/if}
 </div>
 
 <style>
@@ -189,4 +269,19 @@
   @keyframes avatar-hop { 0% { scale:1; } 35% { scale:1.08 .92; } 65% { translate:0 -.5rem;scale:.97 1.04; } 100% { scale:1;translate:0 0; } }
   @keyframes avatar-roll { from { transform:rotate(0) scale(1); } 50% { transform:rotate(200deg) scale(1.25); } to { transform:rotate(360deg) scale(1); } }
   @media (prefers-reduced-motion:reduce) { .avatar-preview,.avatar-roll.rolling :global(svg) { animation:none; } .avatar-tile,.avatar-swatch,.avatar-part { transition:none; } }
+  .avatar-choices :global(.avatar-star),.avatar-star { position:absolute;inset-inline-end:.1rem;bottom:.1rem;width:1.35rem;height:1.2rem;pointer-events:none;filter:drop-shadow(0 1px 1px rgba(23,42,69,.35)); }
+  .avatar-swatch.sale { position:relative;opacity:.85; }
+  .avatar-swatch.sale .avatar-star { inset:auto -.35rem -.3rem auto; }
+  .avatar-sets { grid-template-columns:repeat(auto-fill,minmax(5.2rem,1fr)); }
+  .avatar-set { aspect-ratio:4 / 5;display:grid;align-items:end; }
+  .avatar-set :global(.story-character) { position:absolute;inset:0 0 1.1rem; width:100%;height:calc(100% - 1.1rem); }
+  .avatar-tile.avatar-set.locked :global(.story-character) { filter:none;opacity:1; }
+  .avatar-set-name { position:relative;padding:.15rem .3rem;font-size:.58rem;font-weight:900;text-align:center;color:#172a45; }
+  :global(html.dark) .avatar-set-name { color:#fffdf7; }
+  .avatar-sale { align-items:center;gap:.5rem; }
+  .avatar-sale-star { flex:none;width:2.2rem;height:2rem; }
+  .avatar-sale-text { display:grid;gap:.1rem;flex:1;min-width:0; }
+  .avatar-sale-text strong { font-size:.74rem;font-weight:900; }
+  .avatar-sale-text small { font-size:.6rem;font-weight:700;opacity:.75; }
+  .avatar-sale .btn-play { flex:none; }
 </style>

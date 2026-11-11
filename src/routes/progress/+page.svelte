@@ -20,10 +20,7 @@
   import Companion from '#lib/story/Companion.svelte';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import AvatarEditor from '#lib/profile/AvatarEditor.svelte';
-  import Bundles from '#lib/store/Bundles.svelte';
   import ProCard from '#lib/store/ProCard.svelte';
-  import { withProduct, type Product } from '#lib/store/catalog.js';
-  import type { Avatar } from '#lib/profile/avatar.js';
   import { cloudSync } from '#lib/sync/cloudSync.svelte.js';
   import { checkAchievementRewards, cosmetics } from '#lib/profile/cosmetics.svelte.js';
   import { dailyActivity, modeShares } from '#lib/progress/statsView.js';
@@ -146,16 +143,6 @@
   let shareNote = $state('');
   // The name and the character are edited right here, not in the settings panel.
   let editingName = $state(false);
-  // A bundle being tried on shows on the editor's character; picking a part there ends the try-on
-  // and changes only that part of the learner's own look.
-  let trying = $state<Product | null>(null);
-  const look = $derived(withProduct(settings.avatar ?? defaultAvatar, trying));
-  function changeLook(next: Avatar) {
-    const own = settings.avatar ?? defaultAvatar;
-    const changed = (Object.keys(next) as (keyof Avatar)[]).filter((part) => next[part] !== look[part]);
-    trying = null;
-    settings.setAvatar(changed.length ? { ...own, ...Object.fromEntries(changed.map((part) => [part, next[part]])) } : next);
-  }
   let nameDraft = $state('');
 
   const masteredWords = $derived(vocabProgress[settings.lang]?.masteredWords ?? 0);
@@ -263,8 +250,8 @@
 <section class="flex-1 min-h-0 m-0 px-[clamp(1rem,5vw,2rem)] pb-[clamp(1rem,5vw,2rem)] pt-[clamp(2.9rem,10vw,3.6rem)] overflow-x-hidden overflow-y-auto bg-transparent" dir={interfaceDirection} lang={settings.interfaceLocale} aria-label={labels.title}>
   <h1 class="m-0 text-center text-base-content font-['DM_Serif_Display',serif] text-[clamp(1.6rem,7vw,2.2rem)] font-normal tracking-[-.03em] leading-none">{labels.title}</h1>
 
-  <!-- Customising: the learner's name and own story character, edited right here, with the colour
-       bundles to try on and buy underneath. -->
+  <!-- Customising: the learner's name and own story character, edited right here; colours and sets
+       for Telegram Stars are tried on and bought inside the editor. -->
   <section class="panel-play mt-[1.2rem] px-4 pt-[.9rem] pb-4" aria-labelledby="progress-profile-heading">
     <h2 id="progress-profile-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.profileTitle}</h2>
     {#if editingName}
@@ -281,8 +268,7 @@
       </div>
     {/if}
     <p class="m-0 mt-[.35rem] mb-[.7rem] text-base-content/65 text-[.6rem] font-bold leading-[1.4]">{labels.profileHint}</p>
-    <AvatarEditor value={look} onchange={changeLook} />
-    <Bundles bind:trying />
+    <AvatarEditor value={settings.avatar ?? defaultAvatar} onchange={(next) => settings.setAvatar(next)} shop />
   </section>
 
   <!-- Not signed in with Telegram yet: the offer to save progress there (and to buy bundles and Pro). -->
