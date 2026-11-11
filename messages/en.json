@@ -944,5 +944,6 @@
   "mock_again": "Take a new test",
   "mock_other_level": "Another level",
   "mock_unavailable": "This language doesn't have enough word meanings for a mock test yet.",
-  "coach_mock": "Mock test {level}"
+  "coach_mock": "Mock test {level}",
+  "coach_focus_feature_prior": "Often tricky when your first language is {language}"
 }

@@ -17,6 +17,7 @@
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import { readEvents } from './eventLog.js';
   import { featureStats, type LearningEvent } from './events.js';
+  import { blendPriors, priorsFor, PRIOR_WEIGHT } from './l1Priors.js';
   import { buildOverview } from './overview.js';
   import BottomSheet from '#lib/app/BottomSheet.svelte';
   import IconHelp from '~icons/material-symbols/question-mark-rounded';
@@ -111,7 +112,12 @@
 
   // Up to three concrete next steps: the weakest practised skill, the weakest grammar feature and due words.
   const weakestSkill = $derived(SKILLS.filter((skill) => overview.skills[skill].attempts >= 5).sort((a, b) => overview.skills[a].point - overview.skills[b].point)[0]);
-  const weakFeature = $derived(featureStats(events, Date.now() - 30 * DAY_MS).find((stat) => stat.accuracy < 0.7));
+  // Until there are enough own answers, features that are typically hard for speakers of the
+  // interface language (l1Priors.ts) count as weak, so a new learner gets a sensible first focus.
+  const weakFeature = $derived(blendPriors(featureStats(events, Date.now() - 30 * DAY_MS, 1), priorsFor(settings.interfaceLocale, settings.lang)).find((stat) => stat.accuracy < 0.7));
+  const firstLanguage = $derived.by(() => {
+    try { return new Intl.DisplayNames([settings.interfaceLocale], { type: 'language' }).of(settings.interfaceLocale) ?? settings.interfaceLocale; } catch { return settings.interfaceLocale; }
+  });
 </script>
 
 <!-- Hero: how ready, for what, and the next step to find out for sure -->
@@ -158,7 +164,7 @@
         <li><a class="card-play coach-step" href={PRACTICE[weakestSkill]}><span><strong>{m.coach_focus_skill({ skill: skillName[weakestSkill] }, locale)}</strong><small>{m.coach_focus_skill_hint({ range: rangeLabel(overview.skills[weakestSkill]) }, locale)}</small></span><IconArrow aria-hidden="true" class="rtl:rotate-180" /></a></li>
       {/if}
       {#if weakFeature}
-        <li><a class="card-play coach-step" href="/grammar"><span><strong>{m.coach_focus_feature({ feature: featureLabel(weakFeature.feature) }, locale)}</strong><small>{m.coach_focus_feature_hint({ percent: formatPercent(settings.formatContext, weakFeature.accuracy) }, locale)}</small></span><IconArrow aria-hidden="true" class="rtl:rotate-180" /></a></li>
+        <li><a class="card-play coach-step" href="/grammar"><span><strong>{m.coach_focus_feature({ feature: featureLabel(weakFeature.feature) }, locale)}</strong><small>{weakFeature.observed < PRIOR_WEIGHT ? m.coach_focus_feature_prior({ language: firstLanguage }, locale) : m.coach_focus_feature_hint({ percent: formatPercent(settings.formatContext, weakFeature.accuracy) }, locale)}</small></span><IconArrow aria-hidden="true" class="rtl:rotate-180" /></a></li>
       {/if}
     </ul>
   </section>
