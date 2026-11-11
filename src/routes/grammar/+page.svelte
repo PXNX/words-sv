@@ -13,7 +13,8 @@
   import { dueReviewEntries, recordReview } from '#lib/review/ledger.js';
   import { articleChoiceOptions, gapSentenceSuffixes, grammarArticles, pickRandomSection, shuffled, GRAMMAR_REVIEW_STORAGE_PREFIX } from '#lib/grammar/learning.js';
   import { buildNounCasePrompt, buildNounPropertyPrompt, genderFeature, isDeclinableNoun, type GrammarPrompt } from '#lib/grammar/cases.js';
-  import { buildAdjectivePrompt, isEligibleAdjective } from '#lib/grammar/adjectives.js';
+  import { adjectiveStem, buildAdjectivePrompt, isEligibleAdjective } from '#lib/grammar/adjectives.js';
+  import { formCountsAsRight, scoreForm, type FormScore } from '#lib/grammar/formAnswer.js';
   import { buildVerbPrompt, buildVerbPropertyPrompt, verbConjugations } from '#lib/grammar/verbs.js';
   import { buildFalseFriendPrompt, falseFriendsFor } from '#lib/grammar/falseFriends.js';
   import { isSentenceLanguage, matchOrder, orderExercisePool, shuffleTiles } from '#lib/grammar/sentenceBuilder.js';
@@ -35,7 +36,16 @@
     orderTitle: m.grammar_order({}, { locale: settings.interfaceLocale }),
     orderPrompt: m.grammar_order_prompt({}, { locale: settings.interfaceLocale }),
     orderReset: m.grammar_order_reset({}, { locale: settings.interfaceLocale }),
-    orderUnsupported: m.grammar_order_unsupported({}, { locale: settings.interfaceLocale })
+    orderUnsupported: m.grammar_order_unsupported({}, { locale: settings.interfaceLocale }),
+    formsTitle: m.grammar_forms({}, { locale: settings.interfaceLocale }),
+    formsPrompt: m.grammar_forms_prompt({}, { locale: settings.interfaceLocale }),
+    formsCheck: m.grammar_forms_check({}, { locale: settings.interfaceLocale }),
+    formsUnsupported: m.grammar_forms_unsupported({}, { locale: settings.interfaceLocale }),
+    formsVerdict: (verdict: FormScore['verdict'], correct: string) =>
+      verdict === 'case' ? m.grammar_forms_case({ correct }, { locale: settings.interfaceLocale })
+      : verdict === 'spelling' ? m.grammar_forms_spelling({ correct }, { locale: settings.interfaceLocale })
+      : verdict === 'typo' ? m.grammar_forms_typo({ correct }, { locale: settings.interfaceLocale })
+      : m.grammar_forms_wrong({ correct }, { locale: settings.interfaceLocale })
   });
 
   // German gets the full case/adjective/verb engine below (`cases.ts`, `adjectives.ts`,
@@ -50,12 +60,14 @@
     page.url.searchParams.get('mode') === 'determine' ? 'determine'
     : page.url.searchParams.get('mode') === 'order' ? 'order'
     : page.url.searchParams.get('mode') === 'falsefriends' ? 'falsefriends'
+    : page.url.searchParams.get('mode') === 'forms' ? 'forms'
     : 'fill'
   );
   const modeTitle = $derived(
     grammarMode === 'order' ? labels.orderTitle
     : grammarMode === 'determine' ? 'Bestimmung'
     : grammarMode === 'falsefriends' ? 'Falsche Freunde'
+    : grammarMode === 'forms' ? labels.formsTitle
     : 'Lücken füllen'
   );
   const metadata = $derived(wordMetadata[settings.lang]);
@@ -75,6 +87,8 @@
       ? falseFriendPairs.map((pair) => `ff:${pair.word}`)
       : grammarMode === 'order'
       ? orderPool.map((exercise) => `order:${exercise.id}`)
+      : grammarMode === 'forms'
+      ? isGerman ? [...verbPool.map((word) => `verb:${word}`), ...adjectivePool.map((word) => `adj:${word}`)] : []
       : isGerman
       ? grammarMode === 'determine'
         ? [...nounPool.map((word) => `noun:${word}`), ...verbPool.map((word) => `verb:${word}`)]
@@ -86,6 +100,8 @@
       ? falseFriendPairs.length > 0
       : grammarMode === 'order'
       ? orderPool.length > 0
+      : grammarMode === 'forms'
+      ? isGerman && verbPool.length + adjectivePool.length > 0
       : isGerman
       ? nounPool.length + adjectivePool.length + verbPool.length > 0
       : articleUniverse.length > 0
@@ -113,6 +129,9 @@
   let selectedOrder = $state<number[]>([]);
   // The correct sentence the learner built, with its punctuation, once it matches.
   let orderSolution = $state<string | null>(null);
+  // The typed form in the Formen mode and how much credit it earned.
+  let typedForm = $state('');
+  let formScore = $state<FormScore | null>(null);
 
   const currentKey = $derived(queue[position] ?? '');
   const currentOrderExercise = $derived(currentKey.startsWith('order:') ? orderPool.find((exercise) => exercise.id === currentKey.slice('order:'.length)) ?? null : null);
@@ -180,7 +199,36 @@
     if (kind === 'verb') return grammarMode === 'determine' ? buildVerbPropertyPrompt(word, random, shuffled) : buildVerbPrompt(word, random, shuffled);
     return null;
   }
+  // The dictionary form shown under a Formen gap, and the word's other forms (never counted as typos).
+  function formLemma(key: string): string {
+    const [kind, word = ''] = key.split(':');
+    return kind === 'verb' ? word.toLocaleLowerCase('de') : (metadata[word]?.spelling ?? word).toLocaleLowerCase('de');
+  }
+  function otherForms(key: string): string[] {
+    const [kind, word = ''] = key.split(':');
+    if (kind === 'verb') return [...(verbConjugations[word]?.forms ?? []), word.toLocaleLowerCase('de')];
+    const stem = adjectiveStem(metadata[word]?.spelling ?? word);
+    return ['e', 'en', 'er', 'es', 'em'].map((ending) => `${stem}${ending}`);
+  }
+  function checkForm(event: SubmitEvent) {
+    event.preventDefault();
+    if (answerStatus || !prompt || !typedForm.trim()) return;
+    const score = scoreForm(typedForm, prompt.correct, otherForms(currentKey));
+    formScore = score;
+    const right = formCountsAsRight(score);
+    answerStatus = right ? 'correct' : 'wrong';
+    recordAnswer('grammar', score.verdict === 'exact');
+    // A slip still counts as known, but as a hard answer, so it comes back sooner.
+    const grade = score.verdict === 'exact' ? gradeNow(true) : right ? 'hard' : gradeNow(false);
+    reviewProgress = updateReviewProgress(reviewProgress, currentKey, right, Date.now(), grade);
+    persistProgress();
+    recordReview(settings.lang, currentKey, right, 'grammar', Date.now(), grade, { score: score.credit, ...(prompt.features ? { features: prompt.features } : {}) });
+    if (right) { playSuccessSound(settings.sound, 'grammar'); void settings.recordStreak('grammar_correct'); }
+    else { playErrorSound(settings.sound, 'grammar'); recordMissedGrammarWord(currentKey); requeue(currentKey); }
+  }
   function resetPrompt() {
+    typedForm = '';
+    formScore = null;
     answerStatus = null;
     selectedChoice = null;
     shownAt = performance.now();
@@ -276,7 +324,7 @@
     <Companion id="tom" mood={answerStatus === 'correct' ? 'happy' : answerStatus === 'wrong' ? 'sad' : 'curious'} size="sm" />
   </header>
   {#if !isSupported}
-    <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{grammarMode === 'falsefriends' ? 'Falsche Freunde sind aktuell nur für Deutsch verfügbar.' : grammarMode === 'order' ? labels.orderUnsupported : labels.unsupported}</div>
+    <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{grammarMode === 'falsefriends' ? 'Falsche Freunde sind aktuell nur für Deutsch verfügbar.' : grammarMode === 'order' ? labels.orderUnsupported : grammarMode === 'forms' ? labels.formsUnsupported : labels.unsupported}</div>
   {:else if !prompt}
     <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{labels.unavailable}</div>
   {:else}
@@ -305,7 +353,25 @@
             {#if prompt.question}<p class="m-0 text-accent text-[.62rem] font-black tracking-[.08em] uppercase">{prompt.question}</p>{/if}
             <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.55rem,7vw,2.6rem)] font-normal tracking-[.04em] leading-[1.3]" lang={settings.lang}>{#if prompt.before}{prompt.before}{/if}{#if prompt.question}{#if prompt.highlight && prompt.after.includes(prompt.highlight)}{@const highlightIndex = prompt.after.indexOf(prompt.highlight)}{prompt.after.slice(0, highlightIndex)}<mark class="bg-primary/25 text-accent px-[.15rem]">{prompt.highlight}</mark>{prompt.after.slice(highlightIndex + prompt.highlight.length)}{:else}{prompt.after}{/if}{:else}<span class="inline-block border-b-4 border-dotted border-accent text-accent px-[.3rem]">___</span> {prompt.after}{/if}</p>
     </article>{/key}
-    {#if prompt.choices.length >= 2}
+    {#if grammarMode === 'forms'}
+      <form class="w-[min(100%,28rem)] grid gap-[.55rem]" onsubmit={checkForm} aria-label={labels.formsPrompt}>
+        <p class="m-0 text-accent text-[.6rem] font-black tracking-[.1em] text-center uppercase">{labels.formsPrompt} · <span class="normal-case tracking-normal" lang={settings.lang}>{formLemma(currentKey)}</span></p>
+        <div class="flex gap-[.45rem]">
+          <!-- svelte-ignore a11y_autofocus -->
+          <input class="input input-bordered flex-1 min-w-0 text-[1rem] font-bold" bind:value={typedForm} lang={settings.lang} autocomplete="off" autocapitalize="off" spellcheck="false" readonly={answerStatus !== null} aria-label={labels.formsPrompt} autofocus />
+          <button type="submit" class="btn-play btn-play-ink" disabled={answerStatus !== null || !typedForm.trim()}>{labels.formsCheck}</button>
+        </div>
+        <!-- A fixed slot for the verdict and Continue, so nothing above moves when they appear. -->
+        <div class="grid justify-items-center gap-[.45rem] min-h-[5.4rem] {answerStatus ? '' : 'invisible'}" aria-live="polite">
+          {#if formScore && prompt}
+            <p class="m-0 flex items-center gap-[.35rem] text-[.72rem] font-extrabold {formScore.verdict === 'exact' ? 'text-success' : formScore.credit >= 0.75 ? 'text-accent' : 'text-error'}">
+              {#if formScore.verdict === 'exact'}<IconCheck class="w-[1rem] h-[1rem]" aria-hidden="true" />{labels.correct}{:else}{#if formScore.credit < 0.75}<IconClose class="w-[1rem] h-[1rem]" aria-hidden="true" />{/if}<span lang={settings.lang}>{labels.formsVerdict(formScore.verdict, prompt.correct)}</span>{/if}
+            </p>
+          {/if}
+          <button type="button" class="btn-play btn-play-ink" onclick={continueLearning} tabindex={answerStatus ? 0 : -1}>{labels.continue}</button>
+        </div>
+      </form>
+    {:else if prompt.choices.length >= 2}
       <section class="w-[min(100%,28rem)] grid gap-[.55rem]" aria-label={labels.chooseArticle}>
         <p class="m-0 text-accent text-[.6rem] font-black tracking-[.1em] text-center uppercase">{labels.chooseArticle}</p>
         <div class="grid gap-[.45rem]" style={`grid-template-columns:repeat(${grammarMode === 'determine' ? 2 : Math.min(prompt.choices.length, 3)},minmax(0,1fr));`}>

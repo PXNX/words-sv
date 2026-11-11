@@ -945,5 +945,14 @@
   "mock_other_level": "Another level",
   "mock_unavailable": "This language doesn't have enough word meanings for a mock test yet.",
   "coach_mock": "Mock test {level}",
-  "coach_focus_feature_prior": "Often tricky when your first language is {language}"
+  "coach_focus_feature_prior": "Often tricky when your first language is {language}",
+  "grammar_forms": "Forms",
+  "grammar_forms_prompt": "Type the right form of",
+  "grammar_forms_check": "Check",
+  "grammar_forms_unsupported": "Forms are only available for German so far.",
+  "grammar_forms_case": "Almost: it's “{correct}” (capital letters).",
+  "grammar_forms_spelling": "Almost: it's “{correct}” (umlaut or ß).",
+  "grammar_forms_typo": "One letter off: “{correct}”.",
+  "grammar_forms_wrong": "It's “{correct}”.",
+  "home_forms": "Conjugate verbs and decline adjectives yourself, with partial credit for small slips."
 }

@@ -46,6 +46,7 @@
   import IconEditNote from '~icons/material-symbols/edit-note-rounded';
   import IconFactCheck from '~icons/material-symbols/fact-check-rounded';
   import IconSort from '~icons/material-symbols/sort-rounded';
+  import IconForms from '~icons/material-symbols/text-fields-rounded';
   import IconPen from '~icons/material-symbols/ink-pen-rounded';
   import IconArticle from '~icons/material-symbols/article-rounded';
   import IconSwapHoriz from '~icons/material-symbols/swap-horiz-rounded';
@@ -344,6 +345,7 @@
       <a class="card-play {streakClass('grammar')}" href="/grammar?mode=fill"><span class="home-icon" aria-hidden="true"><IconEditNote /></span><h2>{labels.grammarFill}</h2><p>{labels.homeGrammar}</p>{#if grammarDue > 0}<span class="home-due-badge">{labels.repeatDue(grammarDue)}</span>{/if}<TodayBadge done={modeDone(settings.streak, 'grammar')} label={labels.streakModeDone} /></a>
       <a class="card-play {streakClass('grammar')}" href="/grammar?mode=determine"><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>{labels.grammarDetermine}</h2><p>{labels.homeDetermine}</p><TodayBadge done={modeDone(settings.streak, 'grammar')} label={labels.streakModeDone} /></a>
       <a class="card-play {streakClass('grammar')}" href="/grammar?mode=order"><span class="home-icon" aria-hidden="true"><IconSort /></span><h2>{labels.grammarOrder}</h2><p>{labels.homeOrder}</p><TodayBadge done={modeDone(settings.streak, 'grammar')} label={labels.streakModeDone} /></a>
+      {#if settings.lang === 'de'}<a class="card-play {streakClass('grammar')}" href="/grammar?mode=forms"><span class="home-icon" aria-hidden="true"><IconForms /></span><h2>{m.grammar_forms({}, { locale: settings.interfaceLocale })}</h2><p>{m.home_forms({}, { locale: settings.interfaceLocale })}</p><TodayBadge done={modeDone(settings.streak, 'grammar')} label={labels.streakModeDone} /></a>{/if}
     </div>
     </div>
     <div class="home-foot">
