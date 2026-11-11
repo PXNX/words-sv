@@ -299,14 +299,14 @@
             <small>{labels.todayKicker}</small>
             <strong>{todayTitle(todayPlan)}</strong>
           </span>
-          <span class="home-today-start">{labels.todayStart}<IconChevronRight aria-hidden="true" /></span>
+          <span class="home-today-start">{labels.todayStart}<IconChevronRight aria-hidden="true" class="rtl:rotate-180" /></span>
         </a>
       {/if}
       {#each homeContinue as item (item.href)}
         <a class="home-daily-row home-continue" href={item.href}>
           <span class="home-continue-label">{item.label}</span>
           <span class="home-continue-detail">{item.detail}</span>
-          <IconChevronRight class="home-continue-arrow" aria-hidden="true" />
+          <IconChevronRight class="home-continue-arrow rtl:rotate-180" aria-hidden="true" />
         </a>
       {/each}
     </section>

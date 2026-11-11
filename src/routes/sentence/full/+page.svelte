@@ -176,7 +176,7 @@
   .progress { height: 0.4rem; border-radius: 999px; background: rgba(23, 42, 69, 0.12); overflow: hidden; }
   .progress-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #e6a527, #34824d); transition: width 0.2s ease; }
   .writing-meta { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: flex-end; color: #7b8494; font-family: 'DM Sans', sans-serif; font-size: 0.64rem; font-weight: 700; }
-  .target-hint { margin-right: auto; }
+  .target-hint { margin-inline-end: auto; }
   .writing-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; }
   .writing-actions .btn-play :global(svg) { width: 1rem; height: 1rem; }
   :global(html.dark) .writing-header h1 { color: #fffdf7; }

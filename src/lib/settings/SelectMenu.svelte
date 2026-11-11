@@ -69,7 +69,7 @@
     <IconChevronDown aria-hidden="true" />
   </button>
   {#if open}
-    <ul class={`dropdown-content menu menu-sm select-menu absolute z-50 mt-[.25rem] ${align === 'end' ? 'right-0' : 'left-0'}`} role="listbox" aria-label={label}>
+    <ul class={`dropdown-content menu menu-sm select-menu absolute z-50 mt-[.25rem] ${align === 'end' ? 'end-0' : 'start-0'}`} role="listbox" aria-label={label}>
       {#each options as option (option.value)}
         <li role="none">
           <button

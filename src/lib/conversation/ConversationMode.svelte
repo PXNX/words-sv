@@ -642,7 +642,7 @@
   .talk-type { width:100%;display:flex;gap:.5rem; }
   .talk-download { font-size:.72rem; }
   .talk-choices { width:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem;margin:0;padding:0;list-style:none; }
-  .talk-choice { padding:.4rem .8rem;border:2px solid #172a45;border-radius:14px;background:#fffdf7;color:#172a45;font-size:.85rem;font-weight:700;line-height:1.3;text-align:left;cursor:pointer;box-shadow:2px 2px 0 #172a45;transition:transform .15s ease; }
+  .talk-choice { padding:.4rem .8rem;border:2px solid #172a45;border-radius:14px;background:#fffdf7;color:#172a45;font-size:.85rem;font-weight:700;line-height:1.3;text-align:start;cursor:pointer;box-shadow:2px 2px 0 #172a45;transition:transform .15s ease; }
   .talk-choice:active { transform:scale(.96); }
   .talk-choice:disabled { opacity:.55;cursor:default; }
   .talk-show-choices { padding:.3rem .8rem;border:2px dashed rgba(23,42,69,.4);border-radius:999px;background:transparent;color:inherit;font-size:.72rem;font-weight:800;cursor:pointer; }
