@@ -35,6 +35,7 @@ import { haptic } from '#lib/feedback/haptics.js';
 	import { loadTelegramWebApp, miniAppLaunch } from '#lib/settings/telegramMiniApp.js';
 	import { adoptMiniAppProfile } from '#lib/settings/telegramClient.js';
 	import IconHome from '~icons/material-symbols/home-rounded';
+	import AppDock from '#lib/app/AppDock.svelte';
 	let { children } = $props();
 	let hydrated = $state(false);
 	let previousLanguage = settings.lang;
@@ -48,6 +49,8 @@ import { haptic } from '#lib/feedback/haptics.js';
 	const routePath = $derived(page.url.pathname.replace(/\/+$/, '') || '/');
 	const isHome = $derived(routePath === '/');
 	const isListPage = $derived(routePath === '/settings' || routePath === '/progress' || routePath === '/repeat' || routePath === '/dictionary');
+	// The hub pages share the dock; inside a mode the corner's home button leads back instead.
+	const isHub = $derived(isHome || isListPage);
 	const homeLabel = $derived(m.home_button({}, { locale: settings.interfaceLocale }));
 	const shellLabel = $derived(m.label({}, { locale: settings.interfaceLocale }));
 
@@ -171,8 +174,9 @@ onMount(() => {
 	{:else}
 		<main class="game-shell">
 			<section class="game-paper" class:paper-wide={isHome} class:paper-list={isListPage} class:paper-full={routePath === '/settings'} aria-label={shellLabel}>
-				{#if !isHome}<button class="btn-play btn-play-round home-trigger" onclick={() => void goto('/')} aria-label={homeLabel}><IconHome aria-hidden="true" /></button>{/if}
+				{#if !isHub}<button class="btn-play btn-play-round home-trigger" onclick={() => void goto('/')} aria-label={homeLabel}><IconHome aria-hidden="true" /></button>{/if}
 				{@render children()}
+				{#if isHub}<AppDock path={routePath} />{/if}
 			</section>
 		</main>
 		<CosmeticUnlockToast />

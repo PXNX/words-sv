@@ -56,6 +56,14 @@
   import IconHeadphones from '~icons/material-symbols/headphones-rounded';
   import IconExplore from '~icons/material-symbols/explore-rounded';
   import IconForum from '~icons/material-symbols/forum-rounded';
+  import IconEar from '~icons/material-symbols/hearing';
+  import IconEye from '~icons/material-symbols/visibility-rounded';
+  import IconHand from '~icons/material-symbols/touch-app-rounded';
+  import IconCheck from '~icons/material-symbols/check-rounded';
+  import PhysicsTiles from '#lib/app/PhysicsTiles.svelte';
+  import { defaultAvatar } from '#lib/profile/avatar.js';
+  import { CHANNELS, HOME_GROUPS, dailyMix, modesForChannel, type Channel, type HomeGroup, type HomeMode, type HomeModeId, type MixStep } from '#lib/today/homeModes.js';
+  import type { Component } from 'svelte';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
 
@@ -68,11 +76,8 @@
   // Keeps the welcome flow open through its name, character and finale steps after the language.
   let pickingLook = $state(false);
 
-  // Letter tiles drifting around the cast: decoration only, like loose tiles on a game table.
-  const FLOATING_TILES = [
-    { letter: 'W', x: 4, y: 18, r: -12 }, { letter: 'O', x: 88, y: 8, r: 9 }, { letter: 'R', x: 12, y: 62, r: 6 },
-    { letter: 'T', x: 82, y: 58, r: -8 }, { letter: 'A', x: 46, y: 2, r: 14 }, { letter: 'Ö', x: 94, y: 36, r: -4 }
-  ];
+  // Loose letter tiles around the cast, like on a game table: they drift, and can be flicked about.
+  const FLOATING_TILES = ['W', 'O', 'R', 'T', 'A', 'Ö'];
   const labels = $derived({
     settings: m.settings({}, { locale: settings.interfaceLocale }),
     homeTitle: m.home_title({}, { locale: settings.interfaceLocale }),
@@ -151,16 +156,56 @@
     rootOnboarding = false;
     pickingLook = false;
   }
+  // Every card's icon, title and one-line description; what the mode trains comes from homeModes.ts.
+  const modeCards = $derived<Record<HomeModeId, { icon: Component; title: string; text: string }>>({
+    circle: { icon: IconCrossword, title: labels.modeCrossword, text: labels.homeCircle },
+    definitions: { icon: IconFactCheck, title: labels.modeDefinitions, text: labels.homeDefinitions },
+    wordle: { icon: IconSpellcheck, title: labels.modeWordle, text: labels.homeWordle },
+    hangman: { icon: IconHangman, title: labels.modeHangman, text: labels.homeHangman },
+    taboo: { icon: IconTaboo, title: labels.modeTaboo, text: labels.homeTaboo },
+    stories: { icon: IconStory, title: labels.story, text: labels.homeStory },
+    reading: { icon: IconMenuBook, title: labels.reading, text: labels.homeReading },
+    listen: { icon: IconHeadphones, title: labels.listen, text: labels.homeListen },
+    conversation: { icon: IconForum, title: labels.conversation, text: labels.homeConversation },
+    sentence: { icon: IconPen, title: labels.modeSentence, text: labels.homeSentence },
+    fullText: { icon: IconArticle, title: labels.modeFullText, text: labels.homeFullText },
+    vocab: { icon: IconQuiz, title: labels.wordQuiz, text: labels.homeVocab },
+    pronunciation: { icon: IconMic, title: labels.pronunciation, text: labels.homePronunciation },
+    alltag: { icon: IconEmoji, title: labels.alltag, text: labels.homeAlltag },
+    dictionary: { icon: IconDictionary, title: m.dictionary_title({}, { locale: settings.interfaceLocale }), text: m.home_dictionary({}, { locale: settings.interfaceLocale }) },
+    falseFriends: { icon: IconSwapHoriz, title: labels.grammarFalseFriends, text: labels.homeFalseFriends },
+    grammarFill: { icon: IconEditNote, title: labels.grammarFill, text: labels.homeGrammar },
+    grammarDetermine: { icon: IconFactCheck, title: labels.grammarDetermine, text: labels.homeDetermine },
+    grammarOrder: { icon: IconSort, title: labels.grammarOrder, text: labels.homeOrder },
+    grammarForms: { icon: IconForms, title: m.grammar_forms({}, { locale: settings.interfaceLocale }), text: m.home_forms({}, { locale: settings.interfaceLocale }) }
+  });
+  const groupLabels = $derived<Record<HomeGroup, string>>({ games: labels.gamesGroup, stories: labels.story, writing: labels.sentenceGroup, vocabulary: labels.vocabularyGroup, grammar: labels.grammarGroup });
+  const channelLabels = $derived<Record<Channel | 'all', string>>({
+    all: m.channel_all({}, { locale: settings.interfaceLocale }), hear: m.channel_hear({}, { locale: settings.interfaceLocale }),
+    read: m.channel_read({}, { locale: settings.interfaceLocale }), speak: m.channel_speak({}, { locale: settings.interfaceLocale }),
+    write: m.channel_write({}, { locale: settings.interfaceLocale }), words: m.channel_words({}, { locale: settings.interfaceLocale }),
+    grammar: m.channel_grammar({}, { locale: settings.interfaceLocale }), play: m.channel_play({}, { locale: settings.interfaceLocale })
+  });
+  // The chip the learner last picked comes back on the next visit.
+  const CHANNEL_KEY = 'wordcircle-home-channel-v1';
+  let channel = $state<Channel | 'all'>('all');
+  function chooseChannel(next: Channel | 'all') {
+    channel = next;
+    localStorage.setItem(CHANNEL_KEY, next);
+  }
+  const visibleModes = $derived(modesForChannel(channel, settings.lang));
+  // With "All" the cards keep their groups; a single channel is one flat list, its main modes first.
+  const cardGroups = $derived<{ group: HomeGroup | null; modes: HomeMode[] }[]>(channel === 'all'
+    ? HOME_GROUPS.map((group) => ({ group, modes: visibleModes.filter((mode) => mode.group === group) })).filter((entry) => entry.modes.length > 0)
+    : [{ group: null, modes: visibleModes }]);
+  function dueFor(id: HomeModeId): number {
+    return id === 'vocab' ? wordDue : id === 'reading' ? readingDue : id === 'grammarFill' ? grammarDue : 0;
+  }
   let petting = $state(false);
   function petLilith() {
     playSoundEffect(settings.sound, 'purr');
     petting = false;
     requestAnimationFrame(() => (petting = true));
-  }
-  // Only the modes that already counted today stand out (a green edge and a small check); the rest
-  // stay calm instead of every card asking to be done.
-  function streakClass(kind: StreakMode | null): string {
-    return kind && modeDone(settings.streak, kind) ? 'streak-done' : 'streak-none';
   }
   let todayPlan = $state<TodayPlan | null>(null);
   let repairOffer = $state<StreakRepair | null>(null);
@@ -168,6 +213,11 @@
   let wordDue = $state(0);
   let grammarDue = $state(0);
   let readingDue = $state(0);
+  // Today's mix: one step each for ear, eye and hand (today/homeModes.ts).
+  const mixIcons: Record<MixStep, Component> = { hear: IconEar, see: IconEye, do: IconHand };
+  const mixLabels = $derived<Record<MixStep, string>>({ hear: m.mix_hear({}, { locale: settings.interfaceLocale }), see: m.mix_see({}, { locale: settings.interfaceLocale }), do: m.mix_do({}, { locale: settings.interfaceLocale }) });
+  const mix = $derived(dailyMix({ language: settings.lang, dateKey: settings.streak.dateKey, style: settings.learningStyle, dueWords: wordDue, isDone: (mode) => modeDone(settings.streak, mode) }));
+  const mixDone = $derived(mix.filter((entry) => entry.done).length);
   type HomeContinue = { href: string; label: string; detail: string };
   let homeContinue = $state<HomeContinue[]>([]);
 
@@ -275,6 +325,8 @@
 
   onMount(() => {
     if (!settings.hasStoredInterfaceLocale()) settings.applyPreferredInterfaceLocale();
+    const storedChannel = localStorage.getItem(CHANNEL_KEY);
+    if (storedChannel === 'all' || (CHANNELS as readonly string[]).includes(storedChannel ?? '')) channel = storedChannel as Channel | 'all';
     if (localStorage.getItem(ROOT_ONBOARDING_KEY) !== 'complete') rootOnboarding = true;
     // Learners without a name go through the rest of the welcome flow, finale included.
     pickingLook = rootOnboarding || !settings.firstName;
@@ -291,17 +343,23 @@
   {#if rootOnboarding || needsName || pickingLook}
     <WelcomeFlow start={rootOnboarding ? 'hello' : 'name'} onlanguage={chooseLearningLanguage} onfinish={finishWelcome} />
   {:else}
-    <!-- Side, main and foot are invisible wrappers on phones (display: contents); a landscape tablet
-         turns them into a sticky left column (cast + daily card) beside the game groups. -->
+    <!-- Side and main are invisible wrappers on phones (display: contents); a landscape tablet turns
+         them into a sticky left column (cast, daily card, mix) beside the exercise cards. -->
     <div class="home-side">
     <UpdateAppHint />
     <InstallAppHint />
     <header class="home-header">
+      <PhysicsTiles letters={FLOATING_TILES} />
+      <div class="home-hello">
+        <a class="home-me" href="/progress" aria-label={m.stats_title({}, { locale: settings.interfaceLocale })}><StoryCharacter id="kumar" avatar={settings.avatar ?? defaultAvatar} mood="happy" /></a>
+        <div class="home-hello-text">
+          <h1 class="home-title">{m.home_greeting({ name: settings.firstName }, { locale: settings.interfaceLocale })}</h1>
+          <span class="home-cast-note">{labels.homeCast}</span>
+        </div>
+      </div>
       <div class="home-family"><span class="home-family-people" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="tom" /></span><button type="button" class="home-lilith-pet" class:petting onclick={petLilith} onanimationend={() => (petting = false)} aria-label={labels.petLilith}><span class="home-lilith" class:loving={lilith === 'loving'}><StoryCharacter id="lilith" mood={petting && lilith !== 'loving' ? 'happy' : lilithFace(lilith)} />{#if lilith === 'loving'}<span class="home-lilith-hearts" aria-hidden="true"><span>♥</span><span>♥</span></span>{/if}</span></button></div>
-      <span class="home-tiles" aria-hidden="true">{#each FLOATING_TILES as tile, index}<i style={`--x:${tile.x}%;--y:${tile.y}%;--d:${index * 0.7}s;--r:${tile.r}deg`}>{tile.letter}</i>{/each}</span>
-      <h1 class="home-title" aria-label={labels.homeTitle}>{#each [...labels.homeTitle] as letter, index}<span aria-hidden="true" style={`--i:${index}`}>{letter === ' ' ? '\u00a0' : letter}</span>{/each}</h1><span class="home-cast-note">{labels.homeCast}</span>
     </header>
-    <!-- One daily card: today's challenge, its reward and the next steps, instead of three stacked blocks -->
+    <!-- One daily card: the streak, the next best step and what is waiting to be continued. -->
     <MissedStreakSheet repair={repairOffer} />
     <section class="panel-play home-daily" aria-label={labels.dailyChallenge}>
       <StreakStrip />
@@ -329,163 +387,202 @@
         </a>
       {/each}
     </section>
+    <!-- Today's mix: three short steps that reach the ear, the eye and the hand. -->
+    <section class="home-mix" aria-labelledby="home-mix-title">
+      <header><h2 id="home-mix-title">{m.mix_title({}, { locale: settings.interfaceLocale })}</h2><span class="home-mix-count" class:complete={mixDone === mix.length}>{m.mix_progress({ done: num(mixDone), total: num(mix.length) }, { locale: settings.interfaceLocale })}</span></header>
+      <ol>
+        {#each mix as entry (entry.step)}
+          {@const StepIcon = mixIcons[entry.step]}
+          <li>
+            <a class="home-mix-step" class:done={entry.done} href={entry.mode.href} style={`--skill:var(--skill-${entry.mode.channels[0]})`}>
+              <span class="home-mix-icon" aria-hidden="true">{#if entry.done}<IconCheck />{:else}<StepIcon />{/if}</span>
+              <small>{mixLabels[entry.step]}</small>
+              <strong>{modeCards[entry.mode.id].title}</strong>
+            </a>
+          </li>
+        {/each}
+      </ol>
+      <p>{mixDone === mix.length ? m.mix_done({}, { locale: settings.interfaceLocale }) : m.mix_hint({}, { locale: settings.interfaceLocale })}</p>
+    </section>
     </div>
     <div class="home-main">
-    <h2 class="home-group-heading">{labels.gamesGroup}</h2>
-    <div class="home-games home-games--games">
-      <div class="home-card-slot"><a class="card-play {streakClass('circle')}" href="/circle"><span class="home-icon" aria-hidden="true"><IconCrossword /></span><h2>{labels.modeCrossword}</h2><p>{labels.homeCircle}</p><TodayBadge done={modeDone(settings.streak, 'circle')} label={labels.streakModeDone} /></a></div>
-      <a class="card-play {streakClass('definitions')}" href="/circle/definitions"><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>{labels.modeDefinitions}</h2><p>{labels.homeDefinitions}</p><TodayBadge done={modeDone(settings.streak, 'definitions')} label={labels.streakModeDone} /></a>
-      <div class="home-card-slot"><a class="card-play {streakClass('wordle')}" href="/wordle"><span class="home-icon" aria-hidden="true"><IconSpellcheck /></span><h2>{labels.modeWordle}</h2><p>{labels.homeWordle}</p><TodayBadge done={modeDone(settings.streak, 'wordle')} label={labels.streakModeDone} /></a></div>
-      <div class="home-card-slot"><a class="card-play {streakClass('hangman')}" href="/hangman"><span class="home-icon" aria-hidden="true"><IconHangman /></span><h2>{labels.modeHangman}</h2><p>{labels.homeHangman}</p><TodayBadge done={modeDone(settings.streak, 'hangman')} label={labels.streakModeDone} /></a></div>
-      <div class="home-card-slot"><a class="card-play {streakClass('taboo')}" href="/taboo"><span class="home-icon" aria-hidden="true"><IconTaboo /></span><h2>{labels.modeTaboo}</h2><p>{labels.homeTaboo}</p><TodayBadge done={modeDone(settings.streak, 'taboo')} label={labels.streakModeDone} /></a></div>
+    <div class="home-chips" role="radiogroup" aria-label={m.channel_filter({}, { locale: settings.interfaceLocale })}>
+      {#each ['all', ...CHANNELS] as const as option (option)}
+        <button type="button" role="radio" aria-checked={channel === option} class:selected={channel === option} style={option === 'all' ? '' : `--skill:var(--skill-${option})`} onclick={() => chooseChannel(option)}>{#if option !== 'all'}<i aria-hidden="true"></i>{/if}{channelLabels[option]}</button>
+      {/each}
     </div>
-    <h2 class="home-group-heading">{labels.story}</h2>
-    <div class="home-games">
-      <a class="card-play {streakClass('story')}" href="/stories"><span class="home-icon" aria-hidden="true"><IconStory /></span><h2>{labels.story}</h2><p>{labels.homeStory}</p><TodayBadge done={modeDone(settings.streak, 'story')} label={labels.streakModeDone} /></a>
-      <a class="card-play {streakClass('reading')}" href="/reading"><span class="home-icon" aria-hidden="true"><IconMenuBook /></span><h2>{labels.reading}</h2><p>{labels.homeReading}</p>{#if readingDue > 0}<span class="home-due-badge">{labels.repeatDue(readingDue)}</span>{/if}<TodayBadge done={modeDone(settings.streak, 'reading')} label={labels.streakModeDone} /></a>
-      <a class="card-play {streakClass('listen')}" href="/listen"><span class="home-icon" aria-hidden="true"><IconHeadphones /></span><h2>{labels.listen}</h2><p>{labels.homeListen}</p><TodayBadge done={modeDone(settings.streak, 'listen')} label={labels.streakModeDone} /></a>
-      <a class="card-play {streakClass(null)}" href="/conversation"><span class="home-icon" aria-hidden="true"><IconForum /></span><h2>{labels.conversation}</h2><p>{labels.homeConversation}</p></a>
-    </div>
-    <h2 class="home-group-heading">{labels.sentenceGroup}</h2>
-    <div class="home-games">
-      <a class="card-play {streakClass('sentence')}" href="/sentence"><span class="home-icon" aria-hidden="true"><IconPen /></span><h2>{labels.modeSentence}</h2><p>{labels.homeSentence}</p><TodayBadge done={modeDone(settings.streak, 'sentence')} label={labels.streakModeDone} /></a>
-      <a class="card-play {streakClass('sentence')}" href="/sentence/full"><span class="home-icon" aria-hidden="true"><IconArticle /></span><h2>{labels.modeFullText}</h2><p>{labels.homeFullText}</p><TodayBadge done={modeDone(settings.streak, 'sentence')} label={labels.streakModeDone} /></a>
-    </div>
-    <h2 class="home-group-heading">{labels.vocabularyGroup}</h2>
-    <div class="home-games">
-      <a class="card-play {streakClass('vocab')}" href="/vocab"><span class="home-icon" aria-hidden="true"><IconQuiz /></span><h2>{labels.wordQuiz}</h2><p>{labels.homeVocab}</p>{#if wordDue > 0}<span class="home-due-badge">{labels.repeatDue(wordDue)}</span>{/if}<TodayBadge done={modeDone(settings.streak, 'vocab')} label={labels.streakModeDone} /></a>
-      <a class="card-play {streakClass('pronunciation')}" href="/pronunciation"><span class="home-icon" aria-hidden="true"><IconMic /></span><h2>{labels.pronunciation}</h2><p>{labels.homePronunciation}</p><TodayBadge done={modeDone(settings.streak, 'pronunciation')} label={labels.streakModeDone} /></a>
-      <a class="card-play {streakClass('alltag')}" href="/alltag"><span class="home-icon" aria-hidden="true"><IconEmoji /></span><h2>{labels.alltag}</h2><p>{labels.homeAlltag}</p><TodayBadge done={modeDone(settings.streak, 'alltag')} label={labels.streakModeDone} /></a>
-      <a class="card-play" href="/dictionary"><span class="home-icon" aria-hidden="true"><IconDictionary /></span><h2>{m.dictionary_title({}, { locale: settings.interfaceLocale })}</h2><p>{m.home_dictionary({}, { locale: settings.interfaceLocale })}</p></a>
-      <a class="card-play {streakClass('grammar')}" href="/grammar?mode=falsefriends"><span class="home-icon" aria-hidden="true"><IconSwapHoriz /></span><h2>{labels.grammarFalseFriends}</h2><p>{labels.homeFalseFriends}</p><TodayBadge done={modeDone(settings.streak, 'grammar')} label={labels.streakModeDone} /></a>
-    </div>
-    <h2 class="home-group-heading">{labels.grammarGroup}</h2>
-    <div class="home-games">
-      <a class="card-play {streakClass('grammar')}" href="/grammar?mode=fill"><span class="home-icon" aria-hidden="true"><IconEditNote /></span><h2>{labels.grammarFill}</h2><p>{labels.homeGrammar}</p>{#if grammarDue > 0}<span class="home-due-badge">{labels.repeatDue(grammarDue)}</span>{/if}<TodayBadge done={modeDone(settings.streak, 'grammar')} label={labels.streakModeDone} /></a>
-      <a class="card-play {streakClass('grammar')}" href="/grammar?mode=determine"><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>{labels.grammarDetermine}</h2><p>{labels.homeDetermine}</p><TodayBadge done={modeDone(settings.streak, 'grammar')} label={labels.streakModeDone} /></a>
-      <a class="card-play {streakClass('grammar')}" href="/grammar?mode=order"><span class="home-icon" aria-hidden="true"><IconSort /></span><h2>{labels.grammarOrder}</h2><p>{labels.homeOrder}</p><TodayBadge done={modeDone(settings.streak, 'grammar')} label={labels.streakModeDone} /></a>
-      {#if settings.lang === 'de'}<a class="card-play {streakClass('grammar')}" href="/grammar?mode=forms"><span class="home-icon" aria-hidden="true"><IconForms /></span><h2>{m.grammar_forms({}, { locale: settings.interfaceLocale })}</h2><p>{m.home_forms({}, { locale: settings.interfaceLocale })}</p><TodayBadge done={modeDone(settings.streak, 'grammar')} label={labels.streakModeDone} /></a>{/if}
-    </div>
-    </div>
-    <div class="home-foot">
-    <a class="btn-play btn-play-soft btn-play-sm home-settings-link" href="/settings"><IconSettings aria-hidden="true" /><span>{labels.settings}</span></a>
+    {#each cardGroups as entry (entry.group ?? channel)}
+      {#if entry.group}<h2 class="home-group-heading">{groupLabels[entry.group]}</h2>{/if}
+      <div class="home-games">
+        {#each entry.modes as mode (mode.id)}
+          {@const card = modeCards[mode.id]}
+          {@const CardIcon = card.icon}
+          {@const done = mode.streak ? modeDone(settings.streak, mode.streak) : false}
+          {@const due = dueFor(mode.id)}
+          <a class="card-play" class:streak-done={done} href={mode.href} style={`--skill:var(--skill-${mode.channels[0]})`}>
+            <span class="home-icon" aria-hidden="true"><CardIcon /></span>
+            <h3>{card.title}</h3>
+            <p>{card.text}</p>
+            {#if due > 0}<span class="home-due-badge">{labels.repeatDue(due)}</span>{/if}
+            <TodayBadge {done} label={labels.streakModeDone} />
+          </a>
+        {/each}
+      </div>
+    {/each}
     <nav class="home-legal" aria-label={labels.legal}><a href="/impressum">{labels.imprint}</a><a href="/datenschutz">{labels.privacy}</a><a href="/bedingungen">{labels.terms}</a></nav>
     </div>
   {/if}
 </section>
 
 <style>
-  .home-view { flex:1 1 auto;min-height:0;display:grid;grid-auto-rows:max-content;align-content:safe center;gap:clamp(1rem,4vw,1.8rem);padding:clamp(.6rem,3vw,1.1rem) clamp(.7rem,3.4vw,1.25rem);overflow-x:hidden;overflow-y:auto; }
-  /* Joy on the start page: tiles drift, the title waves in, the cast hops now and then, cards pop in. */
-  .home-header { position:relative; }
-  .home-tiles { position:absolute;inset:0 -.5rem;pointer-events:none;z-index:0; }
-  .home-header > :not(.home-tiles) { position:relative;z-index:1; }
-  .home-tiles i { position:absolute;left:var(--x);top:var(--y);display:grid;place-items:center;width:1.55rem;height:1.55rem;border:2px solid #172a45;border-radius:.4rem;background:#fffdf7;box-shadow:2px 2px 0 #172a45;color:#172a45;font-family:'DM Serif Display',serif;font-size:.95rem;font-style:normal;opacity:.55;rotate:var(--r);animation:home-tile-float 7s ease-in-out var(--d) infinite; }
-  :global(html.dark) .home-tiles i { border-color:#fffdf7;background:#213a5d;color:#fffdf7;box-shadow:2px 2px 0 #0a1626; }
-  @keyframes home-tile-float { 0%,100% { translate:0 0; } 50% { translate:0 -.55rem;rotate:calc(var(--r) * -1); } }
-  .home-title span { display:inline-block;animation:home-letter .7s cubic-bezier(.34,1.56,.64,1) both;animation-delay:calc(var(--i) * 35ms + .1s); }
-  @keyframes home-letter { from { opacity:0;translate:0 .7em;rotate:-12deg; } }
-  .home-family-people :global(.story-character) { animation:home-hop 9s ease-in-out infinite; transform-origin:50% 100%; }
-  .home-family-people :global(.story-character + .story-character) { animation-delay:1.3s; }
+  .home-view { flex:1 1 auto;min-height:0;display:grid;grid-auto-rows:max-content;align-content:start;gap:1.1rem;padding:clamp(.8rem,3vw,1.1rem) clamp(.8rem,3.6vw,1.25rem) 1.4rem;overflow-x:hidden;overflow-y:auto;font-family:var(--font-body); }
+  .home-side,.home-main { display:contents; }
+
+  /* Header: the learner's own face and greeting on one side, the cast under their arch on the other. */
+  .home-header { position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:.6rem;min-height:6.4rem;padding-top:.4rem; }
+  .home-header > :global(.physics-tiles) { z-index:0; }
+  .home-hello,.home-family { position:relative;z-index:1; }
+  .home-hello { display:grid;gap:.45rem;min-width:0;padding-bottom:.35rem; }
+  .home-me { display:block;width:2.9rem;height:2.9rem;overflow:hidden;border:2px solid var(--ink);border-radius:50% 46% 52% 48% / 48% 52% 46% 50%;background:var(--sun-soft);box-shadow:2px 2px 0 var(--ink);transition:translate var(--dur-move) var(--ease-spring),box-shadow var(--dur-move) var(--ease-spring); }
+  .home-me :global(.story-character) { width:100%;height:118%;margin-top:6%; }
+  .home-me:active { translate:2px 2px;box-shadow:0 0 0 var(--ink); }
+  .home-me:focus-visible { outline:3px dashed var(--sun);outline-offset:3px; }
+  .home-title { margin:0;color:var(--text);font-family:var(--font-display);font-size:clamp(1.75rem,8vw,2.4rem);font-weight:400;letter-spacing:-.03em;line-height:1;overflow-wrap:anywhere;animation:home-rise var(--dur-show) var(--ease-spring) both; }
+  .home-cast-note { color:var(--text-soft);font-size:var(--text-xs);font-weight:700;line-height:1.3; }
+  @keyframes home-rise { from { opacity:0;translate:0 .6rem; } }
+
+  .home-family { flex:none;display:flex;align-items:flex-end;height:5.6rem; }
+  .home-family-people { display:flex;align-items:flex-end;height:100%;padding:.5rem .8rem 0 .5rem;border:2px solid var(--ink);border-bottom-width:0;border-radius:3rem 3rem .4rem .4rem;background:radial-gradient(circle at 50% 85%,var(--sun-soft),color-mix(in oklch,var(--sun-soft) 45%,var(--paper)) 70%);overflow:hidden; }
+  .home-family-people :global(.story-character) { width:3.5rem;height:4.8rem;transform-origin:50% 100%;animation:home-hop 9s ease-in-out infinite; }
+  .home-family-people :global(.story-character + .story-character) { margin-inline-start:-.85rem;animation-delay:1.3s; }
+  .home-family::after { content:'';position:absolute;inset:auto -.5rem 0;height:2px;border-radius:2px;background:var(--ink); }
   @keyframes home-hop { 0%,88%,100% { translate:0 0;scale:1; } 91% { translate:0 0;scale:1.06 .94; } 94% { translate:0 -.6rem;scale:.97 1.04; } 97% { translate:0 0;scale:1.03 .97; } }
-  .home-games > :global(*) { animation:home-card-pop .5s cubic-bezier(.34,1.56,.64,1) both; }
-  .home-games > :global(*:nth-child(2)) { animation-delay:.06s; } .home-games > :global(*:nth-child(3)) { animation-delay:.12s; } .home-games > :global(*:nth-child(4)) { animation-delay:.18s; } .home-games > :global(*:nth-child(5)) { animation-delay:.24s; } .home-games > :global(*:nth-child(n+6)) { animation-delay:.3s; }
-  @keyframes home-card-pop { from { opacity:0;translate:0 .9rem;scale:.92;rotate:-2deg; } }
-  @media (hover:hover) { .home-games :global(.card-play:hover .home-icon) { animation:home-icon-wiggle .55s ease-in-out; } }
-  @keyframes home-icon-wiggle { 0%,100% { rotate:0deg;scale:1; } 30% { rotate:-12deg;scale:1.12; } 60% { rotate:9deg;scale:1.08; } }
-  .home-today-icon { animation:home-today-glow 2.8s ease-in-out infinite; }
-  @keyframes home-today-glow { 0%,100% { box-shadow:0 0 0 0 rgba(230,165,39,0); } 50% { box-shadow:0 0 0 .35rem rgba(230,165,39,.35); } }
-  .home-today :global(.home-today-start svg) { animation:home-nudge 1.6s ease-in-out infinite; }
-  @keyframes home-nudge { 0%,100% { translate:0 0; } 50% { translate:.2rem 0; } }
-  :global([dir='rtl']) .home-today :global(.home-today-start svg) { animation-name:home-nudge-rtl; }
-  @keyframes home-nudge-rtl { 0%,100% { translate:0 0; } 50% { translate:-.2rem 0; } }
-  @media (prefers-reduced-motion:reduce) {
-    .home-tiles i,.home-title span,.home-family-people :global(.story-character),.home-games > :global(*),.home-today-icon,.home-today :global(.home-today-start svg) { animation:none; }
-    .home-games :global(.card-play:hover .home-icon) { animation:none; }
-  }
-  .home-header { display:grid;gap:.35rem;text-align:center; }.home-group-heading { margin:0 -.1rem -.35rem;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase; }.home-header p { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }.home-header h1 { margin:0;color:#172a45 !important;text-shadow:0 1px 0 rgba(255,253,247,.72);font-family:'DM Serif Display',serif;font-size:clamp(2.1rem,10vw,3.35rem);font-weight:400;letter-spacing:-.05em;line-height:.9; }
-  .home-settings-link { justify-self:center; }
-  /* overflow clips the row backgrounds to the rounded corners; min-height keeps the scrolling home grid from squeezing the card to nothing */
-  .home-daily { position:relative;z-index:1;display:grid;justify-self:center;width:min(100%,27rem);min-height:min-content;overflow:hidden;rotate:-.4deg; }
-  .home-daily > * + * { border-top:1.5px dashed rgba(23,42,69,.22); }
-  .home-legal { display:flex;justify-content:center;gap:.9rem;margin-top:-.6rem; }
-  .home-legal a { color:#596477;font-family:'DM Sans',sans-serif;font-size:.8125rem;font-weight:800;text-decoration:none; }
-  .home-legal a:hover { text-decoration:underline; }
-  .home-repair { display:grid;justify-items:center;gap:.35rem;padding:.6rem .9rem;background:#fff4d9;text-align:center; }
-  :global(html.dark) .home-legal a { color:rgba(255,253,247,.72); }
-  :global(html.dark) .home-daily > * + * { border-top-color:rgba(255,253,247,.18); }
-  :global(html.dark) .home-repair { background:#2b4a73; }:global(html.dark) .home-repair p { color:#fffdf7; }
-  .home-repair p{ margin:0;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.8125rem;font-weight:800;line-height:1.4; }
-  .home-daily-row { color:inherit;text-decoration:none; }
-  .home-today { display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.7rem;padding:.65rem .9rem;background:#f7e2b0; }
-  .home-continue { display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:.55rem;padding:.5rem .9rem; }
-  @media (hover:hover) { .home-continue:hover { background:rgba(230,165,39,.12); } .home-today:hover { background:#f3d797; } }
-  .home-daily-row:focus-visible { outline:3px dashed #e6a527;outline-offset:-3px; }
-  .home-continue-label { overflow:hidden;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:900;line-height:1.3;text-overflow:ellipsis;white-space:nowrap; }
-  .home-continue-detail { color:#596477;font-family:'DM Sans',sans-serif;font-size:.8125rem;font-weight:900;font-variant-numeric:tabular-nums; }
-  .home-continue-arrow { width:1rem;height:1rem;color:#a45e38; }
-  .home-due-badge { align-self:start;justify-self:start;margin-top:.15rem;padding:.1rem .38rem;border:1.5px solid #a45e38;border-radius:999px;background:#fff2e8;color:#8e4322;font-family:'DM Sans',sans-serif;font-size:.8125rem;font-weight:900;line-height:1.2;white-space:nowrap; }
-  :global(html.dark) .home-continue-label { color:#fffdf7; }:global(html.dark) .home-continue-detail { color:rgba(255,253,247,.65); }:global(html.dark) .home-continue-arrow { color:#e6a527; }
-  :global(html.dark) .home-due-badge { border-color:#e6a527;background:#3a4f30;color:#f7e2b0; }
-  .home-today-icon { display:grid;place-items:center;width:2.2rem;height:2.2rem;flex:none;border:2px solid #172a45;border-radius:50% 46% 52% 48% / 48% 52% 46% 50%;background:#fffdf7;color:#a45e38; }
-  .home-today-icon :global(svg) { width:1.2rem;height:1.2rem; }
-  .home-today-copy { display:grid;gap:.1rem;min-width:0; }
-  .home-today-copy small { color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.8125rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase; }
-  .home-today-copy strong { color:#172a45;font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:800;line-height:1.3; }
-  .home-today-start { display:inline-flex;align-items:center;gap:.1rem;flex:none;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.8125rem;font-weight:900;white-space:nowrap; }
-  .home-today-start :global(svg) { width:.95rem;height:.95rem; }
-  .home-family { position:relative;justify-self:center;display:flex;align-items:flex-end;height:6.2rem;margin-top:clamp(1rem,5vh,2.25rem);margin-bottom:.6rem; }
-  .home-family-people { display:flex;align-items:flex-end;height:100%;padding:.55rem .9rem 0 .55rem;border:2px solid #172a45;border-bottom-width:0;border-radius:3.2rem 3.2rem .4rem .4rem;background:radial-gradient(circle at 50% 85%,#f7e2b0,#fbf1da 70%);overflow:hidden; }
-  .home-family-people :global(.story-character) { width:4rem;height:5.4rem; }.home-family-people :global(.story-character + .story-character) { margin-inline-start:-.9rem; }
-  .home-family::after { content:'';position:absolute;inset:auto -.6rem 0;height:2px;border-radius:2px;background:#172a45; }
-  .home-lilith { position:relative;display:block;width:4.4rem;height:5.5rem;margin-inline-start:-1.35rem;transform-origin:50% 100%;animation:lilith-breathe 4.5s ease-in-out infinite; }.home-lilith :global(.story-character) { width:100%;height:100%; }
-  .home-lilith-hearts { position:absolute;inset:-.4rem 0 auto;display:flex;justify-content:center;gap:.15rem;color:#d9546a;font-size:.95rem;line-height:1;pointer-events:none; }
+  .home-lilith { position:relative;display:block;width:3.9rem;height:4.9rem;transform-origin:50% 100%;animation:lilith-breathe 4.5s ease-in-out infinite; }.home-lilith :global(.story-character) { width:100%;height:100%; }
+  .home-lilith-hearts { position:absolute;inset:-.4rem 0 auto;display:flex;justify-content:center;gap:.15rem;color:#d9546a;font-size:.9rem;line-height:1;pointer-events:none; }
   .home-lilith-hearts span { display:block;animation:lilith-heart 2s ease-in-out infinite; }
-  .home-lilith-hearts span:last-child { margin-top:.35rem;font-size:.8125rem;animation-delay:.7s; }
+  .home-lilith-hearts span:last-child { margin-top:.35rem;font-size:.7rem;animation-delay:.7s; }
   @keyframes lilith-heart { 0% { opacity:0;translate:0 .3rem;scale:.7; } 35% { opacity:1; } 100% { opacity:0;translate:0 -1rem;scale:1; } }
-  .home-lilith-pet { display:block;margin-inline-start:-1.35rem;padding:0;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transform-origin:50% 100%; }.home-lilith-pet .home-lilith { margin:0; }
-  .home-lilith-pet:focus-visible { outline:3px dashed #e6a527;outline-offset:2px;border-radius:1rem; }
-  .home-lilith-pet.petting { animation:lilith-wiggle .9s var(--play-ease); }
+  .home-lilith-pet { display:block;margin-inline-start:-1.25rem;padding:0;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transform-origin:50% 100%; }
+  .home-lilith-pet:focus-visible { outline:3px dashed var(--sun);outline-offset:2px;border-radius:1rem; }
+  .home-lilith-pet.petting { animation:lilith-wiggle .9s var(--ease-spring); }
   @keyframes lilith-wiggle { 0%,100% { rotate:0deg; } 20% { rotate:-4deg; } 45% { rotate:3deg; } 70% { rotate:-1.5deg; } }
-  @media (prefers-reduced-motion:reduce) { .home-lilith-pet.petting { animation:none; } }
-  .home-cast-note { justify-self:center;color:#596477;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:700; }
   @keyframes lilith-breathe { 0%,100% { scale:1; } 50% { scale:1.018 1.012; } }
-  @media (prefers-reduced-motion:reduce) { .home-lilith { animation:none; } .home-lilith-hearts span { animation:none;opacity:1; } }
-  .home-games { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem; } .home-games a.card-play{ color:inherit;text-decoration:none; } .home-card-slot { position:relative;display:grid; } .home-games .card-play { position:relative;display:grid;grid-template-rows:auto auto 1fr;justify-items:center;gap:.3rem;padding:1rem .6rem .9rem;border-top-width:5px;text-align:center;cursor:pointer; } .home-games > :nth-child(4n+1) { --tilt:-.7deg; } .home-games > :nth-child(4n+2) { --tilt:.5deg; } .home-games > :nth-child(4n+3) { --tilt:-.3deg; } .home-games > :nth-child(4n) { --tilt:.6deg; } .home-games .card-play.streak-done { border-top-color:#34824d; } .home-games .card-play.streak-pending { border-top-color:#e6a527; } .home-games .card-play.streak-none { border-top-color:#172a45; } .home-icon { display:grid;place-items:center;width:2.6rem;height:2.6rem;border:2px solid #172a45;border-radius:48% 52% 46% 54% / 54% 46% 52% 48%;background:#f7e2b0;color:#a45e38;transition:rotate .25s var(--play-ease); } .home-icon :global(svg) { width:1.3rem;height:1.3rem; } .home-games h2 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:1rem;font-weight:400;line-height:1.15; } .home-games p { margin:0;color:#596477;font-family:'DM Sans',sans-serif;font-size:.8125rem;font-weight:700;line-height:1.35; }
-  @media (hover:hover) { .home-games .card-play:hover .home-icon { rotate:-8deg; } }
-  @media (prefers-reduced-motion:reduce) { .home-icon { transition:none; } .home-games .card-play:hover .home-icon { rotate:none; } }
+
+  /* overflow clips the row backgrounds to the rounded corners; min-height keeps the scrolling grid from squeezing the card */
+  .home-daily { position:relative;z-index:1;display:grid;min-height:min-content;overflow:hidden; }
+  .home-daily > :global(* + *) { border-top:1.5px dashed var(--line-soft); }
+  .home-daily-row { color:inherit;text-decoration:none; }
+  .home-daily-row:focus-visible { outline:3px dashed var(--sun);outline-offset:-3px; }
+  .home-repair { display:grid;justify-items:center;gap:.4rem;padding:.7rem .9rem;background:#fff4d9;text-align:center; }
+  .home-repair p { margin:0;color:var(--ink);font-size:var(--text-xs);font-weight:800;line-height:1.4; }
+  .home-today { display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.7rem;padding:.75rem .9rem;background:var(--sun-soft); }
+  .home-today-icon { display:grid;place-items:center;width:2.4rem;height:2.4rem;flex:none;border:2px solid var(--ink);border-radius:50% 46% 52% 48% / 48% 52% 46% 50%;background:var(--paper);color:var(--clay);animation:home-today-glow 2.8s ease-in-out infinite; }
+  .home-today-icon :global(svg) { width:1.3rem;height:1.3rem; }
+  @keyframes home-today-glow { 0%,100% { box-shadow:0 0 0 0 rgba(230,165,39,0); } 50% { box-shadow:0 0 0 .35rem rgba(230,165,39,.35); } }
+  .home-today-copy { display:grid;gap:.1rem;min-width:0; }
+  .home-today-copy small { color:var(--clay);font-size:.6875rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase; }
+  .home-today-copy strong { color:var(--ink);font-size:var(--text-sm);font-weight:800;line-height:1.3; }
+  .home-today-start { display:inline-flex;align-items:center;gap:.1rem;flex:none;padding:.35rem .45rem .35rem .7rem;border:2px solid var(--ink);border-radius:999px;background:var(--ink);color:var(--paper);font-size:var(--text-xs);font-weight:900;white-space:nowrap; }
+  .home-today-start :global(svg) { width:1rem;height:1rem;animation:home-nudge 1.6s ease-in-out infinite; }
+  @keyframes home-nudge { 0%,100% { translate:0 0; } 50% { translate:.2rem 0; } }
+  :global([dir='rtl']) .home-today-start :global(svg) { animation-name:home-nudge-rtl; }
+  @keyframes home-nudge-rtl { 0%,100% { translate:0 0; } 50% { translate:-.2rem 0; } }
+  .home-continue { display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:.55rem;padding:.65rem .9rem; }
+  @media (hover:hover) { .home-continue:hover { background:color-mix(in oklch,var(--sun) 14%,transparent); } .home-today:hover { background:color-mix(in oklch,var(--sun-soft) 80%,var(--sun)); } }
+  .home-continue-label { overflow:hidden;color:var(--text);font-size:var(--text-xs);font-weight:800;line-height:1.3;text-overflow:ellipsis;white-space:nowrap; }
+  .home-continue-detail { color:var(--text-soft);font-size:var(--text-xs);font-weight:900;font-variant-numeric:tabular-nums; }
+  .home-continue :global(.home-continue-arrow) { width:1.1rem;height:1.1rem;color:var(--clay); }
+
+  /* Today's mix */
+  .home-mix { display:grid;gap:.5rem; }
+  .home-mix header { display:flex;align-items:baseline;justify-content:space-between;gap:.6rem; }
+  .home-mix h2,.home-group-heading { margin:0;color:var(--clay);font-size:var(--text-xs);font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
+  .home-mix-count { color:var(--text-soft);font-size:var(--text-xs);font-weight:900;font-variant-numeric:tabular-nums; }
+  .home-mix-count.complete { color:var(--go); }
+  .home-mix ol { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;margin:0;padding:0;list-style:none; }
+  .home-mix-step { position:relative;display:grid;justify-items:center;gap:.15rem;height:100%;padding:.7rem .35rem .6rem;border:2px solid var(--ink);border-radius:16px 11px 15px 12px / 12px 15px 11px 16px;background:color-mix(in oklch,var(--skill) 14%,var(--surface));box-shadow:3px 3px 0 var(--ink);color:var(--text);text-align:center;text-decoration:none;-webkit-tap-highlight-color:transparent;transition:translate var(--dur-move) var(--ease-spring),box-shadow var(--dur-move) var(--ease-spring); }
+  .home-mix-step:active { translate:2px 2px;box-shadow:1px 1px 0 var(--ink); }
+  .home-mix-step:focus-visible { outline:3px dashed var(--sun);outline-offset:3px; }
+  .home-mix-icon { display:grid;place-items:center;width:2.3rem;height:2.3rem;border:2px solid var(--ink);border-radius:50%;background:var(--skill);color:var(--paper); }
+  .home-mix-icon :global(svg) { width:1.25rem;height:1.25rem; }
+  .home-mix-step small { color:var(--text-soft);font-size:.6875rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase; }
+  .home-mix-step strong { font-size:var(--text-xs);font-weight:800;line-height:1.2;overflow-wrap:anywhere; }
+  .home-mix-step.done { background:var(--go-soft); }
+  .home-mix-step.done .home-mix-icon { background:var(--go);animation:play-pop .4s var(--ease-spring) both; }
+  .home-mix p { margin:0;color:var(--text-soft);font-size:var(--text-xs);font-weight:700;line-height:1.4; }
+  /* The steps are joined by a dotted path, so the three read as one small journey. */
+  .home-mix li { position:relative; }
+  .home-mix li + li::before { content:'';position:absolute;top:1.85rem;inset-inline-start:-.5rem;width:.5rem;border-top:2px dotted var(--ink); }
+
+  /* Filter chips: a row that scrolls sideways and bleeds to the screen's edge */
+  .home-chips { display:flex;gap:.45rem;margin:0 calc(clamp(.8rem,3.6vw,1.25rem) * -1);padding:.15rem clamp(.8rem,3.6vw,1.25rem) .35rem;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x proximity; }
+  .home-chips::-webkit-scrollbar { display:none; }
+  .home-chips button { flex:none;display:inline-flex;align-items:center;gap:.35rem;min-height:2.4rem;padding:.3rem .85rem;border:2px solid var(--ink);border-radius:999px;background:var(--surface);color:var(--text);font:inherit;font-size:var(--text-sm);font-weight:800;scroll-snap-align:start;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color var(--dur-quick) ease,color var(--dur-quick) ease,scale var(--dur-move) var(--ease-spring),box-shadow var(--dur-move) var(--ease-spring); }
+  .home-chips button i { width:.6rem;height:.6rem;border-radius:50%;background:var(--skill); }
+  .home-chips button:active { scale:.94; }
+  .home-chips button.selected { background:var(--ink);color:var(--paper);box-shadow:2px 2px 0 var(--sun); }
+  .home-chips button:focus-visible { outline:3px dashed var(--sun);outline-offset:2px; }
+
+  /* Exercise cards: each takes the colour of what it trains */
+  .home-group-heading { margin-bottom:-.5rem; }
+  .home-games { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem; }
+  .home-games .card-play { position:relative;display:grid;grid-template-rows:auto auto 1fr auto;justify-items:start;gap:.3rem;padding:.85rem .8rem .8rem;color:inherit;text-align:start;text-decoration:none;cursor:pointer;animation:home-card-pop .5s var(--ease-spring) both; }
+  .home-games .card-play:nth-child(2) { animation-delay:.05s; } .home-games .card-play:nth-child(3) { animation-delay:.1s; } .home-games .card-play:nth-child(4) { animation-delay:.15s; } .home-games .card-play:nth-child(n+5) { animation-delay:.2s; }
+  @keyframes home-card-pop { from { opacity:0;translate:0 .9rem;scale:.94; } }
+  .home-games > :nth-child(4n+1) { --tilt:-.6deg; } .home-games > :nth-child(4n+2) { --tilt:.5deg; } .home-games > :nth-child(4n+3) { --tilt:.4deg; } .home-games > :nth-child(4n) { --tilt:-.5deg; }
+  .home-games .card-play.streak-done { background:color-mix(in oklch,var(--go-soft) 55%,var(--surface)); }
+  .home-icon { display:grid;place-items:center;width:2.7rem;height:2.7rem;border:2px solid var(--ink);border-radius:48% 52% 46% 54% / 54% 46% 52% 48%;background:color-mix(in oklch,var(--skill) 26%,var(--paper));color:color-mix(in oklch,var(--skill) 62%,var(--ink));transition:rotate var(--dur-move) var(--ease-spring); }
+  .home-icon :global(svg) { width:1.45rem;height:1.45rem; }
+  .home-games h3 { margin:.15rem 0 0;color:var(--text);font-family:var(--font-display);font-size:1.15rem;font-weight:400;line-height:1.15;overflow-wrap:anywhere; }
+  .home-games p { margin:0;color:var(--text-soft);font-size:var(--text-xs);font-weight:600;line-height:1.35; }
+  .home-games .card-play :global(.today-check) { top:.6rem;inset-inline:auto .6rem; }
+  .home-due-badge { margin-top:.2rem;padding:.12rem .5rem;border:1.5px solid var(--clay);border-radius:999px;background:#fff2e8;color:#8e4322;font-size:.6875rem;font-weight:900;line-height:1.3;white-space:nowrap; }
+  @media (hover:hover) { .home-games .card-play:hover .home-icon { rotate:-8deg;animation:home-icon-wiggle .55s ease-in-out; } }
+  @keyframes home-icon-wiggle { 0%,100% { rotate:0deg;scale:1; } 30% { rotate:-12deg;scale:1.12; } 60% { rotate:9deg;scale:1.08; } }
+
+  .home-legal { display:flex;justify-content:center;gap:1rem;padding-top:.3rem; }
+  .home-legal a { color:var(--text-soft);font-size:var(--text-xs);font-weight:700;text-decoration:none; }
+  .home-legal a:hover { text-decoration:underline; }
+
+  @media (prefers-reduced-motion:reduce) {
+    .home-title,.home-family-people :global(.story-character),.home-lilith,.home-lilith-pet.petting,.home-games .card-play,.home-today-icon,.home-today-start :global(svg),.home-mix-step.done .home-mix-icon { animation:none; }
+    .home-lilith-hearts span { animation:none;opacity:1; }
+    .home-games .card-play:hover .home-icon { animation:none;rotate:none; }
+  }
   @media (min-width:640px) {
-    .home-games { gap:.8rem; }
-    .home-games .card-play { padding:1.2rem .9rem 1.1rem; }
-    .home-games h2 { font-size:1.12rem; }
-    .home-games p { font-size:.9rem; }
-    .home-group-heading,.home-header p { font-size:.9rem; }
-    .home-cast-note { font-size:.9rem; }
-    .home-family { height:7.2rem; }.home-family-people :global(.story-character) { width:4.6rem;height:6.3rem; }.home-lilith { width:5rem;height:6.3rem; }
-    .home-settings-link { font-size:.875rem; }
+    .home-view { gap:1.3rem; }
+    .home-games { gap:.9rem; }
+    .home-family { height:6.6rem; }.home-family-people :global(.story-character) { width:4.2rem;height:5.7rem; }.home-lilith { width:4.6rem;height:5.8rem; }
+    .home-me { width:3.4rem;height:3.4rem; }
   }
-  @media (min-width:760px) { .home-games { grid-template-columns:repeat(4,minmax(0,1fr)); } }
-  @media (min-width:700px) and (min-height:560px) { .home-view { padding:clamp(1.5rem,3.5vw,2.75rem) clamp(1.5rem,4vw,3rem); } }
-  .home-side,.home-main,.home-foot { display:contents; }
-  /* Landscape tablets: the cast, title and daily card stay in a sticky column on the left while the
-     game groups fill the width on the right, as many cards per row as fit. */
+  @media (min-width:760px) { .home-games { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+  @media (min-width:700px) and (min-height:560px) { .home-view { padding:clamp(1.4rem,3vw,2.2rem) clamp(1.5rem,4vw,3rem) 1.6rem; } .home-chips { margin-inline:0;padding-inline:0;flex-wrap:wrap;overflow:visible; } }
+  /* Landscape tablets and desktops: cast, daily card and mix stay in a sticky column on the left
+     while the exercise cards fill the width on the right. */
   @media (orientation:landscape) and (min-width:900px) and (min-height:560px) {
-    .home-view { grid-template-columns:minmax(17rem,22rem) minmax(0,1fr);grid-template-areas:'side main' 'foot main';grid-template-rows:max-content 1fr;align-content:start;column-gap:clamp(1.5rem,3.5vw,3rem);row-gap:1rem; }
-    .home-side { grid-area:side;position:sticky;top:0;display:grid;align-content:start;gap:1.1rem;padding-top:clamp(0rem,4vh,2rem); }
-    .home-main { grid-area:main;display:grid;align-content:start;gap:1.25rem;padding-top:.4rem; }
-    .home-foot { grid-area:foot;display:grid;align-content:start;justify-items:center;gap:1.1rem; }
-    .home-family { margin-top:0; }
-    .home-daily { width:100%;rotate:0deg; }
-    .home-games,.home-games--games { grid-template-columns:repeat(auto-fill,minmax(9.5rem,1fr)); }
-    .home-legal { margin-top:0; }
+    .home-view { grid-template-columns:minmax(19rem,23rem) minmax(0,1fr);align-items:start;column-gap:clamp(1.5rem,3.5vw,3rem); }
+    .home-side { position:sticky;top:0;display:grid;align-content:start;gap:1.2rem; }
+    .home-main { display:grid;align-content:start;gap:1.2rem; }
+    .home-games { grid-template-columns:repeat(auto-fill,minmax(11rem,1fr)); }
   }
-  :global(html.dark) .home-header h1,:global(html.dark) .home-games h2 { color:#fffdf7 !important;text-shadow:none; }
-  :global(html.dark) .home-family-people { border-color:#0b1626;background:radial-gradient(circle at 50% 85%,#2b4a73,#213a5d 70%); }:global(html.dark) .home-family::after { background:#0b1626; }
-  :global(html.dark) .home-cast-note,:global(html.dark) .home-games p { color:rgba(255,253,247,.72); }
-  :global(html.dark) .home-games .card-play.streak-none { border-top-color:#0b1626; }
-  :global(html.dark) .home-icon{ border-color:#0b1626;background:#172a45;color:#e6a527; }
+
+  :global(html.dark) .home-family-people { border-color:var(--ink-deep);background:radial-gradient(circle at 50% 85%,#2b4a73,#213a5d 70%); }
+  :global(html.dark) .home-family::after { background:var(--ink-deep); }
+  :global(html.dark) .home-me { border-color:var(--ink-deep);background:#2b4a73;box-shadow:2px 2px 0 var(--ink-deep); }
+  :global(html.dark) .home-repair { background:#2b4a73; }:global(html.dark) .home-repair p { color:var(--paper); }
   :global(html.dark) .home-today { background:#2b4a73; }
-  :global(html.dark) .home-today-icon { border-color:#0b1626;background:#213a5d;color:#e6a527; }
-  :global(html.dark) .home-today-copy small { color:#f0c06a; }
-  :global(html.dark) .home-today-copy strong,:global(html.dark) .home-today-start { color:#fffdf7; }
+  :global(html.dark) .home-today-icon { border-color:var(--ink-deep);background:var(--surface);color:var(--sun); }
+  :global(html.dark) .home-today-copy small,:global(html.dark) .home-mix h2,:global(html.dark) .home-group-heading { color:#f0c06a; }
+  :global(html.dark) .home-today-copy strong { color:var(--paper); }
+  :global(html.dark) .home-today-start { border-color:var(--sun);background:var(--sun);color:var(--ink); }
+  :global(html.dark) .home-continue :global(.home-continue-arrow) { color:var(--sun); }
+  :global(html.dark) .home-mix-step { border-color:var(--ink-deep);box-shadow:3px 3px 0 var(--ink-deep); }
+  :global(html.dark) .home-mix-step.done { background:color-mix(in oklch,var(--go) 35%,var(--surface)); }
+  :global(html.dark) .home-mix-icon { border-color:var(--ink-deep);color:var(--ink); }
+  :global(html.dark) .home-mix li + li::before { border-top-color:color-mix(in oklch,var(--paper) 45%,transparent); }
+  :global(html.dark) .home-chips button { border-color:var(--ink-deep); }
+  :global(html.dark) .home-chips button.selected { background:var(--sun);color:var(--ink);box-shadow:2px 2px 0 var(--ink-deep); }
+  :global(html.dark) .home-icon { border-color:var(--ink-deep);background:color-mix(in oklch,var(--skill) 30%,var(--surface-2));color:var(--skill); }
+  :global(html.dark) .home-games .card-play.streak-done { background:color-mix(in oklch,var(--go) 28%,var(--surface)); }
+  :global(html.dark) .home-due-badge { border-color:var(--sun);background:#3a4f30;color:#f7e2b0; }
 </style>

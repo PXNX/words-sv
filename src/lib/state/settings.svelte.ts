@@ -1,3 +1,4 @@
+import { LEARNING_STYLES, type LearningStyle } from '#lib/today/homeModes.js';
 import { requiresCumulativePool } from '#lib/circle/engine.js';
 import { chatModel, DEFAULT_CHAT_MODEL, type ChatModelId } from '#lib/conversation/models.js';
 import { ownsClipKey, storedVoiceEngine, voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
@@ -59,6 +60,7 @@ export const interfaceLocales = [
 const THEME_KEY = 'wordcircle-theme';
 const VIBRATION_KEY = 'wordcircle-vibration';
 const SOUND_KEY = 'wordcircle-sound';
+const LEARNING_STYLE_KEY = 'wordcircle-learning-style-v1';
 const VOICE_QUALITY_KEY = 'wordcircle-voice-quality-v1';
 const NATURAL_MODEL_KEY = 'wordcircle-natural-model-v1';
 const CHAT_MODEL_KEY = 'wordcircle-chat-model-v1';
@@ -140,6 +142,8 @@ class SettingsStore {
     theme = $state<Theme>(typeof localStorage !== 'undefined' && localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light');
     vibration = $state(typeof localStorage === 'undefined' || localStorage.getItem(VIBRATION_KEY) !== 'off');
     sound = $state(typeof localStorage === 'undefined' || localStorage.getItem(SOUND_KEY) !== 'off');
+    // How the learner likes to take things in (today/homeModes.ts); weights the daily mix and the word quiz.
+    learningStyle = $state<LearningStyle>(readStored(LEARNING_STYLE_KEY, LEARNING_STYLES, 'mixed'));
     voiceQuality = $state<VoiceQuality>(readVoiceQuality());
     naturalModel = $state<NaturalModel>(readNaturalModel());
     dialects = $state(typeof localStorage === 'undefined' || localStorage.getItem(DIALECTS_KEY) !== 'off');
@@ -214,6 +218,10 @@ class SettingsStore {
   setDialects(next: boolean) {
     this.dialects = next;
     localStorage.setItem(DIALECTS_KEY, next ? 'on' : 'off');
+  }
+  setLearningStyle(next: LearningStyle) {
+    this.learningStyle = next;
+    localStorage.setItem(LEARNING_STYLE_KEY, next);
   }
   setSound(next: boolean) {
     this.sound = next;
