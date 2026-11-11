@@ -441,7 +441,7 @@
   .progress-goal.active { border-color: #172a45; background: #172a45; color: #fffdf7; }
   .progress-goal:focus-visible { outline: 2px solid #e6a527; outline-offset: 2px; }
   :global(html.dark) .progress-goal.active { border-color: #e6a527; background: #e6a527; color: #172a45; }
-  .progress-name { margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--play-ink,#172a45);font-family:'DM Serif Display',serif;font-size:1.35rem;line-height:1.1; }
+  .progress-name { margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);font-family:'DM Serif Display',serif;font-size:1.35rem;line-height:1.1; }
   .progress-name-input { min-width:0;flex:1;min-height:2rem;padding:.15rem .5rem;border:2px solid var(--play-line);border-radius:.55rem;background:#fffdf7;color:#172a45;font-size:.95rem;font-weight:800;outline:0; }
   .progress-edit { display:grid;place-items:center;flex:none;width:1.7rem;height:1.7rem;padding:0;border:1.5px solid var(--play-line);border-radius:999px;background:transparent;color:var(--play-ink,#172a45);cursor:pointer; }
   .progress-edit :global(svg) { width:1rem;height:1rem; }
