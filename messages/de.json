@@ -911,5 +911,20 @@
   "alltag_price": "Wie sagt man diesen Preis?",
   "alltag_continue": "Weiter",
   "offline_pill": "Offline – lern einfach weiter, alles wird gespeichert",
-  "offline_needs_network": "Dafür brauchst du eine Internetverbindung."
+  "offline_needs_network": "Dafür brauchst du eine Internetverbindung.",
+  "rubric_title": "Bewertung für {level}",
+  "rubric_band_above": "Über {level}",
+  "rubric_band_at": "Auf {level}-Niveau",
+  "rubric_band_below": "Noch unter {level}",
+  "rubric_task": "Aufgabe",
+  "rubric_range": "Wortschatz",
+  "rubric_accuracy": "Richtigkeit",
+  "rubric_coherence": "Zusammenhang",
+  "rubric_points": "{points} von {max} Punkten",
+  "rubric_task_detail": "{value} Wörter, ab {expected} erfüllt der Text die Aufgabe.",
+  "rubric_range_detail": "{value} % verschiedene Wörter, auf diesem Niveau etwa {expected} %.",
+  "rubric_accuracy_detail": "{value} Stellen mit Großschreibung, Satzzeichen oder Leerzeichen.",
+  "rubric_accuracy_clean": "Satzanfänge, Satzzeichen und Leerzeichen sitzen.",
+  "rubric_coherence_detail": "{value} verschiedene Verbindungswörter, auf diesem Niveau {expected}.",
+  "rubric_connectors_used": "Verbindungswörter: {words}"
 }

@@ -9,6 +9,8 @@
   import { grader, runGrade } from '#lib/sentence/graderClient.svelte.js';
   import GraderGate from '#lib/sentence/GraderGate.svelte';
   import GradeResultCard from '#lib/sentence/GradeResultCard.svelte';
+  import RubricCard from '#lib/sentence/RubricCard.svelte';
+  import { scoreRubric, type RubricScore } from '#lib/sentence/levelRubric.js';
   import IconLightbulb from '~icons/material-symbols/lightbulb-rounded';
   import IconRestart from '~icons/material-symbols/restart-alt-rounded';
 
@@ -32,6 +34,7 @@
 
   let answer = $state('');
   let result = $state<GradeResult | null>(null);
+  let rubric = $state<RubricScore | null>(null);
   let showReference = $state(false);
 
   const wordCount = $derived(answer.trim() ? answer.trim().split(/\s+/u).length : 0);
@@ -42,14 +45,16 @@
   async function submit() {
     if (!canSubmit || grader.busy) return;
     result = await runGrade(answer, settings.lang, 'full', prompt.topic);
-    // The rubric score feeds the writing readiness on /progress.
-    logAnswer(settings.lang, 'write', `WRITE:FULL:${prompt.topic}`, null, { level: settings.vocabularyLevel, score: result.score });
+    rubric = scoreRubric(answer, settings.lang, settings.vocabularyLevel);
+    // The score feeds the writing readiness on /progress: the grade and the level rubric count half each.
+    logAnswer(settings.lang, 'write', `WRITE:FULL:${prompt.topic}`, null, { level: settings.vocabularyLevel, score: (result.score + rubric.total) / 2 });
     void settings.recordStreak('sentence_completed');
   }
 
   function reset() {
     answer = '';
     result = null;
+    rubric = null;
   }
 
   onMount(() => {
@@ -143,6 +148,9 @@
 
   {#if result}
     <GradeResultCard {result} />
+  {/if}
+  {#if rubric}
+    <RubricCard {rubric} />
   {/if}
 </section>
 
