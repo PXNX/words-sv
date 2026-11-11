@@ -286,8 +286,9 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
   German cases and compound parts, listen, add to review; tap-to-lookup in reading opens it.
 - [ ] D: provider router (WebGPU first, OpenRouter BYOK opt-in), per-language model settings.
 - [ ] E: Persian/Arabic native-speaker path, RTL audit, L1 error priors.
-- [ ] F: writing rubric per level, reading/listening task formats, speaking simulation, mock tests per
-  level (no exam-specific formats).
+- [x] F: writing rubric per level (`sentence/levelRubric.ts`, under the full-text grade) and a mock
+  test per level (`/mock`: reading, listening, language, writing; no exam-specific formats).
+- [ ] F: longer reading/listening task formats (texts with questions), speaking simulation.
 - [x] G: offline audit (`docs/offline.md`), an offline pill, and network-only buttons disabled offline.
 - [x] H: group competition through Telegram games (`/games`, `/top` in a group), scored on the server.
 - [ ] I: dashboards, A/B framework, content QA loop.
@@ -300,7 +301,10 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [x] Every German entry has a definition (686 written), mistyped adverbs/adjectives fixed,
   conjugated forms, participles and misspellings replaced by their infinitives or removed;
   `tests/data/german-vocabulary.test.ts` keeps it that way.
-- [ ] The 25 "Extra" stories in `story/germanStories.ts` are word lists, not stories; rewrite.
+- [x] The 25 "Extra A2–C2" stories in `story/germanStories.ts` are real stories now
+  (`tests/german-stories.test.ts`).
+- [ ] About 30 more `*-extra` stories (e.g. `a1-extra1`–`5`, `b1-pets-extra`, `c2-court-extra`) are
+  still word lists; 36 stories have replies addressed to someone other than the last speaker.
 
 ### Release process leftovers
 - [x] `tests/fixtures/v1.0.0/` snapshot of a learner's local data for migration tests
