@@ -296,7 +296,9 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
   have a native speaker review the grammar terms.
 - [x] F: writing rubric per level (`sentence/levelRubric.ts`, under the full-text grade) and a mock
   test per level (`/mock`: reading, listening, language, writing; no exam-specific formats).
-- [ ] F: longer reading/listening task formats (texts with questions), speaking simulation.
+- [x] F: speaking simulation (a spoken task in the mock test, transcribed by the browser and scored
+  with the spoken rubric).
+- [ ] F: longer reading/listening task formats in the mock test (a text with questions).
 - [x] G: offline audit (`docs/offline.md`), an offline pill, and network-only buttons disabled offline.
 - [x] H: group competition through Telegram games (`/games`, `/top` in a group), scored on the server.
 - [ ] I: dashboards, A/B framework, content QA loop.
