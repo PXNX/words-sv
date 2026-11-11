@@ -37,7 +37,7 @@
 {/if}
 
 <style>
-  .background-jobs { position:fixed;z-index:55;left:max(.75rem,env(safe-area-inset-left));bottom:max(.75rem,env(safe-area-inset-bottom));display:flex;align-items:center;gap:.45rem;max-width:min(70vw,18rem);padding:.35rem .7rem .35rem .4rem;border:2px solid #172a45;border-radius:999px;background:#fffdf7;color:#172a45;box-shadow:2px 2px 0 #172a45;font-size:.66rem;font-weight:900;text-decoration:none; }
+  .background-jobs { position:fixed;z-index:55;inset-inline-start:max(.75rem,env(safe-area-inset-left));bottom:max(.75rem,env(safe-area-inset-bottom));display:flex;align-items:center;gap:.45rem;max-width:min(70vw,18rem);padding-block:.35rem;padding-inline:.4rem .7rem;border:2px solid #172a45;border-radius:999px;background:#fffdf7;color:#172a45;box-shadow:2px 2px 0 #172a45;font-size:.66rem;font-weight:900;text-decoration:none; }
   .background-jobs span:last-child,.background-jobs a { overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:inherit; }
   .background-jobs-ring { flex:none;width:1.1rem;height:1.1rem;border-radius:50%;background:conic-gradient(#34824d var(--fill),rgba(23,42,69,.15) 0); }
   .background-jobs.ready { background:#e8f4ea; }

@@ -34,7 +34,7 @@
 
 <style>
   .install-hint { justify-self:center;width:min(100%,27rem);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.15rem;padding:.35rem .45rem .35rem .55rem; }
-  .install-hint-main { display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:.55rem;min-width:0;padding:.2rem;border:0;border-radius:.7rem;background:none;color:inherit;text-align:left;font:inherit;cursor:pointer; }
+  .install-hint-main { display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:.55rem;min-width:0;padding:.2rem;border:0;border-radius:.7rem;background:none;color:inherit;text-align:start;font:inherit;cursor:pointer; }
   .install-hint-main:focus-visible,.install-hint-close:focus-visible { outline:3px dashed #e6a527;outline-offset:2px; }
   .install-hint-icon { display:grid;place-items:center;width:2rem;height:2rem;flex:none;border:2px solid #172a45;border-radius:48% 52% 46% 54% / 54% 46% 52% 48%;background:#f7e2b0;color:#a45e38; }
   .install-hint-icon :global(svg) { width:1rem;height:1rem; }

@@ -13,7 +13,7 @@
 {/if}
 
 <style>
-  .today-check { position:absolute;top:.45rem;left:.45rem;display:grid;place-items:center;width:1.15rem;height:1.15rem;border-radius:50%;background:#34824d;color:#fffdf7;animation:today-check-in .45s cubic-bezier(.34,1.56,.64,1); }
+  .today-check { position:absolute;top:.45rem;inset-inline-start:.45rem;display:grid;place-items:center;width:1.15rem;height:1.15rem;border-radius:50%;background:#34824d;color:#fffdf7;animation:today-check-in .45s cubic-bezier(.34,1.56,.64,1); }
   .today-check :global(svg) { width:.8rem;height:.8rem; }
   :global(html.dark) .today-check { background:#8ed8a2;color:#172a45; }
   @keyframes today-check-in { from { scale:.3;opacity:0; } to { scale:1;opacity:1; } }

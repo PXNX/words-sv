@@ -210,7 +210,7 @@ onMount(() => {
 	:global(html.dark .game-shell) { background-color:#213a5d; }
 	.game-paper { position:relative;isolation:isolate;box-sizing:border-box;overflow:hidden;width:100%;height:calc(100svh - var(--tg-inset-top) - var(--tg-inset-bottom));min-height:0;padding:0;display:flex;flex-direction:column;justify-content:center;border:0;background-color:#ede4d5;background-image:radial-gradient(circle at 50% 15%,rgba(230,165,39,.18),transparent 34%),linear-gradient(rgba(23,42,69,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(23,42,69,.018) 1px,transparent 1px);background-size:auto,24px 24px,24px 24px;box-shadow:none; }
 	.game-paper::before { display:none; }
-	.home-trigger { position:absolute;z-index:105;top:.62rem;left:.62rem; }.home-trigger :global(svg) { width:1rem;height:1rem; }
+	.home-trigger { position:absolute;z-index:105;top:.62rem;inset-inline-start:.62rem; }.home-trigger :global(svg) { width:1rem;height:1rem; }
 	:global(html.dark) .game-paper { background-color:#213a5d; }
 	/* Phones (and phones held sideways, which are too short for a frame) stay full-bleed. Anything with room
 	   around it gets a framed paper sheet: wider for the home menu, medium for lists, game-sized otherwise. */

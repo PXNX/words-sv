@@ -319,7 +319,7 @@
   .model-list { display:grid;gap:.4rem;margin:0;padding:0;list-style:none; }
   .model-card { display:flex;align-items:center;gap:.5rem;padding:.45rem .55rem;border:2px solid color-mix(in srgb,currentColor 18%,transparent);border-radius:14px;transition:border-color .2s ease,background .2s ease; }
   .model-card.chosen { border-color:#34824d;background:color-mix(in srgb,#34824d 8%,transparent); }
-  .model-pick { flex:1;min-width:0;display:grid;gap:.2rem;padding:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer; }
+  .model-pick { flex:1;min-width:0;display:grid;gap:.2rem;padding:0;border:0;background:transparent;color:inherit;text-align:start;cursor:pointer; }
   .model-name { display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;font-size:.78rem;font-weight:900; }
   .model-best { display:inline-flex;align-items:center;gap:.15rem;padding:.05rem .4rem;border-radius:999px;background:#fbe6b5;color:#7a4a12;font-size:.58rem;font-weight:900; }
   .model-actions { flex:none; }

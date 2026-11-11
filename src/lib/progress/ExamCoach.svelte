@@ -152,13 +152,13 @@
     <h2 id="coach-focus-title" class="coach-heading">{m.coach_focus({}, locale)}</h2>
     <ul>
       {#if dueWords > 0}
-        <li><a class="card-play coach-step" href="/repeat"><span><strong>{m.coach_focus_due({ count: number(dueWords) }, locale)}</strong><small>{m.coach_focus_due_hint({}, locale)}</small></span><IconArrow aria-hidden="true" /></a></li>
+        <li><a class="card-play coach-step" href="/repeat"><span><strong>{m.coach_focus_due({ count: number(dueWords) }, locale)}</strong><small>{m.coach_focus_due_hint({}, locale)}</small></span><IconArrow aria-hidden="true" class="rtl:rotate-180" /></a></li>
       {/if}
       {#if weakestSkill}
-        <li><a class="card-play coach-step" href={PRACTICE[weakestSkill]}><span><strong>{m.coach_focus_skill({ skill: skillName[weakestSkill] }, locale)}</strong><small>{m.coach_focus_skill_hint({ range: rangeLabel(overview.skills[weakestSkill]) }, locale)}</small></span><IconArrow aria-hidden="true" /></a></li>
+        <li><a class="card-play coach-step" href={PRACTICE[weakestSkill]}><span><strong>{m.coach_focus_skill({ skill: skillName[weakestSkill] }, locale)}</strong><small>{m.coach_focus_skill_hint({ range: rangeLabel(overview.skills[weakestSkill]) }, locale)}</small></span><IconArrow aria-hidden="true" class="rtl:rotate-180" /></a></li>
       {/if}
       {#if weakFeature}
-        <li><a class="card-play coach-step" href="/grammar"><span><strong>{m.coach_focus_feature({ feature: featureLabel(weakFeature.feature) }, locale)}</strong><small>{m.coach_focus_feature_hint({ percent: formatPercent(settings.formatContext, weakFeature.accuracy) }, locale)}</small></span><IconArrow aria-hidden="true" /></a></li>
+        <li><a class="card-play coach-step" href="/grammar"><span><strong>{m.coach_focus_feature({ feature: featureLabel(weakFeature.feature) }, locale)}</strong><small>{m.coach_focus_feature_hint({ percent: formatPercent(settings.formatContext, weakFeature.accuracy) }, locale)}</small></span><IconArrow aria-hidden="true" class="rtl:rotate-180" /></a></li>
       {/if}
     </ul>
   </section>

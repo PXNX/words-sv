@@ -455,10 +455,10 @@ import { page } from '$app/state';
 
     <footer class="reading-footer">
       {#if previousItem}
-        <button type="button" class="btn-play btn-play-soft reading-nav" onclick={() => void select(previousItem.id)}><IconChevronLeft aria-hidden="true" /><span>{labels.previous}</span></button>
+        <button type="button" class="btn-play btn-play-soft reading-nav" onclick={() => void select(previousItem.id)}><IconChevronLeft aria-hidden="true" class="rtl:rotate-180" /><span>{labels.previous}</span></button>
       {/if}
       {#if nextItem}
-        <button type="button" class="btn-play btn-play-ink reading-nav" onclick={() => void select(nextItem.id)}><span>{labels.next}</span><IconChevronRight aria-hidden="true" /></button>
+        <button type="button" class="btn-play btn-play-ink reading-nav" onclick={() => void select(nextItem.id)}><span>{labels.next}</span><IconChevronRight aria-hidden="true" class="rtl:rotate-180" /></button>
       {/if}
     </footer>
   {:else}

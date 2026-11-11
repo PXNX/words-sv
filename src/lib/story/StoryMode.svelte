@@ -981,7 +981,7 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
   .story-view { flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:.65rem;padding:clamp(.6rem,3vw,1rem) clamp(.7rem,3.4vw,1.2rem) clamp(.7rem,3vw,1rem); }
   .story-header { display:grid;gap:.2rem;padding-top:.35rem;text-align:center; }
   /* Mirrors the home button in the top-left corner of the paper sheet */
-  .story-auto-read { position:absolute;z-index:105;top:.62rem;right:.62rem; }.story-auto-read :global(svg) { width:1rem;height:1rem; }
+  .story-auto-read { position:absolute;z-index:105;top:.62rem;inset-inline-end:.62rem; }.story-auto-read :global(svg) { width:1rem;height:1rem; }
   .story-header p { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase; }
   .story-header h1 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.55rem,7vw,2.2rem);font-weight:400;letter-spacing:-.03em;line-height:1; }
 
@@ -1024,10 +1024,10 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
 
   .story-transcript { flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:.55rem;margin:0;padding:.2rem .1rem .4rem;overflow-y:auto;list-style:none;font-family:'DM Sans',sans-serif; }
   .story-transcript > li { animation:story-in .28s cubic-bezier(.23,1,.32,1); }
-  .story-narration { display:flex;align-items:flex-start;gap:.4rem;padding:.6rem .75rem;border-left:3px solid #e6a527;background:rgba(255,253,247,.6); }
+  .story-narration { display:flex;align-items:flex-start;gap:.4rem;padding:.6rem .75rem;border-inline-start:3px solid #e6a527;background:rgba(255,253,247,.6); }
   .story-narration p { flex:1;margin:0;color:#596477;font-size:.78rem;font-style:italic;font-weight:600;line-height:1.45; }
   /* Station announcements carry a loudspeaker and the station's blue */
-  .story-narration.story-announcement { border-left-color:#4b78c2;background:rgba(75,120,194,.08); }
+  .story-narration.story-announcement { border-inline-start-color:#4b78c2;background:rgba(75,120,194,.08); }
   .story-narration :global(.story-announcement-icon) { flex:none;width:1.1rem;height:1.1rem;margin-top:.05rem;color:#4b78c2; }
   /* the eagle sails in from the left and circles to and fro high above the stage */
   .story-eagle { position:absolute;z-index:1;top:8%;left:-14%;width:3.4rem;pointer-events:none;animation:story-eagle 18s ease-in-out infinite alternate; }

@@ -103,7 +103,7 @@
               <strong class="block text-base-content text-[.78rem] font-extrabold">{sourceLabel(group.source)}</strong>
               <small class="block mt-[.1rem] text-base-content/55 text-[.6rem] font-bold">{labels.groupCount(group.count)}</small>
             </span>
-            <IconChevronRight class="w-[1.1rem] h-[1.1rem] flex-none text-accent" aria-hidden="true" />
+            <IconChevronRight class="w-[1.1rem] h-[1.1rem] flex-none text-accent rtl:rotate-180" aria-hidden="true" />
           </a>
           <ul class="m-0 mt-[.3rem] px-[.2rem] flex flex-wrap gap-[.25rem] list-none">
             {#each groupEntries.slice(0, 8) as { item } (item)}
