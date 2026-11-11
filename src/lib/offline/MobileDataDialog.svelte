@@ -39,7 +39,7 @@
   .data-icon { display:grid;place-items:center;width:2.8rem;height:2.8rem;border-radius:50%;background:rgba(230,165,39,.2);color:#a45e38; }
   .data-icon :global(svg) { width:1.5rem;height:1.5rem; }
   .data-sheet h2 { margin:0;font-family:'DM Serif Display',serif;font-size:1.35rem;font-weight:400; }
-  .data-sheet p { margin:0;color:#596477;font-size:.78rem;font-weight:700;line-height:1.45; }
+  .data-sheet p { margin:0;color:#596477;font-size:.95rem;font-weight:700;line-height:1.45; }
   .data-actions { display:grid;grid-template-columns:1fr 1fr;gap:.5rem;width:100%;margin-top:.3rem; }
   .data-actions button { justify-content:center;min-height:2.7rem; }
   :global(html.dark) .data-sheet { background:#152b47;color:#fffdf7; }

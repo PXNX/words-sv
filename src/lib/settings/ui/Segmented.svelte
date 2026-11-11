@@ -45,7 +45,7 @@
   .segmented-pill { position:absolute;z-index:-1;inset-block:2px;inset-inline-start:2px;width:calc((100% - 4px) / var(--count));border-radius:999px;background:#172a45;translate:calc(var(--index) * 100%) 0;transition:translate .32s cubic-bezier(.34,1.4,.64,1); }
   :global([dir='rtl']) .segmented-pill { translate:calc(var(--index) * -100%) 0; }
   :global(html.dark) .segmented-pill { background:#e6a527; }
-  .segmented button { display:inline-flex;align-items:center;justify-content:center;gap:.25rem;min-height:1.75rem;padding:0 .5rem;border:0;border-radius:999px;background:none;color:color-mix(in srgb,currentColor 65%,transparent);font:inherit;font-size:.64rem;font-weight:900;white-space:nowrap;cursor:pointer;transition:color .25s,scale .15s; }
+  .segmented button { display:inline-flex;align-items:center;justify-content:center;gap:.25rem;min-height:1.75rem;padding:0 .5rem;border:0;border-radius:999px;background:none;color:color-mix(in srgb,currentColor 65%,transparent);font:inherit;font-size:.84rem;font-weight:900;white-space:nowrap;cursor:pointer;transition:color .25s,scale .15s; }
   .segmented button:active { scale:.94; }
   .segmented button.chosen { color:#fffdf7; }
   :global(html.dark) .segmented button.chosen { color:#172a45; }

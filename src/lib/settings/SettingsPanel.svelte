@@ -419,32 +419,32 @@
   .settings-me:hover .settings-me-avatar { animation:settings-wave .6s ease-in-out; }
   .settings-me-text { display:grid;flex:1;min-width:0; }
   .settings-me-text strong { overflow:hidden;font-family:'DM Serif Display',serif;font-size:1.35rem;font-weight:400;letter-spacing:-.02em;line-height:1.1;white-space:nowrap;text-overflow:ellipsis; }
-  .settings-me-text small { font-size:.6rem;font-weight:700;opacity:.6; }
-  .settings-kicker { color:#a45e38;font-size:.56rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
+  .settings-me-text small { font-size:.8125rem;font-weight:700;opacity:.6; }
+  .settings-kicker { color:#a45e38;font-size:.8125rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
   :global(html.dark) .settings-kicker { color:#e6a527; }
   :global(.settings-me-arrow) { flex:none;width:1.2rem;height:1.2rem; }
   .settings-me-account { padding-top:.7rem;border-top:1.5px dashed color-mix(in srgb,currentColor 18%,transparent); }
-  .settings-sub { margin:.9rem 0 .1rem;padding-top:.7rem;border-top:1.5px dashed color-mix(in srgb,currentColor 18%,transparent);color:#a45e38;font-size:.56rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
+  .settings-sub { margin:.9rem 0 .1rem;padding-top:.7rem;border-top:1.5px dashed color-mix(in srgb,currentColor 18%,transparent);color:#a45e38;font-size:.8125rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
   :global(html.dark) .settings-sub { color:#e6a527; }
-  .settings-link { display:inline-flex;align-items:center;justify-content:flex-end;gap:.2rem;align-self:flex-end;color:#a45e38;font-size:.62rem;font-weight:900;text-decoration:none; }
+  .settings-link { display:inline-flex;align-items:center;justify-content:flex-end;gap:.2rem;align-self:flex-end;color:#a45e38;font-size:.84rem;font-weight:900;text-decoration:none; }
   :global(html.dark) .settings-link { color:#e6a527; }
   .settings-link :global(svg) { width:.9rem;height:.9rem; }
-  .settings-nav { display:flex;align-items:center;gap:.6rem;width:100%;padding:.65rem 0;border:0;border-top:1px solid color-mix(in srgb,currentColor 12%,transparent);background:none;color:inherit;font:inherit;font-size:.72rem;font-weight:800;text-align:start;text-decoration:none;cursor:pointer;transition:padding .2s; }
+  .settings-nav { display:flex;align-items:center;gap:.6rem;width:100%;padding:.65rem 0;border:0;border-top:1px solid color-mix(in srgb,currentColor 12%,transparent);background:none;color:inherit;font:inherit;font-size:.9rem;font-weight:800;text-align:start;text-decoration:none;cursor:pointer;transition:padding .2s; }
   .settings-nav:first-child { border-top:0; }
   .settings-nav:hover { padding-inline-start:.25rem; }
   .settings-nav > :global(svg) { flex:none;width:1rem;height:1rem;opacity:.75; }
   .settings-nav > span { display:grid;flex:1;gap:.1rem; }
-  .settings-nav small { font-size:.58rem;font-weight:700;opacity:.6; }
+  .settings-nav small { font-size:.8125rem;font-weight:700;opacity:.6; }
   .settings-dot { display:inline-block;width:.45rem;height:.45rem;margin-inline-start:.35rem;border-radius:50%;background:var(--color-primary,#e6a527);vertical-align:middle;animation:settings-pulse 1.6s ease-in-out infinite; }
-  .settings-invite { display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-size:.7rem;font-weight:900; }
+  .settings-invite { display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-size:.9rem;font-weight:900; }
   .settings-invite :global(svg) { width:.85rem;height:.85rem; }
   .settings-invite-goal { display:grid;gap:.3rem; }
   .settings-invite-goal span { height:.35rem;border-radius:999px;background:linear-gradient(90deg,#2aabee calc(var(--share) * 100%),color-mix(in srgb,currentColor 12%,transparent) 0); }
-  .settings-invite-goal small { font-size:.6rem;font-weight:800;color:#2a6fa8; }
+  .settings-invite-goal small { font-size:.8125rem;font-weight:800;color:#2a6fa8; }
   :global(html.dark) .settings-invite-goal small { color:#9cc8ec; }
   .settings-voice-test { display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;margin-top:.55rem; }
   .settings-voice-test :global(svg) { width:.85rem;height:.85rem; }
-  .settings-voice-test small { font-size:.6rem;font-weight:700;opacity:.65; }
+  .settings-voice-test small { font-size:.8125rem;font-weight:700;opacity:.65; }
   @keyframes settings-brand-in { from { opacity:0;scale:.8; } }
   @keyframes settings-me-in { from { opacity:0;translate:0 14px; } }
   @keyframes settings-orbit { 0%,100% { translate:0 0; } 50% { translate:2px -2px; } }

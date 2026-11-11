@@ -319,32 +319,32 @@
 >
   <header class="flex items-end justify-center gap-[.6rem]">
     <div class="text-center">
-      <span class="text-accent text-[.58rem] font-extrabold tracking-[.14em] uppercase">{labels.title} · {settings.vocabularyLevel.toUpperCase()}</span>
+      <span class="text-accent text-[.8125rem] font-extrabold tracking-[.14em] uppercase">{labels.title} · {settings.vocabularyLevel.toUpperCase()}</span>
       <h1 class="my-[.16rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,7vw,2.65rem)] font-normal leading-none">{modeTitle}</h1>
-      <p class="m-0 text-base-content/60 text-[.65rem] font-extrabold">{num(Math.min(position + 1, queue.length))} / {num(queue.length || 6)}</p>
+      <p class="m-0 text-base-content/60 text-[.84rem] font-extrabold">{num(Math.min(position + 1, queue.length))} / {num(queue.length || 6)}</p>
     </div>
     <Companion id="tom" mood={answerStatus === 'correct' ? 'happy' : answerStatus === 'wrong' ? 'sad' : 'curious'} size="sm" />
   </header>
   {#if !isSupported}
-    <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{grammarMode === 'falsefriends' ? 'Falsche Freunde sind aktuell nur für Deutsch verfügbar.' : grammarMode === 'order' ? labels.orderUnsupported : grammarMode === 'forms' ? labels.formsUnsupported : labels.unsupported}</div>
+    <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.9rem] font-bold leading-[1.45] text-center">{grammarMode === 'falsefriends' ? 'Falsche Freunde sind aktuell nur für Deutsch verfügbar.' : grammarMode === 'order' ? labels.orderUnsupported : grammarMode === 'forms' ? labels.formsUnsupported : labels.unsupported}</div>
   {:else if !prompt}
-    <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{labels.unavailable}</div>
+    <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.9rem] font-bold leading-[1.45] text-center">{labels.unavailable}</div>
   {:else}
     {#if grammarMode === 'order'}
       {#key position}<article class="learn-card-in w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center" class:learn-correct={answerStatus === 'correct'} class:learn-wrong={answerStatus === 'wrong'}>
-        <p class="m-0 text-accent text-[.62rem] font-black tracking-[.08em] uppercase">{labels.orderPrompt}</p>
+        <p class="m-0 text-accent text-[.84rem] font-black tracking-[.08em] uppercase">{labels.orderPrompt}</p>
         <p class="m-0 min-h-[2.2rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.35rem,6vw,2.1rem)] leading-[1.3]" lang={settings.lang}>{orderPreview()}</p>
       </article>{/key}
-      <div class="w-[min(100%,28rem)] flex flex-wrap justify-center gap-[.45rem]" lang={settings.lang}>{#each orderWords as word, index}<button type="button" class="btn-play btn-play-choice min-h-[2.55rem] px-[.75rem] text-[.75rem] {selectedOrder.includes(index) ? 'border-neutral/30 bg-neutral/20 text-base-content/35 shadow-none' : ''}" onclick={() => chooseOrderWord(index)} disabled={selectedOrder.includes(index) || answerStatus !== null}>{word}</button>{/each}</div>
+      <div class="w-[min(100%,28rem)] flex flex-wrap justify-center gap-[.45rem]" lang={settings.lang}>{#each orderWords as word, index}<button type="button" class="btn-play btn-play-choice min-h-[2.55rem] px-[.75rem] text-[.9rem] {selectedOrder.includes(index) ? 'border-neutral/30 bg-neutral/20 text-base-content/35 shadow-none' : ''}" onclick={() => chooseOrderWord(index)} disabled={selectedOrder.includes(index) || answerStatus !== null}>{word}</button>{/each}</div>
       <!-- The feedback has its own slot, so the word tiles above stay where they are. -->
       <div class="grid justify-items-center content-start gap-[.45rem] min-h-[5.4rem]">
       {#if answerStatus === 'wrong'}
-        <div class="flex items-center gap-[.35rem] text-error text-[.7rem] font-extrabold"><IconClose class="w-[1rem] h-[1rem]" aria-hidden="true" />{labels.tryAgain}</div>
+        <div class="flex items-center gap-[.35rem] text-error text-[.9rem] font-extrabold"><IconClose class="w-[1rem] h-[1rem]" aria-hidden="true" />{labels.tryAgain}</div>
         <div class="flex flex-wrap justify-center gap-[.45rem]">
           <button class="btn-play btn-play-sm text-accent" onclick={resetOrder}>{labels.orderReset}</button>
         </div>
       {:else if answerStatus === 'correct'}
-        <div class="flex items-center gap-[.35rem] text-success text-[.7rem] font-extrabold"><IconCheck class="w-[1rem] h-[1rem]" aria-hidden="true" />{labels.correct}</div>
+        <div class="flex items-center gap-[.35rem] text-success text-[.9rem] font-extrabold"><IconCheck class="w-[1rem] h-[1rem]" aria-hidden="true" />{labels.correct}</div>
         <div class="flex flex-wrap justify-center gap-[.45rem]">
           <button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>
         </div>
@@ -352,12 +352,12 @@
       </div>
     {:else}
     {#key position}<article class="learn-card-in w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center" class:learn-correct={answerStatus === 'correct'} class:learn-wrong={answerStatus === 'wrong'}>
-            {#if prompt.question}<p class="m-0 text-accent text-[.62rem] font-black tracking-[.08em] uppercase">{prompt.question}</p>{/if}
+            {#if prompt.question}<p class="m-0 text-accent text-[.84rem] font-black tracking-[.08em] uppercase">{prompt.question}</p>{/if}
             <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.55rem,7vw,2.6rem)] font-normal tracking-[.04em] leading-[1.3]" lang={settings.lang}>{#if prompt.before}{prompt.before}{/if}{#if prompt.question}{#if prompt.highlight && prompt.after.includes(prompt.highlight)}{@const highlightIndex = prompt.after.indexOf(prompt.highlight)}{prompt.after.slice(0, highlightIndex)}<mark class="bg-primary/25 text-accent px-[.15rem]">{prompt.highlight}</mark>{prompt.after.slice(highlightIndex + prompt.highlight.length)}{:else}{prompt.after}{/if}{:else}<span class="inline-block border-b-4 border-dotted border-accent text-accent px-[.3rem]">___</span>{(/^[.,!?]/u).test(prompt.after) ? '' : ' '}{prompt.after}{/if}</p>
     </article>{/key}
     {#if grammarMode === 'forms'}
       <form class="w-[min(100%,28rem)] grid gap-[.55rem]" onsubmit={checkForm} aria-label={labels.formsPrompt}>
-        <p class="m-0 text-accent text-[.6rem] font-black tracking-[.1em] text-center uppercase">{labels.formsPrompt} · <span class="normal-case tracking-normal" lang={settings.lang}>{formLemma(currentKey)}</span></p>
+        <p class="m-0 text-accent text-[.8125rem] font-black tracking-[.1em] text-center uppercase">{labels.formsPrompt} · <span class="normal-case tracking-normal" lang={settings.lang}>{formLemma(currentKey)}</span></p>
         <div class="flex gap-[.45rem]">
           <!-- svelte-ignore a11y_autofocus -->
           <input class="input input-bordered flex-1 min-w-0 text-[1rem] font-bold" bind:value={typedForm} lang={settings.lang} autocomplete="off" autocapitalize="off" spellcheck="false" readonly={answerStatus !== null} aria-label={labels.formsPrompt} autofocus />
@@ -366,7 +366,7 @@
         <!-- A fixed slot for the verdict and Continue, so nothing above moves when they appear. -->
         <div class="grid justify-items-center gap-[.45rem] min-h-[5.4rem] {answerStatus ? '' : 'invisible'}" aria-live="polite">
           {#if formScore && prompt}
-            <p class="m-0 flex items-center gap-[.35rem] text-[.72rem] font-extrabold {formScore.verdict === 'exact' ? 'text-success' : formScore.credit >= 0.75 ? 'text-accent' : 'text-error'}">
+            <p class="m-0 flex items-center gap-[.35rem] text-[.9rem] font-extrabold {formScore.verdict === 'exact' ? 'text-success' : formScore.credit >= 0.75 ? 'text-accent' : 'text-error'}">
               {#if formScore.verdict === 'exact'}<IconCheck class="w-[1rem] h-[1rem]" aria-hidden="true" />{labels.correct}{:else}{#if formScore.credit < 0.75}<IconClose class="w-[1rem] h-[1rem]" aria-hidden="true" />{/if}<span lang={settings.lang}>{labels.formsVerdict(formScore.verdict, prompt.correct)}</span>{/if}
             </p>
           {/if}
@@ -375,7 +375,7 @@
       </form>
     {:else if prompt.choices.length >= 2}
       <section class="w-[min(100%,28rem)] grid gap-[.55rem]" aria-label={labels.chooseArticle}>
-        <p class="m-0 text-accent text-[.6rem] font-black tracking-[.1em] text-center uppercase">{labels.chooseArticle}</p>
+        <p class="m-0 text-accent text-[.8125rem] font-black tracking-[.1em] text-center uppercase">{labels.chooseArticle}</p>
         <div class="grid gap-[.45rem]" style={`grid-template-columns:repeat(${grammarMode === 'determine' ? 2 : Math.min(prompt.choices.length, 3)},minmax(0,1fr));`}>
           {#each prompt.choices as choice}
             <button
@@ -384,7 +384,7 @@
               lang={grammarMode === 'falsefriends' ? falseFriends?.source : undefined}
               onclick={chooseAnswer}
               disabled={answerStatus !== null}
-              class="btn-play btn-play-choice gap-[.4rem] text-[.85rem] touch-manipulation disabled:opacity-100 {optionStateClasses(choice)}"
+              class="btn-play btn-play-choice gap-[.4rem] text-[.95rem] touch-manipulation disabled:opacity-100 {optionStateClasses(choice)}"
             >{choice}{#if answerStatus !== null && choice === prompt.correct}<IconCheck class="w-[1.15rem] h-[1.15rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && choice === selectedChoice}<IconClose class="w-[1.15rem] h-[1.15rem] flex-none text-[#c0392b] dark:text-[#ffc2b8]" aria-label={labels.tryAgain} />{/if}</button>
           {/each}
         </div>

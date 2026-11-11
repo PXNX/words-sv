@@ -66,11 +66,11 @@
   .account-icon.linked { background:#d9efdd;color:#34824d; }
   .account-icon :global(svg) { width:1.15rem;height:1.15rem; }
   .account-text { display:grid;gap:.15rem;min-width:0; }
-  .account-text strong { font-size:.74rem;font-weight:900; }
-  .account-text small { color:color-mix(in srgb, currentColor 62%, transparent);font-size:.62rem;font-weight:700;line-height:1.4; }
+  .account-text strong { font-size:.9rem;font-weight:900; }
+  .account-text small { color:color-mix(in srgb, currentColor 62%, transparent);font-size:.84rem;font-weight:700;line-height:1.4; }
   .account-action { grid-column:1 / -1;justify-self:start;gap:.35rem;text-transform:none;letter-spacing:0; }
   .account-action :global(svg) { width:.85rem;height:.85rem; }
-  .account-action.quiet { padding:0;border:0;background:none;color:inherit;font:inherit;font-size:.62rem;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer;opacity:.75; }
+  .account-action.quiet { padding:0;border:0;background:none;color:inherit;font:inherit;font-size:.84rem;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer;opacity:.75; }
   :global(html.dark) .account-icon { background:#213a5d;color:#9cc8ec; }
   :global(html.dark) .account-icon.linked { background:#1f4a32;color:#8fd6a2; }
 </style>

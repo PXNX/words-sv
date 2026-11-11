@@ -77,20 +77,20 @@
   .changelog { flex: 1; min-height: 0; overflow-y: auto; padding: clamp(2.9rem, 10vw, 3.6rem) clamp(1rem, 5vw, 2rem) clamp(1rem, 5vw, 2rem); display: grid; align-content: start; gap: 0.9rem; max-width: 40rem; margin-inline: auto; width: 100%; }
   .changelog-header { display: flex; align-items: center; gap: 0.75rem; }
   .changelog-header h1 { margin: 0; font-size: 1.25rem; font-weight: 900; }
-  .changelog-header p { margin: 0; font-size: 0.7rem; font-weight: 800; opacity: 0.6; }
+  .changelog-header p { margin: 0; font-size: .9rem; font-weight: 800; opacity: 0.6; }
   .changelog-release { padding: 0.75rem 0.9rem; scroll-margin-top: 1rem; }
   .changelog-release summary { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; cursor: pointer; list-style: none; }
   .changelog-release summary::-webkit-details-marker { display: none; }
-  .changelog-version { font-weight: 900; font-size: 0.95rem; }
-  .changelog-badge { padding: 0.1rem 0.45rem; border-radius: 999px; background: var(--color-primary); color: var(--color-primary-content); font-size: 0.58rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; }
-  .changelog-date { margin-inline-start: auto; font-size: 0.68rem; font-weight: 800; opacity: 0.6; }
-  .changelog-highlight { margin: 0.55rem 0 0; font-weight: 800; font-size: 0.85rem; line-height: 1.4; }
-  .changelog-details h2 { margin: 0.7rem 0 0.2rem; color: var(--color-accent); font-size: 0.58rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; }
-  .changelog-details ul { margin: 0; padding-inline-start: 1.1rem; list-style: disc; font-size: 0.78rem; line-height: 1.45; }
+  .changelog-version { font-weight: 900; font-size: 1rem; }
+  .changelog-badge { padding: 0.1rem 0.45rem; border-radius: 999px; background: var(--color-primary); color: var(--color-primary-content); font-size: .8125rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; }
+  .changelog-date { margin-inline-start: auto; font-size: .875rem; font-weight: 800; opacity: 0.6; }
+  .changelog-highlight { margin: 0.55rem 0 0; font-weight: 800; font-size: .95rem; line-height: 1.4; }
+  .changelog-details h2 { margin: 0.7rem 0 0.2rem; color: var(--color-accent); font-size: .8125rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; }
+  .changelog-details ul { margin: 0; padding-inline-start: 1.1rem; list-style: disc; font-size: .95rem; line-height: 1.45; }
   .changelog-details li { margin-block: 0.15rem; }
   .changelog-details li::marker { color: var(--color-accent); }
   .changelog-details h2.fixed { color: var(--color-success, #2f8f5b); }
-  .changelog-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; margin: 0.7rem 0 0; font-size: 0.62rem; font-weight: 800; opacity: 0.7; }
+  .changelog-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; margin: 0.7rem 0 0; font-size: .84rem; font-weight: 800; opacity: 0.7; }
   .changelog-footer a { display: inline-flex; align-items: center; gap: 0.25rem; color: inherit; }
   @media (prefers-reduced-motion: no-preference) {
     .changelog-release[open] .changelog-highlight { animation: drop-in 0.2s cubic-bezier(0.23, 1, 0.32, 1); }

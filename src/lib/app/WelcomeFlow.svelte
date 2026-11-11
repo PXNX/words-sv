@@ -181,9 +181,9 @@
   .welcome-dots li.active { width:1.1rem;background:#e6a527; }
   .welcome-locale { justify-self:end; }
   .welcome h1 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.9rem,9vw,2.8rem);font-weight:400;letter-spacing:-.04em;line-height:.95; }
-  .welcome-kicker { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
-  .welcome-body { color:#596477;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;line-height:1.45; }
-  .welcome-cta { width:100%;min-height:2.9rem;justify-content:center;font-size:.78rem; }
+  .welcome-kicker { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
+  .welcome-body { color:#596477;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:700;line-height:1.45; }
+  .welcome-cta { width:100%;min-height:2.9rem;justify-content:center;font-size:.95rem; }
 
   /* the two brand rings draw themselves and settle into their overlap */
   .welcome-rings { position:relative;width:3rem;height:3rem; }
@@ -202,7 +202,7 @@
   .walk-in.right { --from:140%; }
   .rise { animation:welcome-rise .45s ease-out var(--d) both; }
   .welcome-hearts { position:absolute;inset:0;pointer-events:none; }
-  .welcome-hearts b { position:absolute;top:25%;left:50%;color:#e86a9a;font-size:.95rem;opacity:0;animation:welcome-heart 1.4s ease-out forwards; }
+  .welcome-hearts b { position:absolute;top:25%;left:50%;color:#e86a9a;font-size:1rem;opacity:0;animation:welcome-heart 1.4s ease-out forwards; }
   .welcome-hearts b:nth-child(1) { --hx:-2.2rem; }
   .welcome-hearts b:nth-child(2) { --hx:2rem;animation-delay:.2s; }
   .welcome-hearts b:nth-child(3) { --hx:-.2rem;animation-delay:.4s; }
@@ -216,7 +216,7 @@
   .welcome-friends.small .welcome-friend { opacity:1;filter:none;transform:none; }
   .welcome-friends.small :global(.story-character) { width:3.8rem; }
   .welcome-friend.wave { animation:welcome-bob 1.8s ease-in-out var(--d,0s) infinite; }
-  .welcome-bubble { position:relative;margin:.2rem 0 0;padding:.75rem .9rem;border:2px solid #172a45;border-radius:1rem;background:#fff6e0;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:800;line-height:1.45; }
+  .welcome-bubble { position:relative;margin:.2rem 0 0;padding:.75rem .9rem;border:2px solid #172a45;border-radius:1rem;background:#fff6e0;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:800;line-height:1.45; }
   .welcome-bubble::before { content:'';position:absolute;top:-.55rem;left:50%;width:.9rem;height:.9rem;border-top:2px solid #172a45;border-left:2px solid #172a45;background:inherit;transform:translateX(-50%) rotate(45deg); }
   .welcome-bubble.lilith { background:#fde7ef; }
   .welcome-actions { display:grid;grid-template-columns:1fr 1.6fr;gap:.5rem;width:100%; }
@@ -224,11 +224,11 @@
 
   .welcome-solo { display:block;width:4.4rem;height:5.4rem;margin-top:.6rem;animation:welcome-bob 2s ease-in-out infinite; }
   .welcome-languages { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem;width:100%; }
-  .welcome-languages button { min-height:2.8rem;justify-content:center;font-size:.74rem;text-transform:none; }
+  .welcome-languages button { min-height:2.8rem;justify-content:center;font-size:.9rem;text-transform:none; }
   .welcome-form { display:grid;gap:.8rem;width:100%; }
   .welcome-field { display:grid;gap:.3rem;text-align:start; }
-  .welcome-field span { color:#a45e38;font-size:.58rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }
-  .welcome-field input { min-height:2.7rem;padding:0 .8rem;border-radius:.7rem;border:1px solid rgba(23,42,69,.28);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:800; }
+  .welcome-field span { color:#a45e38;font-size:.8125rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }
+  .welcome-field input { min-height:2.7rem;padding:0 .8rem;border-radius:.7rem;border:1px solid rgba(23,42,69,.28);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:800; }
   .welcome-field input:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
 
   .welcome-parade.finale .hop { display:block;height:100%;animation:welcome-pop .5s cubic-bezier(.34,1.56,.64,1) var(--d) both, welcome-hop .9s ease-in-out calc(var(--d) + .6s) 3; transform-origin:50% 100%; }

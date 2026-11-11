@@ -110,15 +110,15 @@
   .unlock-burst i { position:absolute;width:.42rem;height:.7rem;margin:-.35rem 0 0 -.21rem;border-radius:.1rem;background:var(--c);opacity:0;animation:unlock-burst 1.1s cubic-bezier(.15,.8,.3,1) calc(.2s + var(--d)) both; }
   .unlock-sparkles b { position:absolute;color:#e6a527;font-size:1rem;opacity:0;animation:unlock-twinkle 1.8s ease-in-out infinite; }
   .unlock-sparkles b:nth-child(1) { top:12%;left:8%;animation-delay:.5s; }
-  .unlock-sparkles b:nth-child(2) { top:58%;left:2%;animation-delay:1.1s;font-size:.75rem; }
-  .unlock-sparkles b:nth-child(3) { top:30%;right:4%;animation-delay:.8s;font-size:.8rem; }
+  .unlock-sparkles b:nth-child(2) { top:58%;left:2%;animation-delay:1.1s;font-size:.9rem; }
+  .unlock-sparkles b:nth-child(3) { top:30%;right:4%;animation-delay:.8s;font-size:.95rem; }
   .unlock-sparkles b:nth-child(4) { bottom:6%;right:12%;animation-delay:1.4s; }
 
-  .unlock-kicker { margin:0;color:#a45e38;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;animation:unlock-in .4s ease-out .45s both; }
+  .unlock-kicker { margin:0;color:#a45e38;font-size:.84rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;animation:unlock-in .4s ease-out .45s both; }
   .unlock-card h2 { margin:0;font-family:'DM Serif Display',serif;font-size:1.6rem;font-weight:400;line-height:1;animation:unlock-in .4s ease-out .55s both; }
-  .unlock-source { margin:0;color:#596477;font-size:.76rem;font-weight:700;line-height:1.4;animation:unlock-in .4s ease-out .65s both; }
+  .unlock-source { margin:0;color:#596477;font-size:.9rem;font-weight:700;line-height:1.4;animation:unlock-in .4s ease-out .65s both; }
   .unlock-actions { display:grid;grid-template-columns:1fr 1fr;gap:.45rem;width:100%;margin-top:.35rem;animation:unlock-in .4s ease-out .8s both; }
-  .unlock-actions .btn-play { justify-content:center;min-height:2.6rem;font-size:.7rem;text-decoration:none; }
+  .unlock-actions .btn-play { justify-content:center;min-height:2.6rem;font-size:.9rem;text-decoration:none; }
   .unlock-worn { grid-column:1 / -1;display:inline-flex;align-items:center;justify-content:center;gap:.3rem;min-height:2.6rem;color:#34824d;font-weight:900;animation:unlock-pop .4s cubic-bezier(.34,1.56,.64,1); }
   .unlock-worn :global(svg) { width:1.2rem;height:1.2rem; }
 

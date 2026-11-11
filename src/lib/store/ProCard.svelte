@@ -48,13 +48,13 @@
   .pro-badge :global(svg) { width:1.3rem;height:1.3rem; }
   @keyframes pro-badge { 0%,100% { rotate:0deg; } 50% { rotate:-8deg;scale:1.06; } }
   .pro-text { display:grid;gap:.1rem;min-width:0; }
-  .pro-text strong { font-size:.78rem;font-weight:900; }
-  .pro-text p { margin:0;font-size:.62rem;font-weight:700;line-height:1.4; }
-  .pro-text small { font-size:.56rem;font-weight:800;opacity:.65; }
+  .pro-text strong { font-size:.95rem;font-weight:900; }
+  .pro-text p { margin:0;font-size:.84rem;font-weight:700;line-height:1.4; }
+  .pro-text small { font-size:.8125rem;font-weight:800;opacity:.65; }
   .pro-card.active small { color:#34824d;opacity:1; }
   .pro-buy { grid-column:1 / -1;justify-self:start;gap:.3rem; }
   .pro-buy :global(svg) { width:.85rem;height:.85rem; }
-  .pro-notice { grid-column:1 / -1;margin:0;font-size:.6rem;font-weight:800;color:#1d4f7a; }
+  .pro-notice { grid-column:1 / -1;margin:0;font-size:.8125rem;font-weight:800;color:#1d4f7a; }
   :global(html.dark) .pro-notice { color:#cfe4f5; }
   @media (prefers-reduced-motion:reduce) { .pro-badge { animation:none; } }
 </style>

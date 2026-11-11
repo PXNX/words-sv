@@ -31,9 +31,9 @@
   .setting-row + :global(.setting-row) { border-top:1px solid color-mix(in srgb,currentColor 12%,transparent); }
   .setting-row.stacked { flex-direction:column;align-items:stretch;gap:.5rem; }
   .setting-row-label { display:grid;gap:.2rem;min-width:0; }
-  .setting-row-label > label,.setting-row-label > span { display:inline-flex;align-items:center;gap:.4rem;font-size:.72rem;font-weight:800; }
+  .setting-row-label > label,.setting-row-label > span { display:inline-flex;align-items:center;gap:.4rem;font-size:.9rem;font-weight:800; }
   .setting-row-label label { cursor:pointer; }
-  .setting-row-label small { font-size:.6rem;font-weight:700;line-height:1.4;opacity:.62; }
+  .setting-row-label small { font-size:.8125rem;font-weight:700;line-height:1.4;opacity:.62; }
   .setting-row-icon { display:inline-grid;place-items:center;opacity:.75; }
   .setting-row-icon :global(svg) { width:.95rem;height:.95rem; }
   .setting-row-control { display:flex;flex:none;align-items:center;justify-content:flex-end;max-width:58%; }

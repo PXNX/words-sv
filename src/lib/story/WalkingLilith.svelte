@@ -79,7 +79,7 @@
   .walk-body { display:block;height:100%;transform-origin:50% 100%; }
   .walk-body.petted { animation:walk-squish .5s ease-out; }
   .walk-hearts { position:absolute;inset:0;pointer-events:none; }
-  .walk-hearts b { position:absolute;top:20%;left:50%;color:#e86a9a;font-size:.95rem;opacity:0;animation:walk-heart 1.3s ease-out forwards; }
+  .walk-hearts b { position:absolute;top:20%;left:50%;color:#e86a9a;font-size:1rem;opacity:0;animation:walk-heart 1.3s ease-out forwards; }
   .walk-hearts b:nth-child(2) { --hx:1.6rem;animation-delay:.18s; }
   .walk-hearts b:nth-child(1) { --hx:-1.6rem; }
   @keyframes walk-squish { 30% { transform:scale(1.1,.86); } 60% { transform:scale(.95,1.06); } }

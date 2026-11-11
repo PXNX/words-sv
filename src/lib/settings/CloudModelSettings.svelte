@@ -61,15 +61,15 @@
 <style>
   .cloud { display:grid;gap:.55rem;margin-top:.9rem; }
   h4 { margin:0; }
-  .cloud-note { margin:0;color:#596477;font-size:.7rem;font-weight:700;line-height:1.45; }
+  .cloud-note { margin:0;color:#596477;font-size:.9rem;font-weight:700;line-height:1.45; }
   .cloud-fields { display:grid;gap:.55rem;transition:opacity .2s ease; }
   .cloud-fields.off { opacity:.45; }
-  label { display:grid;gap:.25rem;font-size:.7rem;font-weight:800;color:#243449; }
+  label { display:grid;gap:.25rem;font-size:.9rem;font-weight:800;color:#243449; }
   label a { color:#a45e38; }
   .cloud-row { display:flex;gap:.4rem; }
   .cloud-row input { flex:1;min-width:0; }
-  input { font-size:.82rem; }
-  .cloud-status { margin:0;min-height:1.2em;color:#34824d;font-size:.7rem;font-weight:800; }
+  input { font-size:.95rem; }
+  .cloud-status { margin:0;min-height:1.2em;color:#34824d;font-size:.9rem;font-weight:800; }
   :global(html.dark) .cloud-note { color:rgba(255,253,247,.68); }
   :global(html.dark) label { color:rgba(255,253,247,.9); }
   :global(html.dark) label a { color:#f0c46a; }

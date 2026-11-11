@@ -415,9 +415,9 @@
           <button type="button" class="btn-play btn-play-soft btn-play-round btn-play-sm flex-none" onclick={() => (showDefinition = !showDefinition)} aria-expanded={showDefinition} aria-label={showDefinition ? 'Hide meaning' : 'Show meaning'}><IconHelp aria-hidden="true" /></button>
         </div>
         {#if matchState === 'incorrect' && correction}
-          <p class="m-0 text-[.95rem] font-mono tracking-[.03em]" lang={settings.lang} title="Underlined = wrong sound · struck through = missing · + = extra" aria-label={`Correct pronunciation: ${ipa}`}>/{#each correction as segment, index (index)}<span class={segment.status === 'match' ? 'text-accent/80' : segment.status === 'sub' ? 'px-[.05em] rounded-sm bg-error/15 text-error font-bold underline decoration-2 underline-offset-[3px]' : segment.status === 'extra' ? 'text-error/60 text-[.6em] align-super' : 'px-[.05em] rounded-sm bg-error/15 text-error/60 line-through'}>{segment.status === 'extra' ? `+${segment.char}` : segment.char}</span>{/each}/</p>
-        {:else if ipa}<p class="m-0 text-accent/80 text-[.85rem] font-mono tracking-[.02em]" lang={settings.lang} aria-label={`International Phonetic Alphabet: ${ipa}`}>/{ipa}/</p>{/if}
-        {#if showDefinition}<p class="m-0 mt-[.4rem] max-w-[22rem] text-base-content/70 text-[.72rem] font-bold leading-[1.4]">{definition ?? 'No definition is available for this word yet.'} <a class="text-accent font-extrabold underline underline-offset-2" href={wiktionaryUrl(settings.lang, spelling)} target="_blank" rel="noreferrer">Wiktionary</a></p>{/if}
+          <p class="m-0 text-[1rem] font-mono tracking-[.03em]" lang={settings.lang} title="Underlined = wrong sound · struck through = missing · + = extra" aria-label={`Correct pronunciation: ${ipa}`}>/{#each correction as segment, index (index)}<span class={segment.status === 'match' ? 'text-accent/80' : segment.status === 'sub' ? 'px-[.05em] rounded-sm bg-error/15 text-error font-bold underline decoration-2 underline-offset-[3px]' : segment.status === 'extra' ? 'text-error/60 text-[.6em] align-super' : 'px-[.05em] rounded-sm bg-error/15 text-error/60 line-through'}>{segment.status === 'extra' ? `+${segment.char}` : segment.char}</span>{/each}/</p>
+        {:else if ipa}<p class="m-0 text-accent/80 text-[.95rem] font-mono tracking-[.02em]" lang={settings.lang} aria-label={`International Phonetic Alphabet: ${ipa}`}>/{ipa}/</p>{/if}
+        {#if showDefinition}<p class="m-0 mt-[.4rem] max-w-[22rem] text-base-content/70 text-[.9rem] font-bold leading-[1.4]">{definition ?? 'No definition is available for this word yet.'} <a class="text-accent font-extrabold underline underline-offset-2" href={wiktionaryUrl(settings.lang, spelling)} target="_blank" rel="noreferrer">Wiktionary</a></p>{/if}
       </div>
 
       <div class="flex items-center gap-[.6rem]">
@@ -434,7 +434,7 @@
         {/if}
       </div>
 
-      <div class="min-h-[2.6rem] grid justify-items-center content-start gap-[.35rem] text-center text-[.7rem] font-extrabold" role="status" aria-live="polite">
+      <div class="min-h-[2.6rem] grid justify-items-center content-start gap-[.35rem] text-center text-[.9rem] font-extrabold" role="status" aria-live="polite">
         {#if recognitionNeedsTap}
           <button type="button" class="btn-play btn-play-sm" onclick={() => startListening(true)}><IconMic aria-hidden="true" />Tap to start listening</button>
         {:else if recognitionStalled}

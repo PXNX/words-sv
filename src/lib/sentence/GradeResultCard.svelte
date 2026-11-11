@@ -86,12 +86,12 @@
   .grade-score[data-verdict='high'] .grade-number { color: #34824d; }
   .grade-score[data-verdict='ok'] .grade-number { color: #c9862b; }
   .grade-score[data-verdict='low'] .grade-number { color: #c9604e; }
-  .grade-verdict { color: #596477; font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 900; letter-spacing: 0.04em; text-transform: uppercase; }
-  .grade-stats { margin: 0; color: #7b8494; font-family: 'DM Sans', sans-serif; font-size: 0.66rem; font-weight: 700; }
+  .grade-verdict { color: #596477; font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 900; letter-spacing: 0.04em; text-transform: uppercase; }
+  .grade-stats { margin: 0; color: #7b8494; font-family: 'DM Sans', sans-serif; font-size: .875rem; font-weight: 700; }
   .grade-source { color: #a45e38; }
-  .grade-comment { margin: 0; padding: 0.5rem 0.65rem; border-radius: 0.55rem; background: rgba(247, 226, 176, 0.45); color: #243449; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 600; line-height: 1.5; }
+  .grade-comment { margin: 0; padding: 0.5rem 0.65rem; border-radius: 0.55rem; background: rgba(247, 226, 176, 0.45); color: #243449; font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 600; line-height: 1.5; }
   .grade-factors { display: grid; gap: 0.3rem; margin: 0; padding: 0; list-style: none; }
-  .grade-factor { padding: 0.4rem 0.6rem; border-radius: 0.55rem; background: #fbf7ee; color: #243449; font-family: 'DM Sans', sans-serif; font-size: 0.74rem; font-weight: 600; line-height: 1.4; }
+  .grade-factor { padding: 0.4rem 0.6rem; border-radius: 0.55rem; background: #fbf7ee; color: #243449; font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 600; line-height: 1.4; }
   .grade-factor[data-key='lengthGood'],
   .grade-factor[data-key='sentenceCountGood'],
   .grade-factor[data-key='varietyGood'],

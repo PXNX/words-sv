@@ -85,16 +85,16 @@
   .news-confetti i { position:absolute;top:-.8rem;left:var(--x);width:.45rem;height:.75rem;border-radius:.12rem;background:var(--c);opacity:0;animation:news-confetti 1.6s cubic-bezier(.2,.7,.4,1) var(--d) forwards; }
   .news-lilith { position:relative;display:block;width:6rem;height:7.2rem;transform-origin:50% 100%;animation:news-pop .55s cubic-bezier(.34,1.56,.64,1) .1s both, news-bounce 1.4s ease-in-out .7s 2; }
   .news-hearts { position:absolute;inset:0;pointer-events:none; }
-  .news-hearts b { position:absolute;top:30%;left:50%;color:#e86a9a;font-size:.9rem;opacity:0;animation:news-heart 1.5s ease-out forwards; }
+  .news-hearts b { position:absolute;top:30%;left:50%;color:#e86a9a;font-size:1rem;opacity:0;animation:news-heart 1.5s ease-out forwards; }
   .news-hearts b:nth-child(1) { --hx:-2.6rem;animation-delay:.5s; }
   .news-hearts b:nth-child(2) { --hx:2.2rem;animation-delay:.75s; }
   .news-hearts b:nth-child(3) { --hx:-.3rem;animation-delay:1s; }
   .news-sheet h2 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:1.45rem;font-weight:400;text-align:center;animation:news-in .4s ease-out .25s both; }
-  .news-highlight { margin:0;color:#243449;font-size:.85rem;font-weight:800;line-height:1.4;text-align:center;animation:news-in .4s ease-out .35s both; }
-  .news-features { display:grid;gap:.3rem;width:100%;margin:.2rem 0 0;padding-inline-start:1.2rem;list-style:disc;color:#243449;font-size:.78rem;line-height:1.4; }
+  .news-highlight { margin:0;color:#243449;font-size:.95rem;font-weight:800;line-height:1.4;text-align:center;animation:news-in .4s ease-out .35s both; }
+  .news-features { display:grid;gap:.3rem;width:100%;margin:.2rem 0 0;padding-inline-start:1.2rem;list-style:disc;color:#243449;font-size:.95rem;line-height:1.4; }
   .news-features li { animation:news-in .35s ease-out calc(.45s + var(--i) * .07s) both; }
   .news-features li::marker { color:#e6a527; }
-  .news-extra { display:flex;flex-wrap:wrap;justify-content:center;gap:.25rem .6rem;margin:0;font-size:.68rem;font-weight:800;opacity:.75; }
+  .news-extra { display:flex;flex-wrap:wrap;justify-content:center;gap:.25rem .6rem;margin:0;font-size:.875rem;font-weight:800;opacity:.75; }
   .news-extra a { color:#a45e38; }
   .news-go { width:100%;justify-content:center;margin-top:.35rem;animation:news-in .4s ease-out .8s both; }
   @keyframes news-fade { from { opacity:0; } }

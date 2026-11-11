@@ -286,28 +286,28 @@ target = candidates.length > 0 ? (candidates[Math.floor(Math.random() * candidat
     <div class="grid content-center justify-items-center gap-[.65rem]">
       <WordleGrid rows={2} wordLength={5} {entries} currentGuess={practiceFinished ? '' : guess} {revealRow} ariaLabel={labels.title} compact />
       {#if practiceFinished}
-        <p class="min-h-[1rem] m-0 text-success text-[.68rem] font-extrabold text-center">{practiceCompleteLabel}</p>
+        <p class="min-h-[1rem] m-0 text-success text-[.875rem] font-extrabold text-center">{practiceCompleteLabel}</p>
         <button class="btn-play btn-play-go" onclick={finishPractice}>{practiceContinueLabel}</button>
       {:else}
-        <p class="m-0 text-accent text-[.68rem] font-extrabold text-center">{practicePromptLabel} {practiceExpectedWord}</p>
+        <p class="m-0 text-accent text-[.875rem] font-extrabold text-center">{practicePromptLabel} {practiceExpectedWord}</p>
       {/if}
     </div>
     {#if !practiceFinished}
       <WordleKeyboard {language} expectedLetter={practiceExpectedWord[guess.length]} ariaLabel={labels.input} onPress={practicePress} onRemove={practiceRemoveLetter} />
     {/if}
   {:else if candidates.length === 0}
-    <div class="p-[1.25rem] border border-accent/42 bg-accent/8 text-accent text-[.75rem] font-extrabold text-center">{labels.empty}</div>
+    <div class="p-[1.25rem] border border-accent/42 bg-accent/8 text-accent text-[.9rem] font-extrabold text-center">{labels.empty}</div>
   {:else}
     <div class="grid content-center justify-items-center gap-[.65rem]">
       <WordleGrid rows={maxAttempts} {wordLength} {entries} currentGuess={guess} {invalid} {revealRow} {markLabels} explainLabel={(word) => m.wordle_explain({ word }, { locale: settings.interfaceLocale })} ariaLabel={labels.title} onExplain={(word) => (explanationWord = explanationWord === word ? null : word)} />
-      {#if explanation}<div class="note-play pop-in flex items-start gap-[.45rem] max-w-[min(100%,28rem)] p-[.55rem_.7rem] text-accent text-[.65rem] font-bold leading-[1.35]"><IconHelp class="w-[.9rem] h-[.9rem] flex-none mt-[.05rem]" aria-hidden="true" /><span>{explanation.definition ?? noDefinitionLabel}<a class="ms-1 font-extrabold underline underline-offset-2" href={explanation.href} target="_blank" rel="noreferrer">Wiktionary</a></span></div>{/if}
-      <p class="min-h-[1rem] m-0 text-accent text-[.68rem] font-extrabold text-center" role="status" aria-live="polite">{notice}</p>
+      {#if explanation}<div class="note-play pop-in flex items-start gap-[.45rem] max-w-[min(100%,28rem)] p-[.55rem_.7rem] text-accent text-[.84rem] font-bold leading-[1.35]"><IconHelp class="w-[.9rem] h-[.9rem] flex-none mt-[.05rem]" aria-hidden="true" /><span>{explanation.definition ?? noDefinitionLabel}<a class="ms-1 font-extrabold underline underline-offset-2" href={explanation.href} target="_blank" rel="noreferrer">Wiktionary</a></span></div>{/if}
+      <p class="min-h-[1rem] m-0 text-accent text-[.875rem] font-extrabold text-center" role="status" aria-live="polite">{notice}</p>
       <p class="sr-only" aria-live="polite">{announcement}</p>
       {#if answer}
         <div class="wordle-result note-play grid justify-items-center gap-[.2rem] max-w-[min(100%,28rem)] p-[.6rem_.85rem] text-center" style:--reveal-delay={revealDelay}>
-          <p class="m-0 text-[.68rem] font-extrabold" class:text-success={won} class:text-accent={!won}>{won ? `${labels.win} ${solvedLabel}` : revealLabel}</p>
+          <p class="m-0 text-[.875rem] font-extrabold" class:text-success={won} class:text-accent={!won}>{won ? `${labels.win} ${solvedLabel}` : revealLabel}</p>
           <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[1.35rem] leading-tight" lang={language}>{#if answer.article}<span class="text-base-content/60 text-[1rem]">{answer.article}</span>{' '}{/if}{answer.spelling}</p>
-          <p class="m-0 text-base-content/75 text-[.65rem] font-bold leading-[1.35]">{answer.definition ?? noDefinitionLabel}<a class="ms-1 font-extrabold text-accent underline underline-offset-2" href={answer.href} target="_blank" rel="noreferrer">Wiktionary</a></p>
+          <p class="m-0 text-base-content/75 text-[.84rem] font-bold leading-[1.35]">{answer.definition ?? noDefinitionLabel}<a class="ms-1 font-extrabold text-accent underline underline-offset-2" href={answer.href} target="_blank" rel="noreferrer">Wiktionary</a></p>
         </div>
         <button class="wordle-result btn-play btn-play-go disabled:cursor-wait disabled:opacity-80" style:--reveal-delay={revealDelay} onclick={continueRound} disabled={loadingNextRound} aria-busy={loadingNextRound}>
           {#if loadingNextRound}<IconProgressActivity class="w-[1rem] h-[1rem] animate-[startup-spin_1s_linear_infinite] motion-reduce:animate-none" aria-hidden="true" />{/if}

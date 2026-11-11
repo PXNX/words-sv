@@ -56,19 +56,19 @@
 <style>
   .rubric-card { display: grid; gap: 0.6rem; padding: 0.9rem 1rem; border: 1px solid rgba(23, 42, 69, 0.16); border-radius: 1rem; background: #fffdf7; }
   header { display: grid; gap: 0.15rem; }
-  .rubric-kicker { margin: 0; color: #a45e38; font-family: 'DM Sans', sans-serif; font-size: 0.58rem; font-weight: 900; letter-spacing: 0.14em; text-transform: uppercase; }
+  .rubric-kicker { margin: 0; color: #a45e38; font-family: 'DM Sans', sans-serif; font-size: .8125rem; font-weight: 900; letter-spacing: 0.14em; text-transform: uppercase; }
   .rubric-band { margin: 0; color: #172a45; font-family: 'DM Serif Display', serif; font-size: 1.25rem; line-height: 1.15; }
   .rubric-card[data-band='above'] .rubric-band { color: #34824d; }
   .rubric-card[data-band='below'] .rubric-band { color: #c9604e; }
   ul { display: grid; gap: 0.45rem; margin: 0; padding: 0; list-style: none; }
   li { display: grid; grid-template-columns: 1fr auto; gap: 0.1rem 0.6rem; align-items: center; }
-  .rubric-name { color: #243449; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 800; }
+  .rubric-name { color: #243449; font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 800; }
   .rubric-points { display: inline-flex; gap: 0.22rem; }
   .rubric-points i { width: 0.6rem; height: 0.6rem; border-radius: 999px; background: rgba(23, 42, 69, 0.14); }
   .rubric-points i.on { background: #e6a527; }
   .rubric-card[data-band='above'] .rubric-points i.on { background: #34824d; }
-  .rubric-detail { grid-column: 1 / -1; color: #7b8494; font-family: 'DM Sans', sans-serif; font-size: 0.66rem; font-weight: 700; line-height: 1.35; }
-  .rubric-connectors { margin: 0; color: #596477; font-family: 'DM Sans', sans-serif; font-size: 0.68rem; font-weight: 700; }
+  .rubric-detail { grid-column: 1 / -1; color: #7b8494; font-family: 'DM Sans', sans-serif; font-size: .875rem; font-weight: 700; line-height: 1.35; }
+  .rubric-connectors { margin: 0; color: #596477; font-family: 'DM Sans', sans-serif; font-size: .875rem; font-weight: 700; }
   :global(html.dark) .rubric-card { border-color: rgba(255, 253, 247, 0.24); background: #152b47; }
   :global(html.dark) .rubric-band, :global(html.dark) .rubric-name { color: #fffdf7; }
   :global(html.dark) .rubric-points i { background: rgba(255, 253, 247, 0.18); }

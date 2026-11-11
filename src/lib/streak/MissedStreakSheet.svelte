@@ -38,6 +38,6 @@
 {/if}
 
 <style>
-  .missed-text { margin:0;font-size:.72rem;font-weight:700;line-height:1.45; }
+  .missed-text { margin:0;font-size:.9rem;font-weight:700;line-height:1.45; }
   .missed-repair { justify-self:start; }
 </style>

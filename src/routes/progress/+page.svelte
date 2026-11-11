@@ -254,7 +254,7 @@
   <!-- Customising: the learner's name and own story character, edited right here; colours and sets
        for Telegram Stars are tried on and bought inside the editor. -->
   <section class="panel-play mt-[1.2rem] px-4 pt-[.9rem] pb-4" aria-labelledby="progress-profile-heading">
-    <h2 id="progress-profile-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.profileTitle}</h2>
+    <h2 id="progress-profile-heading" class="m-0 text-accent text-[.8125rem] font-extrabold tracking-[.12em] uppercase">{labels.profileTitle}</h2>
     {#if editingName}
       <form class="mt-[.35rem] flex items-center gap-[.3rem]" onsubmit={submitName}>
         <!-- svelte-ignore a11y_autofocus -->
@@ -268,7 +268,7 @@
         <button type="button" class="progress-edit" aria-label={labels.profileNameEdit} title={labels.profileNameEdit} onclick={startNameEdit}><IconEdit aria-hidden="true" /></button>
       </div>
     {/if}
-    <p class="m-0 mt-[.35rem] mb-[.7rem] text-base-content/65 text-[.6rem] font-bold leading-[1.4]">{labels.profileHint}</p>
+    <p class="m-0 mt-[.35rem] mb-[.7rem] text-base-content/65 text-[.8125rem] font-bold leading-[1.4]">{labels.profileHint}</p>
     <AvatarEditor value={settings.avatar ?? defaultAvatar} onchange={(next) => settings.setAvatar(next)} shop />
   </section>
 
@@ -284,7 +284,7 @@
   <section class="panel-play mt-[1.2rem] px-4 pt-[.9rem] pb-4" aria-labelledby="progress-streak-heading">
     <div class="flex items-end justify-between gap-3">
       <div class="min-w-0">
-        <h2 id="progress-streak-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.streak}</h2>
+        <h2 id="progress-streak-heading" class="m-0 text-accent text-[.8125rem] font-extrabold tracking-[.12em] uppercase">{labels.streak}</h2>
         <div class="mt-[.3rem] flex items-center gap-[.5rem]">
           <span class="relative grid place-items-center" aria-hidden="true">
             <svg class="progress-ring absolute w-[3.2rem] h-[3.2rem]" viewBox="0 0 36 36">
@@ -300,7 +300,7 @@
     </div>
 
     <div class="mt-[.8rem]">
-      <div class="flex items-center justify-between gap-3 text-base-content text-[.64rem] font-extrabold">
+      <div class="flex items-center justify-between gap-3 text-base-content text-[.84rem] font-extrabold">
         <span>{labels.dailyGoal}</span>
         <span class="tabular-nums">{num(Math.min(settings.streak.vocabCorrect, settings.streak.vocabularyGoal))}/{num(settings.streak.vocabularyGoal)}</span>
       </div>
@@ -309,7 +309,7 @@
           <li class={`pip flex-1 h-[.6rem] ${index < settings.streak.vocabCorrect ? 'bg-[#34824d]' : 'bg-base-content/10'}`}></li>
         {/each}
       </ol>
-      <p class="m-0 mt-[.45rem] text-[.62rem] font-extrabold text-base-content/70">
+      <p class="m-0 mt-[.45rem] text-[.84rem] font-extrabold text-base-content/70">
         {#if settings.streak.qualified}{labels.streakDone}{:else}{labels.streakTimeLeft}: {formatMinutes(settings.streak.minutesRemaining)}{/if}
       </p>
       <div class="mt-[.5rem] flex flex-wrap items-center gap-[.3rem]" role="group" aria-label={labels.streakGoalChoose}>
@@ -317,15 +317,15 @@
           <button type="button" class="progress-goal" class:active={goal === settings.streak.vocabularyGoal} aria-pressed={goal === settings.streak.vocabularyGoal} onclick={() => void settings.setDailyGoal(goal)}>{labels.streakGoalWords(goal)}</button>
         {/each}
       </div>
-      <p class="m-0 mt-[.3rem] text-base-content/55 text-[.56rem] font-bold">{labels.streakGoalHint}</p>
-      <p class="m-0 mt-[.2rem] text-base-content/55 text-[.56rem] font-bold">{labels.streakFreezes(settings.streak.freezes)} · {labels.streakFreezeHint}</p>
+      <p class="m-0 mt-[.3rem] text-base-content/55 text-[.8125rem] font-bold">{labels.streakGoalHint}</p>
+      <p class="m-0 mt-[.2rem] text-base-content/55 text-[.8125rem] font-bold">{labels.streakFreezes(settings.streak.freezes)} · {labels.streakFreezeHint}</p>
       {#if repairOffer}
         <div class="mt-[.55rem] p-[.6rem] border border-base-content/25 rounded-[.6rem] bg-[#fff4d9] dark:bg-[#294666]">
-          <p class="m-0 text-base-content text-[.6rem] font-extrabold leading-[1.4]">{labels.streakRepairHint(repairOffer.streakCount, REPAIR_WORDS)}</p>
+          <p class="m-0 text-base-content text-[.8125rem] font-extrabold leading-[1.4]">{labels.streakRepairHint(repairOffer.streakCount, REPAIR_WORDS)}</p>
           <a class="btn-play btn-play-ink btn-play-sm mt-[.4rem]" href="/vocab?repair=1">{labels.streakRepairCta}</a>
         </div>
       {:else if !settings.streak.qualified && settings.streak.streakCount === 0 && settings.streak.bestStreak > 0}
-        <p class="m-0 mt-[.35rem] text-base-content/65 text-[.6rem] font-bold">{labels.streakRestart(settings.streak.bestStreak)}</p>
+        <p class="m-0 mt-[.35rem] text-base-content/65 text-[.8125rem] font-bold">{labels.streakRestart(settings.streak.bestStreak)}</p>
       {/if}
     </div>
     <!-- Signed in with Telegram: WordCircle Pro, which keeps the streak through one missed day a week. -->
@@ -333,14 +333,14 @@
 
 
     <dl class="m-0 mt-[.8rem] pt-[.7rem] grid grid-cols-2 border-t border-base-content/[.14] dark:border-base-content/[.22]">
-      <div class="grid gap-[.1rem] text-center"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.4rem] leading-none text-base-content">{settings.streak.bestStreak}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.streakBest}</dt></div>
-      <div class="grid gap-[.1rem] text-center border-s border-base-content/[.14] dark:border-base-content/[.22]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.4rem] leading-none text-base-content">{settings.completedRounds}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.completed}</dt></div>
+      <div class="grid gap-[.1rem] text-center"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.4rem] leading-none text-base-content">{settings.streak.bestStreak}</dd><dt class="order-2 text-base-content/60 text-[.8125rem] font-extrabold tracking-[.06em] uppercase">{labels.streakBest}</dt></div>
+      <div class="grid gap-[.1rem] text-center border-s border-base-content/[.14] dark:border-base-content/[.22]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.4rem] leading-none text-base-content">{settings.completedRounds}</dd><dt class="order-2 text-base-content/60 text-[.8125rem] font-extrabold tracking-[.06em] uppercase">{labels.completed}</dt></div>
     </dl>
   </section>
 
   <!-- Weekly recap: what actually happened this week, not a guessed average. -->
   <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4" aria-labelledby="progress-week-heading">
-    <h2 id="progress-week-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.weekTitle}</h2>
+    <h2 id="progress-week-heading" class="m-0 text-accent text-[.8125rem] font-extrabold tracking-[.12em] uppercase">{labels.weekTitle}</h2>
     <figure class="week-chart">
       <figcaption>{m.stats_week_chart({}, { locale: settings.interfaceLocale })}</figcaption>
       <!-- Bars carry minutes; only today and the busiest day get a number, the rest show it on hover. -->
@@ -359,13 +359,13 @@
       </table>
     </figure>
     <dl class="m-0 mt-[.6rem] grid grid-cols-2 gap-x-4 gap-y-[.55rem]">
-      <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{num(weekly.wordsMastered)}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekWords}</dt></div>
-      <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{num(weekly.minutes)}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekMinutes}</dt></div>
-      <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{num(weekly.bestStreak)}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekBestStreak}</dt></div>
-      <div class="grid gap-[.1rem] min-w-0"><dd class="m-0 order-1 truncate text-base-content text-[.8rem] font-extrabold leading-[1.9]">{weekly.hardestWord ?? '—'}</dd><dt class="order-2 text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{labels.weekHardest}</dt></div>
+      <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{num(weekly.wordsMastered)}</dd><dt class="order-2 text-base-content/60 text-[.8125rem] font-extrabold tracking-[.06em] uppercase">{labels.weekWords}</dt></div>
+      <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{num(weekly.minutes)}</dd><dt class="order-2 text-base-content/60 text-[.8125rem] font-extrabold tracking-[.06em] uppercase">{labels.weekMinutes}</dt></div>
+      <div class="grid gap-[.1rem]"><dd class="m-0 order-1 font-['DM_Serif_Display',serif] text-[1.5rem] leading-none text-base-content">{num(weekly.bestStreak)}</dd><dt class="order-2 text-base-content/60 text-[.8125rem] font-extrabold tracking-[.06em] uppercase">{labels.weekBestStreak}</dt></div>
+      <div class="grid gap-[.1rem] min-w-0"><dd class="m-0 order-1 truncate text-base-content text-[.95rem] font-extrabold leading-[1.9]">{weekly.hardestWord ?? '—'}</dd><dt class="order-2 text-base-content/60 text-[.8125rem] font-extrabold tracking-[.06em] uppercase">{labels.weekHardest}</dt></div>
     </dl>
     {#if topModes.length > 0}
-      <p class="m-0 mt-[.7rem] text-base-content/60 text-[.54rem] font-extrabold tracking-[.06em] uppercase">{m.stats_most_played({}, { locale: settings.interfaceLocale })}</p>
+      <p class="m-0 mt-[.7rem] text-base-content/60 text-[.8125rem] font-extrabold tracking-[.06em] uppercase">{m.stats_most_played({}, { locale: settings.interfaceLocale })}</p>
       <ul class="mode-shares">
         {#each topModes as mode (mode.kind)}
           <li><span class="mode-share-name">{kindNames[mode.kind]}</span><span class="mode-share-bar" aria-hidden="true"><span style:width={`${Math.round(mode.share * 100)}%`}></span></span><b class="tabular-nums">{num(mode.count)}</b></li>
@@ -373,30 +373,30 @@
       </ul>
     {/if}
     {#if weekly.wordsMastered === 0 && weekly.minutes === 0}
-      <p class="m-0 mt-[.5rem] text-base-content/55 text-[.62rem] font-bold">{labels.weekEmpty}</p>
+      <p class="m-0 mt-[.5rem] text-base-content/55 text-[.84rem] font-bold">{labels.weekEmpty}</p>
     {/if}
     <button type="button" class="btn-play btn-play-soft btn-play-sm mt-[.7rem]" onclick={shareWeek}>{labels.weekShare}</button>
-    <p class="m-0 mt-[.35rem] text-success text-[.58rem] font-bold" aria-live="polite">{shareNote}</p>
+    <p class="m-0 mt-[.35rem] text-success text-[.8125rem] font-bold" aria-live="polite">{shareNote}</p>
   </section>
 
   <!-- Your words in the learning language: the tricky ones to repeat and the most practised -->
   <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4" aria-labelledby="progress-words-heading">
     <div class="flex items-baseline justify-between gap-3">
-      <h2 id="progress-words-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{m.coach_words({ language: learningLanguage.label }, { locale: settings.interfaceLocale })}</h2>
-      {#if vocabProgress[settings.lang]}<span class="text-base-content/55 text-[.58rem] font-extrabold tabular-nums">{labels.wordsPracticed}: {num(vocabProgress[settings.lang]!.wordsPracticed)}</span>{/if}
+      <h2 id="progress-words-heading" class="m-0 text-accent text-[.8125rem] font-extrabold tracking-[.12em] uppercase">{m.coach_words({ language: learningLanguage.label }, { locale: settings.interfaceLocale })}</h2>
+      {#if vocabProgress[settings.lang]}<span class="text-base-content/55 text-[.8125rem] font-extrabold tabular-nums">{labels.wordsPracticed}: {num(vocabProgress[settings.lang]!.wordsPracticed)}</span>{/if}
     </div>
     <div class="grid grid-cols-2 gap-4 mt-[.6rem]">
       {#each [{ heading: labels.trickyWords, words: practicedLanguages[0]!.trickyWords.map((entry) => ({ word: entry.word, count: entry.count })) }, { heading: labels.topWords, words: vocabProgress[settings.lang]?.mostRepeated.map((entry) => ({ word: entry.word, count: entry.repetitions })) ?? [] }] as list (list.heading)}
         <div class="min-w-0">
-          <h3 class="m-0 text-base-content/60 text-[.54rem] font-extrabold tracking-[.08em] uppercase">{list.heading}</h3>
+          <h3 class="m-0 text-base-content/60 text-[.8125rem] font-extrabold tracking-[.08em] uppercase">{list.heading}</h3>
           {#if list.words.length > 0}
             <ol class="m-0 mt-[.3rem] p-0 list-none grid gap-[.2rem]">
               {#each list.words as entry (entry.word)}
-                <li class="flex items-center justify-between gap-2 text-base-content text-[.68rem] font-bold"><span class="truncate" lang={settings.lang}>{spellingOf(settings.lang, entry.word)}</span><span class="text-base-content/50 tabular-nums">{num(entry.count)}×</span></li>
+                <li class="flex items-center justify-between gap-2 text-base-content text-[.875rem] font-bold"><span class="truncate" lang={settings.lang}>{spellingOf(settings.lang, entry.word)}</span><span class="text-base-content/50 tabular-nums">{num(entry.count)}×</span></li>
               {/each}
             </ol>
           {:else}
-            <p class="m-0 mt-[.3rem] text-base-content/50 text-[.64rem] font-bold">{labels.noneYet}</p>
+            <p class="m-0 mt-[.3rem] text-base-content/50 text-[.84rem] font-bold">{labels.noneYet}</p>
           {/if}
         </div>
       {/each}
@@ -407,8 +407,8 @@
   <!-- Achievements: badges earned from real practice. -->
   <section class="panel-play mt-4 px-4 pt-[.9rem] pb-4" aria-labelledby="progress-achievements-heading">
     <div class="flex items-baseline justify-between gap-3">
-      <h2 id="progress-achievements-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.achievementsTitle}</h2>
-      <span class="text-base-content/55 text-[.58rem] font-extrabold tabular-nums">{labels.achievementsUnlocked(unlocked, achievements.length)}</span>
+      <h2 id="progress-achievements-heading" class="m-0 text-accent text-[.8125rem] font-extrabold tracking-[.12em] uppercase">{labels.achievementsTitle}</h2>
+      <span class="text-base-content/55 text-[.8125rem] font-extrabold tabular-nums">{labels.achievementsUnlocked(unlocked, achievements.length)}</span>
     </div>
     <ul class="achievement-grid">
       {#each achievements as achievement (achievement.id)}
@@ -420,43 +420,43 @@
         </li>
       {/each}
     </ul>
-    {#if unlocked === 0}<p class="m-0 mt-[.5rem] text-base-content/55 text-[.6rem] font-bold leading-[1.4]">{labels.achievementsNone}</p>{/if}
+    {#if unlocked === 0}<p class="m-0 mt-[.5rem] text-base-content/55 text-[.8125rem] font-bold leading-[1.4]">{labels.achievementsNone}</p>{/if}
   </section>
 
 </section>
 
 <style>
   .pip { border: 2px solid var(--play-line); border-radius: 5px; }
-  .progress-group { margin: 1.6rem 0 0; color: var(--color-accent); font-size: .62rem; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; text-align: center; }
+  .progress-group { margin: 1.6rem 0 0; color: var(--color-accent); font-size: .84rem; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; text-align: center; }
   .progress-ring { rotate: -90deg; overflow: visible; }
   .progress-ring-track { fill: none; stroke: var(--play-line); stroke-width: 2.4; opacity: .28; }
   .progress-ring-value { fill: none; stroke: #34824d; stroke-width: 2.4; stroke-linecap: round; transition: stroke-dashoffset .45s ease; }
   .progress-lilith { position:relative;display:block;flex:none; }
-  .progress-lilith-hearts { position:absolute;inset:-.5rem 0 auto;display:flex;justify-content:center;gap:.12rem;color:#d9546a;font-size:.78rem;line-height:1;pointer-events:none; }
+  .progress-lilith-hearts { position:absolute;inset:-.5rem 0 auto;display:flex;justify-content:center;gap:.12rem;color:#d9546a;font-size:.95rem;line-height:1;pointer-events:none; }
   .progress-lilith-hearts span { display:block;animation:progress-heart 2s ease-in-out infinite; }
-  .progress-lilith-hearts span:last-child { margin-top:.35rem;font-size:.58rem;animation-delay:.7s; }
+  .progress-lilith-hearts span:last-child { margin-top:.35rem;font-size:.8125rem;animation-delay:.7s; }
   @keyframes progress-heart { 0% { opacity:0;translate:0 .3rem;scale:.7; } 35% { opacity:1; } 100% { opacity:0;translate:0 -1rem;scale:1; } }
   @media (prefers-reduced-motion:reduce) { .progress-lilith-hearts span { animation:none;opacity:1; } }
-  .progress-goal { min-height: 1.7rem; padding: .15rem .55rem; border: 1.5px solid var(--play-line); border-radius: 999px; background: transparent; color: var(--play-ink, #172a45); font-size: .58rem; font-weight: 900; cursor: pointer; }
+  .progress-goal { min-height: 1.7rem; padding: .15rem .55rem; border: 1.5px solid var(--play-line); border-radius: 999px; background: transparent; color: var(--play-ink, #172a45); font-size: .8125rem; font-weight: 900; cursor: pointer; }
   .progress-goal.active { border-color: #172a45; background: #172a45; color: #fffdf7; }
   .progress-goal:focus-visible { outline: 2px solid #e6a527; outline-offset: 2px; }
   :global(html.dark) .progress-goal.active { border-color: #e6a527; background: #e6a527; color: #172a45; }
   .progress-name { margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--play-ink,#172a45);font-family:'DM Serif Display',serif;font-size:1.35rem;line-height:1.1; }
-  .progress-name-input { min-width:0;flex:1;min-height:2rem;padding:.15rem .5rem;border:2px solid var(--play-line);border-radius:.55rem;background:#fffdf7;color:#172a45;font-size:.78rem;font-weight:800;outline:0; }
+  .progress-name-input { min-width:0;flex:1;min-height:2rem;padding:.15rem .5rem;border:2px solid var(--play-line);border-radius:.55rem;background:#fffdf7;color:#172a45;font-size:.95rem;font-weight:800;outline:0; }
   .progress-edit { display:grid;place-items:center;flex:none;width:1.7rem;height:1.7rem;padding:0;border:1.5px solid var(--play-line);border-radius:999px;background:transparent;color:var(--play-ink,#172a45);cursor:pointer; }
   .progress-edit :global(svg) { width:1rem;height:1rem; }
   .progress-edit:focus-visible,.progress-name-input:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
   .week-chart { margin:.7rem 0 .2rem; }
-  .week-chart figcaption { color:rgba(23,42,69,.6);font-size:.54rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }
+  .week-chart figcaption { color:rgba(23,42,69,.6);font-size:.8125rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }
   .week-bars { display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.35rem;height:7rem;margin-top:.45rem;padding-bottom:1.1rem;position:relative;background:linear-gradient(rgba(23,42,69,.1),rgba(23,42,69,.1)) left bottom 1.1rem / 100% 1px no-repeat; }
   .week-bar { position:relative;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-width:0;cursor:default; }
   .week-fill { width:min(100%,1.6rem);border-radius:4px 4px 0 0;background:#e6a527;transition:height .45s cubic-bezier(.23,1,.32,1); }
   .week-bar.today .week-fill { background:#c9832f; }
-  .week-value { margin-bottom:.15rem;color:var(--play-ink,#172a45);font-size:.56rem;font-weight:900;line-height:1; }
-  .week-day { position:absolute;bottom:-1.1rem;color:rgba(23,42,69,.55);font-size:.52rem;font-weight:800;white-space:nowrap; }
+  .week-value { margin-bottom:.15rem;color:var(--play-ink,#172a45);font-size:.8125rem;font-weight:900;line-height:1; }
+  .week-day { position:absolute;bottom:-1.1rem;color:rgba(23,42,69,.55);font-size:.8125rem;font-weight:800;white-space:nowrap; }
   .week-bar.today .week-day { color:var(--play-ink,#172a45);font-weight:900; }
   .mode-shares { margin:.35rem 0 0;padding:0;list-style:none;display:grid;gap:.3rem; }
-  .mode-shares li { display:grid;grid-template-columns:minmax(5rem,7.5rem) 1fr auto;align-items:center;gap:.5rem;font-size:.6rem;font-weight:800;color:var(--play-ink,#172a45); }
+  .mode-shares li { display:grid;grid-template-columns:minmax(5rem,7.5rem) 1fr auto;align-items:center;gap:.5rem;font-size:.8125rem;font-weight:800;color:var(--play-ink,#172a45); }
   .mode-share-name { overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
   .mode-share-bar { height:.4rem;border-radius:999px;background:rgba(23,42,69,.08);overflow:hidden; }
   .mode-share-bar span { display:block;height:100%;border-radius:inherit;background:#e6a527; }
@@ -473,8 +473,8 @@
   .achievement-grid { margin:.6rem 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(10.5rem,1fr));gap:.35rem; }
   .achievement { display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto auto;column-gap:.45rem;row-gap:.2rem;align-items:center;padding:.4rem .5rem;border:1.5px solid var(--play-line);border-radius:.6rem;opacity:.7; }
   .achievement.done { opacity:1;background:rgba(230,165,39,.12);border-color:#e6a527; }
-  .achievement-label { color:var(--play-ink,#172a45);font-size:.62rem;font-weight:800;line-height:1.25; }
-  .achievement-progress { color:var(--play-ink,#172a45);opacity:.55;font-size:.55rem;font-weight:800; }
+  .achievement-label { color:var(--play-ink,#172a45);font-size:.84rem;font-weight:800;line-height:1.25; }
+  .achievement-progress { color:var(--play-ink,#172a45);opacity:.55;font-size:.8125rem;font-weight:800; }
   :global(html.dark) .progress-name-input { border-color:#0b1626;background:#2b4a70;color:#fffdf7; }
   :global(html.dark) .achievement { border-color:rgba(255,253,247,.2); }
   :global(html.dark) .achievement.done { border-color:#e6a527;background:rgba(230,165,39,.16); }

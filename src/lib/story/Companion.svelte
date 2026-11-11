@@ -20,8 +20,8 @@
   .companion-character { display:block;flex:none;width:3.3rem;height:4.1rem;transform-origin:50% 100%;animation:companion-hop .42s cubic-bezier(.34,1.56,.64,1); }
   .companion-sm .companion-character { width:2.5rem;height:3.1rem; }
   .companion-character :global(.story-character) { width:100%;height:100%; }
-  .companion-bubble { position:relative;max-width:12rem;margin:0 0 1.6rem;padding:.38rem .6rem;border:2px solid #172a45;border-radius:.9rem .9rem .9rem .25rem;background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:800;line-height:1.3;animation:companion-pop .24s cubic-bezier(.23,1,.32,1) both; }
-  .companion-sm .companion-bubble { margin-bottom:1.15rem;font-size:.6rem; }
+  .companion-bubble { position:relative;max-width:12rem;margin:0 0 1.6rem;padding:.38rem .6rem;border:2px solid #172a45;border-radius:.9rem .9rem .9rem .25rem;background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:800;line-height:1.3;animation:companion-pop .24s cubic-bezier(.23,1,.32,1) both; }
+  .companion-sm .companion-bubble { margin-bottom:1.15rem;font-size:.8125rem; }
   :global(html.dark) .companion-bubble { border-color:#0b1626;background:#2b4a70;color:#fffdf7; }
   @keyframes companion-hop { 0% { scale:1; } 40% { scale:1.06 .94; translate:0 0; } 70% { translate:0 -.25rem; } 100% { scale:1;translate:0 0; } }
   @keyframes companion-pop { from { opacity:0;transform:translateY(.25rem) scale(.92); } }

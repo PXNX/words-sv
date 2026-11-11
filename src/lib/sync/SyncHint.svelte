@@ -64,12 +64,12 @@
   .sync-hint-icon { display:grid;place-items:center;flex:none;width:2rem;height:2rem;border-radius:50%;background:#dcebf7;color:#2a6fa8; }
   .sync-hint-icon :global(svg) { width:1.15rem;height:1.15rem; }
   .sync-hint-text { display:grid;gap:.3rem;min-width:0; }
-  .sync-hint-text strong { color:#172a45;font-size:.72rem;font-weight:900; }
-  .sync-hint-text p { margin:0;color:#596477;font-size:.62rem;font-weight:700;line-height:1.4; }
+  .sync-hint-text strong { color:#172a45;font-size:.9rem;font-weight:900; }
+  .sync-hint-text p { margin:0;color:#596477;font-size:.84rem;font-weight:700;line-height:1.4; }
   .sync-hint-actions { display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .8rem;margin-top:.15rem; }
   .sync-hint-connect { gap:.35rem;text-transform:none;letter-spacing:0;color:#2a6fa8; }
   .sync-hint-connect :global(svg) { width:.85rem;height:.85rem; }
-  .sync-hint-later { padding:0;border:0;background:none;color:#596477;font:inherit;font-size:.6rem;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer; }
+  .sync-hint-later { padding:0;border:0;background:none;color:#596477;font:inherit;font-size:.8125rem;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer; }
   :global(html.dark) .sync-hint { border-color:rgba(255,253,247,.25); }
   :global(html.dark) .sync-hint-icon { background:#213a5d;color:#9cc8ec; }
   :global(html.dark) .sync-hint-text strong { color:#fffdf7; }

@@ -45,7 +45,7 @@
   .update-sheet { position:relative;display:grid;justify-items:center;gap:.6rem;width:min(100%,30rem);padding:1rem 1.2rem calc(1.3rem + env(safe-area-inset-bottom));border-radius:1.3rem 1.3rem 0 0;background:#fffdf7;box-shadow:0 -12px 34px rgba(23,42,69,.22);animation:update-rise .5s linear(0, .45 18%, .9 34%, 1.06 48%, 1.02 62%, 1); }
   .update-lilith { display:block;width:5rem;height:6rem;transform-origin:50% 100%; }
   .update-lilith.done { animation:update-hop .7s ease-in-out infinite; }
-  .update-sheet p { margin:0;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:900;text-align:center; }
+  .update-sheet p { margin:0;color:#172a45;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:900;text-align:center; }
   .update-progress { width:min(100%,16rem);color:#172a45; }
   @keyframes update-fade { from { opacity:0; } }
   @keyframes update-rise { from { transform:translateY(100%); } }

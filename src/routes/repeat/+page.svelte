@@ -74,23 +74,23 @@
 </svelte:head>
 
 <section class="flex-1 min-h-0 m-0 px-[clamp(1rem,5vw,2rem)] pb-[clamp(1rem,5vw,2rem)] pt-[clamp(2.9rem,10vw,3.6rem)] overflow-x-hidden overflow-y-auto bg-transparent" dir={interfaceDirection} lang={settings.interfaceLocale} aria-label={labels.title}>
-  <p class="m-0 text-center text-accent text-[.58rem] font-black tracking-[.14em] uppercase">{labels.kicker}</p>
+  <p class="m-0 text-center text-accent text-[.8125rem] font-black tracking-[.14em] uppercase">{labels.kicker}</p>
   <h1 class="m-0 mt-[.2rem] text-center text-base-content font-['DM_Serif_Display',serif] text-[clamp(1.7rem,7vw,2.4rem)] font-normal tracking-[-.03em] leading-none">{labels.title}</h1>
 
   {#if ready && entries.length === 0}
     <div class="panel-play mt-[1.2rem] px-[.9rem] py-[.8rem]">
-      <p class="m-0 text-base-content/65 text-[.7rem] font-bold leading-[1.45]">{labels.empty}</p>
+      <p class="m-0 text-base-content/65 text-[.9rem] font-bold leading-[1.45]">{labels.empty}</p>
     </div>
   {:else}
     <div class="panel-play mt-[1.2rem] px-4 pt-[.9rem] pb-4">
       <div class="flex items-center justify-between gap-3">
         <strong class="text-base-content font-['DM_Serif_Display',serif] text-[1.9rem] font-normal leading-none">{entries.length}</strong>
-        <span class="text-base-content/60 text-[.62rem] font-extrabold">{labels.due(entries.length)}</span>
+        <span class="text-base-content/60 text-[.84rem] font-extrabold">{labels.due(entries.length)}</span>
       </div>
       {#if wordEntries.length > 0}
         <a class="btn-play btn-play-ink mt-[.8rem] w-full justify-center" href="/vocab?due=1"><IconReplay class="w-[1rem] h-[1rem]" aria-hidden="true" />{labels.mixed(wordEntries.length)}</a>
       {:else}
-        <p class="m-0 mt-[.8rem] text-base-content/60 text-[.64rem] font-bold leading-[1.4]">{labels.noWords}</p>
+        <p class="m-0 mt-[.8rem] text-base-content/60 text-[.84rem] font-bold leading-[1.4]">{labels.noWords}</p>
       {/if}
     </div>
 
@@ -100,16 +100,16 @@
         <li>
           <a class="card-play flex w-full items-center justify-between gap-3 px-[.8rem] py-[.65rem]" href={sourceHref(group.source)}>
             <span class="min-w-0">
-              <strong class="block text-base-content text-[.78rem] font-extrabold">{sourceLabel(group.source)}</strong>
-              <small class="block mt-[.1rem] text-base-content/55 text-[.6rem] font-bold">{labels.groupCount(group.count)}</small>
+              <strong class="block text-base-content text-[.95rem] font-extrabold">{sourceLabel(group.source)}</strong>
+              <small class="block mt-[.1rem] text-base-content/55 text-[.8125rem] font-bold">{labels.groupCount(group.count)}</small>
             </span>
             <IconChevronRight class="w-[1.1rem] h-[1.1rem] flex-none text-accent rtl:rotate-180" aria-hidden="true" />
           </a>
           <ul class="m-0 mt-[.3rem] px-[.2rem] flex flex-wrap gap-[.25rem] list-none">
             {#each groupEntries.slice(0, 8) as { item } (item)}
-              <li class="px-[.45rem] py-[.14rem] border border-base-content/15 rounded-full bg-base-200/50 text-base-content/70 text-[.56rem] font-bold">{itemLabel(item)}</li>
+              <li class="px-[.45rem] py-[.14rem] border border-base-content/15 rounded-full bg-base-200/50 text-base-content/70 text-[.8125rem] font-bold">{itemLabel(item)}</li>
             {/each}
-            {#if groupEntries.length > 8}<li class="px-[.45rem] py-[.14rem] text-base-content/50 text-[.56rem] font-bold">+{groupEntries.length - 8}</li>{/if}
+            {#if groupEntries.length > 8}<li class="px-[.45rem] py-[.14rem] text-base-content/50 text-[.8125rem] font-bold">+{groupEntries.length - 8}</li>{/if}
           </ul>
         </li>
       {/each}

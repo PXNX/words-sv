@@ -163,25 +163,25 @@
 <style>
   .writing-view { display: flex; flex-direction: column; gap: 0.8rem; width: min(100%, 44rem); margin: 0 auto; padding: clamp(0.8rem, 3vw, 1.4rem); }
   .writing-header { display: grid; gap: 0.2rem; text-align: center; }
-  .writing-kicker { margin: 0; color: #a45e38; font-family: 'DM Sans', sans-serif; font-size: 0.58rem; font-weight: 900; letter-spacing: 0.16em; text-transform: uppercase; }
+  .writing-kicker { margin: 0; color: #a45e38; font-family: 'DM Sans', sans-serif; font-size: .8125rem; font-weight: 900; letter-spacing: 0.16em; text-transform: uppercase; }
   .writing-header h1 { margin: 0; color: #172a45; font-family: 'DM Serif Display', serif; font-size: clamp(1.6rem, 7vw, 2.3rem); font-weight: 400; letter-spacing: -0.03em; line-height: 1.02; }
-  .writing-intro { max-width: 34rem; margin: 0 auto; color: #596477; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 700; line-height: 1.45; }
+  .writing-intro { max-width: 34rem; margin: 0 auto; color: #596477; font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 700; line-height: 1.45; }
   .writing-prompt { display: grid; gap: 0.4rem; padding: 0.8rem 0.9rem; border: 1px solid rgba(23, 42, 69, 0.16); border-radius: 0.9rem; background: #fbf7ee; }
-  .writing-prompt-topic { margin: 0; color: #172a45; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 800; line-height: 1.4; }
-  .writing-prompt-hint { margin: 0; color: #596477; font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 600; line-height: 1.4; }
-  .hint-toggle { display: inline-flex; align-items: center; gap: 0.35rem; justify-self: start; padding: 0.32rem 0.6rem; border: 1px solid rgba(164, 94, 56, 0.4); border-radius: 999px; background: transparent; color: #a45e38; font-family: 'DM Sans', sans-serif; font-size: 0.66rem; font-weight: 900; cursor: pointer; }
+  .writing-prompt-topic { margin: 0; color: #172a45; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 800; line-height: 1.4; }
+  .writing-prompt-hint { margin: 0; color: #596477; font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 600; line-height: 1.4; }
+  .hint-toggle { display: inline-flex; align-items: center; gap: 0.35rem; justify-self: start; padding: 0.32rem 0.6rem; border: 1px solid rgba(164, 94, 56, 0.4); border-radius: 999px; background: transparent; color: #a45e38; font-family: 'DM Sans', sans-serif; font-size: .875rem; font-weight: 900; cursor: pointer; }
   .hint-toggle:hover { background: rgba(247, 226, 176, 0.6); }
   .hint-toggle:focus-visible { outline: 2px solid #e6a527; outline-offset: 2px; }
   .hint-toggle :global(svg) { width: 1rem; height: 1rem; }
   .reference-text { display: grid; gap: 0.2rem; padding: 0.6rem 0.7rem; border-radius: 0.7rem; background: rgba(247, 226, 176, 0.45); }
-  .reference-label { margin: 0; color: #a45e38; font-family: 'DM Sans', sans-serif; font-size: 0.56rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; }
-  .reference-body { margin: 0; color: #243449; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; line-height: 1.6; }
-  .writing-area { width: 100%; min-height: 16rem; padding: 0.9rem 1rem; border: 1px solid rgba(23, 42, 69, 0.2); border-radius: 0.9rem; background: #fffdf7; color: #243449; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; line-height: 1.8; resize: vertical; }
+  .reference-label { margin: 0; color: #a45e38; font-family: 'DM Sans', sans-serif; font-size: .8125rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; }
+  .reference-body { margin: 0; color: #243449; font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 500; line-height: 1.6; }
+  .writing-area { width: 100%; min-height: 16rem; padding: 0.9rem 1rem; border: 1px solid rgba(23, 42, 69, 0.2); border-radius: 0.9rem; background: #fffdf7; color: #243449; font-family: 'DM Sans', sans-serif; font-size: 1rem; line-height: 1.8; resize: vertical; }
   .writing-area:focus-visible { outline: 2px solid #e6a527; outline-offset: 2px; }
   .writing-toolbar { display: grid; gap: 0.3rem; }
   .progress { height: 0.4rem; border-radius: 999px; background: rgba(23, 42, 69, 0.12); overflow: hidden; }
   .progress-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #e6a527, #34824d); transition: width 0.2s ease; }
-  .writing-meta { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: flex-end; color: #7b8494; font-family: 'DM Sans', sans-serif; font-size: 0.64rem; font-weight: 700; }
+  .writing-meta { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: flex-end; color: #7b8494; font-family: 'DM Sans', sans-serif; font-size: .84rem; font-weight: 700; }
   .target-hint { margin-inline-end: auto; }
   .writing-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; }
   .writing-actions .btn-play :global(svg) { width: 1rem; height: 1rem; }
