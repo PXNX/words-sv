@@ -280,8 +280,9 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
   animations, V5 scenes, V6 memory map, V7 retention A/B.
 
 ### Phases C, W, D, E, F, G, H, I
-- [ ] C: Formen verbs/adjectives (German first) on `FormItem`/`FeatureKey`, partial credit,
-  feature errors as events; deeper gap-fill, Satzbau and B2–C2 content.
+- [x] C: Formen (`/grammar?mode=forms`): typed German verb and adjective forms with partial credit
+  (`grammar/formAnswer.ts`), feature errors and the credit as events.
+- [ ] C: deeper gap-fill (past tenses, Konjunktiv II, genitive), Satzbau and B2–C2 content.
 - [x] W: offline dictionary (`/dictionary`): search across levels, inflected forms to their base word,
   German cases and compound parts, listen, add to review; tap-to-lookup in reading opens it.
 - [ ] D: provider router (WebGPU first, OpenRouter BYOK opt-in), per-language model settings.
