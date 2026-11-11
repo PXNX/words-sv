@@ -1,11 +1,12 @@
 // Which game tutorials the learner has seen, so each opens by itself only on the first visit.
 // The keys are the ones the games already used for their guided first round.
-export type TutorialGame = 'circle' | 'wordle' | 'hangman';
+export type TutorialGame = 'circle' | 'wordle' | 'hangman' | 'taboo';
 
 const KEYS: Record<TutorialGame, string> = {
   circle: 'wordcircle-tutorial-state-v1',
   wordle: 'wordcircle-wordle-tutorial-v1',
-  hangman: 'wordcircle-hangman-tutorial-v1'
+  hangman: 'wordcircle-hangman-tutorial-v1',
+  taboo: 'wordcircle-taboo-tutorial-v1'
 };
 
 export function tutorialSeen(game: TutorialGame): boolean {
