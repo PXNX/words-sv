@@ -62,6 +62,12 @@ export const pages: Record<string, PageMeta> = {
     kicker: 'Niveau',
     icon: 'fact-check-rounded'
   },
+  '/mock': {
+    title: 'Probetest',
+    description: 'Ein Probetest pro Niveau: Lesen, Hören, Sprache und Schreiben, bewertet wie eine Prüfung.',
+    kicker: 'Niveau',
+    icon: 'assignment-rounded'
+  },
   '/store': {
     title: 'Laden',
     description: 'Gestalte deine Figur und unterstütze WordCircle mit Telegram Stars.',

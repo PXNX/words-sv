@@ -25,6 +25,7 @@
   import { storeSnapshot, weeklySeries, type MasterySnapshot } from './masteryHistory.js';
   import IconArrow from '~icons/material-symbols/arrow-forward-rounded';
   import IconQuiz from '~icons/material-symbols/fact-check-rounded';
+  import IconMock from '~icons/material-symbols/assignment-rounded';
 
   const DAY_MS = 24 * 60 * 60 * 1000;
   const FORECAST_TARGET = 0.8;
@@ -141,6 +142,7 @@
     <p class="coach-forecast">{m.readiness_forecast({ weeks: number(forecast.weeks), low: number(forecast.low), high: number(forecast.high), level: settings.vocabularyLevel.toUpperCase() }, locale)}</p>
   {/if}
   <a class="btn-play {due ? 'btn-play-ink' : 'btn-play-soft'} coach-test" href="/placement"><IconQuiz aria-hidden="true" />{due ? m.coach_test_now({}, locale) : m.coach_test_again({}, locale)}</a>
+  <a class="btn-play btn-play-soft coach-test" href="/mock"><IconMock aria-hidden="true" />{m.coach_mock({ level: settings.vocabularyLevel.toUpperCase() }, locale)}</a>
   {#if !due && nextAt}<p class="coach-next">{m.checkpoint_next({ date: formatDate(settings.formatContext, nextAt, 'dayMonthShort') }, locale)}</p>{/if}
 </section>
 
