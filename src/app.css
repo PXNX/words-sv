@@ -217,6 +217,8 @@ body {
  */
 :root {
   --play-line: #172a45;
+  /* Text on the play surfaces: ink on paper, paper on the dark theme's navy. */
+  --play-ink: var(--text);
   --play-outline: 2px solid var(--play-line);
   --play-shadow: 3px 3px 0 var(--play-line);
   --play-shadow-lift: 4px 5px 0 var(--play-line);
