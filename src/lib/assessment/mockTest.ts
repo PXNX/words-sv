@@ -9,9 +9,9 @@ import type { Level } from '#lib/domain/types.js';
 import { scoreRubric, scoreSpokenRubric } from '#lib/sentence/levelRubric.js';
 import { articleItem, grammarItem, listeningItem, meaningItem, scoreExamLevel, type ExamAnswer, type ExamEntry, type ExamItem } from './examItems.js';
 
-export type MockSection = 'reading' | 'listening' | 'language' | 'writing' | 'speaking';
+export type MockSection = 'reading' | 'text' | 'listening' | 'language' | 'writing' | 'speaking';
 
-export const MOCK_SIZES = { reading: 10, listening: 5, language: 6 } as const;
+export const MOCK_SIZES = { reading: 10, text: 5, listening: 5, language: 6 } as const;
 export const MOCK_PASS = 0.6;
 /** A section under this share fails the test even when the average passes, as in the real exams. */
 export const MOCK_SECTION_MIN = 0.35;
@@ -63,9 +63,19 @@ const SPEAKING_TASKS: Record<Level, WritingTask[]> = {
   c2: [{ id: 'c2-speak-debate', de: 'Diskutiere: Macht Technik uns freier oder abhängiger? Wäge ab und zieh ein Fazit.', en: 'Discuss: does technology make us freer or more dependent? Weigh it up and conclude.' }]
 };
 
-export interface MockTest {
+/** A longer text with questions, for the reading comprehension part (from story/readingCatalog.ts). */
+export interface MockText<Block = unknown> {
+  id: string;
+  title: string;
+  blocks: Block[];
+  questions: ReadonlyArray<{ prompt: string; options: readonly string[]; answer: string }>;
+}
+
+export interface MockTest<Block = unknown> {
   level: Level;
   items: Record<Exclude<MockSection, 'writing' | 'speaking'>, ExamItem[]>;
+  /** The text the comprehension questions are about, when one was available at the level. */
+  text: MockText<Block> | null;
   writing: WritingTask;
   speaking: WritingTask;
 }
@@ -89,8 +99,13 @@ function shuffle<T>(items: readonly T[], random: () => number): T[] {
   return copy;
 }
 
-/** Builds the test for a level from its word entries; no word is asked twice. */
-export function buildMockTest(language: string, level: Level, entries: Readonly<Record<string, ExamEntry>>, random: () => number): MockTest {
+/** Texts long enough for the comprehension part: at least three questions with three or more options. */
+export function comprehensionTexts<Block>(texts: readonly MockText<Block>[]): MockText<Block>[] {
+  return texts.filter((text) => text.questions.filter((question) => question.options.length >= 3).length >= 3);
+}
+
+/** Builds the test for a level from its word entries (no word is asked twice) and, when given, one of the level's texts. */
+export function buildMockTest<Block = unknown>(language: string, level: Level, entries: Readonly<Record<string, ExamEntry>>, random: () => number, texts: readonly MockText<Block>[] = []): MockTest<Block> {
   const words = shuffle(Object.keys(entries).filter((word) => entries[word]!.definition), random);
   const used = new Set<string>();
   const take = (count: number, make: (word: string) => ExamItem | null): ExamItem[] => {
@@ -117,18 +132,23 @@ export function buildMockTest(language: string, level: Level, entries: Readonly<
   }
   const tasks = WRITING_TASKS[level];
   const spoken = SPEAKING_TASKS[level];
-  return { level, items: { reading, listening, language: language_ }, writing: tasks[Math.floor(random() * tasks.length)]!, speaking: spoken[Math.floor(random() * spoken.length)]! };
+  const candidates = comprehensionTexts(texts);
+  const text = candidates.length ? candidates[Math.floor(random() * candidates.length)]! : null;
+  const comprehension: ExamItem[] = text
+    ? text.questions.filter((question) => question.options.length >= 3).slice(0, MOCK_SIZES.text).map((question, index) => ({ id: `text:${text.id}:${index}`, kind: 'comprehension', level, word: question.prompt, options: [...question.options], correct: question.answer }))
+    : [];
+  return { level, text, items: { reading, text: comprehension, listening, language: language_ }, writing: tasks[Math.floor(random() * tasks.length)]!, speaking: spoken[Math.floor(random() * spoken.length)]! };
 }
 
 /** The sections a test has, in the order they are taken; speaking only where speech can be transcribed. */
 export function mockSections(test: MockTest, options: { speaking?: boolean } = {}): MockSection[] {
-  return [...(['reading', 'listening', 'language'] as const).filter((section) => test.items[section].length), 'writing', ...(options.speaking ? ['speaking' as const] : [])];
+  return [...(['reading', 'text', 'listening', 'language'] as const).filter((section) => test.items[section].length), 'writing', ...(options.speaking ? ['speaking' as const] : [])];
 }
 
 /** Scores the answers per section and the writing text; the result passes at 60 % with no section under 35 %. */
 export function scoreMockTest(test: MockTest, answers: Partial<Record<MockSection, readonly ExamAnswer[]>>, writing: string, lang: string, at = Date.now(), spoken?: string): MockResult {
   const sections: MockResult['sections'] = {};
-  for (const section of ['reading', 'listening', 'language'] as const) {
+  for (const section of ['reading', 'text', 'listening', 'language'] as const) {
     if (!test.items[section].length) continue;
     const given = answers[section] ?? [];
     // Unanswered questions count as "I don't know".
