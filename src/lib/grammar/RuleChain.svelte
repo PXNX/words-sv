@@ -39,7 +39,7 @@
   .rule-chain .case small { font-size:.6875rem;font-weight:700;opacity:.75; }
   .rule-chain .form { background:var(--go);border-color:var(--go);color:var(--paper); }
   .rule-chain i { position:relative;width:1.3rem;height:2px;background:currentColor;opacity:.55;transform-origin:left center; }
-  .rule-chain i::after { content:'';position:absolute;inset-inline-end:-1px;top:-3px;width:6px;height:6px;border-top:2px solid currentColor;border-right:2px solid currentColor;rotate:45deg; }
+  .rule-chain i::after { content:'';position:absolute;inset-inline-end:-1px;top:-3px;width:6px;height:6px;border-top:2px solid currentColor;border-inline-end:2px solid currentColor;rotate:45deg; }
   :global([dir='rtl']) .rule-chain { direction:ltr; }
   .animate span { animation:chain-pop var(--dur-show) var(--ease-spring) both; }
   .animate i { animation:chain-draw var(--dur-move) var(--ease-out) both; }
