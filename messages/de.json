@@ -983,5 +983,11 @@
   "hardware_page": "Speicher der App",
   "models_default": "Standard",
   "models_no_llm": "Kein Sprachmodell",
-  "models_no_llm_hint": "Gespräche laufen mit festen Dialogen, Texte bewertet ein Regelwerk. Kein Download, funktioniert überall."
+  "models_no_llm_hint": "Gespräche laufen mit festen Dialogen, Texte bewertet ein Regelwerk. Kein Download, funktioniert überall.",
+  "mode_ai_voice": "Stimme",
+  "mode_ai_voice_hint": "Wer vorliest. Größere Stimmen werden beim ersten Abspielen geladen.",
+  "mode_ai_llm": "Sprachmodell",
+  "mode_ai_llm_active": "Antwortet: {model}",
+  "mode_ai_not_downloaded": "noch nicht geladen",
+  "mode_ai_more": "Alle Stimmen und Modelle in den Einstellungen"
 }

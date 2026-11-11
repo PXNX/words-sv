@@ -76,6 +76,8 @@
       // Ignore quota or privacy-mode failures.
     }
   });
+  import GameToolbar from '#lib/app/GameToolbar.svelte';
+  import AiModeSettings from '#lib/app/AiModeSettings.svelte';
 </script>
 
 <svelte:head>
@@ -91,6 +93,10 @@
   <meta name="twitter:description" content="Write a whole German paragraph on a topic and get it graded." />
   <meta name="twitter:image" content="https://words-sv.vercel.app/pwa-512x512.png" />
 </svelte:head>
+
+<GameToolbar>
+  {#snippet gameSettings()}<AiModeSettings llm="writing" />{/snippet}
+</GameToolbar>
 
 <section class="writing-view">
   <header class="writing-header">
