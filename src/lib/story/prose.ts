@@ -1,5 +1,6 @@
 import type { Language } from '#lib/data/vocabulary.js';
-import { characterNames, fillName, withDetails, type CharacterId, type Story, type StoryBeat } from './stories';
+import { characterNames, fillName, withDetails } from './storyKit';
+import type { CharacterId, Story, StoryBeat } from './stories';
 import type { ReadingBlock, ReadingQuestion, SpeechStyle } from './readingTexts';
 
 export type ReadingQuestionView = ReadingQuestion & { answer: string };

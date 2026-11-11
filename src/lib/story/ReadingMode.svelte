@@ -20,7 +20,8 @@ import { page } from '$app/state';
     type ReadingToken,
     type ReadingWordInfo
   } from './readingWords';
-  import { characterNames, type CharacterId } from './stories';
+  import { characterNames } from './storyKit';
+  import type { CharacterId } from './stories';
   import StoryCharacter from './StoryCharacter.svelte';
   import { clearMissedWord, readMissedWords, recordMissedWord } from './missedWords';
   import { recordActivity } from '#lib/progress/activity.js';
