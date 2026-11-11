@@ -29,7 +29,7 @@
   import { voiceEngines } from '#lib/voice/engines.js';
   import { chatMessages, cleanReply, LEVEL_WORD_SAMPLE, pickTargetWords, usedWords, type Turn } from './conversation.js';
   import { pickPartner, type Partner } from './partners.js';
-  import { checkLocalModel, chosenModel, generateReply, interruptReply, loadLocalModel, localModel, modelGpuMB } from './localModel.svelte.js';
+  import { activeModelLabel, checkLocalModel, chosenModel, generateReply, interruptReply, loadLocalModel, localModel, modelGpuMB } from './localModel.svelte.js';
   import { aiAvailable, usesAi } from './aiChoice.svelte.js';
   import AiSwitch from './AiSwitch.svelte';
   import { choicesOpen, replyChoices, respond, startScript, type ScriptState, type ScriptTurn, type ScriptWord, type Verdict } from './scripted.js';
@@ -457,8 +457,8 @@
       <span class="talk-level">Level {level.toUpperCase()}</span>
       {#if aiAvailable()}<AiSwitch mode="conversation" />{/if}
       {#if withAi}
-        <p class="talk-model">{labels.model(chosenModel().label)} · <a href="/settings">{labels.changeModel}</a></p>
-        <ModelStatus downloaded={localModel.cached} inMemory={localModel.status === 'ready'} downloadMB={chosenModel().downloadMB} memoryMB={modelGpuMB(chosenModel())} />
+        <p class="talk-model">{labels.model(activeModelLabel())} · <a href="/settings">{labels.changeModel}</a></p>
+        {#if localModel.provider === 'local'}<ModelStatus downloaded={localModel.cached} inMemory={localModel.status === 'ready'} downloadMB={chosenModel().downloadMB} memoryMB={modelGpuMB(chosenModel())} />{/if}
       {:else}
         <p class="talk-model">{labels.scriptedNote}</p>
       {/if}
@@ -488,7 +488,7 @@
         <div class="talk-header-text">
           <strong>{partner.name}</strong>
           <span>{phase === 'thinking' ? labels.thinking(partner.name) : phase === 'speaking' ? labels.speaking(partner.name) : phase === 'listening' ? labels.listening : labels.tapToTalk}</span>
-          {#if scripted}<span class="talk-speed">{labels.withoutAi}</span>{:else if localModel.tokensPerSecond}<span class="talk-speed" title={chosenModel().label}>{Math.round(localModel.tokensPerSecond)} tok/s</span>{/if}
+          {#if scripted}<span class="talk-speed">{labels.withoutAi}</span>{:else if localModel.tokensPerSecond}<span class="talk-speed" title={activeModelLabel()}>{Math.round(localModel.tokensPerSecond)} tok/s</span>{/if}
         </div>
       {/if}
       <button type="button" class="btn-play btn-play-round talk-new" onclick={newPartner} aria-label={labels.newPartner} title={labels.newPartner}><IconCasino aria-hidden="true" /></button>

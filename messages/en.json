@@ -962,5 +962,19 @@
   "mock_speaking_stop": "Stop recording",
   "mock_speaking_empty": "Nothing heard yet.",
   "mock_speaking_skip": "Hand in without speaking",
-  "mock_section_text": "Reading a text"
+  "mock_section_text": "Reading a text",
+  "cloud_title": "OpenRouter with your own key",
+  "cloud_intro": "Optional: when the language model can't run on your device, or you want a bigger one, OpenRouter can answer. You need your own API key; OpenRouter bills you for what you use.",
+  "cloud_mode_off": "Off",
+  "cloud_mode_fallback": "Without WebGPU",
+  "cloud_mode_always": "Always",
+  "cloud_key": "API key",
+  "cloud_key_get": "Get a key",
+  "cloud_forget": "Forget",
+  "cloud_model": "Model for {language}",
+  "cloud_models_link": "Browse models",
+  "cloud_status_no_key": "Without a key everything stays on the device.",
+  "cloud_status_active": "Answering now: {model}",
+  "cloud_status_standby": "Ready; the model on your device comes first.",
+  "cloud_privacy": "When OpenRouter answers, your messages and texts go to OpenRouter and the model's provider. The key stays in this browser only."
 }

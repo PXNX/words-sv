@@ -6,6 +6,8 @@ import { cancelJob, runJob } from '#lib/audio/backgroundJobs.svelte.js';
 import { createSpeedMeter } from '#lib/offline/downloadSpeed.js';
 import { settings } from '#lib/state/settings.svelte.js';
 import { chatModel, chatModels, gpuNeedMB, webllmId, type ChatModel, type ChatModelId } from './models.js';
+import { cloud, cloudConfigured, cloudModelFor } from './cloudModel.svelte.js';
+import { streamCloudReply } from './openRouter.js';
 
 /*
  * The conversation partner's brain: a chat model that runs entirely on the device through WebGPU
@@ -13,6 +15,10 @@ import { chatModel, chatModels, gpuNeedMB, webllmId, type ChatModel, type ChatMo
  * the settings (conversation/models.ts); each is downloaded once from Hugging Face and then kept in
  * the browser's cache. This module also reports what the model costs: GPU memory, download size,
  * and how fast it writes (tokens per second).
+ *
+ * Provider router: the on-device model comes first. Only when the learner opted into OpenRouter with
+ * their own key (cloudModel.svelte.ts) does a reply go there instead: as a fallback where WebGPU
+ * does not work, or always. `localModel.provider` says which one answers.
  */
 
 type Status = 'idle' | 'checking' | 'unsupported' | 'loading' | 'ready' | 'failed';
@@ -35,7 +41,9 @@ export const localModel = $state<{
   device: DeviceInfo | null;
   // Downloads running without loading (from the settings), several at once, per model.
   downloads: Partial<Record<ChatModelId, ModelDownload>>;
-}>({ status: 'idle', progress: 0, text: '', cached: false, downloaded: [], loaded: null, bytesPerSecond: 0, tokensPerSecond: 0, lastStats: null, device: null, downloads: {} });
+  // Who answers: the model on this device, or OpenRouter (opt-in, the learner's own key).
+  provider: 'local' | 'cloud';
+}>({ provider: 'local', status: 'idle', progress: 0, text: '', cached: false, downloaded: [], loaded: null, bytesPerSecond: 0, tokensPerSecond: 0, lastStats: null, device: null, downloads: {} });
 
 export type ModelDownload = { progress: number; bytesPerSecond: number; failed?: boolean };
 const running = new Map<ChatModelId, Promise<void>>();
@@ -80,13 +88,33 @@ export function modelGpuMB(model: ChatModel): number {
   return gpuNeedMB(model, localModel.device?.f16 ?? true);
 }
 
+/** Whether OpenRouter answers instead of the device: always when chosen so, else only without WebGPU. */
+function cloudAnswers(device: DeviceInfo | null): boolean {
+  return cloudConfigured() && (cloud.mode === 'always' || !device);
+}
+
+/** Marks OpenRouter as the ready provider (nothing to download or load). */
+function useCloud() {
+  localModel.provider = 'cloud';
+  localModel.status = 'ready';
+  localModel.cached = true;
+}
+
+/** The model that answers, for labels: the on-device model's name or the OpenRouter model id. */
+export function activeModelLabel(): string {
+  return localModel.provider === 'cloud' ? `${cloudModelFor(settings.lang)} · OpenRouter` : chosenModel().label;
+}
+
 /** Checks WebGPU support and which models are downloaded, without loading any. */
 export async function checkLocalModel(force = false): Promise<void> {
   if (localModel.status !== 'idle' && !force) return;
   if (localModel.status === 'loading') return;
   const previous = localModel.status;
+  const wasCloud = localModel.provider === 'cloud';
   localModel.status = 'checking';
   localModel.device ??= await detectDevice();
+  if (cloudAnswers(localModel.device)) return useCloud();
+  localModel.provider = 'local';
   if (!localModel.device) {
     localModel.status = 'unsupported';
     return;
@@ -99,15 +127,21 @@ export async function checkLocalModel(force = false): Promise<void> {
   const cached = anyCache ? await worker.request('cached', { models: ids }).catch((): string[] => []) : [];
   localModel.downloaded = chatModels.filter((model) => cached.includes(webllmId(model, f16))).map((model) => model.id);
   localModel.cached = localModel.downloaded.includes(chosenModel().id);
-  localModel.status = previous === 'ready' && localModel.loaded === chosenModel().id ? 'ready' : 'idle';
+  localModel.status = previous === 'ready' && !wasCloud && localModel.loaded === chosenModel().id ? 'ready' : 'idle';
 }
 
 /** Downloads (once) and loads the chosen model onto the GPU, reporting progress in `localModel`. */
 export function loadLocalModel(): Promise<void> {
   const model = chosenModel();
-  if (localModel.status === 'ready' && localModel.loaded === model.id) return Promise.resolve();
+  if (localModel.status === 'ready' && (localModel.provider === 'cloud' ? cloudConfigured() : localModel.loaded === model.id)) return Promise.resolve();
   loading ??= (async () => {
     localModel.device ??= await detectDevice();
+    if (cloudAnswers(localModel.device)) {
+      useCloud();
+      loading = null;
+      return;
+    }
+    localModel.provider = 'local';
     if (!localModel.device) {
       localModel.status = 'unsupported';
       return;
@@ -230,6 +264,7 @@ function dropLostEngine() {
  * device was lost, the model is loaded again (from the cache) and the reply tried once more.
  */
 export async function generateReply(messages: ChatMessage[], onText: (text: string) => void): Promise<string> {
+  if (localModel.provider === 'cloud') return generateInCloud(messages, onText);
   try {
     return await generateOnce(messages, onText);
   } catch (error) {
@@ -261,8 +296,45 @@ async function generateOnce(messages: ChatMessage[], onText: (text: string) => v
   return reply.text;
 }
 
+let cloudRequest: AbortController | null = null;
+
+async function generateInCloud(messages: ChatMessage[], onText: (text: string) => void): Promise<string> {
+  if (!cloudConfigured()) throw new Error('model_not_loaded');
+  cloudRequest?.abort();
+  const request = new AbortController();
+  cloudRequest = request;
+  const startedAt = performance.now();
+  let pieces = 0;
+  let written = '';
+  try {
+    return await streamCloudReply({
+      apiKey: cloud.apiKey,
+      model: cloudModelFor(settings.lang),
+      messages,
+      signal: request.signal,
+      referer: typeof location === 'undefined' ? undefined : location.origin,
+      onText: (text) => {
+        // A rough speed: streamed pieces per second (OpenRouter sends about one token per piece).
+        pieces += 1;
+        const seconds = (performance.now() - startedAt) / 1000;
+        if (seconds > 0.3) localModel.tokensPerSecond = pieces / seconds;
+        written = text;
+        onText(text);
+      }
+    });
+  } catch (error) {
+    // Stopping a reply keeps what was written so far, as on the device.
+    if (request.signal.aborted) return written;
+    throw error;
+  } finally {
+    if (cloudRequest === request) cloudRequest = null;
+    localModel.lastStats = null;
+  }
+}
+
 /** Stops a reply that is still being generated. */
 export function interruptReply() {
+  cloudRequest?.abort();
   if (worker.running && localModel.status === 'ready') void worker.request('interrupt', {}).catch(() => undefined);
 }
 

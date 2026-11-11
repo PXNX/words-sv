@@ -6,6 +6,7 @@
   Downloads run as background jobs, so the learner can leave the settings while they continue.
 -->
 <script lang="ts">
+  import CloudModelSettings from './CloudModelSettings.svelte';
   import { onMount, type Snippet } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
@@ -233,7 +234,7 @@
     {@render voiceOptions?.()}
   {/if}
   <h4 id="models-conversation-heading">{m.models_conversation({}, { locale })}</h4>
-  {#if localModel.status === 'unsupported'}
+  {#if localModel.status === 'unsupported' || (localModel.provider === 'cloud' && !localModel.device)}
     <p class="model-empty">{m.models_unsupported({}, { locale })}</p>
   {:else}
     <ul class="model-list" role="radiogroup" aria-labelledby="models-conversation-heading">
@@ -273,6 +274,8 @@
       <p class="model-device">{m.models_last_reply({ decode: String(Math.round(localModel.lastStats.decodeTokensPerSecond)), prefill: String(Math.round(localModel.lastStats.prefillTokensPerSecond)), tokens: String(localModel.lastStats.completionTokens) }, { locale })}</p>
     {/if}
   {/if}
+
+  <CloudModelSettings />
 
   <h3>{m.models_stored({}, { locale })}</h3>
   {#if storedGroupIds.some((group) => stored[group])}

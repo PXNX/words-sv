@@ -22,7 +22,8 @@
   <ul>
     <li><strong>Natürliche Stimmen auf dem Gerät:</strong> Sprachmodelle und Programmbibliotheken werden von Hugging Face (Hugging Face Inc., USA) und jsDelivr (Prospect One, Polen) geladen. Die Sprachausgabe selbst läuft danach auf deinem Gerät.</li>
     <li><strong>Edge-Stimmen:</strong> Wählst du diese Stimmen, werden die vorzulesenden Sätze an Microsoft (Microsoft Ireland Operations Ltd., Irland) gesendet und als Audio zurückgegeben.</li>
-    <li><strong>Aussprache-Training:</strong> Die Spracherkennung nutzt die Spracherkennung deines Browsers. Je nach Browser wird die Aufnahme dabei an dessen Hersteller übertragen (in Chrome an Google). Das Mikrofon wird nur nach deiner Freigabe genutzt.</li>
+    <li><strong>OpenRouter (freiwillig, mit eigenem Schlüssel):</strong> Schaltest du in den Einstellungen OpenRouter ein und hinterlegst deinen eigenen API-Schlüssel, werden deine Gesprächsnachrichten und die zu bewertenden Texte an OpenRouter (OpenRouter Inc., USA) und von dort an den Anbieter des gewählten Modells gesendet. Der Schlüssel wird nur in deinem Browser gespeichert; die Abrechnung erfolgt direkt zwischen dir und OpenRouter (Art. 6 Abs. 1 lit. a DSGVO). Ohne diese Einstellung läuft das Sprachmodell ausschließlich auf deinem Gerät.</li>
+    <li><strong>Aussprache-Training und Sprechen im Probetest:</strong> Die Spracherkennung nutzt die Spracherkennung deines Browsers. Je nach Browser wird die Aufnahme dabei an dessen Hersteller übertragen (in Chrome an Google). Das Mikrofon wird nur nach deiner Freigabe genutzt.</li>
     <li><strong>Wörterbuch:</strong> Bei Worterklärungen werden Einträge von Wiktionary (Wikimedia Foundation Inc., USA) abgerufen.</li>
   </ul>
 
