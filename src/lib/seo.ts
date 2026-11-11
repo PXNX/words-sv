@@ -50,6 +50,12 @@ export const pages: Record<string, PageMeta> = {
     kicker: 'Wortspiel',
     icon: 'extension-rounded'
   },
+  '/taboo': {
+    title: 'Taboo',
+    description: 'Beschreibe ein Wort, ohne es oder seine Wortfamilie zu nennen – und sammle Punkte für die treffenden Stichwörter.',
+    kicker: 'Wortspiel',
+    icon: 'record-voice-over-rounded'
+  },
   '/vocab': {
     title: 'Word Quiz',
     description: 'Wiederhole Wörter mit Ton und schnellen Auswahlfragen.',
