@@ -285,7 +285,9 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [x] W: offline dictionary (`/dictionary`): search across levels, inflected forms to their base word,
   German cases and compound parts, listen, add to review; tap-to-lookup in reading opens it.
 - [ ] D: provider router (WebGPU first, OpenRouter BYOK opt-in), per-language model settings.
-- [ ] E: Persian/Arabic native-speaker path, RTL audit, L1 error priors.
+- [x] E: RTL audit (`docs/rtl.md`, `tests/rtl-css.test.ts`) and L1 error priors (`progress/l1Priors.ts`,
+  the coach's first grammar focus).
+- [ ] E: Persian/Arabic native-speaker path (full fa/ar interface translations).
 - [x] F: writing rubric per level (`sentence/levelRubric.ts`, under the full-text grade) and a mock
   test per level (`/mock`: reading, listening, language, writing; no exam-specific formats).
 - [ ] F: longer reading/listening task formats (texts with questions), speaking simulation.
