@@ -12,6 +12,7 @@
     "preview": "vite preview --host 0.0.0.0",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "test": "vitest run --config tests/vitest.server.config.ts",
+    "budget": "bun scripts/bundle-budget.ts",
     "voices:build": "bun scripts/build-character-voices.ts",
     "lint": "bun lint",
     "ci": "bun run lint && bun run check && bun run test"
