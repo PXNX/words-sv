@@ -1047,5 +1047,8 @@
   "learning_almost": "Fast perfekt: Schau dir die Schreibweise noch einmal an.",
   "learning_answer_was": "Das Wort heißt",
   "learning_type_placeholder": "Deine Antwort",
-  "learning_remove_letter": "Letzten Buchstaben zurücknehmen"
+  "learning_remove_letter": "Letzten Buchstaben zurücknehmen",
+  "grammar_determine_case": "Bestimme Kasus, Genus und Numerus.",
+  "grammar_determine_verb": "Bestimme Person und Tempus.",
+  "grammar_false_friends_unsupported": "Falsche Freunde gibt es bisher nur für Deutsch."
 }

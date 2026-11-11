@@ -8,6 +8,7 @@
  * levels are scored with formula scoring (right − wrong / (options − 1)), so random guessing
  * averages out to zero. Pure and seeded, so it can be tested.
  */
+import { fittingNouns } from '#lib/grammar/nounClasses.js';
 import type { Level } from '#lib/domain/types.js';
 import type { VocabularyGender } from '#lib/data/vocabulary.js';
 import { buildNounCasePrompt, isDeclinableNoun } from '#lib/grammar/cases.js';
@@ -94,8 +95,8 @@ export function grammarItem(level: Level, entries: Readonly<Record<string, ExamE
     const noun = pick(nouns, random);
     prompt = noun ? buildNounCasePrompt(noun[0], noun[1].genus!, random, keep) : null;
   } else {
-    const noun = pick(nouns, random);
     const adjective = pick(adjectives, random);
+    const noun = adjective ? pick(fittingNouns(adjective, nouns, ([word]) => word), random) : null;
     prompt = noun && adjective ? buildAdjectivePrompt(adjective, noun[0], noun[1].genus!, random, keep) : null;
   }
   if (!prompt || prompt.choices.length < 2) return null;

@@ -14,6 +14,7 @@
   import { articleChoiceOptions, gapSentenceSuffixes, grammarArticles, pickRandomSection, shuffled, GRAMMAR_REVIEW_STORAGE_PREFIX } from '#lib/grammar/learning.js';
   import { buildNounCasePrompt, buildNounPropertyPrompt, genderFeature, isDeclinableNoun, type GrammarPrompt } from '#lib/grammar/cases.js';
   import { adjectiveStem, buildAdjectivePrompt, isEligibleAdjective } from '#lib/grammar/adjectives.js';
+  import { fittingNouns } from '#lib/grammar/nounClasses.js';
   import { formCountsAsRight, scoreForm, type FormScore } from '#lib/grammar/formAnswer.js';
   import { buildVerbPrompt, buildVerbPropertyPrompt, verbConjugations } from '#lib/grammar/verbs.js';
   import { buildFalseFriendPrompt, falseFriendsFor } from '#lib/grammar/falseFriends.js';
@@ -66,11 +67,14 @@
   );
   const modeTitle = $derived(
     grammarMode === 'order' ? labels.orderTitle
-    : grammarMode === 'determine' ? 'Bestimmung'
-    : grammarMode === 'falsefriends' ? 'Falsche Freunde'
+    : grammarMode === 'determine' ? m.grammar_determine({}, { locale: settings.interfaceLocale })
+    : grammarMode === 'falsefriends' ? m.grammar_false_friends({}, { locale: settings.interfaceLocale })
     : grammarMode === 'forms' ? labels.formsTitle
-    : 'Lücken füllen'
+    : m.grammar_fill({}, { locale: settings.interfaceLocale })
   );
+  // The generators write their task line in German; the page says it in the interface language.
+  const questionText = (question: string) => question === 'Bestimme Kasus, Genus und Numerus.' ? m.grammar_determine_case({}, { locale: settings.interfaceLocale })
+    : question === 'Bestimme Person und Tempus.' ? m.grammar_determine_verb({}, { locale: settings.interfaceLocale }) : question;
   const metadata = $derived(wordMetadata[settings.lang]);
   // Word order works for German and English: generated sentences plus hand-checked ones for the
   // level (`sentenceBuilder.ts`). The vocabulary's genders veto any lexicon noun they disagree with.
@@ -190,10 +194,12 @@
     }
     if (kind === 'adj') {
       if (nounPool.length === 0) return null;
-      const pairedNoun = nounPool[Math.floor(random() * nounPool.length)]!;
+      const adjectiveSpelling = metadata[word!]?.spelling ?? word!;
+      // People get adjectives for people, things adjectives for things (grammar/nounClasses.ts).
+      const fitting = fittingNouns(adjectiveSpelling, nounPool, (noun) => metadata[noun]?.spelling ?? noun);
+      const pairedNoun = fitting[Math.floor(random() * fitting.length)]!;
       const gender = metadata[pairedNoun]?.gender;
       if (!gender) return null;
-      const adjectiveSpelling = metadata[word!]?.spelling ?? word!;
       const nounSpelling = metadata[pairedNoun]?.spelling ?? pairedNoun;
       return buildAdjectivePrompt(adjectiveSpelling, nounSpelling, gender, random, shuffled);
     }
@@ -326,7 +332,7 @@
     <Companion id="tom" mood={answerStatus === 'correct' ? 'happy' : answerStatus === 'wrong' ? 'sad' : 'curious'} size="sm" />
   </header>
   {#if !isSupported}
-    <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.9rem] font-bold leading-[1.45] text-center">{grammarMode === 'falsefriends' ? 'Falsche Freunde sind aktuell nur für Deutsch verfügbar.' : grammarMode === 'order' ? labels.orderUnsupported : grammarMode === 'forms' ? labels.formsUnsupported : labels.unsupported}</div>
+    <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.9rem] font-bold leading-[1.45] text-center">{grammarMode === 'falsefriends' ? m.grammar_false_friends_unsupported({}, { locale: settings.interfaceLocale }) : grammarMode === 'order' ? labels.orderUnsupported : grammarMode === 'forms' ? labels.formsUnsupported : labels.unsupported}</div>
   {:else if !prompt}
     <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.9rem] font-bold leading-[1.45] text-center">{labels.unavailable}</div>
   {:else}
@@ -352,7 +358,7 @@
       </div>
     {:else}
     {#key position}<article class="learn-card-in w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center" class:learn-correct={answerStatus === 'correct'} class:learn-wrong={answerStatus === 'wrong'}>
-            {#if prompt.question}<p class="m-0 text-accent text-[.84rem] font-black tracking-[.08em] uppercase">{prompt.question}</p>{/if}
+            {#if prompt.question}<p class="m-0 text-accent text-[.84rem] font-black tracking-[.08em] uppercase">{questionText(prompt.question)}</p>{/if}
             <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.55rem,7vw,2.6rem)] font-normal tracking-[.04em] leading-[1.3]" lang={settings.lang}>{#if prompt.before}{prompt.before}{/if}{#if prompt.question}{#if prompt.highlight && prompt.after.includes(prompt.highlight)}{@const highlightIndex = prompt.after.indexOf(prompt.highlight)}{prompt.after.slice(0, highlightIndex)}<mark class="bg-primary/25 text-accent px-[.15rem]">{prompt.highlight}</mark>{prompt.after.slice(highlightIndex + prompt.highlight.length)}{:else}{prompt.after}{/if}{:else}<span class="inline-block border-b-4 border-dotted border-accent text-accent px-[.3rem]">___</span>{(/^[.,!?]/u).test(prompt.after) ? '' : ' '}{prompt.after}{/if}</p>
     </article>{/key}
     {#if grammarMode === 'forms'}

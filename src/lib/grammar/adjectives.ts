@@ -1,5 +1,6 @@
 import type { VocabularyGender } from '#lib/data/vocabulary.js';
 import { featureKey } from './taxonomy.js';
+import { adjectiveFits, nounClass, type NounClass } from './nounClasses.js';
 import { articleTable, capitalize, caseFeature, declineNoun, genderFeature, pickArticleKind, pickCase, uniqueEndingsAcrossGenders, type ArticleKind, type GrammarCase, type GrammarPrompt } from './cases';
 
 // Endings for an attributive adjective after a der-word (weak declension) and after
@@ -52,25 +53,63 @@ export function inflectAdjective(adjective: string, ending: string): string {
 
 type AdjectiveTemplate = { leadIn: string; tail: string };
 
-const templatesByCase: Record<GrammarCase, AdjectiveTemplate[]> = {
-  nominative: [
-    { leadIn: '', tail: ' ist wirklich schön.' },
-    { leadIn: '', tail: ' steht im Garten.' },
-    { leadIn: '', tail: ' gefällt mir sehr.' },
-    { leadIn: 'Plötzlich stand ', tail: ' vor der Tür.' }
-  ],
-  accusative: [
-    { leadIn: 'Ich kaufe ', tail: ' sofort.' },
-    { leadIn: 'Er hat mir ', tail: ' gezeigt.' },
-    { leadIn: 'Ich finde ', tail: ' wirklich toll.' },
-    { leadIn: 'Wir suchen ', tail: ' schon lange.' }
-  ],
-  dative: [
-    { leadIn: 'Ich helfe ', tail: ' gern.' },
-    { leadIn: 'Das gehört ', tail: '.' },
-    { leadIn: 'Mit ', tail: ' geht es leichter.' },
-    { leadIn: 'Er spricht oft von ', tail: '.' }
-  ]
+// Sentences per kind of noun (nounClasses.ts), so "ein junger Lehrer" works somewhere and
+// "ein neues Fahrrad" is bought, not helped.
+const templatesByClass: Record<NounClass, Record<GrammarCase, AdjectiveTemplate[]>> = {
+  person: {
+    nominative: [
+      { leadIn: '', tail: ' wohnt nebenan.' },
+      { leadIn: '', tail: ' arbeitet hier.' },
+      { leadIn: 'Plötzlich stand ', tail: ' vor der Tür.' },
+      { leadIn: '', tail: ' kommt aus Hamburg.' }
+    ],
+    accusative: [
+      { leadIn: 'Ich kenne ', tail: ' schon lange.' },
+      { leadIn: 'Wir besuchen ', tail: ' morgen.' },
+      { leadIn: 'Ich finde ', tail: ' wirklich toll.' },
+      { leadIn: 'Er hat ', tail: ' gestern getroffen.' }
+    ],
+    dative: [
+      { leadIn: 'Ich helfe ', tail: ' gern.' },
+      { leadIn: 'Das gehört ', tail: '.' },
+      { leadIn: 'Wir sprechen mit ', tail: '.' },
+      { leadIn: 'Er erzählt oft von ', tail: '.' }
+    ]
+  },
+  thing: {
+    nominative: [
+      { leadIn: '', tail: ' ist wirklich schön.' },
+      { leadIn: '', tail: ' gefällt mir sehr.' },
+      { leadIn: '', tail: ' war ein Geschenk.' },
+      { leadIn: 'Dort steht ', tail: '.' }
+    ],
+    accusative: [
+      { leadIn: 'Ich sehe ', tail: ' jeden Tag.' },
+      { leadIn: 'Er hat mir ', tail: ' gezeigt.' },
+      { leadIn: 'Ich finde ', tail: ' wirklich toll.' },
+      { leadIn: 'Wir suchen ', tail: ' schon lange.' }
+    ],
+    dative: [
+      { leadIn: 'Ich bin mit ', tail: ' sehr zufrieden.' },
+      { leadIn: 'Wir träumen von ', tail: '.' },
+      { leadIn: 'Er erzählt oft von ', tail: '.' },
+      { leadIn: 'Wir stehen vor ', tail: '.' }
+    ]
+  },
+  other: {
+    nominative: [
+      { leadIn: '', tail: ' ist heute unser Thema.' },
+      { leadIn: 'Das ist ', tail: '.' }
+    ],
+    accusative: [
+      { leadIn: 'Wir sprechen heute über ', tail: '.' },
+      { leadIn: 'Ich denke oft an ', tail: '.' }
+    ],
+    dative: [
+      { leadIn: 'Wir beginnen heute mit ', tail: '.' },
+      { leadIn: 'Er fragt nach ', tail: '.' }
+    ]
+  }
 };
 
 export function buildAdjectivePrompt(
@@ -85,8 +124,10 @@ export function buildAdjectivePrompt(
   const article = articleTable(articleKind)[grammarCase][gender];
   const endingsTable = articleKind === 'definite' ? weakEndings : mixedEndings;
   const correctEnding = endingsTable[grammarCase][gender];
-  // Every grammar case has at least one template; callers pick a random one within its row.
-  const template = templatesByCase[grammarCase]![Math.floor(random() * templatesByCase[grammarCase]!.length)]!;
+  // An adjective that does not describe this kind of noun falls back to the neutral sentences.
+  const kind = nounClass(noun);
+  const templates = templatesByClass[adjectiveFits(adjective, kind) ? kind : 'other'][grammarCase];
+  const template = templates[Math.floor(random() * templates.length)]!;
   const before = template.leadIn === '' ? `${capitalize(article)} ` : `${template.leadIn}${article} `;
   const after = `${declineNoun(noun, gender, grammarCase)}${template.tail}`;
   const endings = uniqueEndingsAcrossGenders(endingsTable);

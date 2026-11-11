@@ -1047,5 +1047,8 @@
   "learning_almost": "Almost perfect: look at the spelling once more.",
   "learning_answer_was": "The word is",
   "learning_type_placeholder": "Your answer",
-  "learning_remove_letter": "Take back the last letter"
+  "learning_remove_letter": "Take back the last letter",
+  "grammar_determine_case": "Which case, gender and number is this?",
+  "grammar_determine_verb": "Which person and tense is this?",
+  "grammar_false_friends_unsupported": "False friends are only available for German so far."
 }
