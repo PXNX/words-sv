@@ -141,3 +141,25 @@ export function scoreRubric(text: string, lang: string, level: Level): RubricSco
   const total = criteria[0]!.points === 0 ? Math.min(points, 0.5) : points;
   return { level, criteria, total, band: bandOf(total), connectorsUsed };
 }
+
+/**
+ * The rubric for a spoken answer (a speech-recognition transcript): task, vocabulary and coherence,
+ * without accuracy, since a transcript has no capitals or punctuation of the speaker's own. Speech at
+ * a level is about half as long as writing in the same time.
+ */
+export function scoreSpokenRubric(transcript: string, lang: string, level: Level): RubricScore {
+  const target = LEVEL_TARGETS[level];
+  const spokenTarget: LevelTarget = { ...target, minWords: Math.round(target.minWords / 2), maxWords: target.maxWords };
+  const words = wordsOf(transcript).map((word) => word.toLocaleLowerCase(lang));
+  const variety = words.length ? new Set(words).size / words.length : 0;
+  const longShare = words.length ? words.filter((word) => [...word].length >= 7).length / words.length : 0;
+  const criteria: RubricScore['criteria'] = [{ key: 'task', points: taskPoints(words.length, spokenTarget), value: words.length, expected: spokenTarget.minWords }];
+  const varietyPoints = words.length < 10 ? Math.min(1, words.length ? 1 : 0) : towards(variety, target.variety);
+  criteria.push({ key: 'range', points: Math.round((varietyPoints + towards(longShare, target.longWords)) / 2), value: Math.round(variety * 100), expected: Math.round(target.variety * 100) });
+  const available = connectorsFor(lang, level);
+  const connectorsUsed = available.filter((connector) => words.includes(connector));
+  if (available.length) criteria.push({ key: 'coherence', points: towards(connectorsUsed.length, target.connectors), value: connectorsUsed.length, expected: target.connectors });
+  const points = criteria.reduce((sum, criterion) => sum + criterion.points, 0) / (criteria.length * MAX_POINTS);
+  const total = criteria[0]!.points === 0 ? Math.min(points, 0.5) : points;
+  return { level, criteria, total, band: bandOf(total), connectorsUsed };
+}

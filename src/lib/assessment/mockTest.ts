@@ -1,14 +1,15 @@
 /*
  * A mock test for one language level, the same for every exam: reading (meanings of the level's
  * words), listening (words only heard), language (articles and grammar gaps, German) and writing
- * (a short text scored with the level rubric, sentence/levelRubric.ts). No feedback during the
+ * (a short text scored with the level rubric, sentence/levelRubric.ts), and speaking where the
+ * browser can transcribe speech (a spoken answer scored with the spoken rubric). No feedback during the
  * test; every section is scored with formula scoring and counts the same. Pure and seeded.
  */
 import type { Level } from '#lib/domain/types.js';
-import { scoreRubric } from '#lib/sentence/levelRubric.js';
+import { scoreRubric, scoreSpokenRubric } from '#lib/sentence/levelRubric.js';
 import { articleItem, grammarItem, listeningItem, meaningItem, scoreExamLevel, type ExamAnswer, type ExamEntry, type ExamItem } from './examItems.js';
 
-export type MockSection = 'reading' | 'listening' | 'language' | 'writing';
+export type MockSection = 'reading' | 'listening' | 'language' | 'writing' | 'speaking';
 
 export const MOCK_SIZES = { reading: 10, listening: 5, language: 6 } as const;
 export const MOCK_PASS = 0.6;
@@ -51,10 +52,22 @@ const WRITING_TASKS: Record<Level, WritingTask[]> = {
   ]
 };
 
+// Speaking, like the oral parts of the exams: a monologue that grows from introducing yourself to a
+// short talk on a question.
+const SPEAKING_TASKS: Record<Level, WritingTask[]> = {
+  a1: [{ id: 'a1-speak-intro', de: 'Stell dich vor: Wie heißt du, woher kommst du, was machst du gern?', en: 'Introduce yourself: your name, where you are from, what you like doing.' }],
+  a2: [{ id: 'a2-speak-day', de: 'Erzähl von deinem gestrigen Tag: Was hast du gemacht?', en: 'Talk about yesterday: what did you do?' }],
+  b1: [{ id: 'b1-speak-plan', de: 'Ein Freund besucht dich. Schlag ein Programm für das Wochenende vor und begründe es.', en: 'A friend is visiting. Suggest a plan for the weekend and give reasons.' }],
+  b2: [{ id: 'b2-speak-opinion', de: 'Sollten Schulen Hausaufgaben abschaffen? Nimm Stellung mit Argumenten.', en: 'Should schools abolish homework? Take a position with arguments.' }],
+  c1: [{ id: 'c1-speak-talk', de: 'Halte einen kurzen Vortrag: Welche Rolle spielt Mehrsprachigkeit in deinem Leben?', en: 'Give a short talk: what role does speaking several languages play in your life?' }],
+  c2: [{ id: 'c2-speak-debate', de: 'Diskutiere: Macht Technik uns freier oder abhängiger? Wäge ab und zieh ein Fazit.', en: 'Discuss: does technology make us freer or more dependent? Weigh it up and conclude.' }]
+};
+
 export interface MockTest {
   level: Level;
-  items: Record<Exclude<MockSection, 'writing'>, ExamItem[]>;
+  items: Record<Exclude<MockSection, 'writing' | 'speaking'>, ExamItem[]>;
   writing: WritingTask;
+  speaking: WritingTask;
 }
 
 export interface MockResult {
@@ -103,16 +116,17 @@ export function buildMockTest(language: string, level: Level, entries: Readonly<
     }
   }
   const tasks = WRITING_TASKS[level];
-  return { level, items: { reading, listening, language: language_ }, writing: tasks[Math.floor(random() * tasks.length)]! };
+  const spoken = SPEAKING_TASKS[level];
+  return { level, items: { reading, listening, language: language_ }, writing: tasks[Math.floor(random() * tasks.length)]!, speaking: spoken[Math.floor(random() * spoken.length)]! };
 }
 
-/** The sections a test has, in the order they are taken. */
-export function mockSections(test: MockTest): MockSection[] {
-  return [...(['reading', 'listening', 'language'] as const).filter((section) => test.items[section].length), 'writing'];
+/** The sections a test has, in the order they are taken; speaking only where speech can be transcribed. */
+export function mockSections(test: MockTest, options: { speaking?: boolean } = {}): MockSection[] {
+  return [...(['reading', 'listening', 'language'] as const).filter((section) => test.items[section].length), 'writing', ...(options.speaking ? ['speaking' as const] : [])];
 }
 
 /** Scores the answers per section and the writing text; the result passes at 60 % with no section under 35 %. */
-export function scoreMockTest(test: MockTest, answers: Partial<Record<MockSection, readonly ExamAnswer[]>>, writing: string, lang: string, at = Date.now()): MockResult {
+export function scoreMockTest(test: MockTest, answers: Partial<Record<MockSection, readonly ExamAnswer[]>>, writing: string, lang: string, at = Date.now(), spoken?: string): MockResult {
   const sections: MockResult['sections'] = {};
   for (const section of ['reading', 'listening', 'language'] as const) {
     if (!test.items[section].length) continue;
@@ -122,6 +136,7 @@ export function scoreMockTest(test: MockTest, answers: Partial<Record<MockSectio
     sections[section] = Math.max(0, scoreExamLevel(all).score);
   }
   sections.writing = scoreRubric(writing, lang, test.level).total;
+  if (spoken !== undefined) sections.speaking = scoreSpokenRubric(spoken, lang, test.level).total;
   const values = Object.values(sections);
   const total = values.reduce((sum, value) => sum + value, 0) / values.length;
   return { at, lang, level: test.level, sections, total, passed: total >= MOCK_PASS && values.every((value) => value >= MOCK_SECTION_MIN) };

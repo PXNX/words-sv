@@ -54,4 +54,13 @@ describe('mock test', () => {
     expect(bestMockResult(stored, 'de', 'a1')?.at).toBe(2);
     expect(bestMockResult(stored, 'de', 'b1')).toBeNull();
   });
+
+  it('adds speaking only where speech can be transcribed, and scores the transcript', () => {
+    const test = buildMockTest('de', 'a1', a1 as Entries, seededRandom(9));
+    expect(mockSections(test, { speaking: true }).at(-1)).toBe('speaking');
+    expect(test.speaking.de).toBeTruthy();
+    const withSpeech = scoreMockTest(test, {}, '', 'de', 1, 'ich heiße anna und ich komme aus spanien ich wohne in berlin und ich lerne deutsch');
+    expect(withSpeech.sections.speaking).toBeGreaterThan(0);
+    expect(scoreMockTest(test, {}, '', 'de', 1).sections.speaking).toBeUndefined();
+  });
 });

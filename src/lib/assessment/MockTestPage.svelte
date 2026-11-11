@@ -1,7 +1,8 @@
 <!--
   A mock test per language level (assessment/mockTest.ts): reading, listening, language and a
   writing task, without feedback until the end, then a score per section against the pass marks.
-  Results are kept on the device; answers count for the skills on /progress like any practice.
+  Where the browser transcribes speech, a spoken task follows the writing. Results are kept on the
+  device; answers count for the skills on /progress like any practice.
 -->
 <script lang="ts">
   import { num } from '#lib/format/num.svelte.js';
@@ -20,12 +21,17 @@
   import RubricCard from '#lib/sentence/RubricCard.svelte';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import IconVolume from '~icons/material-symbols/volume-up-rounded';
+  import IconMic from '~icons/material-symbols/mic-rounded';
+  import IconStop from '~icons/material-symbols/stop-rounded';
+  import { scoreSpokenRubric } from '#lib/sentence/levelRubric.js';
   import type { Level } from '#lib/domain/types.js';
   import { supportsExam, type ExamAnswer, type ExamEntry, type ExamItem } from './examItems.js';
   import { PLACEMENT_LEVELS, seededRandom } from './placement.js';
   import { appendMockResult, bestMockResult, buildMockTest, mockSections, MOCK_PASS, MOCK_RESULTS_KEY, MOCK_SECTION_MIN, parseMockResults, scoreMockTest, type MockResult, type MockSection, type MockTest } from './mockTest.js';
 
-  type Phase = 'loading' | 'intro' | 'questions' | 'writing' | 'result' | 'unavailable';
+  type Phase = 'loading' | 'intro' | 'questions' | 'writing' | 'speaking' | 'result' | 'unavailable';
+  type Recognition = { lang: string; continuous: boolean; interimResults: boolean; start: () => void; stop: () => void; abort: () => void; onresult: ((event: { resultIndex: number; results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal: boolean }> }) => void) | null; onerror: ((event: { error: string }) => void) | null; onend: (() => void) | null };
+  type RecognitionCtor = new () => Recognition;
 
   const language = settings.lang;
   const locale = $derived({ locale: settings.interfaceLocale });
@@ -43,18 +49,35 @@
   let result = $state<MockResult | null>(null);
   let rubric = $state<RubricScore | null>(null);
   let history = $state<MockResult[]>([]);
+  // Speaking: the transcript so far (final parts) and what is being heard right now.
+  let speakingSupported = $state(false);
+  let spoken = $state('');
+  let hearing = $state('');
+  let listening = $state(false);
+  let spokenRubric = $state<RubricScore | null>(null);
+  let recognition: Recognition | null = null;
   const entries: Partial<Record<Level, Record<string, ExamEntry>>> = {};
 
   const section = $derived(sections[sectionIndex]);
-  const questions = $derived(section && section !== 'writing' && test ? test.items[section] : []);
+  const questions = $derived(section && section !== 'writing' && section !== 'speaking' && test ? test.items[section] : []);
   const item = $derived<ExamItem | undefined>(questions[itemIndex]);
   const best = $derived(bestMockResult(history, language, level));
   const words = $derived(text.trim() ? text.trim().split(/\s+/u).length : 0);
   const answered = $derived(Object.values(answers).reduce((sum, list) => sum + (list?.length ?? 0), 0));
   const totalQuestions = $derived(test ? test.items.reading.length + test.items.listening.length + test.items.language.length : 0);
-  const progress = $derived(phase === 'writing' ? totalQuestions / (totalQuestions + 1) : answered / Math.max(1, totalQuestions + 1));
+  const extraSteps = $derived(sections.includes('speaking') ? 2 : 1);
+  const progress = $derived(phase === 'speaking' ? (totalQuestions + 1) / (totalQuestions + extraSteps) : phase === 'writing' ? totalQuestions / (totalQuestions + extraSteps) : answered / Math.max(1, totalQuestions + extraSteps));
+  const spokenWords = $derived(`${spoken} ${hearing}`.trim() ? `${spoken} ${hearing}`.trim().split(/\s+/u).length : 0);
 
-  const sectionName = (key: MockSection) => ({ reading: m.mock_section_reading, listening: m.mock_section_listening, language: m.mock_section_language, writing: m.mock_section_writing })[key]({}, locale);
+  const sectionName = (key: MockSection) => ({ reading: m.mock_section_reading, listening: m.mock_section_listening, language: m.mock_section_language, writing: m.mock_section_writing, speaking: m.mock_section_speaking })[key]({}, locale);
+  // Leaving the page mid-recording releases the microphone.
+  $effect(() => () => { listening = false; recognition?.abort(); });
+  const recognitionCtor = (): RecognitionCtor | null => {
+    if (typeof window === 'undefined') return null;
+    const scope = window as unknown as { SpeechRecognition?: RecognitionCtor; webkitSpeechRecognition?: RecognitionCtor };
+    return scope.SpeechRecognition ?? scope.webkitSpeechRecognition ?? null;
+  };
+  const speechLocale = () => ({ de: 'de-DE', en: 'en-US', fr: 'fr-FR', it: 'it-IT', es: 'es-ES', pt: 'pt-PT', uk: 'uk-UA' } as Record<string, string>)[language] ?? language;
 
   function readHistory(): MockResult[] {
     try { return parseMockResults(localStorage.getItem(MOCK_RESULTS_KEY)); } catch { return []; }
@@ -62,6 +85,7 @@
 
   onMount(async () => {
     history = readHistory();
+    speakingSupported = Boolean(recognitionCtor());
     await warmLanguage(language);
     const found: Level[] = [];
     for (const entry of PLACEMENT_LEVELS) {
@@ -79,18 +103,21 @@
   function start() {
     const built = buildMockTest(language, level, entries[level] ?? {}, seededRandom(Date.now()));
     test = built;
-    sections = mockSections(built);
+    sections = mockSections(built, { speaking: speakingSupported });
     sectionIndex = 0;
     itemIndex = 0;
     answers = {};
     text = '';
+    spoken = '';
+    hearing = '';
     result = null;
     rubric = null;
+    spokenRubric = null;
     phase = sections[0] === 'writing' ? 'writing' : 'questions';
   }
 
   function choose(chosen: string | null) {
-    if (!item || !section || section === 'writing') return;
+    if (!item || !section || section === 'writing' || section === 'speaking') return;
     answers = { ...answers, [section]: [...(answers[section] ?? []), { item, chosen }] };
     logAnswer(language, section === 'listening' ? 'listen' : 'mock', `MOCK:${item.id}`, chosen === item.correct, { level });
     haptic('tap');
@@ -103,11 +130,60 @@
     if (sections[sectionIndex] === 'writing') phase = 'writing';
   }
 
+  function handIn() {
+    if (sections.includes('speaking')) phase = 'speaking';
+    else finish();
+  }
+
+  function startListening() {
+    const Ctor = recognitionCtor();
+    if (!Ctor || listening) return;
+    const next = new Ctor();
+    next.lang = speechLocale();
+    next.continuous = true;
+    next.interimResults = true;
+    next.onresult = (event) => {
+      let interim = '';
+      for (let index = event.resultIndex; index < event.results.length; index += 1) {
+        const part = event.results[index]!;
+        const said = part[0]?.transcript ?? '';
+        if (part.isFinal) spoken = `${spoken} ${said}`.trim();
+        else interim += said;
+      }
+      hearing = interim.trim();
+    };
+    next.onerror = () => { listening = false; };
+    next.onend = () => {
+      // Browsers end a continuous session after a pause; keep listening until the learner stops.
+      if (listening && recognition === next) { try { next.start(); } catch { listening = false; } }
+    };
+    recognition = next;
+    listening = true;
+    try { next.start(); } catch { listening = false; }
+  }
+  function stopListening() {
+    listening = false;
+    spoken = `${spoken} ${hearing}`.trim();
+    hearing = '';
+    recognition?.stop();
+    recognition = null;
+  }
+  // Skipping the spoken part leaves it out of the result instead of counting it as zero.
+  function skipSpeaking() {
+    stopListening();
+    sections = sections.filter((entry) => entry !== 'speaking');
+    finish();
+  }
+
   function finish() {
     if (!test) return;
+    if (listening) stopListening();
+    const speaking = sections.includes('speaking');
     rubric = scoreRubric(text, language, level);
-    result = scoreMockTest(test, answers, text, language);
+    spokenRubric = speaking ? scoreSpokenRubric(spoken, language, level) : null;
+    result = scoreMockTest(test, answers, text, language, Date.now(), speaking ? spoken : undefined);
     logAnswer(language, 'write', `MOCK:WRITE:${test.writing.id}`, null, { level, score: rubric.total });
+    if (spokenRubric) logAnswer(language, 'speak', `MOCK:SPEAK:${test.speaking.id}`, null, { level, score: spokenRubric.total });
     history = appendMockResult(history, result);
     try { localStorage.setItem(MOCK_RESULTS_KEY, JSON.stringify(history)); } catch { /* the result is still shown */ }
     haptic(result.passed ? 'win' : 'success');
@@ -180,7 +256,20 @@
       <p class="mock-prompt">{settings.interfaceLocale === 'de' ? test.writing.de : test.writing.en}</p>
       <textarea class="mock-text" bind:value={text} rows={10} lang={language} placeholder={m.fullText_placeholder({}, locale)}></textarea>
       <p class="mock-words">{m.sentence_words({ count: num(words) }, locale)}</p>
-      <button type="button" class="btn-play btn-play-ink mock-cta" onclick={finish}>{m.mock_finish({}, locale)}</button>
+      <button type="button" class="btn-play btn-play-ink mock-cta" onclick={handIn}>{sections.includes('speaking') ? m.mock_next({}, locale) : m.mock_finish({}, locale)}</button>
+    </div>
+  {:else if phase === 'speaking' && test}
+    <div class="mock-card" in:fly={{ x: 24, duration: ms(220) }}>
+      <p class="mock-section">{sectionName('speaking')}</p>
+      <p class="mock-prompt">{settings.interfaceLocale === 'de' ? test.speaking.de : test.speaking.en}</p>
+      <p class="mock-hint">{m.mock_speaking_hint({}, locale)}</p>
+      <button type="button" class="btn-play btn-play-round mock-mic {listening ? 'btn-play-ink listening' : 'btn-play-soft'}" onclick={() => (listening ? stopListening() : startListening())} aria-pressed={listening} aria-label={listening ? m.mock_speaking_stop({}, locale) : m.mock_speaking_start({}, locale)}>
+        {#if listening}<IconStop aria-hidden="true" />{:else}<IconMic aria-hidden="true" />{/if}
+      </button>
+      <p class="mock-transcript" lang={language} aria-live="polite">{spoken}{#if hearing} <span>{hearing}</span>{/if}{#if !spoken && !hearing}<span>{m.mock_speaking_empty({}, locale)}</span>{/if}</p>
+      <p class="mock-words">{m.sentence_words({ count: num(spokenWords) }, locale)}</p>
+      <button type="button" class="btn-play btn-play-ink mock-cta" onclick={finish} disabled={!spoken && !hearing}>{m.mock_finish({}, locale)}</button>
+      <button type="button" class="mock-skip" onclick={skipSpeaking}>{m.mock_speaking_skip({}, locale)}</button>
     </div>
   {:else if phase === 'result' && result}
     <div class="mock-panel" in:scale={{ start: 0.88, duration: ms(380), easing: backOut }}>
@@ -194,6 +283,7 @@
         {/each}
       </ol>
       {#if rubric}<RubricCard {rubric} />{/if}
+      {#if spokenRubric}<RubricCard rubric={spokenRubric} />{/if}
       <button type="button" class="btn-play btn-play-ink mock-cta" onclick={start}>{m.mock_again({}, locale)}</button>
       <button type="button" class="btn-play btn-play-soft mock-cta" onclick={() => (phase = 'intro')}>{m.mock_other_level({}, locale)}</button>
     </div>
@@ -233,6 +323,14 @@
   .mock-skip { justify-self:center;padding:.3rem .5rem;border:0;background:none;color:#596477;font:inherit;font-size:.7rem;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer; }
   .mock-text { width:100%;min-height:14rem;padding:.8rem .9rem;border:1px solid rgba(23,42,69,.2);border-radius:.9rem;background:#fffdf7;color:#243449;font:inherit;font-size:.92rem;font-weight:500;line-height:1.7;text-align:start;resize:vertical; }
   .mock-text:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
+  .mock-hint { margin:0;color:#596477;font-size:.72rem;font-weight:700;line-height:1.4; }
+  .mock-mic { justify-self:center;width:4rem;height:4rem; }
+  .mock-mic :global(svg) { width:1.7rem;height:1.7rem; }
+  .mock-mic.listening { animation:mock-pulse 1.4s ease-in-out infinite; }
+  @keyframes mock-pulse { 50% { box-shadow:0 0 0 .55rem rgba(230,165,39,.25); } }
+  @media (prefers-reduced-motion: reduce) { .mock-mic.listening { animation:none; } }
+  .mock-transcript { margin:0;min-height:7rem;padding:.7rem .8rem;border-radius:.8rem;background:rgba(230,165,39,.1);color:#172a45;font-size:.88rem;font-weight:700;line-height:1.55;text-align:start; }
+  .mock-transcript span { color:#7b8494; }
   .mock-words { margin:0;justify-self:end;color:#7b8494;font-size:.66rem;font-weight:800; }
   .mock-badge { justify-self:center;margin:0;padding:.4rem 1rem;border-radius:1rem;background:#c9604e;color:#fffdf7 !important;font-size:1.5rem !important;font-weight:900 !important; }
   .mock-badge.passed { background:#34824d; }
@@ -249,4 +347,6 @@
   :global(html.dark) .mock-levels button.active { border-color:#fffdf7;background:#fffdf7;color:#172a45; }
   :global(html.dark) .mock-text { border-color:rgba(255,253,247,.24);background:#152b47;color:rgba(255,253,247,.9); }
   :global(html.dark) .mock-skip { color:rgba(255,253,247,.7); }
+  :global(html.dark) .mock-transcript { color:#fffdf7; }
+  :global(html.dark) .mock-hint { color:rgba(255,253,247,.72); }
 </style>

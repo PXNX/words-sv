@@ -929,7 +929,7 @@
   "rubric_connectors_used": "Verbindungswörter: {words}",
   "mock_title": "Probetest {level}",
   "mock_heading": "Probetest für dein Niveau",
-  "mock_intro": "Lesen, Hören, Sprache und eine Schreibaufgabe, wie in einer Prüfung: Du siehst erst am Ende, was richtig war. Bestanden ist der Test ab {pass}, und kein Teil darf unter {min} liegen. Dauert etwa 15 Minuten.",
+  "mock_intro": "Lesen, Hören, Sprache, eine Schreibaufgabe und, wo dein Browser zuhören kann, Sprechen – wie in einer Prüfung: Du siehst erst am Ende, was richtig war. Bestanden ist der Test ab {pass}, und kein Teil darf unter {min} liegen. Dauert etwa 15 bis 20 Minuten.",
   "mock_level_label": "Niveau",
   "mock_best": "Dein bestes Ergebnis auf diesem Niveau: {percent}",
   "mock_start": "{level}-Test starten",
@@ -954,5 +954,12 @@
   "grammar_forms_spelling": "Fast: richtig ist „{correct}“ (Umlaut oder ß).",
   "grammar_forms_typo": "Ein Buchstabe daneben: „{correct}“.",
   "grammar_forms_wrong": "Richtig ist „{correct}“.",
-  "home_forms": "Verben und Adjektive selbst beugen, mit Teilpunkten für kleine Fehler."
+  "home_forms": "Verben und Adjektive selbst beugen, mit Teilpunkten für kleine Fehler.",
+  "mock_section_speaking": "Sprechen",
+  "mock_next": "Weiter zum Sprechen",
+  "mock_speaking_hint": "Tipp aufs Mikrofon und sprich etwa eine Minute. Deine Worte erscheinen darunter.",
+  "mock_speaking_start": "Aufnahme starten",
+  "mock_speaking_stop": "Aufnahme beenden",
+  "mock_speaking_empty": "Noch nichts gehört.",
+  "mock_speaking_skip": "Ohne Sprechen abgeben"
 }

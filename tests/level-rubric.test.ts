@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { connectorsFor, LEVEL_TARGETS, scoreRubric } from '../src/lib/sentence/levelRubric.js';
+import { connectorsFor, LEVEL_TARGETS, scoreRubric, scoreSpokenRubric } from '../src/lib/sentence/levelRubric.js';
 
 const A2_TEXT = 'Am Samstag stehe ich spät auf. Zuerst frühstücke ich mit meiner Familie, dann gehe ich in den Park. Ich spiele dort Fußball, weil das Wetter schön ist. Am Abend koche ich eine Suppe und lese ein Buch. Das Wochenende ist kurz, aber sehr schön.';
 
@@ -39,5 +39,13 @@ describe('level rubric', () => {
     const score = scoreRubric('', 'en', 'b1');
     expect(score.total).toBe(0);
     expect(score.band).toBe('below');
+  });
+
+  it('scores a spoken transcript without accuracy and with half the length', () => {
+    const transcript = 'ich heiße anna und ich komme aus spanien ich wohne jetzt in berlin und ich lerne deutsch aber das ist manchmal schwer ich spiele gern fußball und ich koche auch gern';
+    const spoken = scoreSpokenRubric(transcript, 'de', 'a1');
+    expect(spoken.criteria.map((criterion) => criterion.key)).toEqual(['task', 'range', 'coherence']);
+    expect(spoken.band).not.toBe('below');
+    expect(scoreSpokenRubric('', 'de', 'a1').total).toBe(0);
   });
 });
