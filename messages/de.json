@@ -1050,5 +1050,16 @@
   "learning_remove_letter": "Letzten Buchstaben zurücknehmen",
   "grammar_determine_case": "Bestimme Kasus, Genus und Numerus.",
   "grammar_determine_verb": "Bestimme Person und Tempus.",
-  "grammar_false_friends_unsupported": "Falsche Freunde gibt es bisher nur für Deutsch."
+  "grammar_false_friends_unsupported": "Falsche Freunde gibt es bisher nur für Deutsch.",
+  "memory_title": "Gedächtniskarte",
+  "memory_hint": "Ein Feld pro Wort. Es füllt sich, wenn ein Wort sitzt, und verblasst, wenn es Zeit für ein Wiedersehen ist. Tippe ein Feld an, um das Wort zu sehen.",
+  "memory_stage_new": "Neu",
+  "memory_stage_learning": "Im Lernen",
+  "memory_stage_young": "Festigt sich",
+  "memory_stage_mature": "Sitzt",
+  "memory_stage_leech": "Rutscht immer weg",
+  "memory_never": "noch nicht geübt",
+  "memory_due_now": "jetzt fällig",
+  "memory_due_on": "wieder am {date}",
+  "memory_practise": "{count} fällige Wörter üben"
 }

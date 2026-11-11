@@ -31,6 +31,7 @@
   import type { Mood } from '#lib/story/stories.js';
   import { formatNumber, formatWeekday } from '#lib/format/format.js';
   import ExamCoach from '#lib/progress/ExamCoach.svelte';
+  import MemoryMap from '#lib/progress/MemoryMap.svelte';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
   // Lilith turns loving at five days, happy once today is qualified, sad about a broken streak and
@@ -293,6 +294,8 @@
   {/if}
 
   <ExamCoach />
+
+  <MemoryMap ledger={allLedger} />
 
   <h2 class="progress-group">{m.coach_keep_going({}, { locale: settings.interfaceLocale })}</h2>
   <!-- Streak -->
