@@ -306,7 +306,7 @@
   <div class="settings-columns">
     <!-- The learner and their account first: who they are and whether their progress is saved -->
     <section class="settings-me-card panel-play" aria-label={labels.profileTitle}>
-      <a class="settings-me" href="/progress">
+      <a class="settings-me" href="/progress?look=1">
         <span class="settings-me-avatar" aria-hidden="true"><StoryCharacter id="kumar" avatar={settings.avatar ?? defaultAvatar} mood="happy" /></span>
         <span class="settings-me-text">
           <span class="settings-kicker">{labels.profileTitle}</span>

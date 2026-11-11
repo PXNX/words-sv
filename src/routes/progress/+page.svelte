@@ -19,6 +19,7 @@
   import IconClose from '~icons/material-symbols/close-rounded';
   import Companion from '#lib/story/Companion.svelte';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
+  import { slide } from 'svelte/transition';
   import AvatarEditor from '#lib/profile/AvatarEditor.svelte';
   import ProCard from '#lib/store/ProCard.svelte';
   import { cloudSync } from '#lib/sync/cloudSync.svelte.js';
@@ -142,6 +143,8 @@
   const ledger = $derived(Object.fromEntries(Object.entries(allLedger).filter(([key]) => key.startsWith(`${settings.lang}:`))) as ReviewLedger);
   let shareNote = $state('');
   // The name and the character are edited right here, not in the settings panel.
+  // The look editor opens from the face or its button (and straight away with /progress?look=1).
+  let editingLook = $state(false);
   let editingName = $state(false);
   let nameDraft = $state('');
 
@@ -237,6 +240,7 @@
     });
   }
   onMount(() => {
+    editingLook = new URLSearchParams(location.search).get('look') === '1';
     allActivity = readActivity();
     allLedger = readReviewLedger();
     nameDraft = settings.firstName;
@@ -255,21 +259,32 @@
        for Telegram Stars are tried on and bought inside the editor. -->
   <section class="panel-play mt-[1.2rem] px-4 pt-[.9rem] pb-4" aria-labelledby="progress-profile-heading">
     <h2 id="progress-profile-heading" class="m-0 text-accent text-[.8125rem] font-extrabold tracking-[.12em] uppercase">{labels.profileTitle}</h2>
-    {#if editingName}
-      <form class="mt-[.35rem] flex items-center gap-[.3rem]" onsubmit={submitName}>
-        <!-- svelte-ignore a11y_autofocus -->
-        <input class="progress-name-input" bind:value={nameDraft} type="text" autocomplete="given-name" autocapitalize="words" maxlength={FIRST_NAME_MAX_LENGTH} aria-label={labels.profileNameEdit} autofocus />
-        <button type="submit" class="progress-edit" aria-label={labels.profileNameSave} title={labels.profileNameSave}><IconCheck aria-hidden="true" /></button>
-        <button type="button" class="progress-edit" aria-label={labels.profileNameCancel} title={labels.profileNameCancel} onclick={cancelNameEdit}><IconClose aria-hidden="true" /></button>
-      </form>
-    {:else}
-      <div class="mt-[.2rem] flex items-center gap-[.35rem]">
-        <p class="progress-name">{settings.firstName || labels.profileNameEmpty}</p>
-        <button type="button" class="progress-edit" aria-label={labels.profileNameEdit} title={labels.profileNameEdit} onclick={startNameEdit}><IconEdit aria-hidden="true" /></button>
+    <div class="profile-head">
+      <button type="button" class="profile-face" onclick={() => (editingLook = !editingLook)} aria-label={m.profile_edit({}, { locale: settings.interfaceLocale })} aria-expanded={editingLook}><StoryCharacter id="kumar" avatar={settings.avatar ?? defaultAvatar} mood="happy" /></button>
+      <div class="min-w-0 flex-1">
+        {#if editingName}
+          <form class="flex items-center gap-[.3rem]" onsubmit={submitName}>
+            <!-- svelte-ignore a11y_autofocus -->
+            <input class="progress-name-input" bind:value={nameDraft} type="text" autocomplete="given-name" autocapitalize="words" maxlength={FIRST_NAME_MAX_LENGTH} aria-label={labels.profileNameEdit} autofocus />
+            <button type="submit" class="progress-edit" aria-label={labels.profileNameSave} title={labels.profileNameSave}><IconCheck aria-hidden="true" /></button>
+            <button type="button" class="progress-edit" aria-label={labels.profileNameCancel} title={labels.profileNameCancel} onclick={cancelNameEdit}><IconClose aria-hidden="true" /></button>
+          </form>
+        {:else}
+          <div class="flex items-center gap-[.35rem]">
+            <p class="progress-name">{settings.firstName || labels.profileNameEmpty}</p>
+            <button type="button" class="progress-edit" aria-label={labels.profileNameEdit} title={labels.profileNameEdit} onclick={startNameEdit}><IconEdit aria-hidden="true" /></button>
+          </div>
+        {/if}
+        <p class="m-0 mt-[.25rem] text-base-content/65 text-[.8125rem] font-bold leading-[1.4]">{labels.profileHint}</p>
+      </div>
+    </div>
+    <!-- The editor stays folded away until asked for, so the page opens on the learner's progress. -->
+    <button type="button" class="btn-play btn-play-sm {editingLook ? 'btn-play-soft' : 'btn-play-sun'} mt-[.7rem]" onclick={() => (editingLook = !editingLook)} aria-expanded={editingLook}>{editingLook ? m.cosmetic_close({}, { locale: settings.interfaceLocale }) : m.profile_edit({}, { locale: settings.interfaceLocale })}</button>
+    {#if editingLook}
+      <div class="mt-[.8rem]" transition:slide={{ duration: 260 }}>
+        <AvatarEditor value={settings.avatar ?? defaultAvatar} onchange={(next) => settings.setAvatar(next)} shop />
       </div>
     {/if}
-    <p class="m-0 mt-[.35rem] mb-[.7rem] text-base-content/65 text-[.8125rem] font-bold leading-[1.4]">{labels.profileHint}</p>
-    <AvatarEditor value={settings.avatar ?? defaultAvatar} onchange={(next) => settings.setAvatar(next)} shop />
   </section>
 
   <!-- Not signed in with Telegram yet: the offer to save progress there (and to buy bundles and Pro). -->
@@ -426,6 +441,12 @@
 </section>
 
 <style>
+  .profile-head { display:flex;align-items:center;gap:.8rem;margin-top:.45rem; }
+  .profile-face { flex:none;width:4.2rem;height:4.2rem;padding:0;overflow:hidden;border:2px solid var(--play-line);border-radius:50% 46% 52% 48% / 48% 52% 46% 50%;background:var(--sun-soft);box-shadow:var(--play-shadow);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:translate var(--dur-move) var(--ease-spring),box-shadow var(--dur-move) var(--ease-spring); }
+  .profile-face :global(.story-character) { width:100%;height:118%;margin-top:6%; }
+  .profile-face:active { translate:2px 2px;box-shadow:var(--play-shadow-press); }
+  .profile-face:focus-visible { outline:3px dashed var(--sun);outline-offset:3px; }
+  :global(html.dark) .profile-face { background:#2b4a73; }
   .pip { border: 2px solid var(--play-line); border-radius: 5px; }
   .progress-group { margin: 1.6rem 0 0; color: var(--color-accent); font-size: .84rem; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; text-align: center; }
   .progress-ring { rotate: -90deg; overflow: visible; }
@@ -447,13 +468,13 @@
   .progress-edit :global(svg) { width:1rem;height:1rem; }
   .progress-edit:focus-visible,.progress-name-input:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
   .week-chart { margin:.7rem 0 .2rem; }
-  .week-chart figcaption { color:rgba(23,42,69,.6);font-size:.8125rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }
+  .week-chart figcaption { color:var(--text-soft);font-size:.8125rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }
   .week-bars { display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.35rem;height:7rem;margin-top:.45rem;padding-bottom:1.1rem;position:relative;background:linear-gradient(rgba(23,42,69,.1),rgba(23,42,69,.1)) left bottom 1.1rem / 100% 1px no-repeat; }
   .week-bar { position:relative;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-width:0;cursor:default; }
   .week-fill { width:min(100%,1.6rem);border-radius:4px 4px 0 0;background:#e6a527;transition:height .45s cubic-bezier(.23,1,.32,1); }
   .week-bar.today .week-fill { background:#c9832f; }
   .week-value { margin-bottom:.15rem;color:var(--play-ink,#172a45);font-size:.8125rem;font-weight:900;line-height:1; }
-  .week-day { position:absolute;bottom:-1.1rem;color:rgba(23,42,69,.55);font-size:.8125rem;font-weight:800;white-space:nowrap; }
+  .week-day { position:absolute;bottom:-1.1rem;color:var(--text-soft);font-size:.8125rem;font-weight:800;white-space:nowrap; }
   .week-bar.today .week-day { color:var(--play-ink,#172a45);font-weight:900; }
   .mode-shares { margin:.35rem 0 0;padding:0;list-style:none;display:grid;gap:.3rem; }
   .mode-shares li { display:grid;grid-template-columns:minmax(5rem,7.5rem) 1fr auto;align-items:center;gap:.5rem;font-size:.8125rem;font-weight:800;color:var(--play-ink,#172a45); }
