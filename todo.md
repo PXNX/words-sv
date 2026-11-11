@@ -315,8 +315,10 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
   `tests/data/german-vocabulary.test.ts` keeps it that way.
 - [x] The 25 "Extra A2–C2" stories in `story/germanStories.ts` are real stories now
   (`tests/german-stories.test.ts`).
-- [ ] About 30 more `*-extra` stories (e.g. `a1-extra1`–`5`, `b1-pets-extra`, `c2-court-extra`) are
-  still word lists; 36 stories have replies addressed to someone other than the last speaker.
+- [x] The other 35 filler stories (A1–C2) are real stories, and every reply goes to the last speaker
+  (both checked in `tests/german-stories.test.ts`).
+- [ ] `a2-library`/`a2-bibliothek` are near duplicates; `a2-butcher`, `a2-alps`, `a2-munich` are set to
+  B1; in `b2-job-application` the reply options are written as if the learner were Kumar.
 
 ### Release process leftovers
 - [x] `tests/fixtures/v1.0.0/` snapshot of a learner's local data for migration tests
