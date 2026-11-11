@@ -56,6 +56,6 @@
   .grader-gate p { margin:0;font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:700;line-height:1.45; }
   .grader-gate button { justify-self:start; }
   .grader-gate button :global(svg) { width:1rem;height:1rem; }
-  .grader-warn { color:#a45e38; }
+  .grader-warn { color:var(--color-accent); }
   :global(html.dark) .grader-gate { border-color:rgba(255,253,247,.28);color:rgba(255,253,247,.72); }
 </style>

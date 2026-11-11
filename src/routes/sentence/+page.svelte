@@ -105,7 +105,7 @@
 <style>
   .writing-view { display: flex; flex-direction: column; gap: 0.8rem; width: min(100%, 44rem); margin: 0 auto; padding: clamp(0.8rem, 3vw, 1.4rem); }
   .writing-header { display: grid; gap: 0.2rem; text-align: center; }
-  .writing-kicker { margin: 0; color: #a45e38; font-family: 'DM Sans', sans-serif; font-size: .8125rem; font-weight: 900; letter-spacing: 0.16em; text-transform: uppercase; }
+  .writing-kicker { margin: 0; color: var(--color-accent); font-family: 'DM Sans', sans-serif; font-size: .8125rem; font-weight: 900; letter-spacing: 0.16em; text-transform: uppercase; }
   .writing-header h1 { margin: 0; color: #172a45; font-family: 'DM Serif Display', serif; font-size: clamp(1.6rem, 7vw, 2.3rem); font-weight: 400; letter-spacing: -0.03em; line-height: 1.02; }
   .writing-intro { max-width: 34rem; margin: 0 auto; color: #596477; font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 700; line-height: 1.45; }
   .writing-prompt { display: grid; gap: 0.25rem; padding: 0.8rem 0.9rem; border: 1px solid rgba(23, 42, 69, 0.16); border-radius: 0.9rem; background: #fbf7ee; }

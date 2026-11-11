@@ -92,8 +92,8 @@
   --color-primary-content: #172a45;
   --color-secondary: #fffdf7;
   --color-secondary-content: #172a45;
-  --color-accent: #a45e38;
-  --color-accent-content: #fffdf7;
+  --color-accent: #f0b877;
+  --color-accent-content: #172a45;
   --color-neutral: #fffdf7;
   --color-neutral-content: #172a45;
   --color-info: #6ea3d9;
@@ -158,6 +158,8 @@
   --ease-spring: cubic-bezier(.34, 1.4, .64, 1);
 }
 html.dark {
+  /* Anything that inherits its colour (lists, the dictionary, the changelog) reads light on the dark paper. */
+  color: #fffdf7;
   --surface: oklch(0.345 0.07 258);
   --surface-2: oklch(0.283 0.058 258);
   --text: var(--paper);
