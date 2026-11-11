@@ -6,7 +6,8 @@
   import type { Language } from '#lib/data/vocabulary.js';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { characterNames, type Story } from './stories';
+  import { characterNames } from './storyKit';
+  import type { Story } from './stories';
   import type { VocabularyLevel } from '#lib/data/vocabulary.js';
   import StoryScene from './StoryScene.svelte';
   import BackgroundOffer from '#lib/audio/BackgroundOffer.svelte';

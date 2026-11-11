@@ -30,7 +30,6 @@
   import { featureStats } from '#lib/progress/events.js';
   import { labelKeys, type FeatureKey } from '#lib/grammar/taxonomy.js';
   import { buildTodayPlan, estimatedMinutes, type TodayPlan, type TodayReading } from '#lib/today/todayPlan.js';
-  import { readingCatalog } from '#lib/story/readingCatalog.js';
   import { readDueVocabulary } from '#lib/vocab/spacedRepetition.js';
   import { readMissedWords } from '#lib/story/missedWords.js';
   import { dueReviewEntries } from '#lib/review/ledger.js';
@@ -228,11 +227,25 @@
       return null;
     }
   }
+  // The reading catalog pulls in every story, so it loads only when there is a text in progress,
+  // and after the page instead of with it.
+  let readingCatalog: typeof import('#lib/story/readingCatalog.js').readingCatalog | null = null;
+  let catalogLoading = false;
   function readingToday(): TodayReading | null {
     try {
       const fingerprint = `${settings.lang}|${settings.vocabularyLevel}|${settings.includeLowerVocabulary}`;
       const parsed = JSON.parse(localStorage.getItem('wordcircle-reading-progress-v1') ?? 'null') as { fingerprint?: string; id?: string; solved?: Record<string, Record<number, true>> } | null;
       if (!parsed || parsed.fingerprint !== fingerprint || typeof parsed.id !== 'string') return null;
+      if (!readingCatalog) {
+        if (!catalogLoading) {
+          catalogLoading = true;
+          void import('#lib/story/readingCatalog.js').then((module) => {
+            readingCatalog = module.readingCatalog;
+            refreshToday();
+          });
+        }
+        return null;
+      }
       const item = readingCatalog(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary, settings.firstName || 'du').find((entry) => entry.id === parsed.id);
       if (!item || item.questions.length === 0) return null;
       const solved = parsed.solved?.[item.id] ?? {};

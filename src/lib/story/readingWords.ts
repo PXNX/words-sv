@@ -1,7 +1,8 @@
 import { wordDefinitions, wordMetadata, type Language, type VocabularyGender } from '#lib/data/vocabulary.js';
 import { verbConjugations } from '#lib/grammar/verbs.js';
 import { definiteArticlesByCase } from '#lib/grammar/cases.js';
-import { characterNames, type CharacterId } from './stories';
+import { characterNames } from './storyKit';
+import type { CharacterId } from './stories';
 
 // A word as the reading mode needs it: dictionary spelling, meaning, number and the grammar that
 // helps a learner understand the sentence. `word` stays the uppercased singular dictionary form
