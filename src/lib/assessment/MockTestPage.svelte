@@ -25,9 +25,10 @@
   import IconStop from '~icons/material-symbols/stop-rounded';
   import { scoreSpokenRubric } from '#lib/sentence/levelRubric.js';
   import type { Level } from '#lib/domain/types.js';
+  import type { ReadingBlock } from '#lib/story/readingTexts.js';
   import { supportsExam, type ExamAnswer, type ExamEntry, type ExamItem } from './examItems.js';
   import { PLACEMENT_LEVELS, seededRandom } from './placement.js';
-  import { appendMockResult, bestMockResult, buildMockTest, mockSections, MOCK_PASS, MOCK_RESULTS_KEY, MOCK_SECTION_MIN, parseMockResults, scoreMockTest, type MockResult, type MockSection, type MockTest } from './mockTest.js';
+  import { appendMockResult, bestMockResult, buildMockTest, mockSections, type MockText, MOCK_PASS, MOCK_RESULTS_KEY, MOCK_SECTION_MIN, parseMockResults, scoreMockTest, type MockResult, type MockSection, type MockTest } from './mockTest.js';
 
   type Phase = 'loading' | 'intro' | 'questions' | 'writing' | 'speaking' | 'result' | 'unavailable';
   type Recognition = { lang: string; continuous: boolean; interimResults: boolean; start: () => void; stop: () => void; abort: () => void; onresult: ((event: { resultIndex: number; results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal: boolean }> }) => void) | null; onerror: ((event: { error: string }) => void) | null; onend: (() => void) | null };
@@ -40,7 +41,8 @@
   let phase = $state<Phase>('loading');
   let levels = $state<Level[]>([]);
   let level = $state<Level>(settings.vocabularyLevel);
-  let test = $state<MockTest | null>(null);
+  let test = $state<MockTest<ReadingBlock> | null>(null);
+  let starting = $state(false);
   let sections = $state<MockSection[]>([]);
   let sectionIndex = $state(0);
   let itemIndex = $state(0);
@@ -69,7 +71,7 @@
   const progress = $derived(phase === 'speaking' ? (totalQuestions + 1) / (totalQuestions + extraSteps) : phase === 'writing' ? totalQuestions / (totalQuestions + extraSteps) : answered / Math.max(1, totalQuestions + extraSteps));
   const spokenWords = $derived(`${spoken} ${hearing}`.trim() ? `${spoken} ${hearing}`.trim().split(/\s+/u).length : 0);
 
-  const sectionName = (key: MockSection) => ({ reading: m.mock_section_reading, listening: m.mock_section_listening, language: m.mock_section_language, writing: m.mock_section_writing, speaking: m.mock_section_speaking })[key]({}, locale);
+  const sectionName = (key: MockSection) => ({ reading: m.mock_section_reading, text: m.mock_section_text, listening: m.mock_section_listening, language: m.mock_section_language, writing: m.mock_section_writing, speaking: m.mock_section_speaking })[key]({}, locale);
   // Leaving the page mid-recording releases the microphone.
   $effect(() => () => { listening = false; recognition?.abort(); });
   const recognitionCtor = (): RecognitionCtor | null => {
@@ -100,8 +102,22 @@
     phase = found.length ? 'intro' : 'unavailable';
   });
 
-  function start() {
-    const built = buildMockTest(language, level, entries[level] ?? {}, seededRandom(Date.now()));
+  // The level's reading texts come from the story catalog, which is large, so it loads only here.
+  async function levelTexts(): Promise<Array<MockText<ReadingBlock>>> {
+    try {
+      const { readingCatalog } = await import('#lib/story/readingCatalog.js');
+      return readingCatalog(language, level, false, settings.firstName || 'du').filter((item) => item.level === level).map((item) => ({ id: item.id, title: item.title, blocks: item.blocks, questions: item.questions }));
+    } catch {
+      return [];
+    }
+  }
+
+  async function start() {
+    if (starting) return;
+    starting = true;
+    const texts = await levelTexts();
+    starting = false;
+    const built = buildMockTest(language, level, entries[level] ?? {}, seededRandom(Date.now()), texts);
     test = built;
     sections = mockSections(built, { speaking: speakingSupported });
     sectionIndex = 0;
@@ -204,7 +220,7 @@
     if (phase === 'questions' && item?.kind === 'listening' && item.word) void speak(item.word);
   });
 
-  const prompt = $derived(!item ? '' : item.kind === 'meaning' ? m.placement_meaning({ word: item.word ?? '' }, locale) : item.kind === 'listening' ? m.placement_listening({}, locale) : item.kind === 'article' ? m.placement_article({}, locale) : m.placement_grammar({}, locale));
+  const prompt = $derived(!item ? '' : item.kind === 'comprehension' ? (item.word ?? '') : item.kind === 'meaning' ? m.placement_meaning({ word: item.word ?? '' }, locale) : item.kind === 'listening' ? m.placement_listening({}, locale) : item.kind === 'article' ? m.placement_article({}, locale) : m.placement_grammar({}, locale));
   const percent = (value: number) => `${num(Math.round(value * 100))} %`;
 </script>
 
@@ -228,10 +244,19 @@
         {/each}
       </div>
       <p class="mock-best">{best ? m.mock_best({ percent: percent(best.total) }, locale) : ' '}</p>
-      <button type="button" class="btn-play btn-play-ink mock-cta" onclick={start}>{m.mock_start({ level: level.toUpperCase() }, locale)}</button>
+      <button type="button" class="btn-play btn-play-ink mock-cta" onclick={start} disabled={starting}>{m.mock_start({ level: level.toUpperCase() }, locale)}</button>
     </div>
   {:else if phase === 'questions' && item && section}
     <p class="mock-section">{sectionName(section)} · {m.placement_question({ current: num(itemIndex + 1), total: num(questions.length) }, locale)}</p>
+    {#if section === 'text' && test?.text}
+      <!-- The text stays above the questions for the whole part, in its own scroll box. -->
+      <article class="mock-text-box" lang={language} dir="ltr" aria-label={test.text.title}>
+        <h2>{test.text.title}</h2>
+        {#each test.text.blocks as block, index (index)}
+          {#if block.kind === 'heading'}<h3>{block.text}</h3>{:else if block.kind === 'quote'}<p class="quote">„{block.text}“</p>{:else}<p>{block.text}</p>{/if}
+        {/each}
+      </article>
+    {/if}
     {#key item.id}
       <div class="mock-card" in:fly={{ x: 24, duration: ms(220) }}>
         <p class="mock-prompt">{prompt}</p>
@@ -242,7 +267,7 @@
         {:else if item.kind === 'grammar'}
           <p class="mock-sentence" lang={language} dir="ltr">{item.before}<span class="mock-gap">___</span>{item.after ? ` ${item.after}`.replace(/^ ([.,!?])/u, '$1') : ''}</p>
         {/if}
-        <div class="mock-options" class:long={item.kind === 'meaning' || item.kind === 'listening'} lang={language} dir="ltr">
+        <div class="mock-options" class:long={item.kind === 'meaning' || item.kind === 'listening' || item.kind === 'comprehension'} lang={language} dir="ltr">
           {#each item.options as option (option)}
             <button type="button" class="btn-play btn-play-choice" onclick={() => choose(option)}>{option}</button>
           {/each}
@@ -323,6 +348,11 @@
   .mock-skip { justify-self:center;padding:.3rem .5rem;border:0;background:none;color:#596477;font:inherit;font-size:.7rem;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer; }
   .mock-text { width:100%;min-height:14rem;padding:.8rem .9rem;border:1px solid rgba(23,42,69,.2);border-radius:.9rem;background:#fffdf7;color:#243449;font:inherit;font-size:.92rem;font-weight:500;line-height:1.7;text-align:start;resize:vertical; }
   .mock-text:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
+  .mock-text-box { width:100%;max-height:min(42vh,20rem);overflow-y:auto;padding:.8rem .9rem;border:1px solid rgba(23,42,69,.16);border-radius:.9rem;background:#fffdf7;text-align:start; }
+  .mock-text-box h2 { margin:0 0 .4rem;color:#172a45;font-family:'DM Serif Display',serif;font-size:1.15rem;font-weight:400; }
+  .mock-text-box h3 { margin:.5rem 0 .2rem;color:#a45e38;font-size:.72rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase; }
+  .mock-text-box p { margin:0 0 .45rem;color:#243449;font-size:.84rem;font-weight:500;line-height:1.6; }
+  .mock-text-box p.quote { padding-inline-start:.6rem;border-inline-start:3px solid rgba(230,165,39,.6); }
   .mock-hint { margin:0;color:#596477;font-size:.72rem;font-weight:700;line-height:1.4; }
   .mock-mic { justify-self:center;width:4rem;height:4rem; }
   .mock-mic :global(svg) { width:1.7rem;height:1.7rem; }
@@ -348,5 +378,7 @@
   :global(html.dark) .mock-text { border-color:rgba(255,253,247,.24);background:#152b47;color:rgba(255,253,247,.9); }
   :global(html.dark) .mock-skip { color:rgba(255,253,247,.7); }
   :global(html.dark) .mock-transcript { color:#fffdf7; }
+  :global(html.dark) .mock-text-box { border-color:rgba(255,253,247,.24);background:#152b47; }
+  :global(html.dark) .mock-text-box h2,:global(html.dark) .mock-text-box p { color:rgba(255,253,247,.92); }
   :global(html.dark) .mock-hint { color:rgba(255,253,247,.72); }
 </style>

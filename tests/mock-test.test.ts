@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { appendMockResult, bestMockResult, buildMockTest, mockSections, MOCK_SIZES, parseMockResults, scoreMockTest } from '../src/lib/assessment/mockTest';
+import { appendMockResult, bestMockResult, buildMockTest, comprehensionTexts, mockSections, MOCK_SIZES, parseMockResults, scoreMockTest } from '../src/lib/assessment/mockTest';
 import { seededRandom } from '../src/lib/assessment/placement';
 import a1 from '../src/lib/data/de.a1.json';
 import b1 from '../src/lib/data/de.b1.json';
@@ -62,5 +62,21 @@ describe('mock test', () => {
     const withSpeech = scoreMockTest(test, {}, '', 'de', 1, 'ich heiße anna und ich komme aus spanien ich wohne in berlin und ich lerne deutsch');
     expect(withSpeech.sections.speaking).toBeGreaterThan(0);
     expect(scoreMockTest(test, {}, '', 'de', 1).sections.speaking).toBeUndefined();
+  });
+
+  it('asks comprehension questions on a text when the level has one', () => {
+    const question = (prompt: string) => ({ prompt, options: ['richtig', 'falsch', 'steht nicht im Text'], answer: 'richtig' });
+    const texts = [
+      { id: 'short', title: 'Kurz', blocks: ['…'], questions: [question('Eins?')] },
+      { id: 'long', title: 'Lang', blocks: ['…'], questions: [question('Eins?'), question('Zwei?'), question('Drei?'), question('Vier?')] }
+    ];
+    expect(comprehensionTexts(texts).map((text) => text.id)).toEqual(['long']);
+    const test = buildMockTest('de', 'a1', a1 as Entries, seededRandom(10), texts);
+    expect(test.text?.id).toBe('long');
+    expect(test.items.text).toHaveLength(4);
+    expect(test.items.text[0]).toMatchObject({ kind: 'comprehension', word: 'Eins?', correct: 'richtig' });
+    expect(mockSections(test)).toEqual(['reading', 'text', 'listening', 'language', 'writing']);
+    const right = test.items.text.map((item) => ({ item, chosen: item.correct }));
+    expect(scoreMockTest(test, { text: right }, '', 'de').sections.text).toBe(1);
   });
 });

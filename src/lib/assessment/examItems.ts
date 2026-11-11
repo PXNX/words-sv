@@ -15,7 +15,8 @@ import { buildAdjectivePrompt, isEligibleAdjective } from '#lib/grammar/adjectiv
 import { buildVerbPrompt, verbConjugations } from '#lib/grammar/verbs.js';
 
 export type ExamEntry = { definition?: string; type?: string; genus?: VocabularyGender; article?: string };
-export type ExamKind = 'meaning' | 'article' | 'grammar' | 'listening';
+// 'comprehension': a question on a longer text (the mock test's reading part); `word` holds the question.
+export type ExamKind = 'meaning' | 'article' | 'grammar' | 'listening' | 'comprehension';
 
 export interface ExamItem {
   id: string;

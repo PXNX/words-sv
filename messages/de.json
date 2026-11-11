@@ -934,7 +934,7 @@
   "mock_best": "Dein bestes Ergebnis auf diesem Niveau: {percent}",
   "mock_start": "{level}-Test starten",
   "mock_loading": "Test wird vorbereitet",
-  "mock_section_reading": "Lesen",
+  "mock_section_reading": "Wortschatz",
   "mock_section_listening": "Hören",
   "mock_section_language": "Sprache",
   "mock_section_writing": "Schreiben",
@@ -961,5 +961,6 @@
   "mock_speaking_start": "Aufnahme starten",
   "mock_speaking_stop": "Aufnahme beenden",
   "mock_speaking_empty": "Noch nichts gehört.",
-  "mock_speaking_skip": "Ohne Sprechen abgeben"
+  "mock_speaking_skip": "Ohne Sprechen abgeben",
+  "mock_section_text": "Leseverstehen"
 }
