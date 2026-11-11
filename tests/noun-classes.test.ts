@@ -68,3 +68,22 @@ describe('generated sentences fit their noun', () => {
     for (const sentence of dative) expect(sentence).toContain('Kollegen');
   });
 });
+
+describe('case reasons', () => {
+  it('names the preposition, the dative verb or the case question', async () => {
+    const { caseReason } = await import('../src/lib/grammar/cases');
+    expect(caseReason('Wir sprechen mit ', 'dative')).toEqual({ cue: 'mit', case: 'dative' });
+    expect(caseReason('Wir stehen vor ', 'dative')).toEqual({ cue: 'Wo? vor', case: 'dative' });
+    expect(caseReason('Ich helfe ', 'dative')).toEqual({ cue: 'helfen', case: 'dative' });
+    expect(caseReason('Ich schreibe ', 'dative')).toEqual({ cue: 'Wem?', case: 'dative' });
+    expect(caseReason('Ich sehe ', 'accusative')).toEqual({ cue: 'Wen oder was?', case: 'accusative' });
+    expect(caseReason('Wir sprechen heute über ', 'accusative')).toEqual({ cue: 'über', case: 'accusative' });
+    expect(caseReason('', 'nominative')).toEqual({ cue: 'Wer oder was?', case: 'nominative' });
+  });
+
+  it('comes with every generated case prompt', () => {
+    const prompt = buildNounCasePrompt('Lehrer', 'masculine', () => 0.4, keep);
+    expect(prompt.why?.case).toBeDefined();
+    expect(buildAdjectivePrompt('nett', 'Lehrer', 'masculine', () => 0.4, keep).why).toBeDefined();
+  });
+});

@@ -145,7 +145,7 @@ const templatesByClass: Record<NounClass, Record<GrammarCase, NounTemplate[]>> =
     accusative: [
       (noun) => ({ before: 'Wir sprechen heute über ', after: `${noun}.` }),
       (noun) => ({ before: 'Ich denke oft an ', after: `${noun}.` }),
-      (noun) => ({ before: 'Er erklärt mir ', after: `${noun}.` }),
+      (noun) => ({ before: 'Ich meine ', after: `${noun}.` }),
       (noun) => ({ before: 'Ich schreibe einen Text über ', after: `${noun}.` })
     ],
     dative: [
@@ -162,7 +162,31 @@ function templatesFor(noun: string, grammarCase: GrammarCase): NounTemplate[] {
 
 // `features` names the grammar features a German prompt tests, so a wrong answer can be logged
 // against them (progress/events.ts, featureErrors).
-export type GrammarPrompt = { before: string; after: string; correct: string; choices: string[]; question?: string; highlight?: string | undefined; features?: FeatureKey[] };
+/** Why a gap takes its case: the word or question that asks for it, shown after the answer. */
+export type CaseReason = { cue: string; case: GrammarCase };
+export type GrammarPrompt = { before: string; after: string; correct: string; choices: string[]; question?: string; highlight?: string | undefined; features?: FeatureKey[]; why?: CaseReason };
+
+const CASE_QUESTION: Record<GrammarCase, string> = { nominative: 'Wer oder was?', accusative: 'Wen oder was?', dative: 'Wem?' };
+// Verbs that take the dative and the prepositions used in the drills, by the form the sentences use.
+const DATIVE_VERBS: Record<string, string> = { helfe: 'helfen', gehört: 'gehören', dankt: 'danken', folgen: 'folgen' };
+const PREPOSITIONS = new Set(['mit', 'von', 'nach', 'vor', 'neben', 'über', 'an']);
+// "Wir stehen vor dem Haus" answers "wo?", which is why these two take the dative here.
+const PLACE_PREPOSITIONS = new Set(['vor', 'neben']);
+
+/**
+ * The reason for a gap's case, read from the words in front of it: a preposition ("mit"), a verb
+ * that takes the dative ("helfen"), or else the question the case answers ("Wen oder was?").
+ */
+export function caseReason(before: string, grammarCase: GrammarCase): CaseReason {
+  const words = before.trim().toLocaleLowerCase('de').split(/\s+/u).filter(Boolean);
+  const last = words.at(-1) ?? '';
+  if (PREPOSITIONS.has(last)) return { cue: PLACE_PREPOSITIONS.has(last) ? `Wo? ${last}` : last, case: grammarCase };
+  if (grammarCase === 'dative') {
+    const verb = words.map((word) => DATIVE_VERBS[word]).find(Boolean);
+    if (verb) return { cue: verb, case: grammarCase };
+  }
+  return { cue: CASE_QUESTION[grammarCase], case: grammarCase };
+}
 
 const CASE_FEATURE = { nominative: 'nominativ', accusative: 'akkusativ', dative: 'dativ' } as const satisfies Record<GrammarCase, string>;
 const GENDER_FEATURE = { masculine: 'maskulin', feminine: 'feminin', neuter: 'neutrum' } as const satisfies Record<VocabularyGender, string>;
@@ -193,7 +217,7 @@ export function buildNounCasePrompt(noun: string, gender: VocabularyGender, rand
   const choices = uniqueForms(articleKind, gender);
   const templates = templatesFor(noun, grammarCase);
   const { before, after } = templates[Math.floor(random() * templates.length)]!(declineNoun(noun, gender, grammarCase));
-  return { before, after, correct, choices: shuffle(choices, random), features: [caseFeature(grammarCase), genderFeature(gender)] };
+  return { before, after, correct, choices: shuffle(choices, random), features: [caseFeature(grammarCase), genderFeature(gender)], why: caseReason(before, grammarCase) };
 }
 
 /** Ask for several properties at once instead of filling a sentence gap. */
