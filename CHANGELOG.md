@@ -9,6 +9,9 @@ its one-line summary; the localised highlight shown in the app lives in the mess
 
 ## Unreleased
 
+### New
+- Add Taboo: describe a word without saying it or any word built on the same base, rated against the definition's key words, and reveal the definition when skipping
+
 ### Fixed
 - Serve Web Push from one serverless function so a deployment stays within the plan's function limit
 
