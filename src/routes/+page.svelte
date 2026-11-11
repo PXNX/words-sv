@@ -26,6 +26,7 @@
   import { REPAIR_WORDS, lilithFace, lilithMood, modeDone, type StreakMode, type StreakRepair } from '#lib/streak/clientStreak.js';
   import TodayBadge from '#lib/streak/TodayBadge.svelte';
   import StreakStrip from '#lib/streak/StreakStrip.svelte';
+  import MissedStreakSheet from '#lib/streak/MissedStreakSheet.svelte';
   import { readEvents } from '#lib/progress/eventLog.js';
   import { featureStats } from '#lib/progress/events.js';
   import { labelKeys, type FeatureKey } from '#lib/grammar/taxonomy.js';
@@ -298,6 +299,7 @@
       <h1 class="home-title" aria-label={labels.homeTitle}>{#each [...labels.homeTitle] as letter, index}<span aria-hidden="true" style={`--i:${index}`}>{letter === ' ' ? '\u00a0' : letter}</span>{/each}</h1><span class="home-cast-note">{labels.homeCast}</span>
     </header>
     <!-- One daily card: today's challenge, its reward and the next steps, instead of three stacked blocks -->
+    <MissedStreakSheet repair={repairOffer} />
     <section class="panel-play home-daily" aria-label={labels.dailyChallenge}>
       <StreakStrip />
       {#if repairOffer}
