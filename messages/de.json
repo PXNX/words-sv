@@ -1037,5 +1037,15 @@
   "style_write": "Durch Lesen und Schreiben",
   "style_do": "Durch Ausprobieren und Bauen",
   "home_all_modes": "Alle Übungen",
-  "home_empty_filter": "Für diese Sprache gibt es hier noch nichts."
+  "home_empty_filter": "Für diese Sprache gibt es hier noch nichts.",
+  "learning_picture_prompt": "Welches Wort ist das?",
+  "learning_type_prompt": "Schreib das Wort.",
+  "learning_dictation_prompt": "Schreib, was du hörst.",
+  "learning_build_prompt": "Tippe die Buchstaben in der richtigen Reihenfolge an.",
+  "learning_check": "Prüfen",
+  "learning_hint": "Einen Buchstaben zeigen",
+  "learning_almost": "Fast perfekt: Schau dir die Schreibweise noch einmal an.",
+  "learning_answer_was": "Das Wort heißt",
+  "learning_type_placeholder": "Deine Antwort",
+  "learning_remove_letter": "Letzten Buchstaben zurücknehmen"
 }

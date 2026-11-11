@@ -1037,5 +1037,15 @@
   "style_write": "By reading and writing",
   "style_do": "By trying and building",
   "home_all_modes": "All exercises",
-  "home_empty_filter": "Nothing here for this language yet."
+  "home_empty_filter": "Nothing here for this language yet.",
+  "learning_picture_prompt": "Which word is this?",
+  "learning_type_prompt": "Type the word.",
+  "learning_dictation_prompt": "Type what you hear.",
+  "learning_build_prompt": "Tap the letters in the right order.",
+  "learning_check": "Check",
+  "learning_hint": "Show a letter",
+  "learning_almost": "Almost perfect: look at the spelling once more.",
+  "learning_answer_was": "The word is",
+  "learning_type_placeholder": "Your answer",
+  "learning_remove_letter": "Take back the last letter"
 }
