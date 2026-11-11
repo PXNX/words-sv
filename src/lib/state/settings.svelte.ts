@@ -31,6 +31,7 @@ const ACTIVITY_BY_EVENT: Partial<Record<StreakEvent, ActivityKind>> = {
   definitions_completed: 'circle',
   wordle_completed: 'wordle',
   hangman_completed: 'hangman',
+  taboo_completed: 'taboo',
   alltag_correct: 'alltag'
 };
 
@@ -295,6 +296,7 @@ class SettingsStore {
       (event === 'story_completed' && this.streak.storyCompleted) ||
       (event === 'listen_completed' && this.streak.listenCompleted) ||
       (event === 'hangman_completed' && this.streak.hangmanCompleted) ||
+      (event === 'taboo_completed' && this.streak.tabooCompleted) ||
       (event === 'sentence_completed' && this.streak.sentenceCompleted)
     )) return;
     // Counters drop one timestamp per answer, so the weekly recap can measure real time spent.

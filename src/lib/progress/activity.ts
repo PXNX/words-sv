@@ -16,6 +16,7 @@ export type ActivityKind =
 	| 'circle'
 	| 'wordle'
 	| 'hangman'
+	| 'taboo'
 	| 'alltag'
 	| 'tricky_cleared';
 
@@ -34,7 +35,7 @@ export const ACTIVITY_KEY = 'wordcircle-activity-v1';
 const MAX_EVENTS = 4000;
 const SESSION_GAP_MS = 5 * 60 * 1000;
 
-const KINDS: ActivityKind[] = ['vocab', 'grammar', 'reading', 'story', 'listen', 'pronunciation', 'circle', 'wordle', 'hangman', 'alltag', 'tricky_cleared'];
+const KINDS: ActivityKind[] = ['vocab', 'grammar', 'reading', 'story', 'listen', 'pronunciation', 'circle', 'wordle', 'hangman', 'taboo', 'alltag', 'tricky_cleared'];
 
 export function normalizeActivityEvent(value: unknown): ActivityEvent | null {
 	if (!value || typeof value !== 'object') return null;

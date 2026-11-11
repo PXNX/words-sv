@@ -48,6 +48,6 @@ describe('buildAchievements', () => {
 	it('tracks how many different modes have been tried', () => {
 		const activity = [...events(1, 'vocab'), ...events(1, 'story'), ...events(1, 'wordle'), ...events(1, 'tricky_cleared')];
 		const achievement = buildAchievements({ ...empty, activity }).find((entry) => entry.id === 'all_rounder');
-		expect(achievement).toMatchObject({ value: 3, target: 10, done: false });
+		expect(achievement).toMatchObject({ value: 3, target: 11, done: false });
 	});
 });

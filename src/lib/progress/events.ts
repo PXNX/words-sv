@@ -11,7 +11,7 @@ import * as v from 'valibot';
 
 export const EVENT_MODES = [
   'vocab', 'reading', 'listen', 'speak', 'write', 'grammar', 'forms', 'story', 'mock', 'duel', 'dictionary',
-  'circle', 'wordle', 'hangman', 'alltag', 'conversation', 'placement', 'checkpoint'
+  'circle', 'wordle', 'hangman', 'taboo', 'alltag', 'conversation', 'placement', 'checkpoint'
 ] as const;
 export type EventMode = (typeof EVENT_MODES)[number];
 
@@ -147,7 +147,7 @@ export function skillForMode(mode: EventMode): Skill {
     case 'speak': case 'conversation': return 'speaking';
     case 'write': return 'writing';
     case 'grammar': case 'forms': return 'grammar';
-    case 'vocab': case 'circle': case 'wordle': case 'hangman': case 'alltag': case 'dictionary': case 'duel': case 'mock': case 'placement': case 'checkpoint': return 'vocab';
+    case 'vocab': case 'circle': case 'wordle': case 'hangman': case 'taboo': case 'alltag': case 'dictionary': case 'duel': case 'mock': case 'placement': case 'checkpoint': return 'vocab';
   }
 }
 

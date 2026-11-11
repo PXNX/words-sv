@@ -39,7 +39,7 @@ export type AchievementInput = {
 };
 
 // Every mode that leaves an event in the activity log; clearing tricky words is a bonus, not a mode.
-const MODES: ActivityKind[] = ['vocab', 'grammar', 'reading', 'story', 'listen', 'pronunciation', 'circle', 'wordle', 'hangman', 'alltag'];
+const MODES: ActivityKind[] = ['vocab', 'grammar', 'reading', 'story', 'listen', 'pronunciation', 'circle', 'wordle', 'hangman', 'taboo', 'alltag'];
 
 function distinctModes(activity: ActivityEvent[]): number {
 	const seen = new Set<ActivityKind>();

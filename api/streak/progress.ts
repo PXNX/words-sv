@@ -16,13 +16,14 @@ const events = new Set([
 	'listen_completed',
 	'pronunciation_practised',
 	'hangman_completed',
+	'taboo_completed',
 	'alltag_correct',
 	'sentence_completed',
 	'reward_collected'
 ]);
 const validDeviceId = (value: unknown): value is string => typeof value === 'string' && /^[a-zA-Z0-9_-]{16,64}$/.test(value);
 
-const COLUMNS = ['device_id', 'timezone', 'locale', 'day_key', 'vocab_correct', 'circle_completed', 'definitions_completed', 'wordle_completed', 'reading_completed', 'story_completed', 'grammar_correct', 'listen_completed', 'pronunciation_attempts', 'hangman_completed', 'alltag_correct', 'sentence_completed', 'pro_shield_week', 'native_digits', 'current_qualified', 'last_qualified_day', 'streak_count', 'best_streak', 'vocabulary_goal', 'freezes', 'qualified_days', 'reward_collected', 'embers'];
+const COLUMNS = ['device_id', 'timezone', 'locale', 'day_key', 'vocab_correct', 'circle_completed', 'definitions_completed', 'wordle_completed', 'reading_completed', 'story_completed', 'grammar_correct', 'listen_completed', 'pronunciation_attempts', 'hangman_completed', 'taboo_completed', 'alltag_correct', 'sentence_completed', 'pro_shield_week', 'native_digits', 'current_qualified', 'last_qualified_day', 'streak_count', 'best_streak', 'vocabulary_goal', 'freezes', 'qualified_days', 'reward_collected', 'embers'];
 const UPSERT = `INSERT INTO wordcircle_streak_devices (${COLUMNS.join(', ')})
 	VALUES (${COLUMNS.map(() => '?').join(', ')})
 	ON DUPLICATE KEY UPDATE ${COLUMNS.slice(1).map((column) => `${column} = VALUES(${column})`).join(', ')}`;
@@ -31,6 +32,7 @@ const UPSERT = `INSERT INTO wordcircle_streak_devices (${COLUMNS.join(', ')})
 const MIGRATIONS = [
 	'ALTER TABLE wordcircle_streak_devices ADD COLUMN reward_collected TINYINT(1) NOT NULL DEFAULT 0, ADD COLUMN embers TINYINT UNSIGNED NULL',
 	'ALTER TABLE wordcircle_streak_devices ADD COLUMN sentence_completed TINYINT(1) NOT NULL DEFAULT 0',
+	'ALTER TABLE wordcircle_streak_devices ADD COLUMN taboo_completed TINYINT(1) NOT NULL DEFAULT 0',
 	'ALTER TABLE wordcircle_streak_devices ADD COLUMN pro_shield_week CHAR(8) NULL',
 	'ALTER TABLE wordcircle_streak_devices ADD COLUMN native_digits TINYINT(1) NOT NULL DEFAULT 0'
 ];
@@ -91,6 +93,7 @@ export default async function streakProgress(req: ApiRequest, res: ApiResponse) 
 			merged.storyCompleted = merged.storyCompleted || Boolean(snapshot.storyCompleted);
 			merged.listenCompleted = merged.listenCompleted || Boolean(snapshot.listenCompleted);
 			merged.hangmanCompleted = merged.hangmanCompleted || Boolean(snapshot.hangmanCompleted);
+			merged.tabooCompleted = merged.tabooCompleted || Boolean(snapshot.tabooCompleted);
 			merged.sentenceCompleted = merged.sentenceCompleted || Boolean(snapshot.sentenceCompleted);
 			// The later week wins ("2026-W46" > "2026-W45"), so a shield used offline stays used.
 			if (typeof snapshot.proShieldWeek === 'string' && /^\d{4}-W\d{2}$/u.test(snapshot.proShieldWeek) && snapshot.proShieldWeek > (merged.proShieldWeek ?? '')) merged.proShieldWeek = snapshot.proShieldWeek;
@@ -124,6 +127,7 @@ export default async function streakProgress(req: ApiRequest, res: ApiResponse) 
 			listen_completed: next.listenCompleted ? 1 : 0,
 			pronunciation_attempts: next.pronunciationAttempts,
 			hangman_completed: next.hangmanCompleted ? 1 : 0,
+			taboo_completed: next.tabooCompleted ? 1 : 0,
 			alltag_correct: next.alltagCorrect,
 			sentence_completed: next.sentenceCompleted ? 1 : 0,
 			pro_shield_week: next.proShieldWeek,

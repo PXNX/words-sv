@@ -13,9 +13,9 @@ describe('streak basic qualification', () => {
 		expect(state.lastQualifiedDay).toBe('2026-08-26');
 	});
 
-	it('Circle, definitions, Wordle and Hangman completion qualify a day without eight vocabulary answers', () => {
+	it('Circle, definitions, Wordle, Hangman and Taboo completion qualify a day without eight vocabulary answers', () => {
 		const base = { day_key: '2026-08-26', streak_count: 4, last_qualified_day: '2026-08-25' };
-		for (const event of ['circle_completed', 'definitions_completed', 'wordle_completed', 'hangman_completed']) {
+		for (const event of ['circle_completed', 'definitions_completed', 'wordle_completed', 'hangman_completed', 'taboo_completed']) {
 			const state = applyStreakEvent(base, 'UTC', event, new Date('2026-08-26T12:00:00Z'));
 			expect(state.qualified).toBe(true);
 			expect(state.streakCount).toBe(5);
