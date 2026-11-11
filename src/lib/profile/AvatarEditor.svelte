@@ -4,7 +4,7 @@
   Used in the intro and on the profile page; `onchange` gets every new look.
   Colours sold for Telegram Stars carry a star instead of a lock; tapping one tries it on and the
   information bar shows its price. With `shop` (the profile page) that bar also has the buy button,
-  and an extra "Sets" category lists the colour sets.
+  and an extra "Sets" category lists the colour sets. Pro subscribers get a shimmering golden stage.
 -->
 <script lang="ts">
   import { num } from '#lib/format/num.svelte.js';
@@ -23,7 +23,7 @@
   import { network } from '#lib/offline/network.svelte.js';
   import { cloudSync } from '#lib/sync/cloudSync.svelte.js';
   import { PRODUCTS, SHOP_ITEMS, product as findProduct, withProduct, type Product } from '#lib/store/catalog.js';
-  import { buy, storeState } from '#lib/store/storeClient.svelte.js';
+  import { buy, proActive, storeState } from '#lib/store/storeClient.svelte.js';
 
   let { value, onchange, shop = false }: { value: Avatar; onchange: (next: Avatar) => void; shop?: boolean } = $props();
 
@@ -100,6 +100,8 @@
   let notice = $state('');
   const stage = $derived(withProduct(value, trying));
   const linked = $derived(cloudSync.linked === true || storeState.linked === true);
+  const pro = $derived(proActive());
+  const SPARKLES = [[8, 18], [22, 62], [78, 14], [88, 55], [64, 76], [36, 10]] as const;
   const sets = PRODUCTS.filter((entry) => entry.kind === 'set');
   const setNames = $derived<Record<string, string>>({ set_neon: m.store_set_neon({}, locale), set_dusk: m.store_set_dusk({}, locale), set_rose: m.store_set_rose({}, locale) });
   const productName = (entry: Product) => entry.kind === 'set' ? setNames[entry.id] ?? entry.id : partLabels[SHOP_ITEMS.find((item) => item.id === entry.id)!.part];
@@ -179,7 +181,8 @@
 </script>
 
 <div class="avatar-editor">
-  <div class="avatar-stage">
+  <div class="avatar-stage" class:pro>
+    {#if pro}<span class="avatar-sparkles" aria-hidden="true">{#each SPARKLES as spot, index (index)}<i style:--i={index} style:left={`${spot[0]}%`} style:top={`${spot[1]}%`}>✦</i>{/each}</span>{/if}
     {#key bump}<span class="avatar-preview" aria-hidden="true"><StoryCharacter id="kumar" avatar={stage} {mood} /></span>{/key}
     <button type="button" class="btn-play btn-play-round avatar-roll" class:rolling onanimationend={() => (rolling = false)} onclick={roll} aria-label={randomLabel} title={randomLabel}><IconCasino aria-hidden="true" /></button>
   </div>
@@ -284,4 +287,12 @@
   .avatar-sale-text strong { font-size:.74rem;font-weight:900; }
   .avatar-sale-text small { font-size:.6rem;font-weight:700;opacity:.75; }
   .avatar-sale .btn-play { flex:none; }
+  /* Pro: the stage shimmers gold with twinkling sparkles, like Telegram Premium. */
+  .avatar-stage.pro { overflow:hidden;background:linear-gradient(115deg,#f7d774 0%,#fff3c4 22%,#e6a527 45%,#fff6d6 62%,#f0c04a 80%,#fbe6a0 100%);background-size:260% 100%;animation:avatar-gold 5s ease-in-out infinite alternate; }
+  :global(html.dark) .avatar-stage.pro { background:linear-gradient(115deg,#7a5410 0%,#d8a83a 22%,#5c3f0c 45%,#e9c260 62%,#8a6116 80%,#c99a32 100%);background-size:260% 100%; }
+  .avatar-sparkles { position:absolute;inset:0;pointer-events:none; }
+  .avatar-sparkles i { position:absolute;color:#fffbe8;font-style:normal;font-size:calc(.6rem + var(--i) * .08rem);text-shadow:0 0 6px #ffd54f;animation:avatar-twinkle calc(2.2s + var(--i) * .35s) ease-in-out calc(var(--i) * -.6s) infinite; }
+  @keyframes avatar-gold { from { background-position:0% 50%; } to { background-position:100% 50%; } }
+  @keyframes avatar-twinkle { 0%,100% { opacity:0;scale:.3; } 45%,55% { opacity:1;scale:1;rotate:45deg; } }
+  @media (prefers-reduced-motion:reduce) { .avatar-stage.pro,.avatar-sparkles i { animation:none; } .avatar-sparkles i { opacity:.8; } }
 </style>
