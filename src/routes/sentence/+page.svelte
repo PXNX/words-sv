@@ -105,15 +105,15 @@
 <style>
   .writing-view { display: flex; flex-direction: column; gap: 0.8rem; width: min(100%, 44rem); margin: 0 auto; padding: clamp(0.8rem, 3vw, 1.4rem); }
   .writing-header { display: grid; gap: 0.2rem; text-align: center; }
-  .writing-kicker { margin: 0; color: #a45e38; font-family: 'DM Sans', sans-serif; font-size: 0.58rem; font-weight: 900; letter-spacing: 0.16em; text-transform: uppercase; }
+  .writing-kicker { margin: 0; color: #a45e38; font-family: 'DM Sans', sans-serif; font-size: .8125rem; font-weight: 900; letter-spacing: 0.16em; text-transform: uppercase; }
   .writing-header h1 { margin: 0; color: #172a45; font-family: 'DM Serif Display', serif; font-size: clamp(1.6rem, 7vw, 2.3rem); font-weight: 400; letter-spacing: -0.03em; line-height: 1.02; }
-  .writing-intro { max-width: 34rem; margin: 0 auto; color: #596477; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 700; line-height: 1.45; }
+  .writing-intro { max-width: 34rem; margin: 0 auto; color: #596477; font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 700; line-height: 1.45; }
   .writing-prompt { display: grid; gap: 0.25rem; padding: 0.8rem 0.9rem; border: 1px solid rgba(23, 42, 69, 0.16); border-radius: 0.9rem; background: #fbf7ee; }
-  .writing-prompt-topic { margin: 0; color: #172a45; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 800; line-height: 1.4; }
-  .writing-prompt-hint { margin: 0; color: #596477; font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 600; line-height: 1.4; }
-  .writing-area { width: 100%; min-height: 7rem; padding: 0.8rem 0.9rem; border: 1px solid rgba(23, 42, 69, 0.2); border-radius: 0.9rem; background: #fffdf7; color: #243449; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; line-height: 1.7; resize: vertical; }
+  .writing-prompt-topic { margin: 0; color: #172a45; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 800; line-height: 1.4; }
+  .writing-prompt-hint { margin: 0; color: #596477; font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 600; line-height: 1.4; }
+  .writing-area { width: 100%; min-height: 7rem; padding: 0.8rem 0.9rem; border: 1px solid rgba(23, 42, 69, 0.2); border-radius: 0.9rem; background: #fffdf7; color: #243449; font-family: 'DM Sans', sans-serif; font-size: 1rem; line-height: 1.7; resize: vertical; }
   .writing-area:focus-visible { outline: 2px solid #e6a527; outline-offset: 2px; }
-  .writing-meta { display: flex; justify-content: flex-end; color: #7b8494; font-family: 'DM Sans', sans-serif; font-size: 0.64rem; font-weight: 700; }
+  .writing-meta { display: flex; justify-content: flex-end; color: #7b8494; font-family: 'DM Sans', sans-serif; font-size: .84rem; font-weight: 700; }
   .writing-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; }
   :global(html.dark) .writing-header h1 { color: #fffdf7; }
   :global(html.dark) .writing-intro { color: rgba(255, 253, 247, 0.68); }

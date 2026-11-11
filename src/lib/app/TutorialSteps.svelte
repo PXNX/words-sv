@@ -78,14 +78,14 @@ const step = $derived(steps[index]!);
 <style>
   .tutorial-stage { display:grid;gap:.75rem; }
   .tutorial-demo { display:grid;place-items:center;min-height:7.5rem;padding:.8rem;border:1.5px dashed rgba(23,42,69,.22);border-radius:1rem;background:rgba(230,165,39,.06);animation:tutorial-in .35s cubic-bezier(.23,1,.32,1) both; }
-  .tutorial-text { display:grid;grid-template-columns:1.55rem 1fr;gap:.62rem;align-items:start;min-height:2.6rem;margin:0;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:700;line-height:1.4;animation:tutorial-in .35s .06s cubic-bezier(.23,1,.32,1) both; }
-  .tutorial-text b { display:grid;place-items:center;width:1.45rem;height:1.45rem;border:2px solid #172a45;border-radius:48% 52% 46% 54% / 54% 46% 52% 48%;background:#f7e2b0;box-shadow:2px 2px 0 #172a45;color:#172a45;font-family:'DM Serif Display',serif;font-size:.9rem;font-weight:400; }
+  .tutorial-text { display:grid;grid-template-columns:1.55rem 1fr;gap:.62rem;align-items:start;min-height:2.6rem;margin:0;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:700;line-height:1.4;animation:tutorial-in .35s .06s cubic-bezier(.23,1,.32,1) both; }
+  .tutorial-text b { display:grid;place-items:center;width:1.45rem;height:1.45rem;border:2px solid #172a45;border-radius:48% 52% 46% 54% / 54% 46% 52% 48%;background:#f7e2b0;box-shadow:2px 2px 0 #172a45;color:#172a45;font-family:'DM Serif Display',serif;font-size:1rem;font-weight:400; }
   .tutorial-dots { display:flex;justify-content:center;gap:.4rem; }
   .tutorial-dot { width:.5rem;height:.5rem;padding:0;border:0;border-radius:999px;background:rgba(23,42,69,.2);cursor:pointer;transition:width .25s ease,background .25s ease; }
   .tutorial-dot.active { width:1.3rem;background:#e6a527; }
   .tutorial-nav { display:flex;align-items:center;justify-content:space-between;gap:.6rem; }
   .tutorial-go { flex:1;max-width:12rem;margin-inline-start:auto; }
-  .tutorial-skip { padding:.4rem .2rem;border:0;background:none;color:#596477;font:inherit;font-size:.68rem;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer; }
+  .tutorial-skip { padding:.4rem .2rem;border:0;background:none;color:#596477;font:inherit;font-size:.875rem;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer; }
   @keyframes tutorial-in { from { opacity:0;translate:0 .4rem; } }
   @media (prefers-reduced-motion:reduce) { .tutorial-demo,.tutorial-text { animation:none; } .tutorial-dot { transition:none; } }
   :global(html.dark) .tutorial-demo { border-color:rgba(255,253,247,.22);background:rgba(230,165,39,.08); }

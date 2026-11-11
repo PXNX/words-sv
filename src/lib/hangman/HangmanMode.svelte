@@ -155,7 +155,7 @@
   <h1 class="sr-only">{m.mode_hangman({}, { locale })}</h1>
 
   {#if candidates.length === 0}
-    <div class="note-play p-[1.25rem] text-accent text-[.75rem] font-extrabold text-center">{m.hangman_empty({}, { locale })}</div>
+    <div class="note-play p-[1.25rem] text-accent text-[.9rem] font-extrabold text-center">{m.hangman_empty({}, { locale })}</div>
   {:else}
     <div class="panel-play w-[min(100%,26rem)] justify-self-center grid content-center justify-items-center gap-[.9rem] px-[clamp(1rem,5vw,1.6rem)] py-[clamp(1rem,4vw,1.4rem)]">
       <div class="flex items-end justify-center gap-[.7rem]">
@@ -191,14 +191,14 @@
         {/each}
       </div>
 
-      <p class="min-h-[1rem] m-0 text-[.68rem] font-extrabold text-center" class:text-success={!finished && notice?.tone === 'hit'} class:text-error={!finished && notice?.tone === 'miss'} class:text-base-content={!finished && notice?.tone === 'info'} aria-live="polite">{finished ? '' : notice?.text ?? ''}</p>
+      <p class="min-h-[1rem] m-0 text-[.875rem] font-extrabold text-center" class:text-success={!finished && notice?.tone === 'hit'} class:text-error={!finished && notice?.tone === 'miss'} class:text-base-content={!finished && notice?.tone === 'info'} aria-live="polite">{finished ? '' : notice?.text ?? ''}</p>
 
       {#if finished}
         <div class="hm-reveal grid justify-items-center gap-[.4rem] text-center" role="status">
-          <p class={won ? 'm-0 text-success text-[.72rem] font-extrabold' : 'm-0 text-error text-[.72rem] font-extrabold'}>{resultText}</p>
+          <p class={won ? 'm-0 text-success text-[.9rem] font-extrabold' : 'm-0 text-error text-[.9rem] font-extrabold'}>{resultText}</p>
           <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[1.35rem] leading-tight">{revealSpelling}</p>
-          {#if revealDefinition}<p class="m-0 max-w-[22rem] text-base-content/70 text-[.68rem] font-bold leading-[1.4]">{revealDefinition}</p>{/if}
-          <a class="text-accent text-[.62rem] font-extrabold underline underline-offset-2" href={revealHref} target="_blank" rel="noreferrer">Wiktionary</a>
+          {#if revealDefinition}<p class="m-0 max-w-[22rem] text-base-content/70 text-[.875rem] font-bold leading-[1.4]">{revealDefinition}</p>{/if}
+          <a class="text-accent text-[.84rem] font-extrabold underline underline-offset-2" href={revealHref} target="_blank" rel="noreferrer">Wiktionary</a>
           <button class="btn-play btn-play-go mt-[.2rem]" onclick={start}>{m.hangman_new_word({}, { locale })}</button>
         </div>
       {/if}

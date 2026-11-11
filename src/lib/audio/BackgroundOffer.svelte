@@ -38,12 +38,12 @@
 </BottomSheet>
 
 <style>
-  .background-offer { display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .6rem;border:0;border-radius:999px;background:rgba(23,42,69,.08);color:inherit;font:inherit;font-size:.62rem;font-weight:900;cursor:pointer;transition:background-color .2s; }
+  .background-offer { display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .6rem;border:0;border-radius:999px;background:rgba(23,42,69,.08);color:inherit;font:inherit;font-size:.84rem;font-weight:900;cursor:pointer;transition:background-color .2s; }
   .background-offer:hover { background:rgba(23,42,69,.14); }
   :global(html.dark) .background-offer { background:rgba(255,253,247,.12); }
   .background-offer :global(svg) { width:.9rem;height:.9rem; }
   .background-offer-body { display:flex;align-items:center;gap:.8rem; }
-  .background-offer-body p { margin:0 0 .25rem;font-size:.7rem;font-weight:700;line-height:1.45; }
+  .background-offer-body p { margin:0 0 .25rem;font-size:.9rem;font-weight:700;line-height:1.45; }
   .background-offer-lilith { display:block;flex:none;width:3.4rem;height:4.2rem; }
   .background-offer-actions { display:flex;flex-wrap:wrap;gap:.5rem; }
 </style>

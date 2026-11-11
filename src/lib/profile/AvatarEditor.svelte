@@ -242,7 +242,7 @@
   .avatar-roll.rolling :global(svg) { animation:avatar-roll .5s cubic-bezier(.34,1.56,.64,1); }
   .avatar-parts { display:flex;gap:.35rem;overflow-x:auto;padding:.1rem .1rem .3rem;scrollbar-width:none; }
   .avatar-parts::-webkit-scrollbar { display:none; }
-  .avatar-part { flex:none;min-height:1.9rem;padding:0 .7rem;border:2px solid #172a45;border-radius:999px;background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:900;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:transform .15s ease,background .15s ease; }
+  .avatar-part { flex:none;min-height:1.9rem;padding:0 .7rem;border:2px solid #172a45;border-radius:999px;background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:900;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:transform .15s ease,background .15s ease; }
   .avatar-part.active { background:#172a45;color:#fffdf7; }
   .avatar-part:active { transform:scale(.94); }
   .avatar-choices { display:grid;grid-template-columns:repeat(auto-fill,minmax(3.6rem,1fr));gap:.45rem; }
@@ -257,7 +257,7 @@
   .avatar-swatch.locked { position:relative;opacity:.55;display:grid;place-items:center; }
   .avatar-choices :global(.avatar-lock) { position:absolute;inset-inline-end:.2rem;bottom:.2rem;width:.95rem;height:.95rem;color:#172a45; }
   .avatar-swatch.locked :global(.avatar-lock) { position:static;color:#fffdf7;filter:drop-shadow(0 0 1px #172a45); }
-  .avatar-locked-hint { display:flex;align-items:flex-start;gap:.35rem;margin:0;padding:.5rem .65rem;border-radius:12px;background:rgba(230,165,39,.18);font-size:.72rem;font-weight:800;line-height:1.35; }
+  .avatar-locked-hint { display:flex;align-items:flex-start;gap:.35rem;margin:0;padding:.5rem .65rem;border-radius:12px;background:rgba(230,165,39,.18);font-size:.9rem;font-weight:800;line-height:1.35; }
   .avatar-locked-hint :global(svg) { flex:none;width:.95rem;height:.95rem;margin-top:.05rem; }
   :global(html.dark) .avatar-choices :global(.avatar-lock) { color:#fffdf7; }
   .avatar-tile:hover,.avatar-swatch:hover { transform:translateY(-2px) rotate(-2deg); }
@@ -279,13 +279,13 @@
   .avatar-set { aspect-ratio:4 / 5;display:grid;align-items:end; }
   .avatar-set :global(.story-character) { position:absolute;inset:0 0 1.1rem; width:100%;height:calc(100% - 1.1rem); }
   .avatar-tile.avatar-set.locked :global(.story-character) { filter:none;opacity:1; }
-  .avatar-set-name { position:relative;padding:.15rem .3rem;font-size:.58rem;font-weight:900;text-align:center;color:#172a45; }
+  .avatar-set-name { position:relative;padding:.15rem .3rem;font-size:.8125rem;font-weight:900;text-align:center;color:#172a45; }
   :global(html.dark) .avatar-set-name { color:#fffdf7; }
   .avatar-sale { align-items:center;gap:.5rem; }
   .avatar-sale-star { flex:none;width:2.2rem;height:2rem; }
   .avatar-sale-text { display:grid;gap:.1rem;flex:1;min-width:0; }
-  .avatar-sale-text strong { font-size:.74rem;font-weight:900; }
-  .avatar-sale-text small { font-size:.6rem;font-weight:700;opacity:.75; }
+  .avatar-sale-text strong { font-size:.9rem;font-weight:900; }
+  .avatar-sale-text small { font-size:.8125rem;font-weight:700;opacity:.75; }
   .avatar-sale .btn-play { flex:none; }
   /* Pro: the stage shimmers gold with twinkling sparkles, like Telegram Premium. */
   .avatar-stage.pro { overflow:hidden;background:linear-gradient(115deg,#f7d774 0%,#fff3c4 22%,#e6a527 45%,#fff6d6 62%,#f0c04a 80%,#fbe6a0 100%);background-size:260% 100%;animation:avatar-gold 5s ease-in-out infinite alternate; }

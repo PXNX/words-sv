@@ -53,7 +53,7 @@
 
 <style>
   .grader-gate { display:grid;gap:.5rem;padding:.7rem .85rem;border:1px dashed rgba(23,42,69,.25);border-radius:.8rem;color:#596477; }
-  .grader-gate p { margin:0;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:700;line-height:1.45; }
+  .grader-gate p { margin:0;font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:700;line-height:1.45; }
   .grader-gate button { justify-self:start; }
   .grader-gate button :global(svg) { width:1rem;height:1rem; }
   .grader-warn { color:#a45e38; }

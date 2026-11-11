@@ -253,19 +253,19 @@
   .exam-listen :global(svg) { width:1.5rem;height:1.5rem; }
   .placement { flex:1;min-height:0;overflow-y:auto;display:grid;align-content:start;justify-items:center;gap:.9rem;width:min(100%,28rem);margin-inline:auto;padding:clamp(2.9rem,10vw,3.6rem) clamp(1rem,5vw,2rem) 1.5rem;text-align:center; }
   header { display:grid;gap:.45rem;width:100%; }
-  .placement-kicker { margin:0;color:#a45e38;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
+  .placement-kicker { margin:0;color:#a45e38;font-size:.84rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
   .placement-bar { height:.4rem;border-radius:999px;background:rgba(23,42,69,.12);overflow:hidden; }
   .placement-bar i { display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#e6a527,#34824d);transition:width .35s cubic-bezier(.23,1,.32,1); }
   .placement-lilith { display:block;width:5rem;height:6rem; }
   .placement-panel { display:grid;gap:.75rem;width:100%; }
   .placement h1 { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(1.7rem,8vw,2.3rem);font-weight:400;line-height:1; }
-  .placement-panel p { margin:0;color:#596477;font-size:.82rem;font-weight:700;line-height:1.45; }
+  .placement-panel p { margin:0;color:#596477;font-size:.95rem;font-weight:700;line-height:1.45; }
   .placement-cta { width:100%;min-height:2.8rem;justify-content:center; }
-  .placement-level { margin:0;padding:.15rem .6rem;border-radius:999px;background:rgba(230,165,39,.18);color:#a45e38;font-size:.66rem;font-weight:900;letter-spacing:.08em; }
+  .placement-level { margin:0;padding:.15rem .6rem;border-radius:999px;background:rgba(230,165,39,.18);color:#a45e38;font-size:.875rem;font-weight:900;letter-spacing:.08em; }
   .placement-word { margin:.4rem 0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(2.2rem,11vw,3.2rem);line-height:1.05;word-break:break-word; }
   .placement-answers { display:grid;grid-template-columns:1fr 1fr;gap:.6rem;width:100%; }
   .placement-answers button { min-height:3rem;justify-content:center; }
-  .placement-note { margin:0;color:#596477;font-size:.64rem;font-weight:700;opacity:.8; }
+  .placement-note { margin:0;color:#596477;font-size:.84rem;font-weight:700;opacity:.8; }
   .placement-badge { justify-self:center;margin:0;padding:.4rem 1rem;border-radius:1rem;background:#34824d;color:#fffdf7 !important;font-size:1.6rem !important;font-weight:900 !important; }
   .placement-applied { color:#34824d !important;font-weight:900 !important; }
   .exam-card { display:grid;gap:.7rem;width:100%; }
@@ -274,15 +274,15 @@
   .exam-gap { display:inline-block;min-width:2.6rem;padding:0 .3rem;border-bottom:2px solid #a45e38;color:#a45e38; }
   .exam-options { display:grid;grid-template-columns:1fr 1fr;gap:.5rem; }
   .exam-options.long { grid-template-columns:1fr; }
-  .exam-options button { min-height:2.9rem;justify-content:center;text-align:center;text-transform:none;font-size:.78rem;line-height:1.35;white-space:normal; }
+  .exam-options button { min-height:2.9rem;justify-content:center;text-align:center;text-transform:none;font-size:.95rem;line-height:1.35;white-space:normal; }
   .exam-options.long button { justify-content:flex-start;text-align:start;padding-block:.55rem; }
   .exam-options button:disabled { opacity:1; }
   .exam-options button.right { border-color:#34824d;background:#34824d;color:#fffdf7; }
   .exam-options button.wrong { border-color:#c0392b;background:#fdecea;color:#b03224;box-shadow:none; }
   .exam-options button.dim { opacity:.55; }
-  .exam-skip { justify-self:center;padding:.3rem .5rem;border:0;background:none;color:#596477;font:inherit;font-size:.7rem;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer; }
+  .exam-skip { justify-self:center;padding:.3rem .5rem;border:0;background:none;color:#596477;font:inherit;font-size:.9rem;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer; }
   .placement-scores { display:grid;gap:.35rem;margin:0;padding:0;list-style:none; }
-  .placement-scores li { display:grid;grid-template-columns:2rem 1fr 3rem;align-items:center;gap:.5rem;font-size:.7rem;font-weight:900; }
+  .placement-scores li { display:grid;grid-template-columns:2rem 1fr 3rem;align-items:center;gap:.5rem;font-size:.9rem;font-weight:900; }
   .placement-score-bar { height:.45rem;border-radius:999px;background:rgba(23,42,69,.12);overflow:hidden; }
   .placement-score-bar i { display:block;height:100%;border-radius:inherit;background:#c0392b; }
   .placement-scores li.passed .placement-score-bar i { background:#34824d; }

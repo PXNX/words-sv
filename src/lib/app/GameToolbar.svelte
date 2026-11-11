@@ -102,7 +102,7 @@
   .game-sheet { position:relative;display:grid;gap:.6rem;width:min(100%,32rem);max-height:calc(100dvh - 3rem);overflow-y:auto;padding:.55rem 1rem calc(1.1rem + env(safe-area-inset-bottom));border:1px solid rgba(23,42,69,.2);border-bottom:0;border-radius:1.2rem 1.2rem 0 0;background:#fffdf7;color:#172a45;box-shadow:0 -12px 34px rgba(23,42,69,.22); }
   .game-sheet-grip { justify-self:center;width:2.4rem;height:.25rem;border-radius:999px;background:rgba(23,42,69,.2); }
   .game-sheet header { display:flex;align-items:center;justify-content:space-between;gap:.6rem; }
-  .game-sheet h2 { margin:0;color:#a45e38;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
+  .game-sheet h2 { margin:0;color:#a45e38;font-size:.84rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
   .game-sheet-close { display:grid;place-items:center;width:2rem;height:2rem;padding:0;border:0;border-radius:50%;background:transparent;color:inherit;cursor:pointer; }
   .game-sheet-close :global(svg) { width:1.1rem;height:1.1rem; }
   .game-sheet-body { display:grid;gap:.8rem; }

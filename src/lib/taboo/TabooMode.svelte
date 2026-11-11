@@ -105,7 +105,7 @@
   <h1 class="sr-only">{m.mode_taboo({}, locale)}</h1>
 
   {#if candidates.length === 0}
-    <div class="note-play p-[1.25rem] text-accent text-[.75rem] font-extrabold text-center justify-self-center">{m.taboo_empty({}, locale)}</div>
+    <div class="note-play p-[1.25rem] text-accent text-[.9rem] font-extrabold text-center justify-self-center">{m.taboo_empty({}, locale)}</div>
   {:else}
     <div class="panel-play w-[min(100%,28rem)] justify-self-center grid gap-[clamp(.7rem,3vw,1rem)] px-[clamp(1rem,5vw,1.6rem)] py-[clamp(1rem,4vw,1.4rem)]">
       <p class="taboo-kicker">{m.taboo_kicker({}, locale)}</p>
@@ -175,34 +175,34 @@
 </section>
 
 <style>
-  .taboo-kicker { margin:0;color:#a45e38;font-size:.58rem;font-weight:900;letter-spacing:.14em;text-align:center;text-transform:uppercase; }
+  .taboo-kicker { margin:0;color:#a45e38;font-size:.8125rem;font-weight:900;letter-spacing:.14em;text-align:center;text-transform:uppercase; }
   .taboo-head { display:grid;justify-items:center;gap:.55rem; }
   .taboo-word { margin:0;color:#172a45;font-family:'DM Serif Display',serif;font-size:clamp(2rem,12vw,3.1rem);line-height:1;text-align:center;overflow-wrap:anywhere; }
   .taboo-forbidden { display:grid;justify-items:center;gap:.28rem;text-align:center; }
-  .taboo-forbidden-label { color:rgba(23,42,69,.6);font-size:.55rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase; }
-  .taboo-chip { display:inline-block;padding:.18rem .5rem;border:1px solid rgba(23,42,69,.22);border-radius:999px;background:rgba(23,42,69,.04);color:#172a45;font-size:.64rem;font-weight:800;line-height:1.3;overflow-wrap:anywhere; }
+  .taboo-forbidden-label { color:rgba(23,42,69,.6);font-size:.8125rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase; }
+  .taboo-chip { display:inline-block;padding:.18rem .5rem;border:1px solid rgba(23,42,69,.22);border-radius:999px;background:rgba(23,42,69,.04);color:#172a45;font-size:.84rem;font-weight:800;line-height:1.3;overflow-wrap:anywhere; }
   .taboo-chip-forbidden { border-color:rgba(180,54,44,.45);background:rgba(180,54,44,.09);color:#a33027;text-decoration:line-through; }
   .taboo-chip-hit { border-color:rgba(52,130,77,.45);background:rgba(52,130,77,.12);color:#256b3c; }
 
-  .taboo-label { color:#172a45;font-size:.6rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }
-  .taboo-input { width:100%;min-height:6.4rem;resize:vertical;padding:.65rem .75rem;border:2px solid rgba(23,42,69,.35);border-radius:.7rem;background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:600;line-height:1.45; }
+  .taboo-label { color:#172a45;font-size:.8125rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }
+  .taboo-input { width:100%;min-height:6.4rem;resize:vertical;padding:.65rem .75rem;border:2px solid rgba(23,42,69,.35);border-radius:.7rem;background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;line-height:1.45; }
   .taboo-input:focus-visible { outline:3px dashed #e6a527;outline-offset:2px;border-color:rgba(23,42,69,.6); }
   .taboo-actions { display:flex;flex-wrap:wrap;gap:.55rem; }
   .taboo-actions .btn-play { flex:1 1 8rem;justify-content:center; }
-  .taboo-hint { margin:0;color:rgba(23,42,69,.65);font-size:.6rem;font-weight:700;line-height:1.4;text-align:center; }
+  .taboo-hint { margin:0;color:rgba(23,42,69,.65);font-size:.8125rem;font-weight:700;line-height:1.4;text-align:center; }
 
   .taboo-result { display:grid;justify-items:center;gap:.42rem;text-align:center;animation:taboo-rise .28s ease-out both; }
-  .taboo-verdict { margin:0;font-size:.82rem;font-weight:900;line-height:1.35; }
+  .taboo-verdict { margin:0;font-size:.95rem;font-weight:900;line-height:1.35; }
   .taboo-pass { color:#256b3c; }
   .taboo-close { color:#a45e38; }
   .taboo-fail { color:#a33027; }
-  .taboo-note { margin:0;color:rgba(23,42,69,.7);font-size:.58rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }
-  .taboo-note-error { color:#a33027;text-transform:none;letter-spacing:0;font-size:.66rem; }
-  .taboo-skipped { color:#a45e38;font-size:.62rem;letter-spacing:0;text-transform:none; }
+  .taboo-note { margin:0;color:rgba(23,42,69,.7);font-size:.8125rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase; }
+  .taboo-note-error { color:#a33027;text-transform:none;letter-spacing:0;font-size:.875rem; }
+  .taboo-skipped { color:#a45e38;font-size:.84rem;letter-spacing:0;text-transform:none; }
 
   .taboo-definition { display:grid;gap:.28rem;padding:.6rem .7rem;border:1px solid rgba(23,42,69,.16);border-radius:.7rem;background:rgba(23,42,69,.04);text-align:center;animation:taboo-rise .28s ease-out both; }
-  .taboo-definition p { margin:0;color:rgba(23,42,69,.82);font-size:.72rem;font-weight:700;line-height:1.45; }
-  .taboo-definition p:first-child { color:rgba(23,42,69,.55);font-size:.52rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
+  .taboo-definition p { margin:0;color:rgba(23,42,69,.82);font-size:.9rem;font-weight:700;line-height:1.45; }
+  .taboo-definition p:first-child { color:rgba(23,42,69,.55);font-size:.8125rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
   .taboo-definition .taboo-spelling { color:#a45e38;font-family:'DM Serif Display',serif;font-size:1.05rem;font-weight:400; }
 
   @keyframes taboo-rise { from { opacity:0;transform:translateY(.35rem); } }

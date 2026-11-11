@@ -168,7 +168,7 @@ html.dark { --play-line: #0b1626; }
     box-shadow: var(--play-shadow);
     text-decoration: none;
     font-family: 'DM Sans', sans-serif;
-    font-size: .68rem;
+    font-size: .875rem;
     font-weight: 900;
     letter-spacing: .07em;
     line-height: 1.2;
@@ -196,12 +196,12 @@ html.dark { --play-line: #0b1626; }
   }
 
   /* Sizes and shapes */
-  .btn-play-sm { min-height: 2.05rem; padding: .3rem .8rem; font-size: .6rem; }
+  .btn-play-sm { min-height: 2.05rem; padding: .3rem .8rem; font-size: .8125rem; }
   .btn-play-round { width: 2.2rem; min-height: 0; height: 2.2rem; padding: 0; border-radius: 48% 52% 50% 50% / 52% 48% 52% 48%; }
   .btn-play-round.btn-play-sm { width: 1.75rem; height: 1.75rem; }
   .btn-play-round.btn-play-sm :where(svg) { width: .9rem; height: .9rem; }
   /* Answer tiles: sentence case, larger type, left-aligned when they hold longer text */
-  .btn-play-choice { min-height: 2.8rem; padding: .55rem .85rem; font-size: .8rem; font-weight: 800; letter-spacing: 0; text-transform: none; }
+  .btn-play-choice { min-height: 2.8rem; padding: .55rem .85rem; font-size: .95rem; font-weight: 800; letter-spacing: 0; text-transform: none; }
 
   html.dark .btn-play { background: #213a5d; color: #fffdf7; }
   html.dark .btn-play-ink,

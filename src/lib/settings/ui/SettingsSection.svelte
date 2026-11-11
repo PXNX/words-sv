@@ -70,8 +70,8 @@
   .settings-section-icon :global(svg) { width:1.15rem;height:1.15rem; }
   :global(html.dark) .settings-section-icon { color:color-mix(in srgb,var(--accent) 80%,#fffdf7); }
   .settings-section-text { display:grid;gap:.1rem;min-width:0;flex:1; }
-  .settings-section-title { font-size:.8rem;font-weight:900;letter-spacing:.01em; }
-  .settings-section-summary { overflow:hidden;font-size:.62rem;font-weight:700;white-space:nowrap;text-overflow:ellipsis;opacity:.6; }
+  .settings-section-title { font-size:.95rem;font-weight:900;letter-spacing:.01em; }
+  .settings-section-summary { overflow:hidden;font-size:.84rem;font-weight:700;white-space:nowrap;text-overflow:ellipsis;opacity:.6; }
   :global(.settings-section-chevron) { flex:none;width:1.3rem;height:1.3rem;opacity:.6;transition:rotate .3s cubic-bezier(.34,1.56,.64,1); }
   .open :global(.settings-section-chevron) { rotate:180deg; }
   .settings-section-body { display:grid;padding:0 .85rem .8rem; }

@@ -100,7 +100,7 @@
     border-radius: 9px 6px 9px 7px;
     background: #fffdf7;
     color: #172a45;
-    font-size: 0.68rem;
+    font-size: .875rem;
     font-weight: 800;
     text-align: start;
     cursor: pointer;
@@ -138,7 +138,7 @@
     background: transparent;
     padding: 0.42rem 0.5rem;
     color: #172a45;
-    font-size: 0.68rem;
+    font-size: .875rem;
     font-weight: 800;
     text-align: start;
     cursor: pointer;

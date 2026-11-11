@@ -20,7 +20,7 @@
 
 <style>
   .ai-switch { display:inline-flex;justify-self:center;padding:.15rem;border:2px solid #172a45;border-radius:999px;background:#fffdf7; }
-  .ai-switch button { padding:.3rem .8rem;border:0;border-radius:999px;background:transparent;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:900;letter-spacing:.03em;cursor:pointer;opacity:.6;transition:background .2s ease,opacity .2s ease; }
+  .ai-switch button { padding:.3rem .8rem;border:0;border-radius:999px;background:transparent;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:900;letter-spacing:.03em;cursor:pointer;opacity:.6;transition:background .2s ease,opacity .2s ease; }
   .ai-switch button.on { background:#172a45;color:#fffdf7;opacity:1; }
   :global(html.dark) .ai-switch { border-color:#0b1626;background:#2b4a70; }
   :global(html.dark) .ai-switch button { color:#fffdf7; }

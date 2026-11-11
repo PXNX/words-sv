@@ -378,7 +378,7 @@
 >
   <header class="flex items-end justify-center gap-[.6rem]">
     <div class="text-center">
-      <span class="text-accent text-[.58rem] font-extrabold tracking-[.14em] uppercase">{labels.section} · {settings.vocabularyLevel.toUpperCase()}</span>
+      <span class="text-accent text-[.8125rem] font-extrabold tracking-[.14em] uppercase">{labels.section} · {settings.vocabularyLevel.toUpperCase()}</span>
       <h1 class="my-[.16rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.7rem,7vw,2.65rem)] font-normal leading-none">{labels.title}</h1>
       {#if audioReady}<div class="mt-[.35rem] text-base-content/70"><SessionDots {dots} label={`${sessionDone ? queue.length : Math.min(position + 1, queue.length)} / ${queue.length || 6}`} /></div>{/if}
     </div>
@@ -386,12 +386,12 @@
   </header>
   {#if audioReady && repairMode && !sessionDone}
     <div class="w-[min(100%,28rem)] grid gap-[.3rem] px-[.9rem] py-[.65rem] panel-play text-center" aria-live="polite">
-      <p class="m-0 text-accent text-[.58rem] font-black tracking-[.12em] uppercase">{labels.repairTitle}</p>
+      <p class="m-0 text-accent text-[.8125rem] font-black tracking-[.12em] uppercase">{labels.repairTitle}</p>
       {#if repairAvailable}
-        <p class="m-0 text-base-content/70 text-[.66rem] font-bold leading-[1.4]">{labels.repairHint(settings.streak.bestStreak, REPAIR_WORDS)}</p>
-        <p class="m-0 text-base-content text-[.7rem] font-extrabold tabular-nums">{labels.repairProgress(repairCount, REPAIR_WORDS)}</p>
+        <p class="m-0 text-base-content/70 text-[.875rem] font-bold leading-[1.4]">{labels.repairHint(settings.streak.bestStreak, REPAIR_WORDS)}</p>
+        <p class="m-0 text-base-content text-[.9rem] font-extrabold tabular-nums">{labels.repairProgress(repairCount, REPAIR_WORDS)}</p>
       {:else}
-        <p class="m-0 text-base-content/60 text-[.66rem] font-bold">{labels.repairNone}</p>
+        <p class="m-0 text-base-content/60 text-[.875rem] font-bold">{labels.repairNone}</p>
       {/if}
     </div>
   {/if}
@@ -408,7 +408,7 @@
     />
   {:else if repairMode && repairDone}
     <div class="w-[min(100%,28rem)] grid justify-items-center gap-[.7rem] p-[clamp(1.2rem,6vw,2rem)] panel-play text-center">
-      <p class="m-0 text-accent text-[.6rem] font-black tracking-[.12em] uppercase">{labels.repairTitle}</p>
+      <p class="m-0 text-accent text-[.8125rem] font-black tracking-[.12em] uppercase">{labels.repairTitle}</p>
       <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.3rem,6vw,1.9rem)] leading-[1.15]">{labels.repairDone(settings.streak.streakCount)}</p>
       <div class="flex flex-wrap justify-center gap-[.5rem]">
         <a class="btn-play btn-play-ink" href="/progress">{labels.progress}</a>
@@ -417,21 +417,21 @@
     </div>
   {:else if sessionDone}
     <div class="w-[min(100%,28rem)] grid justify-items-center gap-[.7rem] p-[clamp(1.2rem,6vw,2rem)] panel-play text-center">
-      <p class="m-0 text-accent text-[.6rem] font-black tracking-[.12em] uppercase">{labels.recapTitle}</p>
+      <p class="m-0 text-accent text-[.8125rem] font-black tracking-[.12em] uppercase">{labels.recapTitle}</p>
       <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.3rem,6vw,1.9rem)] leading-[1.15]">{labels.recapScore(firstTry.length, attempted.length)}</p>
       {#if tricky.length}
-        <p class="m-0 text-base-content/70 text-[.68rem] font-extrabold">{labels.recapTricky}</p>
+        <p class="m-0 text-base-content/70 text-[.875rem] font-extrabold">{labels.recapTricky}</p>
         <ul class="flex flex-wrap justify-center gap-[.35rem] m-0 p-0 list-none">
-          {#each tricky as word (word)}<li class="px-[.55rem] py-[.25rem] border border-accent/35 rounded-full bg-[#f7e2b0] text-[#172a45] text-[.66rem] font-extrabold">{displayWord(word)}</li>{/each}
+          {#each tricky as word (word)}<li class="px-[.55rem] py-[.25rem] border border-accent/35 rounded-full bg-[#f7e2b0] text-[#172a45] text-[.875rem] font-extrabold">{displayWord(word)}</li>{/each}
         </ul>
         <button type="button" class="btn-play btn-play-ink" onclick={startTricky}>{labels.recapPractise(tricky.length)}</button>
       {:else}
-        <p class="m-0 text-success text-[.75rem] font-extrabold">{labels.recapNone}</p>
+        <p class="m-0 text-success text-[.9rem] font-extrabold">{labels.recapNone}</p>
       {/if}
       <button type="button" class="btn-play btn-play-soft" onclick={startSection}>{labels.recapNew}</button>
     </div>
   {:else if !currentWord}
-    <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.75rem] font-bold leading-[1.45] text-center">{labels.unavailable}</div>
+    <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.9rem] font-bold leading-[1.45] text-center">{labels.unavailable}</div>
   {:else}
     {#key `${position}|${sessionId}`}
     <article
@@ -444,16 +444,16 @@
         {#if promptKind === 'audio'}<button class="btn-play btn-play-soft btn-play-sm" onclick={speak} disabled={!canHear}><IconVolume class="w-[1rem] h-[1rem]" aria-hidden="true" />{labels.listen}</button>{/if}
       {:else}
         <button class="btn-play btn-play-ink" onclick={speak} disabled={!canHear}><IconVolume class="w-[1.1rem] h-[1.1rem]" aria-hidden="true" />{labels.listen}</button>
-        <p class="m-0 text-accent text-[.62rem] font-extrabold leading-[1.35]">{labels.audioPrompt}</p>
+        <p class="m-0 text-accent text-[.84rem] font-extrabold leading-[1.35]">{labels.audioPrompt}</p>
       {/if}
-      {#if promptKind === 'audio'}<p class="m-0 min-h-[1.35em] text-accent text-[.62rem] font-extrabold leading-[1.35]" aria-live="polite">{speechStatus}</p>{/if}
+      {#if promptKind === 'audio'}<p class="m-0 min-h-[1.35em] text-accent text-[.84rem] font-extrabold leading-[1.35]" aria-live="polite">{speechStatus}</p>{/if}
       <!-- The definition's space is kept from the start (invisible until answered), so the choices never move. -->
-      {#if !isDefinitionPrompt && currentDefinition}<p class="m-0 max-w-[22rem] text-base-content/65 text-[.72rem] font-bold leading-[1.4] {answerStatus !== null ? 'learn-fade-in' : 'invisible'}" aria-hidden={answerStatus === null}>{currentDefinition}</p>{/if}
+      {#if !isDefinitionPrompt && currentDefinition}<p class="m-0 max-w-[22rem] text-base-content/65 text-[.9rem] font-bold leading-[1.4] {answerStatus !== null ? 'learn-fade-in' : 'invisible'}" aria-hidden={answerStatus === null}>{currentDefinition}</p>{/if}
     </article>
     {/key}
     {#if choiceWords.length >= 3}
       <section class="w-[min(100%,28rem)] grid gap-[.55rem]" aria-label={isDefinitionPrompt ? labels.chooseDefinition : labels.chooseWord}>
-        <p class="m-0 text-accent text-[.6rem] font-black tracking-[.1em] text-center uppercase">{isDefinitionPrompt ? labels.chooseDefinition : labels.chooseWord}</p>
+        <p class="m-0 text-accent text-[.8125rem] font-black tracking-[.1em] text-center uppercase">{isDefinitionPrompt ? labels.chooseDefinition : labels.chooseWord}</p>
         <div class="grid gap-[.45rem]">
           {#each choiceWords as word}
             <button
@@ -461,7 +461,7 @@
               value={word}
               onclick={chooseAnswer}
               disabled={answerStatus !== null}
-              class="btn-play btn-play-choice justify-between gap-[.65rem] text-[.72rem] font-bold leading-[1.3] text-left touch-manipulation disabled:opacity-100 {optionStateClasses(word)}"
+              class="btn-play btn-play-choice justify-between gap-[.65rem] text-[.9rem] font-bold leading-[1.3] text-left touch-manipulation disabled:opacity-100 {optionStateClasses(word)}"
             ><span class="flex-1">{optionText(word)}</span>{#if answerStatus !== null && word === currentWord}<IconCheck class="w-[1.25rem] h-[1.25rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && word === selectedChoice}<IconClose class="w-[1.25rem] h-[1.25rem] flex-none text-[#c0392b] dark:text-[#ffc2b8]" aria-label={labels.tryAgain} />{/if}</button>
           {/each}
         </div>
@@ -469,7 +469,7 @@
         <div class="answer-slot">
         {#if answerStatus === 'correct'}
           <div class="grid gap-[.35rem]">
-            <p class="m-0 text-center text-base-content/60 text-[.58rem] font-extrabold">{labels.rateHint}</p>
+            <p class="m-0 text-center text-base-content/60 text-[.8125rem] font-extrabold">{labels.rateHint}</p>
             <div class="flex flex-wrap justify-center gap-[.45rem]">
               <button class="btn-play btn-play-soft" onclick={() => rateAnswer('again')}>{labels.again}</button>
               <button class="btn-play btn-play-soft" onclick={() => rateAnswer('hard')}>{labels.hard}</button>
@@ -483,7 +483,7 @@
         {/if}
         </div>
       </section>
-    {:else}<p class="max-w-[24rem] m-0 text-base-content/60 text-[.75rem] font-bold leading-[1.45] text-center">{currentDefinition || labels.unavailable}</p>{/if}
+    {:else}<p class="max-w-[24rem] m-0 text-base-content/60 text-[.9rem] font-bold leading-[1.45] text-center">{currentDefinition || labels.unavailable}</p>{/if}
   {/if}
 </section>
 

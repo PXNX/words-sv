@@ -96,7 +96,7 @@
 
   .streak-days { flex:1;display:flex;justify-content:space-between;gap:.2rem;max-width:15rem;margin:0;padding:0;list-style:none; }
   .streak-day { display:grid;justify-items:center;gap:.15rem; }
-  .streak-day small { color:rgba(23,42,69,.45);font-size:.5rem;font-weight:800;line-height:1;text-transform:uppercase; }
+  .streak-day small { color:rgba(23,42,69,.45);font-size:.8125rem;font-weight:800;line-height:1;text-transform:uppercase; }
   .streak-day.today-open small,.streak-day.today-done small { color:#172a45; }
   .streak-dot { position:relative;display:grid;place-items:center;width:1rem;height:1rem;border-radius:50%; }
   .missed .streak-dot { width:.4rem;height:.4rem;margin:.3rem;background:rgba(23,42,69,.16); }
@@ -107,12 +107,12 @@
   .today-open .track { fill:none;stroke:rgba(23,42,69,.2);stroke-width:2.6; }
   .today-open .value { fill:none;stroke:#e6a527;stroke-width:2.6;stroke-linecap:round;transition:stroke-dashoffset .45s ease; }
 
-  .streak-freeze { display:inline-flex;align-items:center;gap:.1rem;flex:none;color:#3f7fb3;font-size:.62rem;font-weight:900; }
+  .streak-freeze { display:inline-flex;align-items:center;gap:.1rem;flex:none;color:#3f7fb3;font-size:.84rem;font-weight:900; }
   .streak-freeze :global(svg) { width:.85rem;height:.85rem; }
 
-  .streak-nudge { display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.3rem .6rem;margin:0;color:#596477;font-size:.6rem;font-weight:700;line-height:1.35; }
+  .streak-nudge { display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.3rem .6rem;margin:0;color:#596477;font-size:.8125rem;font-weight:700;line-height:1.35; }
   .streak-nudge.urgent { color:#a45e38; }
-  .streak-collect { display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .55rem;border:1.5px solid #c9832f;border-radius:999px;background:#fff4d9;color:#a45e38;font:inherit;font-size:.56rem;font-weight:900;cursor:pointer;animation:ember-glow 2.4s ease-in-out infinite; }
+  .streak-collect { display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .55rem;border:1.5px solid #c9832f;border-radius:999px;background:#fff4d9;color:#a45e38;font:inherit;font-size:.8125rem;font-weight:900;cursor:pointer;animation:ember-glow 2.4s ease-in-out infinite; }
   .streak-collect:disabled { opacity:.6;cursor:default; }
   .streak-ember { width:.5rem;height:.5rem;border-radius:50% 50% 50% 0;rotate:-45deg;background:#e6a527; }
 

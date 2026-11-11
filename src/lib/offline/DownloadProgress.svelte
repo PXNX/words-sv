@@ -41,7 +41,7 @@
 
 <style>
   .download-progress { display:grid;gap:.3rem;width:100%;text-align:start; }
-  .download-progress-head { display:flex;justify-content:space-between;gap:.6rem;font-size:.66rem;font-weight:800;color:inherit; }
+  .download-progress-head { display:flex;justify-content:space-between;gap:.6rem;font-size:.875rem;font-weight:800;color:inherit; }
   .download-progress-head strong { font-variant-numeric:tabular-nums; }
   .download-progress-bar { position:relative;height:.5rem;border-radius:999px;background:color-mix(in oklch, currentColor 12%, transparent);overflow:hidden; }
   .download-progress-bar span { position:absolute;inset-block:0;inset-inline-start:0;border-radius:inherit;background:linear-gradient(90deg,#e6a527,#e86a9a);background-size:1.2rem 100%;transition:width .3s cubic-bezier(.23,1,.32,1); }
@@ -50,7 +50,7 @@
   /* moving stripes while active, so a slow step still looks alive */
   .download-progress-bar span::after { content:'';position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.28) 0 .35rem,transparent .35rem .7rem);animation:download-stripes .8s linear infinite; }
   .download-progress-bar.indeterminate span { width:35%;animation:download-slide 1.2s ease-in-out infinite; }
-  .download-progress p { margin:0;font-size:.6rem;font-weight:700;opacity:.65; }
+  .download-progress p { margin:0;font-size:.8125rem;font-weight:700;opacity:.65; }
   .compact .download-progress-bar { height:.38rem; }
   @keyframes download-stripes { to { background-position:.81rem 0; } }
   @keyframes download-slide { 0% { inset-inline-start:-35%; } 100% { inset-inline-start:100%; } }

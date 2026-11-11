@@ -39,8 +39,8 @@
   .install-hint-icon { display:grid;place-items:center;width:2rem;height:2rem;flex:none;border:2px solid #172a45;border-radius:48% 52% 46% 54% / 54% 46% 52% 48%;background:#f7e2b0;color:#a45e38; }
   .install-hint-icon :global(svg) { width:1rem;height:1rem; }
   .install-hint-copy { display:grid;gap:.08rem;min-width:0; }
-  .install-hint-copy strong { color:#172a45;font-family:'DM Sans',sans-serif;font-size:.6rem;font-weight:900;letter-spacing:.07em;line-height:1.15;text-transform:uppercase; }
-  .install-hint-copy small { color:#596477;font-family:'DM Sans',sans-serif;font-size:.55rem;font-weight:700;line-height:1.3; }
+  .install-hint-copy strong { color:#172a45;font-family:'DM Sans',sans-serif;font-size:.8125rem;font-weight:900;letter-spacing:.07em;line-height:1.15;text-transform:uppercase; }
+  .install-hint-copy small { color:#596477;font-family:'DM Sans',sans-serif;font-size:.8125rem;font-weight:700;line-height:1.3; }
   .install-hint-close { display:grid;place-items:center;width:1.75rem;height:1.75rem;border:0;border-radius:50%;background:none;color:rgba(23,42,69,.45);cursor:pointer; }
   .install-hint-close :global(svg) { width:1rem;height:1rem; }
   @media (hover:hover) { .install-hint-close:hover { background:rgba(23,42,69,.08);color:#172a45; } }
