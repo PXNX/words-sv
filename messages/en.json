@@ -983,5 +983,11 @@
   "hardware_page": "App memory",
   "models_default": "Default",
   "models_no_llm": "No language model",
-  "models_no_llm_hint": "Conversations use scripted dialogues and texts are graded by rules. No download, works everywhere."
+  "models_no_llm_hint": "Conversations use scripted dialogues and texts are graded by rules. No download, works everywhere.",
+  "mode_ai_voice": "Voice",
+  "mode_ai_voice_hint": "Who reads aloud. Bigger voices load the first time they play.",
+  "mode_ai_llm": "Language model",
+  "mode_ai_llm_active": "Answering: {model}",
+  "mode_ai_not_downloaded": "not downloaded yet",
+  "mode_ai_more": "All voices and models in the settings"
 }

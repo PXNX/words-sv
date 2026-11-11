@@ -38,6 +38,8 @@
     answer = '';
     result = null;
   }
+  import GameToolbar from '#lib/app/GameToolbar.svelte';
+  import AiModeSettings from '#lib/app/AiModeSettings.svelte';
 </script>
 
 <svelte:head>
@@ -53,6 +55,10 @@
   <meta name="twitter:description" content="Write one or two German sentences on a topic and get them graded." />
   <meta name="twitter:image" content="https://words-sv.vercel.app/pwa-512x512.png" />
 </svelte:head>
+
+<GameToolbar>
+  {#snippet gameSettings()}<AiModeSettings llm="writing" />{/snippet}
+</GameToolbar>
 
 <section class="writing-view">
   <header class="writing-header">

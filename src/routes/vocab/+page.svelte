@@ -364,7 +364,13 @@
     choiceKey = nextChoiceKey;
     untrack(() => resetPrompt());
   });
+  import GameToolbar from '#lib/app/GameToolbar.svelte';
+  import AiModeSettings from '#lib/app/AiModeSettings.svelte';
 </script>
+
+<GameToolbar>
+  {#snippet gameSettings()}<AiModeSettings voice />{/snippet}
+</GameToolbar>
 
 <section
   class="flex-1 min-h-0 grid content-center justify-items-center gap-4 p-[clamp(1rem,4vw,2rem)] overflow-x-hidden overflow-y-auto bg-[color:#ede4d5] dark:bg-[color:#213a5d] bg-[image:radial-gradient(circle_at_50%_15%,rgba(230,165,39,.18),transparent_34%),linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:auto,24px_24px,24px_24px]"
