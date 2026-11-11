@@ -15,6 +15,7 @@
   import { buildNounCasePrompt, buildNounPropertyPrompt, genderFeature, isDeclinableNoun, type GrammarPrompt } from '#lib/grammar/cases.js';
   import { adjectiveStem, buildAdjectivePrompt, isEligibleAdjective } from '#lib/grammar/adjectives.js';
   import { fittingNouns } from '#lib/grammar/nounClasses.js';
+  import RuleChain from '#lib/grammar/RuleChain.svelte';
   import { formCountsAsRight, scoreForm, type FormScore } from '#lib/grammar/formAnswer.js';
   import { buildVerbPrompt, buildVerbPropertyPrompt, verbConjugations } from '#lib/grammar/verbs.js';
   import { buildFalseFriendPrompt, falseFriendsFor } from '#lib/grammar/falseFriends.js';
@@ -395,7 +396,8 @@
           {/each}
         </div>
         <!-- Kept in place (invisible until answered), so the choices above never move. -->
-        <div class="flex flex-wrap justify-center gap-[.45rem] {answerStatus ? '' : 'invisible'}" aria-hidden={!answerStatus}>
+        <div class="grid justify-items-center gap-[.6rem] {answerStatus ? '' : 'invisible'}" aria-hidden={!answerStatus}>
+          {#if prompt.why}<div class="min-h-[2.6rem] grid content-center">{#if answerStatus}<RuleChain why={prompt.why} form={prompt.correct} />{/if}</div>{/if}
           <button class="btn-play btn-play-ink" onclick={continueLearning} tabindex={answerStatus ? 0 : -1}>{labels.continue}</button>
         </div>
       </section>
