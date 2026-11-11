@@ -1895,7 +1895,7 @@ export const germanStories: Story[] = [
       { kind: 'line', speaker: 'kim', text: german('Dein Lebenslauf sieht gut aus, Kumar. Aber das Anschreiben könnte noch präziser sein. Warum genau willst du für diese Firma arbeiten?') },
       { kind: 'line', speaker: 'kumar', text: german('Wegen der spannenden Projekte und der guten Reputation. Die Firma arbeitet an innovativer KI-Technologie, und das interessiert mich sehr.') },
       { kind: 'line', speaker: 'kim', text: german('Hallo {name}! Was würdest du im Anschreiben betonen?') },
-      { kind: 'reply', to: 'kumar', options: [
+      { kind: 'reply', to: 'kim', options: [
         german('Meine Erfahrung mit Python und meine erfolgreichen Projekte an der Universität.'),
         german('Ich brauche dringend Geld und habe sonst keine Arbeit.'),
         german('Ich mag den Namen der Firma, weil er so klingt wie Käse.')
@@ -2299,11 +2299,11 @@ export const germanStories: Story[] = [
       { kind: 'line', speaker: 'kumar', text: german('Gut, dass wir darüber sprechen. Ich warte mit der Unterschrift, bis die Behörde entschieden hat.') },
       { kind: 'line', speaker: 'kumar', text: german('Vielen Dank für die klare Auskunft. Ich schicke die Meldebescheinigung morgen per Einschreiben.') },
       { kind: 'narration', text: german('Am Freitag liegt der Nachweis im Briefkasten der Behörde. Drei Wochen später hält Kumar seine neue Aufenthaltserlaubnis in der Hand – gültig für drei Jahre.') },
-      { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Jetzt kann ich endlich durchatmen. Beim nächsten Termin bringe ich alle Kopien doppelt mit.') },
-      { kind: 'reply', to: 'kim', options: [
-        german('Ja, wann genau muss ich den Nachweis nachreichen?'),
-        german('Nein, ich möchte sofort die deutsche Staatsbürgerschaft.'),
-        german('Ja, ich habe meinen Reisepass vergessen.')
+      { kind: 'line', speaker: 'kumar', mood: 'happy', text: german('Jetzt kann ich endlich durchatmen. Beim nächsten Termin bringe ich alle Kopien doppelt mit. {name}, danke, dass du mich begleitet hast. Was nimmst du von diesem Termin mit?') },
+      { kind: 'reply', to: 'kumar', options: [
+        german('Dass man jede Frist einhalten und einen Jobwechsel rechtzeitig melden muss.'),
+        german('Dass eine Kopie der Bestätigung immer genügt.'),
+        german('Dass man mit einer Fiktionsbescheinigung unbegrenzt ins Ausland reisen darf.')
       ] },
       { kind: 'question', prompt: german('Wie lange ist Kumars Aufenthaltserlaubnis noch gültig?'), options: [german('Sechs Wochen'), german('Sechs Monate'), german('Drei Jahre')] },
       { kind: 'question', prompt: german('Welche Unterlagen hat Kumar dabei?'), options: [german('Reisepass, Arbeitsvertrag, Gehaltsabrechnungen und Mietvertrag'), german('Nur seinen Reisepass'), german('Ein Foto und einen Koffer')] },
@@ -2998,17 +2998,30 @@ export const germanStories: Story[] = [
     scene: 'airport',
     cast: ['tom', 'oma'],
     languages: ['de'],
-    title: german('Am Flughafen'),
+    title: german('Omas erster Flug allein'),
     beats: [
-      { kind: 'narration', text: german('Tom und Oma sind am Flughafen. Es gibt einen Abflug und eine Abfertigung.') },
-      { kind: 'line', speaker: 'tom', text: german('Hallo {name}! Ich habe einen Anschluss und eine Abteilung.') },
-      { kind: 'line', speaker: 'oma', text: german('Gut. Ich habe einen Abflug und einen Absender.') },
-      { kind: 'reply', to: 'tom', options: [german('Ich bin ein Anschluss.'), german('Ich bin ein Abflug.'), german('Ich habe einen Absender.')] },
-      { kind: 'line', speaker: 'oma', text: german('Danke! Wir müssen einen Bericht schreiben und einen Abschluss machen.') },
-      { kind: 'question', prompt: german('Was hat Tom?'), options: [german('Anschluss und Abteilung'), german('Abflug und Absender'), german('Apparat und Auto')] },
-      { kind: 'question', prompt: german('Was hat Oma?'), options: [german('Abflug und Absender'), german('Anschluss und Abteilung'), german('Band und Baby')] },
-      { kind: 'question', prompt: german('Was müssen sie schreiben?'), options: [german('Einen Bericht'), german('Ein Blatt'), german('Ein Band')] },
-      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Einen Abschluss'), german('Einen Apparat'), german('Einen Abfall')] }
+      { kind: 'narration', text: german('Dienstag, 6:15 Uhr, Flughafen München. Oma fliegt zum ersten Mal allein ins Ausland: Sie besucht ihre Schwester in Toronto, mit Umstieg in London. Tom begleitet sie bis zur Sicherheitskontrolle.') },
+      { kind: 'line', speaker: 'tom', text: german('Ich habe dich gestern schon online eingecheckt, Oma. Deine Bordkarte ist hier auf deinem Handy.') },
+      { kind: 'line', speaker: 'oma', mood: 'worried', text: german('Auf dem Handy? Und wenn der Akku leer ist? Ich hätte lieber eine Bordkarte aus Papier, die man anfassen kann.') },
+      { kind: 'line', speaker: 'tom', mood: 'laughing', text: german('Kein Problem, die drucken wir dir am Schalter aus. Wir müssen ohnehin noch deinen Koffer abgeben.') },
+      { kind: 'narration', text: german('Am Schalter zeigt die Waage 25 Kilo. Erlaubt sind nur 23. Die Mitarbeiterin verlangt für das Übergepäck 70 Euro.') },
+      { kind: 'line', speaker: 'oma', mood: 'angry', text: german('Siebzig Euro für zwei Kilo? Das sind doch nur die Marmeladengläser für meine Schwester!') },
+      { kind: 'line', speaker: 'tom', text: german('Dann packen wir zwei Gläser in mein Auto, und ich schicke sie dir per Post nach. Das ist billiger. Ins Handgepäck dürfen sie übrigens auch nicht – Flüssigkeiten nur bis hundert Milliliter.') },
+      { kind: 'narration', text: german('Nach dem Umpacken wiegt der Koffer 22,8 Kilo. Die Mitarbeiterin lächelt und druckt Oma zwei Bordkarten aus Papier aus: München–London und London–Toronto.') },
+      { kind: 'line', speaker: 'oma', mood: 'worried', text: german('In London habe ich nur fünfundfünfzig Minuten zum Umsteigen. Was ist, wenn mein erster Flug Verspätung hat?') },
+      { kind: 'line', speaker: 'tom', text: german('Du hast ein durchgehendes Ticket, da kümmert sich die Fluggesellschaft um dich. Und dein Koffer wird bis Toronto durchgecheckt.') },
+      { kind: 'line', speaker: 'oma', mood: 'curious', text: german('Entschuldigung, {name}, Sie fliegen doch auch über London nach Toronto. Was mache ich, wenn ich den Anschluss trotzdem verpasse?') },
+      { kind: 'reply', to: 'oma', options: [
+        german('Dann bucht die Fluggesellschaft Sie kostenlos auf den nächsten Flug um.'),
+        german('Dann müssen Sie Ihren Koffer in London selbst nach Toronto tragen.'),
+        german('Dann gilt Ihr Ticket nicht mehr, und Sie müssen nach München zurückfliegen.')
+      ] },
+      { kind: 'line', speaker: 'oma', mood: 'happy', text: german('Das beruhigt mich. Dann bleiben wir einfach zusammen. Tom, du kannst jetzt nach Hause fahren – ich habe ja eine Reisebegleitung.') },
+      { kind: 'question', prompt: german('Wohin fliegt Oma?'), options: [german('Nach Toronto, mit Umstieg in London'), german('Nach London, mit Umstieg in Toronto'), german('Direkt nach Lissabon')] },
+      { kind: 'question', prompt: german('Warum möchte Oma eine Bordkarte aus Papier?'), options: [german('Sie hat Angst, dass der Akku ihres Handys leer wird.'), german('Ihr Handy ist kaputt.'), german('Online-Bordkarten gelten in Kanada nicht.')] },
+      { kind: 'question', prompt: german('Warum ist Omas Koffer zu schwer?'), options: [german('Wegen der Marmeladengläser für ihre Schwester'), german('Wegen ihrer Winterkleidung'), german('Wegen zu vieler Bücher')] },
+      { kind: 'question', prompt: german('Warum darf die Marmelade nicht ins Handgepäck?'), options: [german('Flüssigkeiten sind nur bis hundert Milliliter erlaubt.'), german('Glas ist im Flugzeug verboten.'), german('Lebensmittel dürfen nicht nach Kanada.')] },
+      { kind: 'question', prompt: german('Wie viel Zeit hat Oma in London zum Umsteigen?'), options: [german('Fünfundfünfzig Minuten'), german('Zwei Stunden'), german('Fünfzehn Minuten')] }
     ]
   },
   {
@@ -3017,17 +3030,30 @@ export const germanStories: Story[] = [
     scene: 'office',
     cast: ['kim', 'leo'],
     languages: ['de'],
-    title: german('Die Konferenz'),
+    title: german('Fünfzehn statt dreißig Minuten'),
     beats: [
-      { kind: 'narration', text: german('Kim und Leo sind auf einer Konferenz. Sie diskutieren eine Änderung.') },
-      { kind: 'line', speaker: 'kim', text: german('Hallo {name}! Ich habe einen Ansatz und einen Anteil.') },
-      { kind: 'line', speaker: 'leo', text: german('Gut. Ich habe eine Ansicht und einen Aufbau.') },
-      { kind: 'reply', to: 'kim', options: [german('Ich bin ein Ansatz.'), german('Ich bin ein Anteil.'), german('Ich habe einen Aufbau.')] },
-      { kind: 'line', speaker: 'leo', text: german('Danke! Wir müssen einen Ausdruck finden und eine Analyse machen.') },
-      { kind: 'question', prompt: german('Was hat Kim?'), options: [german('Ansatz und Anteil'), german('Ansicht und Aufbau'), german('Apparat und Auto')] },
-      { kind: 'question', prompt: german('Was hat Leo?'), options: [german('Ansicht und Aufbau'), german('Ansatz und Anteil'), german('Band und Baby')] },
-      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Analyse'), german('Abschluss'), german('Apparat')] },
-      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Ausdruck'), german('Einen Abflug'), german('Einen Apparat')] }
+      { kind: 'narration', text: german('Mittwochabend, 19 Uhr, im Büro eines Forschungsinstituts. Morgen stellen Kim und Leo auf einer Fachkonferenz ihre Studie zur Nutzung von Lastenrädern in der Stadt vor. Dann kommt eine E-Mail der Veranstalter.') },
+      { kind: 'line', speaker: 'leo', mood: 'surprised', text: german('Das darf doch nicht wahr sein! Wegen einer Programmänderung haben wir statt dreißig nur noch fünfzehn Minuten.') },
+      { kind: 'line', speaker: 'kim', mood: 'worried', text: german('Fünfzehn Minuten? Unsere Präsentation hat zweiunddreißig Folien. Das schaffen wir nie.') },
+      { kind: 'line', speaker: 'leo', text: german('Dann sprechen wir eben schneller. Jede Zahl in dieser Analyse hat uns Monate gekostet. Ich will nichts davon weglassen.') },
+      { kind: 'line', speaker: 'kim', text: german('Leo, wenn wir durch zweiunddreißig Folien rasen, bleibt beim Publikum gar nichts hängen. Wir brauchen einen anderen Aufbau – eine zentrale Botschaft statt einer Datenflut.') },
+      { kind: 'line', speaker: 'leo', mood: 'curious', text: german('Und welche Botschaft wäre das deiner Meinung nach?') },
+      { kind: 'line', speaker: 'kim', text: german('Dass in unserer Stichprobe der Anteil der Lieferfahrten mit dem Auto um vierzig Prozent gesunken ist, sobald es sichere Abstellplätze für Lastenräder gab. Alles andere ist Hintergrund.') },
+      { kind: 'narration', text: german('Leo scrollt schweigend durch die Folien. Fast die Hälfte erklärt die Methodik und die Befragung im Detail.') },
+      { kind: 'line', speaker: 'leo', mood: 'curious', text: german('{name}, du hast die Befragung mit uns durchgeführt. Was würdest du an unserer Stelle kürzen?') },
+      { kind: 'reply', to: 'leo', options: [
+        german('Die Methodik nur kurz erklären und die wichtigsten Ergebnisse in den Mittelpunkt stellen.'),
+        german('Die Ergebnisse weglassen und dafür die Methodik ausführlicher erklären.'),
+        german('Alle zweiunddreißig Folien zeigen, aber ohne etwas dazu zu sagen.')
+      ] },
+      { kind: 'line', speaker: 'kim', mood: 'happy', text: german('Genau. Und die Details verschwinden nicht: Wir legen ein Handout mit einem QR-Code aus. Wer sich für die Methodik interessiert, findet dort alles.') },
+      { kind: 'line', speaker: 'leo', mood: 'laughing', text: german('Na gut, du hast mich überzeugt. Zehn Folien, eine Botschaft – und ich spreche ausnahmsweise mal langsam.') },
+      { kind: 'narration', text: german('Am nächsten Tag ist der Vortrag nach vierzehn Minuten zu Ende. In der Pause stehen mehr Leute an ihrem Stand als bei jedem anderen Team.') },
+      { kind: 'question', prompt: german('Worum geht es in der Studie von Kim und Leo?'), options: [german('Um die Nutzung von Lastenrädern in der Stadt'), german('Um den öffentlichen Nahverkehr auf dem Land'), german('Um Elektroautos in Firmen')] },
+      { kind: 'question', prompt: german('Was ändert sich durch die E-Mail der Veranstalter?'), options: [german('Sie haben nur noch fünfzehn statt dreißig Minuten.'), german('Der Vortrag fällt ganz aus.'), german('Sie müssen auf Englisch vortragen.')] },
+      { kind: 'question', prompt: german('Was möchte Leo zuerst?'), options: [german('Schneller sprechen und nichts weglassen'), german('Den Vortrag absagen'), german('Nur die Methodik präsentieren')] },
+      { kind: 'question', prompt: german('Was ist laut Kim die zentrale Botschaft?'), options: [german('Lieferfahrten mit dem Auto sind um vierzig Prozent gesunken, wenn es sichere Abstellplätze gab.'), german('Lastenräder sind zu teuer für die meisten Firmen.'), german('Die Befragung hat Monate gedauert.')] },
+      { kind: 'question', prompt: german('Wie kommen die Interessierten an die Details?'), options: [german('Über ein Handout mit QR-Code'), german('Über einen zweiten Vortrag'), german('Gar nicht')] }
     ]
   },
   {
@@ -3036,17 +3062,30 @@ export const germanStories: Story[] = [
     scene: 'park',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Die Umwelt'),
+    weathers: ['sunny', 'cloudy'],
+    title: german('Bäume oder Kita?'),
     beats: [
-      { kind: 'narration', text: german('Mia und Tom sprechen über Umwelt. Sie haben einen Absatz und einen Ausdruck.') },
-      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Ich habe einen Absatz und einen Ausdruck.') },
-      { kind: 'line', speaker: 'tom', text: german('Gut. Ich habe einen Ansatz und einen Aufbau.') },
-      { kind: 'reply', to: 'mia', options: [german('Ich bin ein Absatz.'), german('Ich bin ein Ausdruck.'), german('Ich habe einen Aufbau.')] },
-      { kind: 'line', speaker: 'tom', text: german('Danke! Wir müssen einen Bericht schreiben und einen Abschluss machen.') },
-      { kind: 'question', prompt: german('Was hat Mia?'), options: [german('Absatz und Ausdruck'), german('Ansatz und Aufbau'), german('Apparat und Auto')] },
-      { kind: 'question', prompt: german('Was hat Tom?'), options: [german('Ansatz und Aufbau'), german('Absatz und Ausdruck'), german('Band und Baby')] },
-      { kind: 'question', prompt: german('Was müssen sie schreiben?'), options: [german('Einen Bericht'), german('Ein Blatt'), german('Ein Band')] },
-      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Einen Abschluss'), german('Einen Apparat'), german('Einen Abfall')] }
+      { kind: 'narration', text: german('Samstagvormittag im Stadtpark. An vierzig alten Linden hängen rote Bänder. Die Stadt will hier im Frühjahr eine neue Kita bauen, und dafür sollen die Bäume gefällt werden. Mia hat gerade eine Petition dagegen unterschrieben.') },
+      { kind: 'line', speaker: 'mia', mood: 'angry', text: german('Manche dieser Bäume sind über hundert Jahre alt. Im Sommer ist das hier der einzige kühle Ort im ganzen Viertel. Und die wollen sie einfach absägen!') },
+      { kind: 'line', speaker: 'tom', text: german('Ich verstehe dich. Aber meine Schwester sucht seit einem Jahr einen Kitaplatz für ihren Sohn. In unserem Viertel fehlen über zweihundert Plätze. Irgendwo muss die Kita ja hin.') },
+      { kind: 'line', speaker: 'mia', text: german('Natürlich brauchen wir Kitas. Aber die Stadt sagt doch selbst, dass sie für jeden gefällten Baum zwei neue pflanzt.') },
+      { kind: 'line', speaker: 'tom', mood: 'curious', text: german('Ist das nicht ein fairer Ausgleich?') },
+      { kind: 'line', speaker: 'mia', text: german('Leider nicht. Ein junger Baum braucht Jahrzehnte, bis er so viel Schatten spendet und so viel CO2 bindet wie eine alte Linde. Achtzig kleine Bäume ersetzen vierzig große noch lange nicht.') },
+      { kind: 'narration', text: german('Tom holt sein Handy heraus und öffnet den Bebauungsplan auf der Webseite der Stadt. Am Rand des Parks ist ein großer Parkplatz eingezeichnet, der kaum genutzt wird.') },
+      { kind: 'line', speaker: 'tom', mood: 'surprised', text: german('Schau mal hier. Warum baut man die Kita nicht auf den Parkplatz an der Nordseite? Der ist doch fast immer leer.') },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Das wäre ja die perfekte Lösung! Die Kinder hätten den Park direkt vor der Tür, und die Bäume blieben stehen. {name}, wie siehst du das?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Das klingt vernünftig. So bekäme das Viertel die Kitaplätze, ohne die alten Bäume zu verlieren.'),
+        german('Das klingt vernünftig. Dann fällen wir die Bäume und bauen auf dem Parkplatz einen zweiten Parkplatz.'),
+        german('Kitas sind schlecht für die Umwelt, deshalb sollte man gar keine bauen.')
+      ] },
+      { kind: 'line', speaker: 'tom', text: german('Dann schreiben wir das in die Petition – nicht nur „Nein zur Fällung“, sondern „Ja zur Kita auf dem Parkplatz“. Mit einem konkreten Vorschlag nimmt uns der Gemeinderat ernster.') },
+      { kind: 'narration', text: german('Drei Wochen später haben über dreitausend Menschen die neue Petition unterschrieben. Der Gemeinderat beschließt, den Standort noch einmal prüfen zu lassen.') },
+      { kind: 'question', prompt: german('Was plant die Stadt im Park?'), options: [german('Vierzig alte Linden für eine neue Kita zu fällen'), german('Einen großen Parkplatz zu bauen'), german('Achtzig neue Linden zu pflanzen')] },
+      { kind: 'question', prompt: german('Warum ist Tom zuerst nicht gegen den Plan?'), options: [german('Im Viertel fehlen viele Kitaplätze.'), german('Er findet die Bäume hässlich.'), german('Er arbeitet bei der Stadt.')] },
+      { kind: 'question', prompt: german('Warum ist das Pflanzen neuer Bäume laut Mia kein fairer Ausgleich?'), options: [german('Junge Bäume brauchen Jahrzehnte, bis sie so viel leisten wie alte.'), german('Junge Bäume sind zu teuer.'), german('Die Stadt pflanzt die neuen Bäume woanders.')] },
+      { kind: 'question', prompt: german('Welchen Standort schlägt Tom vor?'), options: [german('Den fast leeren Parkplatz an der Nordseite'), german('Die Wiese in der Mitte des Parks'), german('Ein anderes Viertel')] },
+      { kind: 'question', prompt: german('Was beschließt der Gemeinderat?'), options: [german('Den Standort noch einmal prüfen zu lassen'), german('Die Bäume sofort zu fällen'), german('Keine Kita zu bauen')] }
     ]
   },
   {
@@ -3055,17 +3094,30 @@ export const germanStories: Story[] = [
     scene: 'office',
     cast: ['kim', 'leo'],
     languages: ['de'],
-    title: german('Die Polizei'),
+    title: german('Die falsche Paketnachricht'),
     beats: [
-      { kind: 'narration', text: german('Kim und Leo sprechen mit der Polizei. Es gibt einen Absender und einen Abfall.') },
-      { kind: 'line', speaker: 'kim', text: german('Hallo {name}! Ich habe einen Absender und einen Abflug.') },
-      { kind: 'line', speaker: 'leo', text: german('Gut. Ich habe einen Anschluss und einen Bericht.') },
-      { kind: 'reply', to: 'kim', options: [german('Ich bin ein Absender.'), german('Ich bin ein Abflug.'), german('Ich habe einen Anschluss.')] },
-      { kind: 'line', speaker: 'leo', text: german('Danke! Wir müssen einen Abschluss machen und einen Ausdruck finden.') },
-      { kind: 'question', prompt: german('Was hat Kim?'), options: [german('Absender und Abflug'), german('Anschluss und Bericht'), german('Apparat und Auto')] },
-      { kind: 'question', prompt: german('Was hat Leo?'), options: [german('Anschluss und Bericht'), german('Absender und Abflug'), german('Band und Baby')] },
-      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Einen Abschluss'), german('Einen Apparat'), german('Einen Abfall')] },
-      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Ausdruck'), german('Einen Abflug'), german('Einen Apparat')] }
+      { kind: 'narration', text: german('Montagvormittag auf dem Polizeirevier. Leo sitzt bleich vor dem Schreibtisch von Kommissarin Kim. Er möchte Anzeige erstatten.') },
+      { kind: 'line', speaker: 'kim', text: german('Erzählen Sie bitte der Reihe nach, was passiert ist.') },
+      { kind: 'line', speaker: 'leo', mood: 'sad', text: german('Am Freitag habe ich eine SMS bekommen: Mein Paket könne nicht zugestellt werden, ich solle eine Gebühr von 1,99 Euro bezahlen. Ich habe tatsächlich ein Paket erwartet, also habe ich auf den Link geklickt und meine Kreditkartendaten eingegeben.') },
+      { kind: 'line', speaker: 'kim', text: german('Und dann wurde mehr abgebucht als 1,99 Euro, nehme ich an.') },
+      { kind: 'line', speaker: 'leo', mood: 'angry', text: german('Viel mehr! Heute Morgen habe ich gesehen, dass über das Wochenende 840 Euro in einem Onlineshop ausgegeben wurden. Ich habe dort nie etwas bestellt.') },
+      { kind: 'line', speaker: 'kim', text: german('Leider sind Sie damit nicht allein. Allein in diesem Monat hatten wir über dreißig solcher Fälle. Haben Sie Ihre Karte schon sperren lassen?') },
+      { kind: 'line', speaker: 'leo', text: german('Ja, gleich heute Morgen über den Sperrnotruf. Bekomme ich das Geld zurück?') },
+      { kind: 'line', speaker: 'kim', text: german('Gute Chancen. Melden Sie die Abbuchungen sofort Ihrer Bank und widersprechen Sie ihnen. Für die Bank ist unsere Anzeige ein wichtiger Nachweis. Haben Sie die SMS noch?') },
+      { kind: 'narration', text: german('Leo zeigt ihr das Handy. Der Absender ist eine unbekannte Nummer aus dem Ausland, der Link führt zu einer Seite, die fast genauso aussieht wie die eines bekannten Paketdienstes.') },
+      { kind: 'line', speaker: 'kim', text: german('Typisch. Bitte machen Sie Screenshots von der SMS und den Abbuchungen und schicken Sie sie mir. {name}, Sie wohnen mit ihm zusammen. Woran hätte man die Nachricht erkennen können?') },
+      { kind: 'reply', to: 'kim', options: [
+        german('Am unbekannten Absender, am seltsamen Link und an der Forderung, schnell zu bezahlen.'),
+        german('Daran, dass Leo wirklich ein Paket erwartet hat.'),
+        german('Daran, dass die Gebühr nur 1,99 Euro betragen hat.')
+      ] },
+      { kind: 'line', speaker: 'leo', mood: 'sad', text: german('Im Nachhinein ist das alles so offensichtlich. Aber in dem Moment habe ich einfach nicht nachgedacht.') },
+      { kind: 'line', speaker: 'kim', text: german('Genau darauf setzen die Täter. Echte Paketdienste verlangen keine Gebühren per SMS. Im Zweifel: nie auf den Link klicken, sondern die offizielle App oder Webseite öffnen.') },
+      { kind: 'question', prompt: german('Warum ist Leo auf dem Polizeirevier?'), options: [german('Er möchte Anzeige wegen eines Betrugs erstatten.'), german('Er hat ein Paket gefunden.'), german('Er hatte einen Autounfall.')] },
+      { kind: 'question', prompt: german('Was stand in der SMS?'), options: [german('Sein Paket könne nicht zugestellt werden, er solle 1,99 Euro bezahlen.'), german('Er habe in einem Gewinnspiel gewonnen.'), german('Seine Kreditkarte sei abgelaufen.')] },
+      { kind: 'question', prompt: german('Wie viel Geld wurde von Leos Karte abgebucht?'), options: [german('840 Euro'), german('1,99 Euro'), german('30 Euro')] },
+      { kind: 'question', prompt: german('Was soll Leo der Polizei schicken?'), options: [german('Screenshots von der SMS und den Abbuchungen'), german('Seine Kreditkarte'), german('Das Paket')] },
+      { kind: 'question', prompt: german('Was rät Kim für die Zukunft?'), options: [german('Nie auf den Link klicken, sondern die offizielle App oder Webseite öffnen'), german('Keine Pakete mehr bestellen'), german('Nur noch bar bezahlen')] }
     ]
   },
   {
@@ -3074,17 +3126,29 @@ export const germanStories: Story[] = [
     scene: 'cafe',
     cast: ['mia', 'tom'],
     languages: ['de'],
-    title: german('Lieblingsessen'),
+    title: german('Der Currywurst-Test'),
     beats: [
-      { kind: 'narration', text: german('Mia und Tom sprechen über Essen. Sie haben einen Absatz und einen Ausdruck.') },
-      { kind: 'line', speaker: 'mia', text: german('Hallo {name}! Ich habe einen Absatz und einen Ausdruck.') },
-      { kind: 'line', speaker: 'tom', text: german('Gut. Ich habe einen Ansatz und einen Aufbau.') },
-      { kind: 'reply', to: 'mia', options: [german('Ich bin ein Absatz.'), german('Ich bin ein Ausdruck.'), german('Ich habe einen Aufbau.')] },
-      { kind: 'line', speaker: 'tom', text: german('Danke! Wir müssen einen Bericht schreiben und einen Abschluss machen.') },
-      { kind: 'question', prompt: german('Was hat Mia?'), options: [german('Absatz und Ausdruck'), german('Ansatz und Aufbau'), german('Apparat und Auto')] },
-      { kind: 'question', prompt: german('Was hat Tom?'), options: [german('Ansatz und Aufbau'), german('Absatz und Ausdruck'), german('Band und Baby')] },
-      { kind: 'question', prompt: german('Was müssen sie schreiben?'), options: [german('Einen Bericht'), german('Ein Blatt'), german('Ein Band')] },
-      { kind: 'question', prompt: german('Was müssen sie machen?'), options: [german('Einen Abschluss'), german('Einen Apparat'), german('Einen Abfall')] }
+      { kind: 'narration', text: german('Ein Mittwochmittag in einem kleinen Café in Berlin-Kreuzberg. Mia schreibt einen Foodblog. Heute testet sie die neue vegane Speisekarte. Tom, der eigentlich nur Fleisch isst, begleitet sie.') },
+      { kind: 'line', speaker: 'tom', mood: 'angry', text: german('Vegane Currywurst? Das ist doch ein Widerspruch in sich. Die Currywurst ist ein Stück Berliner Kultur, die kann man nicht einfach durch Soja ersetzen.') },
+      { kind: 'line', speaker: 'mia', mood: 'laughing', text: german('Du hast sie ja noch nicht mal probiert. Ich schlage dir einen Deal vor: ein Blindtest. Zwei Würste, eine mit Fleisch, eine vegan. Wenn du den Unterschied erkennst, bezahle ich.') },
+      { kind: 'line', speaker: 'tom', mood: 'happy', text: german('Abgemacht. Ich esse seit dreißig Jahren Currywurst. Das ist leicht verdientes Geld.') },
+      { kind: 'narration', text: german('Die Kellnerin bringt zwei Teller ohne Beschriftung. Tom probiert lange, kaut nachdenklich und zeigt dann entschlossen auf den linken Teller.') },
+      { kind: 'line', speaker: 'tom', text: german('Ganz klar: Die linke ist die echte. Die ist würziger, die hat Biss.') },
+      { kind: 'line', speaker: 'mia', mood: 'laughing', text: german('Tut mir leid, Tom. Die linke ist die vegane.') },
+      { kind: 'line', speaker: 'tom', mood: 'surprised', text: german('Das kann nicht sein! Ich hätte schwören können … Na gut. Aber warum kostet die vegane Wurst dann einen Euro mehr? Das ergibt doch keinen Sinn.') },
+      { kind: 'line', speaker: 'mia', text: german('Das liegt unter anderem daran, dass Fleisch in Deutschland stark subventioniert wird und die Ersatzprodukte noch in kleineren Mengen hergestellt werden. Das ist übrigens ein guter Punkt für meinen Artikel. {name}, du hast Toms Gesicht beim Test gesehen. Hat er den Unterschied bemerkt?') },
+      { kind: 'reply', to: 'mia', options: [
+        german('Nein, er hat die vegane Wurst für die echte gehalten.'),
+        german('Ja, er hat sofort erkannt, dass die linke Wurst vegan ist.'),
+        german('Nein, er hat keine der beiden Würste probiert.')
+      ] },
+      { kind: 'line', speaker: 'tom', mood: 'laughing', text: german('Schon gut, schon gut. Ich gebe zu: Die vegane war richtig lecker. Aber verrate in deinem Blog bitte nicht meinen Namen.') },
+      { kind: 'narration', text: german('Eine Woche später erscheint Mias Artikel: „Der Currywurst-Test – warum selbst ein Fleischliebhaber den Unterschied nicht schmeckt“. Er wird über tausend Mal geteilt.') },
+      { kind: 'question', prompt: german('Was schreibt Mia?'), options: [german('Einen Foodblog'), german('Ein Kochbuch'), german('Die Speisekarte des Cafés')] },
+      { kind: 'question', prompt: german('Was hält Tom am Anfang von veganer Currywurst?'), options: [german('Er hält sie für einen Widerspruch in sich.'), german('Er findet sie gesünder.'), german('Er isst sie jeden Tag.')] },
+      { kind: 'question', prompt: german('Welche Abmachung treffen Mia und Tom?'), options: [german('Wenn Tom den Unterschied erkennt, bezahlt Mia.'), german('Wenn Tom verliert, muss er vegan leben.'), german('Wer verliert, schreibt den Artikel.')] },
+      { kind: 'question', prompt: german('Warum ist die vegane Wurst laut Mia teurer?'), options: [german('Fleisch wird subventioniert, und Ersatzprodukte werden in kleineren Mengen hergestellt.'), german('Das Café will mit veganem Essen mehr verdienen.'), german('Soja muss aus Berlin importiert werden.')] },
+      { kind: 'question', prompt: german('Worum bittet Tom Mia am Ende?'), options: [german('Seinen Namen im Blog nicht zu verraten'), german('Die Rechnung zu bezahlen'), german('Noch eine vegane Wurst zu bestellen')] }
     ]
   },
   {
