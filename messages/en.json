@@ -1050,5 +1050,16 @@
   "learning_remove_letter": "Take back the last letter",
   "grammar_determine_case": "Which case, gender and number is this?",
   "grammar_determine_verb": "Which person and tense is this?",
-  "grammar_false_friends_unsupported": "False friends are only available for German so far."
+  "grammar_false_friends_unsupported": "False friends are only available for German so far.",
+  "memory_title": "Memory map",
+  "memory_hint": "One tile per word. It fills in as a word settles and fades when it is time to see it again. Tap a tile to meet the word.",
+  "memory_stage_new": "New",
+  "memory_stage_learning": "Learning",
+  "memory_stage_young": "Settling",
+  "memory_stage_mature": "Known",
+  "memory_stage_leech": "Keeps slipping",
+  "memory_never": "not practised yet",
+  "memory_due_now": "due now",
+  "memory_due_on": "next on {date}",
+  "memory_practise": "Practise {count} due words"
 }
