@@ -911,5 +911,20 @@
   "alltag_price": "How do you say this price?",
   "alltag_continue": "Continue",
   "offline_pill": "Offline – keep learning, everything is saved",
-  "offline_needs_network": "This needs an internet connection."
+  "offline_needs_network": "This needs an internet connection.",
+  "rubric_title": "Rubric for {level}",
+  "rubric_band_above": "Above {level}",
+  "rubric_band_at": "At {level} level",
+  "rubric_band_below": "Not yet {level}",
+  "rubric_task": "Task",
+  "rubric_range": "Vocabulary",
+  "rubric_accuracy": "Accuracy",
+  "rubric_coherence": "Coherence",
+  "rubric_points": "{points} of {max} points",
+  "rubric_task_detail": "{value} words; from {expected} the text fulfils the task.",
+  "rubric_range_detail": "{value} % different words, about {expected} % at this level.",
+  "rubric_accuracy_detail": "{value} spots with capitals, punctuation or spacing.",
+  "rubric_accuracy_clean": "Sentence starts, punctuation and spacing are right.",
+  "rubric_coherence_detail": "{value} different linking words, {expected} at this level.",
+  "rubric_connectors_used": "Linking words: {words}"
 }
