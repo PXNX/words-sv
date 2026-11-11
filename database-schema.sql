@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS wordcircle_streak_devices (
   listen_completed TINYINT(1) NOT NULL DEFAULT 0,
   pronunciation_attempts INT UNSIGNED NOT NULL DEFAULT 0,
   hangman_completed TINYINT(1) NOT NULL DEFAULT 0,
+  taboo_completed TINYINT(1) NOT NULL DEFAULT 0,
   alltag_correct INT UNSIGNED NOT NULL DEFAULT 0,
   sentence_completed TINYINT(1) NOT NULL DEFAULT 0,
   -- The ISO week whose WordCircle Pro shield bridged a missed day.
@@ -64,6 +65,7 @@ CREATE TABLE IF NOT EXISTS wordcircle_streak_devices (
 
 -- Migration for the writing goal (/sentence); api/streak/progress.ts runs it on its own as well.
 -- ALTER TABLE wordcircle_streak_devices ADD COLUMN sentence_completed TINYINT(1) NOT NULL DEFAULT 0;
+-- ALTER TABLE wordcircle_streak_devices ADD COLUMN taboo_completed TINYINT(1) NOT NULL DEFAULT 0;
 -- ALTER TABLE wordcircle_streak_devices ADD COLUMN pro_shield_week CHAR(8) NULL;
 -- ALTER TABLE wordcircle_streak_devices ADD COLUMN native_digits TINYINT(1) NOT NULL DEFAULT 0;
 

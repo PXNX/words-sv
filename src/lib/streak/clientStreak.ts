@@ -15,11 +15,12 @@ export type StreakEvent =
 	| 'listen_completed'
 	| 'pronunciation_practised'
 	| 'hangman_completed'
+	| 'taboo_completed'
 	| 'alltag_correct'
 	| 'sentence_completed'
 	| 'reward_collected';
 
-export type StreakMode = 'vocab' | 'circle' | 'definitions' | 'wordle' | 'reading' | 'story' | 'grammar' | 'listen' | 'pronunciation' | 'hangman' | 'alltag' | 'sentence';
+export type StreakMode = 'vocab' | 'circle' | 'definitions' | 'wordle' | 'reading' | 'story' | 'grammar' | 'listen' | 'pronunciation' | 'hangman' | 'taboo' | 'alltag' | 'sentence';
 
 export type ClientStreak = {
 	dateKey: string;
@@ -33,6 +34,7 @@ export type ClientStreak = {
 	listenCompleted: boolean;
 	pronunciationAttempts: number;
 	hangmanCompleted: boolean;
+	tabooCompleted: boolean;
 	alltagCorrect: number;
 	sentenceCompleted: boolean;
 	qualified: boolean;
@@ -132,6 +134,7 @@ function defaultState(now = new Date()): ClientStreak {
 		listenCompleted: false,
 		pronunciationAttempts: 0,
 		hangmanCompleted: false,
+		tabooCompleted: false,
 		alltagCorrect: 0,
 		sentenceCompleted: false,
 		qualified: false,
@@ -223,6 +226,7 @@ export function readStreak(now = new Date()) {
 			storyCompleted: Boolean(saved.storyCompleted),
 			listenCompleted: Boolean(saved.listenCompleted),
 			hangmanCompleted: Boolean(saved.hangmanCompleted),
+			tabooCompleted: Boolean(saved.tabooCompleted),
 			sentenceCompleted: Boolean(saved.sentenceCompleted),
 			qualified: Boolean(saved.qualified),
 			vocabularyGoal: goal,
@@ -259,6 +263,7 @@ export function qualifiesToday(state: ClientStreak): boolean {
 		state.listenCompleted ||
 		state.pronunciationAttempts >= PRONUNCIATION_GOAL ||
 		state.hangmanCompleted ||
+		state.tabooCompleted ||
 		state.alltagCorrect >= ALLTAG_GOAL ||
 		state.sentenceCompleted
 	);
@@ -311,6 +316,7 @@ export function applyLocalEvent(current: ClientStreak, event: StreakEvent, now =
 	if (event === 'listen_completed') next.listenCompleted = true;
 	if (event === 'pronunciation_practised') next.pronunciationAttempts += 1;
 	if (event === 'hangman_completed') next.hangmanCompleted = true;
+	if (event === 'taboo_completed') next.tabooCompleted = true;
 	if (event === 'alltag_correct') next.alltagCorrect += 1;
 	if (event === 'sentence_completed') next.sentenceCompleted = true;
 	if (event === 'reward_collected') return writeStreak(collectReward(next));
@@ -405,6 +411,7 @@ export function modeDone(state: ClientStreak, mode: StreakMode): boolean {
 	if (mode === 'grammar') return state.grammarCorrect >= GRAMMAR_GOAL;
 	if (mode === 'listen') return state.listenCompleted;
 	if (mode === 'hangman') return state.hangmanCompleted;
+	if (mode === 'taboo') return state.tabooCompleted;
 	if (mode === 'alltag') return state.alltagCorrect >= ALLTAG_GOAL;
 	if (mode === 'sentence') return state.sentenceCompleted;
 	return state.pronunciationAttempts >= PRONUNCIATION_GOAL;

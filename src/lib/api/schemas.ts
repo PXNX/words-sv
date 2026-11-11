@@ -30,6 +30,7 @@ export const ServerStreakSchema = v.object({
   listenCompleted: v.optional(v.boolean()),
   pronunciationAttempts: v.optional(count),
   hangmanCompleted: v.optional(v.boolean()),
+  tabooCompleted: v.optional(v.boolean()),
   alltagCorrect: v.optional(count),
   sentenceCompleted: v.optional(v.boolean()),
   qualified: v.boolean(),

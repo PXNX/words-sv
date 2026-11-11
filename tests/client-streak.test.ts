@@ -79,7 +79,7 @@ describe('every game mode counts toward the streak', () => {
 
 	const today = (): ClientStreak => ({ ...readStreak(NOW), dateKey: TODAY, qualified: false, streakCount: 0, lastQualifiedDay: YESTERDAY });
 
-	test('definitions, hangman and Alltag each qualify today', () => {
+	test('definitions, hangman, taboo and Alltag each qualify today', () => {
 		const definitions = applyLocalEvent(today(), 'definitions_completed', NOW);
 		expect(definitions.qualified).toBe(true);
 		expect(definitions.streakCount).toBe(1);
@@ -89,6 +89,11 @@ describe('every game mode counts toward the streak', () => {
 		const hangman = applyLocalEvent(today(), 'hangman_completed', NOW);
 		expect(hangman.qualified).toBe(true);
 		expect(modeDone(hangman, 'hangman')).toBe(true);
+
+		store.clear();
+		const taboo = applyLocalEvent(today(), 'taboo_completed', NOW);
+		expect(taboo.qualified).toBe(true);
+		expect(modeDone(taboo, 'taboo')).toBe(true);
 
 		store.clear();
 		let alltag = today();

@@ -31,6 +31,8 @@ export interface StoredStreak {
 	pronunciationAttempts?: number;
 	hangman_completed?: boolean | number;
 	hangmanCompleted?: boolean | number;
+	taboo_completed?: boolean | number;
+	tabooCompleted?: boolean | number;
 	alltag_correct?: number;
 	alltagCorrect?: number;
 	sentence_completed?: boolean | number;
@@ -68,6 +70,7 @@ export interface StreakState {
 	listenCompleted: boolean;
 	pronunciationAttempts: number;
 	hangmanCompleted: boolean;
+	tabooCompleted: boolean;
 	alltagCorrect: number;
 	sentenceCompleted: boolean;
 	qualified: boolean;
@@ -176,6 +179,7 @@ export function stateForToday(stored: StoredStreak | null | undefined, timeZone:
 			listenCompleted: Boolean(stored?.listen_completed ?? stored?.listenCompleted),
 			pronunciationAttempts: numberField(stored?.pronunciation_attempts ?? stored?.pronunciationAttempts),
 			hangmanCompleted: Boolean(stored?.hangman_completed ?? stored?.hangmanCompleted),
+			tabooCompleted: Boolean(stored?.taboo_completed ?? stored?.tabooCompleted),
 			alltagCorrect: numberField(stored?.alltag_correct ?? stored?.alltagCorrect),
 			sentenceCompleted: Boolean(stored?.sentence_completed ?? stored?.sentenceCompleted),
 			qualified: Boolean(stored?.current_qualified ?? stored?.qualified),
@@ -215,6 +219,7 @@ export function stateForToday(stored: StoredStreak | null | undefined, timeZone:
 		listenCompleted: false,
 		pronunciationAttempts: 0,
 		hangmanCompleted: false,
+		tabooCompleted: false,
 		alltagCorrect: 0,
 		sentenceCompleted: false,
 		qualified: false,
@@ -241,6 +246,7 @@ export function qualifiesToday(state: StreakState) {
 		state.listenCompleted ||
 		state.pronunciationAttempts >= PRONUNCIATION_GOAL ||
 		state.hangmanCompleted ||
+		state.tabooCompleted ||
 		state.alltagCorrect >= ALLTAG_GOAL ||
 		state.sentenceCompleted
 	);
@@ -283,6 +289,7 @@ export function applyStreakEvent(stored: StoredStreak | null | undefined, timeZo
 	if (event === 'listen_completed') state.listenCompleted = true;
 	if (event === 'pronunciation_practised') state.pronunciationAttempts += 1;
 	if (event === 'hangman_completed') state.hangmanCompleted = true;
+	if (event === 'taboo_completed') state.tabooCompleted = true;
 	if (event === 'alltag_correct') state.alltagCorrect += 1;
 	if (event === 'sentence_completed') state.sentenceCompleted = true;
 	if (event === 'reward_collected') return collectReward(state);
