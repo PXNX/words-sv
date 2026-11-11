@@ -113,10 +113,11 @@ function readVoiceQuality(): VoiceQuality {
   // A retired engine's setting (VoxCPM) moves to its replacement instead of silently resetting.
   return storedVoiceEngine(localStorage.getItem(VOICE_QUALITY_KEY));
 }
-// The conversation partner's language model (conversation/models.ts).
-function readChatModel(): ChatModelId {
+// The conversation partner's language model (conversation/models.ts), chosen per learning language;
+// a language without its own choice uses the last one picked anywhere.
+function readChatModel(language: string): ChatModelId {
   if (typeof localStorage === 'undefined') return DEFAULT_CHAT_MODEL;
-  return chatModel(localStorage.getItem(CHAT_MODEL_KEY)).id;
+  return chatModel(localStorage.getItem(`${CHAT_MODEL_KEY}:${language}`) ?? localStorage.getItem(CHAT_MODEL_KEY)).id;
 }
 function readNaturalModel(): NaturalModel {
   if (typeof localStorage === 'undefined') return 'high';
@@ -140,9 +141,9 @@ class SettingsStore {
     sound = $state(typeof localStorage === 'undefined' || localStorage.getItem(SOUND_KEY) !== 'off');
     voiceQuality = $state<VoiceQuality>(readVoiceQuality());
     naturalModel = $state<NaturalModel>(readNaturalModel());
-    chatModel = $state<ChatModelId>(readChatModel());
     dialects = $state(typeof localStorage === 'undefined' || localStorage.getItem(DIALECTS_KEY) !== 'off');
     lang = $state<Language>(readLanguage());
+    chatModel = $state<ChatModelId>(readChatModel(this.lang));
     interfaceLocale = $state<InterfaceLocale>(readInterfaceLocale());
     vocabularyLevel = $state<VocabularyLevel>(readVocabularyLevel());
     includeLowerVocabulary = $state(typeof localStorage !== 'undefined' && localStorage.getItem(INCLUDE_LOWER_VOCABULARY_KEY) === 'on');
@@ -203,6 +204,7 @@ class SettingsStore {
   setChatModel(next: ChatModelId) {
     this.chatModel = next;
     localStorage.setItem(CHAT_MODEL_KEY, next);
+    localStorage.setItem(`${CHAT_MODEL_KEY}:${this.lang}`, next);
   }
   setNaturalModel(next: NaturalModel) {
     this.naturalModel = next;
@@ -223,6 +225,7 @@ class SettingsStore {
   setLang(next: Language) {
     this.lang = next;
     localStorage.setItem(LANGUAGE_KEY, next);
+    this.chatModel = readChatModel(next);
     this.normalizeVocabulary();
     // Fetch the new language's vocabulary in the background; game modes that need it
     // pick it up from the cache as soon as it arrives.

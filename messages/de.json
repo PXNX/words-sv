@@ -962,5 +962,19 @@
   "mock_speaking_stop": "Aufnahme beenden",
   "mock_speaking_empty": "Noch nichts gehört.",
   "mock_speaking_skip": "Ohne Sprechen abgeben",
-  "mock_section_text": "Leseverstehen"
+  "mock_section_text": "Leseverstehen",
+  "cloud_title": "OpenRouter mit eigenem Schlüssel",
+  "cloud_intro": "Freiwillig: Wenn das Sprachmodell nicht auf deinem Gerät laufen kann oder du ein größeres möchtest, kann OpenRouter antworten. Du brauchst dafür einen eigenen API-Schlüssel; die Kosten rechnet OpenRouter mit dir ab.",
+  "cloud_mode_off": "Aus",
+  "cloud_mode_fallback": "Ohne WebGPU",
+  "cloud_mode_always": "Immer",
+  "cloud_key": "API-Schlüssel",
+  "cloud_key_get": "Schlüssel holen",
+  "cloud_forget": "Vergessen",
+  "cloud_model": "Modell für {language}",
+  "cloud_models_link": "Modelle ansehen",
+  "cloud_status_no_key": "Ohne Schlüssel bleibt alles auf dem Gerät.",
+  "cloud_status_active": "Antwortet gerade: {model}",
+  "cloud_status_standby": "Bereit; das Modell auf dem Gerät hat Vorrang.",
+  "cloud_privacy": "Wenn OpenRouter antwortet, gehen deine Nachrichten und Texte an OpenRouter und den Anbieter des Modells. Der Schlüssel bleibt nur in diesem Browser."
 }
