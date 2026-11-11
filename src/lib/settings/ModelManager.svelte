@@ -7,6 +7,7 @@
 -->
 <script lang="ts">
   import CloudModelSettings from './CloudModelSettings.svelte';
+  import { prefersWithoutAi, setWithoutAi } from '#lib/conversation/aiChoice.svelte.js';
   import { onMount, type Snippet } from 'svelte';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
@@ -29,7 +30,6 @@
   import IconShield from '~icons/material-symbols/shield-rounded';
   import IconStar from '~icons/material-symbols/star-rounded';
   import IconWarning from '~icons/material-symbols/warning-rounded';
-  import IconMemory from '~icons/material-symbols/memory-rounded';
   import IconClose from '~icons/material-symbols/close-rounded';
 
   // `voiceOptions`: the settings that belong to the chosen voice (Piper quality, test, dialects),
@@ -123,6 +123,13 @@
 
   // --- conversation model -----------------------------------------------------------------------
   const device = $derived(localModel.device);
+  // "No language model" is chosen when both AI modes run without it: by choice, or because no model
+  // is downloaded yet (then the modes cannot use one anyway).
+  const noLlm = $derived((prefersWithoutAi('conversation') && prefersWithoutAi('writing')) || !(localModel.status === 'ready' || localModel.cached));
+  function chooseNoLlm(value: boolean) {
+    setWithoutAi('conversation', value);
+    setWithoutAi('writing', value);
+  }
   const f16 = $derived(device?.f16 ?? true);
   function fits(model: ChatModel) {
     return likelyFits(model, f16, device?.deviceMemoryGB ?? null, device?.maxBufferMB ?? null);
@@ -194,9 +201,6 @@
   <p class="model-hint">{m.models_hint({}, { locale })}</p>
 
   <h3>{m.models_downloads({}, { locale })}</h3>
-  {#if device}
-    <p class="model-device"><IconMemory aria-hidden="true" /> {m.models_device({ gpu: device.gpu, f16: device.f16 ? '16-bit' : '32-bit' }, { locale })}{#if device.deviceMemoryGB} · {m.models_ram({ ram: `${device.deviceMemoryGB}${device.deviceMemoryGB >= 8 ? '+' : ''} GB` }, { locale })}{/if}</p>
-  {/if}
   <p class="model-hint">{m.models_parallel_hint({}, { locale })}</p>
 
   {#if voicesSupported}
@@ -208,7 +212,7 @@
         {@const group = voiceGroups[id]}
         <li class="model-card" class:chosen>
           <button type="button" class="model-pick" role="radio" aria-checked={chosen} onclick={() => chooseVoice(id)}>
-            <span class="model-name">{engineNames[id]()}</span>
+            <span class="model-name">{engineNames[id]()}{#if id === 'standard'}<span class="model-default">{m.models_default({}, { locale })}</span>{/if}</span>
             {#if voiceMeta(id)}<span class="model-facts">{voiceMeta(id)}</span>{/if}
             {#if group}<span class="model-facts">{m.models_facts({ download: `~${mb(voiceDownloadMB(id))}`, memory: `~${mb(voiceMemoryMB(id))}` }, { locale })}</span>{/if}
             <span class="model-about">{voiceHint(id)}</span>
@@ -238,11 +242,18 @@
     <p class="model-empty">{m.models_unsupported({}, { locale })}</p>
   {:else}
     <ul class="model-list" role="radiogroup" aria-labelledby="models-conversation-heading">
+      <!-- The default: conversation and writing feedback without a language model (scripted, rule-based). -->
+      <li class="model-card" class:chosen={noLlm}>
+        <button type="button" class="model-pick" role="radio" aria-checked={noLlm} onclick={() => chooseNoLlm(true)}>
+          <span class="model-name">{m.models_no_llm({}, { locale })}<span class="model-default">{m.models_default({}, { locale })}</span></span>
+          <span class="model-about">{m.models_no_llm_hint({}, { locale })}</span>
+        </button>
+      </li>
       {#each chatModels as model (model.id)}
         {@const state = modelState(model)}
-        {@const chosen = settings.chatModel === model.id}
+        {@const chosen = !noLlm && settings.chatModel === model.id}
         <li class="model-card" class:chosen>
-          <button type="button" class="model-pick" role="radio" aria-checked={chosen} onclick={() => chooseModel(model.id)}>
+          <button type="button" class="model-pick" role="radio" aria-checked={chosen} onclick={() => { chooseModel(model.id); chooseNoLlm(false); }}>
             <span class="model-name">{model.label}{#if isRecommended(model, settings.lang)}<span class="model-best" title={m.models_best_for({ language: languageName }, { locale })}><IconStar aria-hidden="true" /> {m.models_best_for({ language: languageName }, { locale })}</span>{/if}</span>
             <span class="model-facts">{sizeNames[model.size]} · {m.models_facts({ download: mb(model.downloadMB), memory: mb(modelGpuMB(model)) }, { locale })}</span>
             {#if !fits(model)}<span class="model-warn"><IconWarning aria-hidden="true" /> {m.models_may_not_fit({}, { locale })}</span>{/if}
@@ -324,6 +335,8 @@
   .model-card.chosen { border-color:#34824d;background:color-mix(in srgb,#34824d 8%,transparent); }
   .model-pick { flex:1;min-width:0;display:grid;gap:.2rem;padding:0;border:0;background:transparent;color:inherit;text-align:start;cursor:pointer; }
   .model-name { display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;font-size:.78rem;font-weight:900; }
+  .model-default { display:inline-flex;align-items:center;margin-inline-start:.35rem;padding:.05rem .4rem;border-radius:999px;background:rgba(52,130,77,.15);color:#2f6f45;font-size:.58rem;font-weight:900;vertical-align:middle; }
+  :global(html.dark) .model-default { background:rgba(52,130,77,.3);color:#b6e3c4; }
   .model-best { display:inline-flex;align-items:center;gap:.15rem;padding:.05rem .4rem;border-radius:999px;background:#fbe6b5;color:#7a4a12;font-size:.58rem;font-weight:900; }
   .model-actions { flex:none; }
   .model-stored { display:grid;gap:.35rem;margin:0;padding:0;list-style:none; }

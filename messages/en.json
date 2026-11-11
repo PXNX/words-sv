@@ -220,7 +220,7 @@
   "pet_lilith": "Pet Lilith",
   "story_auto_read": "Read aloud automatically",
   "voice_quality": "Story voices",
-  "voice_quality_standard": "Standard",
+  "voice_quality_standard": "Web Speech (browser)",
   "voice_quality_natural": "Natural",
   "voice_quality_hint": "Natural voices are generated on your device. They are downloaded once (about {size} MB for this language).",
   "voice_quality_standard_hint": "Uses the voices already installed on this device. Ready instantly, even offline, but sounds more robotic.",
@@ -976,5 +976,12 @@
   "cloud_status_no_key": "Without a key everything stays on the device.",
   "cloud_status_active": "Answering now: {model}",
   "cloud_status_standby": "Ready; the model on your device comes first.",
-  "cloud_privacy": "When OpenRouter answers, your messages and texts go to OpenRouter and the model's provider. The key stays in this browser only."
+  "cloud_privacy": "When OpenRouter answers, your messages and texts go to OpenRouter and the model's provider. The key stays in this browser only.",
+  "hardware_title": "Your device",
+  "hardware_ram": "Memory",
+  "hardware_cores": "CPU cores",
+  "hardware_page": "App memory",
+  "models_default": "Default",
+  "models_no_llm": "No language model",
+  "models_no_llm_hint": "Conversations use scripted dialogues and texts are graded by rules. No download, works everywhere."
 }
