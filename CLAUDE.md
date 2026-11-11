@@ -35,7 +35,7 @@ Conventions:
 
 - Pure logic goes in `.ts` files with a Vitest test in `tests/` (add it to `tests/vitest.server.config.ts`); reactive state in `.svelte.ts`. Keep pure files free of `$state` imports so they stay testable.
 - Heavy work (models, encoding) runs in a `*.worker.ts` behind a small client module; anything that can wait goes through `audio/priorityQueue.ts` as `'background'`.
-- Everything runs on the device; do not add cloud LLM or TTS calls (Edge voices are the one opt-in exception).
+- Everything runs on the device; do not add cloud LLM or TTS calls. The opt-in exceptions are Edge voices and OpenRouter with the learner's own key (`conversation/openRouter.ts`, `cloudModel.svelte.ts`), which the router in `localModel.svelte.ts` uses only when the learner turned it on.
 - User-facing text goes in `messages/de.json` and `messages/en.json` (German is the base locale; other locales fall back to it).
 - `bun run lint`, `bun run check`, `bun run test` and `bun run build` are clean on `main`, and CI runs the same four. `bun lint` reads `eslint.config.ts`; the app, tests, scripts and the Vercel server functions in `api/` are all TypeScript.
 

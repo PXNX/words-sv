@@ -292,7 +292,8 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [ ] C: more Satzbau and B2–C2 sentences; more tense gaps per level.
 - [x] W: offline dictionary (`/dictionary`): search across levels, inflected forms to their base word,
   German cases and compound parts, listen, add to review; tap-to-lookup in reading opens it.
-- [ ] D: provider router (WebGPU first, OpenRouter BYOK opt-in), per-language model settings.
+- [x] D: provider router in `localModel.svelte.ts` (device first, OpenRouter with the learner's own key
+  as opt-in fallback or always), chat model and OpenRouter model per learning language.
 - [x] E: RTL audit (`docs/rtl.md`, `tests/rtl-css.test.ts`) and L1 error priors (`progress/l1Priors.ts`,
   the coach's first grammar focus).
 - [x] E: full Persian and Arabic interface translations.

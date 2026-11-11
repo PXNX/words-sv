@@ -25,6 +25,7 @@ everything a learner practises is stored on the device first.
 | Store purchases, Pro status | Buy buttons are disabled; owned items stay unlocked (stored locally). |
 | Telegram group games | Rounds still count for the learner; only the group board misses them. |
 | Edge voices | Fall back to the next engine (see `voice/engines.ts`). |
+| OpenRouter (opt-in, own key) | Replies fail while offline; with the "Without WebGPU" setting the on-device model, where there is one, keeps answering. |
 | First download of a voice or chat model | Needs the connection once; afterwards it is cached. |
 | Server push and Telegram reminders | Sent by the server; the PWA's own reminders keep working. |
 | Wiktionary link in the dictionary | Opens the external page. |
