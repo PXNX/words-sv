@@ -46,3 +46,14 @@ export function ownedItems(bought: readonly string[]): ShopItemId[] {
 export function stillUseful(entry: Product, owned: readonly ShopItemId[]): boolean {
   return entry.kind === 'pro' || entry.unlocks.some((item) => !owned.includes(item));
 }
+
+/** The look with every item of `entry` put on, for trying it before buying. */
+export function withProduct<T extends Record<string, string>>(look: T, entry: Product | null): T {
+  if (!entry) return look;
+  const next: Record<string, string> = { ...look };
+  for (const id of entry.unlocks) {
+    const item = SHOP_ITEMS.find((shopItem) => shopItem.id === id)!;
+    next[item.part] = item.choice;
+  }
+  return next as T;
+}

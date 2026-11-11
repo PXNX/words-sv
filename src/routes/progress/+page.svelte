@@ -19,8 +19,11 @@
   import IconClose from '~icons/material-symbols/close-rounded';
   import Companion from '#lib/story/Companion.svelte';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
-  import IconStore from '~icons/material-symbols/storefront-rounded';
-  import IconChevron from '~icons/material-symbols/chevron-right-rounded';
+  import AvatarEditor from '#lib/profile/AvatarEditor.svelte';
+  import Bundles from '#lib/store/Bundles.svelte';
+  import ProCard from '#lib/store/ProCard.svelte';
+  import { withProduct, type Product } from '#lib/store/catalog.js';
+  import type { Avatar } from '#lib/profile/avatar.js';
   import { cloudSync } from '#lib/sync/cloudSync.svelte.js';
   import { checkAchievementRewards, cosmetics } from '#lib/profile/cosmetics.svelte.js';
   import { dailyActivity, modeShares } from '#lib/progress/statsView.js';
@@ -88,7 +91,6 @@
     streakRestart: (count: number) => m.streak_restart({ count }, { locale: settings.interfaceLocale }),
     profileTitle: m.profile_title({}, { locale: settings.interfaceLocale }),
     profileHint: m.profile_hint({}, { locale: settings.interfaceLocale }),
-    profileEdit: m.profile_edit({}, { locale: settings.interfaceLocale }),
     profileNameEdit: m.profile_name_edit({}, { locale: settings.interfaceLocale }),
     profileNameSave: m.profile_name_save({}, { locale: settings.interfaceLocale }),
     profileNameCancel: m.profile_name_cancel({}, { locale: settings.interfaceLocale }),
@@ -144,6 +146,16 @@
   let shareNote = $state('');
   // The name and the character are edited right here, not in the settings panel.
   let editingName = $state(false);
+  // A bundle being tried on shows on the editor's character; picking a part there ends the try-on
+  // and changes only that part of the learner's own look.
+  let trying = $state<Product | null>(null);
+  const look = $derived(withProduct(settings.avatar ?? defaultAvatar, trying));
+  function changeLook(next: Avatar) {
+    const own = settings.avatar ?? defaultAvatar;
+    const changed = (Object.keys(next) as (keyof Avatar)[]).filter((part) => next[part] !== look[part]);
+    trying = null;
+    settings.setAvatar(changed.length ? { ...own, ...Object.fromEntries(changed.map((part) => [part, next[part]])) } : next);
+  }
   let nameDraft = $state('');
 
   const masteredWords = $derived(vocabProgress[settings.lang]?.masteredWords ?? 0);
@@ -251,43 +263,31 @@
 <section class="flex-1 min-h-0 m-0 px-[clamp(1rem,5vw,2rem)] pb-[clamp(1rem,5vw,2rem)] pt-[clamp(2.9rem,10vw,3.6rem)] overflow-x-hidden overflow-y-auto bg-transparent" dir={interfaceDirection} lang={settings.interfaceLocale} aria-label={labels.title}>
   <h1 class="m-0 text-center text-base-content font-['DM_Serif_Display',serif] text-[clamp(1.6rem,7vw,2.2rem)] font-normal tracking-[-.03em] leading-none">{labels.title}</h1>
 
-  <!-- Profile: the learner's name and own story character, plus what they have unlocked -->
+  <!-- Customising: the learner's name and own story character, edited right here, with the colour
+       bundles to try on and buy underneath. -->
   <section class="panel-play mt-[1.2rem] px-4 pt-[.9rem] pb-4" aria-labelledby="progress-profile-heading">
-    <div class="flex items-center gap-3">
-      <span class="progress-avatar" aria-hidden="true"><StoryCharacter id="kumar" avatar={settings.avatar ?? defaultAvatar} mood="happy" still /></span>
-      <div class="min-w-0 flex-1">
-        <h2 id="progress-profile-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.profileTitle}</h2>
-        {#if editingName}
-          <form class="mt-[.35rem] flex items-center gap-[.3rem]" onsubmit={submitName}>
-            <!-- svelte-ignore a11y_autofocus -->
-            <input class="progress-name-input" bind:value={nameDraft} type="text" autocomplete="given-name" autocapitalize="words" maxlength={FIRST_NAME_MAX_LENGTH} aria-label={labels.profileNameEdit} autofocus />
-            <button type="submit" class="progress-edit" aria-label={labels.profileNameSave} title={labels.profileNameSave}><IconCheck aria-hidden="true" /></button>
-            <button type="button" class="progress-edit" aria-label={labels.profileNameCancel} title={labels.profileNameCancel} onclick={cancelNameEdit}><IconClose aria-hidden="true" /></button>
-          </form>
-        {:else}
-          <div class="mt-[.2rem] flex items-center gap-[.35rem]">
-            <p class="progress-name">{settings.firstName || labels.profileNameEmpty}</p>
-            <button type="button" class="progress-edit" aria-label={labels.profileNameEdit} title={labels.profileNameEdit} onclick={startNameEdit}><IconEdit aria-hidden="true" /></button>
-          </div>
-        {/if}
+    <h2 id="progress-profile-heading" class="m-0 text-accent text-[.56rem] font-extrabold tracking-[.12em] uppercase">{labels.profileTitle}</h2>
+    {#if editingName}
+      <form class="mt-[.35rem] flex items-center gap-[.3rem]" onsubmit={submitName}>
+        <!-- svelte-ignore a11y_autofocus -->
+        <input class="progress-name-input" bind:value={nameDraft} type="text" autocomplete="given-name" autocapitalize="words" maxlength={FIRST_NAME_MAX_LENGTH} aria-label={labels.profileNameEdit} autofocus />
+        <button type="submit" class="progress-edit" aria-label={labels.profileNameSave} title={labels.profileNameSave}><IconCheck aria-hidden="true" /></button>
+        <button type="button" class="progress-edit" aria-label={labels.profileNameCancel} title={labels.profileNameCancel} onclick={cancelNameEdit}><IconClose aria-hidden="true" /></button>
+      </form>
+    {:else}
+      <div class="mt-[.2rem] flex items-center gap-[.35rem]">
+        <p class="progress-name">{settings.firstName || labels.profileNameEmpty}</p>
+        <button type="button" class="progress-edit" aria-label={labels.profileNameEdit} title={labels.profileNameEdit} onclick={startNameEdit}><IconEdit aria-hidden="true" /></button>
       </div>
-    </div>
-    <p class="m-0 mt-[.55rem] text-base-content/65 text-[.6rem] font-bold leading-[1.4]">{labels.profileHint}</p>
-    <a class="btn-play btn-play-soft btn-play-sm mt-[.6rem]" href="/store">{labels.profileEdit}</a>
+    {/if}
+    <p class="m-0 mt-[.35rem] mb-[.7rem] text-base-content/65 text-[.6rem] font-bold leading-[1.4]">{labels.profileHint}</p>
+    <AvatarEditor value={look} onchange={changeLook} />
+    <Bundles bind:trying />
   </section>
 
-  <!-- Signed in with Telegram: the store with the character; otherwise first the offer to save progress. -->
-  {#if cloudSync.linked === true}
-    <a class="panel-play card-play progress-store" href="/store">
-      <span class="progress-store-icon" aria-hidden="true"><IconStore /></span>
-      <span class="progress-store-text"><strong>{m.store_link({}, { locale: settings.interfaceLocale })}</strong><small>{m.store_link_hint({}, { locale: settings.interfaceLocale })}</small></span>
-      <IconChevron aria-hidden="true" class="progress-store-arrow rtl:rotate-180" />
-    </a>
-  {:else if cloudSync.linked === false}
+  <!-- Not signed in with Telegram yet: the offer to save progress there (and to buy bundles and Pro). -->
+  {#if cloudSync.linked === false}
     <div class="mt-4"><SyncHint /></div>
-  {:else}
-    <!-- Still asking the server: hold the card's place so nothing below jumps when it answers. -->
-    <div class="panel-play progress-store pending" aria-hidden="true"><span class="progress-store-icon"></span><span class="progress-store-text"><strong>&nbsp;</strong><small>&nbsp;</small></span></div>
   {/if}
 
   <ExamCoach />
@@ -341,6 +341,8 @@
         <p class="m-0 mt-[.35rem] text-base-content/65 text-[.6rem] font-bold">{labels.streakRestart(settings.streak.bestStreak)}</p>
       {/if}
     </div>
+    <!-- Signed in with Telegram: WordCircle Pro, which keeps the streak through one missed day a week. -->
+    {#if cloudSync.linked === true}<div class="mt-[.7rem]"><ProCard /></div>{/if}
 
 
     <dl class="m-0 mt-[.8rem] pt-[.7rem] grid grid-cols-2 border-t border-base-content/[.14] dark:border-base-content/[.22]">
@@ -434,24 +436,9 @@
     {#if unlocked === 0}<p class="m-0 mt-[.5rem] text-base-content/55 text-[.6rem] font-bold leading-[1.4]">{labels.achievementsNone}</p>{/if}
   </section>
 
-  <!-- Not linked to Telegram yet: an invitation to save the progress there. -->
-
-
 </section>
 
 <style>
-  .progress-store { display:flex;align-items:center;gap:.75rem;margin-top:1rem;padding:.75rem .85rem;color:inherit;text-decoration:none; }
-  .progress-store.pending { opacity:.45; }
-  .progress-store.pending .progress-store-icon { animation:none; }
-  .progress-store-icon { display:grid;place-items:center;flex:none;width:2.4rem;height:2.4rem;border-radius:.8rem;background:#fff4d9;color:#a45e38;animation:progress-store-bob 3.2s ease-in-out infinite; }
-  :global(html.dark) .progress-store-icon { background:#4a3a1a;color:#e6a527; }
-  .progress-store-icon :global(svg) { width:1.3rem;height:1.3rem; }
-  .progress-store-text { display:grid;gap:.1rem;flex:1;min-width:0; }
-  .progress-store-text strong { font-size:.78rem;font-weight:900; }
-  .progress-store-text small { font-size:.62rem;font-weight:700;opacity:.65; }
-  :global(.progress-store-arrow) { flex:none;width:1.2rem;height:1.2rem; }
-  @keyframes progress-store-bob { 0%,100% { translate:0 0; } 50% { translate:0 -3px; } }
-  @media (prefers-reduced-motion:reduce) { .progress-store-icon { animation:none; } }
   .pip { border: 2px solid var(--play-line); border-radius: 5px; }
   .progress-group { margin: 1.6rem 0 0; color: var(--color-accent); font-size: .62rem; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; text-align: center; }
   .progress-ring { rotate: -90deg; overflow: visible; }
@@ -467,8 +454,6 @@
   .progress-goal.active { border-color: #172a45; background: #172a45; color: #fffdf7; }
   .progress-goal:focus-visible { outline: 2px solid #e6a527; outline-offset: 2px; }
   :global(html.dark) .progress-goal.active { border-color: #e6a527; background: #e6a527; color: #172a45; }
-  .progress-avatar { display:grid;place-items:center;flex:none;width:4.4rem;height:5.4rem;border-radius:16px 11px 14px 12px / 12px 15px 11px 16px;background:radial-gradient(circle at 50% 85%,rgba(230,165,39,.32),transparent 60%),rgba(23,42,69,.05); }
-  .progress-avatar :global(.story-character) { width:3.6rem;height:4.5rem; }
   .progress-name { margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--play-ink,#172a45);font-family:'DM Serif Display',serif;font-size:1.35rem;line-height:1.1; }
   .progress-name-input { min-width:0;flex:1;min-height:2rem;padding:.15rem .5rem;border:2px solid var(--play-line);border-radius:.55rem;background:#fffdf7;color:#172a45;font-size:.78rem;font-weight:800;outline:0; }
   .progress-edit { display:grid;place-items:center;flex:none;width:1.7rem;height:1.7rem;padding:0;border:1.5px solid var(--play-line);border-radius:999px;background:transparent;color:var(--play-ink,#172a45);cursor:pointer; }
@@ -503,7 +488,6 @@
   .achievement.done { opacity:1;background:rgba(230,165,39,.12);border-color:#e6a527; }
   .achievement-label { color:var(--play-ink,#172a45);font-size:.62rem;font-weight:800;line-height:1.25; }
   .achievement-progress { color:var(--play-ink,#172a45);opacity:.55;font-size:.55rem;font-weight:800; }
-  :global(html.dark) .progress-avatar { background:radial-gradient(circle at 50% 85%,rgba(230,165,39,.28),transparent 60%),rgba(11,22,38,.35); }
   :global(html.dark) .progress-name-input { border-color:#0b1626;background:#2b4a70;color:#fffdf7; }
   :global(html.dark) .achievement { border-color:rgba(255,253,247,.2); }
   :global(html.dark) .achievement.done { border-color:#e6a527;background:rgba(230,165,39,.16); }

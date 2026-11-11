@@ -47,7 +47,7 @@ import { haptic } from '#lib/feedback/haptics.js';
 
 	const routePath = $derived(page.url.pathname.replace(/\/+$/, '') || '/');
 	const isHome = $derived(routePath === '/');
-	const isListPage = $derived(routePath === '/settings' || routePath === '/progress' || routePath === '/repeat' || routePath === '/store' || routePath === '/dictionary');
+	const isListPage = $derived(routePath === '/settings' || routePath === '/progress' || routePath === '/repeat' || routePath === '/dictionary');
 	const homeLabel = $derived(m.home_button({}, { locale: settings.interfaceLocale }));
 	const shellLabel = $derived(m.label({}, { locale: settings.interfaceLocale }));
 
