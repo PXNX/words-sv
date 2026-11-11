@@ -11,7 +11,7 @@
   import { m } from '#lib/paraglide/messages.js';
   import GameToolbar from '#lib/app/GameToolbar.svelte';
   import GameSetting from '#lib/app/GameSetting.svelte';
-  import SelectMenu from '#lib/settings/SelectMenu.svelte';
+  import Segmented from '#lib/settings/ui/Segmented.svelte';
   import WordleTutorial from '#lib/wordle/WordleTutorial.svelte';
   import { hasPracticeRound } from '#lib/app/tutorials.js';
   import type { WordleLength } from '#lib/state/settings.svelte.js';
@@ -24,7 +24,7 @@
     practice = true;
     round += 1;
   }
-  const lengthOptions = [3, 4, 5, 6, 7].map((length) => ({ value: String(length), label: String(length) }));
+  const lengthOptions = [3, 4, 5, 6, 7].map((length) => ({ value: String(length), label: num(length) }));
 
   const labels = $derived({
     title: m.wordle_title({}, { locale: settings.interfaceLocale }),
@@ -42,7 +42,7 @@
   {#snippet tutorial({ start, skip })}<WordleTutorial onstart={start} onskip={skip} />{/snippet}
   {#snippet gameSettings()}
     <GameSetting label={m.wordle_length({}, { locale: settings.interfaceLocale })} hint={m.wordle_length_explain({}, { locale: settings.interfaceLocale })}>
-      <SelectMenu class="w-[7rem]" value={String(settings.wordleLength)} options={lengthOptions} label={m.wordle_length({}, { locale: settings.interfaceLocale })} onchange={(value) => settings.setWordleLength(Number(value) as WordleLength)} />
+      <div class="w-[11rem] max-w-full"><Segmented value={String(settings.wordleLength)} options={lengthOptions} label={m.wordle_length({}, { locale: settings.interfaceLocale })} onchange={(value) => settings.setWordleLength(Number(value) as WordleLength)} /></div>
     </GameSetting>
   {/snippet}
 </GameToolbar>
