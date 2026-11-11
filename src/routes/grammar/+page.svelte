@@ -17,6 +17,7 @@
   import { formCountsAsRight, scoreForm, type FormScore } from '#lib/grammar/formAnswer.js';
   import { buildVerbPrompt, buildVerbPropertyPrompt, verbConjugations } from '#lib/grammar/verbs.js';
   import { buildFalseFriendPrompt, falseFriendsFor } from '#lib/grammar/falseFriends.js';
+  import { buildTenseGapPrompt, tenseGapsFor } from '#lib/grammar/tenseGaps.js';
   import { isSentenceLanguage, matchOrder, orderExercisePool, shuffleTiles } from '#lib/grammar/sentenceBuilder.js';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import { gradeFromAnswer } from '#lib/review/scheduler.js';
@@ -92,7 +93,7 @@
       : isGerman
       ? grammarMode === 'determine'
         ? [...nounPool.map((word) => `noun:${word}`), ...verbPool.map((word) => `verb:${word}`)]
-        : [...nounPool.map((word) => `noun:${word}`), ...adjectivePool.map((word) => `adj:${word}`), ...verbPool.map((word) => `verb:${word}`)]
+        : [...nounPool.map((word) => `noun:${word}`), ...adjectivePool.map((word) => `adj:${word}`), ...verbPool.map((word) => `verb:${word}`), ...tenseGapsFor(settings.vocabularyLevel).map((gap) => `tense:${gap.id}`)]
       : legacyArticleWords.map((word) => `article:${word}`)
   );
   const isSupported = $derived(
@@ -196,6 +197,7 @@
       const nounSpelling = metadata[pairedNoun]?.spelling ?? pairedNoun;
       return buildAdjectivePrompt(adjectiveSpelling, nounSpelling, gender, random, shuffled);
     }
+    if (kind === 'tense') return buildTenseGapPrompt(word, random, shuffled);
     if (kind === 'verb') return grammarMode === 'determine' ? buildVerbPropertyPrompt(word, random, shuffled) : buildVerbPrompt(word, random, shuffled);
     return null;
   }
@@ -351,7 +353,7 @@
     {:else}
     {#key position}<article class="learn-card-in w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center" class:learn-correct={answerStatus === 'correct'} class:learn-wrong={answerStatus === 'wrong'}>
             {#if prompt.question}<p class="m-0 text-accent text-[.62rem] font-black tracking-[.08em] uppercase">{prompt.question}</p>{/if}
-            <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.55rem,7vw,2.6rem)] font-normal tracking-[.04em] leading-[1.3]" lang={settings.lang}>{#if prompt.before}{prompt.before}{/if}{#if prompt.question}{#if prompt.highlight && prompt.after.includes(prompt.highlight)}{@const highlightIndex = prompt.after.indexOf(prompt.highlight)}{prompt.after.slice(0, highlightIndex)}<mark class="bg-primary/25 text-accent px-[.15rem]">{prompt.highlight}</mark>{prompt.after.slice(highlightIndex + prompt.highlight.length)}{:else}{prompt.after}{/if}{:else}<span class="inline-block border-b-4 border-dotted border-accent text-accent px-[.3rem]">___</span> {prompt.after}{/if}</p>
+            <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.55rem,7vw,2.6rem)] font-normal tracking-[.04em] leading-[1.3]" lang={settings.lang}>{#if prompt.before}{prompt.before}{/if}{#if prompt.question}{#if prompt.highlight && prompt.after.includes(prompt.highlight)}{@const highlightIndex = prompt.after.indexOf(prompt.highlight)}{prompt.after.slice(0, highlightIndex)}<mark class="bg-primary/25 text-accent px-[.15rem]">{prompt.highlight}</mark>{prompt.after.slice(highlightIndex + prompt.highlight.length)}{:else}{prompt.after}{/if}{:else}<span class="inline-block border-b-4 border-dotted border-accent text-accent px-[.3rem]">___</span>{(/^[.,!?]/u).test(prompt.after) ? '' : ' '}{prompt.after}{/if}</p>
     </article>{/key}
     {#if grammarMode === 'forms'}
       <form class="w-[min(100%,28rem)] grid gap-[.55rem]" onsubmit={checkForm} aria-label={labels.formsPrompt}>
