@@ -1,6 +1,7 @@
 <!--
-  The result of the device's WebGPU check (app/webgpuCheck.ts): whether on-device AI can run, what
-  graphics the browser offers, when it was checked, and a button to check again.
+  The device's hardware at the top of "Voices & models": the WebGPU check (app/webgpuCheck.ts) that
+  decides whether on-device AI can run, the graphics and shader precision the chat model (WebLLM)
+  sees, memory and processor cores, when it was checked, and a button to check again.
 -->
 <script lang="ts">
   import { fade } from 'svelte/transition';
@@ -9,6 +10,7 @@
   import { formatMoment } from '#lib/format/format.js';
   import { num } from '#lib/format/num.svelte.js';
   import { checkWebGpu, webgpu } from '#lib/app/webgpuCheck.svelte.js';
+  import { checkLocalModel, localModel, pageMemoryMB } from '#lib/conversation/localModel.svelte.js';
   import type { WebGpuStatus } from '#lib/app/webgpuCheck.js';
   import IconOk from '~icons/material-symbols/check-circle-rounded';
   import IconFailed from '~icons/material-symbols/error-rounded';
@@ -23,29 +25,47 @@
     'compute-failed': () => m.webgpu_compute_failed({}, locale)
   };
   const result = $derived(webgpu.result);
+  // What the chat model's own GPU check found (adapter name, 16-bit shaders), once it ran.
+  const device = $derived(localModel.device);
+  const nav = typeof navigator === 'undefined' ? null : (navigator as Navigator & { deviceMemory?: number });
+  const ramGB = nav?.deviceMemory ?? null;
+  const cores = nav?.hardwareConcurrency || null;
+  const pageMB = pageMemoryMB();
+  // Checking again also refreshes what the chat model sees.
+  async function recheck() {
+    await checkWebGpu(true);
+    await checkLocalModel(true);
+  }
 </script>
 
+<h3 class="webgpu-title">{m.hardware_title({}, locale)}</h3>
 <div class="webgpu" class:ok={result?.status === 'ok'} class:failed={result && result.status !== 'ok'} aria-live="polite">
   <p class="webgpu-status">
     <span class="webgpu-icon" aria-hidden="true">{#if result?.status === 'ok'}<IconOk />{:else if result}<IconFailed />{/if}</span>
     <span>{result ? explain[result.status]() : m.webgpu_not_run({}, locale)}</span>
   </p>
-  {#if result && result.status !== 'no-api'}
-    <dl class="webgpu-facts" transition:fade={{ duration: 150 }}>
-      {#if result.gpu}<div><dt>{m.webgpu_gpu({}, locale)}</dt><dd dir="ltr">{result.gpu}</dd></div>{/if}
-      <div><dt>{m.webgpu_f16({}, locale)}</dt><dd>{result.f16 ? m.webgpu_yes({}, locale) : m.webgpu_no({}, locale)}</dd></div>
-      {#if result.maxBufferMB}<div><dt>{m.webgpu_buffer({}, locale)}</dt><dd>{num(result.maxBufferMB)} MB</dd></div>{/if}
-    </dl>
-  {/if}
+  <dl class="webgpu-facts">
+    {#if result && result.status !== 'no-api'}
+      {#if device?.gpu || result.gpu}<div transition:fade={{ duration: 150 }}><dt>{m.webgpu_gpu({}, locale)}</dt><dd dir="ltr">{device?.gpu || result.gpu}</dd></div>{/if}
+      <div transition:fade={{ duration: 150 }}><dt>{m.webgpu_f16({}, locale)}</dt><dd>{(device?.f16 ?? result.f16) ? m.webgpu_yes({}, locale) : m.webgpu_no({}, locale)}</dd></div>
+      {#if result.maxBufferMB}<div transition:fade={{ duration: 150 }}><dt>{m.webgpu_buffer({}, locale)}</dt><dd>{num(result.maxBufferMB)} MB</dd></div>{/if}
+    {/if}
+    {#if ramGB}<div><dt>{m.hardware_ram({}, locale)}</dt><dd>{num(ramGB)}{ramGB >= 8 ? '+' : ''} GB</dd></div>{/if}
+    {#if cores}<div><dt>{m.hardware_cores({}, locale)}</dt><dd>{num(cores)}</dd></div>{/if}
+    {#if pageMB !== null}<div><dt>{m.hardware_page({}, locale)}</dt><dd>{num(pageMB)} MB</dd></div>{/if}
+  </dl>
   <div class="webgpu-foot">
     {#if result}<small>{m.webgpu_checked({ time: formatMoment(settings.formatContext, result.at) }, locale)}</small>{/if}
-    <button type="button" class="btn-play btn-play-sm btn-play-soft" disabled={webgpu.running} onclick={() => void checkWebGpu(true)}>
+    <button type="button" class="btn-play btn-play-sm btn-play-soft" disabled={webgpu.running} onclick={() => void recheck()}>
       <IconRefresh aria-hidden="true" class={webgpu.running ? 'webgpu-spin' : ''} />{webgpu.running ? m.webgpu_running({}, locale) : m.webgpu_run({}, locale)}
     </button>
   </div>
 </div>
 
 <style>
+  /* Matches the section sub-headings (settings-sub), first in its section so without the divider. */
+  .webgpu-title { margin:0 0 .4rem;color:#a45e38;font-size:.56rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
+  :global(html.dark) .webgpu-title { color:#e6a527; }
   .webgpu { display:grid;gap:.55rem;padding:.65rem .7rem;border-radius:.9rem;background:color-mix(in srgb,currentColor 5%,transparent);transition:background-color .3s; }
   .webgpu.ok { background:rgba(52,130,77,.1); }
   .webgpu.failed { background:rgba(181,118,42,.12); }

@@ -220,7 +220,7 @@
   "pet_lilith": "Lilith streicheln",
   "story_auto_read": "Automatisch vorlesen",
   "voice_quality": "Stimmen in Geschichten",
-  "voice_quality_standard": "Standard",
+  "voice_quality_standard": "Web Speech (Browser)",
   "voice_quality_natural": "Natürlich",
   "voice_quality_hint": "Natürliche Stimmen werden auf deinem Gerät erzeugt. Sie werden einmal heruntergeladen (etwa {size} MB für diese Sprache).",
   "voice_quality_standard_hint": "Nutzt die bereits auf diesem Gerät installierten Stimmen. Sofort bereit, auch offline, klingt aber eher roboterhaft.",
@@ -976,5 +976,12 @@
   "cloud_status_no_key": "Ohne Schlüssel bleibt alles auf dem Gerät.",
   "cloud_status_active": "Antwortet gerade: {model}",
   "cloud_status_standby": "Bereit; das Modell auf dem Gerät hat Vorrang.",
-  "cloud_privacy": "Wenn OpenRouter antwortet, gehen deine Nachrichten und Texte an OpenRouter und den Anbieter des Modells. Der Schlüssel bleibt nur in diesem Browser."
+  "cloud_privacy": "Wenn OpenRouter antwortet, gehen deine Nachrichten und Texte an OpenRouter und den Anbieter des Modells. Der Schlüssel bleibt nur in diesem Browser.",
+  "hardware_title": "Dein Gerät",
+  "hardware_ram": "Arbeitsspeicher",
+  "hardware_cores": "Prozessorkerne",
+  "hardware_page": "Speicher der App",
+  "models_default": "Standard",
+  "models_no_llm": "Kein Sprachmodell",
+  "models_no_llm_hint": "Gespräche laufen mit festen Dialogen, Texte bewertet ein Regelwerk. Kein Download, funktioniert überall."
 }
