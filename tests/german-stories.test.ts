@@ -18,6 +18,32 @@ describe('german stories', () => {
     expect(clashes).toEqual([]);
   });
 
+  it('addresses every reply to the character who spoke just before it', () => {
+    const misaddressed = germanStories.flatMap((story) => {
+      let lastSpeaker: string | null = null;
+      return story.beats.flatMap((beat, index) => {
+        if (beat.kind === 'line') lastSpeaker = beat.speaker;
+        return beat.kind === 'reply' && beat.to !== lastSpeaker ? [`${story.id} #${index}: to ${beat.to}, last spoke ${lastSpeaker}`] : [];
+      });
+    });
+    expect(misaddressed).toEqual([]);
+  });
+
+  it('tells a story instead of stringing level words together', () => {
+    // The old filler stories had six or nine beats and sentences like "Ich habe einen Absatz und einen
+    // Ausdruck." – nothing but two nouns from the word list.
+    const wordList = /\b(?:habe|haben|sehe|sehen|über) (?:einen|eine|ein) \p{Lu}\p{L}* und (?:einen|eine|ein) \p{Lu}\p{L}*\.$/u;
+    const fillers = germanStories.flatMap((story) => {
+      if (story.beats.length < 10) return [`${story.id}: only ${story.beats.length} beats`];
+      return story.beats.flatMap((beat, index) =>
+        (beat.kind === 'line' || beat.kind === 'narration') && beat.text.de.split(/(?<=[.!?])\s+/).some((sentence) => wordList.test(sentence))
+          ? [`${story.id} #${index}: ${beat.text.de}`]
+          : []
+      );
+    });
+    expect(fillers).toEqual([]);
+  });
+
   it('only lets the story’s cast speak and be replied to', () => {
     const strangers = germanStories.flatMap((story) =>
       story.beats.flatMap((beat, index) => {
