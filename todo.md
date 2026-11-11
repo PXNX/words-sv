@@ -253,6 +253,8 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [x] Budgets: shell, route and pack sizes (gzip) checked in CI (`bun run budget`).
 - [ ] The shell carries every interface language's messages (~300 KB gzip with fa/ar complete);
   load messages per locale. Lighthouse CI.
+- [ ] The story pages (stories, reading, listening, conversation) load the whole corpus (~540 KB gzip
+  with the route, budget 560); load stories per level.
 
 ### Phase A — progress foundation
 - [x] Append-only `LearningEvent` log in IndexedDB (`progress/events.ts`, `progress/eventLog.ts`)
