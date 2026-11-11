@@ -1,3 +1,4 @@
+import { nounClass, type NounClass } from './nounClasses.js';
 import type { VocabularyGender } from '#lib/data/vocabulary.js';
 import { featureKey, type FeatureKey } from './taxonomy.js';
 
@@ -78,32 +79,86 @@ export function declineNoun(noun: string, gender: VocabularyGender, grammarCase:
 // genuinely require that case (e.g. `helfen`/`danken`/`gehören` all govern the dative).
 type NounTemplate = (noun: string) => { before: string; after: string };
 
-const templatesByCase: Record<GrammarCase, NounTemplate[]> = {
-  nominative: [
-    (noun) => ({ before: '', after: `${noun} ist wirklich schön.` }),
-    (noun) => ({ before: '', after: `${noun} steht dort drüben.` }),
-    (noun) => ({ before: 'Wo ist ', after: `${noun}?` }),
-    (noun) => ({ before: '', after: `${noun} gehört mir.` }),
-    (noun) => ({ before: 'Plötzlich war ', after: `${noun} verschwunden.` }),
-    (noun) => ({ before: '', after: `${noun} macht mich glücklich.` })
-  ],
-  accusative: [
-    (noun) => ({ before: 'Ich sehe ', after: `${noun}.` }),
-    (noun) => ({ before: 'Wir brauchen ', after: `${noun} dringend.` }),
-    (noun) => ({ before: 'Er kauft ', after: `${noun} morgen.` }),
-    (noun) => ({ before: 'Sie sucht ', after: `${noun} schon lange.` }),
-    (noun) => ({ before: 'Kannst du ', after: `${noun} bitte holen?` }),
-    (noun) => ({ before: 'Ich habe ', after: `${noun} gestern verloren.` })
-  ],
-  dative: [
-    (noun) => ({ before: 'Ich helfe ', after: `${noun} gern.` }),
-    (noun) => ({ before: 'Das gehört ', after: `${noun}.` }),
-    (noun) => ({ before: 'Er dankt ', after: `${noun} herzlich.` }),
-    (noun) => ({ before: 'Mit ', after: `${noun} geht es leichter.` }),
-    (noun) => ({ before: 'Von ', after: `${noun} habe ich schon gehört.` }),
-    (noun) => ({ before: 'Wir folgen ', after: `${noun} langsam.` })
-  ]
+// One set of sentences per kind of noun (nounClasses.ts): people act and are helped, things are
+// bought and lost, and every other noun (a percentage, an appointment, an idea) gets sentences
+// that are true of any word.
+const templatesByClass: Record<NounClass, Record<GrammarCase, NounTemplate[]>> = {
+  person: {
+    nominative: [
+      (noun) => ({ before: '', after: `${noun} wohnt nebenan.` }),
+      (noun) => ({ before: '', after: `${noun} kommt heute später.` }),
+      (noun) => ({ before: 'Wo ist ', after: `${noun}?` }),
+      (noun) => ({ before: 'Plötzlich stand ', after: `${noun} vor der Tür.` }),
+      (noun) => ({ before: '', after: `${noun} arbeitet in Berlin.` }),
+      (noun) => ({ before: '', after: `${noun} lacht gern.` })
+    ],
+    accusative: [
+      (noun) => ({ before: 'Ich sehe ', after: `${noun} jeden Tag.` }),
+      (noun) => ({ before: 'Wir besuchen ', after: `${noun} morgen.` }),
+      (noun) => ({ before: 'Kennst du ', after: `${noun} schon?` }),
+      (noun) => ({ before: 'Sie sucht ', after: `${noun} schon lange.` }),
+      (noun) => ({ before: 'Kannst du ', after: `${noun} bitte anrufen?` }),
+      (noun) => ({ before: 'Ich habe ', after: `${noun} gestern getroffen.` })
+    ],
+    dative: [
+      (noun) => ({ before: 'Ich helfe ', after: `${noun} gern.` }),
+      (noun) => ({ before: 'Das gehört ', after: `${noun}.` }),
+      (noun) => ({ before: 'Er dankt ', after: `${noun} herzlich.` }),
+      (noun) => ({ before: 'Wir sprechen mit ', after: `${noun}.` }),
+      (noun) => ({ before: 'Ich schreibe ', after: `${noun} eine Nachricht.` }),
+      (noun) => ({ before: 'Wir folgen ', after: `${noun} langsam.` })
+    ]
+  },
+  thing: {
+    nominative: [
+      (noun) => ({ before: '', after: `${noun} ist wirklich schön.` }),
+      (noun) => ({ before: '', after: `${noun} ist ganz neu.` }),
+      (noun) => ({ before: 'Wo ist ', after: `${noun}?` }),
+      (noun) => ({ before: '', after: `${noun} gehört mir.` }),
+      (noun) => ({ before: '', after: `${noun} gefällt mir sehr.` }),
+      (noun) => ({ before: '', after: `${noun} war nicht teuer.` })
+    ],
+    accusative: [
+      (noun) => ({ before: 'Ich sehe ', after: `${noun}.` }),
+      (noun) => ({ before: 'Wir brauchen ', after: `${noun} dringend.` }),
+      (noun) => ({ before: 'Er zeigt mir ', after: `${noun}.` }),
+      (noun) => ({ before: 'Sie sucht ', after: `${noun} schon lange.` }),
+      (noun) => ({ before: 'Ich finde ', after: `${noun} toll.` }),
+      (noun) => ({ before: 'Wir fotografieren ', after: `${noun}.` })
+    ],
+    dative: [
+      (noun) => ({ before: 'Ich bin mit ', after: `${noun} sehr zufrieden.` }),
+      (noun) => ({ before: 'Wir träumen von ', after: `${noun}.` }),
+      (noun) => ({ before: 'Was machst du mit ', after: `${noun}?` }),
+      (noun) => ({ before: 'Er erzählt gern von ', after: `${noun}.` }),
+      (noun) => ({ before: 'Wir stehen vor ', after: `${noun}.` }),
+      (noun) => ({ before: 'Neben ', after: `${noun} ist noch Platz.` })
+    ]
+  },
+  other: {
+    nominative: [
+      (noun) => ({ before: '', after: `${noun} ist heute unser Thema.` }),
+      (noun) => ({ before: 'Das ist ', after: `${noun}.` }),
+      (noun) => ({ before: 'Was bedeutet ', after: `${noun} für dich?` }),
+      (noun) => ({ before: '', after: `${noun} ist mir wichtig.` })
+    ],
+    accusative: [
+      (noun) => ({ before: 'Wir sprechen heute über ', after: `${noun}.` }),
+      (noun) => ({ before: 'Ich denke oft an ', after: `${noun}.` }),
+      (noun) => ({ before: 'Er erklärt mir ', after: `${noun}.` }),
+      (noun) => ({ before: 'Ich schreibe einen Text über ', after: `${noun}.` })
+    ],
+    dative: [
+      (noun) => ({ before: 'Wir beginnen heute mit ', after: `${noun}.` }),
+      (noun) => ({ before: 'Er fragt nach ', after: `${noun}.` }),
+      (noun) => ({ before: 'Was machen wir mit ', after: `${noun}?` }),
+      (noun) => ({ before: 'Sie erzählt von ', after: `${noun}.` })
+    ]
+  }
 };
+function templatesFor(noun: string, grammarCase: GrammarCase): NounTemplate[] {
+  return templatesByClass[nounClass(noun)][grammarCase];
+}
 
 // `features` names the grammar features a German prompt tests, so a wrong answer can be logged
 // against them (progress/events.ts, featureErrors).
@@ -136,7 +191,7 @@ export function buildNounCasePrompt(noun: string, gender: VocabularyGender, rand
   const articleKind = pickArticleKind(random);
   const correct = articleTable(articleKind)[grammarCase][gender];
   const choices = uniqueForms(articleKind, gender);
-  const templates = templatesByCase[grammarCase];
+  const templates = templatesFor(noun, grammarCase);
   const { before, after } = templates[Math.floor(random() * templates.length)]!(declineNoun(noun, gender, grammarCase));
   return { before, after, correct, choices: shuffle(choices, random), features: [caseFeature(grammarCase), genderFeature(gender)] };
 }
@@ -145,7 +200,7 @@ export function buildNounCasePrompt(noun: string, gender: VocabularyGender, rand
 export function buildNounPropertyPrompt(noun: string, gender: VocabularyGender, random: () => number, shuffle: <T>(values: T[], random: () => number) => T[]): GrammarPrompt {
   const grammarCase = pickCase(random);
   const article = definiteArticlesByCase[grammarCase][gender];
-  const templates = templatesByCase[grammarCase];
+  const templates = templatesFor(noun, grammarCase);
   const declined = declineNoun(noun, gender, grammarCase);
   const sentence = templates[Math.floor(random() * templates.length)]!(declined);
   const before = sentence.before.length === 0 ? `${capitalize(article)} ` : `${sentence.before}${article} `;
