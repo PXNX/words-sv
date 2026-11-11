@@ -41,6 +41,7 @@
   import IconSpellcheck from '~icons/material-symbols/spellcheck-rounded';
   import IconQuiz from '~icons/material-symbols/quiz-rounded';
   import IconHangman from '~icons/material-symbols/extension-rounded';
+  import IconTaboo from '~icons/material-symbols/record-voice-over-rounded';
   import IconMic from '~icons/material-symbols/mic-rounded';
   import IconEmoji from '~icons/material-symbols/sentiment-satisfied-rounded';
   import IconEditNote from '~icons/material-symbols/edit-note-rounded';
@@ -82,6 +83,7 @@
     modeDefinitions: m.mode_definitions({}, { locale: settings.interfaceLocale }),
     homeDefinitions: m.home_definitions({}, { locale: settings.interfaceLocale }),
     homeHangman: m.home_hangman({}, { locale: settings.interfaceLocale }),
+    homeTaboo: m.home_taboo({}, { locale: settings.interfaceLocale }),
     homePronunciation: m.home_pronunciation({}, { locale: settings.interfaceLocale }),
     conversation: m.mode_conversation({}, { locale: settings.interfaceLocale }),
     homeConversation: m.home_conversation({}, { locale: settings.interfaceLocale }),
@@ -96,6 +98,7 @@
     modeWordle: m.mode_wordle({}, { locale: settings.interfaceLocale }),
     modeGrammar: m.mode_grammar({}, { locale: settings.interfaceLocale }),
     modeHangman: m.mode_hangman({}, { locale: settings.interfaceLocale }),
+    modeTaboo: m.mode_taboo({}, { locale: settings.interfaceLocale }),
     pronunciation: m.mode_pronunciation({}, { locale: settings.interfaceLocale }),
     alltag: m.mode_alltag({}, { locale: settings.interfaceLocale }),
     wordQuiz: m.mode_word_quiz({}, { locale: settings.interfaceLocale }),
@@ -334,6 +337,7 @@
       <a class="card-play {streakClass('definitions')}" href="/circle/definitions"><span class="home-icon" aria-hidden="true"><IconFactCheck /></span><h2>{labels.modeDefinitions}</h2><p>{labels.homeDefinitions}</p><TodayBadge done={modeDone(settings.streak, 'definitions')} label={labels.streakModeDone} /></a>
       <div class="home-card-slot"><a class="card-play {streakClass('wordle')}" href="/wordle"><span class="home-icon" aria-hidden="true"><IconSpellcheck /></span><h2>{labels.modeWordle}</h2><p>{labels.homeWordle}</p><TodayBadge done={modeDone(settings.streak, 'wordle')} label={labels.streakModeDone} /></a></div>
       <div class="home-card-slot"><a class="card-play {streakClass('hangman')}" href="/hangman"><span class="home-icon" aria-hidden="true"><IconHangman /></span><h2>{labels.modeHangman}</h2><p>{labels.homeHangman}</p><TodayBadge done={modeDone(settings.streak, 'hangman')} label={labels.streakModeDone} /></a></div>
+      <div class="home-card-slot"><a class="card-play {streakClass('taboo')}" href="/taboo"><span class="home-icon" aria-hidden="true"><IconTaboo /></span><h2>{labels.modeTaboo}</h2><p>{labels.homeTaboo}</p><TodayBadge done={modeDone(settings.streak, 'taboo')} label={labels.streakModeDone} /></a></div>
     </div>
     <h2 class="home-group-heading">{labels.story}</h2>
     <div class="home-games">

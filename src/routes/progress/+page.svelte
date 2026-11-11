@@ -171,6 +171,7 @@
     circle: m.mode_crossword({}, { locale: settings.interfaceLocale }),
     wordle: m.mode_wordle({}, { locale: settings.interfaceLocale }),
     hangman: m.mode_hangman({}, { locale: settings.interfaceLocale }),
+    taboo: m.mode_taboo({}, { locale: settings.interfaceLocale }),
     alltag: m.mode_alltag({}, { locale: settings.interfaceLocale }),
     tricky_cleared: ''
   });
