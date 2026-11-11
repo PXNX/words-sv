@@ -3474,17 +3474,30 @@ export const germanStories: Story[] = [
     scene: 'office',
     cast: ['simon', 'jana'],
     languages: ['de'],
-    title: german('Ethik'),
+    title: german('Loyalität hat Grenzen'),
     beats: [
-      { kind: 'narration', text: german('Sim und Jana diskutieren Ethik. Sie sprechen über einen Einsatz und eine Funktion.') },
-      { kind: 'line', speaker: 'simon', text: german('Hallo {name}! Ich sehe einen Einsatz und eine Funktion.') },
-      { kind: 'line', speaker: 'jana', text: german('Gut. Ich sehe eine Einheit und einen Ausdruck.') },
-      { kind: 'reply', to: 'simon', options: [german('Ich bin ein Einsatz.'), german('Ich bin eine Funktion.'), german('Ich habe eine Einheit.')] },
-      { kind: 'line', speaker: 'jana', text: german('Danke! Wir müssen eine Handlung analysieren und einen Kontrast finden.') },
-      { kind: 'question', prompt: german('Was sieht Sim?'), options: [german('Einsatz und Funktion'), german('Einheit und Ausdruck'), german('Apparat und Auto')] },
-      { kind: 'question', prompt: german('Was sieht Jana?'), options: [german('Einheit und Ausdruck'), german('Einsatz und Funktion'), german('Band und Baby')] },
-      { kind: 'question', prompt: german('Was müssen sie analysieren?'), options: [german('Eine Handlung'), german('Einen Apparat'), german('Ein Auto')] },
-      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Kontrast'), german('Einen Abschluss'), german('Einen Apparat')] }
+      { kind: 'narration', text: german('Donnerstagabend, das Großraumbüro eines Herstellers von Heizungsanlagen ist längst verwaist. Simon hat Jana, die Compliance-Beauftragte des Unternehmens, gebeten, noch zu bleiben. Auf seinem Bildschirm ist Programmcode zu sehen.') },
+      { kind: 'line', speaker: 'simon', mood: 'worried', text: german('Ich hab die Steuerungssoftware unserer neuen Gasheizung durchgesehen. Kiek mal hier: Die Anlage erkennt, wenn sie auf einem Prüfstand läuft, und drosselt dann die Leistung. Im Normalbetrieb liegen die Stickoxidwerte fast doppelt so hoch wie zertifiziert.') },
+      { kind: 'line', speaker: 'jana', mood: 'surprised', text: german('Das wäre im Grunde dasselbe Muster wie beim Dieselskandal. Bist du dir sicher, dass es sich nicht um eine legitime Schutzfunktion handelt?') },
+      { kind: 'line', speaker: 'simon', text: german('Ich hab es dreimal überprüft. Eine Schutzfunktion bräuchte keinen Code, der gezielt die Prüfzyklen der Zertifizierungsstelle abfragt. Dat is kein Versehen, dat is Absicht.') },
+      { kind: 'line', speaker: 'jana', text: german('Dann stehen wir vor einer ernsten Frage. Du hast eine Loyalitätspflicht gegenüber dem Arbeitgeber – aber die endet dort, wo du an einem Rechtsbruch mitwirken würdest, der Dritten schadet.') },
+      { kind: 'line', speaker: 'simon', mood: 'worried', text: german('Ehrlich gesagt hab ich Angst. Ich hab zwei Kinder und einen Kredit fürs Haus. Wer so etwas meldet, gilt doch schnell als Nestbeschmutzer – und ist am Ende derjenige, der gehen muss.') },
+      { kind: 'line', speaker: 'jana', text: german('Diese Sorge ist berechtigt, aber seit dem Hinweisgeberschutzgesetz bist du deutlich besser geschützt. Repressalien wie Kündigung oder Versetzung sind verboten, und im Streitfall muss der Arbeitgeber beweisen, dass eine Maßnahme nichts mit deiner Meldung zu tun hat.') },
+      { kind: 'narration', text: german('Simon lehnt sich zurück und starrt eine Weile an die Decke. Draußen fährt die letzte S-Bahn vorbei.') },
+      { kind: 'line', speaker: 'simon', mood: 'curious', text: german('Und dann? Geh ich direkt zur Presse? {name}, du hast doch Jura studiert. Wat wär der richtige erste Schritt?') },
+      { kind: 'reply', to: 'simon', options: [
+        german('Zuerst den Verdacht über die interne oder eine externe Meldestelle melden und die Belege sorgfältig dokumentieren.'),
+        german('Den Code heimlich löschen, damit niemand je davon erfährt.'),
+        german('Abwarten, bis die Heizung zertifiziert ist, denn danach kann ohnehin niemand mehr belangt werden.')
+      ] },
+      { kind: 'line', speaker: 'jana', text: german('Genau. Die Presse ist nur unter engen Voraussetzungen eine Option – etwa wenn eine Meldung folgenlos bleibt oder Gefahr im Verzug ist. Und als Compliance-Beauftragte nehme ich deinen Hinweis hiermit offiziell entgegen. Ab jetzt bin ich verpflichtet, ihm nachzugehen.') },
+      { kind: 'line', speaker: 'simon', mood: 'sad', text: german('Merkwürdig. Ich dachte, ich würde mich erleichtert fühlen. Stattdessen fühlt es sich an, als hätte ich gerade meine Firma verraten.') },
+      { kind: 'line', speaker: 'jana', text: german('Verraten haben sie diejenigen, die den Code geschrieben und abgesegnet haben. Du hast nur verhindert, dass Tausende Haushalte jahrelang mehr Schadstoffe einatmen, als ihnen versprochen wurde.') },
+      { kind: 'question', prompt: german('Was hat Simon in der Steuerungssoftware entdeckt?'), options: [german('Die Anlage erkennt den Prüfstand und drosselt dann die Leistung.'), german('Die Heizung schaltet sich nachts automatisch ab.'), german('Die Software sammelt heimlich Kundendaten.')] },
+      { kind: 'question', prompt: german('Warum hält Simon den Code nicht für eine Schutzfunktion?'), options: [german('Er fragt gezielt die Prüfzyklen der Zertifizierungsstelle ab.'), german('Er wurde von einem Praktikanten geschrieben.'), german('Er ist zu kurz für eine Schutzfunktion.')] },
+      { kind: 'question', prompt: german('Wovor hat Simon Angst?'), options: [german('Als Nestbeschmutzer zu gelten und seine Stelle zu verlieren'), german('Dass Jana ihn anzeigt'), german('Dass die Heizung explodiert')] },
+      { kind: 'question', prompt: german('Wie schützt das Hinweisgeberschutzgesetz laut Jana?'), options: [german('Repressalien sind verboten, und der Arbeitgeber trägt im Streitfall die Beweislast.'), german('Hinweisgeber erhalten eine hohe Belohnung.'), german('Hinweisgeber dürfen anonym bei der Presse kündigen.')] },
+      { kind: 'question', prompt: german('Wann ist der Gang zur Presse laut Jana eine Option?'), options: [german('Nur unter engen Voraussetzungen, etwa wenn eine Meldung folgenlos bleibt'), german('Immer als erster Schritt'), german('Nie, unter keinen Umständen')] }
     ]
   },
   {
@@ -3493,17 +3506,29 @@ export const germanStories: Story[] = [
     scene: 'library',
     cast: ['simon', 'jana'],
     languages: ['de'],
-    title: german('Freiheit'),
+    title: german('Wer darf hier sprechen?'),
     beats: [
-      { kind: 'narration', text: german('Sim und Jana diskutieren Freiheit. Sie haben einen Kontrast und eine Funktion.') },
-      { kind: 'line', speaker: 'simon', text: german('Hallo {name}! Ich sehe einen Kontrast und eine Funktion.') },
-      { kind: 'line', speaker: 'jana', text: german('Gut. Ich sehe einen Einsatz und eine Einheit.') },
-      { kind: 'reply', to: 'simon', options: [german('Ich bin ein Kontrast.'), german('Ich bin eine Funktion.'), german('Ich habe einen Einsatz.')] },
-      { kind: 'line', speaker: 'jana', text: german('Danke! Wir müssen einen Ausdruck finden und eine Handlung analysieren.') },
-      { kind: 'question', prompt: german('Was sieht Sim?'), options: [german('Kontrast und Funktion'), german('Einsatz und Einheit'), german('Apparat und Auto')] },
-      { kind: 'question', prompt: german('Was sieht Jana?'), options: [german('Einsatz und Einheit'), german('Kontrast und Funktion'), german('Band und Baby')] },
-      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Ausdruck'), german('Einen Abschluss'), german('Einen Apparat')] },
-      { kind: 'question', prompt: german('Was müssen sie analysieren?'), options: [german('Eine Handlung'), german('Einen Apparat'), german('Ein Auto')] }
+      { kind: 'narration', text: german('Der Lesesaal der Universitätsbibliothek, eine Stunde vor Schließung. Jana organisiert eine Lesereihe und hat einen Publizisten eingeladen, dessen jüngstes Buch über Migration heftig umstritten ist. Ein offener Brief mit vierhundert Unterschriften fordert, die Lesung abzusagen. Simon hat ihn unterschrieben.') },
+      { kind: 'line', speaker: 'jana', mood: 'angry', text: german('Ausgerechnet du, Simon. Ich hätte nicht gedacht, dass ausgerechnet ein Ingenieur, der sonst auf jedes Argument eine Gegenrechnung hat, ein Redeverbot unterstützt.') },
+      { kind: 'line', speaker: 'simon', text: german('Nö, so einfach ist das nicht. Niemand verbietet ihm zu reden. Er kann seine Thesen in jeder Talkshow ausbreiten, und das tut er ja auch ausgiebig. Die Frage ist nur, ob eine Universität ihm dafür eine Bühne bieten muss.') },
+      { kind: 'line', speaker: 'jana', text: german('Formal hast du recht: Die Meinungsfreiheit schützt vor staatlicher Zensur, nicht vor ausbleibenden Einladungen. Aber wenn Universitäten anfangen, nur noch Leute einzuladen, deren Ansichten niemanden stören, verfehlen sie ihren Zweck. Wissenschaft lebt vom Streit.') },
+      { kind: 'line', speaker: 'simon', text: german('Vom Streit, ja – aber von einem, der sich an Fakten hält. In seinem Buch stehen Zahlen zur Kriminalität, die nachweislich aus dem Zusammenhang gerissen sind. Soll eine Universität das adeln, indem sie ihn unter ihr Logo stellt?') },
+      { kind: 'line', speaker: 'jana', mood: 'curious', text: german('Und wer entscheidet, wo die Grenze verläuft? Heute trifft es jemanden, dessen Thesen du für falsch hältst. Morgen trifft es vielleicht eine Klimaforscherin, deren Ergebnisse einer anderen Mehrheit nicht passen.') },
+      { kind: 'narration', text: german('Simon zieht ein abgegriffenes Taschenbuch aus dem Regal: Poppers „Die offene Gesellschaft und ihre Feinde“. Er schlägt die Stelle zum Paradox der Toleranz auf.') },
+      { kind: 'line', speaker: 'simon', text: german('Popper sagt: Unbegrenzte Toleranz führt zum Verschwinden der Toleranz. Aber – und das wird oft vergessen – er meint damit nicht, intolerante Ansichten zu unterdrücken, solange man ihnen mit rationalen Argumenten begegnen kann. Erst wenn jemand das Argument durch Gewalt ersetzt.') },
+      { kind: 'line', speaker: 'jana', mood: 'surprised', text: german('Dann spricht dein eigenes Zitat gegen deinen Brief. {name}, du hast die Debatte im Studierendenparlament mitverfolgt. Welcher Umgang mit der Lesung wäre deiner Meinung nach angemessen?') },
+      { kind: 'reply', to: 'jana', options: [
+        german('Die Lesung stattfinden lassen, aber mit einer Wissenschaftlerin auf dem Podium, die seine Zahlen kritisch einordnet.'),
+        german('Die Lesung absagen und das Buch aus allen Bibliotheken des Landes entfernen lassen.'),
+        german('Die Lesung abhalten, aber jede kritische Frage aus dem Publikum verbieten.')
+      ] },
+      { kind: 'line', speaker: 'simon', mood: 'laughing', text: german('Na schön, ich geb mich geschlagen – unter einer Bedingung: Ich darf die erste Frage stellen. Und ich bring die Originaldaten mit.') },
+      { kind: 'line', speaker: 'jana', mood: 'happy', text: german('Abgemacht. Genau so stelle ich mir eine Universität vor: Widerspruch, aber im selben Raum.') },
+      { kind: 'question', prompt: german('Warum ist die Lesung umstritten?'), options: [german('Das Buch des Publizisten über Migration wird heftig kritisiert.'), german('Der Autor hat keine Erlaubnis der Bibliothek.'), german('Die Lesung soll Eintritt kosten.')] },
+      { kind: 'question', prompt: german('Wie begründet Simon zunächst, dass es kein Redeverbot sei?'), options: [german('Der Autor könne überall reden; die Frage sei nur, ob die Universität ihm eine Bühne bieten müsse.'), german('Der Autor habe selbst abgesagt.'), german('Die Meinungsfreiheit gelte nicht für Bücher.')] },
+      { kind: 'question', prompt: german('Wovor schützt die Meinungsfreiheit laut Jana formal?'), options: [german('Vor staatlicher Zensur'), german('Vor jeder Form von Kritik'), german('Vor ausbleibenden Einladungen')] },
+      { kind: 'question', prompt: german('Was kritisiert Simon inhaltlich an dem Buch?'), options: [german('Zahlen zur Kriminalität seien aus dem Zusammenhang gerissen.'), german('Es sei zu lang.'), german('Es enthalte zu viele Fremdwörter.')] },
+      { kind: 'question', prompt: german('Wie versteht Simon Poppers Paradox der Toleranz?'), options: [german('Intolerante Ansichten soll man mit Argumenten bekämpfen und erst bei Gewalt unterdrücken.'), german('Man soll alle umstrittenen Meinungen sofort verbieten.'), german('Toleranz ist grundsätzlich überflüssig.')] }
     ]
   },
   {
@@ -3512,17 +3537,29 @@ export const germanStories: Story[] = [
     scene: 'office',
     cast: ['simon', 'jana'],
     languages: ['de'],
-    title: german('Das Gericht'),
+    title: german('Das Beratungsgeheimnis'),
     beats: [
-      { kind: 'narration', text: german('Sim und Jana diskutieren ein Gericht. Sie haben einen Einsatz und einen Ausdruck.') },
-      { kind: 'line', speaker: 'simon', text: german('Hallo {name}! Ich habe einen Einsatz und einen Ausdruck.') },
-      { kind: 'line', speaker: 'jana', text: german('Gut. Ich habe eine Einheit und eine Funktion.') },
-      { kind: 'reply', to: 'simon', options: [german('Ich bin ein Einsatz.'), german('Ich bin ein Ausdruck.'), german('Ich habe eine Einheit.')] },
-      { kind: 'line', speaker: 'jana', text: german('Danke! Wir müssen einen Kontrast finden und eine Handlung analysieren.') },
-      { kind: 'question', prompt: german('Was hat Sim?'), options: [german('Einsatz und Ausdruck'), german('Einheit und Funktion'), german('Apparat und Auto')] },
-      { kind: 'question', prompt: german('Was hat Jana?'), options: [german('Einheit und Funktion'), german('Einsatz und Ausdruck'), german('Band und Baby')] },
-      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Kontrast'), german('Einen Abschluss'), german('Einen Apparat')] },
-      { kind: 'question', prompt: german('Was müssen sie analysieren?'), options: [german('Eine Handlung'), german('Einen Apparat'), german('Ein Auto')] }
+      { kind: 'narration', text: german('Eine Anwaltskanzlei in der Hamburger Innenstadt, Mittwochabend. Simon ist seit Jahresbeginn Schöffe am Amtsgericht. Nach seiner ersten Verhandlung besucht er seine alte Studienfreundin Jana, die als Strafverteidigerin arbeitet.') },
+      { kind: 'line', speaker: 'simon', mood: 'sad', text: german('Ich muss das loswerden. Heute stand eine Frau Mitte siebzig vor uns, die im Supermarkt Butter und Kaffee für elf Euro gestohlen hat. Ihre Rente reicht hinten und vorne nicht. Und wir mussten …') },
+      { kind: 'line', speaker: 'jana', text: german('Stopp, Simon. Bevor du weitersprichst: Über die Beratung des Gerichts darfst du mit niemandem reden – auch nicht mit mir. Das Beratungsgeheimnis gilt für Schöffen genauso wie für Berufsrichter, und zwar lebenslang.') },
+      { kind: 'line', speaker: 'simon', mood: 'surprised', text: german('Lebenslang? Dat wusste ich nicht. Na gut, dann frag ich allgemein: Wie kann es sein, dass so ein Fall überhaupt vor Gericht landet? Elf Euro!') },
+      { kind: 'line', speaker: 'jana', text: german('Bei geringwertigen Sachen wird ein Diebstahl in der Regel nur auf Antrag verfolgt – es sei denn, die Staatsanwaltschaft sieht ein besonderes öffentliches Interesse. Häufig wird so ein Verfahren wegen Geringfügigkeit eingestellt. Wenn es trotzdem zur Verhandlung kommt, gibt es dafür meist Gründe, etwa einschlägige Vorstrafen.') },
+      { kind: 'line', speaker: 'simon', text: german('Ohne Details zu nennen: Mir fiel es schwer, das Gesetz und mein Mitgefühl auseinanderzuhalten. Als Ingenieur bin ich gewohnt, dass eine Rechnung entweder aufgeht oder nicht.') },
+      { kind: 'line', speaker: 'jana', text: german('Genau deshalb gibt es Schöffen. Das Gesetz lässt bei der Strafzumessung bewusst Spielraum – für die Lebensumstände, die Motive, die Reue. Ihr sollt die Perspektive der Gesellschaft einbringen, nicht die Rechenlogik einer Maschine.') },
+      { kind: 'narration', text: german('Jana holt zwei Gläser und eine Flasche Wasser. Durch das Fenster sieht man die Lichter der Speicherstadt.') },
+      { kind: 'line', speaker: 'simon', mood: 'curious', text: german('Und was mach ich, wenn ich mit dem Urteil nicht einverstanden bin? {name}, du hast doch selbst schon mal als Schöffe gearbeitet. Wat sagst du?') },
+      { kind: 'reply', to: 'simon', options: [
+        german('Du kannst in der Beratung überstimmt werden, musst das Urteil aber mittragen und darfst nicht verraten, wie abgestimmt wurde.'),
+        german('Dann kannst du das Urteil am nächsten Tag in der Zeitung öffentlich kritisieren und die Abstimmung offenlegen.'),
+        german('Dann gilt das Urteil automatisch nicht, weil Schöffen ein Vetorecht haben.')
+      ] },
+      { kind: 'line', speaker: 'jana', text: german('Und vergiss nicht: Eure Stimmen wiegen genauso viel wie die des Berufsrichters. Am Schöffengericht können zwei Schöffen den Richter sogar überstimmen.') },
+      { kind: 'line', speaker: 'simon', mood: 'happy', text: german('Dann hab ich wohl mehr Verantwortung, als mir heute Morgen klar war. Und ich lern das Strafgesetzbuch jetzt etwas gründlicher als mein Lehrbuch für Statik.') },
+      { kind: 'question', prompt: german('Warum unterbricht Jana Simon?'), options: [german('Er darf wegen des Beratungsgeheimnisses nicht über die Beratung sprechen.'), german('Sie hat keine Zeit für ihn.'), german('Sie vertritt die Angeklagte.')] },
+      { kind: 'question', prompt: german('Wie lange gilt das Beratungsgeheimnis?'), options: [german('Lebenslang'), german('Bis zum Urteil'), german('Ein Jahr lang')] },
+      { kind: 'question', prompt: german('Wie wird der Diebstahl geringwertiger Sachen laut Jana in der Regel verfolgt?'), options: [german('Nur auf Antrag, außer bei besonderem öffentlichen Interesse'), german('Immer mit einer Gefängnisstrafe'), german('Gar nicht')] },
+      { kind: 'question', prompt: german('Wozu gibt es laut Jana Schöffen?'), options: [german('Um die Perspektive der Gesellschaft in die Rechtsprechung einzubringen'), german('Um die Arbeit der Richter zu kontrollieren'), german('Um Gerichtskosten zu sparen')] },
+      { kind: 'question', prompt: german('Welche Macht haben die Schöffen am Schöffengericht?'), options: [german('Zwei Schöffen können den Berufsrichter überstimmen.'), german('Sie dürfen das Urteil allein fällen.'), german('Sie haben nur eine beratende Stimme.')] }
     ]
   },
   {
@@ -3531,17 +3568,29 @@ export const germanStories: Story[] = [
     scene: 'home',
     cast: ['simon', 'jana'],
     languages: ['de'],
-    title: german('Sprache'),
+    title: german('Omas plattdeutsche Briefe'),
     beats: [
-      { kind: 'narration', text: german('Sim und Jana diskutieren Sprache. Sie haben einen Kontrast und einen Einsatz.') },
-      { kind: 'line', speaker: 'simon', text: german('Hallo {name}! Ich sehe einen Kontrast und einen Einsatz.') },
-      { kind: 'line', speaker: 'jana', text: german('Gut. Ich sehe eine Einheit und eine Funktion.') },
-      { kind: 'reply', to: 'simon', options: [german('Ich bin ein Kontrast.'), german('Ich bin ein Einsatz.'), german('Ich habe eine Einheit.')] },
-      { kind: 'line', speaker: 'jana', text: german('Danke! Wir müssen einen Ausdruck finden und eine Handlung analysieren.') },
-      { kind: 'question', prompt: german('Was sieht Sim?'), options: [german('Kontrast und Einsatz'), german('Einheit und Funktion'), german('Apparat und Auto')] },
-      { kind: 'question', prompt: german('Was sieht Jana?'), options: [german('Einheit und Funktion'), german('Kontrast und Einsatz'), german('Band und Baby')] },
-      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Ausdruck'), german('Einen Abschluss'), german('Einen Apparat')] },
-      { kind: 'question', prompt: german('Was müssen sie analysieren?'), options: [german('Eine Handlung'), german('Einen Apparat'), german('Ein Auto')] }
+      { kind: 'narration', text: german('Ein verregneter Sonntag in Simons Wohnung. Auf dem Esstisch liegen Kartons mit Briefen seiner verstorbenen Großmutter aus Wilhelmsburg – fast alle auf Plattdeutsch. Jana hilft ihm beim Sortieren.') },
+      { kind: 'line', speaker: 'jana', mood: 'curious', text: german('„Moin Jung, wo geiht di dat?“ – Das verstehe ich gerade noch. Aber ab der zweiten Zeile bin ich raus. Kannst du das lesen?') },
+      { kind: 'line', speaker: 'simon', mood: 'sad', text: german('Büschen. Verstehen kann ich vieles, sprechen kaum. Meine Eltern haben mit mir nur Hochdeutsch geredet. Platt galt damals als Sprache der Bauern und Fischer – wer es in der Schule sprach, wurde belächelt oder sogar bestraft.') },
+      { kind: 'line', speaker: 'jana', text: german('Das ist ein Muster, das sich weltweit wiederholt: Eine Sprache verschwindet selten, weil sie verboten wird, sondern weil Eltern glauben, ihren Kindern mit der Prestigesprache einen Vorteil zu verschaffen. Nach zwei, drei Generationen ist die Kette dann gerissen.') },
+      { kind: 'line', speaker: 'simon', text: german('Dabei ist Plattdeutsch kein verdorbenes Hochdeutsch, wie viele denken. Es ist eine eigene Sprache, die lange vor dem Hochdeutschen die Verkehrssprache der Hanse war. Von Brügge bis Nowgorod wurde auf Niederdeutsch gehandelt.') },
+      { kind: 'line', speaker: 'jana', mood: 'laughing', text: german('Und heute verwenden Hamburger wie du nur noch die Reste: Moin, schnacken, Schietwetter. Fast wie Souvenirs.') },
+      { kind: 'narration', text: german('Simon zieht einen Brief aus dem Jahr 1962 heraus. Die Großmutter beschreibt darin die Sturmflut, bei der ihr Haus unter Wasser stand. Simon liest langsam vor und übersetzt Satz für Satz.') },
+      { kind: 'line', speaker: 'simon', mood: 'sad', text: german('Merkst du was? In der Übersetzung geht etwas verloren. Auf Platt klingt es nüchtern und gleichzeitig zärtlich. Auf Hochdeutsch klingt es wie ein Polizeibericht.') },
+      { kind: 'line', speaker: 'jana', text: german('Genau das meinen Sprachwissenschaftler, wenn sie sagen, mit jeder Sprache sterbe eine eigene Art, die Welt zu sehen. {name}, du beschäftigst dich doch mit Regionalsprachen. Wie könnte Simon das Plattdeutsche für sich zurückgewinnen?') },
+      { kind: 'reply', to: 'jana', options: [
+        german('Mit einem Kurs, plattdeutschem Radio und Gesprächen mit älteren Sprechern – und indem er die Briefe weiter selbst liest.'),
+        german('Gar nicht, denn eine Sprache kann man nach dem zwölften Lebensjahr nicht mehr lernen.'),
+        german('Indem er die Briefe ins Hochdeutsche übersetzen lässt und die Originale wegwirft.')
+      ] },
+      { kind: 'line', speaker: 'simon', mood: 'happy', text: german('In Hamburg gibt es tatsächlich noch ein plattdeutsches Theater. Und die Volkshochschule bietet Kurse an – vielleicht sitzen da ja mehr Leute in meinem Alter, die dasselbe bereuen.') },
+      { kind: 'line', speaker: 'jana', mood: 'laughing', text: german('Dann erwarte ich, dass du mir nächstes Jahr den Brief von der Sturmflut vorliest – ohne Übersetzung.') },
+      { kind: 'question', prompt: german('Warum spricht Simon kaum Plattdeutsch?'), options: [german('Seine Eltern haben mit ihm nur Hochdeutsch gesprochen.'), german('Er ist nicht in Norddeutschland aufgewachsen.'), german('Plattdeutsch ist in Hamburg verboten.')] },
+      { kind: 'question', prompt: german('Warum verschwinden Sprachen laut Jana meistens?'), options: [german('Eltern geben sie nicht weiter, weil sie sich von der Prestigesprache Vorteile für ihre Kinder versprechen.'), german('Weil sie offiziell verboten werden.'), german('Weil sie zu schwer zu lernen sind.')] },
+      { kind: 'question', prompt: german('Welche Rolle spielte das Niederdeutsche früher?'), options: [german('Es war die Verkehrssprache der Hanse.'), german('Es war die Sprache des Kaiserhofs.'), german('Es wurde nur auf Bauernhöfen gesprochen.')] },
+      { kind: 'question', prompt: german('Worüber schreibt die Großmutter im Brief von 1962?'), options: [german('Über die Sturmflut, bei der ihr Haus unter Wasser stand'), german('Über ihre Hochzeit'), german('Über einen Umzug nach Hamburg')] },
+      { kind: 'question', prompt: german('Was geht laut Simon in der Übersetzung verloren?'), options: [german('Der zugleich nüchterne und zärtliche Ton'), german('Die Jahreszahlen'), german('Die Namen der Personen')] }
     ]
   },
   {
@@ -3550,17 +3599,29 @@ export const germanStories: Story[] = [
     scene: 'workshop',
     cast: ['simon', 'jana'],
     languages: ['de'],
-    title: german('Wert'),
+    title: german('Was ist eine alte Maschine wert?'),
     beats: [
-      { kind: 'narration', text: german('Sim und Jana sprechen über Wert. Sie haben einen Einsatz und eine Einheit.') },
-      { kind: 'line', speaker: 'simon', text: german('Hallo {name}! Ich habe einen Einsatz und eine Einheit.') },
-      { kind: 'line', speaker: 'jana', text: german('Gut. Ich habe eine Funktion und einen Ausdruck.') },
-      { kind: 'reply', to: 'simon', options: [german('Ich bin ein Einsatz.'), german('Ich bin eine Einheit.'), german('Ich habe eine Funktion.')] },
-      { kind: 'line', speaker: 'jana', text: german('Danke! Wir müssen einen Kontrast finden und eine Handlung analysieren.') },
-      { kind: 'question', prompt: german('Was hat Sim?'), options: [german('Einsatz und Einheit'), german('Funktion und Ausdruck'), german('Apparat und Auto')] },
-      { kind: 'question', prompt: german('Was hat Jana?'), options: [german('Funktion und Ausdruck'), german('Einsatz und Einheit'), german('Band und Baby')] },
-      { kind: 'question', prompt: german('Was müssen sie finden?'), options: [german('Einen Kontrast'), german('Einen Abschluss'), german('Einen Apparat')] },
-      { kind: 'question', prompt: german('Was müssen sie analysieren?'), options: [german('Eine Handlung'), german('Einen Apparat'), german('Ein Auto')] }
+      { kind: 'narration', text: german('Samstagnachmittag in Simons Werkstatt. Auf der Werkbank steht eine mechanische Rechenmaschine aus den Fünfzigerjahren, gebaut in einer Hamburger Fabrik, die es längst nicht mehr gibt. Simon hat sie in zwei Jahren Kleinarbeit restauriert. Jana, Volkswirtin, schaut ihm über die Schulter.') },
+      { kind: 'line', speaker: 'simon', mood: 'happy', text: german('Kiek mal: Sie dividiert wieder. Dreihundertvierzig Einzelteile, jedes gereinigt, geölt und justiert. Die hat mein Opa im Kontor benutzt.') },
+      { kind: 'line', speaker: 'jana', text: german('Beeindruckend. Und gestern hat dir ein Sammler aus München viertausend Euro dafür geboten, habe ich gehört. Hast du angenommen?') },
+      { kind: 'line', speaker: 'simon', text: german('Nö. Wieso sollte ich? Unter zehntausend geb ich die nicht her – und eigentlich nicht mal dafür.') },
+      { kind: 'line', speaker: 'jana', mood: 'laughing', text: german('Du bist ein Paradebeispiel für den Besitztumseffekt. Menschen bewerten einen Gegenstand deutlich höher, sobald er ihnen gehört. In Experimenten verlangen Leute für eine Tasse, die man ihnen gerade geschenkt hat, etwa doppelt so viel, wie sie selbst für dieselbe Tasse zahlen würden.') },
+      { kind: 'line', speaker: 'simon', text: german('Dat mag für Tassen gelten. Aber diese Maschine hat einen Wert, der sich nicht in Euro ausdrücken lässt. Zwei Jahre meines Lebens stecken da drin. Und die Erinnerung an meinen Opa.') },
+      { kind: 'line', speaker: 'jana', text: german('Die klassischen Ökonomen hätten dir zum Teil recht gegeben. Adam Smith unterschied zwischen Gebrauchswert und Tauschwert, Marx sah den Wert in der aufgewendeten Arbeit. Die moderne Ökonomie dagegen sagt: Etwas ist genau so viel wert, wie jemand bereit ist, dafür zu zahlen.') },
+      { kind: 'line', speaker: 'simon', mood: 'curious', text: german('Dann wäre sie nach dieser Logik viertausend Euro wert. Und meine zwei Jahre Arbeit null.') },
+      { kind: 'line', speaker: 'jana', text: german('Nicht ganz. Nach der subjektiven Wertlehre ist sie für den Sammler viertausend Euro wert – und für dich offenbar mehr als jeder Preis. Genau deshalb kommt der Tausch nicht zustande. {name}, du handelst doch mit Antiquitäten. Wie würdest du erklären, warum der Handel scheitert?') },
+      { kind: 'reply', to: 'jana', options: [
+        german('Weil Simon der Maschine einen höheren Wert beimisst, als der Sammler zu zahlen bereit ist.'),
+        german('Weil die Maschine objektiv wertlos ist, da sie nicht elektrisch rechnet.'),
+        german('Weil Sammler grundsätzlich nur Gegenstände aus Süddeutschland kaufen dürfen.')
+      ] },
+      { kind: 'line', speaker: 'simon', mood: 'happy', text: german('Dann bleibt sie hier. Und eines Tages zeig ich meiner Nichte, wie man damit Wurzeln zieht. Wenn sie dann versteht, warum ihr Uropa so stolz auf das Ding war, hat sich jede Stunde gelohnt.') },
+      { kind: 'narration', text: german('Jana dreht vorsichtig an der Kurbel. Mit einem satten Klacken springt das Ergebnis ins Fenster.') },
+      { kind: 'question', prompt: german('Wem hat die Rechenmaschine früher gehört?'), options: [german('Simons Großvater'), german('Janas Vater'), german('Einem Sammler aus München')] },
+      { kind: 'question', prompt: german('Wie viel hat der Sammler geboten?'), options: [german('Viertausend Euro'), german('Zehntausend Euro'), german('Dreihundertvierzig Euro')] },
+      { kind: 'question', prompt: german('Was beschreibt der Besitztumseffekt?'), options: [german('Menschen bewerten etwas höher, sobald es ihnen gehört.'), german('Menschen kaufen gern alte Dinge.'), german('Alte Maschinen werden mit der Zeit wertvoller.')] },
+      { kind: 'question', prompt: german('Worin sah Marx laut Jana den Wert einer Ware?'), options: [german('In der aufgewendeten Arbeit'), german('In der Zahlungsbereitschaft der Käufer'), german('Im Alter der Ware')] },
+      { kind: 'question', prompt: german('Was hat Simon mit der Maschine vor?'), options: [german('Er behält sie und will sie eines Tages seiner Nichte zeigen.'), german('Er verkauft sie für zehntausend Euro.'), german('Er schenkt sie einem Museum.')] }
     ]
   },
 
