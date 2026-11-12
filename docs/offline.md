@@ -9,6 +9,7 @@ everything a learner practises is stored on the device first.
 | Area | Why |
 |---|---|
 | Every page and mode (circle, wordle, hangman, vocabulary, grammar, Satzbau, Alltag, writing, stories, reading, listening, dictionary, progress, store page view, settings) | Prerendered HTML and all build files are precached per version (`install` in the service worker). |
+| Interface languages | Each language's messages are their own build file (`src/lib/i18n/messages.ts`), precached with the rest; switching the interface language needs no connection. |
 | Vocabulary, definitions, dictionary | The level files are part of the build (`src/lib/data/*.json`). |
 | Progress, streak, review, achievements, character | localStorage and IndexedDB; the streak syncs later (`syncStreak` falls back to the local state). |
 | Writing grading without AI, conversation without AI | Rule-based grader and scripted dialogues, no model needed. |
