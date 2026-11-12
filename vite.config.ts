@@ -12,7 +12,7 @@ import { levelSlicePlugin } from './scripts/level-slice.ts';
 const { version } = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as { version: string };
 
 export default defineConfig({
-  // Shown in Settings and on /changelog; scripts/release.ts bumps it in package.json.
+  // Shown in Settings; scripts/release.ts bumps it in package.json.
   define: { __APP_VERSION__: JSON.stringify(version) },
   plugins: [
     // `<file>?level=a1` loads a corpus file with only that level's entries (src/lib/story/storyCorpus.ts).
