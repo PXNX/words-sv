@@ -957,7 +957,7 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
         <div class="story-options" lang={lang}>
           {#each orders[currentIndex] ?? [] as option (option)}
             {@const missed = wrong[currentIndex]?.includes(option)}
-            <button type="button" class="btn-play btn-play-choice" class:missed disabled={missed} onclick={() => choose(option)}>{say(current.options[option]![lang])}{#if missed}<IconClose aria-hidden="true" />{/if}</button>
+            <button type="button" class="btn-play btn-play-choice" class:missed disabled={missed} onclick={() => choose(option)}><span>{say(current.options[option]![lang])}</span><span class="story-mark">{#if missed}<IconClose aria-hidden="true" />{/if}</span></button>
           {/each}
         </div>
       {:else if finished}
@@ -1078,6 +1078,8 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
   .story-options button { justify-content:space-between;line-height:1.3;text-align:start; }
   .story-options button.missed { border-color:#c0392b;background:#fdecea;color:#b03224;box-shadow:none;opacity:1;animation:story-shake .3s ease; }
   .story-options button :global(svg) { width:1.1rem;height:1.1rem;flex:none; }
+  /* The cross has its place in every option, so a wrong pick never re-wraps the text. */
+  .story-mark { flex:none;display:grid;place-items:center;width:1.1rem;height:1.1rem; }
     .story-continue { justify-self:center;min-width:min(100%,14rem); }
   .story-finished { display:grid;justify-items:center;gap:.35rem;padding:.8rem;border:1px solid rgba(52,130,77,.4);border-top:3px solid #34824d;border-radius:1rem;background:#fffdf7;text-align:center;font-family:'DM Sans',sans-serif; }
   .story-finished strong { color:#34824d;font-family:'DM Serif Display',serif;font-size:1.3rem;font-weight:400; }

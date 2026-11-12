@@ -276,10 +276,10 @@ import { page } from '$app/state';
         if (Object.values(currentWrong).every((options) => options.length === 0)) unlockCosmetic('reading');
         void settings.recordStreak('reading_completed');
       }
-      if (settings.sound) playSuccessSound(settings.sound, 'vocab');
+      playSuccessSound(settings.sound, 'vocab');
     } else {
       wrong = { ...wrong, [item.id]: { ...currentWrong, [index]: [...(currentWrong[index] ?? []), option] } };
-      if (settings.sound) playErrorSound(settings.sound, 'vocab');
+      playErrorSound(settings.sound, 'vocab');
     }
   }
 
@@ -422,16 +422,15 @@ import { page } from '$app/state';
               <span class="reading-question-badge" aria-hidden="true">{#if currentSolved[index]}<IconCheck />{:else}<IconQuestion />{/if}</span>
               <div>
                 <p>{question.prompt}</p>
-                {#if currentSolved[index]}
-                  <span class="reading-answer">{question.answer}</span>
-                {:else}
-                  <div class="reading-options">
-                    {#each question.options as option (option)}
-                      {@const missed = currentWrong[index]?.includes(option)}
-                      <button type="button" class="btn-play btn-play-choice" class:missed disabled={missed} onclick={() => choose(option, index)}>{option}{#if missed}<IconClose aria-hidden="true" />{/if}</button>
-                    {/each}
-                  </div>
-                {/if}
+                <!-- The options stay in place after the answer: the right one turns green with a check,
+                     a wrong pick red with a cross, so nothing below jumps. -->
+                <div class="reading-options">
+                  {#each question.options as option (option)}
+                    {@const missed = currentWrong[index]?.includes(option)}
+                    {@const right = Boolean(currentSolved[index]) && isCorrectAnswer(question, option)}
+                    <button type="button" class="btn-play btn-play-choice" class:missed class:right disabled={missed || Boolean(currentSolved[index])} onclick={() => choose(option, index)}><span>{option}</span><span class="reading-mark">{#if right}<IconCheck aria-hidden="true" />{:else if missed}<IconClose aria-hidden="true" />{/if}</span></button>
+                  {/each}
+                </div>
               </div>
             </li>
           {/each}
@@ -575,15 +574,19 @@ import { page } from '$app/state';
   .reading-question-badge :global(svg) { width:.9rem;height:.9rem; }
   .reading-questions li.solved .reading-question-badge { background:#cfe6d4;color:#34824d; }
   .reading-questions li p { margin:0;color:#172a45;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:800;line-height:1.4; }
-  .reading-answer { display:inline-flex;align-items:center;gap:.3rem;margin-top:.35rem;color:#34824d;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:900; }
   .reading-options { display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.45rem; }
   .reading-options button { flex:1 1 10rem; }
   /* a wrong pick turns red and stays readable (not greyed out like a disabled button) */
+  .reading-options button { justify-content:space-between;gap:.5rem;text-align:start; }
+  .reading-mark { flex:none;display:grid;place-items:center;width:1.2rem;height:1.2rem; }
+  .reading-mark :global(svg) { width:1.2rem;height:1.2rem; }
+  .reading-options button:disabled:not(.missed):not(.right) { opacity:.45;box-shadow:var(--play-shadow-press); }
+  .reading-options button.right { opacity:1;border-color:var(--play-line);background:#34824d;color:#fffdf7;animation:play-pop .38s var(--play-ease) both; }
   .reading-options button.missed { opacity:1;border-color:#c0392b;background:#fdecea;color:#b03224;box-shadow:none;animation:reading-shake .3s ease; }
   .reading-options button.missed :global(svg) { color:#c0392b; }
   @keyframes reading-shake { 0%,100% { translate:0 0; } 25% { translate:-4px 0; } 60% { translate:3px 0; } }
   :global(html.dark) .reading-options button.missed { border-color:#f08a7e;background:rgba(192,57,43,.22);color:#ffc2b8; }
-  @media (prefers-reduced-motion:reduce) { .reading-options button.missed { animation:none; } }
+  @media (prefers-reduced-motion:reduce) { .reading-options button.missed,.reading-options button.right { animation:none; } }
   .reading-score { margin:0;padding-top:.15rem;text-align:center;color:#596477;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:800; }
   .reading-recap { display:grid;gap:.5rem;padding:.35rem 0 .1rem;border-top:1px dashed rgba(23,42,69,.2); }
   .reading-recap-actions { display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem; }
