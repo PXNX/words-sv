@@ -321,7 +321,7 @@
 </script>
 
 <section
-  class="flex-1 min-h-0 grid content-center justify-items-center gap-4 p-[clamp(1rem,4vw,2rem)] overflow-x-hidden overflow-y-auto bg-[color:#ede4d5] dark:bg-[color:#213a5d] bg-[image:radial-gradient(circle_at_50%_15%,rgba(230,165,39,.18),transparent_34%),linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:auto,24px_24px,24px_24px]"
+  class="quiz-stage flex-1 min-h-0 grid justify-items-center gap-4 p-[clamp(1rem,4vw,2rem)] overflow-x-hidden overflow-y-auto bg-[color:#ede4d5] dark:bg-[color:#213a5d] bg-[image:radial-gradient(circle_at_50%_15%,rgba(230,165,39,.18),transparent_34%),linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:auto,24px_24px,24px_24px]"
   aria-label={labels.title}
 >
   <header class="flex items-end justify-center gap-[.6rem]">
@@ -338,27 +338,23 @@
     <div class="max-w-[24rem] m-0 p-[1.2rem] border border-accent/42 bg-[rgba(255,253,247,.8)] text-accent text-[.9rem] font-bold leading-[1.45] text-center">{labels.unavailable}</div>
   {:else}
     {#if grammarMode === 'order'}
-      {#key position}<article class="learn-card-in w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center" class:learn-correct={answerStatus === 'correct'} class:learn-wrong={answerStatus === 'wrong'}>
+      {#key position}<article class="learn-card-in w-[min(100%,28rem)] min-h-[11.5rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center" class:learn-correct={answerStatus === 'correct'} class:learn-wrong={answerStatus === 'wrong'}>
         <p class="m-0 text-accent text-[.84rem] font-black tracking-[.08em] uppercase">{labels.orderPrompt}</p>
-        <p class="m-0 min-h-[2.2rem] text-base-content font-['DM_Serif_Display'] text-[clamp(1.35rem,6vw,2.1rem)] leading-[1.3]" lang={settings.lang}>{orderPreview()}</p>
+        <p class="m-0 min-h-[2.6em] text-base-content font-['DM_Serif_Display'] text-[clamp(1.35rem,6vw,2.1rem)] leading-[1.3]" lang={settings.lang}>{orderPreview()}</p>
       </article>{/key}
       <div class="w-[min(100%,28rem)] flex flex-wrap justify-center gap-[.45rem]" lang={settings.lang}>{#each orderWords as word, index}<button type="button" class="btn-play btn-play-choice min-h-[2.55rem] px-[.75rem] text-[.9rem] {selectedOrder.includes(index) ? 'border-neutral/30 bg-neutral/20 text-base-content/35 shadow-none' : ''}" onclick={() => chooseOrderWord(index)} disabled={selectedOrder.includes(index) || answerStatus !== null}>{word}</button>{/each}</div>
       <!-- The feedback has its own slot, so the word tiles above stay where they are. -->
-      <div class="grid justify-items-center content-start gap-[.45rem] min-h-[5.4rem]">
+      <div class="grid justify-items-center content-start gap-[.5rem] min-h-[6.4rem]">
       {#if answerStatus === 'wrong'}
-        <div class="flex items-center gap-[.35rem] text-error text-[.9rem] font-extrabold"><IconClose class="w-[1rem] h-[1rem]" aria-hidden="true" />{labels.tryAgain}</div>
-        <div class="flex flex-wrap justify-center gap-[.45rem]">
-          <button class="btn-play btn-play-sm text-accent" onclick={resetOrder}>{labels.orderReset}</button>
-        </div>
+        <span class="answer-mark answer-mark-wrong" role="img" aria-label={labels.tryAgain}><IconClose aria-hidden="true" /></span>
+        <button class="btn-play btn-play-soft" onclick={resetOrder}>{labels.orderReset}</button>
       {:else if answerStatus === 'correct'}
-        <div class="flex items-center gap-[.35rem] text-success text-[.9rem] font-extrabold"><IconCheck class="w-[1rem] h-[1rem]" aria-hidden="true" />{labels.correct}</div>
-        <div class="flex flex-wrap justify-center gap-[.45rem]">
-          <button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>
-        </div>
+        <span class="answer-mark answer-mark-right" role="img" aria-label={labels.correct}><IconCheck aria-hidden="true" /></span>
+        <button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>
       {/if}
       </div>
     {:else}
-    {#key position}<article class="learn-card-in w-[min(100%,28rem)] min-h-[8.2rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center" class:learn-correct={answerStatus === 'correct'} class:learn-wrong={answerStatus === 'wrong'}>
+    {#key position}<article class="learn-card-in w-[min(100%,28rem)] min-h-[11.5rem] grid content-center justify-items-center gap-4 p-[clamp(1.2rem,6vw,2rem)] panel-play text-center" class:learn-correct={answerStatus === 'correct'} class:learn-wrong={answerStatus === 'wrong'}>
             {#if prompt.question}<p class="m-0 text-accent text-[.84rem] font-black tracking-[.08em] uppercase">{questionText(prompt.question)}</p>{/if}
             <p class="m-0 text-base-content font-['DM_Serif_Display'] text-[clamp(1.55rem,7vw,2.6rem)] font-normal tracking-[.04em] leading-[1.3]" lang={settings.lang}>{#if prompt.before}{prompt.before}{/if}{#if prompt.question}{#if prompt.highlight && prompt.after.includes(prompt.highlight)}{@const highlightIndex = prompt.after.indexOf(prompt.highlight)}{prompt.after.slice(0, highlightIndex)}<mark class="bg-primary/25 text-accent px-[.15rem]">{prompt.highlight}</mark>{prompt.after.slice(highlightIndex + prompt.highlight.length)}{:else}{prompt.after}{/if}{:else}<span class="inline-block border-b-4 border-dotted border-accent text-accent px-[.3rem]">___</span>{(/^[.,!?]/u).test(prompt.after) ? '' : ' '}{prompt.after}{/if}</p>
     </article>{/key}
@@ -368,12 +364,16 @@
         <div class="flex gap-[.45rem]">
           <!-- svelte-ignore a11y_autofocus -->
           <input class="input input-bordered flex-1 min-w-0 text-[1rem] font-bold" bind:value={typedForm} lang={settings.lang} autocomplete="off" autocapitalize="off" spellcheck="false" readonly={answerStatus !== null} aria-label={labels.formsPrompt} autofocus />
-          <button type="submit" class="btn-play btn-play-ink" disabled={answerStatus !== null || !typedForm.trim()}>{labels.formsCheck}</button>
+          <span class="grid justify-items-end min-w-[5.6rem]">
+            {#if answerStatus === null || !formScore}<button type="submit" class="btn-play btn-play-ink" disabled={answerStatus !== null || !typedForm.trim()}>{labels.formsCheck}</button>
+            {:else if formScore.credit >= 0.75}<span class="answer-mark answer-mark-right" role="img" aria-label={labels.correct}><IconCheck aria-hidden="true" /></span>
+            {:else}<span class="answer-mark answer-mark-wrong" role="img" aria-label={labels.tryAgain}><IconClose aria-hidden="true" /></span>{/if}
+          </span>
         </div>
         <!-- A fixed slot for the verdict and Continue, so nothing above moves when they appear. -->
-        <div class="grid justify-items-center gap-[.45rem] min-h-[5.4rem] {answerStatus ? '' : 'invisible'}" aria-live="polite">
+        <div class="grid justify-items-center content-start gap-[.45rem] min-h-[6.6rem] {answerStatus ? '' : 'invisible'}" aria-live="polite">
           {#if formScore && prompt}
-            <p class="m-0 flex items-center gap-[.35rem] text-[.9rem] font-extrabold {formScore.verdict === 'exact' ? 'text-success' : formScore.credit >= 0.75 ? 'text-accent' : 'text-error'}">
+            <p class="m-0 min-h-[2.6em] flex items-center gap-[.35rem] text-center text-[.9rem] font-extrabold leading-[1.3] {formScore.verdict === 'exact' ? 'text-success' : formScore.credit >= 0.75 ? 'text-accent' : 'text-error'}">
               {#if formScore.verdict === 'exact'}<IconCheck class="w-[1rem] h-[1rem]" aria-hidden="true" />{labels.correct}{:else}{#if formScore.credit < 0.75}<IconClose class="w-[1rem] h-[1rem]" aria-hidden="true" />{/if}<span lang={settings.lang}>{labels.formsVerdict(formScore.verdict, prompt.correct)}</span>{/if}
             </p>
           {/if}
@@ -383,7 +383,8 @@
     {:else if prompt.choices.length >= 2}
       <section class="w-[min(100%,28rem)] grid gap-[.55rem]" aria-label={labels.chooseArticle}>
         <p class="m-0 text-accent text-[.8125rem] font-black tracking-[.1em] text-center uppercase">{labels.chooseArticle}</p>
-        <div class="grid gap-[.45rem]" style={`grid-template-columns:repeat(${grammarMode === 'determine' ? 2 : Math.min(prompt.choices.length, 3)},minmax(0,1fr));`}>
+        <!-- Room for two rows of answers on every card, so the button below keeps its place. -->
+        <div class="grid content-start gap-[.45rem] min-h-[6.7rem]" style={`grid-template-columns:repeat(${grammarMode === 'determine' ? 2 : Math.min(prompt.choices.length, 3)},minmax(0,1fr));`}>
           {#each prompt.choices as choice}
             <button
               type="button"
@@ -391,13 +392,13 @@
               lang={grammarMode === 'falsefriends' ? falseFriends?.source : undefined}
               onclick={chooseAnswer}
               disabled={answerStatus !== null}
-              class="btn-play btn-play-choice gap-[.4rem] text-[.95rem] touch-manipulation disabled:opacity-100 {optionStateClasses(choice)}"
-            >{choice}{#if answerStatus !== null && choice === prompt.correct}<IconCheck class="w-[1.15rem] h-[1.15rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && choice === selectedChoice}<IconClose class="w-[1.15rem] h-[1.15rem] flex-none text-[#c0392b] dark:text-[#ffc2b8]" aria-label={labels.tryAgain} />{/if}</button>
+              class="btn-play btn-play-choice has-flag text-[.95rem] touch-manipulation disabled:opacity-100 {optionStateClasses(choice)}"
+            >{choice}<span class="choice-flag">{#if answerStatus !== null && choice === prompt.correct}<IconCheck class="text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && choice === selectedChoice}<IconClose class="text-[#c0392b] dark:text-[#ffc2b8]" aria-label={labels.tryAgain} />{/if}</span></button>
           {/each}
         </div>
         <!-- Kept in place (invisible until answered), so the choices above never move. -->
         <div class="grid justify-items-center gap-[.6rem] {answerStatus ? '' : 'invisible'}" aria-hidden={!answerStatus}>
-          {#if prompt.why}<div class="min-h-[2.6rem] grid content-center">{#if answerStatus}<RuleChain why={prompt.why} form={prompt.correct} />{/if}</div>{/if}
+          {#if grammarMode === 'fill' && isGerman}<div class="min-h-[3.3rem] grid content-center">{#if answerStatus && prompt.why}<RuleChain why={prompt.why} form={prompt.correct} />{/if}</div>{/if}
           <button class="btn-play btn-play-ink" onclick={continueLearning} tabindex={answerStatus ? 0 : -1}>{labels.continue}</button>
         </div>
       </section>
