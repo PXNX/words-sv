@@ -1096,5 +1096,11 @@
   "flag_placeholder": "Zum Beispiel: falscher Artikel, seltsamer Satz, Tippfehler",
   "flag_hint": "Die Notiz bleibt auf deinem Gerät. Unter Einblicke kannst du alle Notizen kopieren und uns schicken.",
   "flag_save": "Notiz speichern",
-  "flag_remove": "Entfernen"
+  "flag_remove": "Entfernen",
+  "streak_day_label": "Tage in Folge",
+  "streak_day_label_one": "Tag in Folge",
+  "streak_best_short": "Rekord: {count}",
+  "streak_next_milestone": "Nächstes Ziel: {count} Tage",
+  "streak_today": "Heute: {done} von {goal} Wörtern",
+  "streak_today_done": "Heute zählt"
 }

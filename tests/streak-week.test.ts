@@ -46,3 +46,18 @@ describe('streak nudge', () => {
     expect(isStreakMilestone(8)).toBe(false);
   });
 });
+
+describe('next milestone', () => {
+  it('names the next streak length and how far along it is', async () => {
+    const { nextMilestone } = await import('../src/lib/streak/streakWeek');
+    expect(nextMilestone(0)).toEqual({ target: 3, from: 0, share: 0 });
+    expect(nextMilestone(2).target).toBe(3);
+    expect(nextMilestone(2).share).toBeCloseTo(2 / 3);
+    // Reaching a milestone starts the way to the next one from empty.
+    expect(nextMilestone(3)).toEqual({ target: 7, from: 3, share: 0 });
+    expect(nextMilestone(5).share).toBeCloseTo(0.5);
+    expect(nextMilestone(1000)).toEqual({ target: 1100, from: 1000, share: 0 });
+    expect(nextMilestone(1250)).toMatchObject({ target: 1300, from: 1200 });
+    expect(nextMilestone(-4).target).toBe(3);
+  });
+});
