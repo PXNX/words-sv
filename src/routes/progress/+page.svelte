@@ -296,6 +296,7 @@
   <ExamCoach />
 
   <MemoryMap ledger={allLedger} />
+  <a class="btn-play btn-play-soft btn-play-sm mt-[.9rem]" href="/insights">{m.insights_link({}, { locale: settings.interfaceLocale })}</a>
 
   <h2 class="progress-group">{m.coach_keep_going({}, { locale: settings.interfaceLocale })}</h2>
   <!-- Streak -->
