@@ -51,6 +51,22 @@ export function streakNudge(state: Pick<ClientStreak, 'qualified' | 'streakCount
   return { kind: 'keep', count: state.streakCount };
 }
 
+export type MilestoneProgress = { target: number; from: number; share: number };
+
+/**
+ * The next streak length worth reaching and how far along the way to it the learner is, counted
+ * from the milestone before (so the bar starts empty again after each one). Past the last
+ * milestone the target is the next full hundred.
+ */
+export function nextMilestone(count: number): MilestoneProgress {
+  const reached = Math.max(0, Math.floor(count));
+  const last = STREAK_MILESTONES.at(-1)!;
+  const target = STREAK_MILESTONES.find((milestone) => milestone > reached) ?? Math.max(last, Math.floor(reached / 100) * 100) + 100;
+  const from = [...STREAK_MILESTONES].reverse().find((milestone) => milestone <= reached) ?? 0;
+  const start = target > last ? target - 100 : from;
+  return { target, from: start, share: Math.min(1, Math.max(0, (reached - start) / (target - start))) };
+}
+
 /** Whether a streak count that was just reached is one of the milestones. */
 export function isStreakMilestone(count: number): boolean {
   return (STREAK_MILESTONES as readonly number[]).includes(count);
