@@ -23,6 +23,15 @@ describe('interface messages', () => {
   }
 });
 
+// The lazy messages (src/lib/i18n/messages.ts) answer a call by looking the key up verbatim in the
+// locale's message module, so a key paraglide had to rename is never found and renders as ''. It
+// renames camelCase (`home_fullText` becomes `home_fulltext1`) and reserved words (`continue`
+// becomes `_continue`). Snake_case needs no renaming, so every key stays snake_case.
+it('uses only message keys paraglide leaves alone, so the lazy messages can find them', () => {
+  const renamed = Object.keys(base).filter((key) => key !== '$schema' && !/^[a-z][a-z0-9_]*$/u.test(key));
+  expect(renamed).toEqual([]);
+});
+
 // Persian and Arabic write the cast's names in their own script and the brand Telegram in Latin,
 // the same in every message.
 describe('names in Persian and Arabic', () => {
