@@ -62,3 +62,9 @@
 - Die Leerlaufaufforderung im Kreismittelpunkt ausreichend groß und bernsteinfarben für eine klar lesbare Bewegungsaufforderung setzen.
 - Die Kreuzworträtselplatte mit einer zurückhaltenden Satzspiegelkante und papierfarbenem Innensaum als bewusst gesetzte Druckfläche gestalten.
 - Die Rundenanzeige als Serif-Folio mit bernsteinfarbener Satzmarke hervorheben; den Kreiskern als klare, groß gesetzte Bewegungsaufforderung führen.
+
+## Navigation überdenken (offen)
+
+- Die untere Leiste (Start, Wiederholen, Wörterbuch, Fortschritt, Einstellungen) bleibt vorerst, wie sie ist.
+- Das Wörterbuch ist kein so großes Feature, dass es einen eigenen Eintrag in der Navigation verdient; es könnte eine Karte auf der Startseite bleiben und aus der Leiste verschwinden.
+- Muss es überhaupt eine Leiste am unteren Rand sein? Alternative: wenige kleine Knöpfe oben auf der Startseite (Profilbild zum Fortschritt, Wiederholen mit Zähler, Einstellungen) und auf den Unterseiten nur der Knopf zurück zur Startseite.
