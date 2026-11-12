@@ -80,6 +80,12 @@ export const pages: Record<string, PageMeta> = {
     kicker: 'Nachschlagen',
     icon: 'menu-book-rounded'
   },
+  '/insights': {
+    title: 'Einblicke',
+    description: 'Was dein eigenes Üben zeigt: Aktivität, Rückkehr, Übungen im Vergleich – berechnet auf deinem Gerät.',
+    kicker: 'Fortschritt',
+    icon: 'leaderboard-rounded'
+  },
   '/changelog': {
     title: 'Was ist neu',
     description: 'Alle Versionen von WordCircle mit ihren Neuerungen und Korrekturen.',

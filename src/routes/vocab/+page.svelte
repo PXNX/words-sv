@@ -460,6 +460,7 @@
   import AiModeSettings from '#lib/app/AiModeSettings.svelte';
   import GameSetting from '#lib/app/GameSetting.svelte';
   import LearningStylePicker from '#lib/learn/LearningStylePicker.svelte';
+  import FlagButton from '#lib/content/FlagButton.svelte';
 </script>
 
 <GameToolbar>
@@ -554,6 +555,7 @@
         <p class="quiz-definition cue">{currentDefinition}</p>
       {/if}
       <p class="quiz-status" aria-live="polite">{speechStatus}</p>
+      <span class="quiz-flag"><FlagButton item={`${settings.lang}:${currentWord}`} kind="word" text={`${currentDisplayWord}: ${currentDefinition}`} /></span>
     </article>
     {/key}
     <section class="quiz-answer" aria-label={promptLabel}>
@@ -647,6 +649,7 @@
   .quiz-word-row { display:flex;align-items:center;justify-content:center;gap:.6rem;max-width:100%; }
   /* Pinned to the card's foot, so a message about the voice never pushes the word. */
   .quiz-card { position:relative; }
+  .quiz-flag { position:absolute;top:.2rem;inset-inline-end:.2rem; }
   .quiz-status { position:absolute;inset:auto .6rem .35rem;margin:0;color:var(--color-accent);font-size:.6875rem;font-weight:800;line-height:1.1; }
   .quiz-check { flex:none;display:grid;justify-items:end;min-width:5.6rem; }
   .quiz-card.kind-listen,.quiz-card.kind-dictation { background-image:linear-gradient(145deg,transparent,color-mix(in oklch,var(--skill-hear) 16%,transparent)); }

@@ -48,9 +48,9 @@ import { haptic } from '#lib/feedback/haptics.js';
 
 	const routePath = $derived(page.url.pathname.replace(/\/+$/, '') || '/');
 	const isHome = $derived(routePath === '/');
-	const isListPage = $derived(routePath === '/settings' || routePath === '/progress' || routePath === '/repeat' || routePath === '/dictionary');
+	const isListPage = $derived(routePath === '/settings' || routePath === '/progress' || routePath === '/repeat' || routePath === '/dictionary' || routePath === '/insights');
 	// The hub pages share the dock; inside a mode the corner's home button leads back instead.
-	const isHub = $derived(isHome || isListPage);
+	const isHub = $derived(isHome || (isListPage && routePath !== '/insights'));
 	const homeLabel = $derived(m.home_button({}, { locale: settings.interfaceLocale }));
 	const shellLabel = $derived(m.label({}, { locale: settings.interfaceLocale }));
 
