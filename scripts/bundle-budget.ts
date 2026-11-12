@@ -14,7 +14,7 @@ import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 
 // Set a little above the sizes measured when they were introduced, so growth is a decision, not an accident.
-export const BUDGETS_KB = { shell: 330, route: 560, pack: 60, story: 50, locale: 50 } as const;
+export const BUDGETS_KB = { shell: 180, route: 260, pack: 60, story: 50, locale: 50 } as const;
 
 type Chunk = { file: string; src?: string; name?: string; isEntry?: boolean; isDynamicEntry?: boolean; imports?: string[]; css?: string[] };
 type Manifest = Record<string, Chunk>;

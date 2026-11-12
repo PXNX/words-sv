@@ -26,3 +26,8 @@ jobs:
         run: bun run build
       - name: Bundle and pack budgets
         run: bun run budget
+      # Lighthouse against the static build; its assertions only warn (.lighthouserc.json) until they
+      # have been watched over a few runs, so a slow runner cannot fail the build.
+      - name: Lighthouse
+        continue-on-error: true
+        run: bunx @lhci/cli@0.15 autorun
