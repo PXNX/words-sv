@@ -77,7 +77,7 @@
   let pickingLook = $state(false);
 
   // Loose letter tiles around the cast, like on a game table: they drift, and can be flicked about.
-  const FLOATING_TILES = ['W', 'O', 'R', 'T', 'A', 'Ö'];
+  const FLOATING_TILES = ['W', 'O', 'R', 'T'];
   const labels = $derived({
     settings: m.settings({}, { locale: settings.interfaceLocale }),
     homeTitle: m.home_title({}, { locale: settings.interfaceLocale }),
@@ -402,7 +402,7 @@
           </li>
         {/each}
       </ol>
-      <p>{mixDone === mix.length ? m.mix_done({}, { locale: settings.interfaceLocale }) : m.mix_hint({}, { locale: settings.interfaceLocale })}</p>
+      {#if mixDone === mix.length}<p>{m.mix_done({}, { locale: settings.interfaceLocale })}</p>{:else if mixDone === 0}<p>{m.mix_hint({}, { locale: settings.interfaceLocale })}</p>{/if}
     </section>
     </div>
     <div class="home-main">
@@ -435,12 +435,13 @@
 </section>
 
 <style>
-  .home-view { flex:1 1 auto;min-height:0;display:grid;grid-auto-rows:max-content;align-content:start;gap:1.1rem;padding:clamp(.8rem,3vw,1.1rem) clamp(.8rem,3.6vw,1.25rem) 1.4rem;overflow-x:hidden;overflow-y:auto;font-family:var(--font-body); }
+  .home-view { flex:1 1 auto;min-height:0;display:grid;grid-auto-rows:max-content;align-content:start;gap:1.5rem;padding:clamp(2rem,7vh,3.4rem) clamp(1rem,4.4vw,1.4rem) 1.8rem;overflow-x:hidden;overflow-y:auto;font-family:var(--font-body); }
   .home-side,.home-main { display:contents; }
 
   /* Header: the learner's own face and greeting on one side, the cast under their arch on the other. */
-  .home-header { position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:.6rem;min-height:6.4rem;padding-top:.4rem; }
-  .home-header > :global(.physics-tiles) { z-index:0; }
+  .home-header { position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:.6rem;min-height:6.4rem;margin-bottom:.3rem; }
+  /* The loose tiles keep to the cast's side, clear of the greeting. */
+  .home-header > :global(.physics-tiles) { z-index:0;inset-inline-start:46%;inset-block-start:-1.2rem; }
   .home-hello,.home-family { position:relative;z-index:1; }
   .home-hello { display:grid;gap:.45rem;min-width:0;padding-bottom:.35rem; }
   .home-me { display:block;width:2.9rem;height:2.9rem;overflow:hidden;border:2px solid var(--ink);border-radius:50% 46% 52% 48% / 48% 52% 46% 50%;background:var(--sun-soft);box-shadow:2px 2px 0 var(--ink);transition:translate var(--dur-move) var(--ease-spring),box-shadow var(--dur-move) var(--ease-spring); }
@@ -515,7 +516,7 @@
   .home-mix li + li::before { content:'';position:absolute;top:1.85rem;inset-inline-start:-.5rem;width:.5rem;border-top:2px dotted var(--ink); }
 
   /* Filter chips: a row that scrolls sideways and bleeds to the screen's edge */
-  .home-chips { display:flex;gap:.45rem;margin:0 calc(clamp(.8rem,3.6vw,1.25rem) * -1);padding:.15rem clamp(.8rem,3.6vw,1.25rem) .35rem;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x proximity; }
+  .home-chips { display:flex;gap:.45rem;margin:0 calc(clamp(1rem,4.4vw,1.4rem) * -1);padding:.15rem clamp(1rem,4.4vw,1.4rem) .35rem;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x proximity; }
   .home-chips::-webkit-scrollbar { display:none; }
   .home-chips button { flex:none;display:inline-flex;align-items:center;gap:.35rem;min-height:2.4rem;padding:.3rem .85rem;border:2px solid var(--ink);border-radius:999px;background:var(--surface);color:var(--text);font:inherit;font-size:var(--text-sm);font-weight:800;scroll-snap-align:start;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color var(--dur-quick) ease,color var(--dur-quick) ease,scale var(--dur-move) var(--ease-spring),box-shadow var(--dur-move) var(--ease-spring); }
   .home-chips button i { width:.6rem;height:.6rem;border-radius:50%;background:var(--skill); }
@@ -550,7 +551,7 @@
     .home-games .card-play:hover .home-icon { animation:none;rotate:none; }
   }
   @media (min-width:640px) {
-    .home-view { gap:1.3rem; }
+    .home-view { gap:1.7rem; }
     .home-games { gap:.9rem; }
     .home-family { height:6.6rem; }.home-family-people :global(.story-character) { width:4.2rem;height:5.7rem; }.home-lilith { width:4.6rem;height:5.8rem; }
     .home-me { width:3.4rem;height:3.4rem; }
