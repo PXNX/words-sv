@@ -9,6 +9,10 @@ its one-line summary; the localised highlight shown in the app lives in the mess
 
 ## Unreleased
 
+## v2.0.0 - 2026-11-12
+
+Loads about half as much up front, shows insights from the learner's own activity, and leads the home screen with the streak.
+
 ### New
 - Rebuild the home screen around the streak: a big flame and count, the week as marks, bars for today's goal and the next milestone, a daily mix with one step each for ear, eye and hand, cards coloured and filtered by skill, and a dock for the hub pages
 - Add `/insights`: activity, return rates, modes compared, recall by presentation and flagged content, all on the device
