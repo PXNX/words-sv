@@ -20,6 +20,8 @@ jobs:
         run: bun run check
       - name: Tests
         run: bun run test
+      - name: Content QA
+        run: bun run qa:content
       - name: Build
         run: bun run build
       - name: Bundle and pack budgets
