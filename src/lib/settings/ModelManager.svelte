@@ -115,17 +115,26 @@
       try { await prepareNatural(language); } finally { window.clearInterval(report); }
     }).finally(refresh);
   }
+  // Choosing a voice only chooses it. A voice that is not on the device yet says so on its card
+  // and offers its download there; until then the browser's voice reads.
   function chooseVoice(id: VoiceEngineId) {
     onvoicechange?.();
     settings.setVoiceQuality(id);
-    if (voiceGroups[id]) void downloadVoices();
+    // Already downloaded: load it now, so the first story does not wait.
+    if (voiceGroups[id] && stored[voiceGroups[id]!]) void prepareNatural(lang).catch(() => undefined);
+  }
+  // The download button chooses the voice too: the download is always for the chosen engine.
+  function downloadVoice(id: VoiceEngineId) {
+    onvoicechange?.();
+    settings.setVoiceQuality(id);
+    void downloadVoices();
   }
 
   // --- conversation model -----------------------------------------------------------------------
   const device = $derived(localModel.device);
-  // "No language model" is chosen when both AI modes run without it: by choice, or because no model
-  // is downloaded yet (then the modes cannot use one anyway).
-  const noLlm = $derived((prefersWithoutAi('conversation') && prefersWithoutAi('writing')) || !(localModel.status === 'ready' || localModel.cached));
+  // "No language model" is chosen when the learner turned both AI modes off. A chosen model that
+  // is not downloaded yet stays chosen and says on its card that it still needs its download.
+  const noLlm = $derived(prefersWithoutAi('conversation') && prefersWithoutAi('writing'));
   function chooseNoLlm(value: boolean) {
     setWithoutAi('conversation', value);
     setWithoutAi('writing', value);
@@ -141,8 +150,14 @@
     if (localModel.loaded === model.id && localModel.status === 'ready') return 'loaded';
     return localModel.downloaded.includes(model.id) ? 'downloaded' : 'none';
   }
+  function pickModel(model: ChatModel) {
+    chooseModel(model.id);
+    chooseNoLlm(false);
+  }
   // Downloads only (no GPU), so several can run side by side; the conversation loads the chosen one.
+  // Downloading the first model also chooses it: that is what the learner is after.
   async function downloadModel(model: ChatModel) {
+    if (noLlm || !localModel.downloaded.length) pickModel(model);
     if (!(await confirmDownload(model.downloadMB, model.label))) return;
     void downloadModelFiles(model.id).finally(refresh);
   }
@@ -212,26 +227,29 @@
         {@const group = voiceGroups[id]}
         <li class="model-card" class:chosen>
           <button type="button" class="model-pick" role="radio" aria-checked={chosen} onclick={() => chooseVoice(id)}>
-            <span class="model-name">{engineNames[id]()}{#if id === 'standard'}<span class="model-default">{m.models_default({}, { locale })}</span>{/if}</span>
-            {#if voiceMeta(id)}<span class="model-facts">{voiceMeta(id)}</span>{/if}
-            {#if group}<span class="model-facts">{m.models_facts({ download: `~${mb(voiceDownloadMB(id))}`, memory: `~${mb(voiceMemoryMB(id))}` }, { locale })}</span>{/if}
-            <span class="model-about">{voiceHint(id)}</span>
-            {#if state === 'downloading'}
-              <DownloadProgress progress={naturalState.progress[lang] ?? 0} phase="download" detail={`${mb(naturalState.downloaded[lang] ?? 0)} / ${mb(naturalState.total[lang] ?? voiceDownloadMB(id))}`} />
-            {:else if state === 'failed'}
-              <span class="model-warn"><IconWarning aria-hidden="true" /> {m.models_download_failed({}, { locale })}</span>
-              {#if naturalState.error[lang]}<span class="model-error">{naturalState.error[lang]}</span>{/if}
-            {:else if state === 'downloaded'}
-              <span class="model-ok"><IconCheck aria-hidden="true" /> {m.models_downloaded({}, { locale })}</span>
-            {/if}
+            <span class="model-radio" aria-hidden="true"></span>
+            <span class="model-text">
+              <span class="model-name">{engineNames[id]()}{#if id === 'standard'}<span class="model-default">{m.models_default({}, { locale })}</span>{/if}</span>
+              <span class="model-facts">{[group ? `${mb(voiceDownloadMB(id))} · ${m.models_memory({ memory: mb(voiceMemoryMB(id)) }, { locale })}` : m.models_no_download({}, { locale }), voiceMeta(id)].filter(Boolean).join(' · ')}</span>
+              <span class="model-about">{voiceHint(id)}</span>
+            </span>
           </button>
-          <div class="model-actions">
-            {#if group && (state === 'none' || state === 'failed')}
-              <button type="button" class="btn-play btn-play-sm btn-play-go btn-play-round" onclick={() => chooseVoice(id)} aria-label={m.models_download({}, { locale })} title={m.models_download({}, { locale })}><IconDownload aria-hidden="true" /></button>
-            {:else if group && state === 'downloaded'}
-              <button type="button" class="btn-play btn-play-sm btn-play-soft btn-play-round" class:confirm={confirming === group} onclick={() => remove(group)} onblur={() => { if (confirming === group) confirming = null; }} aria-label={confirming === group ? m.models_confirm({}, { locale }) : m.models_delete({}, { locale })} title={confirming === group ? m.models_confirm({}, { locale }) : m.models_delete({}, { locale })}><IconDelete aria-hidden="true" /></button>
-            {/if}
-          </div>
+          {#if group}
+            <div class="model-foot">
+              {#if state === 'downloading'}
+                <DownloadProgress progress={naturalState.progress[lang] ?? 0} phase="download" detail={`${mb(naturalState.downloaded[lang] ?? 0)} / ${mb(naturalState.total[lang] ?? voiceDownloadMB(id))}`} />
+              {:else if state === 'downloaded'}
+                <span class="model-ok"><IconCheck aria-hidden="true" /> {chosen ? m.models_in_use({}, { locale }) : m.models_downloaded({}, { locale })}</span>
+                <button type="button" class="btn-play btn-play-sm btn-play-soft" class:confirm={confirming === group} onclick={() => remove(group)} onblur={() => { if (confirming === group) confirming = null; }}><IconDelete aria-hidden="true" />{confirming === group ? m.models_confirm({}, { locale }) : m.models_delete({}, { locale })}</button>
+              {:else}
+                <span class="model-note" class:failed={state === 'failed'}>
+                  {#if state === 'failed'}<IconWarning aria-hidden="true" /> {m.models_download_failed({}, { locale })}{#if naturalState.error[lang]}<span class="model-error">{naturalState.error[lang]}</span>{/if}
+                  {:else if chosen}{m.models_voice_fallback({}, { locale })}{:else}{m.models_not_downloaded({}, { locale })}{/if}
+                </span>
+                <button type="button" class="btn-play btn-play-sm btn-play-go" onclick={() => downloadVoice(id)}><IconDownload aria-hidden="true" />{state === 'failed' ? m.models_retry({}, { locale }) : m.models_download_size({ size: mb(voiceDownloadMB(id)) }, { locale })}</button>
+              {/if}
+            </div>
+          {/if}
         </li>
       {/each}
     </ul>
@@ -245,37 +263,44 @@
       <!-- The default: conversation and writing feedback without a language model (scripted, rule-based). -->
       <li class="model-card" class:chosen={noLlm}>
         <button type="button" class="model-pick" role="radio" aria-checked={noLlm} onclick={() => chooseNoLlm(true)}>
-          <span class="model-name">{m.models_no_llm({}, { locale })}<span class="model-default">{m.models_default({}, { locale })}</span></span>
-          <span class="model-about">{m.models_no_llm_hint({}, { locale })}</span>
+          <span class="model-radio" aria-hidden="true"></span>
+          <span class="model-text">
+            <span class="model-name">{m.models_no_llm({}, { locale })}<span class="model-default">{m.models_default({}, { locale })}</span></span>
+            <span class="model-about">{m.models_no_llm_hint({}, { locale })}</span>
+          </span>
         </button>
       </li>
       {#each chatModels as model (model.id)}
         {@const state = modelState(model)}
         {@const chosen = !noLlm && settings.chatModel === model.id}
         <li class="model-card" class:chosen>
-          <button type="button" class="model-pick" role="radio" aria-checked={chosen} onclick={() => { chooseModel(model.id); chooseNoLlm(false); }}>
-            <span class="model-name">{model.label}{#if isRecommended(model, settings.lang)}<span class="model-best" title={m.models_best_for({ language: languageName }, { locale })}><IconStar aria-hidden="true" /> {m.models_best_for({ language: languageName }, { locale })}</span>{/if}</span>
-            <span class="model-facts">{sizeNames[model.size]} · {m.models_facts({ download: mb(model.downloadMB), memory: mb(modelGpuMB(model)) }, { locale })}</span>
-            {#if !fits(model)}<span class="model-warn"><IconWarning aria-hidden="true" /> {m.models_may_not_fit({}, { locale })}</span>{/if}
+          <button type="button" class="model-pick" role="radio" aria-checked={chosen} onclick={() => pickModel(model)}>
+            <span class="model-radio" aria-hidden="true"></span>
+            <span class="model-text">
+              <span class="model-name">{model.label}{#if isRecommended(model, settings.lang)}<span class="model-best" title={m.models_best_for({ language: languageName }, { locale })}><IconStar aria-hidden="true" /> {m.models_best_for({ language: languageName }, { locale })}</span>{/if}</span>
+              <span class="model-facts">{mb(model.downloadMB)} · {m.models_memory({ memory: mb(modelGpuMB(model)) }, { locale })} · {sizeNames[model.size]}</span>
+              {#if !fits(model)}<span class="model-warn"><IconWarning aria-hidden="true" /> {m.models_may_not_fit({}, { locale })}</span>{/if}
+            </span>
+          </button>
+          <div class="model-foot">
             {#if state === 'downloading'}
               {@const download = localModel.downloads[model.id]!}
               <DownloadProgress progress={download.progress} phase="download" bytesPerSecond={download.bytesPerSecond} />
-            {:else if state === 'failed'}
-              <span class="model-warn"><IconWarning aria-hidden="true" /> {m.models_download_failed({}, { locale })}</span>
+              <button type="button" class="btn-play btn-play-sm btn-play-soft" onclick={() => cancelModelDownload(model.id)}><IconClose aria-hidden="true" />{m.models_cancel({}, { locale })}</button>
             {:else if state === 'loading'}
               <DownloadProgress progress={localModel.progress} phase={modelProgressPhase(localModel.text)} bytesPerSecond={localModel.bytesPerSecond} />
             {:else if state === 'loaded' || state === 'downloaded'}
-              <ModelStatus downloaded inMemory={state === 'loaded'} downloadMB={model.downloadMB} memoryMB={modelGpuMB(model)} />
-              {#if state === 'loaded' && localModel.tokensPerSecond}<span class="model-facts">{Math.round(localModel.tokensPerSecond)} tok/s</span>{/if}
-            {/if}
-          </button>
-          <div class="model-actions">
-            {#if state === 'downloading'}
-              <button type="button" class="btn-play btn-play-sm btn-play-soft btn-play-round" onclick={() => cancelModelDownload(model.id)} aria-label={m.models_cancel({}, { locale })} title={m.models_cancel({}, { locale })}><IconClose aria-hidden="true" /></button>
-            {:else if state === 'none' || state === 'failed'}
-              <button type="button" class="btn-play btn-play-sm btn-play-go btn-play-round" onclick={() => downloadModel(model)} aria-label={m.models_download({}, { locale })} title={m.models_download({}, { locale })}><IconDownload aria-hidden="true" /></button>
-            {:else if state === 'downloaded' || state === 'loaded'}
-              <button type="button" class="btn-play btn-play-sm btn-play-soft btn-play-round" class:confirm={confirmingModel === model.id} onclick={() => removeModel(model)} onblur={() => { if (confirmingModel === model.id) confirmingModel = null; }} aria-label={confirmingModel === model.id ? m.models_confirm({}, { locale }) : m.models_delete({}, { locale })} title={confirmingModel === model.id ? m.models_confirm({}, { locale }) : m.models_delete({}, { locale })}><IconDelete aria-hidden="true" /></button>
+              <span class="model-state">
+                <ModelStatus downloaded inMemory={state === 'loaded'} downloadMB={model.downloadMB} memoryMB={modelGpuMB(model)} hint={false} />
+                {#if state === 'loaded' && localModel.tokensPerSecond}<span class="model-facts">{Math.round(localModel.tokensPerSecond)} tok/s</span>{/if}
+              </span>
+              <button type="button" class="btn-play btn-play-sm btn-play-soft" class:confirm={confirmingModel === model.id} onclick={() => removeModel(model)} onblur={() => { if (confirmingModel === model.id) confirmingModel = null; }}><IconDelete aria-hidden="true" />{confirmingModel === model.id ? m.models_confirm({}, { locale }) : m.models_delete({}, { locale })}</button>
+            {:else}
+              <span class="model-note" class:failed={state === 'failed'}>
+                {#if state === 'failed'}<IconWarning aria-hidden="true" /> {m.models_download_failed({}, { locale })}
+                {:else if chosen}{m.models_llm_fallback({}, { locale })}{:else}{m.models_not_downloaded({}, { locale })}{/if}
+              </span>
+              <button type="button" class="btn-play btn-play-sm btn-play-go" onclick={() => downloadModel(model)}><IconDownload aria-hidden="true" />{state === 'failed' ? m.models_retry({}, { locale }) : m.models_download_size({ size: mb(model.downloadMB) }, { locale })}</button>
             {/if}
           </div>
         </li>
@@ -322,8 +347,10 @@
   .models h2 { margin:0 0 .3rem;font-family:'DM Serif Display',serif;font-size:1.15rem;font-weight:400; }
   .models h3 { margin:.95rem 0 .35rem;font-size:.84rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;opacity:.65; }
   .models h4 { margin:.8rem 0 .35rem;font-size:.9rem;font-weight:900; }
-  .model-error { font-size:.8125rem;font-weight:700;line-height:1.35;opacity:.75;overflow-wrap:anywhere; }
-  .model-about { font-size:.84rem;font-weight:700;line-height:1.4;opacity:.7; }
+  .model-error { flex-basis:100%;font-size:.8125rem;font-weight:700;line-height:1.35;opacity:.75;overflow-wrap:anywhere; }
+  /* One line of description per card; the chosen card shows all of it. */
+  .model-about { font-size:.84rem;font-weight:600;line-height:1.4;opacity:.7;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:1;line-clamp:1;overflow:hidden; }
+  .chosen .model-about { -webkit-line-clamp:unset;line-clamp:unset; }
   .model-hint { margin:0 0 .2rem;font-size:.875rem;font-weight:700;opacity:.65;line-height:1.35; }
   .model-facts { font-size:.875rem;font-weight:700;opacity:.7;font-variant-numeric:tabular-nums; }
   .model-ok { display:inline-flex;align-items:center;gap:.25rem;color:#34824d;opacity:1 !important;font-size:.875rem;font-weight:800; }
@@ -331,14 +358,25 @@
   .model-warn { display:inline-flex;align-items:center;gap:.25rem;color:#b5762a;font-size:.875rem;font-weight:800; }
   .model-device { display:flex;align-items:center;gap:.3rem;margin:0 0 .45rem;font-size:.875rem;font-weight:700;opacity:.7; }
   .model-list { display:grid;gap:.4rem;margin:0;padding:0;list-style:none; }
-  .model-card { display:flex;align-items:center;gap:.5rem;padding:.45rem .55rem;border:2px solid color-mix(in srgb,currentColor 18%,transparent);border-radius:14px;transition:border-color .2s ease,background .2s ease; }
+  /* A card is two parts: the choice (a radio with name, facts and what it is) and, for anything that
+     downloads, a foot with its state on one side and the one action that fits it on the other. */
+  .model-card { display:grid;border:2px solid color-mix(in srgb,currentColor 18%,transparent);border-radius:14px;overflow:hidden;transition:border-color .2s ease,background .2s ease; }
   .model-card.chosen { border-color:#34824d;background:color-mix(in srgb,#34824d 8%,transparent); }
-  .model-pick { flex:1;min-width:0;display:grid;gap:.2rem;padding:0;border:0;background:transparent;color:inherit;text-align:start;cursor:pointer; }
+  .model-pick { display:flex;align-items:flex-start;gap:.6rem;min-width:0;padding:.6rem .7rem;border:0;background:transparent;color:inherit;font:inherit;text-align:start;cursor:pointer; }
+  .model-pick:focus-visible { outline:3px dashed #e6a527;outline-offset:-3px; }
+  .model-text { flex:1;min-width:0;display:grid;gap:.2rem; }
+  .model-radio { flex:none;width:1.15rem;height:1.15rem;margin-top:.1rem;border:2px solid color-mix(in srgb,currentColor 45%,transparent);border-radius:50%;transition:border-color .2s ease,box-shadow .2s ease; }
+  .chosen .model-radio { border-color:#34824d;box-shadow:inset 0 0 0 3px var(--surface,#fffdf7),inset 0 0 0 1rem #34824d; }
+  .model-foot { display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.4rem .7rem;padding:.45rem .7rem .55rem;border-top:1.5px dashed color-mix(in srgb,currentColor 16%,transparent); }
+  .model-foot > :global(:first-child) { flex:1 1 9rem;min-width:0; }
+  .model-note { display:flex;flex-wrap:wrap;align-items:center;gap:.25rem;font-size:.8125rem;font-weight:700;line-height:1.35;opacity:.75; }
+  .model-note.failed { color:#b5762a;opacity:1; }
+  .model-note :global(svg) { width:.9rem;height:.9rem;flex:none; }
+  .model-state { display:flex;flex-wrap:wrap;align-items:center;gap:.3rem .6rem; }
   .model-name { display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;font-size:.95rem;font-weight:900; }
   .model-default { display:inline-flex;align-items:center;margin-inline-start:.35rem;padding:.05rem .4rem;border-radius:999px;background:rgba(52,130,77,.15);color:#2f6f45;font-size:.8125rem;font-weight:900;vertical-align:middle; }
   :global(html.dark) .model-default { background:rgba(52,130,77,.3);color:#b6e3c4; }
   .model-best { display:inline-flex;align-items:center;gap:.15rem;padding:.05rem .4rem;border-radius:999px;background:#fbe6b5;color:#7a4a12;font-size:.8125rem;font-weight:900; }
-  .model-actions { flex:none; }
   .model-stored { display:grid;gap:.35rem;margin:0;padding:0;list-style:none; }
   .model-stored li { display:flex;align-items:center;gap:.6rem;font-size:.9rem;font-weight:800; }
   .model-stored li > span:first-child { flex:1; }

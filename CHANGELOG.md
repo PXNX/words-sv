@@ -10,6 +10,8 @@ its one-line summary; the localised highlight shown in the app lives in the mess
 ## Unreleased
 
 ### Improved
+- Rework the model cards in the settings: a radio, the name, size, memory and one line about it, and beneath them the model's state with the one action that fits it (its download with the size, in use, or delete)
+- A voice or model that is not on the device yet stays chosen and says so on its card instead of falling back to "no language model"; downloading a model also chooses it
 - Show the version history in a sheet over the settings instead of its own page, without links out to GitHub; links to `/changelog` now open the sheet on the settings
 - Give the first run's introduction the sheet to itself: no dock under it, and an update waits until it is done
 
