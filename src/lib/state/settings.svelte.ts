@@ -10,6 +10,7 @@ import type { EventMode } from '#lib/progress/events.js';
 import { publishReminderState } from '#lib/pwa/pwaReminders.js';
 import { reminderExtras } from '#lib/reminders/reminderSnapshot.js';
 import type { Locale } from '#lib/paraglide/runtime.js';
+import { loadLocaleMessages } from '#lib/i18n/messages.js';
 import { parseAvatar, type Avatar } from '#lib/profile/avatar.js';
 import { setKumarStandIn } from '#lib/story/standIn.js';
 import { resolveFormatContext, type FormatCalendar, type FormatContext, type FormatDigits, type FormatSource } from '#lib/format/format.js';
@@ -79,6 +80,8 @@ const INTERFACE_CALENDAR_KEY = 'wordcircle-interface-calendar-v1';
 const INTERFACE_DIGITS_KEY = 'wordcircle-interface-digits-v1';
 export const FIRST_NAME_MAX_LENGTH = 30;
 
+// Only the latest language switch takes effect once its messages have arrived.
+let interfaceLocaleRequest = 0;
 function isInterfaceLocale(value: unknown): value is InterfaceLocale {
   return typeof value === 'string' && interfaceLocales.some((locale) => locale.code === value);
 }
@@ -227,9 +230,15 @@ class SettingsStore {
     this.sound = next;
     localStorage.setItem(SOUND_KEY, next ? 'on' : 'off');
   }
+  // The switch waits for the language's messages (their own chunk, cached for offline use by the
+  // service worker); if they cannot be fetched the interface stays in the language it has.
   setInterfaceLocale(next: InterfaceLocale) {
-    this.interfaceLocale = next;
-    localStorage.setItem(INTERFACE_LOCALE_KEY, next);
+    const request = ++interfaceLocaleRequest;
+    void loadLocaleMessages(next).then(() => {
+      if (request !== interfaceLocaleRequest) return;
+      this.interfaceLocale = next;
+      localStorage.setItem(INTERFACE_LOCALE_KEY, next);
+    }, () => undefined);
   }
   setLang(next: Language) {
     this.lang = next;
