@@ -361,7 +361,7 @@
     beforeAnswer = reviewProgress[word];
     reviewProgress = updateReviewProgress(reviewProgress, word, correct, Date.now(), grade);
     persistProgress();
-    recordReview(settings.lang, word, correct, 'vocab', Date.now(), grade);
+    recordReview(settings.lang, word, correct, 'vocab', Date.now(), grade, { presentation: { image: Boolean(currentPicture), animation: false } });
     if (correct) {
       playSuccessSound(settings.sound, 'vocab');
       // The repair reward qualifies the day itself; a normal event would race its sync.

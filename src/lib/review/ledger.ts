@@ -103,7 +103,8 @@ export function applyReview(
 const MODE_BY_SOURCE: Record<ReviewSource, EventMode> = { vocab: 'vocab', reading: 'reading', grammar: 'grammar', pronunciation: 'speak', story: 'story', listening: 'listen' };
 
 // `features`: the grammar features the item tests; a wrong answer counts against all of them.
-export type ReviewDetails = { latencyMs?: number; score?: number; features?: FeatureKey[] };
+// `presentation`: whether the card carried a picture or an animated explanation (experiments.ts).
+export type ReviewDetails = { latencyMs?: number; score?: number; features?: FeatureKey[]; presentation?: { image: boolean; animation: boolean } };
 
 /** Schedules an answer and appends it to the learning event log. */
 export function recordReview(language: string, item: string, correct: boolean, source: ReviewSource, now: number = Date.now(), grade?: Grade, details: ReviewDetails = {}): ReviewLedger {
@@ -120,6 +121,7 @@ export function recordReview(language: string, item: string, correct: boolean, s
 		rating: grade ?? (correct ? 'good' : 'again'),
 		...(details.latencyMs !== undefined ? { latencyMs: details.latencyMs } : {}),
 		...(details.score !== undefined ? { score: details.score } : {}),
+		...(details.presentation ? { presentation: details.presentation } : {}),
 		...(details.features?.length ? { features: details.features, ...(!correct ? { featureErrors: details.features } : {}) } : {})
 	});
 	return ledger;

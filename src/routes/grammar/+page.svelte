@@ -16,6 +16,9 @@
   import { adjectiveStem, buildAdjectivePrompt, isEligibleAdjective } from '#lib/grammar/adjectives.js';
   import { fittingNouns } from '#lib/grammar/nounClasses.js';
   import RuleChain from '#lib/grammar/RuleChain.svelte';
+  import { variant } from '#lib/experiments/experiments.svelte.js';
+  // Half of the devices see the rule chain build itself, the other half see it standing still.
+  const animateRules = typeof window !== 'undefined' && variant('teaching-animations') === 'on';
   import { formCountsAsRight, scoreForm, type FormScore } from '#lib/grammar/formAnswer.js';
   import { buildVerbPrompt, buildVerbPropertyPrompt, verbConjugations } from '#lib/grammar/verbs.js';
   import { buildFalseFriendPrompt, falseFriendsFor } from '#lib/grammar/falseFriends.js';
@@ -283,7 +286,11 @@
     const grade = gradeNow(correct);
     reviewProgress = updateReviewProgress(reviewProgress, currentKey, correct, Date.now(), grade);
     persistProgress();
-    recordReview(settings.lang, currentKey, correct, 'grammar', Date.now(), grade, settings.lang === 'de' && prompt.features ? { features: prompt.features } : {});
+    recordReview(settings.lang, currentKey, correct, 'grammar', Date.now(), grade, {
+      ...(settings.lang === 'de' && prompt.features ? { features: prompt.features } : {}),
+      // Cards with a rule chain say whether it was animated, for the experiment's comparison.
+      ...(prompt.why ? { presentation: { image: false, animation: animateRules } } : {})
+    });
     if (correct) { playSuccessSound(settings.sound, 'grammar'); void settings.recordStreak('grammar_correct'); }
     else { playErrorSound(settings.sound, 'grammar'); recordMissedGrammarWord(currentKey); requeue(currentKey); }
   }
@@ -398,7 +405,7 @@
         </div>
         <!-- Kept in place (invisible until answered), so the choices above never move. -->
         <div class="grid justify-items-center gap-[.6rem] {answerStatus ? '' : 'invisible'}" aria-hidden={!answerStatus}>
-          {#if grammarMode === 'fill' && isGerman}<div class="min-h-[3.3rem] grid content-center">{#if answerStatus && prompt.why}<RuleChain why={prompt.why} form={prompt.correct} />{/if}</div>{/if}
+          {#if grammarMode === 'fill' && isGerman}<div class="min-h-[3.3rem] grid content-center">{#if answerStatus && prompt.why}<RuleChain why={prompt.why} form={prompt.correct} animate={animateRules} />{/if}</div>{/if}
           <button class="btn-play btn-play-ink" onclick={continueLearning} tabindex={answerStatus ? 0 : -1}>{labels.continue}</button>
         </div>
       </section>
