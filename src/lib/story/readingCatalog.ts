@@ -1,6 +1,7 @@
 import type { Language, VocabularyLevel } from '#lib/data/vocabulary.js';
-import { characterNames, storiesFor, type CharacterId, type SceneId } from './stories';
-import { readingTextsFor, type ReadingBlock } from './readingTexts';
+import type { CharacterId, SceneId, Story } from './stories';
+import type { ReadingBlock, ReadingText } from './readingTexts';
+import { characterNames } from './storyKit';
 import { questionView, storyProse, type ReadingQuestionView } from './prose';
 
 export type ReadingItem = {
@@ -17,9 +18,13 @@ export type ReadingItem = {
   keyWords: string[];
 };
 
-/** All texts available at the current level: the written texts first, then the stories as prose. */
-export function readingCatalog(language: Language, level: VocabularyLevel, includeLower: boolean, name: string): ReadingItem[] {
-  const texts: ReadingItem[] = readingTextsFor(language, level, includeLower).map((text) => ({
+/**
+ * The learner's texts as one catalog: the written texts first, then the stories as prose. Both
+ * lists are already chosen for the language and level (see levelSelect.ts); this file stays free
+ * of the corpus so pages that only need the catalog's shape do not load every story.
+ */
+export function readingCatalog(readingTexts: readonly ReadingText[], levelStories: readonly Story[], language: Language, name: string): ReadingItem[] {
+  const texts: ReadingItem[] = readingTexts.map((text) => ({
     id: text.id,
     kind: 'text',
     level: text.level,
@@ -33,7 +38,7 @@ export function readingCatalog(language: Language, level: VocabularyLevel, inclu
     keyWords: text.keyWords ?? []
   }));
 
-  const stories: ReadingItem[] = storiesFor(language, level, includeLower)
+  const stories: ReadingItem[] = levelStories
     .filter((story) => !story.generated)
     .map((story) => {
       const prose = storyProse(story, language, name);

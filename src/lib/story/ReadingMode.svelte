@@ -9,7 +9,7 @@ import { page } from '$app/state';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { playErrorSound, playSuccessSound } from '#lib/feedback/sounds.js';
-  import { readingCatalog } from './readingCatalog';
+  import { readingCatalog } from './storyPacks.svelte';
   import { isCorrectAnswer, readingParagraphs } from './prose';
   import {
     isReadingArticle,

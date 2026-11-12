@@ -6,7 +6,9 @@
   import { m } from '#lib/paraglide/messages.js';
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
-  import { characterNames, fillName, moodFor, storiesFor, withDetails, withWeather, type CharacterId, type Mood, type SceneId, type Story, type StoryBeat } from './stories';
+  import type { CharacterId, Mood, SceneId, Story, StoryBeat } from './stories';
+  import { characterNames, fillName, moodFor, withDetails, withWeather } from './storyKit';
+  import { storiesFor } from './storyPacks.svelte';
   import type { Language, VocabularyLevel } from '#lib/data/vocabulary.js';
   import { intonationOf, pronounceable, splitSounds, wordsOf } from './speech';
   import { naturalMegabytes, naturalNarratorVoice, naturalReady, naturalState, naturalSupported, prepareNatural, synthesizeNatural, combineNatural, type NaturalClip } from './naturalVoices.svelte';

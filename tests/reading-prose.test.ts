@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import type { Language, VocabularyLevel } from '../src/lib/data/vocabulary.js';
-import { readingCatalog, type ReadingItem } from '../src/lib/story/readingCatalog.js';
+import { readingCatalog as catalogOf, type ReadingItem } from '../src/lib/story/readingCatalog.js';
+import { readingTextsFor } from '../src/lib/story/readingTexts.js';
+import { storiesFor } from '../src/lib/story/stories.js';
+
+// The catalog over the whole corpus; the app builds it from the levels it has loaded.
+const readingCatalog = (language: Language, level: VocabularyLevel, includeLower: boolean, name: string) =>
+	catalogOf(readingTextsFor(language, level, includeLower), storiesFor(language, level, includeLower), language, name);
 import { readingParagraphs } from '../src/lib/story/prose.js';
 
 const languages: Language[] = ['de', 'en', 'fr', 'it', 'es', 'pt', 'uk'];

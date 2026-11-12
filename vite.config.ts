@@ -7,6 +7,7 @@ import Icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { levelSlicePlugin } from './scripts/level-slice.ts';
 
 const { version } = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as { version: string };
 
@@ -14,6 +15,8 @@ export default defineConfig({
   // Shown in Settings and on /changelog; scripts/release.ts bumps it in package.json.
   define: { __APP_VERSION__: JSON.stringify(version) },
   plugins: [
+    // `<file>?level=a1` loads a corpus file with only that level's entries (src/lib/story/storyCorpus.ts).
+    levelSlicePlugin(['src/lib/story/stories.ts', 'src/lib/story/germanStories.ts', 'src/lib/story/readingTexts.ts']),
     tailwindcss(),
     sveltekit({
       preprocess: vitePreprocess(),

@@ -3,6 +3,8 @@
 //   - shell: the app entry plus the root layout and everything they import statically;
 //   - routes: each page with its static imports (the shell counted in, as on a first visit);
 //   - packs: each per-level word file (src/lib/data/<lang>.<level>.json), loaded on demand;
+//   - stories: each level of the story corpus and of the reading texts (src/lib/story/storyCorpus.ts),
+//     loaded by the story pages for the learner's level;
 //   - locales: each interface language's messages with the German base they fall back to; the
 //     first visit loads one of them on top of the shell, a language switch fetches another.
 // Workers and the on-device model runtimes are left out: they load only when a model is used.
@@ -12,7 +14,7 @@ import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 
 // Set a little above the sizes measured when they were introduced, so growth is a decision, not an accident.
-export const BUDGETS_KB = { shell: 330, route: 560, pack: 60, locale: 50 } as const;
+export const BUDGETS_KB = { shell: 330, route: 560, pack: 60, story: 50, locale: 50 } as const;
 
 type Chunk = { file: string; src?: string; name?: string; isEntry?: boolean; isDynamicEntry?: boolean; imports?: string[]; css?: string[] };
 type Manifest = Record<string, Chunk>;
@@ -58,6 +60,10 @@ const packs = Object.entries(manifest)
   .filter(([key]) => /^src\/lib\/data\/[a-z]{2}\.[a-c][12]\.json$/u.test(key))
   .map(([key, chunk]) => ({ pack: key.slice('src/lib/data/'.length, -'.json'.length), size: gzipped(chunk.file) }))
   .sort((a, b) => b.size - a.size);
+const storyPacks = Object.entries(manifest)
+  .filter(([key]) => /^src\/lib\/story\/\w+\.ts\?level=[a-c][12]$/u.test(key))
+  .map(([key, chunk]) => ({ pack: key.slice('src/lib/story/'.length).replace('.ts?level=', '.'), size: gzipped(chunk.file) }))
+  .sort((a, b) => b.size - a.size);
 const locales = Object.keys(manifest)
   .filter((key) => /^src\/lib\/paraglide\/messages\/[a-z-]+\.js$/iu.test(key) && manifest[key]!.isDynamicEntry)
   .map((key) => ({ locale: key.slice(key.lastIndexOf('/') + 1, -'.js'.length), size: total([...closure(key)].filter((file) => !shellFiles.has(file))) }))
@@ -67,17 +73,20 @@ const over = [
   ...(kb(shell) > BUDGETS_KB.shell ? [`shell ${kb(shell)} KB > ${BUDGETS_KB.shell} KB`] : []),
   ...routes.filter((route) => kb(route.size) > BUDGETS_KB.route).map((route) => `route ${route.node} ${kb(route.size)} KB > ${BUDGETS_KB.route} KB`),
   ...packs.filter((pack) => kb(pack.size) > BUDGETS_KB.pack).map((pack) => `pack ${pack.pack} ${kb(pack.size)} KB > ${BUDGETS_KB.pack} KB`),
+  ...storyPacks.filter((pack) => kb(pack.size) > BUDGETS_KB.story).map((pack) => `stories ${pack.pack} ${kb(pack.size)} KB > ${BUDGETS_KB.story} KB`),
+  ...(storyPacks.length ? [] : ['no per-level story chunks found: the story corpus is no longer loaded one level at a time']),
   ...locales.filter((entry) => kb(entry.size) > BUDGETS_KB.locale).map((entry) => `locale ${entry.locale} ${kb(entry.size)} KB > ${BUDGETS_KB.locale} KB`),
   // Every locale in one piece would mean the messages are back in a statically imported chunk.
   ...(locales.length ? [] : ['no per-locale message chunks found: the interface languages are no longer loaded one at a time'])
 ];
 
 if (process.argv.includes('--json')) {
-  console.log(JSON.stringify({ shell, routes, packs, locales, budgetsKb: BUDGETS_KB, over }, null, 2));
+  console.log(JSON.stringify({ shell, routes, packs, storyPacks, locales, budgetsKb: BUDGETS_KB, over }, null, 2));
 } else {
   console.log(`shell (entry + layout): ${kb(shell)} KB gzip (budget ${BUDGETS_KB.shell})`);
   console.log(`largest routes: ${routes.slice(0, 5).map((route) => `${route.node} ${kb(route.size)}`).join(', ')} KB (budget ${BUDGETS_KB.route})`);
   console.log(`packs: ${packs.length}, total ${kb(packs.reduce((sum, pack) => sum + pack.size, 0))} KB; largest ${packs.slice(0, 5).map((pack) => `${pack.pack} ${kb(pack.size)}`).join(', ')} KB (budget ${BUDGETS_KB.pack})`);
+  console.log(`stories: ${storyPacks.length} level chunks, total ${kb(storyPacks.reduce((sum, pack) => sum + pack.size, 0))} KB; largest ${storyPacks.slice(0, 5).map((pack) => `${pack.pack} ${kb(pack.size)}`).join(', ')} KB (budget ${BUDGETS_KB.story})`);
   console.log(`locales (with the German fallback): ${locales.map((entry) => `${entry.locale} ${kb(entry.size)}`).join(', ')} KB (budget ${BUDGETS_KB.locale})`);
 }
 if (over.length) {

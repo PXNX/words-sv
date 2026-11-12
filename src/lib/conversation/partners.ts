@@ -3,8 +3,9 @@
  * their stories. Every round draws a new partner at random, with a little background of their own
  * and a few lines of the story they come from, which the on-device model gets as shared memory.
  */
-import type { Language, VocabularyLevel } from '#lib/data/vocabulary.js';
-import { characterNames, fillName, storiesFor, withDetails, type CharacterId, type SceneId, type Story } from '#lib/story/stories.js';
+import type { Language } from '#lib/data/vocabulary.js';
+import type { CharacterId, SceneId, Story } from '#lib/story/stories.js';
+import { characterNames, fillName, withDetails } from '#lib/story/storyKit.js';
 
 // Written for the model (in English, whatever the learner's language); kept short for its 4k context.
 export const backgrounds: Partial<Record<CharacterId, string>> = {
@@ -60,9 +61,9 @@ function storyLines(story: Story, language: Language, learnerName: string, limit
   return lines;
 }
 
-/** A random partner from a random story of the level, never the one just talked to. */
-export function pickPartner(language: Language, level: VocabularyLevel, includeLower: boolean, learnerName: string, previous: CharacterId | null = null, random: () => number = Math.random): Partner | null {
-  const options = storiesFor(language, level, includeLower).flatMap((story) =>
+/** A random partner from a random one of the level's stories, never the one just talked to. */
+export function pickPartner(stories: readonly Story[], language: Language, learnerName: string, previous: CharacterId | null = null, random: () => number = Math.random): Partner | null {
+  const options = stories.flatMap((story) =>
     story.cast.filter((id) => canTalk(id, language) && id !== previous).map((id) => ({ story, id }))
   );
   if (!options.length) return null;

@@ -281,9 +281,9 @@
       return null;
     }
   }
-  // The reading catalog pulls in every story, so it loads only when there is a text in progress,
-  // and after the page instead of with it.
-  let readingCatalog: typeof import('#lib/story/readingCatalog.js').readingCatalog | null = null;
+  // The reading catalog pulls in the level's stories, so it loads only when there is a text in
+  // progress, and after the page instead of with it.
+  let readingCatalog: typeof import('#lib/story/storyPacks.svelte.js').readingCatalog | null = null;
   let catalogLoading = false;
   function readingToday(): TodayReading | null {
     try {
@@ -293,7 +293,8 @@
       if (!readingCatalog) {
         if (!catalogLoading) {
           catalogLoading = true;
-          void import('#lib/story/readingCatalog.js').then((module) => {
+          void import('#lib/story/storyPacks.svelte.js').then(async (module) => {
+            await module.ensureStoryPacks(settings.lang, settings.vocabularyLevel, settings.includeLowerVocabulary);
             readingCatalog = module.readingCatalog;
             refreshToday();
           });

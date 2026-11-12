@@ -1,5 +1,6 @@
 import type { Language, VocabularyLevel } from '#lib/data/vocabulary.js';
 import type { CharacterId, SceneId } from './stories';
+import { selectReadingTexts } from './levelSelect';
 
 // How a line is introduced when a story is turned into flowing prose.
 export type SpeechStyle = 'say' | 'shout' | 'whisper' | 'ask' | 'answer' | 'laugh' | 'sigh' | 'murmur' | 'call';
@@ -290,15 +291,7 @@ export const readingTexts: ReadingText[] = [
   }
 ];
 
+/** The learner's texts out of the whole corpus; the app itself loads them per level (storyPacks.svelte.ts). */
 export function readingTextsFor(language: Language, level: VocabularyLevel, includeLower: boolean): ReadingText[] {
-  const available = readingTexts.filter((text) => !text.languages || text.languages.includes(language));
-  const levels: VocabularyLevel[] = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'];
-  const rank = levels.indexOf(level);
-  const exact = available.filter((text) => text.level === level);
-  const lower = includeLower
-    ? available
-        .filter((text) => levels.indexOf(text.level) < rank)
-        .sort((a, b) => levels.indexOf(b.level) - levels.indexOf(a.level))
-    : [];
-  return [...exact, ...lower];
+  return selectReadingTexts(readingTexts, language, level, includeLower);
 }

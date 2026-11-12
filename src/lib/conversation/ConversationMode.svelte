@@ -29,6 +29,7 @@
   import { voiceEngines } from '#lib/voice/engines.js';
   import { chatMessages, cleanReply, LEVEL_WORD_SAMPLE, pickTargetWords, usedWords, type Turn } from './conversation.js';
   import { pickPartner, type Partner } from './partners.js';
+  import { storiesFor } from '#lib/story/storyPacks.svelte.js';
   import { activeModelLabel, checkLocalModel, chosenModel, generateReply, interruptReply, loadLocalModel, localModel, modelGpuMB } from './localModel.svelte.js';
   import { aiAvailable, usesAi } from './aiChoice.svelte.js';
   import AiSwitch from './AiSwitch.svelte';
@@ -338,7 +339,7 @@
 
   // The next partner is drawn ahead of time, so the start screen can introduce them.
   function drawPartner() {
-    partner = pickPartner(lang, level, settings.includeLowerVocabulary, settings.firstName, partner?.id ?? null) ?? partner;
+    partner = pickPartner(storiesFor(lang, level, settings.includeLowerVocabulary), lang, settings.firstName, partner?.id ?? null) ?? partner;
   }
 
   async function startRound() {
