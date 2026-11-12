@@ -253,3 +253,27 @@ describe('hand-checked sentences and checking an order', () => {
     expect(shuffled(tiles, Math.random).length).toBe(exercise.tokens.length);
   });
 });
+
+describe('curated sentences', () => {
+  const levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'] as const;
+
+  it('lists alternatives that use exactly the same words', () => {
+    for (const language of ['de', 'en'] as const) {
+      for (const level of levels) {
+        for (const exercise of curatedExercises(language, level)) {
+          const words = (sentence: string) => sentenceTokens(sentence).map((token) => token.toLocaleLowerCase()).sort().join(' ');
+          for (const answer of exercise.answers) expect(words(answer), answer).toBe(words(exercise.answers[0]!));
+          expect(new Set(exercise.answers).size, exercise.id).toBe(exercise.answers.length);
+        }
+      }
+    }
+  });
+
+  it('has a solid set of German sentences on every level, most of all from B2 up', () => {
+    const counts = Object.fromEntries(levels.map((level) => [level, curatedExercises('de', level).length]));
+    for (const level of levels) expect(counts[level], level).toBeGreaterThanOrEqual(5);
+    for (const level of ['b2', 'c1', 'c2'] as const) expect(counts[level], level).toBeGreaterThanOrEqual(15);
+    const ids = levels.flatMap((level) => curatedExercises('de', level).map((exercise) => exercise.id));
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+});
