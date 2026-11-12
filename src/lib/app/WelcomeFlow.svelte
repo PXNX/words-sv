@@ -5,6 +5,7 @@
   existed start at the name step; the character step is skipped when they already have one.
 -->
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { fly, scale, fade } from 'svelte/transition';
   import { backOut, cubicOut } from 'svelte/easing';
   import { prefersReducedMotion } from 'svelte/motion';
@@ -18,6 +19,7 @@
   import SelectMenu from '#lib/settings/SelectMenu.svelte';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import WalkingLilith from '#lib/story/WalkingLilith.svelte';
+  import { introFlow } from './intro.svelte.js';
   import type { CharacterId } from '#lib/story/stories.js';
 
   type Step = 'hello' | 'cast' | 'language' | 'name' | 'look' | 'done';
@@ -46,6 +48,12 @@
     { id: 'lilith', line: m.welcome_meet_lilith({}, locale) }
   ]);
   const interfaceOptions = interfaceLocales.map((entry) => ({ value: entry.code as string, label: entry.label }));
+
+  // The rest of the shell (the dock, the update sheet) steps back for as long as the flow is up.
+  onMount(() => {
+    introFlow.active = true;
+    return () => (introFlow.active = false);
+  });
 
   function go(next: Step) {
     haptic('tap');

@@ -2,8 +2,9 @@
   Updates are not optional: as soon as a new deployment is found, this sheet shows a happy Lilith
   fetching it and reloads into the new version, where WhatsNewSheet shows what changed. Startup
   installs a waiting build before play begins; this covers updates that arrive while the app is
-  open. It only runs on the home screen, so no round is lost; elsewhere SvelteKit turns the next
-  navigation into a full reload, which picks the new version up the same way.
+  open. It only runs on the home screen, so no round is lost, and it waits while the first run's
+  introduction is on screen; elsewhere SvelteKit turns the next navigation into a full reload, which
+  picks the new version up the same way.
 -->
 <script lang="ts">
   import { updated } from '$app/state';
@@ -11,6 +12,7 @@
   import { getTextDirection } from '#lib/paraglide/runtime.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { takeOverUpdate } from '#lib/pwa/pwaUpdate.js';
+  import { introFlow } from '#lib/app/intro.svelte.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
 
@@ -20,14 +22,15 @@
   // Unknown until the service worker reports its first batch, then 0..1.
   let progress = $state<number | null>(null);
 
+  // The first run's introduction is left alone: the sheet waits until the learner is through it.
   $effect(() => {
-    if (!updated.current || started) return;
+    if (!updated.current || introFlow.active || started) return;
     started = true;
     void takeOverUpdate({ minDurationMs: CELEBRATE_MS, onProgress: (share) => (progress = Math.max(progress ?? 0, share)) });
   });
 </script>
 
-{#if updated.current}
+{#if updated.current && !introFlow.active}
   <div class="update-layer" dir={getTextDirection(settings.interfaceLocale)} lang={settings.interfaceLocale}>
     <div class="update-backdrop"></div>
     <div class="update-sheet" role="alertdialog" aria-modal="true" aria-live="assertive" aria-labelledby="update-text">
