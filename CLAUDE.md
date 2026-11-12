@@ -47,6 +47,6 @@ Conventions:
 
 ## Git workflow
 
-- Commit directly onto `main` and push to `origin/main` right after each commit, so `main` is never ahead of `origin`. Do not create feature branches or pull requests unless asked.
+- Commit directly onto `main`, feature by feature. Do not push after every commit: the commits stay local until the user asks for a push. Do not create feature branches or pull requests unless asked.
 - Only commit your own changes. Other work may be in progress in the same working tree, so stage files explicitly and leave unrelated changes alone.
 - The full agent rules are in `agents.md`.
