@@ -251,10 +251,10 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
   gzip in all, largest de.b1 37 KB). The story corpus (160 KB gzip) was pulled into every page that
   named a character; split out (`story/storyKit.ts`), home 489 → 320 KB.
 - [x] Budgets: shell, route and pack sizes (gzip) checked in CI (`bun run budget`).
-- [ ] The shell carries every interface language's messages (~300 KB gzip with fa/ar complete);
-  load messages per locale. Lighthouse CI.
-- [ ] The story pages (stories, reading, listening, conversation) load the whole corpus (~540 KB gzip
-  with the route, budget 560); load stories per level.
+- [x] Messages load one interface language at a time (shell 316 → 159 KB gzip; a locale with its German
+  fallback is at most 46 KB). Lighthouse runs in CI against the static build, warning only for now.
+- [x] Stories and reading texts load per level (12 chunks, largest 38 KB); the heaviest page went from
+  ~540 to 226 KB gzip. Budgets lowered to shell 180 / route 260.
 
 ### Phase A — progress foundation
 - [x] Append-only `LearningEvent` log in IndexedDB (`progress/events.ts`, `progress/eventLog.ts`)
@@ -280,16 +280,24 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [x] Goal date per level against the forecast, listening items in checkpoints.
 
 ### Phase V — visual layer
-- [ ] V1 tokens (OKLCH, gender colours with shape cue, motion tokens), V2 word→picture map with
-  coverage report and Credits page, V3 cat mascot rig and inclusive avatar options, V4 teaching
-  animations, V5 scenes, V6 memory map, V7 retention A/B.
+- [x] V1 tokens in OKLCH for colours, skills, type and motion; every gender colour has a shape
+  (`app.css`, `learn/GenderedWord.svelte`).
+- [x] V2 word→picture map (`learn/pictures.ts`, emoji, 67 % of the A1 and 65 % of the A2 nouns) with a
+  coverage report (`bun run pictures`); the word quiz asks by meaning, sound, picture, typing, dictation
+  or letter tiles (`learn/modality.ts`) and follows the learner's style.
+- [x] V4 teaching animation: the rule chain after a case answer (`grammar/RuleChain.svelte`).
+- [x] V6 memory map on `/progress` (`progress/memoryMap.ts`).
+- [x] V7 retention A/B: `teaching-animations` experiment, recall compared by how a card was shown
+  (`experiments/`, `docs/experiments.md`, `/insights`).
+- [ ] V2 Credits page; V3 cat mascot rig and inclusive avatar options; V5 scenes.
 
 ### Phases C, W, D, E, F, G, H, I
 - [x] C: Formen (`/grammar?mode=forms`): typed German verb and adjective forms with partial credit
   (`grammar/formAnswer.ts`), feature errors and the credit as events.
 - [x] C: gap sentences for Perfekt, Präteritum, Plusquamperfekt, Konjunktiv II, passive and genitive
   (`grammar/tenseGaps.ts`, 39 hand-checked sentences A2–C1).
-- [ ] C: more Satzbau and B2–C2 sentences; more tense gaps per level.
+- [x] C: 68 curated Satzbau sentences (15+ each for B2, C1, C2) and 119 tense gaps A2–C2 with Futur I/II
+  and Konjunktiv I.
 - [x] W: offline dictionary (`/dictionary`): search across levels, inflected forms to their base word,
   German cases and compound parts, listen, add to review; tap-to-lookup in reading opens it.
 - [x] D: provider router in `localModel.svelte.ts` (device first, OpenRouter with the learner's own key
@@ -297,8 +305,9 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [x] E: RTL audit (`docs/rtl.md`, `tests/rtl-css.test.ts`) and L1 error priors (`progress/l1Priors.ts`,
   the coach's first grammar focus).
 - [x] E: full Persian and Arabic interface translations.
-- [ ] E: fa/ar: older entries write character names and Telegram in local script, newer ones in Latin;
-  have a native speaker review the grammar terms.
+- [x] E: fa/ar write the cast's names in their own script and Telegram in Latin throughout (kept by
+  `tests/locales.test.ts`).
+- [ ] E: have a native speaker review the fa/ar grammar terms.
 - [x] F: writing rubric per level (`sentence/levelRubric.ts`, under the full-text grade) and a mock
   test per level (`/mock`: reading, listening, language, writing; no exam-specific formats).
 - [x] F: speaking simulation (a spoken task in the mock test, transcribed by the browser and scored
@@ -306,7 +315,8 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [x] F: reading comprehension in the mock test (one of the level's texts with its questions).
 - [x] G: offline audit (`docs/offline.md`), an offline pill, and network-only buttons disabled offline.
 - [x] H: group competition through Telegram games (`/games`, `/top` in a group), scored on the server.
-- [ ] I: dashboards, A/B framework, content QA loop.
+- [x] I: `/insights` (activity, return rates, modes, what helps recall, flagged content), on-device
+  experiments, content QA in CI (`bun run qa:content`) and a flag on the word quiz card.
 
 ### First run
 - [x] Animated welcome flow: Mia, Tom and Lilith walk in and introduce themselves, then language,
@@ -320,8 +330,9 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
   (`tests/german-stories.test.ts`).
 - [x] The other 35 filler stories (A1–C2) are real stories, and every reply goes to the last speaker
   (both checked in `tests/german-stories.test.ts`).
-- [ ] `a2-library`/`a2-bibliothek` are near duplicates; `a2-butcher`, `a2-alps`, `a2-munich` are set to
-  B1; in `b2-job-application` the reply options are written as if the learner were Kumar.
+- [x] `a2-library` became the film night (`a2-filmabend`); `a2-butcher`, `a2-alps` and `a2-munich` keep
+  their ids (progress and audio are stored under them) and stay B1 for their dialect, as the test
+  documents; `b2-job-application` asks the learner for advice.
 
 ### Release process leftovers
 - [x] `tests/fixtures/v1.0.0/` snapshot of a learner's local data for migration tests
