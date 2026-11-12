@@ -289,7 +289,8 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [x] V6 memory map on `/progress` (`progress/memoryMap.ts`).
 - [x] V7 retention A/B: `teaching-animations` experiment, recall compared by how a card was shown
   (`experiments/`, `docs/experiments.md`, `/insights`).
-- [ ] V2 Credits page; V3 cat mascot rig and inclusive avatar options; V5 scenes.
+- [x] V2 Credits page (`/credits`: typefaces, icons, voices, models and software with their licences).
+- [ ] V3 cat mascot rig and inclusive avatar options; V5 scenes.
 
 ### Phases C, W, D, E, F, G, H, I
 - [x] C: Formen (`/grammar?mode=forms`): typed German verb and adjective forms with partial credit

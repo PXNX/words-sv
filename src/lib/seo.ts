@@ -80,6 +80,12 @@ export const pages: Record<string, PageMeta> = {
     kicker: 'Nachschlagen',
     icon: 'menu-book-rounded'
   },
+  '/credits': {
+    title: 'Quellen und Dank',
+    description: 'Schriften, Symbole, Stimmen, Sprachmodelle und Software, auf denen WordCircle aufbaut, mit ihren Lizenzen.',
+    kicker: 'Rechtliches',
+    icon: 'favorite-rounded'
+  },
   '/insights': {
     title: 'Einblicke',
     description: 'Was dein eigenes Üben zeigt: Aktivität, Rückkehr, Übungen im Vergleich – berechnet auf deinem Gerät.',
