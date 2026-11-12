@@ -36,7 +36,7 @@
     unavailable: m.grammar_unavailable({}, { locale: settings.interfaceLocale }),
     unsupported: m.grammar_unsupported({}, { locale: settings.interfaceLocale }),
     chooseArticle: m.grammar_choose_article({}, { locale: settings.interfaceLocale }),
-    continue: m.continue({}, { locale: settings.interfaceLocale }),
+    continue: m.continue_button({}, { locale: settings.interfaceLocale }),
     correct: m.learning_correct({}, { locale: settings.interfaceLocale }),
     tryAgain: m.learning_try_again({}, { locale: settings.interfaceLocale }),
     orderTitle: m.grammar_order({}, { locale: settings.interfaceLocale }),

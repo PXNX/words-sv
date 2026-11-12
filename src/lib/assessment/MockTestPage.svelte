@@ -279,7 +279,7 @@
     <div class="mock-card" in:fly={{ x: 24, duration: ms(220) }}>
       <p class="mock-section">{sectionName('writing')}</p>
       <p class="mock-prompt">{settings.interfaceLocale === 'de' ? test.writing.de : test.writing.en}</p>
-      <textarea class="mock-text" bind:value={text} rows={10} lang={language} placeholder={m.fullText_placeholder({}, locale)}></textarea>
+      <textarea class="mock-text" bind:value={text} rows={10} lang={language} placeholder={m.full_text_placeholder({}, locale)}></textarea>
       <p class="mock-words">{m.sentence_words({ count: num(words) }, locale)}</p>
       <button type="button" class="btn-play btn-play-ink mock-cta" onclick={handIn}>{sections.includes('speaking') ? m.mock_next({}, locale) : m.mock_finish({}, locale)}</button>
     </div>

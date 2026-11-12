@@ -140,7 +140,7 @@
     again: m.story_again({}, { locale: settings.interfaceLocale }),
     listen: m.story_listen({}, { locale: settings.interfaceLocale }),
     loadingAudio: m.story_listen_loading({}, { locale: settings.interfaceLocale }),
-    continue: m.continue({}, { locale: settings.interfaceLocale }),
+    continue: m.continue_button({}, { locale: settings.interfaceLocale }),
     tryAgain: m.learning_try_again({}, { locale: settings.interfaceLocale }),
     forYou: m.story_for_you({}, { locale: settings.interfaceLocale }),
     practiceWords: m.story_practice_words({}, { locale: settings.interfaceLocale }),
