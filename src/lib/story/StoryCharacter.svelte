@@ -441,10 +441,10 @@
       <path d="M-20 138h30q-2 11-15 11t-15-11Z" fill="#d64b45" /><path d="M-20 138h30" stroke="#9c2a25" stroke-width="1.6" />
     {/if}
     <!-- the head sits a little smaller than life, like the round fluffy face in her portrait -->
-    <g class="cat-head"><g transform="rotate({lilithTilt} 60 64) translate(60 66) scale(.86) translate(-60 -62)">
+    <g class="cat-head" class:cat-purr={mood === 'happy'}><g transform="rotate({lilithTilt} 60 64) translate(60 66) scale(.86) translate(-60 -62)">
       <!-- ears, drooping when she is sad -->
-      <g transform={mood === 'sad' ? 'rotate(-24 42 40)' : undefined}><path d="M29 50Q24 30 28 15q14 7 27 18Z" fill="url(#{uid}-ear)" /><path d="M33 44q-3-13-1-22 9 5 16 12Z" fill="#7a5646" /><path d="M35 42l4-6M38 44l5-5" stroke="#f4e9da" stroke-width="1" opacity=".8" /></g>
-      <g transform={mood === 'sad' ? 'rotate(24 78 40)' : undefined}><path d="M91 50Q96 30 92 15q-14 7-27 18Z" fill="url(#{uid}-ear)" /><path d="M87 44q3-13 1-22-9 5-16 12Z" fill="#7a5646" /><path d="M85 42l-4-6M82 44l-5-5" stroke="#f4e9da" stroke-width="1" opacity=".8" /></g>
+      <g transform={mood === 'sad' ? 'rotate(-24 42 40)' : undefined}><g class="cat-ear cat-ear-left"><path d="M29 50Q24 30 28 15q14 7 27 18Z" fill="url(#{uid}-ear)" /><path d="M33 44q-3-13-1-22 9 5 16 12Z" fill="#7a5646" /><path d="M35 42l4-6M38 44l5-5" stroke="#f4e9da" stroke-width="1" opacity=".8" /></g></g>
+      <g transform={mood === 'sad' ? 'rotate(24 78 40)' : undefined}><g class="cat-ear cat-ear-right"><path d="M91 50Q96 30 92 15q-14 7-27 18Z" fill="url(#{uid}-ear)" /><path d="M87 44q3-13 1-22-9 5-16 12Z" fill="#7a5646" /><path d="M85 42l-4-6M82 44l-5-5" stroke="#f4e9da" stroke-width="1" opacity=".8" /></g></g>
       <!-- round fluffy head with cheek tufts -->
       <path d="M60 30c20 0 32 12 33 28l5 4-5 4 3 6-7 2c-5 12-17 18-29 18s-24-6-29-18l-7-2 3-6-5-4 5-4c1-16 13-28 33-28Z" fill="url(#{uid}-head)" />
       <ellipse cx="60" cy="42" rx="12" ry="6" fill="#cdb497" opacity=".45" />
@@ -628,6 +628,16 @@
   @keyframes cat-step { 0%,100% { transform:translateY(0) scaleY(1); } 30% { transform:translateY(-4px) scaleY(.92) rotate(-4deg); } 55% { transform:translateY(-1px) scaleY(.97); } }
   @keyframes cat-bob { from { transform:translateY(0); } to { transform:translateY(-1.6px); } }
   @keyframes cat-sway { 0%,100% { transform:translateY(0) rotate(0); } 25% { transform:translateY(-1.5px) rotate(-2.5deg); } 75% { transform:translateY(-1.5px) rotate(2.5deg); } }
-  .still .story-eyes,.still .story-mouth-open,.still .story-tail { animation:none; }
-  @media (prefers-reduced-motion:reduce) { .story-eyes,.talking .story-mouth-open,.talking .story-tail,.lip-synced .story-tail,.walking .cat-leg,.walking .cat-body,.walking .cat-head,.walking .story-tail-cat { animation:none; } }
+  /* Lilith at rest is never quite still: the tail flicks now and then, one ear twitches, and a
+     happy Lilith nods along. Walking and talking have their own movement and take over. */
+  .story-tail-cat { transform-box:fill-box;transform-origin:right center;animation:cat-flick 7s ease-in-out infinite; }
+  .cat-ear { transform-box:fill-box;transform-origin:50% 100%; }
+  .cat-ear-right { animation:cat-twitch 9s ease-in-out 2.5s infinite; }
+  .cat-ear-left { animation:cat-twitch 13s ease-in-out 6s infinite; }
+  .cat-purr { transform-box:fill-box;transform-origin:50% 100%;animation:cat-nod 1.6s ease-in-out infinite; }
+  @keyframes cat-flick { 0%,82%,100% { transform:rotate(0); } 87% { transform:rotate(-5deg); } 92% { transform:rotate(4deg); } 96% { transform:rotate(-2deg); } }
+  @keyframes cat-twitch { 0%,94%,100% { transform:rotate(0); } 96% { transform:rotate(9deg); } 98% { transform:rotate(-4deg); } }
+  @keyframes cat-nod { 0%,100% { transform:translateY(0) rotate(0); } 50% { transform:translateY(-1.2px) rotate(1.6deg); } }
+  .still .story-eyes,.still .story-mouth-open,.still .story-tail,.still .cat-ear,.still .cat-purr { animation:none; }
+  @media (prefers-reduced-motion:reduce) { .story-tail-cat,.cat-ear,.cat-purr,.story-eyes,.talking .story-mouth-open,.talking .story-tail,.lip-synced .story-tail,.walking .cat-leg,.walking .cat-body,.walking .cat-head,.walking .story-tail-cat { animation:none; } }
 </style>
