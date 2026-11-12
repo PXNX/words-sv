@@ -53,4 +53,27 @@ describe('german stories', () => {
     );
     expect(strangers).toEqual([]);
   });
+
+  it('has no two stories with the same title or the same text', () => {
+    const titles = new Map<string, string>();
+    const bodies = new Map<string, string>();
+    for (const story of germanStories) {
+      expect(titles.get(story.title.de), `${story.id} repeats the title of ${titles.get(story.title.de)}`).toBeUndefined();
+      titles.set(story.title.de, story.id);
+      const body = story.beats.map((beat) => (beat.kind === 'line' || beat.kind === 'narration' ? beat.text.de : '')).join(' ').slice(0, 160);
+      expect(bodies.get(body), `${story.id} starts like ${bodies.get(body)}`).toBeUndefined();
+      bodies.set(body, story.id);
+    }
+  });
+
+  // An id is the key under which progress and generated audio are stored, so it never changes once
+  // released. These three were written in Bavarian dialect and later moved up a level; their ids stay.
+  const LEGACY_IDS: Record<string, string> = { 'a2-butcher': 'b1', 'a2-alps': 'b1', 'a2-munich': 'b1' };
+  it('names every story after its level', () => {
+    for (const story of germanStories) {
+      const prefix = /^([abc][12])-/u.exec(story.id)?.[1];
+      if (!prefix) continue;
+      expect(LEGACY_IDS[story.id] ?? prefix, story.id).toBe(story.level);
+    }
+  });
 });

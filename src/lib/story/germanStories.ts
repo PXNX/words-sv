@@ -1749,29 +1749,30 @@ export const germanStories: Story[] = [
     ]
   },
   {
-    id: 'a2-library',
+    id: 'a2-filmabend',
     level: 'a2',
     scene: 'home',
     cast: ['mia', 'leo'],
     languages: ['de'],
-    title: german('In der Bibliothek'),
+    title: german('Der Filmabend'),
     beats: [
-      { kind: 'narration', text: german('Leo und Mia sind in der Bibliothek. Sie suchen Bücher für die Schule.') },
-      { kind: 'line', speaker: 'leo', text: german('Guten Tag! Wir suchen ein Buch über Geschichte. Können Sie uns helfen?') },
-      { kind: 'line', speaker: 'mia', text: german('Und ich brauche ein Wörterbuch für Deutsch.') },
-      { kind: 'line', speaker: 'leo', text: german('Hallo {name}! Weißt du, wo die Geschichtsbücher stehen?') },
+      { kind: 'narration', text: german('Es ist Freitagabend und es regnet. Mia und Leo bleiben zu Hause und wollen einen Film sehen.') },
+      { kind: 'line', speaker: 'leo', text: german('Ich habe Popcorn gemacht und Limonade gekauft. Welchen Film sehen wir?') },
+      { kind: 'line', speaker: 'mia', text: german('Ich möchte eine Komödie sehen. Gestern habe ich einen traurigen Film gesehen, das war genug.') },
+      { kind: 'line', speaker: 'leo', mood: 'curious', text: german('{name}, du darfst wählen: Was sehen wir heute?') },
       { kind: 'reply', to: 'leo', options: [
-        german('Ja, in der dritten Regalreihe links.'),
-        german('Die Bücher fliegen im Kreis.'),
-        german('Ich lese nur Comics im Bett.')
+        german('Eine lustige Komödie, dann können wir zusammen lachen.'),
+        german('Wir sehen das Popcorn an, bis es kalt ist.'),
+        german('Ich höre lieber den Kühlschrank.')
       ] },
-      { kind: 'narration', text: german('Mia leiht sich ein Buch aus und leiht einen Ausweis vor.') },
-      { kind: 'line', speaker: 'mia', text: german('Ich kann das Buch vier Wochen behalten. Dann muss ich es zurückgeben.') },
-      { kind: 'line', speaker: 'leo', text: german('Und ich nehme noch einen Roman mit. Lesen macht Spaß!') },
-      { kind: 'question', prompt: german('Wo sind Leo und Mia?'), options: [german('In der Bibliothek'), german('Im Kino'), german('Im Schwimmbad')] },
-      { kind: 'question', prompt: german('Was sucht Mia?'), options: [german('Ein Wörterbuch für Deutsch'), german('Ein Kochbuch'), german('Ein Bilderbuch')] },
-      { kind: 'question', prompt: german('Wie lange kann Mia das Buch behalten?'), options: [german('Vier Wochen'), german('Ein Tag'), german('Ein Jahr')] },
-      { kind: 'question', prompt: german('Wo stehen die Geschichtsbücher?'), options: [german('In der dritten Regalreihe links'), german('Im Keller'), german('Auf dem Dach')] }
+      { kind: 'narration', text: german('Der Film dauert zwei Stunden. Lilith schläft auf dem Sofa zwischen Mia und Leo.') },
+      { kind: 'line', speaker: 'mia', mood: 'happy', text: german('Der Film war super! Ich habe schon lange nicht mehr so viel gelacht.') },
+      { kind: 'line', speaker: 'leo', mood: 'happy', text: german('Nächsten Freitag machen wir das wieder. Dann bringe ich Pizza mit!') },
+      { kind: 'question', prompt: german('Warum bleiben Mia und Leo zu Hause?'), options: [german('Weil es regnet'), german('Weil sie krank sind'), german('Weil das Kino geschlossen ist')] },
+      { kind: 'question', prompt: german('Was hat Leo gemacht?'), options: [german('Popcorn'), german('Pizza'), german('Einen Kuchen')] },
+      { kind: 'question', prompt: german('Welchen Film möchte Mia sehen?'), options: [german('Eine Komödie'), german('Einen traurigen Film'), german('Einen Krimi')] },
+      { kind: 'question', prompt: german('Wie lange dauert der Film?'), options: [german('Zwei Stunden'), german('Eine halbe Stunde'), german('Vier Stunden')] },
+      { kind: 'question', prompt: german('Was bringt Leo nächsten Freitag mit?'), options: [german('Pizza'), german('Popcorn'), german('Limonade')] }
     ]
   },
   {
@@ -1894,11 +1895,11 @@ export const germanStories: Story[] = [
       { kind: 'narration', text: german('Kumar hat eine Stelle als Softwareentwickler ausgeschrieben gesehen und schreibt seine Bewerbung. Er überlegt, welche Erfahrungen und Fähigkeiten er hervorheben soll.') },
       { kind: 'line', speaker: 'kim', text: german('Dein Lebenslauf sieht gut aus, Kumar. Aber das Anschreiben könnte noch präziser sein. Warum genau willst du für diese Firma arbeiten?') },
       { kind: 'line', speaker: 'kumar', text: german('Wegen der spannenden Projekte und der guten Reputation. Die Firma arbeitet an innovativer KI-Technologie, und das interessiert mich sehr.') },
-      { kind: 'line', speaker: 'kim', text: german('Hallo {name}! Was würdest du im Anschreiben betonen?') },
+      { kind: 'line', speaker: 'kim', mood: 'curious', text: german('{name}, du hast doch schon viele Bewerbungen gelesen: Was würdest du im Anschreiben betonen?') },
       { kind: 'reply', to: 'kim', options: [
-        german('Meine Erfahrung mit Python und meine erfolgreichen Projekte an der Universität.'),
-        german('Ich brauche dringend Geld und habe sonst keine Arbeit.'),
-        german('Ich mag den Namen der Firma, weil er so klingt wie Käse.')
+        german('Die Erfahrung mit Python und die erfolgreichen Projekte an der Universität.'),
+        german('Dass man dringend Geld braucht und sonst keine Arbeit hat.'),
+        german('Dass der Name der Firma so schön nach Käse klingt.')
       ] },
       { kind: 'narration', text: german('Kumar überarbeitet sein Anschreiben und fügt Zeugnisse sowie Arbeitsproben bei.') },
       { kind: 'line', speaker: 'kumar', text: german('Ich habe bei meinem letzten Projekt ein Team von fünf Entwicklern geleitet und die Termine eingehalten.') },
