@@ -2,11 +2,10 @@
   import type { SceneId, Weather } from './stories';
 
   let { scene: requested, weather = 'sunny' }: { scene: SceneId; weather?: Weather | undefined } = $props();
-  // Some stories name places that have no drawing of their own (a market, a school, …): they get the
-  // closest scene instead of crashing the picture, and anything unknown falls back to home.
-  const aliases = { market: 'square', town: 'square', shop: 'boutique', factory: 'workshop', school: 'library' } as const satisfies Record<string, SceneId>;
-  type AliasScene = keyof typeof aliases;
-  type DrawnScene = Exclude<SceneId, AliasScene>;
+  // Every place a story names has its own drawing. A scene id this file does not know (stories
+  // name some that are not in SceneId yet) falls back to home instead of crashing the picture.
+  type ExtraScene = 'market' | 'town' | 'shop' | 'factory' | 'school';
+  type DrawnScene = SceneId | ExtraScene;
 
   // Clip-path ids must be unique per instance.
   const uid = $props.id();
@@ -41,11 +40,15 @@
     munich: { back: '#cfe6f2', floor: '#b8aa98' },
     cologne: { back: '#cfe6f2', floor: '#b8aa98' },
     frankfurt: { back: '#cfe6f2', floor: '#c4cbd3' },
-    library: { back: '#e8e2d9', floor: '#b8a07e' }
+    library: { back: '#e8e2d9', floor: '#b8a07e' },
+    market: { back: '#cfe6f2', floor: '#c9b48a' },
+    town: { back: '#cfe6f2', floor: '#b8aa98' },
+    shop: { back: '#f3ead8', floor: '#c9a27e' },
+    factory: { back: '#cfe6f2', floor: '#9aa3ad' },
+    school: { back: '#eef0e2', floor: '#c4a47c' }
   };
-  const drawn = (id: SceneId): id is DrawnScene => id in palettes;
-  const isAlias = (id: SceneId): id is AliasScene => id in aliases;
-  const scene = $derived<DrawnScene>(drawn(requested) ? requested : isAlias(requested) ? aliases[requested] : 'home');
+  const drawn = (id: string): id is DrawnScene => id in palettes;
+  const scene = $derived<DrawnScene>(drawn(requested) ? requested : 'home');
   const palette = $derived(palettes[scene]);
 
   // Where the weather shows: through the window indoors, across the whole sky outdoors.
@@ -80,7 +83,12 @@
     munich: { x: 0, y: 0, w: 400, h: 172 },
     cologne: { x: 0, y: 0, w: 400, h: 172 },
     frankfurt: { x: 0, y: 0, w: 400, h: 172 },
-    library: { x: 200, y: 40, w: 140, h: 110 }
+    library: { x: 200, y: 40, w: 140, h: 110 },
+    market: { x: 0, y: 0, w: 400, h: 172 },
+    town: { x: 0, y: 0, w: 400, h: 172 },
+    shop: { x: 284, y: 30, w: 96, h: 74 },
+    factory: { x: 0, y: 0, w: 400, h: 172 },
+    school: { x: 296, y: 28, w: 84, h: 70 }
   };
   const sky = $derived(skies[scene]);
   const outdoor = $derived(sky.w === 400);
@@ -445,6 +453,68 @@
     <rect x="220" y="104" width="20" height="12" fill="#cfe6f2" />
     <rect x="260" y="104" width="10" height="4" fill="#a45e38" />
     <rect x="150" y="30" width="50" height="50" rx="4" fill="none" stroke="#8c5b3d" stroke-width="4" /><path d="M175 30v50M150 55h50" stroke="#8c5b3d" stroke-width="3" />
+  {:else if scene === 'market'}
+    <!-- a weekly market: three stalls under striped awnings, crates of fruit and vegetables, bunting above -->
+    <path d="M0 26q100 22 200 0t200 0" fill="none" stroke="#172a45" stroke-width="1.5" />
+    {#each [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] as i (i)}<path d="M{14 + i * 40} {30 + (i % 5 === 2 ? 9 : i % 5 === 1 || i % 5 === 3 ? 6 : 2)}l8 14 8-14Z" fill={pastels[i % pastels.length]} stroke="#172a45" stroke-width="1" />{/each}
+    {#each [0, 1, 2] as i (i)}
+      <g transform="translate({14 + i * 130} 0)">
+        <path d="M10 92v80M110 92v80" stroke="#8c5b3d" stroke-width="4" />
+        <path d="M0 96l12-30h96l12 30Z" fill={['#d64b45', '#34824d', '#4b78c2'][i]} stroke="#172a45" stroke-width="2" />
+        <path d="M24 66l-6 30M48 66l-2 30M72 66l2 30M96 66l6 30" stroke="#fffdf7" stroke-width="7" opacity=".85" />
+        <path d="M0 96q10 10 20 0t20 0 20 0 20 0 20 0 20 0" fill="none" stroke="#172a45" stroke-width="2" />
+        <rect x="6" y="136" width="108" height="36" fill="#d9b98a" stroke="#8c5b3d" stroke-width="2" />
+        <path d="M6 148h108M42 136v36M78 136v36" stroke="#8c5b3d" stroke-width="1.5" />
+        {#each [0, 1, 2, 3, 4, 5, 6, 7] as fruit (fruit)}<circle cx={16 + fruit * 12.5} cy={131 - (fruit % 2) * 4} r="6" fill={[['#d64b45', '#e6a527'], ['#55a66a', '#e86a3a'], ['#8a62b6', '#f4c84a']][i]![fruit % 2]} stroke="#172a45" stroke-width="1" />{/each}
+      </g>
+    {/each}
+  {:else if scene === 'town'}
+    <!-- the old town: a town hall with a clock tower, gabled houses either side and a fountain in front -->
+    <g stroke="#172a45" stroke-width="2.5">
+      <path d="M0 180V96l34-30 34 30v84Z" fill="#f3d9a4" /><path d="M300 180V90l50-40 50 40v90Z" fill="#df8eb1" />
+      <rect x="92" y="78" width="190" height="102" fill="#fffdf7" /><path d="M84 78h206l-18-26H102Z" fill="#a45e38" />
+      <rect x="164" y="18" width="46" height="62" fill="#fffdf7" /><path d="M158 20l29-18 29 18Z" fill="#a45e38" />
+    </g>
+    <circle cx="187" cy="46" r="13" fill="#fffdf7" stroke="#172a45" stroke-width="2.5" /><path d="M187 46v-8M187 46l6 3" stroke="#172a45" stroke-width="2" stroke-linecap="round" />
+    <path d="M172 180v-42q15-16 30 0v42Z" fill="#8c5b3d" stroke="#172a45" stroke-width="2.5" />
+    <g fill="#8ab4d9" stroke="#172a45" stroke-width="2">{#each [0, 1, 2, 3] as i (i)}<rect x={104 + i * 44 + (i > 1 ? 18 : 0)} y="98" width="20" height="28" rx="10" />{/each}<rect x="18" y="112" width="14" height="20" /><rect x="40" y="112" width="14" height="20" /><rect x="328" y="104" width="16" height="22" /><rect x="358" y="104" width="16" height="22" /></g>
+    {#if weather === 'snowy'}<g fill="#ffffff" stroke="#172a45" stroke-width="1.2"><path d="M34 66l-34 30v6l34-28 34 28v-6Z" /><path d="M350 50l-50 40v6l50-38 50 38v-6Z" /><path d="M187 2l-29 18v5l29-17 29 17v-5Z" /></g>{/if}
+    <g stroke="#172a45" stroke-width="2"><ellipse cx="60" cy="168" rx="34" ry="8" fill="#8ab4d9" /><path d="M54 168v-18h12v18" fill="#c4cbd3" /><path d="M48 150h24" stroke-width="3" /></g>
+    <path d="M60 148q-10-12-14 2M60 148q10-12 14 2" fill="none" stroke="#cfe6f2" stroke-width="2" stroke-linecap="round" />
+  {:else if scene === 'shop'}
+    <!-- a corner shop: shelves of tins and boxes, a counter with a till and scales, the window by the door -->
+    <rect x="284" y="30" width="96" height="74" rx="6" fill="none" stroke="#8c5b3d" stroke-width="5" /><path d="M332 30v74" stroke="#8c5b3d" stroke-width="4" />
+    <rect x="16" y="22" width="240" height="112" fill="#e9d7b8" stroke="#8c5b3d" stroke-width="3" /><path d="M16 58h240M16 96h240" stroke="#8c5b3d" stroke-width="3" />
+    {#each [0, 1, 2] as row (row)}
+      {#each [0, 1, 2, 3, 4, 5, 6, 7, 8] as i (i)}
+        {#if (i + row) % 3 === 0}<rect x={24 + i * 26} y={36 + row * 38} width="16" height="20" rx="2" fill={pastels[(i + row) % pastels.length]} stroke="#172a45" stroke-width="1.2" />
+        {:else if (i + row) % 3 === 1}<rect x={25 + i * 26} y={32 + row * 38} width="14" height="24" rx="6" fill={['#d64b45', '#34824d', '#e6a527'][(i + row) % 3]} stroke="#172a45" stroke-width="1.2" /><rect x={25 + i * 26} y={41 + row * 38} width="14" height="6" fill="#fffdf7" opacity=".8" />
+        {:else}<path d="M{24 + i * 26} {56 + row * 38}v-14l8-6 8 6v14Z" fill="#f6dc95" stroke="#172a45" stroke-width="1.2" />{/if}
+      {/each}
+    {/each}
+    <rect x="30" y="140" width="250" height="34" fill="#8c5b3d" stroke="#5a3d25" stroke-width="2.5" /><rect x="24" y="134" width="262" height="9" rx="3" fill="#a87850" stroke="#5a3d25" stroke-width="2" />
+    <g stroke="#172a45" stroke-width="2"><rect x="200" y="110" width="46" height="24" rx="3" fill="#596477" /><rect x="206" y="100" width="34" height="13" rx="2" fill="#cfe6f2" /><path d="M64 134v-14M48 120h32" /><path d="M44 120q4 10 8 0ZM72 120q4 10 8 0Z" fill="#e6b52e" /></g>
+  {:else if scene === 'factory'}
+    <!-- a factory yard: saw-tooth roofs, two chimneys with drifting smoke and a wide rolling gate -->
+    <g class="story-cloud" fill="#fffdf7" opacity=".85"><circle cx="96" cy="26" r="11" /><circle cx="110" cy="16" r="14" /><circle cx="128" cy="24" r="10" /><circle cx="154" cy="40" r="9" /><circle cx="166" cy="32" r="11" /></g>
+    <g stroke="#172a45" stroke-width="2.5">
+      <rect x="84" y="36" width="20" height="100" fill="#c0392b" /><rect x="142" y="52" width="20" height="84" fill="#c0392b" />
+      <path d="M80 36h28M138 52h28" stroke-width="5" /><path d="M84 60h20M84 84h20M142 76h20M142 100h20" stroke="#fffdf7" stroke-width="4" />
+      <path d="M20 180v-70l60-34v34l60-34v34l60-34v34l60-34v34l60-34v104Z" fill="#c4cbd3" />
+      <rect x="150" y="128" width="100" height="52" fill="#596477" /><path d="M150 141h100M150 154h100M150 167h100" stroke-width="1.5" />
+    </g>
+    <g fill="#f4c84a" stroke="#172a45" stroke-width="2">{#each [0, 1, 2, 3] as i (i)}<rect x={36 + i * 28} y="128" width="18" height="18" />{/each}{#each [0, 1, 2, 3] as i (i)}<rect x={264 + i * 28} y="128" width="18" height="18" />{/each}</g>
+    {#if weather === 'snowy'}<path d="M20 110l60-34v6l-60 34ZM80 110l60-34v6l-60 34ZM140 110l60-34v6l-60 34ZM200 110l60-34v6l-60 34ZM260 110l60-34v6l-60 34Z" fill="#ffffff" stroke="#172a45" stroke-width="1.2" />{/if}
+  {:else if scene === 'school'}
+    <!-- a classroom: the blackboard with the first letters, a clock, a globe on the teacher's desk and pupils' desks -->
+    <rect x="296" y="28" width="84" height="70" rx="5" fill="none" stroke="#8c5b3d" stroke-width="5" /><path d="M338 28v70M296 63h84" stroke="#8c5b3d" stroke-width="3" />
+    <rect x="28" y="30" width="216" height="92" rx="4" fill="#2f5a45" stroke="#8c5b3d" stroke-width="6" />
+    <text x="46" y="72" fill="#fffdf7" font-family="'DM Serif Display',serif" font-size="30" opacity=".92">A B C</text>
+    <path d="M46 92h92M46 104h64" stroke="#fffdf7" stroke-width="2.5" stroke-linecap="round" opacity=".7" /><path d="M170 60l22 34h-44Z" fill="none" stroke="#f6dc95" stroke-width="2.5" opacity=".85" />
+    <rect x="34" y="122" width="204" height="7" rx="2" fill="#a87850" /><rect x="60" y="118" width="16" height="5" rx="2" fill="#fffdf7" /><rect x="84" y="118" width="12" height="5" rx="2" fill="#df8eb1" />
+    <circle cx="270" cy="34" r="14" fill="#fffdf7" stroke="#172a45" stroke-width="2.5" /><path d="M270 34v-9M270 34l7 4" stroke="#172a45" stroke-width="2" stroke-linecap="round" />
+    <g stroke="#172a45" stroke-width="2"><rect x="250" y="140" width="130" height="10" rx="2" fill="#a87850" /><path d="M260 150v24M370 150v24" stroke-width="4" /><circle cx="345" cy="120" r="15" fill="#8ab4d9" /><path d="M335 116q8-8 14 0t-6 12" fill="#9ccf9f" stroke-width="1.2" /><path d="M345 135v5M335 140h20" stroke-width="2.5" /></g>
+    {#each [0, 1] as i (i)}<g stroke="#172a45" stroke-width="2"><rect x={40 + i * 100} y="146" width="74" height="8" rx="2" fill="#d9b98a" /><path d="M{48 + i * 100} 154v20M{106 + i * 100} 154v20" stroke-width="3.5" /><rect x={58 + i * 100} y="139" width="22" height="7" fill={pastels[i]} /></g>{/each}
   {/if}
   <rect y="172" width="400" height="48" fill={palette.floor} />
   <rect y="172" width="400" height="4" fill="rgba(23,42,69,.14)" />
