@@ -467,7 +467,7 @@
 </GameToolbar>
 
 <section
-  class="flex-1 min-h-0 grid content-center justify-items-center gap-4 p-[clamp(1rem,4vw,2rem)] overflow-x-hidden overflow-y-auto bg-[color:#ede4d5] dark:bg-[color:#213a5d] bg-[image:radial-gradient(circle_at_50%_15%,rgba(230,165,39,.18),transparent_34%),linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:auto,24px_24px,24px_24px]"
+  class="quiz-stage flex-1 min-h-0 grid justify-items-center gap-4 p-[clamp(1rem,4vw,2rem)] overflow-x-hidden overflow-y-auto bg-[color:#ede4d5] dark:bg-[color:#213a5d] bg-[image:radial-gradient(circle_at_50%_15%,rgba(230,165,39,.18),transparent_34%),linear-gradient(rgba(23,42,69,.018)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,69,.018)_1px,transparent_1px)] bg-[length:auto,24px_24px,24px_24px]"
   aria-label={labels.title}
 >
   <header class="flex items-end justify-center gap-[.6rem]">
@@ -536,10 +536,13 @@
     >
       {#if answerStatus !== null || promptKind === 'meaning'}
         <!-- The word itself: on a meaning card from the start, on every other card as the answer. -->
-        {#if currentPicture && answerStatus !== null}<span class="quiz-picture small pop-in" aria-hidden="true">{currentPicture}</span>{/if}
-        <p class="quiz-word" class:learn-fade-in={promptKind !== 'meaning'}><GenderedWord word={currentWord} language={settings.lang} /></p>
-        {#if answerStatus !== null || heardFirst}<button class="btn-play btn-play-soft btn-play-sm" onclick={speak} disabled={!canHear}><IconVolume aria-hidden="true" />{labels.listen}</button>{/if}
-        {#if !isDefinitionPrompt && currentDefinition}<p class="quiz-definition learn-fade-in">{currentDefinition}</p>{/if}
+        <div class="quiz-word-row">
+          {#if currentPicture}<span class="quiz-picture small" aria-hidden="true">{currentPicture}</span>{/if}
+          <p class="quiz-word" class:learn-fade-in={promptKind !== 'meaning'}><GenderedWord word={currentWord} language={settings.lang} /></p>
+          <button class="btn-play btn-play-soft btn-play-round" onclick={speak} disabled={!canHear} aria-label={labels.listen} title={labels.listen}><IconVolume aria-hidden="true" /></button>
+        </div>
+        <!-- The definition's lines are kept from the start on a meaning card, so the word above never moves. -->
+        <p class="quiz-definition {isDefinitionPrompt ? 'invisible' : 'learn-fade-in'}" aria-hidden={isDefinitionPrompt}>{currentDefinition}</p>
       {:else if promptKind === 'picture'}
         <span class="quiz-picture pop-in" role="img" aria-label={labels.picturePrompt}>{currentPicture}</span>
       {:else if heardFirst}
@@ -550,7 +553,7 @@
         {#if currentPicture}<span class="quiz-picture small pop-in" aria-hidden="true">{currentPicture}</span>{/if}
         <p class="quiz-definition cue">{currentDefinition}</p>
       {/if}
-      {#if speechStatus}<p class="quiz-cue" aria-live="polite">{speechStatus}</p>{/if}
+      <p class="quiz-status" aria-live="polite">{speechStatus}</p>
     </article>
     {/key}
     <section class="quiz-answer" aria-label={promptLabel}>
@@ -575,27 +578,31 @@
             enterkeyhint="done"
             autofocus
           />
-          {#if answerStatus === null}
-            <button type="button" class="btn-play btn-play-soft btn-play-round" onclick={showHint} aria-label={labels.hint} title={labels.hint}><IconHint aria-hidden="true" /></button>
-            <button type="submit" class="btn-play btn-play-ink" disabled={!typed.trim()}>{labels.check}</button>
-          {/if}
+          <button type="button" class="btn-play btn-play-soft btn-play-round {answerStatus === null ? '' : 'invisible'}" onclick={showHint} disabled={answerStatus !== null} aria-label={labels.hint} title={labels.hint}><IconHint aria-hidden="true" /></button>
+          <!-- The check button gives way to the verdict in the same spot. -->
+          <span class="quiz-check">
+            {#if answerStatus === null}<button type="submit" class="btn-play btn-play-ink" disabled={!typed.trim()}>{labels.check}</button>
+            {:else if answerStatus === 'correct'}<span class="answer-mark answer-mark-right" role="img" aria-label={labels.correct}><IconCheck aria-hidden="true" /></span>
+            {:else}<span class="answer-mark answer-mark-wrong" role="img" aria-label={labels.tryAgain}><IconClose aria-hidden="true" /></span>{/if}
+          </span>
         </form>
-        {#if answerStatus === 'wrong'}<p class="quiz-solution learn-fade-in">{labels.answerWas} <strong>{currentSpelling}</strong></p>{/if}
+        <p class="quiz-solution" class:invisible={answerStatus !== 'wrong'} aria-hidden={answerStatus !== 'wrong'}>{labels.answerWas} <strong>{currentSpelling}</strong></p>
       {:else if promptKind === 'build'}
         <div class="quiz-slots" class:learn-wrong={buildWrong} class:right={answerStatus === 'correct'} class:wrong={answerStatus === 'wrong'} aria-live="polite" aria-label={builtWord}>
           {#each tiles as _, slot (slot)}
             <span class:filled={slot < placed.length}>{slot < placed.length ? tiles[placed[slot]!] : ''}</span>
           {/each}
         </div>
-        {#if answerStatus === 'wrong'}<p class="quiz-solution learn-fade-in">{labels.answerWas} <strong>{currentSpelling}</strong></p>{/if}
-        {#if answerStatus === null}
-          <div class="quiz-tiles">
-            {#each tiles as letter, index (index)}
-              <button type="button" class="quiz-tile" class:used={placed.includes(index)} disabled={placed.includes(index)} onclick={() => placeTile(index)}>{letter}</button>
-            {/each}
-            <button type="button" class="quiz-tile back" onclick={removeTile} disabled={!placed.length} aria-label={labels.removeLetter}><IconBackspace aria-hidden="true" /></button>
-          </div>
-        {/if}
+        <p class="quiz-solution" class:invisible={answerStatus !== 'wrong'} aria-hidden={answerStatus !== 'wrong'}>{labels.answerWas} <strong>{currentSpelling}</strong></p>
+        <!-- The tiles stay where they are after the answer; the last one turns into the verdict. -->
+        <div class="quiz-tiles">
+          {#each tiles as letter, index (index)}
+            <button type="button" class="quiz-tile" class:used={placed.includes(index) || answerStatus !== null} disabled={placed.includes(index) || answerStatus !== null} onclick={() => placeTile(index)}>{letter}</button>
+          {/each}
+          {#if answerStatus === null}<button type="button" class="quiz-tile back" onclick={removeTile} disabled={!placed.length} aria-label={labels.removeLetter}><IconBackspace aria-hidden="true" /></button>
+          {:else if answerStatus === 'correct'}<span class="answer-mark answer-mark-right" role="img" aria-label={labels.correct}><IconCheck aria-hidden="true" /></span>
+          {:else}<span class="answer-mark answer-mark-wrong" role="img" aria-label={labels.tryAgain}><IconClose aria-hidden="true" /></span>{/if}
+        </div>
       {:else if choiceWords.length >= 3}
         <div class="grid gap-[.55rem]">
           {#each choiceWords as word}
@@ -604,8 +611,8 @@
               value={word}
               onclick={chooseAnswer}
               disabled={answerStatus !== null}
-              class="btn-play btn-play-choice justify-between gap-[.65rem] text-left touch-manipulation disabled:opacity-100 {optionStateClasses(word)}"
-            ><span class="flex-1">{#if isDefinitionPrompt}{definitions[word]}{:else}<GenderedWord {word} language={settings.lang} />{/if}</span>{#if answerStatus !== null && word === currentWord}<IconCheck class="w-[1.25rem] h-[1.25rem] flex-none text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && word === selectedChoice}<IconClose class="w-[1.25rem] h-[1.25rem] flex-none text-[#c0392b] dark:text-[#ffc2b8]" aria-label={labels.tryAgain} />{/if}</button>
+              class="btn-play btn-play-choice justify-between gap-[.65rem] text-left touch-manipulation disabled:opacity-100 {isDefinitionPrompt ? 'two-lines' : ''} {optionStateClasses(word)}"
+            ><span class="flex-1">{#if isDefinitionPrompt}{definitions[word]}{:else}<GenderedWord {word} language={settings.lang} />{/if}</span><span class="choice-mark">{#if answerStatus !== null && word === currentWord}<IconCheck class="text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && word === selectedChoice}<IconClose class="text-[#c0392b] dark:text-[#ffc2b8]" aria-label={labels.tryAgain} />{/if}</span></button>
           {/each}
         </div>
       {:else}
@@ -633,15 +640,22 @@
 </section>
 
 <style>
-  .answer-slot { min-height:5.2rem;display:grid;align-content:start; }
-  .quiz-card { width:min(100%,28rem);min-height:10rem;display:grid;align-content:center;justify-items:center;gap:.8rem;padding:clamp(1.2rem,6vw,2rem);text-align:center; }
+  .answer-slot { min-height:5.4rem;display:grid;align-content:start; }
+  .quiz-tiles :global(.answer-mark) { width:2.9rem;height:2.9rem; }
+  /* One height for every kind of card, before and after the answer. */
+  .quiz-card { width:min(100%,28rem);height:13.2rem;display:grid;align-content:center;justify-items:center;gap:.55rem;padding:.9rem clamp(1rem,5vw,1.6rem);overflow:hidden;text-align:center; }
+  .quiz-word-row { display:flex;align-items:center;justify-content:center;gap:.6rem;max-width:100%; }
+  /* Pinned to the card's foot, so a message about the voice never pushes the word. */
+  .quiz-card { position:relative; }
+  .quiz-status { position:absolute;inset:auto .6rem .35rem;margin:0;color:var(--color-accent);font-size:.6875rem;font-weight:800;line-height:1.1; }
+  .quiz-check { flex:none;display:grid;justify-items:end;min-width:5.6rem; }
   .quiz-card.kind-listen,.quiz-card.kind-dictation { background-image:linear-gradient(145deg,transparent,color-mix(in oklch,var(--skill-hear) 16%,transparent)); }
   .quiz-card.kind-picture { background-image:linear-gradient(145deg,transparent,color-mix(in oklch,var(--skill-words) 20%,transparent)); }
-  .quiz-word { margin:0;color:var(--text);font-family:var(--font-display);font-size:clamp(1.9rem,9vw,3rem);font-weight:400;letter-spacing:.03em;line-height:1.05;overflow-wrap:anywhere; }
+  .quiz-word { margin:0;min-width:0;color:var(--text);font-family:var(--font-display);font-size:clamp(1.6rem,7.5vw,2.5rem);font-weight:400;letter-spacing:.03em;line-height:1.05;overflow-wrap:anywhere; }
   .quiz-picture { font-size:clamp(4.2rem,22vw,6rem);line-height:1.1;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif; }
-  .quiz-picture.small { font-size:clamp(2.4rem,12vw,3.2rem); }
-  .quiz-definition { margin:0;max-width:22rem;color:var(--text-soft);font-size:var(--text-sm);font-weight:700;line-height:1.45; }
-  .quiz-definition.cue { color:var(--text);font-size:1.05rem;font-weight:700; }
+  .quiz-picture.small { flex:none;font-size:clamp(2.2rem,10vw,2.8rem); }
+  .quiz-definition { margin:0;max-width:22rem;min-height:2.9em;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden;color:var(--text-soft);font-size:var(--text-sm);font-weight:700;line-height:1.45; }
+  .quiz-definition.cue { color:var(--text);font-size:1.05rem;font-weight:700;-webkit-line-clamp:4;line-clamp:4; }
   .quiz-cue { margin:0;color:var(--clay);font-size:var(--text-xs);font-weight:800;line-height:1.35; }
   /* The big listen button: a speaker with three bars that move while the learner decides. */
   .quiz-listen { position:relative;display:flex;align-items:center;justify-content:center;gap:.28rem;width:6.2rem;height:6.2rem;border:2px solid var(--ink);border-radius:50% 46% 52% 48% / 48% 52% 46% 50%;background:var(--skill-hear);box-shadow:var(--play-shadow);color:var(--paper);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:translate var(--dur-move) var(--ease-spring),box-shadow var(--dur-move) var(--ease-spring); }
@@ -656,12 +670,16 @@
   .quiz-answer { width:min(100%,28rem);display:grid;gap:.65rem; }
   .quiz-answer :global(.btn-play-choice.bg-success .gender-article) { color:inherit; }
   .quiz-answer :global(.btn-play-choice.bg-success .gender-shape) { background:currentColor; }
+  /* The mark's place is kept in every choice, so the text never re-wraps when it appears. */
+  .choice-mark { flex:none;display:grid;place-items:center;width:1.3rem;height:1.3rem; }
+  .choice-mark :global(svg) { width:1.3rem;height:1.3rem; }
+  .quiz-answer :global(.btn-play-choice.two-lines) { min-height:3.9rem; }
   .quiz-prompt { margin:0;color:var(--clay);font-size:var(--text-xs);font-weight:900;letter-spacing:.08em;text-align:center;text-transform:uppercase; }
   .quiz-type { display:flex;align-items:center;gap:.5rem; }
   .quiz-type input { flex:1;min-width:0;height:3.1rem;padding:0 .9rem;border-width:2px;border-color:var(--ink);color:var(--ink);font-size:1.15rem;font-weight:700;box-shadow:var(--play-shadow); }
   .quiz-type input.right { border-color:var(--go);background:var(--go-soft); }
   .quiz-type input.wrong { border-color:var(--no);background:var(--no-soft);text-decoration:line-through;text-decoration-thickness:.08em; }
-  .quiz-solution { margin:0;color:var(--text-soft);font-size:var(--text-sm);font-weight:700;text-align:center; }
+  .quiz-solution { margin:0;min-height:1.6rem;color:var(--text-soft);font-size:var(--text-sm);font-weight:700;text-align:center; }
   .quiz-solution strong { color:var(--go);font-size:1.15rem; }
   .quiz-slots { display:flex;flex-wrap:wrap;justify-content:center;gap:.3rem;min-height:2.9rem; }
   .quiz-slots span { display:grid;place-items:center;width:2.1rem;height:2.6rem;border-bottom:3px solid var(--ink);color:var(--text);font-family:var(--font-display);font-size:1.6rem;line-height:1; }
