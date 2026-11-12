@@ -15,10 +15,8 @@
   const locale = $derived({ locale: settings.interfaceLocale });
   let open = $state(false);
   let note = $state('');
-  let flagged = $state(false);
-  $effect(() => {
-    flagged = readFlags().some((flag) => flag.item === item);
-  });
+  // Follows the item on the card; saving or removing a flag overrides it until the item changes.
+  let flagged = $derived(readFlags().some((flag) => flag.item === item));
 
   function openSheet() {
     note = readFlags().find((flag) => flag.item === item)?.note ?? '';
