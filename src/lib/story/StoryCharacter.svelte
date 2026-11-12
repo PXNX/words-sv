@@ -20,7 +20,7 @@
   // `build` widens the body (and, for 'wide', the face); `accent` colours an apron or a pair of
   // overalls; `checked` lays a check pattern over the top.
   // `face`, `eyes`, `nose` and `striped` are only picked by learners for their own character.
-  type Look = { skin: string; hair: string; hairStyle: 'bun' | 'short' | 'curly' | 'bob' | 'bald' | 'messy' | 'long' | 'spiky' | 'mohawk'; top: string; face?: Avatar['face']; eyes?: Avatar['eyes']; nose?: Avatar['nose']; striped?: boolean; glasses?: boolean; monocle?: boolean; beard?: boolean; stubble?: boolean; moustache?: boolean | 'kaiser'; hat?: 'tyrolean' | 'crown' | 'police' | 'toque' | 'straw' | 'wizard' | 'beret' | 'star' | 'party' | 'laurel' | 'mortarboard' | undefined; headphones?: boolean; shades?: boolean; pencil?: boolean; build?: 'wide' | 'muscular'; accent?: string; checked?: boolean; outfit: 'plain' | 'hoodie' | 'cardigan' | 'apron' | 'blazer' | 'tie' | 'tracht' | 'waistcoat' | 'police' | 'chef' | 'overalls' | 'tanktop' | 'scrubs' | 'tshirt' | 'shirt' | 'sweater' | 'bowtie' };
+  type Look = { skin: string; hair: string; hairStyle: 'bun' | 'short' | 'curly' | 'bob' | 'bald' | 'messy' | 'long' | 'spiky' | 'mohawk' | 'afro' | 'braids' | 'hijab' | 'turban'; hearingAid?: boolean; kippah?: boolean; top: string; face?: Avatar['face']; eyes?: Avatar['eyes']; nose?: Avatar['nose']; striped?: boolean; glasses?: boolean; monocle?: boolean; beard?: boolean; stubble?: boolean; moustache?: boolean | 'kaiser'; hat?: 'tyrolean' | 'crown' | 'police' | 'toque' | 'straw' | 'wizard' | 'beret' | 'star' | 'party' | 'laurel' | 'mortarboard' | undefined; headphones?: boolean; shades?: boolean; pencil?: boolean; build?: 'wide' | 'muscular'; accent?: string; checked?: boolean; outfit: 'plain' | 'hoodie' | 'cardigan' | 'apron' | 'blazer' | 'tie' | 'tracht' | 'waistcoat' | 'police' | 'chef' | 'overalls' | 'tanktop' | 'scrubs' | 'tshirt' | 'shirt' | 'sweater' | 'bowtie' };
   // Animals are hand-drawn branches below rather than entries in `looks`.
   type Animal = 'bello' | 'crow' | 'seagull' | 'deer' | 'fox' | 'lilith' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake';
   const animals: readonly CharacterId[] = ['bello', 'crow', 'seagull', 'deer', 'fox', 'lilith', 'bird', 'cow', 'horse', 'giraffe', 'elephant', 'snake'];
@@ -71,7 +71,7 @@
     return {
       skin: own.skin, hair: own.hair, hairStyle: own.hairStyle, top: own.top, face: own.face, eyes: own.eyes, nose: own.nose,
       outfit: own.shirt === 'stripes' || own.shirt === 'checked' ? 'plain' : own.shirt, checked: own.shirt === 'checked', striped: own.shirt === 'stripes',
-      glasses: extra === 'glasses', shades: extra === 'shades', beard: extra === 'beard', stubble: extra === 'stubble', headphones: extra === 'headphones',
+      glasses: extra === 'glasses', shades: extra === 'shades', beard: extra === 'beard', stubble: extra === 'stubble', headphones: extra === 'headphones', hearingAid: extra === 'hearingAid', kippah: extra === 'kippah',
       moustache: extra === 'kaiser' ? 'kaiser' : extra === 'moustache', monocle: extra === 'monocle', pencil: extra === 'pencil',
       // Reward hats (cosmetics.svelte.ts) are drawn like the cast's.
       hat: extra === 'crown' || extra === 'tyrolean' || extra === 'toque' || extra === 'straw' || extra === 'wizard' || extra === 'beret' || extra === 'star' || extra === 'party' || extra === 'laurel' || extra === 'mortarboard' ? extra : undefined
@@ -189,6 +189,10 @@
     {#if look.hairStyle === 'bun'}<circle cx="60" cy="54" r="33" fill={look.hair} /><circle cx="60" cy="19" r={id === 'oma' ? 10 : 13} fill={look.hair} />{/if}
     {#if look.hairStyle === 'bob'}<path d="M26 58C26 32 42 21 60 21s34 11 34 37v30q-34 7-68 0Z" fill={look.hair} />{/if}
     {#if look.hairStyle === 'long'}<path d="M25 58C25 32 42 21 60 21s35 11 35 37v54q-9 5-18 0V80H43v32q-9 5-18 0Z" fill={look.hair} />{/if}
+    {#if look.hairStyle === 'afro'}<g fill={look.hair}><circle cx="60" cy="44" r="36" /><circle cx="29" cy="52" r="13" /><circle cx="91" cy="52" r="13" /><circle cx="38" cy="26" r="13" /><circle cx="82" cy="26" r="13" /><circle cx="60" cy="16" r="14" /></g>{/if}
+    {#if look.hairStyle === 'braids'}<g fill={look.hair}>{#each [0, 1, 2, 3, 4, 5] as bead (bead)}<circle cx="27" cy={58 + bead * 9} r="6.2" /><circle cx="93" cy={58 + bead * 9} r="6.2" />{/each}</g><g fill="#e6a527"><circle cx="27" cy="112" r="3.6" /><circle cx="93" cy="112" r="3.6" /></g>{/if}
+    <!-- a headscarf falls behind the head and over the shoulders; its front frames the face further down -->
+    {#if look.hairStyle === 'hijab'}<path d="M21 60C21 30 39 15 60 15s39 15 39 45c0 24-7 42-17 52H38C28 102 21 84 21 60Z" fill={look.hair} />{/if}
     <!-- body: a muscular build shows bare shoulders and arms, the tank top goes over them -->
     {#if look.checked}<defs><pattern id="{uid}-check" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" fill={look.top} /><path d="M0 4.5h9M4.5 0v9" stroke="rgba(255,253,247,.4)" stroke-width="2.4" /></pattern></defs>{/if}
     {#if look.striped}<defs><pattern id="{uid}-stripes" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill={look.top} /><path d="M0 2.5h10" stroke={look.top === '#fffdf7' ? '#172a45' : '#fffdf7'} stroke-opacity=".7" stroke-width="3.2" /></pattern></defs>{/if}
@@ -279,6 +283,12 @@
     {#if look.hairStyle === 'mohawk'}<path d="M33 50c3-12 13-19 27-19s24 7 27 19c-7-7-16-10-27-10s-20 3-27 10Z" fill={look.hair} opacity=".3" /><path d="M51 38 50 22l5 4 1-15 4 9 4-9 1 15 5-4-1 16q-9-3-18 0Z" fill={look.hair} />{/if}
     {#if look.hairStyle === 'bald'}<g fill={look.hair}><ellipse cx="32" cy="52" rx="5" ry="10" /><ellipse cx="88" cy="52" rx="5" ry="10" /></g>{/if}
     {#if look.hairStyle === 'messy'}<path d="M30 55c-3-12 1-22 8-27l-3-10 9 6 2-12 8 9 6-11 4 11 9-8-1 11 10-4-4 10c6 6 7 15 5 25-3-7-7-11-12-12l2 7-8-8-1 8-6-9-4 8-4-8-4 7-2-6c-6 2-11 7-12 13Z" fill={look.hair} />{/if}
+    {#if look.hairStyle === 'afro'}<path d="M29 56c-1-22 13-33 31-33s32 11 31 33c-6-10-17-15-31-15s-25 5-31 15Z" fill={look.hair} />{/if}
+    {#if look.hairStyle === 'braids'}<path d="M29 56c-1-22 13-33 31-33s32 11 31 33c-6-11-17-16-31-16s-25 5-31 16Z" fill={look.hair} /><path d="M60 24v15M46 27l3 13M74 27l-3 13" stroke="rgba(255,253,247,.22)" stroke-width="1.6" stroke-linecap="round" />{/if}
+    {#if look.hairStyle === 'hijab'}<path fill-rule="evenodd" d="M23 58C23 30 40 17 60 17s37 13 37 41c0 17-6 31-16 39q-21 8-42 0C29 89 23 75 23 58Zm37-27c-14 0-23 11-23 26s10 27 23 27 23-12 23-27-9-26-23-26Z" fill={look.hair} /><path d="M37 57c0-15 9-26 23-26s23 11 23 26" fill="none" stroke="rgba(23,42,69,.18)" stroke-width="1.6" />{/if}
+    {#if look.hairStyle === 'turban'}<path d="M27 47c-1-21 14-34 33-34s34 13 33 34c-10-7-21-10-33-10s-23 3-33 10Z" fill={look.hair} /><path d="M31 36q29-19 58 3M39 23q21-9 42 8M60 13q-9 12-22 22" fill="none" stroke="rgba(255,253,247,.3)" stroke-width="2" stroke-linecap="round" /><circle cx="60" cy="27" r="3.4" fill="#e6a527" />{/if}
+    {#if look.kippah}<path d="M43 27q17-13 34 0-17 6-34 0Z" fill="#1f3a6b" /><path d="M46 26.5q14-8 28 0" fill="none" stroke="#e6b52e" stroke-width="1.4" stroke-linecap="round" />{/if}
+    {#if look.hearingAid}<path d="M90 47q7 1 6.5 9t-6 9" fill="none" stroke="#8a939e" stroke-width="3.2" stroke-linecap="round" /><circle cx="90" cy="65" r="2.6" fill="#596477" />{/if}
     {#if look.pencil}<path d="M84 50 99 41" stroke="#e6b52e" stroke-width="3.4" stroke-linecap="round" /><path d="m99 41 3.5-2" stroke="#4a3326" stroke-width="2" stroke-linecap="round" />{/if}
     {#if look.shades}<g fill="#172a45"><rect x="40" y="31" width="17" height="8" rx="3.5" /><rect x="63" y="31" width="17" height="8" rx="3.5" /></g><path d="M57 34h6" stroke="#172a45" stroke-width="1.8" /><path d="M43 33h6M66 33h6" stroke="rgba(255,253,247,.5)" stroke-width="1.4" stroke-linecap="round" />{/if}
     {#if look.hat === 'tyrolean'}

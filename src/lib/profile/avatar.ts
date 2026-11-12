@@ -5,10 +5,12 @@ import { lockedIn, type RewardId } from './cosmetics.js';
 export type FaceShape = 'round' | 'oval' | 'wide' | 'square' | 'heart' | 'long' | 'pear';
 export type EyeStyle = 'dots' | 'big' | 'lashes' | 'tiny' | 'sparkle' | 'sleepy' | 'almond' | 'wink' | 'starry';
 export type NoseStyle = 'curve' | 'button' | 'round' | 'pointy' | 'wide' | 'long' | 'snub' | 'heart' | 'freckles';
-export type AvatarHair = 'short' | 'curly' | 'bob' | 'bun' | 'long' | 'messy' | 'spiky' | 'mohawk' | 'bald';
+// Afro and braids, and the head coverings many learners wear every day: a headscarf and a turban
+// take the hair colour as their cloth colour.
+export type AvatarHair = 'short' | 'curly' | 'bob' | 'bun' | 'long' | 'messy' | 'spiky' | 'mohawk' | 'bald' | 'afro' | 'braids' | 'hijab' | 'turban';
 // The last faces, eyes, noses, shirts, extras and colours are rewards for modes, achievements and high scores (see cosmetics.ts).
 export type AvatarShirt = 'plain' | 'stripes' | 'checked' | 'hoodie' | 'shirt' | 'blazer' | 'cardigan' | 'tshirt' | 'waistcoat' | 'tracht' | 'overalls' | 'tie' | 'sweater' | 'bowtie';
-export type AvatarExtra = 'none' | 'glasses' | 'shades' | 'beard' | 'moustache' | 'stubble' | 'headphones' | 'crown' | 'monocle' | 'tyrolean' | 'pencil' | 'kaiser' | 'toque' | 'straw' | 'wizard' | 'beret' | 'star' | 'party' | 'laurel' | 'mortarboard';
+export type AvatarExtra = 'none' | 'glasses' | 'shades' | 'beard' | 'moustache' | 'stubble' | 'headphones' | 'hearingAid' | 'kippah' | 'crown' | 'monocle' | 'tyrolean' | 'pencil' | 'kaiser' | 'toque' | 'straw' | 'wizard' | 'beret' | 'star' | 'party' | 'laurel' | 'mortarboard';
 
 export type Avatar = { skin: string; face: FaceShape; eyes: EyeStyle; nose: NoseStyle; hairStyle: AvatarHair; hair: string; shirt: AvatarShirt; top: string; extra: AvatarExtra };
 
@@ -19,11 +21,11 @@ export const avatarChoices = {
   skin: ['#f6d7bd', '#f0c9a8', '#e2b08c', '#d9a07a', '#c99068', '#9a6440', '#7a4a2e', '#5a3624'],
   eyes: ['dots', 'big', 'lashes', 'tiny', 'sparkle', 'sleepy', 'almond', 'wink', 'starry'],
   nose: ['curve', 'button', 'round', 'pointy', 'wide', 'long', 'snub', 'heart', 'freckles'],
-  hairStyle: ['short', 'curly', 'bob', 'bun', 'long', 'messy', 'spiky', 'mohawk', 'bald'],
+  hairStyle: ['short', 'curly', 'bob', 'bun', 'long', 'messy', 'spiky', 'mohawk', 'bald', 'afro', 'braids', 'hijab', 'turban'],
   hair: ['#15110e', '#3b2a20', '#7a4a2a', '#c4522e', '#e2c25a', '#d8d4cc', '#5b3a8a', '#3d6fd1', '#e86a9a', '#9fc6e8', '#2fae8f', '#ff7a3d', '#39ff14', '#ff5e62', '#00ced1'],
   shirt: ['plain', 'stripes', 'checked', 'hoodie', 'shirt', 'blazer', 'cardigan', 'tshirt', 'waistcoat', 'tracht', 'overalls', 'tie', 'sweater', 'bowtie'],
   top: ['#e6a527', '#d64b45', '#4b78c2', '#34824d', '#8a62b6', '#3f9a9c', '#172a45', '#fffdf7', '#f19a8a', '#d4af37', '#7fc8a9', '#7a2e4f', '#c0c6cf', '#2aabee', '#98ff98', '#191970', '#b76e79'],
-  extra: ['none', 'glasses', 'shades', 'beard', 'moustache', 'stubble', 'headphones', 'crown', 'monocle', 'tyrolean', 'pencil', 'kaiser', 'toque', 'straw', 'wizard', 'beret', 'star', 'party', 'laurel', 'mortarboard']
+  extra: ['none', 'glasses', 'shades', 'beard', 'moustache', 'stubble', 'headphones', 'hearingAid', 'kippah', 'crown', 'monocle', 'tyrolean', 'pencil', 'kaiser', 'toque', 'straw', 'wizard', 'beret', 'star', 'party', 'laurel', 'mortarboard']
 } as const satisfies { [K in keyof Avatar]: readonly Avatar[K][] };
 
 export type AvatarPart = keyof typeof avatarChoices;
