@@ -102,11 +102,11 @@
     phase = found.length ? 'intro' : 'unavailable';
   });
 
-  // The level's reading texts come from the story catalog, which is large, so it loads only here.
+  // The level's reading texts come from the story catalog, which loads per level and only here.
   async function levelTexts(): Promise<Array<MockText<ReadingBlock>>> {
     try {
-      const { readingCatalog } = await import('#lib/story/readingCatalog.js');
-      return readingCatalog(language, level, false, settings.firstName || 'du').filter((item) => item.level === level).map((item) => ({ id: item.id, title: item.title, blocks: item.blocks, questions: item.questions }));
+      const { loadReadingCatalog } = await import('#lib/story/storyPacks.svelte.js');
+      return (await loadReadingCatalog(language, level, false, settings.firstName || 'du')).filter((item) => item.level === level).map((item) => ({ id: item.id, title: item.title, blocks: item.blocks, questions: item.questions }));
     } catch {
       return [];
     }

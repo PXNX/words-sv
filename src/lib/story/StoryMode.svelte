@@ -11,7 +11,9 @@
   import { settings } from '#lib/state/settings.svelte.js';
   import type { Language } from '#lib/data/vocabulary.js';
   import { playBing, playErrorSound, playSoundEffect, playSuccessSound, soundEffectSeconds, startCrackle, stopSoundEffects } from '#lib/feedback/sounds.js';
-  import { characterNames, fillName, moodFor, storiesFor, withDetails, withWeather, type CharacterId, type HeldItem, type Lights, type Mood, type Story, type StoryBeat } from './stories';
+  import type { CharacterId, HeldItem, Lights, Mood, Story, StoryBeat } from './stories';
+  import { characterNames, fillName, moodFor, withDetails, withWeather } from './storyKit';
+  import { storiesFor } from './storyPacks.svelte';
   import type { SoundEffect } from '#lib/feedback/sounds.js';
   import StoryAudioLoader from './StoryAudioLoader.svelte';
   import StoryCharacter from './StoryCharacter.svelte';

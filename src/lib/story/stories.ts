@@ -1,7 +1,7 @@
 import type { Language, VocabularyLevel } from '#lib/data/vocabulary.js';
-import { vocabularyLevels } from '#lib/data/vocabulary.js';
 import type { SoundEffect } from '#lib/feedback/sounds.js';
 import { german, germanStories } from './germanStories';
+import { selectStories } from './levelSelect';
 
 export type Text = Record<Language, string>;
 export type CharacterId = 'crow' | 'seagull' | 'ludwig' | 'deer' | 'fox' | 'mia' | 'leo' | 'oma' | 'tom' | 'kim' | 'paul' | 'bello' | 'lilith' | 'hans' | 'albert' | 'sabine' | 'enzo' | 'jana' | 'becker' | 'bird' | 'cow' | 'horse' | 'giraffe' | 'elephant' | 'snake' | 'ali' | 'robert' | 'fritz' | 'tobias' | 'selma' | 'kumar' | 'simon' | 'banker' | 'wirt';
@@ -1246,18 +1246,7 @@ export const stories: Story[] = [
   ...germanStories
 ];
 
-/**
- * Stories at the learner's level come first; when lower vocabulary is included, easier stories
- * follow. If nothing matches exactly (sparse levels), fall back to the nearest lower level.
- * Stories limited to other languages are left out.
- */
+/** The learner's stories out of the whole corpus (see `selectStories`); the app itself loads them per level (storyPacks.svelte.ts). */
 export function storiesFor(language: Language, level: VocabularyLevel, includeLower: boolean): Story[] {
-  const rank = vocabularyLevels.indexOf(level);
-  const available = stories.filter((story) => !story.languages || story.languages.includes(language));
-  const exact = available.filter((story) => story.level === level);
-  const lower = available.filter((story) => vocabularyLevels.indexOf(story.level) < rank).sort((a, b) => vocabularyLevels.indexOf(b.level) - vocabularyLevels.indexOf(a.level));
-  if (includeLower) return [...exact, ...lower];
-  if (exact.length) return exact;
-  const nearest = lower[0]?.level;
-  return lower.filter((story) => story.level === nearest);
+  return selectStories(stories, language, level, includeLower);
 }
