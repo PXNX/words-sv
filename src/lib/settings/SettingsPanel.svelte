@@ -28,6 +28,7 @@
   import { unseenReleases } from '#lib/app/changelog.js';
   import { lastSeenVersion } from '#lib/app/changelogSeen.js';
   import { releases } from '#lib/app/releases.js';
+  import { changelogSheet } from '#lib/app/changelogSheet.svelte.js';
   import { nativeDigitsFor, offersCalendarChoice, type FormatCalendar, type FormatDigits, type FormatSource } from '#lib/format/format.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import { defaultAvatar } from '#lib/profile/avatar.js';
@@ -285,8 +286,12 @@
     }
   }
 
-  // A dot on the version row until the learner has opened /changelog for the newest release.
+  // A dot on the version row until the learner has opened the version history for the newest release.
   let hasUnseenRelease = $state(false);
+  function openChangelog() {
+    hasUnseenRelease = false;
+    changelogSheet.open = true;
+  }
   onMount(() => {
     hasUnseenRelease = unseenReleases(releases, lastSeenVersion()).length > 0;
     void pushEnabled().then((enabled) => (notificationsEnabled = enabled));
@@ -390,11 +395,11 @@
       <button type="button" class="settings-nav" onclick={shareApp}><IconShare aria-hidden="true" /><span>{labels.shareApp}</span><IconChevronRight aria-hidden="true" class="rtl:rotate-180" /></button>
       {#if telegramHref}<a class="settings-nav" href={telegramHref} target="_blank" rel="noreferrer"><IconTelegram aria-hidden="true" /><span>{labels.telegramShare}</span><IconChevronRight aria-hidden="true" class="rtl:rotate-180" /></a>{/if}
       <h3 class="settings-sub">{sectionTitles.about}</h3>
-      <a class="settings-nav" href="/changelog">
+      <button type="button" class="settings-nav" onclick={openChangelog}>
         <IconUpdate aria-hidden="true" />
         <span>{m.changelog_settings({}, { locale: settings.interfaceLocale })}{#if hasUnseenRelease}<i class="settings-dot" aria-label={m.changelog_unseen({}, { locale: settings.interfaceLocale })}></i>{/if}<small dir="ltr">{m.changelog_version({ version: __APP_VERSION__ }, { locale: settings.interfaceLocale })}</small></span>
         <IconChevronRight aria-hidden="true" class="rtl:rotate-180" />
-      </a>
+      </button>
       <a class="settings-nav" href="https://github.com/PXNX/words-sv" target="_blank" rel="noreferrer"><IconGithub aria-hidden="true" /><span>GitHub · PXNX/words-sv</span><IconChevronRight aria-hidden="true" class="rtl:rotate-180" /></a>
     </SettingsSection>
   </div>

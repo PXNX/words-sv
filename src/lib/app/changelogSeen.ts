@@ -1,4 +1,4 @@
-// Remembers the newest release the learner has opened /changelog for (per device).
+// Remembers the newest release the learner has opened the version history for (per device).
 import { isAppVersion, type AppVersion } from './version.js';
 
 const LAST_SEEN_KEY = 'wordcircle-changelog-seen-v1';

@@ -9,6 +9,10 @@ its one-line summary; the localised highlight shown in the app lives in the mess
 
 ## Unreleased
 
+### Improved
+- Show the version history in a sheet over the settings instead of its own page, without links out to GitHub; links to `/changelog` now open the sheet on the settings
+- Give the first run's introduction the sheet to itself: no dock under it, and an update waits until it is done
+
 ## v2.0.0 - 2026-11-12
 
 Loads about half as much up front, shows insights from the learner's own activity, and leads the home screen with the streak.

@@ -14,6 +14,7 @@ import { playableLanguages, warmLanguage, refreshHintableBaseWords } from '#lib/
 import StartupLoader from '#lib/app/StartupLoader.svelte';
 import CosmeticUnlockToast from '#lib/profile/CosmeticUnlockToast.svelte';
 import WhatsNewSheet from '#lib/app/WhatsNewSheet.svelte';
+import ChangelogSheet from '#lib/app/ChangelogSheet.svelte';
 import MobileDataDialog from '#lib/offline/MobileDataDialog.svelte';
 import StreakToast from '#lib/streak/StreakToast.svelte';
 import GroupScoreSheet from '#lib/games/GroupScoreSheet.svelte';
@@ -187,6 +188,7 @@ onMount(() => {
 		<GroupScoreSheet />
 		<OfflinePill />
 		<WhatsNewSheet />
+		<ChangelogSheet />
 		<MobileDataDialog />
 		<BackgroundJobsBadge />
 	{/if}

@@ -1,6 +1,7 @@
 <!--
   Shown once after an update: a joyful Lilith, the release's highlight and its new features, with
-  one button to carry on. Opening it marks the release as seen, like visiting /changelog.
+  one button to carry on, plus a link to the full version history in the settings. Opening it
+  marks the release as seen.
 -->
 <script lang="ts">
   import { num } from '#lib/format/num.svelte.js';
@@ -11,6 +12,7 @@
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import { haptic } from '#lib/feedback/haptics.js';
   import { lastSeenVersion, markVersionSeen } from './changelogSeen.js';
+  import { changelogSheet } from './changelogSheet.svelte.js';
   import { releaseHighlight } from './highlight.js';
   import { releases } from './releases.js';
   import { whatsNew, type WhatsNew } from './whatsNew.js';
@@ -46,6 +48,11 @@
   function close() {
     news = null;
   }
+  // "Everything new" hands over to the version history sheet, which the settings share.
+  function showChangelog() {
+    close();
+    changelogSheet.open = true;
+  }
 </script>
 
 <svelte:window onkeydown={(event) => { if (news && event.key === 'Escape') close(); }} />
@@ -69,7 +76,7 @@
       {#if news.fixes || news.moreFeatures}
         <p class="news-extra">
           {#if news.fixes}{m.whats_new_fixes({ count: num(news.fixes) }, locale)}{/if}
-          <a href="/changelog" onclick={close}>{m.whats_new_more({}, locale)}</a>
+          <button type="button" class="news-more" onclick={showChangelog}>{m.whats_new_more({}, locale)}</button>
         </p>
       {/if}
       <button type="button" class="btn-play btn-play-ink news-go" bind:this={button} onclick={close}>{m.whats_new_go({}, locale)}</button>
@@ -95,7 +102,7 @@
   .news-features li { animation:news-in .35s ease-out calc(.45s + var(--i) * .07s) both; }
   .news-features li::marker { color:#e6a527; }
   .news-extra { display:flex;flex-wrap:wrap;justify-content:center;gap:.25rem .6rem;margin:0;font-size:.875rem;font-weight:800;opacity:.75; }
-  .news-extra a { color:#a45e38; }
+  .news-more { color:#a45e38;padding:0;border:0;background:none;font:inherit;font-weight:800;text-decoration:underline;cursor:pointer; }
   .news-go { width:100%;justify-content:center;margin-top:.35rem;animation:news-in .4s ease-out .8s both; }
   @keyframes news-fade { from { opacity:0; } }
   @keyframes news-rise { from { transform:translateY(100%); } }
@@ -110,5 +117,5 @@
   }
   :global(html.dark) .news-sheet { background:#152b47; }
   :global(html.dark) .news-sheet h2,:global(html.dark) .news-highlight,:global(html.dark) .news-features { color:#fffdf7; }
-  :global(html.dark) .news-extra a { color:#e6a527; }
+  :global(html.dark) .news-more { color:#e6a527; }
 </style>

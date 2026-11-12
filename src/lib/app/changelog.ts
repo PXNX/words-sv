@@ -1,5 +1,6 @@
-// Parses CHANGELOG.md (maintained by scripts/release.ts) into typed releases for the
-// /changelog page. Only tagged versions are returned; the "Unreleased" section is skipped.
+// Parses CHANGELOG.md (maintained by scripts/release.ts) into typed releases for the version
+// history sheet (app/ChangelogSheet.svelte). Only tagged versions are returned; the "Unreleased"
+// section is skipped.
 import { compareVersions, isAppVersion, type AppVersion } from './version.js';
 
 export const CHANGE_TYPES = ['new', 'improved', 'fixed', 'migration', 'known'] as const;
