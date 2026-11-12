@@ -22,3 +22,17 @@ describe('interface messages', () => {
     });
   }
 });
+
+// Persian and Arabic write the cast's names in their own script and the brand Telegram in Latin,
+// the same in every message.
+describe('names in Persian and Arabic', () => {
+  for (const locale of ['fa', 'ar']) {
+    it(`${locale} spells the cast in its own script and Telegram in Latin`, () => {
+      const messages = JSON.parse(readFileSync(new URL(`../messages/${locale}.json`, import.meta.url), 'utf8')) as Record<string, unknown>;
+      const offenders = Object.entries(messages)
+        .filter(([, text]) => typeof text === 'string' && (/(?<![A-Za-z@/_.])(Mia|Tom|Lilith|Kumar)(?![A-Za-z_])/u.test(text) || /تلگرام|تيليجرام|تلغرام|تليغرام/u.test(text)))
+        .map(([key]) => key);
+      expect(offenders).toEqual([]);
+    });
+  }
+});
