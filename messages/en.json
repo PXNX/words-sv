@@ -1102,5 +1102,6 @@
   "streak_best_short": "Best: {count}",
   "streak_next_milestone": "Next goal: {count} days",
   "streak_today": "Today: {done} of {goal} words",
-  "streak_today_done": "Today counts"
+  "streak_today_done": "Today counts",
+  "legal_credits": "Credits"
 }

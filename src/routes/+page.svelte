@@ -430,7 +430,7 @@
         {/each}
       </div>
     {/each}
-    <nav class="home-legal" aria-label={labels.legal}><a href="/impressum">{labels.imprint}</a><a href="/datenschutz">{labels.privacy}</a><a href="/bedingungen">{labels.terms}</a></nav>
+    <nav class="home-legal" aria-label={labels.legal}><a href="/impressum">{labels.imprint}</a><a href="/datenschutz">{labels.privacy}</a><a href="/bedingungen">{labels.terms}</a><a href="/credits">{m.legal_credits({}, { locale: settings.interfaceLocale })}</a></nav>
     </div>
   {/if}
 </section>
@@ -542,7 +542,7 @@
   @media (hover:hover) { .home-games .card-play:hover .home-icon { rotate:-8deg;animation:home-icon-wiggle .55s ease-in-out; } }
   @keyframes home-icon-wiggle { 0%,100% { rotate:0deg;scale:1; } 30% { rotate:-12deg;scale:1.12; } 60% { rotate:9deg;scale:1.08; } }
 
-  .home-legal { display:flex;justify-content:center;gap:1rem;padding-top:.3rem; }
+  .home-legal { display:flex;flex-wrap:wrap;justify-content:center;gap:.3rem 1rem;padding-top:.3rem; }
   .home-legal a { color:var(--text-soft);font-size:var(--text-xs);font-weight:700;text-decoration:none; }
   .home-legal a:hover { text-decoration:underline; }
 
