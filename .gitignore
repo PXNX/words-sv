@@ -122,3 +122,4 @@ project.inlang/cache/
 
 # Worktrees of parallel agent sessions
 .claude/worktrees/
+.lighthouseci/
