@@ -23,32 +23,32 @@
     const locale = settings.interfaceLocale;
     const params = { value: String(factor.value ?? 0), expected: String(factor.expected ?? 0) };
     switch (factor.key) {
-      case 'lengthTooShort': return m.factor_lengthTooShort(params, { locale });
-      case 'lengthGood': return m.factor_lengthGood(params, { locale });
-      case 'lengthTooLong': return m.factor_lengthTooLong(params, { locale });
-      case 'noSentenceEnd': return m.factor_noSentenceEnd({}, { locale });
-      case 'sentenceCountLow': return m.factor_sentenceCountLow(params, { locale });
-      case 'sentenceCountGood': return m.factor_sentenceCountGood(params, { locale });
-      case 'startNotCapitalized': return m.factor_startNotCapitalized(params, { locale });
-      case 'nounsNotCapitalized': return m.factor_nounsNotCapitalized(params, { locale });
-      case 'commasMissing': return m.factor_commasMissing(params, { locale });
-      case 'varietyLow': return m.factor_varietyLow(params, { locale });
-      case 'varietyGood': return m.factor_varietyGood(params, { locale });
-      case 'paragraphSingle': return m.factor_paragraphSingle({}, { locale });
-      case 'paragraphGood': return m.factor_paragraphGood(params, { locale });
-      case 'spacingOdd': return m.factor_spacingOdd({}, { locale });
-      case 'allGood': return m.factor_allGood({}, { locale });
-      case 'llmTooShort': return m.factor_llmTooShort({}, { locale });
-      case 'llmTooLong': return m.factor_llmTooLong({}, { locale });
-      case 'llmPunctuation': return m.factor_llmPunctuation({}, { locale });
-      case 'llmCapitalisation': return m.factor_llmCapitalisation({}, { locale });
-      case 'llmNouns': return m.factor_llmNouns({}, { locale });
-      case 'llmCommas': return m.factor_llmCommas({}, { locale });
-      case 'llmVariety': return m.factor_llmVariety({}, { locale });
-      case 'llmStructure': return m.factor_llmStructure({}, { locale });
-      case 'llmSpacing': return m.factor_llmSpacing({}, { locale });
-      case 'llmGrammar': return m.factor_llmGrammar({}, { locale });
-      case 'llmNoIssues': return m.factor_llmNoIssues({}, { locale });
+      case 'lengthTooShort': return m.factor_length_too_short(params, { locale });
+      case 'lengthGood': return m.factor_length_good(params, { locale });
+      case 'lengthTooLong': return m.factor_length_too_long(params, { locale });
+      case 'noSentenceEnd': return m.factor_no_sentence_end({}, { locale });
+      case 'sentenceCountLow': return m.factor_sentence_count_low(params, { locale });
+      case 'sentenceCountGood': return m.factor_sentence_count_good(params, { locale });
+      case 'startNotCapitalized': return m.factor_start_not_capitalized(params, { locale });
+      case 'nounsNotCapitalized': return m.factor_nouns_not_capitalized(params, { locale });
+      case 'commasMissing': return m.factor_commas_missing(params, { locale });
+      case 'varietyLow': return m.factor_variety_low(params, { locale });
+      case 'varietyGood': return m.factor_variety_good(params, { locale });
+      case 'paragraphSingle': return m.factor_paragraph_single({}, { locale });
+      case 'paragraphGood': return m.factor_paragraph_good(params, { locale });
+      case 'spacingOdd': return m.factor_spacing_odd({}, { locale });
+      case 'allGood': return m.factor_all_good({}, { locale });
+      case 'llmTooShort': return m.factor_llm_too_short({}, { locale });
+      case 'llmTooLong': return m.factor_llm_too_long({}, { locale });
+      case 'llmPunctuation': return m.factor_llm_punctuation({}, { locale });
+      case 'llmCapitalisation': return m.factor_llm_capitalisation({}, { locale });
+      case 'llmNouns': return m.factor_llm_nouns({}, { locale });
+      case 'llmCommas': return m.factor_llm_commas({}, { locale });
+      case 'llmVariety': return m.factor_llm_variety({}, { locale });
+      case 'llmStructure': return m.factor_llm_structure({}, { locale });
+      case 'llmSpacing': return m.factor_llm_spacing({}, { locale });
+      case 'llmGrammar': return m.factor_llm_grammar({}, { locale });
+      case 'llmNoIssues': return m.factor_llm_no_issues({}, { locale });
       default: return '';
     }
   }
@@ -62,7 +62,7 @@
   <p class="grade-stats">
     {m.sentence_words({ count: num(result.words) }, { locale: settings.interfaceLocale })}
     {#if result.paragraphs > 1}
-      · {m.fullText_paragraphs({ count: num(result.paragraphs) }, { locale: settings.interfaceLocale })}
+      · {m.full_text_paragraphs({ count: num(result.paragraphs) }, { locale: settings.interfaceLocale })}
     {/if}
     · <span class="grade-source">{sourceLabel}</span>
   </p>

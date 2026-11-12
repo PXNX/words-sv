@@ -54,7 +54,7 @@
     answerWas: m.learning_answer_was({}, { locale: settings.interfaceLocale }),
     typePlaceholder: m.learning_type_placeholder({}, { locale: settings.interfaceLocale }),
     removeLetter: m.learning_remove_letter({}, { locale: settings.interfaceLocale }),
-    continue: m.continue({}, { locale: settings.interfaceLocale }),
+    continue: m.continue_button({}, { locale: settings.interfaceLocale }),
     correct: m.learning_correct({}, { locale: settings.interfaceLocale }),
     tryAgain: m.learning_try_again({}, { locale: settings.interfaceLocale }),
     rateHint: m.learning_rate_hint({}, { locale: settings.interfaceLocale }),

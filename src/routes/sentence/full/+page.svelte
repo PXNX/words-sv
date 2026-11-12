@@ -15,17 +15,17 @@
   import IconRestart from '~icons/material-symbols/restart-alt-rounded';
 
   const labels = $derived({
-    title: m.mode_fullText({}, { locale: settings.interfaceLocale }),
-    intro: m.home_fullText({}, { locale: settings.interfaceLocale }),
-    placeholder: m.fullText_placeholder({}, { locale: settings.interfaceLocale }),
+    title: m.mode_full_text({}, { locale: settings.interfaceLocale }),
+    intro: m.home_full_text({}, { locale: settings.interfaceLocale }),
+    placeholder: m.full_text_placeholder({}, { locale: settings.interfaceLocale }),
     submit: m.sentence_submit({}, { locale: settings.interfaceLocale }),
     reset: m.sentence_reset({}, { locale: settings.interfaceLocale }),
-    showHint: m.fullText_hintButton({}, { locale: settings.interfaceLocale }),
-    hideHint: m.fullText_hintHide({}, { locale: settings.interfaceLocale }),
-    reference: m.fullText_reference({}, { locale: settings.interfaceLocale }),
+    showHint: m.full_text_hint_button({}, { locale: settings.interfaceLocale }),
+    hideHint: m.full_text_hint_hide({}, { locale: settings.interfaceLocale }),
+    reference: m.full_text_reference({}, { locale: settings.interfaceLocale }),
     target: (target: number) => m.sentence_target({ target: String(target) }, { locale: settings.interfaceLocale }),
     words: (count: number) => m.sentence_words({ count: num(count) }, { locale: settings.interfaceLocale }),
-    paragraphs: (count: number) => m.fullText_paragraphs({ count: num(count) }, { locale: settings.interfaceLocale }),
+    paragraphs: (count: number) => m.full_text_paragraphs({ count: num(count) }, { locale: settings.interfaceLocale }),
     aiSubmitting: m.grade_ai_submitting({}, { locale: settings.interfaceLocale }),
   });
 

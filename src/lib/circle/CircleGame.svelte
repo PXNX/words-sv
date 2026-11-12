@@ -172,7 +172,7 @@
     hint: showDefinitions ? m.type_hint({}, { locale: settings.interfaceLocale }) : m.hint({}, { locale: settings.interfaceLocale }),
     allDone: m.all_done({}, { locale: settings.interfaceLocale }),
     time: m.time({}, { locale: settings.interfaceLocale }),
-    continue: m.continue({}, { locale: settings.interfaceLocale }),
+    continue: m.continue_button({}, { locale: settings.interfaceLocale }),
     explain: m.explain({}, { locale: settings.interfaceLocale }),
     readMore: m.read_more({}, { locale: settings.interfaceLocale }),
     tracePrompt: showDefinitions ? m.type_prompt({}, { locale: settings.interfaceLocale }) : m.trace_prompt({}, { locale: settings.interfaceLocale }),

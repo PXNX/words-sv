@@ -130,7 +130,7 @@
         {/key}
         <div class="welcome-actions">
           <button type="button" class="btn-play btn-play-soft" onclick={() => go('language')}>{m.welcome_skip({}, locale)}</button>
-          <button type="button" class="btn-play btn-play-ink" onclick={nextFriend}>{m.continue({}, locale)}</button>
+          <button type="button" class="btn-play btn-play-ink" onclick={nextFriend}>{m.continue_button({}, locale)}</button>
         </div>
       {:else if step === 'language'}
         <span class="welcome-solo" aria-hidden="true"><StoryCharacter id="lilith" mood="curious" /></span>
@@ -156,14 +156,14 @@
             <input bind:value={nameDraft} type="text" name="given-name" autocomplete="given-name" autocapitalize="words" maxlength={FIRST_NAME_MAX_LENGTH} placeholder={m.onboarding_name_placeholder({}, locale)} required autofocus />
           </label>
           <span class="welcome-body">{m.onboarding_name_hint({}, locale)}</span>
-          <button type="submit" class="btn-play btn-play-ink welcome-cta" disabled={!nameDraft.trim()}>{m.continue({}, locale)}</button>
+          <button type="submit" class="btn-play btn-play-ink welcome-cta" disabled={!nameDraft.trim()}>{m.continue_button({}, locale)}</button>
         </form>
       {:else if step === 'look'}
         <form class="welcome-form" onsubmit={submitLook}>
           <h1>{m.avatar_title({}, locale)}</h1>
           <span class="welcome-body">{m.avatar_hint({}, locale)}</span>
           <AvatarEditor value={lookDraft} onchange={(next) => (lookDraft = next)} />
-          <button type="submit" class="btn-play btn-play-ink welcome-cta">{m.continue({}, locale)}</button>
+          <button type="submit" class="btn-play btn-play-ink welcome-cta">{m.continue_button({}, locale)}</button>
         </form>
       {:else}
         <div class="welcome-confetti" aria-hidden="true">{#each pieces as piece}<i style={`--c:${piece.color};--x:${piece.left}%;--d:${piece.delay}s;--s:${piece.spin}`}></i>{/each}</div>
