@@ -290,7 +290,9 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [x] V7 retention A/B: `teaching-animations` experiment, recall compared by how a card was shown
   (`experiments/`, `docs/experiments.md`, `/insights`).
 - [x] V2 Credits page (`/credits`: typefaces, icons, voices, models and software with their licences).
-- [ ] V3 cat mascot rig and inclusive avatar options; V5 scenes.
+- [x] V3 Lilith's idle rig (tail flick, ear twitch, a nod when happy) and inclusive avatar choices (afro,
+  braids, headscarf, turban, kippah, hearing aid).
+- [x] V5 scenes: market, town, shop, factory and school have their own drawings instead of borrowing one.
 
 ### Phases C, W, D, E, F, G, H, I
 - [x] C: Formen (`/grammar?mode=forms`): typed German verb and adjective forms with partial credit
