@@ -2,7 +2,7 @@
 // which modes are group games, how a finished round becomes a score (higher is better, the only
 // order Telegram ranks by), and reading the session from the page the Play button opened.
 
-export const GROUP_GAMES = ['wordle', 'hangman', 'vocab'] as const;
+export const GROUP_GAMES = ['wordle', 'hangman', 'vocab', 'scribble'] as const;
 export type GroupGame = (typeof GROUP_GAMES)[number];
 export type GroupGameSession = { game: GroupGame; session: string };
 
