@@ -9,7 +9,7 @@ import re
 
 import httpx
 
-from settings.config import BRIDGE_SECRET, WORDS_URL
+from settings.config import BRIDGE_SECRET, WORDS_API_URL
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ async def post(path: str, data: dict, client: httpx.AsyncClient | None = None) -
     own = client is None
     client = client or httpx.AsyncClient(timeout=10)
     try:
-        response = await client.post(f"{WORDS_URL.rstrip('/')}{path}", json=data, headers={"Authorization": f"Bearer {BRIDGE_SECRET}"})
+        response = await client.post(f"{WORDS_API_URL.rstrip('/')}{path}", json=data, headers={"Authorization": f"Bearer {BRIDGE_SECRET}"})
         body = response.json()
         return body if response.is_success and isinstance(body, dict) else None
     except (httpx.HTTPError, ValueError) as error:
