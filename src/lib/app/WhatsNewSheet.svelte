@@ -13,7 +13,6 @@
   import { haptic } from '#lib/feedback/haptics.js';
   import { lastSeenVersion, markVersionSeen } from './changelogSeen.js';
   import { changelogSheet } from './changelogSheet.svelte.js';
-  import { releaseHighlight } from './highlight.js';
   import { releases } from './releases.js';
   import { whatsNew, type WhatsNew } from './whatsNew.js';
 
@@ -67,7 +66,7 @@
       </div>
       <span class="news-lilith" aria-hidden="true"><StoryCharacter id="lilith" mood="happy" /><span class="news-hearts"><b>♥</b><b>♥</b><b>♥</b></span></span>
       <h2 id="news-title">{m.whats_new_title({ version: newest.version }, locale)}</h2>
-      <p class="news-highlight">{releaseHighlight(newest, settings.interfaceLocale)}</p>
+      <p class="news-highlight" dir="ltr" lang="en">{newest.summary}</p>
       {#if news.features.length}
         <ul class="news-features" lang="en" dir="ltr">
           {#each news.features as feature, index}<li style={`--i:${index}`}>{feature}</li>{/each}

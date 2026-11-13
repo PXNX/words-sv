@@ -4,8 +4,7 @@
 //
 //   bun scripts/release.ts "One-line summary" [--major | --patch] [--dry-run]
 //
-// Run it on a clean, pushed `main`. The highlight shown in the app goes into the message files
-// as `changelog_v<version>` (with dots as underscores) before releasing.
+// Run it on a clean, pushed `main`. The summary is the highlight shown in the app's changelog.
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { commitEntries, entriesMarkdown, parseChangelog, type ChangeType } from '../src/lib/app/changelog.js';

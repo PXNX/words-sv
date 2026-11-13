@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { appVersion, compareVersions, isAppVersion, bumpVersion, latestVersion, parseVersion, type AppVersion } from '../src/lib/app/version';
-import { ChangelogError, highlightKey, parseChangelog, releaseAnchor, unseenReleases } from '../src/lib/app/changelog';
+import { ChangelogError, parseChangelog, releaseAnchor, unseenReleases } from '../src/lib/app/changelog';
 import { cutChangelog, fullChangelogLink } from '../scripts/release';
 
 describe('versions', () => {
@@ -67,13 +67,12 @@ describe('changelog', () => {
     expect(() => parseChangelog('## v1.1.0 - 2026-11-12\n- x')).toThrow('outside a section');
   });
 
-  it('finds unseen releases and names anchors and highlights', () => {
+  it('finds unseen releases and names anchors', () => {
     const releases = parseChangelog(SAMPLE);
     expect(unseenReleases(releases, null)).toHaveLength(2);
     expect(unseenReleases(releases, '1.0.0').map((release) => release.version)).toEqual(['1.1.0']);
     expect(unseenReleases(releases, '1.1.0')).toEqual([]);
     expect(releaseAnchor(appVersion('1.1.0'))).toBe('v1.1.0');
-    expect(highlightKey(appVersion('1.1.0'))).toBe('changelog_v1_1_0');
   });
 
   it('keeps the real CHANGELOG.md valid', () => {

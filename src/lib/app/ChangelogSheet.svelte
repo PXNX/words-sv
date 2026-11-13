@@ -10,7 +10,6 @@
   import { settings } from '#lib/state/settings.svelte.js';
   import { formatDate, isolateLtr } from '#lib/format/format.js';
   import BottomSheet from './BottomSheet.svelte';
-  import { releaseHighlight } from './highlight.js';
   import { CHANGE_TYPES, unseenReleases, type ChangeType, type ChangelogRelease } from './changelog.js';
   import { lastSeenVersion, markVersionSeen } from './changelogSeen.js';
   import { releases } from './releases.js';
@@ -22,13 +21,14 @@
   const direction = $derived(getTextDirection(settings.interfaceLocale));
   let unseen = $state<Set<string>>(new Set());
 
-  const sectionTitle = $derived<Record<ChangeType, string>>({
-    new: m.changelog_new({}, locale),
-    improved: m.changelog_improved({}, locale),
-    fixed: m.changelog_fixed({}, locale),
-    migration: m.changelog_migration({}, locale),
-    known: m.changelog_known({}, locale)
-  });
+  // The changelog is English throughout: its own section names instead of the interface language.
+  const sectionTitle: Record<ChangeType, string> = {
+    new: 'New features',
+    improved: 'Improved',
+    fixed: 'Fixes',
+    migration: 'Migration',
+    known: 'Known issues'
+  };
 
   // Read on every opening, before the newest release counts as seen, so the badges last this visit.
   $effect(() => {
@@ -45,7 +45,7 @@
 </script>
 
 <BottomSheet bind:open={changelogSheet.open} title={m.changelog_title({}, locale)}>
-  <p class="changelog-version">{m.changelog_version({ version: current }, locale)}<span>{m.changelog_technical({}, locale)}</span></p>
+  <p class="changelog-version">{m.changelog_version({ version: current }, locale)}</p>
   {#each releases as release, index (release.version)}
     <details class="panel-play changelog-release" open={index < 2 || unseen.has(release.version) || release.version === current}>
       <summary>
@@ -53,11 +53,11 @@
         {#if unseen.has(release.version)}<span class="changelog-badge">{m.changelog_unseen({}, locale)}</span>{/if}
         <span class="changelog-date">{releaseDate(release)}</span>
       </summary>
-      <p class="changelog-highlight">{releaseHighlight(release, settings.interfaceLocale)}</p>
+      <p class="changelog-highlight" dir="ltr" lang="en">{release.summary}</p>
       <div class="changelog-details" dir="ltr" lang="en">
         {#each CHANGE_TYPES as type}
           {#if release.entries[type]?.length}
-            <h3 class={type} lang={settings.interfaceLocale} dir={direction}>{sectionTitle[type]}</h3>
+            <h3 class={type}>{sectionTitle[type]}</h3>
             <ul>{#each release.entries[type] ?? [] as entry}<li>{entry}</li>{/each}</ul>
           {/if}
         {/each}
