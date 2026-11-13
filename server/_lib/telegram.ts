@@ -103,7 +103,7 @@ export function appUrl() {
 	return (process.env.APP_URL || 'https://words-sv.vercel.app').replace(/\/+$/, '') + '/';
 }
 
-const escapeHtml = (text: string) => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+export const escapeHtml = (text: string) => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 
 export function htmlMessage({ title, body }: { title: string; body: string }) {
 	return `<b>${escapeHtml(title)}</b>\n${escapeHtml(body)}`;

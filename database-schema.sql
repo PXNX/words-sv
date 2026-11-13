@@ -118,3 +118,39 @@ CREATE TABLE IF NOT EXISTS wordcircle_pro (
   telegram_user_id BIGINT NOT NULL PRIMARY KEY,
   pro_until TIMESTAMPTZ NOT NULL
 );
+
+-- Scribble in Telegram groups: players take turns drawing a word, the others guess by replying to
+-- the picture. The bot (bot/bot/scribble.py) runs the turns and checks guesses; the API server
+-- (server/games/scribble.ts) posts the drawing and opens the round.
+CREATE TABLE IF NOT EXISTS wordcircle_scribble_players (
+  chat_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  first_name VARCHAR(64) NOT NULL DEFAULT '',
+  points INTEGER NOT NULL DEFAULT 0,
+  joined_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  PRIMARY KEY (chat_id, user_id)
+);
+
+CREATE TABLE IF NOT EXISTS wordcircle_scribble_state (
+  chat_id BIGINT NOT NULL PRIMARY KEY,
+  game_message_id BIGINT NOT NULL,
+  drawer_id BIGINT NULL,
+  turn_started_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS wordcircle_scribble_rounds (
+  id BIGSERIAL PRIMARY KEY,
+  chat_id BIGINT NOT NULL,
+  game_message_id BIGINT NOT NULL,
+  photo_message_id BIGINT NOT NULL,
+  drawer_id BIGINT NOT NULL,
+  drawer_name VARCHAR(64) NOT NULL DEFAULT '',
+  word VARCHAR(64) NOT NULL,
+  -- JSON array of the accepted answers (the word, with its article, in German and English).
+  answers TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  solved_at TIMESTAMPTZ NULL,
+  -- NULL while running, 0 when the time ran out, else the Telegram id of the guesser.
+  solved_by BIGINT NULL
+);
+CREATE INDEX IF NOT EXISTS wordcircle_scribble_rounds_photo_idx ON wordcircle_scribble_rounds (chat_id, photo_message_id);
