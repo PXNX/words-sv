@@ -39,9 +39,9 @@ function tile(letter: string, x: number, y: number, size: number, fill = CREAM, 
   return `<g transform="translate(${x} ${y}) rotate(${angle})"><rect x="${-size / 2 + 3}" y="${-size / 2 + 4}" width="${size}" height="${size}" rx="${size * 0.2}" fill="#0e1b2e" opacity=".5"/><rect x="${-size / 2}" y="${-size / 2}" width="${size}" height="${size}" rx="${size * 0.2}" fill="${fill}"/>${letter ? `<text y="${size * 0.25}" text-anchor="middle" font-family="DM Sans 9pt" font-weight="800" font-size="${size * 0.6}" fill="${ink}">${letter}</text>` : ''}</g>`;
 }
 
-function title(text: string, subtitle: string): string {
-  return `<text x="40" y="320" font-family="DM Serif Display" font-size="46" letter-spacing="-1.5" fill="${CREAM}">${text}</text>
-<text x="42" y="342" font-family="DM Sans 9pt" font-weight="800" font-size="14" letter-spacing="2" fill="${GOLD}">${subtitle}</text>`;
+// Just the game's name: Telegram shows the description right under the picture.
+function title(text: string): string {
+  return `<text x="40" y="334" font-family="DM Serif Display" font-size="46" letter-spacing="-1.5" fill="${CREAM}">${text}</text>`;
 }
 
 const frame = (body: string) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" width="640" height="360">${backdrop()}${body}</svg>`;
@@ -59,7 +59,7 @@ function wordleSvg(): string {
   const left = 320 - (5 * size + 4 * gap) / 2 + size / 2;
   const tiles = rows.flatMap((row, r) => row.map(([letter, fill], c) => tile(letter, left + c * (size + gap), 70 + r * (size + gap), size, fill, CREAM))).join('');
   const empty = [0, 1, 2, 3, 4].map((c) => `<rect x="${left + c * (size + gap) - size / 2}" y="${70 + 3 * (size + gap) - size / 2}" width="${size}" height="${size}" rx="${size * 0.2}" fill="none" stroke="${CREAM}" stroke-opacity=".35" stroke-width="2"/>`).join('');
-  return frame(`${tiles}${empty}${lilith(486, 150, 112)}${title('Wordle', 'GUESS THE WORD · WORDCIRCLE')}`);
+  return frame(`${tiles}${empty}${lilith(486, 150, 112)}${title('Wordle')}`);
 }
 
 // The gallows half drawn, a word half guessed and two letters already tried.
@@ -69,7 +69,7 @@ function hangmanSvg(): string {
   const size = 52;
   const word = letters.map((letter, index) => `${letter ? tile(letter, 300 + index * 64, 130, size) : ''}<rect x="${300 + index * 64 - size / 2}" y="${130 + size / 2 + 8}" width="${size}" height="5" rx="2.5" fill="${CREAM}"/>`).join('');
   const tried = ['E', 'K'].map((letter, index) => tile(letter, 316 + index * 46, 222, 36, '#5b6577', CREAM)).join('');
-  return frame(`${gallows}${word}${tried}${lilith(520, 166, 96)}${title('Hangman', 'GUESS THE LETTERS · WORDCIRCLE')}`);
+  return frame(`${gallows}${word}${tried}${lilith(520, 166, 96)}${title('Hangman')}`);
 }
 
 // A quiz card with the word and three answers, the right one ticked, and a run of first tries.
@@ -81,7 +81,7 @@ function vocabSvg(): string {
     return `<rect x="200" y="${y}" width="240" height="34" rx="17" fill="${right ? GREEN : '#2a4466'}" stroke="${right ? '#7fd197' : CREAM}" stroke-opacity="${right ? 1 : 0.25}" stroke-width="2"/><text x="${right ? 300 : 320}" y="${y + 23}" text-anchor="middle" font-family="DM Sans 9pt" font-weight="800" font-size="17" fill="${CREAM}">${text}</text>${right ? `<path d="M392 ${y + 17}l8 8 16-16" fill="none" stroke="${CREAM}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>` : ''}`;
   }).join('');
   const run = `<g transform="translate(560 70)"><circle r="34" fill="${RED}"/><path d="M0-22c10 12 16 20 16 30a16 16 0 0 1-32 0c0-7 4-12 8-16 0 6 3 9 6 9 0-9-2-15 2-23Z" fill="${GOLD}"/><text y="58" text-anchor="middle" font-family="DM Sans 9pt" font-weight="800" font-size="18" fill="${CREAM}">×12</text></g>`;
-  return frame(`${card}${choices}${run}${lilith(36, 120, 104)}${title('Word quiz', 'FIRST TRIES IN A ROW · WORDCIRCLE')}`);
+  return frame(`${card}${choices}${run}${lilith(36, 120, 104)}${title('Word quiz')}`);
 }
 
 async function font(dir: string, path: string, name: string): Promise<string> {
