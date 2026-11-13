@@ -39,7 +39,6 @@ def add_logging():
             datefmt='%Y-%m-%d %H:%M:%S',
         )
     logging.getLogger("httpx").setLevel(logging.WARNING)
-    # The Scribble job runs every 15 s; its start/finish lines would drown the log.
     logging.getLogger("apscheduler").setLevel(logging.WARNING)
 
 

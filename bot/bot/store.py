@@ -6,7 +6,6 @@ from psycopg.rows import dict_row
 from psycopg_pool import AsyncConnectionPool
 
 from games import SCHEMA as GAMES_SCHEMA
-from scribble import SCHEMA as SCRIBBLE_SCHEMA
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS donations (
@@ -25,9 +24,6 @@ async def connect(database_url: str) -> AsyncConnectionPool:
     async with pool.connection() as connection:
         await connection.execute(SCHEMA)
         await connection.execute(GAMES_SCHEMA)
-        for statement in SCRIBBLE_SCHEMA.split(";"):
-            if statement.strip():
-                await connection.execute(statement)
     return pool
 
 
