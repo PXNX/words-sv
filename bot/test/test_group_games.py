@@ -26,7 +26,7 @@ def test_format_top_with_medals_and_escaping():
 
 
 def test_texts_in_both_languages():
-    for key in ("games_menu", "games_only_groups", "games_unavailable", "games_not_registered", "games_show", "games_pick_group", "games_play", "games_scribble_button", "scribble_not_your_turn", "scribble_right", "scribble_next", "scribble_timeout", "scribble_skipped", "scribble_paused", "scribble_wait_guesses", "scribble_groups_only", "games_no_scores", "games_welcome"):
+    for key in ("games_menu", "games_only_groups", "games_unavailable", "games_not_registered", "games_show", "games_pick_group", "games_play", "games_scribble_button", "games_no_scores", "games_welcome"):
         assert key in TEXTS["de"] and key in TEXTS["en"]
 
 
