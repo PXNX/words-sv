@@ -223,7 +223,7 @@
         {@const chosen = settings.voiceQuality === id}
         {@const group = voiceGroups[id]}
         <li class="model-card" class:chosen>
-          <button type="button" class="model-pick" role="radio" aria-checked={chosen} onclick={() => chooseVoice(id)}>
+          <button type="button" class="model-pick" role="radio" aria-checked={chosen} onclick={() => chooseVoice(id)} disabled={state === 'none'}>
             <span class="model-radio" aria-hidden="true"></span>
             <span class="model-text">
               <span class="model-name">{engineNames[id]()}{#if id === 'standard'}<span class="model-default">{m.models_default({}, { locale })}</span>{/if}</span>
@@ -274,7 +274,7 @@
         {@const state = modelState(model)}
         {@const chosen = !noLlm && settings.chatModel === model.id}
         <li class="model-card" class:chosen>
-          <button type="button" class="model-pick" role="radio" aria-checked={chosen} onclick={() => pickModel(model)}>
+          <button type="button" class="model-pick" role="radio" aria-checked={chosen} onclick={() => pickModel(model)} disabled={!localModel.downloaded.includes(model.id)}>
             <span class="model-radio" aria-hidden="true"></span>
             <span class="model-text">
               <span class="model-name">{model.label}{#if isRecommended(model, settings.lang)}<span class="model-best" title={m.models_best_for({ language: languageName }, { locale })}><IconStar aria-hidden="true" /> {m.models_best_for({ language: languageName }, { locale })}</span>{/if}</span>
@@ -364,6 +364,7 @@
   .model-card.chosen { border-color:#34824d;background:color-mix(in srgb,#34824d 8%,transparent); }
   .model-pick { display:flex;align-items:flex-start;gap:.6rem;min-width:0;padding:.6rem .7rem;border:0;background:transparent;color:inherit;font:inherit;text-align:start;cursor:pointer; }
   .model-pick:focus-visible { outline:3px dashed #e6a527;outline-offset:-3px; }
+  .model-pick:disabled { opacity:.5;cursor:not-allowed; }
   .model-text { flex:1;min-width:0;display:grid;gap:.2rem; }
   .model-radio { flex:none;width:1.15rem;height:1.15rem;margin-top:.1rem;border:2px solid color-mix(in srgb,currentColor 45%,transparent);border-radius:50%;transition:border-color .2s ease,box-shadow .2s ease; }
   .chosen .model-radio { border-color:#34824d;box-shadow:inset 0 0 0 3px var(--surface,#fffdf7),inset 0 0 0 1rem #34824d; }
