@@ -4,8 +4,8 @@ Maintained by `scripts/release.ts`. Add entries under "Unreleased" while working
 moves them under a new `## vMAJOR.MINOR.PATCH - YYYY-MM-DD` heading (semantic versioning:
 features bump MINOR, fixes PATCH, breaking changes MAJOR). Sections: New, Improved, Fixed,
 Migration (anything that needs action), Known issues. The first line under a release heading is
-its one-line summary; the localised highlight shown in the app lives in the message files
-(`changelog_v<version>`). Entries are technical and stay in English.
+its one-line summary and the highlight shown in the app. The changelog is English throughout:
+entries, section names and summaries are never translated.
 
 ## Unreleased
 

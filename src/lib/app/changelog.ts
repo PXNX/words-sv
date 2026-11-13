@@ -18,7 +18,7 @@ export interface ChangelogRelease {
   version: AppVersion;
   /** ISO date `YYYY-MM-DD`. */
   date: string;
-  /** One-line English summary; the localised highlight lives in the message files. */
+  /** One-line English summary, shown as the release's highlight. */
   summary: string;
   entries: Partial<Record<ChangeType, string[]>>;
 }
@@ -102,9 +102,4 @@ export function unseenReleases(releases: readonly ChangelogRelease[], lastSeen: 
 /** Anchor id for a release, e.g. `v1.2.0`. */
 export function releaseAnchor(version: AppVersion): string {
   return `v${version}`;
-}
-
-/** Message key of a release's localised highlight, e.g. `changelog_v1_2_0`. */
-export function highlightKey(version: AppVersion): string {
-  return `changelog_v${version.replace(/[^0-9a-z]+/gu, '_')}`;
 }
