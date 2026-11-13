@@ -376,6 +376,49 @@ async function loadModelEngine(language: Language, engine: VoiceEngineId, prepar
   }
 }
 
+/** Engines downloading in the settings without being chosen, with their progress (or why they failed). */
+export const voiceDownloads = $state<Partial<Record<VoiceEngineId, { progress: number; downloaded: number; total: number; error?: string }>>>({});
+const engineDownloads = new Map<VoiceEngineId, Promise<void>>();
+
+/**
+ * Downloads an engine's voices for `language` without choosing it, so the settings can download
+ * several engines side by side. The chosen engine goes through prepareNatural as before.
+ */
+export function downloadVoiceEngine(engine: VoiceEngineId, language: Language): Promise<void> {
+  if (engine === activeEngine(language)) return prepareNatural(language);
+  const running = engineDownloads.get(engine);
+  if (running) return running;
+  const modelEngine = modelEngines[engine];
+  const models = modelEngine ? [] : modelsOf(language);
+  const total = modelEngine ? engineFootprint(engine)?.megabytes ?? 0 : piperMegabytes(language);
+  voiceDownloads[engine] = { progress: 0, downloaded: 0, total };
+  const report = (fraction: number, megabytes: number) => {
+    const entry = voiceDownloads[engine];
+    if (entry) { entry.progress = fraction; entry.downloaded = Math.min(total, megabytes); }
+  };
+  const task = (async () => {
+    try {
+      if (modelEngine) await modelEngine.prepare((loaded, size) => report(size ? loaded / size : 0, loaded / 1_000_000));
+      else {
+        let finished = 0;
+        for (const [index, name] of models.entries()) {
+          await request({ type: 'load', model: name }, (loaded, size) => {
+            if (size) report((index + loaded / size) / models.length, finished + loaded / 1_000_000);
+          });
+          finished += modelMegabytes[name] ?? 0;
+          report((index + 1) / models.length, finished);
+        }
+      }
+      delete voiceDownloads[engine];
+    } catch (error) {
+      console.error(`Voices of ${engine} failed to download`, error);
+      voiceDownloads[engine] = { progress: 0, downloaded: 0, total, error: error instanceof Error ? error.message : String(error) };
+    }
+  })().finally(() => engineDownloads.delete(engine));
+  engineDownloads.set(engine, task);
+  return task;
+}
+
 export function naturalReady(language: Language) {
   if (settings.voiceQuality === 'edge') return naturalSupported();
   return naturalState.status[language] === 'ready' && naturalState.model[language] === voicesKey(language);
