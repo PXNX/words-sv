@@ -559,9 +559,9 @@
   }
   @media (min-width:760px) { .home-games { grid-template-columns:repeat(3,minmax(0,1fr)); } }
   @media (min-width:700px) and (min-height:560px) { .home-view { padding:clamp(1.4rem,3vw,2.2rem) clamp(1.5rem,4vw,3rem) 1.6rem; } .home-chips { margin-inline:0;padding-inline:0;flex-wrap:wrap;overflow:visible; } }
-  /* Landscape tablets and desktops: cast, daily card and mix stay in a sticky column on the left
-     while the exercise cards fill the width on the right. */
-  @media (orientation:landscape) and (min-width:900px) and (min-height:560px) {
+  /* Tablets and desktops with the width for it: cast, daily card and mix stay in a sticky column on
+     the left while the exercise cards fill the width on the right. */
+  @media (min-width:900px) and (min-height:560px) {
     .home-view { grid-template-columns:minmax(19rem,23rem) minmax(0,1fr);align-items:start;column-gap:clamp(1.5rem,3.5vw,3rem); }
     .home-side { position:sticky;top:0;display:grid;align-content:start;gap:1.2rem; }
     .home-main { display:grid;align-content:start;gap:1.2rem; }
