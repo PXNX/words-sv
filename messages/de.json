@@ -1101,5 +1101,12 @@
   "models_download_size": "Laden · {size}",
   "models_retry": "Noch einmal versuchen",
   "models_voice_fallback": "Noch nicht auf diesem Gerät. Bis dahin liest die Stimme des Browsers.",
-  "models_llm_fallback": "Noch nicht auf diesem Gerät. Bis dahin bleiben Gespräche vorgegeben."
+  "models_llm_fallback": "Noch nicht auf diesem Gerät. Bis dahin bleiben Gespräche vorgegeben.",
+  "donate_button": "Spenden",
+  "donate_amount_label": "Wie viele Telegram Stars? (ab {min})",
+  "donate_submit": "{stars} Stars spenden",
+  "donate_range": "Bitte einen ganzen Betrag von {min} bis {max} Stars.",
+  "donate_hint": "Freiwillig: Eine Spende schaltet nichts frei und wird nicht erstattet. Danke!",
+  "donate_thanks": "Danke für deine Spende! 💛",
+  "donate_failed": "Die Spende lässt sich gerade nicht öffnen. Bitte später noch einmal versuchen."
 }

@@ -12,6 +12,7 @@ import { readFile } from 'node:fs/promises';
 import { getDatabase } from './_lib/database.js';
 import type { ApiRequest, ApiResponse } from './_lib/http.js';
 import cronReminders from './cron/reminders.js';
+import donate from './donate/index.js';
 import gamesScore from './games/score.js';
 import progressSync from './progress/sync.js';
 import push from './push/index.js';
@@ -27,6 +28,7 @@ type Handler = (req: ApiRequest, res: ApiResponse) => unknown;
 
 export const ROUTES: Record<string, Handler> = {
 	'cron/reminders': cronReminders,
+	donate,
 	'games/score': gamesScore,
 	'progress/sync': progressSync,
 	push,

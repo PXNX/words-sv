@@ -9,6 +9,7 @@
   import { openTelegramLink, telegramDevice, type TelegramStatus } from './telegramClient';
   import { noteLinked } from '#lib/sync/cloudSync.svelte.js';
   import TelegramAccount from './TelegramAccount.svelte';
+  import DonateButton from '#lib/store/DonateButton.svelte';
   import WebGpuStatus from './WebGpuStatus.svelte';
   import SettingsSection from './ui/SettingsSection.svelte';
   import SettingRow from './ui/SettingRow.svelte';
@@ -324,6 +325,7 @@
         <IconChevronRight aria-hidden="true" class="settings-me-arrow rtl:rotate-180" />
       </a>
       <div class="settings-me-account"><TelegramAccount /></div>
+      <div class="settings-me-account"><DonateButton /></div>
     </section>
 
     <SettingsSection id="learning" index={1} defaultOpen accent="#34824d" title={sectionTitles.learning} summary={summaries.learning}>

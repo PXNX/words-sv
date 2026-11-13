@@ -1101,5 +1101,12 @@
   "models_download_size": "Download · {size}",
   "models_retry": "Try again",
   "models_voice_fallback": "Not on this device yet. Until it is, the browser's voice reads.",
-  "models_llm_fallback": "Not on this device yet. Until it is, conversations stay scripted."
+  "models_llm_fallback": "Not on this device yet. Until it is, conversations stay scripted.",
+  "donate_button": "Donate",
+  "donate_amount_label": "How many Telegram Stars? (from {min})",
+  "donate_submit": "Donate {stars} Stars",
+  "donate_range": "Please enter a whole amount from {min} to {max} Stars.",
+  "donate_hint": "Voluntary: a donation unlocks nothing and is not refunded. Thank you!",
+  "donate_thanks": "Thank you for your donation! 💛",
+  "donate_failed": "The donation can't be opened right now. Please try again later."
 }
