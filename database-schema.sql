@@ -154,3 +154,20 @@ CREATE TABLE IF NOT EXISTS wordcircle_scribble_rounds (
   solved_by BIGINT NULL
 );
 CREATE INDEX IF NOT EXISTS wordcircle_scribble_rounds_photo_idx ON wordcircle_scribble_rounds (chat_id, photo_message_id);
+
+-- Live Scribble: the drawer's lines reach the watchers through the API server; rounds count towards
+-- a match of five, whose winner counts a win for the app's achievements.
+ALTER TABLE wordcircle_scribble_players ADD COLUMN IF NOT EXISTS match_points INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE wordcircle_scribble_state ADD COLUMN IF NOT EXISTS match_rounds INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE wordcircle_scribble_state ADD COLUMN IF NOT EXISTS skips INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE wordcircle_scribble_state ADD COLUMN IF NOT EXISTS lang VARCHAR(8) NOT NULL DEFAULT 'en';
+ALTER TABLE wordcircle_scribble_rounds ADD COLUMN IF NOT EXISTS lines TEXT NOT NULL DEFAULT '[]';
+ALTER TABLE wordcircle_scribble_rounds ADD COLUMN IF NOT EXISTS version INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE wordcircle_scribble_rounds ADD COLUMN IF NOT EXISTS guesser_name VARCHAR(64) NULL;
+ALTER TABLE wordcircle_scribble_rounds ADD COLUMN IF NOT EXISTS points INTEGER NULL;
+
+CREATE TABLE IF NOT EXISTS wordcircle_scribble_champions (
+  telegram_user_id BIGINT NOT NULL PRIMARY KEY,
+  first_name VARCHAR(64) NOT NULL DEFAULT '',
+  wins INTEGER NOT NULL DEFAULT 0
+);

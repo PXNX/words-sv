@@ -2,7 +2,8 @@
  * WordCircle's API server: runs the endpoints in this folder next to their PostgreSQL database, as one
  * long-running Bun process (`bun server/main.ts`). The web app's /api/* requests reach it through the
  * proxy in api/[...path].ts. On start it applies database-schema.sql (idempotent), and every hour it
- * runs the reminder job itself, so no outside scheduler is needed.
+ * runs the reminder job itself, so no outside scheduler is needed. Every five seconds it also ends
+ * Scribble rounds nobody guessed in time (server/_lib/scribbleGame.ts).
  *
  * Environment: DATABASE_URL, PORT (default 3791), TELEGRAM_BOT_TOKEN, TELEGRAM_BRIDGE_SECRET,
  * VAPID_SUBJECT / VAPID_PUBLIC_KEY / VAPID_PRIVATE_KEY (optional, for web push), APP_URL (optional).
@@ -24,6 +25,9 @@ import telegramDevice from './telegram/device.js';
 import telegramGame from './telegram/game.js';
 import telegramPurchase from './telegram/purchase.js';
 import telegramStart from './telegram/start.js';
+import telegramScribble from './telegram/scribble.js';
+import { scribbleTick } from './_lib/scribbleGame.js';
+import { telegramApi } from './_lib/games.js';
 
 type Handler = (req: ApiRequest, res: ApiResponse) => unknown;
 
@@ -40,7 +44,8 @@ export const ROUTES: Record<string, Handler> = {
 	'telegram/device': telegramDevice,
 	'telegram/game': telegramGame,
 	'telegram/purchase': telegramPurchase,
-	'telegram/start': telegramStart
+	'telegram/start': telegramStart,
+	'telegram/scribble': telegramScribble
 };
 
 // Request bodies above this are refused; progress snapshots stay below 2 MB (progress/sync.ts).
@@ -117,6 +122,13 @@ if ((import.meta as { main?: boolean }).main) {
 	const port = Number(process.env.PORT) || 3791;
 	(globalThis as unknown as { Bun: BunRuntime }).Bun.serve({ port, hostname: process.env.HOST || '0.0.0.0', fetch: handle });
 	console.log(`WordCircle API listening on :${port}`);
+	// Live Scribble: end rounds nobody guessed and skip drawers who never started.
+	let ticking = false;
+	setInterval(() => {
+		if (ticking || !process.env.TELEGRAM_BOT_TOKEN) return;
+		ticking = true;
+		scribbleTick(getDatabase(), telegramApi).catch((error: unknown) => console.warn('Scribble tick failed', error)).finally(() => { ticking = false; });
+	}, 5000);
 	// First run a few minutes after the next full hour, then hourly.
 	const untilNextHour = HOUR_MS - (Date.now() % HOUR_MS) + 2 * 60 * 1000;
 	setTimeout(() => {
