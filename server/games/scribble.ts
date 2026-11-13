@@ -1,76 +1,111 @@
 import * as v from 'valibot';
 import { getDatabase } from '../_lib/database.js';
 import { isMethod, readJson, respond } from '../_lib/http.js';
-import { ensureGameTables, SessionIdSchema, SESSION_TTL_MS } from '../_lib/games.js';
-import { escapeHtml } from '../_lib/telegram.js';
-import type { Database } from '../_lib/database.js';
+import { ensureGameTables, SessionIdSchema, SESSION_TTL_MS, telegramApi } from '../_lib/games.js';
+import { bareWord, claimTurn, cleanLines, currentRound, guess, joinPlayer, MATCH_ROUNDS, ROUND_SECONDS, saveLines, startRound, TURN_SECONDS, winsOf, type Telegram } from '../_lib/scribbleGame.js';
+import type { Database, Row } from '../_lib/database.js';
 import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 
-// Scribble in a Telegram group: the player whose turn it is sends their drawing with the word. It
-// is posted to the group as a photo, and the round opens; the bot checks the guesses that reply to
-// it (bot/bot/scribble.py). The session from the Play press is the credential, as for scores.
-export const ROUND_SECONDS = 120;
-const MAX_IMAGE_BYTES = 1_500_000;
-
+// Live Scribble for the page opened from a group's Scribble game (server/_lib/scribbleGame.ts):
+// `state` is polled about once a second and answers the player's role, the round (with the
+// drawer's lines when they changed) and the match standings; the drawer `start`s a round with the
+// chosen word and sends its `lines` as they grow; everybody else sends `guess`es.
 const Text = v.pipe(v.string(), v.trim(), v.minLength(1), v.maxLength(64));
-const Request = v.object({
-	session: SessionIdSchema,
-	word: Text,
-	answers: v.pipe(v.array(Text), v.minLength(1), v.maxLength(12)),
-	image: v.pipe(v.string(), v.regex(/^data:image\/(jpeg|png);base64,[A-Za-z0-9+/=]+$/u))
-});
+const Request = v.variant('action', [
+	v.object({ action: v.literal('state'), session: SessionIdSchema, since: v.optional(v.number(), -1), locale: v.optional(v.string(), 'en') }),
+	v.object({ action: v.literal('start'), session: SessionIdSchema, word: Text, answers: v.pipe(v.array(Text), v.minLength(1), v.maxLength(12)) }),
+	v.object({ action: v.literal('lines'), session: SessionIdSchema, round: v.number(), lines: v.unknown() }),
+	v.object({ action: v.literal('guess'), session: SessionIdSchema, text: v.pipe(v.string(), v.maxLength(64)) })
+]);
 
-export type PhotoSender = (chatId: number, photo: Blob, caption: string, replyTo: number) => Promise<{ message_id: number }>;
+type Player = { userId: number; name: string; chatId: number; gameMessageId: number };
 
-/** Posts a photo through the Bot API (multipart, so the picture needs no public URL). */
-export async function sendTelegramPhoto(chatId: number, photo: Blob, caption: string, replyTo: number): Promise<{ message_id: number }> {
-	const token = process.env.TELEGRAM_BOT_TOKEN;
-	if (!token) throw new Error('telegram_not_configured');
-	const form = new FormData();
-	form.set('chat_id', String(chatId));
-	form.set('caption', caption);
-	form.set('parse_mode', 'HTML');
-	form.set('reply_parameters', JSON.stringify({ message_id: replyTo, allow_sending_without_reply: true }));
-	form.set('photo', photo, 'scribble.jpg');
-	const response = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: 'POST', body: form });
-	const body = (await response.json().catch(() => null)) as { ok?: boolean; result?: { message_id: number }; description?: string } | null;
-	if (!body?.ok || !body.result) throw new Error(body?.description ?? 'telegram_sendPhoto_failed');
-	return body.result;
+async function player(db: Database, session: string): Promise<Player | 'unknown' | 'expired' | 'no_chat'> {
+	const [[row]] = await db.execute('SELECT telegram_user_id, first_name, game, chat_id, message_id, created_at FROM wordcircle_game_sessions WHERE id = ? LIMIT 1', [session]);
+	if (!row || row.game !== 'scribble') return 'unknown';
+	if (Date.now() - new Date(row.created_at).getTime() > SESSION_TTL_MS) return 'expired';
+	if (!row.chat_id || !row.message_id) return 'no_chat';
+	return { userId: Number(row.telegram_user_id), name: String(row.first_name ?? ''), chatId: Number(row.chat_id), gameMessageId: Number(row.message_id) };
 }
 
-export function scribbleCaption(drawer: string, letters: number): string {
-	return `🎨 <b>${escapeHtml(drawer || '?')}</b> hat gezeichnet · drew something (${letters})\n↩️ Antwortet auf das Bild mit eurem Tipp · Reply to the picture with your guess`;
+function roundView(round: Row | undefined, me: number, since: number) {
+	if (!round) return null;
+	const ended = round.solved_by !== null;
+	const mine = Number(round.drawer_id) === me;
+	const version = Number(round.version ?? 0);
+	const elapsed = (Date.now() - new Date(round.created_at).getTime()) / 1000;
+	return {
+		id: Number(round.id),
+		status: !ended ? 'drawing' : Number(round.solved_by) === 0 ? 'timeout' : 'solved',
+		drawer: String(round.drawer_name ?? ''),
+		mine,
+		letters: bareWord(String(round.word)).length,
+		// The word only for its drawer, or once the round is over.
+		word: mine || ended ? String(round.word) : null,
+		guesser: ended && Number(round.solved_by) ? String(round.guesser_name ?? '') : null,
+		guessedByMe: ended && Number(round.solved_by) === me,
+		points: round.points === null || round.points === undefined ? null : Number(round.points),
+		secondsLeft: ended ? 0 : Math.max(0, Math.ceil(ROUND_SECONDS - elapsed)),
+		version,
+		lines: version !== since ? JSON.parse(String(round.lines ?? '[]')) : null
+	};
 }
 
-export function createScribbleEndpoint({ databaseProvider = getDatabase, sendPhoto = sendTelegramPhoto as PhotoSender, now = () => Date.now() }: { databaseProvider?: () => Database; sendPhoto?: PhotoSender; now?: () => number } = {}) {
+export function createScribbleEndpoint({ databaseProvider = getDatabase, telegram = telegramApi as Telegram }: { databaseProvider?: () => Database; telegram?: Telegram } = {}) {
 	return async function scribble(req: ApiRequest, res: ApiResponse) {
 		if (!isMethod(req, 'POST')) return respond(res, 405, { ok: false, error: 'method_not_allowed' });
 		try {
 			const parsed = v.safeParse(Request, await readJson(req));
 			if (!parsed.success) return respond(res, 400, { ok: false, error: 'invalid_request' });
-			const { session, word, answers, image } = parsed.output;
-			const bytes = Buffer.from(image.slice(image.indexOf(',') + 1), 'base64');
-			if (bytes.length === 0 || bytes.length > MAX_IMAGE_BYTES) return respond(res, 413, { ok: false, error: 'image_too_large' });
+			const input = parsed.output;
 			const db = databaseProvider();
 			await ensureGameTables(db);
-			const [[row]] = await db.execute('SELECT telegram_user_id, first_name, game, chat_id, message_id, created_at FROM wordcircle_game_sessions WHERE id = ? LIMIT 1', [session]);
-			if (!row || row.game !== 'scribble') return respond(res, 404, { ok: false, error: 'unknown_session' });
-			if (now() - new Date(row.created_at).getTime() > SESSION_TTL_MS) return respond(res, 410, { ok: false, error: 'session_expired' });
-			// Games shared inline have no chat to post into.
-			if (!row.chat_id || !row.message_id) return respond(res, 409, { ok: false, error: 'no_chat' });
-			const chatId = Number(row.chat_id);
-			const userId = Number(row.telegram_user_id);
-			const [[state]] = await db.execute('SELECT drawer_id, game_message_id FROM wordcircle_scribble_state WHERE chat_id = ? LIMIT 1', [chatId]);
-			if (!state || Number(state.drawer_id) !== userId) return respond(res, 409, { ok: false, error: 'not_your_turn' });
-			const [[running]] = await db.execute('SELECT id FROM wordcircle_scribble_rounds WHERE chat_id = ? AND solved_by IS NULL AND created_at > ? LIMIT 1', [chatId, new Date(now() - ROUND_SECONDS * 1000)]);
-			if (running) return respond(res, 409, { ok: false, error: 'round_running' });
-			const letters = word.replace(/^(der|die|das|the)\s+/iu, '').length;
-			const photo = await sendPhoto(chatId, new Blob([bytes], { type: 'image/jpeg' }), scribbleCaption(String(row.first_name ?? ''), letters), Number(state.game_message_id));
-			await db.execute(
-				'INSERT INTO wordcircle_scribble_rounds (chat_id, game_message_id, photo_message_id, drawer_id, drawer_name, word, answers) VALUES (?, ?, ?, ?, ?, ?, ?)',
-				[chatId, Number(state.game_message_id), photo.message_id, userId, String(row.first_name ?? ''), word, JSON.stringify(answers)]
-			);
-			return respond(res, 200, { ok: true });
+			const me = await player(db, input.session);
+			if (me === 'unknown') return respond(res, 404, { ok: false, error: 'unknown_session' });
+			if (me === 'expired') return respond(res, 410, { ok: false, error: 'session_expired' });
+			if (me === 'no_chat') return respond(res, 409, { ok: false, error: 'no_chat' });
+
+			switch (input.action) {
+				case 'state': {
+					await joinPlayer(db, me.chatId, me.userId, me.name);
+					const state = await claimTurn(db, me.chatId, me.gameMessageId, me.userId, input.locale.slice(0, 2) === 'de' ? 'de' : 'en');
+					const round = await currentRound(db, me.chatId);
+					const drawerId = state.drawer_id === null ? null : Number(state.drawer_id);
+					const [[drawer]] = drawerId === null ? [[undefined]] : await db.execute('SELECT first_name FROM wordcircle_scribble_players WHERE chat_id = ? AND user_id = ?', [me.chatId, drawerId]);
+					const [standings] = await db.execute('SELECT user_id, first_name, match_points FROM wordcircle_scribble_players WHERE chat_id = ? ORDER BY match_points DESC, joined_at LIMIT 8', [me.chatId]);
+					const running = round && round.solved_by === null;
+					return respond(res, 200, {
+						ok: true,
+						role: running ? (Number(round.drawer_id) === me.userId ? 'draw' : 'watch') : drawerId === me.userId ? 'draw' : 'wait',
+						me: { name: me.name, wins: await winsOf(db, me.userId) },
+						drawer: drawer ? String(drawer.first_name ?? '') : null,
+						turnSecondsLeft: Math.max(0, Math.ceil(TURN_SECONDS - (Date.now() - new Date(state.turn_started_at).getTime()) / 1000)),
+						round: roundView(round, me.userId, input.since),
+						match: {
+							round: Math.min(MATCH_ROUNDS, Number(state.match_rounds ?? 0) + (running ? 1 : 0)),
+							of: MATCH_ROUNDS,
+							standings: (standings as Row[]).map((row) => ({ name: String(row.first_name ?? ''), points: Number(row.match_points ?? 0), me: Number(row.user_id) === me.userId }))
+						}
+					});
+				}
+				case 'start': {
+					const started = await startRound(db, telegram, me.chatId, me.userId, me.name, input.word, input.answers);
+					if (!started.ok) return respond(res, 409, { ok: false, error: started.error });
+					return respond(res, 200, { ok: true, round: Number(started.round.id) });
+				}
+				case 'lines': {
+					const lines = cleanLines(input.lines);
+					if (!lines) return respond(res, 400, { ok: false, error: 'invalid_lines' });
+					const saved = await saveLines(db, me.chatId, me.userId, input.round, lines);
+					return respond(res, saved ? 200 : 409, saved ? { ok: true } : { ok: false, error: 'round_over' });
+				}
+				case 'guess': {
+					const result = await guess(db, telegram, me.chatId, me.userId, me.name, input.text);
+					return respond(res, 200, { ok: true, result });
+				}
+				default:
+					return respond(res, 400, { ok: false, error: 'invalid_request' });
+			}
 		} catch (error) {
 			return respond(res, 503, { ok: false, error: error instanceof Error ? error.message : 'scribble_unavailable' });
 		}
