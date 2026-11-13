@@ -10,6 +10,8 @@ entries, section names and summaries are never translated.
 ## Unreleased
 
 ### Improved
+- Put the learning language and the interface language together in one box in the settings, each with its own name, hint and dropdown, so it is clear which language is being learnt and which one the app speaks
+- Widen the pages on tablets and desktops: the framed sheet grows, the home screen shows its two columns earlier, and the progress panels and repeat groups sit side by side instead of trailing down one phone column (phones unchanged)
 - Rework the model cards in the settings: a radio, the name, size, memory and one line about it, and beneath them the model's state with the one action that fits it (its download with the size, in use, or delete)
 - A voice or model that is not on the device yet stays chosen and says so on its card instead of falling back to "no language model"; downloading a model also chooses it
 - Show the version history in a sheet over the settings instead of its own page, without links out to GitHub; links to `/changelog` now open the sheet on the settings

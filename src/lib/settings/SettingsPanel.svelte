@@ -51,10 +51,12 @@
     settingsHint: m.settings_hint({}, { locale: settings.interfaceLocale }),
     contentGroup: m.content_group({}, { locale: settings.interfaceLocale }),
     behaviorGroup: m.behavior_group({}, { locale: settings.interfaceLocale }),
-    gameLanguage: m.game_language({}, { locale: settings.interfaceLocale }),
+    learningLanguage: m.onboarding_learning_language({}, { locale: settings.interfaceLocale }),
+    learningLanguageHint: m.learning_language_hint({}, { locale: settings.interfaceLocale }),
     vocabulary: m.vocabulary({}, { locale: settings.interfaceLocale }),
     includeLower: m.include_lower({}, { locale: settings.interfaceLocale }),
     interfaceLanguage: m.interface_language({}, { locale: settings.interfaceLocale }),
+    interfaceLanguageHint: m.interface_language_hint({}, { locale: settings.interfaceLocale }),
     appearance: m.appearance({}, { locale: settings.interfaceLocale }),
     light: m.light({}, { locale: settings.interfaceLocale }),
     dark: m.dark({}, { locale: settings.interfaceLocale }),
@@ -180,6 +182,7 @@
   const voiceModelOptions = $derived([{ value: 'standard' as const, label: labels.voiceModelStandard }, { value: 'high' as const, label: labels.voiceModelHigh }]);
   const sectionTitles = $derived({
     learning: m.settings_section_learning({}, { locale: settings.interfaceLocale }),
+    languages: m.settings_languages({}, { locale: settings.interfaceLocale }),
     app: m.settings_section_app({}, { locale: settings.interfaceLocale }),
     formats: m.settings_section_formats({}, { locale: settings.interfaceLocale }),
     reminders: m.settings_section_reminders({}, { locale: settings.interfaceLocale }),
@@ -196,7 +199,7 @@
     const optionLabel = (options: ReadonlyArray<{ value: string; label: string }>, value: string) => options.find((option) => option.value === value)?.label ?? value;
     return {
       learning: `${optionLabel(languageOptions, settings.lang)} · ${settings.vocabularyLevel.toUpperCase()}`,
-      app: `${optionLabel(interfaceOptions, settings.interfaceLocale)} · ${settings.theme === 'dark' ? labels.dark : labels.light} · ${labels.notifications}: ${notificationsEnabled ? on : off}`,
+      app: `${settings.theme === 'dark' ? labels.dark : labels.light} · ${labels.notifications}: ${notificationsEnabled ? on : off}`,
       voices: webgpu.result ? (webgpu.result.status === 'ok' ? m.webgpu_short_ok({}, locale) : m.webgpu_short_failed({}, locale)) : m.webgpu_not_run({}, locale),
       more: `${telegram ? `${labels.inviteCount(telegram.invited)} · ` : ''}${m.changelog_version({ version: __APP_VERSION__ }, locale)}`
     };
@@ -325,7 +328,13 @@
 
     <SettingsSection id="learning" index={1} defaultOpen accent="#34824d" title={sectionTitles.learning} summary={summaries.learning}>
       {#snippet icon()}<IconSchool />{/snippet}
-      <SettingRow label={labels.gameLanguage}><SelectMenu class="w-[9.6rem]" value={settings.lang} options={languageOptions} label={labels.gameLanguage} onchange={selectLanguage} /></SettingRow>
+      <!-- Both languages sit together, each with its own line: what the learner practises and what
+           the app speaks. The summary of the folded section names both. -->
+      <h3 class="settings-sub">{sectionTitles.languages}</h3>
+      <div class="settings-language-pair">
+        <SettingRow label={labels.learningLanguage} hint={labels.learningLanguageHint} stacked>{#snippet icon()}<IconSchool />{/snippet}<SelectMenu class="w-full" value={settings.lang} options={languageOptions} label={labels.learningLanguage} onchange={selectLanguage} /></SettingRow>
+        <SettingRow label={labels.interfaceLanguage} hint={labels.interfaceLanguageHint} stacked>{#snippet icon()}<IconLanguage />{/snippet}<SelectMenu class="w-full" value={settings.interfaceLocale} options={interfaceOptions} label={labels.interfaceLanguage} onchange={selectInterfaceLocale} /></SettingRow>
+      </div>
       <SettingRow label={labels.vocabulary} stacked>
         <Segmented value={settings.vocabularyLevel} options={levelOptions} label={labels.vocabulary} onchange={selectVocabularyLevel} />
         <a class="settings-link" href="/placement">{m.placement_link({}, { locale: settings.interfaceLocale })}<IconChevronRight aria-hidden="true" class="rtl:rotate-180" /></a>
@@ -338,7 +347,6 @@
 
     <SettingsSection id="app" index={2} accent="#4b78c2" title={sectionTitles.app} summary={summaries.app}>
       {#snippet icon()}<IconTune />{/snippet}
-      <SettingRow label={labels.interfaceLanguage}>{#snippet icon()}<IconLanguage />{/snippet}<SelectMenu class="w-[9.6rem]" value={settings.interfaceLocale} options={interfaceOptions} label={labels.interfaceLanguage} onchange={selectInterfaceLocale} /></SettingRow>
       <SettingRow label={labels.appearance}>
         <Segmented value={settings.theme} options={themeOptions} label={labels.appearance} onchange={(value) => settings.setTheme(value)}>
           {#snippet optionIcon(value)}{#if value === 'light'}<IconLight />{:else}<IconDark />{/if}{/snippet}
@@ -433,6 +441,14 @@
   .settings-me-account { padding-top:.7rem;border-top:1.5px dashed color-mix(in srgb,currentColor 18%,transparent); }
   .settings-sub { margin:.9rem 0 .1rem;padding-top:.7rem;border-top:1.5px dashed color-mix(in srgb,currentColor 18%,transparent);color:#a45e38;font-size:.8125rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
   :global(html.dark) .settings-sub { color:#e6a527; }
+  /* The two languages in one box, side by side where there is room: what is being learnt on the
+     left, the language the app speaks on the right. Each brings its own hint and dropdown. */
+  .settings-language-pair { display:grid;gap:.7rem;margin-top:.45rem;padding:.75rem .9rem .85rem;border:1.5px solid color-mix(in srgb,currentColor 16%,transparent);border-radius:.9rem;background:color-mix(in srgb,#34824d 6%,transparent); }
+  @media (min-width:600px) { .settings-language-pair { grid-template-columns:repeat(2,minmax(0,1fr));column-gap:1.1rem; } }
+  .settings-language-pair :global(.setting-row) { padding:0; }
+  .settings-language-pair :global(.setting-row + .setting-row) { border-top:0; }
+  .settings-language-pair :global(.setting-row-label > span) { color:#34824d; }
+  :global(html.dark) .settings-language-pair :global(.setting-row-label > span) { color:#7fc8a9; }
   .settings-link { display:inline-flex;align-items:center;justify-content:flex-end;gap:.2rem;align-self:flex-end;color:#a45e38;font-size:.84rem;font-weight:900;text-decoration:none; }
   :global(html.dark) .settings-link { color:#e6a527; }
   .settings-link :global(svg) { width:.9rem;height:.9rem; }
