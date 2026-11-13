@@ -1191,5 +1191,15 @@
   "scribble_live_guessed": "{name} guessed it: {word}",
   "scribble_live_waiting": "{name} draws next …",
   "scribble_live_waiting_anyone": "Waiting for the next round …",
-  "scribble_live_standings": "Standings"
+  "scribble_live_standings": "Standings",
+  "scribble_time_setting": "Time per round",
+  "scribble_time_short": "Short",
+  "scribble_time_normal": "Normal",
+  "scribble_time_long": "Long",
+  "scribble_speed_setting": "Lilith's drawing speed",
+  "scribble_speed_slow": "Slow",
+  "scribble_speed_normal": "Normal",
+  "scribble_speed_fast": "Fast",
+  "scribble_live_round_time": "Time for this round",
+  "scribble_seconds": "{seconds} s"
 }

@@ -186,3 +186,19 @@ export function strokeColor(rgba: ArrayLike<number>, width: number, height: numb
   const ink = (value: number) => Math.round((value / count) * 0.8);
   return `rgb(${ink(r)}, ${ink(g)}, ${ink(b)})`;
 }
+
+/** The learner's settings for Lilith's rounds: how long a round lasts and how fast she draws. */
+export type ScribbleTime = 'short' | 'normal' | 'long';
+export type ScribbleSpeed = 'slow' | 'normal' | 'fast';
+const TIME_FACTOR: Record<ScribbleTime, number> = { short: 0.6, normal: 1, long: 1.6 };
+const SPEED_FACTOR: Record<ScribbleSpeed, number> = { slow: 1.5, normal: 1, fast: 0.55 };
+
+/**
+ * A round's length in seconds and how long Lilith takes to draw (ms). She always finishes a little
+ * before the clock runs out, so a slow drawing still leaves a moment to guess.
+ */
+export function roundTiming(rule: Pick<DifficultyRule, 'seconds' | 'drawShare'>, time: ScribbleTime, speed: ScribbleSpeed): { seconds: number; drawMs: number } {
+  const seconds = Math.round(rule.seconds * TIME_FACTOR[time]);
+  const share = Math.min(0.92, rule.drawShare * SPEED_FACTOR[speed]);
+  return { seconds, drawMs: Math.round(seconds * share * 1000) };
+}

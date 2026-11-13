@@ -20,7 +20,7 @@
   import LilithSketch from './LilithSketch.svelte';
   import ScribbleInvite from './ScribbleInvite.svelte';
   import GroupScribble from './GroupScribble.svelte';
-  import { answerOptions, checkGuess, DIFFICULTIES, drawableWords, pickDifficulty, pickWords, roundPoints, type Difficulty } from './scribble';
+  import { answerOptions, checkGuess, DIFFICULTIES, drawableWords, pickDifficulty, pickWords, roundPoints, roundTiming, type Difficulty, type ScribbleSpeed, type ScribbleTime } from './scribble';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconCross from '~icons/material-symbols/close-rounded';
   import IconTimer from '~icons/material-symbols/timer-rounded';
@@ -67,6 +67,22 @@
     spell = value;
     try { localStorage.setItem(SPELL_KEY, value ? '1' : '0'); } catch { /* not remembered, still on for now */ }
   }
+  // How long a round lasts and how fast Lilith draws: remembered on this device.
+  const TIME_KEY = 'wordcircle-scribble-time';
+  const SPEED_KEY = 'wordcircle-scribble-speed';
+  let timeChoice = $state<ScribbleTime>(readChoice(TIME_KEY, ['short', 'normal', 'long'], 'normal'));
+  let speedChoice = $state<ScribbleSpeed>(readChoice(SPEED_KEY, ['slow', 'normal', 'fast'], 'normal'));
+  function readChoice<T extends string>(key: string, allowed: readonly T[], fallback: T): T {
+    try {
+      const value = typeof localStorage === 'undefined' ? null : localStorage.getItem(key);
+      return allowed.includes(value as T) ? (value as T) : fallback;
+    } catch {
+      return fallback;
+    }
+  }
+  function remember(key: string, value: string) {
+    try { localStorage.setItem(key, value); } catch { /* not remembered, still used for now */ }
+  }
   let rounds = $state(0);
   let drawing = $state('');
   let lines = $state(0);
@@ -75,6 +91,7 @@
   const finished = $derived(picked !== null);
   const right = $derived(picked === target);
   const rule = $derived(DIFFICULTIES[difficulty]);
+  const timing = $derived(roundTiming(rule, timeChoice, speedChoice));
   const difficultyLabel = $derived(difficulty === 'easy' ? m.scribble_easy({}, locale) : difficulty === 'medium' ? m.scribble_medium({}, locale) : m.scribble_hard({}, locale));
   const display = (word: string) => spokenWord(lang, word);
 
@@ -99,7 +116,7 @@
     difficulty = pickDifficulty();
     resetAnswer();
     view = 'guess';
-    timeLeft = DIFFICULTIES[difficulty].seconds;
+    timeLeft = roundTiming(DIFFICULTIES[difficulty], timeChoice, speedChoice).seconds;
     const ends = Date.now() + timeLeft * 1000;
     timer = setInterval(() => {
       timeLeft = Math.max(0, (ends - Date.now()) / 1000);
@@ -116,7 +133,7 @@
     picked = word;
     rounds += 1;
     if (word === target) {
-      lastPoints = roundPoints(difficulty, timeLeft / rule.seconds);
+      lastPoints = roundPoints(difficulty, timeLeft / timing.seconds);
       score += lastPoints;
       playSuccessSound(settings.sound, 'wordle');
       haptic('win');
@@ -222,6 +239,18 @@
         <strong>{m.scribble_mode_draw({}, locale)}</strong>
         <small>{m.scribble_mode_draw_text({}, locale)}</small>
       </button>
+      <div class="scribble-choice-row" role="radiogroup" aria-label={m.scribble_time_setting({}, locale)}>
+        <span>{m.scribble_time_setting({}, locale)}</span>
+        {#each [['short', m.scribble_time_short({}, locale)], ['normal', m.scribble_time_normal({}, locale)], ['long', m.scribble_time_long({}, locale)]] as const as [value, label] (value)}
+          <button type="button" role="radio" aria-checked={timeChoice === value} onclick={() => { timeChoice = value; remember(TIME_KEY, value); }}>{label}</button>
+        {/each}
+      </div>
+      <div class="scribble-choice-row" role="radiogroup" aria-label={m.scribble_speed_setting({}, locale)}>
+        <span>{m.scribble_speed_setting({}, locale)}</span>
+        {#each [['slow', m.scribble_speed_slow({}, locale)], ['normal', m.scribble_speed_normal({}, locale)], ['fast', m.scribble_speed_fast({}, locale)]] as const as [value, label] (value)}
+          <button type="button" role="radio" aria-checked={speedChoice === value} onclick={() => { speedChoice = value; remember(SPEED_KEY, value); }}>{label}</button>
+        {/each}
+      </div>
       <label class="scribble-setting"><input type="checkbox" class="toggle toggle-sm toggle-primary" checked={spell} onchange={(event) => setSpell((event.currentTarget as HTMLInputElement).checked)} /><span><strong>{m.scribble_spell({}, locale)}</strong><small>{m.scribble_spell_hint({}, locale)}</small></span></label>
       <p class="scribble-note">{m.scribble_group_hint({}, locale)}</p>
     </div>
@@ -231,8 +260,8 @@
         <span class="scribble-level {difficulty}">{difficultyLabel}{#if rule.multiplier > 1} ×{num(rule.multiplier)}{/if}</span>
         <span class="scribble-time" class:low={timeLeft <= 5 && !finished}><IconTimer aria-hidden="true" />{num(Math.ceil(timeLeft))}</span>
       </div>
-      <div class="scribble-timer" role="progressbar" aria-label={m.scribble_time_left({}, locale)} aria-valuemin={0} aria-valuemax={rule.seconds} aria-valuenow={Math.ceil(timeLeft)}><i style:width="{(timeLeft / rule.seconds) * 100}%" class:low={timeLeft <= 5}></i></div>
-      {#key target}<LilithSketch emoji={pictureFor(language, target) ?? '?'} {rule} duration={rule.seconds * rule.drawShare * 1000} reveal={finished} label={m.scribble_sketch_label({}, locale)} />{/key}
+      <div class="scribble-timer" role="progressbar" aria-label={m.scribble_time_left({}, locale)} aria-valuemin={0} aria-valuemax={timing.seconds} aria-valuenow={Math.ceil(timeLeft)}><i style:width="{(timeLeft / timing.seconds) * 100}%" class:low={timeLeft <= 5}></i></div>
+      {#key target}<LilithSketch emoji={pictureFor(language, target) ?? '?'} {rule} duration={timing.drawMs} reveal={finished} label={m.scribble_sketch_label({}, locale)} />{/key}
       <p class="scribble-prompt" aria-live="polite">
         {#if finished}<span class="scribble-mark" class:right aria-hidden="true">{#if right}<IconCheck />{:else}<IconCross />{/if}</span>{/if}
         {finished ? (right ? m.scribble_right({ points: num(lastPoints) }, locale) : timedOut ? m.scribble_timeout({ word: display(target) }, locale) : m.scribble_wrong({ word: display(target) }, locale)) : hint === 'close' ? m.scribble_close({}, locale) : hint === 'wrong' ? m.scribble_try_again({}, locale) : m.scribble_guess_prompt({}, locale)}
@@ -327,6 +356,10 @@
   .scribble-spell input.close { border-color:#e6a527; }
   .scribble-reroll { display:inline-flex;align-items:center;justify-self:center;gap:.3rem;padding:.3rem .6rem;border:0;background:none;color:inherit;font:inherit;font-size:.9rem;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer;opacity:.8; }
   .scribble-reroll :global(svg) { width:1.05rem;height:1.05rem; }
+  .scribble-choice-row { display:flex;flex-wrap:wrap;align-items:center;gap:.35rem;padding:.2rem .3rem; }
+  .scribble-choice-row span { flex:1 1 100%;font-weight:900; }
+  .scribble-choice-row button { padding:.3rem .75rem;border:2px solid currentColor;border-radius:999px;background:none;color:inherit;font:inherit;font-size:.86rem;font-weight:800;cursor:pointer; }
+  .scribble-choice-row button[aria-checked='true'] { background:#e6a527;color:#172a45;border-color:#172a45; }
   .scribble-setting { display:flex;align-items:center;gap:.7rem;padding:.2rem .3rem;cursor:pointer; }
   .scribble-setting span { display:grid;gap:.1rem; }
   .scribble-setting small { font-size:.82rem;font-weight:700;opacity:.7; }
