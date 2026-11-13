@@ -1,4 +1,4 @@
-// Pure rules for Telegram group games (the server checks the same limits in api/_lib/games.ts):
+// Pure rules for Telegram group games (the server checks the same limits in server/_lib/games.ts):
 // which modes are group games, how a finished round becomes a score (higher is better, the only
 // order Telegram ranks by), and reading the session from the page the Play button opened.
 

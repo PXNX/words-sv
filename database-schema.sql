@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS wordcircle_streak_devices (
   reward_collected SMALLINT NOT NULL DEFAULT 0,
   -- NULL until the first collection; read as qualified_days % 7 so old progress carries over.
   embers SMALLINT NULL,
-  -- Freezes forged from invite embers on the server (see api/_lib/telegram.ts).
+  -- Freezes forged from invite embers on the server (see server/_lib/telegram.ts).
   invite_freezes SMALLINT NOT NULL DEFAULT 0,
   last_seen_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

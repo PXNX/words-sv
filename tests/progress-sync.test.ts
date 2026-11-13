@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createSyncEndpoint } from '../api/progress/sync.js';
+import { createSyncEndpoint } from '../server/progress/sync.js';
 import { responseCapture } from './support/api';
 
 type Snapshot = { revision: number; snapshot: string };

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { ownedItems, PRODUCTS, product, SHOP_ITEMS, stillUseful } from '../src/lib/store/catalog';
-import { checkoutProblem, parseStorePayload, STORE_PRODUCTS, storePayload } from '../api/_lib/store.js';
-import { createPurchaseEndpoint } from '../api/telegram/purchase.js';
-import { createStoreEndpoint } from '../api/store/index.js';
+import { checkoutProblem, parseStorePayload, STORE_PRODUCTS, storePayload } from '../server/_lib/store.js';
+import { createPurchaseEndpoint } from '../server/telegram/purchase.js';
+import { createStoreEndpoint } from '../server/store/index.js';
 import { responseCapture } from './support/api';
 
 const secret = 'bridge-secret-for-tests-0123456789';

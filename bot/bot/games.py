@@ -9,7 +9,7 @@ from typing import Final
 
 from psycopg_pool import AsyncConnectionPool
 
-# The ids are both the game short names at @BotFather and the server's GROUP_GAMES (api/_lib/games.ts).
+# The ids are both the game short names at @BotFather and the server's GROUP_GAMES (server/_lib/games.ts).
 GAMES: Final[list[dict[str, str]]] = [
     {"id": "wordle", "de": "Wordle", "en": "Wordle"},
     {"id": "hangman", "de": "Galgenmännchen", "en": "Hangman"},

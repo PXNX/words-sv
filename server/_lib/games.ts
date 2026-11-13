@@ -4,8 +4,8 @@ import type { Database } from './database.js';
 
 // Group competition through Telegram's gaming platform (https://core.telegram.org/bots/games). The
 // bot posts a game in a group (sendGame); pressing Play there makes the bot ask this server for a
-// session (api/telegram/game.ts, over the bridge) and opens the mode with `?game_session=<id>` in
-// Telegram's browser. Every finished round sends its score with that session (api/games/score.ts),
+// session (server/telegram/game.ts, over the bridge) and opens the mode with `?game_session=<id>` in
+// Telegram's browser. Every finished round sends its score with that session (server/games/score.ts),
 // and setGameScore puts it on the chat's scoreboard, which Telegram keeps and shows itself.
 
 /** The modes offered as group games; each id is also the game's short name at @BotFather. */

@@ -9,7 +9,7 @@ import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 
 // The store for a device signed in with Telegram: `status` lists what its Telegram account bought
 // and until when Pro runs; `invoice` makes a Telegram Stars invoice link for one product (Pro as a
-// 30-day subscription). Payments reach the bot, which records them here (api/telegram/purchase.ts).
+// 30-day subscription). Payments reach the bot, which records them here (server/telegram/purchase.ts).
 const Request = v.object({
 	deviceId: v.pipe(v.string(), v.regex(/^[a-zA-Z0-9_-]{16,64}$/u)),
 	action: v.picklist(['status', 'invoice']),

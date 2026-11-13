@@ -1,5 +1,5 @@
 // The 640x360 pictures BotFather asks for when a Telegram game is created (/newgame), one per group
-// game (api/_lib/games.ts: wordle, hangman, vocab), in the style of brand/telegram-description.png:
+// game (server/_lib/games.ts: wordle, hangman, vocab), in the style of brand/telegram-description.png:
 // navy night, the logo's rings, a golden glow, Lilith, and the game itself in the middle.
 // Writes brand/game-<id>.svg and .png. Usage: bun scripts/brand-games.ts
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';

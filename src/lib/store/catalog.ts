@@ -1,6 +1,6 @@
 // What the store sells for Telegram Stars: single character items, sets of them at a lower price,
 // and WordCircle Pro (a monthly subscription that forgives one missed day a week). The server keeps
-// the same prices in api/_lib/store.ts (a test keeps the two in step) and decides what was bought;
+// the same prices in server/_lib/store.ts (a test keeps the two in step) and decides what was bought;
 // this file only tells the page what to show and which cosmetic rewards a product unlocks.
 import type { AvatarPart } from '#lib/profile/avatar.js';
 

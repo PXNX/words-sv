@@ -1,5 +1,5 @@
 // WordCircle Pro's streak shield: with Pro active, one missed day per ISO week does not break the
-// streak, before any freeze is used. The server applies the same rule (api/_lib/streak.ts).
+// streak, before any freeze is used. The server applies the same rule (server/_lib/streak.ts).
 
 /** The ISO week of a `YYYY-MM-DD` day, as `YYYY-Www` (weeks start on Monday). */
 export function isoWeek(dateKey: string): string {

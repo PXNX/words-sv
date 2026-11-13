@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { createHmac } from 'node:crypto';
-import { addEmbers, bridgeAuthorized, parseStartPayload, verifyInitData } from '../api/_lib/telegram.js';
-import { createStartEndpoint } from '../api/telegram/start.js';
-import { createRemindersEndpoint } from '../api/cron/reminders.js';
+import { addEmbers, bridgeAuthorized, parseStartPayload, verifyInitData } from '../server/_lib/telegram.js';
+import { createStartEndpoint } from '../server/telegram/start.js';
+import { createRemindersEndpoint } from '../server/cron/reminders.js';
 import { responseCapture } from './support/api';
 
 type Device = {

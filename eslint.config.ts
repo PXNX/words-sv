@@ -71,7 +71,7 @@ export default tseslint.config(
   {
     // Type-aware rules: a dropped promise hides its rejection, and a switch over a union must
     // handle every member (or say `default:` on purpose).
-    files: ['src/**/*.{ts,svelte}', 'tests/**/*.ts', 'api/**/*.ts'],
+    files: ['src/**/*.{ts,svelte}', 'tests/**/*.ts', 'server/**/*.ts', 'api/**/*.ts'],
     languageOptions: {
       parserOptions: { projectService: true, tsconfigRootDir: import.meta.dirname, extraFileExtensions: ['.svelte'] },
     },

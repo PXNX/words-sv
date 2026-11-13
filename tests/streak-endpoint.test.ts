@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import streakProgress from '../api/streak/progress.js';
+import streakProgress from '../server/streak/progress.js';
 import { responseCapture } from './support/api';
 
 // An in-memory stand-in for the streak table: SELECT returns the stored row, the upsert stores the
@@ -21,7 +21,7 @@ const execute = vi.fn(async (sql: string, values: unknown[] = []) => {
   }
   return [{}];
 });
-vi.mock('../api/_lib/database.js', () => ({ getDatabase: () => ({ execute }) }));
+vi.mock('../server/_lib/database.js', () => ({ getDatabase: () => ({ execute }) }));
 
 const deviceId = 'device_0123456789abcdef';
 async function post(body: Record<string, unknown>) {

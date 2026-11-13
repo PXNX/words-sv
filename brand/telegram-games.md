@@ -1,6 +1,6 @@
 # Telegram games for @word_circle_bot
 
-What to enter in @BotFather (`/newgame`) for the group games (see `api/_lib/games.ts` and
+What to enter in @BotFather (`/newgame`) for the group games (see `server/_lib/games.ts` and
 `bot/bot/games.py`). The short name has to match exactly; the photo is the 640×360 PNG next to
 this file (regenerate with `bun scripts/brand-games.ts`). Telegram shows one title and description
 per game, so they are in English; the game page itself follows each player's language.
