@@ -1,347 +1,983 @@
 {
-  "abandon": {},
-  "able": {},
+  "abandon": {
+    "definition": "To leave a place, a thing, or a person completely."
+  },
+  "able": {
+    "definition": "Having the skill or power to do something."
+  },
   "abnormal": {
     "definition": "Different from what is usual or expected."
   },
-  "above": {},
-  "absence": {},
+  "above": {
+    "definition": "Higher than something else, or earlier in a text."
+  },
+  "absence": {
+    "definition": "The state of being away from a place."
+  },
   "absent": {
     "definition": "Not present in a place when expected."
   },
   "absolute": {
     "definition": "Complete and not limited in any way."
   },
-  "absorb": {},
-  "abstract": {},
-  "abundant": {},
-  "academic": {},
-  "academy": {},
-  "accent": {},
-  "access": {},
+  "absorb": {
+    "definition": "To take something in, such as liquid into a sponge."
+  },
+  "abstract": {
+    "definition": "Existing as an idea, not as a physical object."
+  },
+  "abundant": {
+    "definition": "Existing in large amounts; more than enough."
+  },
+  "academic": {
+    "definition": "Connected with education, schools, or studying."
+  },
+  "academy": {
+    "definition": "A special school or college for a particular subject."
+  },
+  "accent": {
+    "definition": "A way of pronouncing words that shows where you come from."
+  },
+  "access": {
+    "definition": "The right or chance to use or see something."
+  },
   "account": {
     "definition": "A record or description of an event, experience, or situation."
   },
-  "accuracy": {},
+  "accuracy": {
+    "definition": "The quality of being correct and without mistakes."
+  },
   "accurate": {
     "definition": "Correct and free from mistakes."
   },
-  "accuse": {},
-  "accustom": {},
-  "ache": {},
-  "acquire": {},
-  "act": {},
-  "active": {},
-  "actress": {},
-  "adapt": {},
+  "accuse": {
+    "definition": "To say that someone has done something wrong."
+  },
+  "accustom": {
+    "definition": "To make someone used to something."
+  },
+  "ache": {
+    "definition": "A continuous dull pain."
+  },
+  "acquire": {
+    "definition": "To get something by buying, learning, or being given it."
+  },
+  "act": {
+    "definition": "To do something, or to perform in a play."
+  },
+  "active": {
+    "definition": "Doing things with energy; not passive."
+  },
+  "actress": {
+    "definition": "A woman who performs in plays or films."
+  },
+  "adapt": {
+    "definition": "To change something so that it fits a new situation."
+  },
   "address": {
     "definition": "The details that identify where a person or place is located."
   },
-  "adopt": {},
-  "adorable": {},
-  "advance": {},
-  "adverb": {},
-  "advert": {},
-  "aerobics": {},
-  "affect": {},
-  "afford": {},
-  "agenda": {},
-  "aid": {},
-  "aim": {},
-  "airline": {},
-  "alarm": {},
-  "alcohol": {},
-  "alike": {},
-  "allergic": {},
-  "alphabet": {},
-  "amazed": {},
-  "amazing": {},
-  "amount": {},
-  "amusing": {},
-  "analysis": {},
-  "anger": {},
-  "angle": {},
-  "animated": {},
-  "announce": {},
-  "annoyed": {},
-  "annual": {},
-  "ant": {},
-  "anti": {},
-  "antique": {},
-  "antonym": {},
-  "anxiety": {},
-  "ape": {},
-  "apology": {},
-  "apparent": {},
-  "appeal": {},
-  "appetite": {},
-  "applaud": {},
-  "applause": {},
-  "appoint": {},
-  "approach": {},
-  "approval": {},
-  "approve": {},
-  "arise": {},
-  "arm": {},
-  "army": {},
-  "arrange": {},
-  "arrest": {},
-  "arrival": {},
-  "arrow": {},
-  "artist": {},
-  "artistic": {},
-  "ashamed": {},
-  "aspect": {},
-  "aspirin": {},
-  "assign": {},
-  "assist": {},
-  "assume": {},
-  "athletic": {},
-  "atlantic": {},
-  "atomic": {},
-  "attach": {},
-  "attain": {},
-  "attempt": {},
-  "attend": {},
-  "attract": {},
-  "avenue": {},
-  "award": {},
-  "aware": {},
-  "awesome": {},
-  "awkward": {},
-  "babysit": {},
+  "adopt": {
+    "definition": "To take another person's child into your family legally."
+  },
+  "adorable": {
+    "definition": "Very attractive and easy to love."
+  },
+  "advance": {
+    "definition": "To move forward, or a payment made early."
+  },
+  "adverb": {
+    "definition": "A word that adds meaning to a verb, adjective, or other adverb."
+  },
+  "advert": {
+    "definition": "A notice or picture that tells people about a product."
+  },
+  "aerobics": {
+    "definition": "Energetic exercises that make the heart beat faster."
+  },
+  "affect": {
+    "definition": "To have an influence on someone or something."
+  },
+  "afford": {
+    "definition": "To have enough money or time for something."
+  },
+  "agenda": {
+    "definition": "A list of things to be discussed at a meeting."
+  },
+  "aid": {
+    "definition": "Help, such as money, food, or medical care."
+  },
+  "aim": {
+    "definition": "To point a weapon or a camera, or a purpose."
+  },
+  "airline": {
+    "definition": "A company that flies people and goods in planes."
+  },
+  "alarm": {
+    "definition": "A sound or device that warns of danger."
+  },
+  "alcohol": {
+    "definition": "A drink such as beer or wine that can make you drunk."
+  },
+  "alike": {
+    "definition": "Very similar to each other."
+  },
+  "allergic": {
+    "definition": "Having a bad reaction to something harmless to most people."
+  },
+  "alphabet": {
+    "definition": "The set of letters in a language, in a fixed order."
+  },
+  "amazed": {
+    "definition": "Very surprised."
+  },
+  "amazing": {
+    "definition": "Causing great surprise or wonder."
+  },
+  "amount": {
+    "definition": "How much there is of something."
+  },
+  "amusing": {
+    "definition": "Funny and entertaining."
+  },
+  "analysis": {
+    "definition": "A detailed study of something."
+  },
+  "anger": {
+    "definition": "A strong feeling of being upset or annoyed."
+  },
+  "angle": {
+    "definition": "The space between two lines that meet, measured in degrees."
+  },
+  "animated": {
+    "definition": "Full of life and energy, or a film made of drawings."
+  },
+  "announce": {
+    "definition": "To tell people about something officially."
+  },
+  "annoyed": {
+    "definition": "Slightly angry or impatient."
+  },
+  "annual": {
+    "definition": "Happening once every year."
+  },
+  "ant": {
+    "definition": "A small insect that lives in large groups."
+  },
+  "anti": {
+    "definition": "Against or opposed to something."
+  },
+  "antique": {
+    "definition": "Old and valuable because of its age."
+  },
+  "antonym": {
+    "definition": "A word with the opposite meaning to another word."
+  },
+  "anxiety": {
+    "definition": "A feeling of worry or nervousness."
+  },
+  "ape": {
+    "definition": "A large monkey without a tail, such as a chimpanzee."
+  },
+  "apology": {
+    "definition": "Something you say to show you are sorry."
+  },
+  "apparent": {
+    "definition": "Easy to see or understand; obvious."
+  },
+  "appeal": {
+    "definition": "To make a serious request, or to be attractive."
+  },
+  "appetite": {
+    "definition": "A desire for food."
+  },
+  "applaud": {
+    "definition": "To hit your hands together to show approval."
+  },
+  "applause": {
+    "definition": "The sound of people clapping."
+  },
+  "appoint": {
+    "definition": "To choose someone for a job or position."
+  },
+  "approach": {
+    "definition": "To come near to something, or a way of dealing with it."
+  },
+  "approval": {
+    "definition": "The feeling that something is good or right."
+  },
+  "approve": {
+    "definition": "To agree with something officially."
+  },
+  "arise": {
+    "definition": "To happen, especially a problem."
+  },
+  "arm": {
+    "definition": "The part of the body between the shoulder and the hand."
+  },
+  "army": {
+    "definition": "A large group of soldiers trained to fight on land."
+  },
+  "arrange": {
+    "definition": "To put things in order, or to plan something."
+  },
+  "arrest": {
+    "definition": "To take someone into custody because they may have broken the law."
+  },
+  "arrival": {
+    "definition": "The act of reaching a place."
+  },
+  "arrow": {
+    "definition": "A thin stick with a point, shot from a bow."
+  },
+  "artist": {
+    "definition": "A person who creates art, such as paintings or music."
+  },
+  "artistic": {
+    "definition": "Showing skill and imagination in creating art."
+  },
+  "ashamed": {
+    "definition": "Feeling guilty or embarrassed about something."
+  },
+  "aspect": {
+    "definition": "One part of a situation, problem, or subject."
+  },
+  "aspirin": {
+    "definition": "A common medicine for pain and fever."
+  },
+  "assign": {
+    "definition": "To give someone a task or duty."
+  },
+  "assist": {
+    "definition": "To help someone."
+  },
+  "assume": {
+    "definition": "To think something is true without proof."
+  },
+  "athletic": {
+    "definition": "Strong, fit, and good at sports."
+  },
+  "atlantic": {
+    "definition": "The ocean between Europe and America."
+  },
+  "atomic": {
+    "definition": "Relating to atoms, the smallest parts of an element."
+  },
+  "attach": {
+    "definition": "To fasten one thing to another."
+  },
+  "attain": {
+    "definition": "To succeed in reaching a goal after effort."
+  },
+  "attempt": {
+    "definition": "To try to do something, especially something difficult."
+  },
+  "attend": {
+    "definition": "To be present at an event or a place."
+  },
+  "attract": {
+    "definition": "To pull something towards you, or to make someone interested."
+  },
+  "avenue": {
+    "definition": "A wide road with trees on both sides."
+  },
+  "award": {
+    "definition": "A prize given for something well done."
+  },
+  "aware": {
+    "definition": "Knowing that something exists or is happening."
+  },
+  "awesome": {
+    "definition": "Extremely impressive or frightening."
+  },
+  "awkward": {
+    "definition": "Difficult to deal with, or causing embarrassment."
+  },
+  "babysit": {
+    "definition": "To look after children while their parents are out."
+  },
   "back": {},
-  "backache": {},
-  "backpack": {},
-  "bacon": {},
-  "baggage": {},
-  "baker": {},
-  "bakery": {},
-  "balance": {},
-  "bald": {},
-  "bandage": {},
-  "bang": {},
+  "backache": {
+    "definition": "Pain in the back."
+  },
+  "backpack": {
+    "definition": "A bag carried on the back with two straps."
+  },
+  "bacon": {
+    "definition": "Salted meat from the back or sides of a pig."
+  },
+  "baggage": {
+    "definition": "Bags and cases you take when travelling."
+  },
+  "baker": {
+    "definition": "A person who makes bread and cakes."
+  },
+  "bakery": {
+    "definition": "A place where bread and cakes are made and sold."
+  },
+  "balance": {
+    "definition": "An even distribution of weight, or the amount of money in an account."
+  },
+  "bald": {
+    "definition": "With no hair on the head."
+  },
+  "bandage": {
+    "definition": "A strip of cloth used to cover a wound."
+  },
+  "bang": {
+    "definition": "A sudden loud noise, or to hit something hard."
+  },
   "bar": {},
-  "barbecue": {},
-  "bare": {},
-  "bark": {},
-  "barman": {},
-  "barrel": {},
-  "base": {},
-  "basement": {},
-  "basin": {},
-  "basis": {},
+  "barbecue": {
+    "definition": "A meal cooked outdoors on a grill."
+  },
+  "bare": {
+    "definition": "Not covered by clothes, or without decoration."
+  },
+  "bark": {
+    "definition": "The rough outer covering of a tree, or the sound a dog makes."
+  },
+  "barman": {
+    "definition": "A man who serves drinks in a bar."
+  },
+  "barrel": {
+    "definition": "A large round container with flat ends."
+  },
+  "base": {
+    "definition": "The bottom part of something, or the main place of operations."
+  },
+  "basement": {
+    "definition": "A room below the ground floor of a building."
+  },
+  "basin": {
+    "definition": "A wide bowl for washing, or the land around a river."
+  },
+  "basis": {
+    "definition": "The main reason or idea something is based on."
+  },
   "bat": {},
-  "bathe": {},
-  "battle": {},
-  "beard": {},
-  "beast": {},
-  "beat": {},
-  "beaver": {},
-  "bedside": {},
-  "behalf": {},
-  "behave": {},
-  "belief": {},
-  "beloved": {},
-  "benefit": {},
-  "bent": {},
-  "bet": {},
+  "bathe": {
+    "definition": "To wash yourself or someone else in a bath."
+  },
+  "battle": {
+    "definition": "A fight between two armies, or a long struggle."
+  },
+  "beard": {
+    "definition": "Hair that grows on a man's chin and cheeks."
+  },
+  "beast": {
+    "definition": "A large dangerous animal."
+  },
+  "beat": {
+    "definition": "To hit repeatedly, or to defeat someone in a game."
+  },
+  "beaver": {
+    "definition": "A large animal that builds dams in rivers."
+  },
+  "bedside": {
+    "definition": "The space next to a bed."
+  },
+  "behalf": {
+    "definition": "As a representative of someone else."
+  },
+  "behave": {
+    "definition": "To act in a certain way."
+  },
+  "belief": {
+    "definition": "Something you accept as true."
+  },
+  "beloved": {
+    "definition": "Very much loved."
+  },
+  "benefit": {
+    "definition": "An advantage or profit gained from something."
+  },
+  "bent": {
+    "definition": "Curved, not straight, or determined to do something."
+  },
+  "bet": {
+    "definition": "To risk money on the result of something."
+  },
   "bill": {},
-  "bin": {},
-  "biology": {},
-  "bishop": {},
-  "bite": {},
-  "bitter": {},
-  "blame": {},
-  "bleed": {},
-  "blend": {},
-  "bless": {},
-  "blessing": {},
-  "blind": {},
+  "bin": {
+    "definition": "A container for rubbish or for storing things."
+  },
+  "biology": {
+    "definition": "The scientific study of living things."
+  },
+  "bishop": {
+    "definition": "A senior priest in some Christian churches."
+  },
+  "bite": {
+    "definition": "To cut into something with your teeth."
+  },
+  "bitter": {
+    "definition": "Having a sharp, unpleasant taste."
+  },
+  "blame": {
+    "definition": "To say someone is responsible for something bad."
+  },
+  "bleed": {
+    "definition": "To lose blood from the body."
+  },
+  "blend": {
+    "definition": "To mix things together thoroughly."
+  },
+  "bless": {
+    "definition": "To ask God to protect someone, or to make something holy."
+  },
+  "blessing": {
+    "definition": "God's favour, or something that makes you very happy."
+  },
+  "blind": {
+    "definition": "Unable to see."
+  },
   "block": {},
-  "blog": {},
-  "blogger": {},
-  "blush": {},
-  "board": {},
-  "boast": {},
-  "bold": {},
-  "bomb": {},
-  "bond": {},
-  "book": {},
-  "booking": {},
-  "boom": {},
-  "boot": {},
-  "border": {},
-  "bore": {},
-  "boredom": {},
-  "bother": {},
-  "bounce": {},
-  "bound": {},
-  "bow": {},
-  "bowl": {},
-  "boxing": {},
-  "bracelet": {},
-  "branch": {},
-  "brass": {},
-  "breast": {},
-  "breath": {},
-  "breed": {},
-  "breeding": {},
-  "brick": {},
-  "brief": {},
-  "broad": {},
-  "broccoli": {},
-  "bronze": {},
-  "bubble": {},
-  "buddy": {},
-  "builder": {},
-  "bull": {},
-  "bullet": {},
-  "bulletin": {},
-  "bump": {},
-  "bunch": {},
-  "burden": {},
-  "bureau": {},
-  "burglar": {},
-  "burn": {},
-  "burning": {},
-  "burst": {},
-  "bust": {},
-  "butcher": {},
-  "buyer": {},
-  "cabbage": {},
-  "cabin": {},
-  "cage": {},
-  "calf": {},
-  "caller": {},
-  "calm": {},
-  "calmness": {},
-  "camel": {},
-  "campsite": {},
-  "canal": {},
-  "cancel": {},
-  "cancer": {},
-  "candle": {},
-  "canned": {},
-  "canteen": {},
-  "capable": {},
-  "capacity": {},
-  "capsule": {},
-  "capture": {},
+  "blog": {
+    "definition": "A website where someone writes regularly about a topic."
+  },
+  "blogger": {
+    "definition": "A person who writes a blog."
+  },
+  "blush": {
+    "definition": "To become red in the face from shame or shyness."
+  },
+  "board": {
+    "definition": "A flat piece of wood, or to get on a vehicle."
+  },
+  "boast": {
+    "definition": "To talk with too much pride about yourself."
+  },
+  "bold": {
+    "definition": "Brave and confident, or thick and dark in colour."
+  },
+  "bomb": {
+    "definition": "An explosive weapon."
+  },
+  "bond": {
+    "definition": "A connection between people, or a legal agreement to pay money."
+  },
+  "book": {
+    "definition": "A written work bound together, or to reserve something."
+  },
+  "booking": {
+    "definition": "An arrangement to have a seat, room, or ticket."
+  },
+  "boom": {
+    "definition": "A deep loud sound, or a sudden increase in business."
+  },
+  "boot": {
+    "definition": "A strong shoe covering the foot and ankle, or to start a computer."
+  },
+  "border": {
+    "definition": "The line that separates two countries."
+  },
+  "bore": {
+    "definition": "To make someone feel tired and uninterested."
+  },
+  "boredom": {
+    "definition": "The state of being bored."
+  },
+  "bother": {
+    "definition": "To annoy, or to take the trouble to do something."
+  },
+  "bounce": {
+    "definition": "To spring back after hitting a surface."
+  },
+  "bound": {
+    "definition": "Certain to happen, or tied up."
+  },
+  "bow": {
+    "definition": "To bend the head or body forward, or a weapon for shooting arrows."
+  },
+  "bowl": {
+    "definition": "A deep round dish for food or liquid."
+  },
+  "boxing": {
+    "definition": "A sport in which two people fight with their fists."
+  },
+  "bracelet": {
+    "definition": "A piece of jewellery worn around the wrist."
+  },
+  "branch": {
+    "definition": "A part of a tree growing out from the trunk."
+  },
+  "brass": {
+    "definition": "A yellow metal made from copper and zinc."
+  },
+  "breast": {
+    "definition": "The front part of the chest, or meat from a bird's chest."
+  },
+  "breath": {
+    "definition": "The air taken into or sent out of the lungs."
+  },
+  "breed": {
+    "definition": "A type of animal, or to produce young animals."
+  },
+  "breeding": {
+    "definition": "The process of producing young animals or plants."
+  },
+  "brick": {
+    "definition": "A rectangular block of baked clay used for building."
+  },
+  "brief": {
+    "definition": "Lasting only a short time, or using few words."
+  },
+  "broad": {
+    "definition": "Wide, or covering many things."
+  },
+  "broccoli": {
+    "definition": "A green vegetable with a thick stalk and flower buds."
+  },
+  "bronze": {
+    "definition": "A brown metal made of copper and tin."
+  },
+  "bubble": {
+    "definition": "A thin ball of liquid with air inside."
+  },
+  "buddy": {
+    "definition": "A close friend."
+  },
+  "builder": {
+    "definition": "A person whose job is building houses."
+  },
+  "bull": {
+    "definition": "A male cow, or someone who expects prices to rise."
+  },
+  "bullet": {
+    "definition": "A small metal piece shot from a gun."
+  },
+  "bulletin": {
+    "definition": "A short official report or news summary."
+  },
+  "bump": {
+    "definition": "To hit something gently, or a raised area."
+  },
+  "bunch": {
+    "definition": "A number of things of the same kind held together."
+  },
+  "burden": {
+    "definition": "A heavy load, or a difficult responsibility."
+  },
+  "bureau": {
+    "definition": "An office or agency, or a chest of drawers."
+  },
+  "burglar": {
+    "definition": "A person who enters a building illegally to steal."
+  },
+  "burn": {
+    "definition": "To be on fire, or to damage with fire."
+  },
+  "burning": {
+    "definition": "Very hot, or on fire."
+  },
+  "burst": {
+    "definition": "To break open suddenly."
+  },
+  "bust": {
+    "definition": "A sculpture of a person's head and shoulders, or to break something."
+  },
+  "butcher": {
+    "definition": "A person who cuts and sells meat."
+  },
+  "buyer": {
+    "definition": "A person who buys something."
+  },
+  "cabbage": {
+    "definition": "A large round vegetable with green or purple leaves."
+  },
+  "cabin": {
+    "definition": "A small wooden house, or a private room on a ship."
+  },
+  "cage": {
+    "definition": "A box made of wire or bars for keeping animals or birds."
+  },
+  "calf": {
+    "definition": "A young cow, or the back part of the lower leg."
+  },
+  "caller": {
+    "definition": "A person who phones or visits."
+  },
+  "calm": {
+    "definition": "Peaceful and quiet, or to make someone peaceful."
+  },
+  "calmness": {
+    "definition": "The state of being peaceful."
+  },
+  "camel": {
+    "definition": "A large animal with a humped back that lives in deserts."
+  },
+  "campsite": {
+    "definition": "A place where people can put up tents for a holiday."
+  },
+  "canal": {
+    "definition": "A long narrow stretch of water made for boats."
+  },
+  "cancel": {
+    "definition": "To decide that a planned event will not happen."
+  },
+  "cancer": {
+    "definition": "A serious disease caused by cells growing out of control."
+  },
+  "candle": {
+    "definition": "A stick of wax with a string in the middle that gives light when lit."
+  },
+  "canned": {
+    "definition": "Preserved in a metal container."
+  },
+  "canteen": {
+    "definition": "A place where people eat meals at work or school."
+  },
+  "capable": {
+    "definition": "Able to do something well."
+  },
+  "capacity": {
+    "definition": "The amount something can hold, or the ability to do something."
+  },
+  "capsule": {
+    "definition": "A small case or a medicine container you swallow."
+  },
+  "capture": {
+    "definition": "To catch someone or something and keep them."
+  },
   "care": {},
-  "career": {},
-  "careless": {},
-  "carpet": {},
-  "carriage": {},
-  "carton": {},
-  "casual": {},
-  "category": {},
-  "cattle": {},
-  "caution": {},
-  "cautious": {},
-  "cave": {},
+  "career": {
+    "definition": "The series of jobs a person does in their working life."
+  },
+  "careless": {
+    "definition": "Not paying enough attention; making mistakes."
+  },
+  "carpet": {
+    "definition": "A thick covering for a floor."
+  },
+  "carriage": {
+    "definition": "A part of a train for passengers, or a horse-drawn vehicle."
+  },
+  "carton": {
+    "definition": "A light box made of cardboard."
+  },
+  "casual": {
+    "definition": "Relaxed and not formal."
+  },
+  "category": {
+    "definition": "A group of things that share a quality."
+  },
+  "cattle": {
+    "definition": "Cows and bulls kept on a farm for milk or meat."
+  },
+  "caution": {
+    "definition": "Care taken to avoid danger or mistakes."
+  },
+  "cautious": {
+    "definition": "Careful to avoid danger."
+  },
+  "cave": {
+    "definition": "A large natural hole in the side of a hill or under the ground."
+  },
   "cell": {},
-  "central": {},
-  "ceremony": {},
-  "champion": {},
-  "channel": {},
-  "chaos": {},
-  "charge": {},
-  "chariot": {},
-  "charity": {},
-  "charm": {},
-  "chase": {},
-  "chat": {},
-  "checkout": {},
-  "cheerful": {},
-  "chemical": {},
-  "chemist": {},
-  "cherish": {},
-  "chief": {},
-  "choir": {},
-  "choke": {},
-  "chuckle": {},
-  "circle": {},
-  "circular": {},
-  "circus": {},
-  "civil": {},
-  "claim": {},
-  "classify": {},
-  "clear": {},
-  "click": {},
-  "cliff": {},
-  "climate": {},
-  "climber": {},
-  "clinic": {},
-  "clip": {},
-  "coal": {},
-  "coast": {},
-  "coastal": {},
-  "cod": {},
-  "coffin": {},
-  "collapse": {},
-  "collar": {},
-  "combine": {},
-  "comedian": {},
-  "comedy": {},
-  "comet": {},
-  "comfort": {},
-  "comma": {},
-  "command": {},
-  "comment": {},
-  "commit": {},
-  "compete": {},
-  "complete": {},
-  "complex": {},
-  "compose": {},
-  "compound": {},
-  "concept": {},
-  "conclude": {},
-  "conduct": {},
-  "confirm": {},
-  "conflict": {},
-  "connect": {},
-  "conquer": {},
-  "consume": {},
-  "consumer": {},
-  "contain": {},
-  "content": {},
-  "contrary": {},
-  "control": {},
-  "convey": {},
-  "convince": {},
-  "cotton": {},
-  "cough": {},
-  "council": {},
-  "count": {},
-  "counter": {},
-  "county": {},
-  "courage": {},
-  "craft": {},
-  "crash": {},
-  "creator": {},
-  "criminal": {},
-  "crisis": {},
-  "critic": {},
-  "critical": {},
-  "crop": {},
-  "crossing": {},
-  "crow": {},
-  "cruel": {},
-  "crush": {},
-  "cucumber": {},
-  "cultural": {},
-  "cure": {},
-  "curious": {},
-  "curly": {},
-  "currency": {},
-  "current": {},
-  "curtain": {},
-  "curve": {},
-  "cushion": {},
-  "customs": {},
-  "cut": {},
-  "cycle": {},
+  "central": {
+    "definition": "In the middle, or most important."
+  },
+  "ceremony": {
+    "definition": "A formal event with special actions and words."
+  },
+  "champion": {
+    "definition": "A person who has won a competition."
+  },
+  "channel": {
+    "definition": "A television station, or a passage for water."
+  },
+  "chaos": {
+    "definition": "Complete confusion and disorder."
+  },
+  "charge": {
+    "definition": "To ask for money, or to give someone a duty."
+  },
+  "chariot": {
+    "definition": "A two-wheeled vehicle pulled by horses in ancient times."
+  },
+  "charity": {
+    "definition": "An organization that helps people in need."
+  },
+  "charm": {
+    "definition": "A quality that attracts and delights people."
+  },
+  "chase": {
+    "definition": "To run after someone to catch them."
+  },
+  "chat": {
+    "definition": "To talk in a friendly informal way."
+  },
+  "checkout": {
+    "definition": "The place where you pay in a shop, or the time you leave a hotel."
+  },
+  "cheerful": {
+    "definition": "Happy and showing it."
+  },
+  "chemical": {
+    "definition": "A substance used in or made by chemistry."
+  },
+  "chemist": {
+    "definition": "A scientist who studies chemistry, or a shop selling medicines."
+  },
+  "cherish": {
+    "definition": "To love and protect something that is important to you."
+  },
+  "chief": {
+    "definition": "Most important, or the leader of a group."
+  },
+  "choir": {
+    "definition": "A group of people who sing together."
+  },
+  "choke": {
+    "definition": "To be unable to breathe because something blocks the throat."
+  },
+  "chuckle": {
+    "definition": "To laugh quietly."
+  },
+  "circle": {
+    "definition": "A round shape where all points are the same distance from the centre."
+  },
+  "circular": {
+    "definition": "Shaped like a circle."
+  },
+  "circus": {
+    "definition": "A travelling show with clowns, animals, and acrobats."
+  },
+  "civil": {
+    "definition": "About ordinary citizens, or polite but not friendly."
+  },
+  "claim": {
+    "definition": "To say something is true, or to ask for something you deserve."
+  },
+  "classify": {
+    "definition": "To put things into groups according to their type."
+  },
+  "clear": {
+    "definition": "Easy to see through or understand, or to remove obstacles."
+  },
+  "click": {
+    "definition": "A short sharp sound, or to press a mouse button."
+  },
+  "cliff": {
+    "definition": "A high steep face of rock."
+  },
+  "climate": {
+    "definition": "The usual weather conditions in a place."
+  },
+  "climber": {
+    "definition": "A person who climbs mountains or rocks for sport."
+  },
+  "clinic": {
+    "definition": "A place where people go for medical treatment."
+  },
+  "clip": {
+    "definition": "A small piece of metal or plastic for holding things together."
+  },
+  "coal": {
+    "definition": "A hard black mineral burned as fuel."
+  },
+  "coast": {
+    "definition": "The land along the sea."
+  },
+  "coastal": {
+    "definition": "On or near the coast."
+  },
+  "cod": {
+    "definition": "A large sea fish with white flesh."
+  },
+  "coffin": {
+    "definition": "A box in which a dead body is buried."
+  },
+  "collapse": {
+    "definition": "To fall down suddenly, or a sudden failure."
+  },
+  "collar": {
+    "definition": "The part of a shirt that goes around the neck."
+  },
+  "combine": {
+    "definition": "To put things together to form one thing."
+  },
+  "comedian": {
+    "definition": "A person whose job is making people laugh."
+  },
+  "comedy": {
+    "definition": "A film, play, or book that is funny."
+  },
+  "comet": {
+    "definition": "An object in space with a bright tail."
+  },
+  "comfort": {
+    "definition": "A state of physical ease, or to make someone feel better."
+  },
+  "comma": {
+    "definition": "A punctuation mark (,) showing a pause."
+  },
+  "command": {
+    "definition": "An order, or to be in charge of something."
+  },
+  "comment": {
+    "definition": "A remark expressing an opinion."
+  },
+  "commit": {
+    "definition": "To do a crime, or to promise to do something."
+  },
+  "compete": {
+    "definition": "To try to win against others."
+  },
+  "complete": {
+    "definition": "Having all parts, or to finish something."
+  },
+  "complex": {
+    "definition": "Made of many connected parts; not simple."
+  },
+  "compose": {
+    "definition": "To write music, or to make up a whole from parts."
+  },
+  "compound": {
+    "definition": "A thing made of two or more separate elements."
+  },
+  "concept": {
+    "definition": "An abstract idea."
+  },
+  "conclude": {
+    "definition": "To bring something to an end, or to decide after reasoning."
+  },
+  "conduct": {
+    "definition": "To organize and carry out, or behaviour."
+  },
+  "confirm": {
+    "definition": "To state that something is definitely true."
+  },
+  "conflict": {
+    "definition": "A serious disagreement or fight."
+  },
+  "connect": {
+    "definition": "To join things together."
+  },
+  "conquer": {
+    "definition": "To take control of a place by force."
+  },
+  "consume": {
+    "definition": "To eat, drink, or use up something."
+  },
+  "consumer": {
+    "definition": "A person who buys goods or services."
+  },
+  "contain": {
+    "definition": "To have something inside."
+  },
+  "content": {
+    "definition": "The things inside something, or satisfied."
+  },
+  "contrary": {
+    "definition": "Opposite in nature or direction."
+  },
+  "control": {
+    "definition": "The power to decide, or to operate a machine."
+  },
+  "convey": {
+    "definition": "To communicate an idea, or to transport something."
+  },
+  "convince": {
+    "definition": "To make someone believe something is true."
+  },
+  "cotton": {
+    "definition": "A soft white fibre from a plant, used for making cloth."
+  },
+  "cough": {
+    "definition": "To force air out of the lungs with a sudden noise."
+  },
+  "council": {
+    "definition": "A group of people chosen to make decisions for an area."
+  },
+  "count": {
+    "definition": "To say numbers in order, or a nobleman in some countries."
+  },
+  "counter": {
+    "definition": "A flat surface for serving food, or to oppose an argument."
+  },
+  "county": {
+    "definition": "A region with its own local government."
+  },
+  "courage": {
+    "definition": "The ability to do something that frightens you."
+  },
+  "craft": {
+    "definition": "A skill in making things by hand, or a boat."
+  },
+  "crash": {
+    "definition": "To hit something violently and noisily, or a sudden failure."
+  },
+  "creator": {
+    "definition": "A person who makes something new."
+  },
+  "criminal": {
+    "definition": "A person who has committed a crime, or relating to crime."
+  },
+  "crisis": {
+    "definition": "A time of great danger or difficulty."
+  },
+  "critic": {
+    "definition": "A person who judges the quality of books, films, or art."
+  },
+  "critical": {
+    "definition": "Expressing disapproval, or extremely important."
+  },
+  "crop": {
+    "definition": "Plants grown in large amounts for food, or to cut something short."
+  },
+  "crossing": {
+    "definition": "A place where you can cross a road or river safely."
+  },
+  "crow": {
+    "definition": "A large black bird with a loud cry."
+  },
+  "cruel": {
+    "definition": "Causing pain or suffering on purpose."
+  },
+  "crush": {
+    "definition": "To press something until it breaks or changes shape."
+  },
+  "cucumber": {
+    "definition": "A long green vegetable with watery flesh, eaten raw."
+  },
+  "cultural": {
+    "definition": "Relating to the arts, customs, and ideas of a society."
+  },
+  "cure": {
+    "definition": "To make an illness go away, or a treatment that does this."
+  },
+  "curious": {
+    "definition": "Wanting to know or learn about something."
+  },
+  "curly": {
+    "definition": "Having curls; not straight."
+  },
+  "currency": {
+    "definition": "The system of money used in a country."
+  },
+  "current": {
+    "definition": "Belonging to the present time, or a flow of water or electricity."
+  },
+  "curtain": {
+    "definition": "A piece of cloth hung to cover a window."
+  },
+  "curve": {
+    "definition": "A line that bends smoothly."
+  },
+  "cushion": {
+    "definition": "A soft bag filled with feathers or foam for sitting on."
+  },
+  "customs": {
+    "definition": "The official department that checks goods entering a country."
+  },
+  "cut": {
+    "definition": "To divide with a sharp tool, or a wound from a sharp edge."
+  },
+  "cycle": {
+    "definition": "A series of events that repeat, or to ride a bicycle."
+  },
   "daisy": {},
   "damage": {},
   "damaged": {},
