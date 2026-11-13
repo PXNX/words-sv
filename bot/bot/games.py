@@ -11,9 +11,21 @@ from psycopg_pool import AsyncConnectionPool
 
 # The ids are both the game short names at @BotFather and the server's GROUP_GAMES (server/_lib/games.ts).
 GAMES: Final[list[dict[str, str]]] = [
-    {"id": "wordle", "de": "Wordle", "en": "Wordle"},
-    {"id": "hangman", "de": "Galgenmännchen", "en": "Hangman"},
-    {"id": "vocab", "de": "Wortquiz", "en": "Word quiz"},
+    {
+        "id": "wordle", "de": "Wordle", "en": "Wordle",
+        "de_about": "Errate das Wort in sechs Versuchen. Je weniger Versuche, desto höher in der Bestenliste.",
+        "en_about": "Guess the word in six tries. The fewer tries, the higher on the leaderboard.",
+    },
+    {
+        "id": "hangman", "de": "Galgenmännchen", "en": "Hangman",
+        "de_about": "Finde das Wort Buchstabe für Buchstabe, bevor die Zeichnung fertig ist.",
+        "en_about": "Find the word letter by letter before the drawing is done.",
+    },
+    {
+        "id": "vocab", "de": "Wortquiz", "en": "Word quiz",
+        "de_about": "Wähle die richtige Bedeutung. Deine längste Serie ist deine Punktzahl.",
+        "en_about": "Pick the right meaning. Your longest run of right answers is your score.",
+    },
 ]
 
 SCHEMA: Final[str] = """
@@ -36,6 +48,19 @@ def find_game(game_id: str | None) -> dict | None:
 def game_name(game_id: str, lang: str) -> str:
     entry = find_game(game_id)
     return (entry.get(lang) or entry["en"]) if entry else game_id
+
+
+def game_about(game_id: str, lang: str) -> str:
+    entry = find_game(game_id)
+    return (entry.get(f"{lang}_about") or entry["en_about"]) if entry else ""
+
+
+def matching_games(query: str, lang: str) -> list[dict]:
+    """The games an inline query asks for: all for an empty query or "games", else those whose id or name contains it."""
+    wanted = (query or "").strip().lower()
+    if wanted in ("", "games", "game", "spiele", "spiel"):
+        return list(GAMES)
+    return [entry for entry in GAMES if wanted in entry["id"] or wanted in game_name(entry["id"], lang).lower() or wanted in entry["en"].lower()]
 
 
 async def remember_game(pool: AsyncConnectionPool, chat_id: int, game: str, message_id: int) -> None:

@@ -1,7 +1,8 @@
 // The 640x360 pictures BotFather asks for when a Telegram game is created (/newgame), one per group
 // game (server/_lib/games.ts: wordle, hangman, vocab), in the style of brand/telegram-description.png:
 // navy night, the logo's rings, a golden glow, Lilith, and the game itself in the middle.
-// Writes brand/game-<id>.svg and .png. Usage: bun scripts/brand-games.ts
+// Writes brand/game-<id>.svg and .png, and a square 256px version of it as the bot's
+// inline result thumbnail (static/telegram/game-<id>.png). Usage: bun scripts/brand-games.ts
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -91,6 +92,8 @@ async function font(dir: string, path: string, name: string): Promise<string> {
 
 const outDir = join(root, 'brand');
 await mkdir(outDir, { recursive: true });
+const thumbDir = join(root, 'static/telegram');
+await mkdir(thumbDir, { recursive: true });
 const fontDir = await mkdtemp(join(tmpdir(), 'brand-games-fonts-'));
 try {
   // The app's own DM Sans subset has no family name in it, so the bold cut comes from @fontsource.
@@ -98,8 +101,11 @@ try {
   for (const [id, svg] of [['wordle', wordleSvg()], ['hangman', hangmanSvg()], ['vocab', vocabSvg()]] as const) {
     await writeFile(join(outDir, `game-${id}.svg`), svg);
     await writeFile(join(outDir, `game-${id}.png`), new Resvg(svg, { font: { fontFiles, loadSystemFonts: false, defaultFontFamily: 'DM Sans 9pt' } }).render().asPng());
+    // The whole picture on a navy square: Telegram shows result thumbnails square, and a crop cuts some games apart.
+    const thumbnail = `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 -140 640 640"><rect x="0" y="-140" width="640" height="640" fill="#101e33"/>${svg}</svg>`;
+    await writeFile(join(thumbDir, `game-${id}.png`), new Resvg(thumbnail, { font: { fontFiles, loadSystemFonts: false, defaultFontFamily: 'DM Sans 9pt' } }).render().asPng());
   }
 } finally {
   await rm(fontDir, { recursive: true, force: true });
 }
-console.log('wrote brand/game-wordle, game-hangman, game-vocab (.svg/.png)');
+console.log('wrote brand/game-wordle, game-hangman, game-vocab (.svg/.png) and static/telegram/game-*.png');
