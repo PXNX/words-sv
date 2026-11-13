@@ -256,6 +256,11 @@
 <section class="flex-1 min-h-0 m-0 px-[clamp(1rem,5vw,2rem)] pb-[clamp(1rem,5vw,2rem)] pt-[clamp(2.9rem,10vw,3.6rem)] overflow-x-hidden overflow-y-auto bg-transparent" dir={interfaceDirection} lang={settings.interfaceLocale} aria-label={labels.title}>
   <h1 class="m-0 text-center text-base-content font-['DM_Serif_Display',serif] text-[clamp(1.6rem,7vw,2.2rem)] font-normal tracking-[-.03em] leading-none">{labels.title}</h1>
 
+  <!-- A tablet or desktop shows the panels in two columns; a phone keeps the single scroll.
+       The two wrappers disappear on a phone (display:contents), so the reading order is unchanged. -->
+  <div class="progress-columns">
+  <div class="progress-col">
+
   <!-- Customising: the learner's name and own story character, edited right here; colours and sets
        for Telegram Stars are tried on and bought inside the editor. -->
   <section class="panel-play mt-[1.2rem] px-4 pt-[.9rem] pb-4" aria-labelledby="progress-profile-heading">
@@ -297,7 +302,9 @@
 
   <MemoryMap ledger={allLedger} />
   <a class="btn-play btn-play-soft btn-play-sm mt-[.9rem]" href="/insights">{m.insights_link({}, { locale: settings.interfaceLocale })}</a>
+  </div>
 
+  <div class="progress-col">
   <h2 class="progress-group">{m.coach_keep_going({}, { locale: settings.interfaceLocale })}</h2>
   <!-- Streak -->
   <section class="panel-play mt-[1.2rem] px-4 pt-[.9rem] pb-4" aria-labelledby="progress-streak-heading">
@@ -441,10 +448,23 @@
     </ul>
     {#if unlocked === 0}<p class="m-0 mt-[.5rem] text-base-content/55 text-[.8125rem] font-bold leading-[1.4]">{labels.achievementsNone}</p>{/if}
   </section>
+  </div>
 
+  </div>
 </section>
 
 <style>
+  /* A phone keeps the single column: the wrappers vanish from the layout entirely. */
+  .progress-columns, .progress-col { display: contents; }
+  /* Two columns from tablet width up: the panels find a place next to each other instead of
+     trailing down one long phone column. */
+  @media (min-width:900px) {
+    .progress-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; column-gap: 1rem; }
+    .progress-col { display: block; }
+    .progress-col > :global(*) { margin-top: 0; }
+    .progress-col > :global(* + *) { margin-top: .9rem; }
+    .progress-columns > .progress-col:last-child > :global(:first-child) { margin-top: 0; }
+  }
   .profile-head { display:flex;align-items:center;gap:.8rem;margin-top:.45rem; }
   .profile-face { flex:none;width:4.2rem;height:4.2rem;padding:0;overflow:hidden;border:2px solid var(--play-line);border-radius:50% 46% 52% 48% / 48% 52% 46% 50%;background:var(--sun-soft);box-shadow:var(--play-shadow);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:translate var(--dur-move) var(--ease-spring),box-shadow var(--dur-move) var(--ease-spring); }
   .profile-face :global(.story-character) { width:100%;height:118%;margin-top:6%; }

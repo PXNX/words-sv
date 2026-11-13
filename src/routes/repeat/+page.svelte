@@ -94,7 +94,7 @@
       {/if}
     </div>
 
-    <ul class="m-0 mt-3 p-0 grid gap-[.45rem] list-none">
+    <ul class="repeat-groups m-0 mt-3 p-0 grid gap-[.45rem] list-none">
       {#each groups as group (group.source)}
         {@const groupEntries = entries.filter(({ entry }) => entry.source === group.source)}
         <li>
@@ -116,3 +116,8 @@
     </ul>
   {/if}
 </section>
+
+<style>
+  /* Tablets and desktops put the groups side by side; phones keep one card per row. */
+  @media (min-width:900px) { .repeat-groups { grid-template-columns:repeat(2,minmax(0,1fr)); align-items:start; column-gap:.7rem; } }
+</style>

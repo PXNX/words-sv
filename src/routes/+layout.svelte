@@ -230,8 +230,17 @@ onMount(() => {
 		.game-paper { --paper-width:640px;width:min(100%,var(--paper-width));height:calc(100svh - 2 * clamp(.75rem,2.2vw,1.75rem) - var(--tg-inset-top) - var(--tg-inset-bottom));border:1px solid rgba(23,42,69,.17);border-radius:1.5rem;box-shadow:0 24px 70px rgba(30,33,44,.13),0 2px 0 rgba(23,42,69,.08); }
 		.game-paper.paper-list { --paper-width:760px; }
 		.game-paper.paper-wide { --paper-width:1000px; }
-		/* A landscape tablet has the width for the home page's two columns: use more of it. */
-		@media (orientation:landscape) and (min-width:1100px) { .game-paper.paper-wide { --paper-width:1240px; } }
+		/* A tablet or a desktop has room for more than a phone column: every kind of page grows. */
+		@media (min-width:1024px) {
+			.game-paper { --paper-width:720px; }
+			.game-paper.paper-list { --paper-width:880px; }
+			.game-paper.paper-wide { --paper-width:1120px; }
+		}
+		@media (min-width:1280px) {
+			.game-paper { --paper-width:780px; }
+			.game-paper.paper-list { --paper-width:980px; }
+			.game-paper.paper-wide { --paper-width:1280px; }
+		}
 		/* Settings use the whole screen instead of a framed sheet with its own scroll box. */
 		:global(.game-shell:has(.paper-full)) { padding:var(--tg-inset-top) 0 var(--tg-inset-bottom);background-color:#ede4d5; }
 		:global(html.dark .game-shell:has(.paper-full)) { background-color:#213a5d; }

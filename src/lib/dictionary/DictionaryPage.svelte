@@ -220,4 +220,9 @@
   .dictionary-more { display:inline-flex;align-items:center;gap:.25rem;color:#2a6fa8;font-size:.875rem;font-weight:800; }
   :global(html.dark) .dictionary-more { color:#9cc8ec; }
   @media (prefers-reduced-motion:reduce) { .dictionary-icon { animation:none; } .dictionary-hit { transition:none; } }
+  /* Tablets and desktops: wider page, and the hits in two columns instead of one long list. */
+  @media (min-width:900px) {
+    .dictionary { max-width:52rem; }
+    .dictionary-results ul { grid-template-columns:repeat(2,minmax(0,1fr));column-gap:.5rem; }
+  }
 </style>

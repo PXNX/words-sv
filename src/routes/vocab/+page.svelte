@@ -708,5 +708,11 @@
   :global(html.dark) .quiz-listen { border-color:var(--ink-deep);color:var(--ink); }
   :global(html.dark) .quiz-tile { border-color:var(--ink-deep);background:var(--surface);color:var(--paper); }
   :global(html.dark) .quiz-tile.back { background:var(--surface-2); }
+  /* A tablet or desktop has a wider sheet: let the word card and its answers use more of it. */
+  @media (min-width:1024px) {
+    .quiz-card { width:min(100%,34rem); }
+    .quiz-answer { width:min(100%,34rem); }
+    .quiz-definition { max-width:28rem; }
+  }
   @media (prefers-reduced-motion:reduce) { .quiz-listen i,.quiz-slots span.filled { animation:none; } .quiz-tile { rotate:0deg;transition:none; } }
 </style>
