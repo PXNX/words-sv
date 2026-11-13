@@ -31,3 +31,12 @@ per game, so they are in English; the game page itself follows each player's lan
 - Description:
   > Pick the right meaning for each word at your level. Your longest run of first-try answers is
   > your score – keep the run going to top your group's leaderboard.
+
+## Scribble
+
+- Short name: `scribble`
+- Title: `Scribble`
+- Photo: `game-scribble.png`
+- Description:
+  > Take turns drawing a word while the others guess it by replying to the picture. The first right
+  > guess scores, the drawer too – the more you guess, the higher you climb on your group's leaderboard.
