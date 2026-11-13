@@ -3,7 +3,6 @@ import { articleItem, examResult, examRound, FORM_PER_LEVEL, grammarItem, meanin
 import { seededRandom } from '../src/lib/assessment/placement';
 import a1 from '../src/lib/data/de.a1.json';
 import b1 from '../src/lib/data/de.b1.json';
-import en from '../src/lib/data/en.a1.json';
 import type { Level } from '../src/lib/domain/types';
 
 type Entries = Record<string, { definition?: string; type?: string; genus?: 'masculine' | 'feminine' | 'neuter'; article?: string }>;
@@ -42,7 +41,8 @@ describe('exam questions', () => {
     expect(round.some((item) => item.kind === 'meaning' && listened.includes(item.word))).toBe(false);
     expect(new Set(round.map((item) => item.id)).size).toBe(round.length);
     expect(supportsExam(de1)).toBe(true);
-    expect(supportsExam(en as Entries)).toBe(false);
+    // A pack without definitions (words only) cannot ask meaning questions yet.
+    expect(supportsExam({ Apfel: {}, Birne: {} })).toBe(false);
   });
 });
 
