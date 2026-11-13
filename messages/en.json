@@ -1149,5 +1149,15 @@
   "scribble_size_thin": "Thin",
   "scribble_size_thick": "Thick",
   "scribble_undo": "Undo",
-  "scribble_clear": "Clear all"
+  "scribble_clear": "Clear all",
+  "scribble_invite": "Invite",
+  "scribble_invite_title": "Play Scribble together",
+  "scribble_invite_group": "Play in a Telegram group",
+  "scribble_invite_group_text": "Pick a group: the bot joins and starts Scribble. You take turns drawing.",
+  "scribble_invite_telegram": "Send on Telegram",
+  "scribble_invite_telegram_text": "Send friends a link to Scribble.",
+  "scribble_invite_more": "Share elsewhere",
+  "scribble_invite_copy": "Copy link",
+  "scribble_invite_copied": "Link copied ✓",
+  "scribble_invite_text": "Let's play Scribble: draw and guess words in WordCircle!"
 }

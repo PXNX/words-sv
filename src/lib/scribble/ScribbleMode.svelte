@@ -21,6 +21,7 @@
   import { spokenWord, wordMetadata, type Language } from '#lib/data/vocabulary.js';
   import DrawPad from './DrawPad.svelte';
   import LilithSketch from './LilithSketch.svelte';
+  import ScribbleInvite from './ScribbleInvite.svelte';
   import { answerOptions, drawableWords, guessPoints, pickWords } from './scribble';
   import IconBrush from '~icons/material-symbols/brush-rounded';
   import IconVisibility from '~icons/material-symbols/visibility-rounded';
@@ -154,6 +155,7 @@
     {#if view !== 'menu' && !inGroup}<button type="button" class="scribble-back" onclick={() => (view = 'menu')} aria-label={m.scribble_back({}, locale)}><IconArrowBack aria-hidden="true" class="rtl:rotate-180" /></button>{/if}
     <h1 id="scribble-title">{m.scribble_title({}, locale)}</h1>
     {#if view === 'guess'}<span class="scribble-score" aria-live="polite">{m.scribble_score({ score: num(score) }, locale)}</span>{/if}
+    {#if !inGroup}<ScribbleInvite />{/if}
   </header>
 
   {#if words.length < 4}

@@ -1149,5 +1149,15 @@
   "scribble_size_thin": "Dünn",
   "scribble_size_thick": "Dick",
   "scribble_undo": "Rückgängig",
-  "scribble_clear": "Alles löschen"
+  "scribble_clear": "Alles löschen",
+  "scribble_invite": "Einladen",
+  "scribble_invite_title": "Zusammen Scribble spielen",
+  "scribble_invite_group": "In einer Telegram-Gruppe spielen",
+  "scribble_invite_group_text": "Wähle eine Gruppe: Der Bot kommt dazu und startet Scribble. Ihr zeichnet reihum.",
+  "scribble_invite_telegram": "Auf Telegram schicken",
+  "scribble_invite_telegram_text": "Schick Freunden einen Link zu Scribble.",
+  "scribble_invite_more": "Woanders teilen",
+  "scribble_invite_copy": "Link kopieren",
+  "scribble_invite_copied": "Link kopiert ✓",
+  "scribble_invite_text": "Lass uns Scribble spielen: Wörter zeichnen und raten in WordCircle!"
 }
