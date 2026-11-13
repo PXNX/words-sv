@@ -15,6 +15,10 @@ import { escapeHtml } from './telegram.js';
 import type { Database, Row } from './database.js';
 
 export const ROUND_SECONDS = 90;
+/** Round times the drawer can choose; the group's last choice is the next default. */
+export const ROUND_TIMES = [45, 60, 90, 120, 180] as const;
+export const validRoundSeconds = (value: unknown): value is number => typeof value === 'number' && (ROUND_TIMES as readonly number[]).includes(value);
+export const roundSeconds = (round: Row) => (validRoundSeconds(Number(round.seconds)) ? Number(round.seconds) : ROUND_SECONDS);
 export const TURN_SECONDS = 120;
 export const MATCH_ROUNDS = 5;
 /** A finished round stays visible to the players this long. */
@@ -26,7 +30,7 @@ export type Line = { c: string; s: number; p: number[] };
 
 const TEXTS = {
 	de: {
-		drawing: (who: string, letters: number) => `🎨 <b>${who}</b> zeichnet jetzt (${letters} Buchstaben)!\n▶️ Drückt Spielen beim Scribble-Spiel, um live zuzuschauen und zu raten – oder antwortet hier mit eurem Tipp.`,
+		drawing: (who: string, letters: number, seconds: number) => `🎨 <b>${who}</b> zeichnet jetzt (${letters} Buchstaben, ${seconds} s)!\n▶️ Drückt Spielen beim Scribble-Spiel, um live zuzuschauen und zu raten – oder antwortet hier mit eurem Tipp.`,
 		right: (who: string, word: string, points: number, drawer: string, drawerPoints: number) => `✅ ${who} hat es erraten: <b>${word}</b> (+${points}) · ${drawer} +${drawerPoints}`,
 		timeout: (word: string) => `⏰ Zeit um! Gesucht war: <b>${word}</b>`,
 		next: (who: string) => `🎨 Als Nächstes zeichnet ${who}: drück ▶️ Spielen beim Scribble-Spiel.`,
@@ -38,7 +42,7 @@ const TEXTS = {
 		tenWins: '👑 Erfolg freigeschaltet: <b>Scribble-Legende</b> – zehn Siege!'
 	},
 	en: {
-		drawing: (who: string, letters: number) => `🎨 <b>${who}</b> is drawing now (${letters} letters)!\n▶️ Press Play on the Scribble game to watch live and guess – or reply here with your guess.`,
+		drawing: (who: string, letters: number, seconds: number) => `🎨 <b>${who}</b> is drawing now (${letters} letters, ${seconds} s)!\n▶️ Press Play on the Scribble game to watch live and guess – or reply here with your guess.`,
 		right: (who: string, word: string, points: number, drawer: string, drawerPoints: number) => `✅ ${who} got it: <b>${word}</b> (+${points}) · ${drawer} +${drawerPoints}`,
 		timeout: (word: string) => `⏰ Time's up! The word was: <b>${word}</b>`,
 		next: (who: string) => `🎨 Next to draw: ${who} – press ▶️ Play on the Scribble game.`,
@@ -56,8 +60,8 @@ const texts = (lang: unknown): Texts => (lang === 'de' ? TEXTS.de : TEXTS.en);
 export const mention = (userId: number, name: string) => `<a href="tg://user?id=${Math.trunc(userId)}">${escapeHtml(name || '?')}</a>`;
 
 /** The guesser's points: 100, plus up to 100 for guessing fast. The drawer gets half of that. */
-export function scribblePoints(elapsedSeconds: number): { guesser: number; drawer: number } {
-	const left = Math.max(0, Math.min(1, 1 - elapsedSeconds / ROUND_SECONDS));
+export function scribblePoints(elapsedSeconds: number, seconds = ROUND_SECONDS): { guesser: number; drawer: number } {
+	const left = Math.max(0, Math.min(1, 1 - elapsedSeconds / seconds));
 	const guesser = 100 + Math.round(100 * left);
 	return { guesser, drawer: Math.round(guesser / 2) };
 }
@@ -139,7 +143,7 @@ export async function claimTurn(db: Database, chatId: number, gameMessageId: num
 export type StartResult = { ok: true; round: Row } | { ok: false; error: 'not_your_turn' | 'round_running' };
 
 /** The drawer picked a word: the round opens and the chat hears about it. */
-export async function startRound(db: Database, telegram: Telegram, chatId: number, userId: number, name: string, word: string, answers: string[]): Promise<StartResult> {
+export async function startRound(db: Database, telegram: Telegram, chatId: number, userId: number, name: string, word: string, answers: string[], seconds = ROUND_SECONDS): Promise<StartResult> {
 	const state = await getState(db, chatId);
 	if (!state || Number(state.drawer_id) !== userId) return { ok: false, error: 'not_your_turn' };
 	if (await runningRound(db, chatId)) return { ok: false, error: 'round_running' };
@@ -148,7 +152,7 @@ export async function startRound(db: Database, telegram: Telegram, chatId: numbe
 	try {
 		const message = await telegram<{ message_id: number }>('sendMessage', {
 			chat_id: chatId,
-			text: t.drawing(escapeHtml(name || '?'), bareWord(word).length),
+			text: t.drawing(escapeHtml(name || '?'), bareWord(word).length, seconds),
 			parse_mode: 'HTML',
 			reply_parameters: { message_id: Number(state.game_message_id), allow_sending_without_reply: true }
 		});
@@ -157,9 +161,10 @@ export async function startRound(db: Database, telegram: Telegram, chatId: numbe
 		/* the round still runs for everyone watching in the app */
 	}
 	const [[round]] = await db.execute(
-		'INSERT INTO wordcircle_scribble_rounds (chat_id, game_message_id, photo_message_id, drawer_id, drawer_name, word, answers) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *',
-		[chatId, Number(state.game_message_id), announcement, userId, name.slice(0, 64), word, JSON.stringify(answers)]
+		'INSERT INTO wordcircle_scribble_rounds (chat_id, game_message_id, photo_message_id, drawer_id, drawer_name, word, answers, seconds) VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING *',
+		[chatId, Number(state.game_message_id), announcement, userId, name.slice(0, 64), word, JSON.stringify(answers), seconds]
 	);
+	await db.execute('UPDATE wordcircle_scribble_state SET round_seconds = ? WHERE chat_id = ?', [seconds, chatId]);
 	return { ok: true, round };
 }
 
@@ -187,7 +192,7 @@ export async function guess(db: Database, telegram: Telegram, chatId: number, us
 	const round = await runningRound(db, chatId);
 	if (!round || Number(round.drawer_id) === userId) return 'none';
 	if (replyTo !== undefined && Number(round.photo_message_id) !== replyTo) return 'none';
-	if (Date.now() - new Date(round.created_at).getTime() > ROUND_SECONDS * 1000) return 'none';
+	if (Date.now() - new Date(round.created_at).getTime() > roundSeconds(round) * 1000) return 'none';
 	const result = checkGuess(text, roundAnswers(round));
 	if (result !== 'right') return result;
 	await joinPlayer(db, chatId, userId, name);
@@ -206,7 +211,7 @@ export async function finishRound(db: Database, telegram: Telegram, round: Row, 
 		telegram('sendMessage', { chat_id: chatId, text, parse_mode: 'HTML', ...(replyTo ? { reply_parameters: { message_id: replyTo, allow_sending_without_reply: true } } : {}) }).catch(() => undefined);
 
 	if (guesser) {
-		const points = scribblePoints((Date.now() - new Date(round.created_at).getTime()) / 1000);
+		const points = scribblePoints((Date.now() - new Date(round.created_at).getTime()) / 1000, roundSeconds(round));
 		await db.execute('UPDATE wordcircle_scribble_rounds SET points = ? WHERE id = ?', [points.guesser, round.id]);
 		for (const [id, name, gained] of [[guesser.id, guesser.name, points.guesser], [drawerId, String(round.drawer_name ?? ''), points.drawer]] as const) {
 			const [[row]] = await db.execute(
@@ -265,7 +270,7 @@ async function passTurn(db: Database, telegram: Telegram, chatId: number, afterU
 
 /** Every few seconds: ends rounds nobody guessed in time and skips drawers who never started. */
 export async function scribbleTick(db: Database, telegram: Telegram) {
-	const [expired] = await db.execute('SELECT * FROM wordcircle_scribble_rounds WHERE solved_by IS NULL AND created_at <= now() - make_interval(secs => ?)', [ROUND_SECONDS]);
+	const [expired] = await db.execute('SELECT * FROM wordcircle_scribble_rounds WHERE solved_by IS NULL AND created_at + make_interval(secs => seconds) <= now()');
 	for (const round of expired as Row[]) await finishRound(db, telegram, round, null);
 	const [idle] = await db.execute(
 		`SELECT s.* FROM wordcircle_scribble_state s WHERE s.drawer_id IS NOT NULL AND s.turn_started_at <= now() - make_interval(secs => ?)

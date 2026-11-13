@@ -36,6 +36,8 @@
     role: v.picklist(['draw', 'watch', 'wait']),
     me: v.object({ name: v.string(), wins: v.number() }),
     drawer: v.nullable(v.string()),
+    roundSeconds: v.number(),
+    roundTimes: v.array(v.number()),
     turnSecondsLeft: v.number(),
     round: v.nullable(v.object({
       id: v.number(),
@@ -47,6 +49,7 @@
       guesser: v.nullable(v.string()),
       guessedByMe: v.boolean(),
       points: v.nullable(v.number()),
+      seconds: v.number(),
       secondsLeft: v.number(),
       version: v.number(),
       lines: v.nullable(v.array(LineSchema))
@@ -71,6 +74,8 @@
   let choices = $state<string[]>([]);
   let chosen = $state('');
   let starting = $state(false);
+  // The drawer's choice of round time; the group's last choice until they pick another.
+  let seconds = $state<number | null>(null);
   let typed = $state('');
   let hint = $state<'close' | 'wrong' | ''>('');
   let pending: LiveLine[] | null = null;
@@ -148,7 +153,7 @@
     starting = true;
     chosen = word;
     try {
-      await callApi('/api/games/scribble', StartSchema, { body: { action: 'start', session, word: display(word), answers: answersFor(word) } });
+      await callApi('/api/games/scribble', StartSchema, { body: { action: 'start', session, word: display(word), answers: answersFor(word), seconds: seconds ?? game?.roundSeconds ?? 90 } });
       lines = [];
       await poll();
     } catch (error) {
@@ -195,7 +200,7 @@
   {:else}
     <div class="live-match">
       <span>{m.scribble_live_round({ round: num(Math.max(1, game.match.round)), of: num(game.match.of) }, locale)}</span>
-      {#if round && drawing}<span class="live-time" class:low={round.secondsLeft <= 10}><IconTimer aria-hidden="true" />{num(round.secondsLeft)}</span>{/if}
+      {#if round && drawing}<span class="live-time" class:low={round.secondsLeft <= Math.min(10, round.seconds / 4)}><IconTimer aria-hidden="true" />{num(round.secondsLeft)}</span>{/if}
     </div>
 
     {#if game.role === 'draw' && !round?.mine}
@@ -208,6 +213,12 @@
           {/each}
         </div>
         <button type="button" class="live-link" disabled={starting} onclick={() => (choices = pickWords(words, 3))}><IconShuffle aria-hidden="true" />{m.scribble_other_words({}, locale)}</button>
+        <div class="live-times" role="radiogroup" aria-label={m.scribble_live_round_time({}, locale)}>
+          <span><IconTimer aria-hidden="true" />{m.scribble_live_round_time({}, locale)}</span>
+          {#each game.roundTimes as option (option)}
+            <button type="button" role="radio" aria-checked={(seconds ?? game.roundSeconds) === option} onclick={() => (seconds = option)}>{m.scribble_seconds({ seconds: num(option) }, locale)}</button>
+          {/each}
+        </div>
         <small class="live-note">{m.scribble_live_turn_left({ seconds: num(game.turnSecondsLeft) }, locale)}</small>
       </div>
     {:else if iDraw && round}
@@ -268,6 +279,11 @@
   .live-options { display:grid;grid-template-columns:repeat(auto-fit, minmax(8rem, 1fr));gap:.55rem; }
   .live-choice { gap:.45rem; }
   .live-choice span { font-size:1.3rem; }
+  .live-times { display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.35rem; }
+  .live-times span { display:inline-flex;align-items:center;gap:.25rem;flex:1 1 100%;justify-content:center;font-size:.9rem;font-weight:900; }
+  .live-times span :global(svg) { width:1rem;height:1rem; }
+  .live-times button { padding:.3rem .7rem;border:2px solid currentColor;border-radius:999px;background:none;color:inherit;font:inherit;font-size:.86rem;font-weight:800;cursor:pointer; }
+  .live-times button[aria-checked='true'] { background:#e6a527;color:#172a45;border-color:#172a45; }
   .live-blanks { margin:0;text-align:center;font-size:1.5rem;font-weight:900;letter-spacing:.12em; }
   .live-blanks small { font-size:.85rem;letter-spacing:0;opacity:.65; }
   .live-guess { display:flex;gap:.5rem; }

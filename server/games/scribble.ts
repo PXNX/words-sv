@@ -2,7 +2,7 @@ import * as v from 'valibot';
 import { getDatabase } from '../_lib/database.js';
 import { isMethod, readJson, respond } from '../_lib/http.js';
 import { ensureGameTables, SessionIdSchema, SESSION_TTL_MS, telegramApi } from '../_lib/games.js';
-import { bareWord, claimTurn, cleanLines, currentRound, guess, joinPlayer, MATCH_ROUNDS, ROUND_SECONDS, saveLines, startRound, TURN_SECONDS, winsOf, type Telegram } from '../_lib/scribbleGame.js';
+import { bareWord, claimTurn, cleanLines, currentRound, guess, joinPlayer, MATCH_ROUNDS, ROUND_SECONDS, ROUND_TIMES, roundSeconds, saveLines, startRound, TURN_SECONDS, validRoundSeconds, winsOf, type Telegram } from '../_lib/scribbleGame.js';
 import type { Database, Row } from '../_lib/database.js';
 import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 
@@ -13,7 +13,7 @@ import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 const Text = v.pipe(v.string(), v.trim(), v.minLength(1), v.maxLength(64));
 const Request = v.variant('action', [
 	v.object({ action: v.literal('state'), session: SessionIdSchema, since: v.optional(v.number(), -1), locale: v.optional(v.string(), 'en') }),
-	v.object({ action: v.literal('start'), session: SessionIdSchema, word: Text, answers: v.pipe(v.array(Text), v.minLength(1), v.maxLength(12)) }),
+	v.object({ action: v.literal('start'), session: SessionIdSchema, word: Text, answers: v.pipe(v.array(Text), v.minLength(1), v.maxLength(12)), seconds: v.optional(v.number(), ROUND_SECONDS) }),
 	v.object({ action: v.literal('lines'), session: SessionIdSchema, round: v.number(), lines: v.unknown() }),
 	v.object({ action: v.literal('guess'), session: SessionIdSchema, text: v.pipe(v.string(), v.maxLength(64)) })
 ]);
@@ -45,7 +45,8 @@ function roundView(round: Row | undefined, me: number, since: number) {
 		guesser: ended && Number(round.solved_by) ? String(round.guesser_name ?? '') : null,
 		guessedByMe: ended && Number(round.solved_by) === me,
 		points: round.points === null || round.points === undefined ? null : Number(round.points),
-		secondsLeft: ended ? 0 : Math.max(0, Math.ceil(ROUND_SECONDS - elapsed)),
+		seconds: roundSeconds(round),
+		secondsLeft: ended ? 0 : Math.max(0, Math.ceil(roundSeconds(round) - elapsed)),
 		version,
 		lines: version !== since ? JSON.parse(String(round.lines ?? '[]')) : null
 	};
@@ -79,6 +80,8 @@ export function createScribbleEndpoint({ databaseProvider = getDatabase, telegra
 						role: running ? (Number(round.drawer_id) === me.userId ? 'draw' : 'watch') : drawerId === me.userId ? 'draw' : 'wait',
 						me: { name: me.name, wins: await winsOf(db, me.userId) },
 						drawer: drawer ? String(drawer.first_name ?? '') : null,
+						roundSeconds: validRoundSeconds(Number(state.round_seconds)) ? Number(state.round_seconds) : ROUND_SECONDS,
+						roundTimes: ROUND_TIMES,
 						turnSecondsLeft: Math.max(0, Math.ceil(TURN_SECONDS - (Date.now() - new Date(state.turn_started_at).getTime()) / 1000)),
 						round: roundView(round, me.userId, input.since),
 						match: {
@@ -89,7 +92,8 @@ export function createScribbleEndpoint({ databaseProvider = getDatabase, telegra
 					});
 				}
 				case 'start': {
-					const started = await startRound(db, telegram, me.chatId, me.userId, me.name, input.word, input.answers);
+					if (!validRoundSeconds(input.seconds)) return respond(res, 400, { ok: false, error: 'invalid_seconds' });
+					const started = await startRound(db, telegram, me.chatId, me.userId, me.name, input.word, input.answers, input.seconds);
 					if (!started.ok) return respond(res, 409, { ok: false, error: started.error });
 					return respond(res, 200, { ok: true, round: Number(started.round.id) });
 				}

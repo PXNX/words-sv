@@ -171,3 +171,7 @@ CREATE TABLE IF NOT EXISTS wordcircle_scribble_champions (
   first_name VARCHAR(64) NOT NULL DEFAULT '',
   wins INTEGER NOT NULL DEFAULT 0
 );
+
+-- Round time, chosen by the drawer; the group's last choice is the next default.
+ALTER TABLE wordcircle_scribble_rounds ADD COLUMN IF NOT EXISTS seconds INTEGER NOT NULL DEFAULT 90;
+ALTER TABLE wordcircle_scribble_state ADD COLUMN IF NOT EXISTS round_seconds INTEGER NOT NULL DEFAULT 90;
