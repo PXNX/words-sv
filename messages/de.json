@@ -1159,5 +1159,21 @@
   "scribble_invite_more": "Woanders teilen",
   "scribble_invite_copy": "Link kopieren",
   "scribble_invite_copied": "Link kopiert ✓",
-  "scribble_invite_text": "Lass uns Scribble spielen: Wörter zeichnen und raten in WordCircle!"
+  "scribble_invite_text": "Lass uns Scribble spielen: Wörter zeichnen und raten in WordCircle!",
+  "scribble_easy": "Leicht",
+  "scribble_medium": "Mittel",
+  "scribble_hard": "Schwer",
+  "scribble_time_left": "Verbleibende Zeit",
+  "scribble_timeout": "Zeit um! Es war: {word}",
+  "scribble_close": "Fast! Nur knapp daneben – versuch es noch einmal.",
+  "scribble_try_again": "Nicht ganz – noch ein Versuch!",
+  "scribble_mark_right": "Richtig",
+  "scribble_mark_wrong": "Falsch",
+  "scribble_other_words": "Andere Wörter",
+  "scribble_give_up": "Aufgeben",
+  "scribble_spell": "Antwort schreiben",
+  "scribble_spell_hint": "Tippe das Wort selbst, statt aus vier auszuwählen.",
+  "scribble_spell_label": "Deine Antwort",
+  "scribble_spell_placeholder": "Was ist das?",
+  "scribble_spell_submit": "Raten"
 }

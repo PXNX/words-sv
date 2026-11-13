@@ -22,10 +22,10 @@ export function drawableWords(language: string, pool: readonly string[]): string
   });
 }
 
-/** `count` different words, drawn at random. */
-export function pickWords(pool: readonly string[], count: number, random: Random = Math.random): string[] {
+/** `count` different words (or any items), drawn at random. */
+export function pickWords<T = string>(pool: readonly T[], count: number, random: Random = Math.random): T[] {
   const rest = [...pool];
-  const picked: string[] = [];
+  const picked: T[] = [];
   while (picked.length < count && rest.length > 0) picked.push(rest.splice(Math.floor(random() * rest.length), 1)[0]!);
   return picked;
 }
@@ -169,4 +169,67 @@ export function orderStrokes(points: readonly Point[], jump = 6, minLength = 3):
     if (stroke.length >= minLength) strokes.push(stroke);
   }
   return strokes;
+}
+
+/**
+ * How hard Lilith makes a round. Easy: she draws in colour from top to bottom and quickly. Medium:
+ * colour, but the strokes come in a jumbled order. Hard: plain pencil, jumbled, and she leaves out
+ * part of the picture. Harder rounds give more time and multiply the points.
+ */
+export type Difficulty = 'easy' | 'medium' | 'hard';
+export type DifficultyRule = { seconds: number; drawShare: number; colored: boolean; shuffled: boolean; detail: number; multiplier: number };
+export const DIFFICULTIES: Record<Difficulty, DifficultyRule> = {
+  // `drawShare` of the round's time goes on drawing; `detail` is the part of the strokes drawn at all.
+  easy: { seconds: 20, drawShare: 0.55, colored: true, shuffled: false, detail: 1, multiplier: 1 },
+  medium: { seconds: 25, drawShare: 0.7, colored: true, shuffled: true, detail: 0.85, multiplier: 1.5 },
+  hard: { seconds: 30, drawShare: 0.85, colored: false, shuffled: true, detail: 0.6, multiplier: 2 }
+};
+
+/** Mostly easy and medium rounds, every so often a hard one. */
+export function pickDifficulty(random: Random = Math.random): Difficulty {
+  const roll = random();
+  return roll < 0.4 ? 'easy' : roll < 0.8 ? 'medium' : 'hard';
+}
+
+/** Points for a right guess: 100 plus up to 100 for time left, times the difficulty's multiplier. */
+export function roundPoints(difficulty: Difficulty, timeLeft: number): number {
+  return Math.round(guessPoints(1 - Math.max(0, Math.min(1, timeLeft))) * DIFFICULTIES[difficulty].multiplier);
+}
+
+/** Strokes as a round draws them: jumbled if it says so, and only the longest `detail` share of them. */
+export function planStrokes(strokes: readonly Stroke[], rule: Pick<DifficultyRule, 'shuffled' | 'detail'>, random: Random = Math.random): Stroke[] {
+  // The longest strokes carry the shape; dropping the short ones keeps the drawing recognisable but harder.
+  const keep = Math.max(1, Math.round(strokes.length * Math.max(0, Math.min(1, rule.detail))));
+  const kept = new Set([...strokes].sort((a, b) => b.length - a.length).slice(0, keep));
+  const ordered = strokes.filter((stroke) => kept.has(stroke));
+  return rule.shuffled ? pickWords(ordered, ordered.length, random) : ordered;
+}
+
+/**
+ * A stroke's colour: the average of the picture's opaque pixels around its points, a little darker
+ * so it reads as ink. `null` when nothing opaque is near (falls back to pencil).
+ */
+export function strokeColor(rgba: ArrayLike<number>, width: number, height: number, stroke: Stroke, radius = 2): string | null {
+  let r = 0;
+  let g = 0;
+  let b = 0;
+  let count = 0;
+  for (const [x, y] of stroke) {
+    for (let dy = -radius; dy <= radius; dy += 1) {
+      for (let dx = -radius; dx <= radius; dx += 1) {
+        const px = x + dx;
+        const py = y + dy;
+        if (px < 0 || py < 0 || px >= width || py >= height) continue;
+        const at = (py * width + px) * 4;
+        if (rgba[at + 3]! < 200) continue;
+        r += rgba[at]!;
+        g += rgba[at + 1]!;
+        b += rgba[at + 2]!;
+        count += 1;
+      }
+    }
+  }
+  if (count === 0) return null;
+  const ink = (value: number) => Math.round((value / count) * 0.8);
+  return `rgb(${ink(r)}, ${ink(g)}, ${ink(b)})`;
 }

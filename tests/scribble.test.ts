@@ -77,3 +77,31 @@ describe('picture translations', async () => {
     expect(pictureTranslations('fa', 'x')).toEqual([]);
   });
 });
+
+describe('Scribble difficulty', async () => {
+  const { DIFFICULTIES, pickDifficulty, planStrokes, roundPoints, strokeColor } = await import('../src/lib/scribble/scribble');
+  it('makes harder rounds longer and worth more', () => {
+    expect(DIFFICULTIES.hard.seconds).toBeGreaterThan(DIFFICULTIES.easy.seconds);
+    expect(roundPoints('easy', 1)).toBe(200);
+    expect(roundPoints('hard', 1)).toBe(400);
+    expect(roundPoints('medium', 0)).toBe(150);
+  });
+
+  it('picks every difficulty', () => {
+    expect([0.1, 0.5, 0.9].map((value) => pickDifficulty(() => value))).toEqual(['easy', 'medium', 'hard']);
+  });
+
+  it('keeps the longest strokes and jumbles them when asked', () => {
+    const strokes = [[[0, 0]], [[1, 1], [2, 2], [3, 3]], [[4, 4], [5, 5]]] as Array<Array<[number, number]>>;
+    expect(planStrokes(strokes, { shuffled: false, detail: 1 })).toEqual(strokes);
+    expect(planStrokes(strokes, { shuffled: false, detail: 0.6 })).toEqual([strokes[1], strokes[2]]);
+    expect(planStrokes(strokes, { shuffled: true, detail: 1 }, seeded(3))).toHaveLength(3);
+  });
+
+  it('colours a stroke like the picture under it, or not at all on empty paper', () => {
+    const rgba = new Uint8ClampedArray(10 * 10 * 4);
+    for (let at = 0; at < rgba.length; at += 4) rgba.set([200, 100, 50, 255], at);
+    expect(strokeColor(rgba, 10, 10, [[5, 5]])).toBe('rgb(160, 80, 40)');
+    expect(strokeColor(new Uint8ClampedArray(400), 10, 10, [[5, 5]])).toBeNull();
+  });
+});
