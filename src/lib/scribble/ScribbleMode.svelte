@@ -22,7 +22,11 @@
   import DrawPad from './DrawPad.svelte';
   import LilithSketch from './LilithSketch.svelte';
   import ScribbleInvite from './ScribbleInvite.svelte';
-  import { answerOptions, drawableWords, guessPoints, pickWords } from './scribble';
+  import { answerOptions, checkGuess, DIFFICULTIES, drawableWords, pickDifficulty, pickWords, roundPoints, type Difficulty } from './scribble';
+  import IconCheck from '~icons/material-symbols/check-rounded';
+  import IconCross from '~icons/material-symbols/close-rounded';
+  import IconTimer from '~icons/material-symbols/timer-rounded';
+  import IconShuffle from '~icons/material-symbols/shuffle-rounded';
   import IconBrush from '~icons/material-symbols/brush-rounded';
   import IconVisibility from '~icons/material-symbols/visibility-rounded';
   import IconSend from '~icons/material-symbols/send-rounded';
@@ -48,8 +52,24 @@
   let options = $state<string[]>([]);
   let choices = $state<string[]>([]);
   let picked = $state<string | null>(null);
-  let progress = $state(0);
   let score = $state(0);
+  let difficulty = $state<Difficulty>('easy');
+  let timeLeft = $state(0);
+  let timedOut = $state(false);
+  let lastPoints = $state(0);
+  let typed = $state('');
+  let hint = $state<'close' | 'wrong' | ''>('');
+  let timer: ReturnType<typeof setInterval> | undefined;
+  // Spell the answer instead of picking it from four: remembered on this device.
+  const SPELL_KEY = 'wordcircle-scribble-spell';
+  let spell = $state(readSpell());
+  function readSpell() {
+    try { return typeof localStorage !== 'undefined' && localStorage.getItem(SPELL_KEY) === '1'; } catch { return false; }
+  }
+  function setSpell(value: boolean) {
+    spell = value;
+    try { localStorage.setItem(SPELL_KEY, value ? '1' : '0'); } catch { /* not remembered, still on for now */ }
+  }
   let rounds = $state(0);
   let drawing = $state('');
   let lines = $state(0);
@@ -59,26 +79,54 @@
 
   const finished = $derived(picked !== null);
   const right = $derived(picked === target);
+  const rule = $derived(DIFFICULTIES[difficulty]);
+  const difficultyLabel = $derived(difficulty === 'easy' ? m.scribble_easy({}, locale) : difficulty === 'medium' ? m.scribble_medium({}, locale) : m.scribble_hard({}, locale));
   const display = (word: string) => spokenWord(lang, word);
 
   $effect(() => {
     if (inGroup && view === 'menu') startDrawing();
   });
 
-  function startGuessing() {
-    target = pickWords(words, 1)[0] ?? '';
-    options = answerOptions(target, words, language);
+  function stopTimer() {
+    if (timer) clearInterval(timer);
+    timer = undefined;
+  }
+  $effect(() => stopTimer);
+
+  function resetAnswer() {
     picked = null;
-    progress = 0;
-    view = 'guess';
+    typed = '';
+    hint = '';
+    timedOut = false;
+    lastPoints = 0;
   }
 
-  function pickGuess(word: string) {
+  function startGuessing() {
+    stopTimer();
+    target = pickWords(words, 1)[0] ?? '';
+    options = answerOptions(target, words, language);
+    difficulty = pickDifficulty();
+    resetAnswer();
+    view = 'guess';
+    timeLeft = DIFFICULTIES[difficulty].seconds;
+    const ends = Date.now() + timeLeft * 1000;
+    timer = setInterval(() => {
+      timeLeft = Math.max(0, (ends - Date.now()) / 1000);
+      if (timeLeft > 0) return;
+      timedOut = true;
+      finishGuess('');
+    }, 200);
+  }
+
+  /** Ends Lilith's round: `word` is the answer given ('' for a wrong spelling or no answer in time). */
+  function finishGuess(word: string) {
     if (finished) return;
+    stopTimer();
     picked = word;
     rounds += 1;
     if (word === target) {
-      score += guessPoints(progress);
+      lastPoints = roundPoints(difficulty, timeLeft / rule.seconds);
+      score += lastPoints;
       playSuccessSound(settings.sound, 'wordle');
       haptic('win');
     } else {
@@ -87,7 +135,23 @@
     }
   }
 
+  /** A spelled answer: right ends the round, close or wrong lets the learner try again while time is left. */
+  function submitSpelling(onRight: (word: string) => void) {
+    if (finished || !typed.trim()) return;
+    const result = checkGuess(typed, answersFor(target));
+    if (result === 'right') {
+      hint = '';
+      onRight(target);
+      return;
+    }
+    hint = result === 'close' ? 'close' : 'wrong';
+    typed = '';
+    playErrorSound(settings.sound, 'vocab');
+    haptic('tap');
+  }
+
   function startDrawing() {
+    stopTimer();
     choices = pickWords(words, 3);
     target = '';
     lines = 0;
@@ -107,13 +171,14 @@
       return;
     }
     options = answerOptions(target, words, language);
-    picked = null;
+    resetAnswer();
     view = 'pass';
   }
 
   function friendGuess(word: string) {
     if (finished) return;
     picked = word;
+    hint = '';
     if (word === target) {
       playSuccessSound(settings.sound, 'wordle');
       haptic('win');
@@ -150,6 +215,26 @@
   }
 </script>
 
+{#snippet optionButtons(onpick: (word: string) => void)}
+  <div class="scribble-options">
+    {#each options as option (option)}
+      {@const isRight = finished && option === target}
+      {@const isWrong = finished && option === picked && option !== target}
+      <button type="button" class="btn-play" class:right={isRight} class:wrong={isWrong} disabled={finished} onclick={() => onpick(option)}>
+        {display(option)}{#if isRight}<IconCheck aria-label={m.scribble_mark_right({}, locale)} />{:else if isWrong}<IconCross aria-label={m.scribble_mark_wrong({}, locale)} />{/if}
+      </button>
+    {/each}
+  </div>
+{/snippet}
+
+{#snippet spellForm(onright: (word: string) => void)}
+  <form class="scribble-spell" onsubmit={(event) => { event.preventDefault(); submitSpelling(onright); }}>
+    <!-- svelte-ignore a11y_autofocus -->
+    <input type="text" bind:value={typed} autocomplete="off" autocapitalize="off" spellcheck="false" autofocus aria-label={m.scribble_spell_label({}, locale)} placeholder={m.scribble_spell_placeholder({}, locale)} class:close={hint === 'close'} />
+    <button type="submit" class="btn-play btn-play-ink" disabled={!typed.trim()}>{m.scribble_spell_submit({}, locale)}</button>
+  </form>
+{/snippet}
+
 <section class="scribble" aria-labelledby="scribble-title">
   <header class="scribble-head">
     {#if view !== 'menu' && !inGroup}<button type="button" class="scribble-back" onclick={() => (view = 'menu')} aria-label={m.scribble_back({}, locale)}><IconArrowBack aria-hidden="true" class="rtl:rotate-180" /></button>{/if}
@@ -172,17 +257,26 @@
         <strong>{m.scribble_mode_draw({}, locale)}</strong>
         <small>{m.scribble_mode_draw_text({}, locale)}</small>
       </button>
+      <label class="scribble-setting"><input type="checkbox" class="toggle toggle-sm toggle-primary" checked={spell} onchange={(event) => setSpell((event.currentTarget as HTMLInputElement).checked)} /><span><strong>{m.scribble_spell({}, locale)}</strong><small>{m.scribble_spell_hint({}, locale)}</small></span></label>
       <p class="scribble-note">{m.scribble_group_hint({}, locale)}</p>
     </div>
   {:else if view === 'guess'}
     <div class="scribble-stage">
-      {#key target}<LilithSketch emoji={pictureFor(language, target) ?? '?'} reveal={finished} label={m.scribble_sketch_label({}, locale)} onprogress={(value) => (progress = value)} />{/key}
-      <p class="scribble-prompt">{finished ? (right ? m.scribble_right({ points: num(guessPoints(progress)) }, locale) : m.scribble_wrong({ word: display(target) }, locale)) : m.scribble_guess_prompt({}, locale)}</p>
-      <div class="scribble-options">
-        {#each options as option (option)}
-          <button type="button" class="btn-play" class:right={finished && option === target} class:wrong={finished && option === picked && option !== target} disabled={finished} onclick={() => pickGuess(option)}>{display(option)}</button>
-        {/each}
+      <div class="scribble-round">
+        <span class="scribble-level {difficulty}">{difficultyLabel}{#if rule.multiplier > 1} ×{num(rule.multiplier)}{/if}</span>
+        <span class="scribble-time" class:low={timeLeft <= 5 && !finished}><IconTimer aria-hidden="true" />{num(Math.ceil(timeLeft))}</span>
       </div>
+      <div class="scribble-timer" role="progressbar" aria-label={m.scribble_time_left({}, locale)} aria-valuemin={0} aria-valuemax={rule.seconds} aria-valuenow={Math.ceil(timeLeft)}><i style:width="{(timeLeft / rule.seconds) * 100}%" class:low={timeLeft <= 5}></i></div>
+      {#key target}<LilithSketch emoji={pictureFor(language, target) ?? '?'} {rule} duration={rule.seconds * rule.drawShare * 1000} reveal={finished} label={m.scribble_sketch_label({}, locale)} />{/key}
+      <p class="scribble-prompt" aria-live="polite">
+        {#if finished}<span class="scribble-mark" class:right aria-hidden="true">{#if right}<IconCheck />{:else}<IconCross />{/if}</span>{/if}
+        {finished ? (right ? m.scribble_right({ points: num(lastPoints) }, locale) : timedOut ? m.scribble_timeout({ word: display(target) }, locale) : m.scribble_wrong({ word: display(target) }, locale)) : hint === 'close' ? m.scribble_close({}, locale) : hint === 'wrong' ? m.scribble_try_again({}, locale) : m.scribble_guess_prompt({}, locale)}
+      </p>
+      {#if spell}
+        {#if !finished}{@render spellForm(finishGuess)}{/if}
+      {:else}
+        {@render optionButtons(finishGuess)}
+      {/if}
       {#if finished}<button type="button" class="btn-play btn-play-ink" onclick={startGuessing}>{m.scribble_next({}, locale)}</button>{/if}
       {#if rounds > 0}<small class="scribble-note">{m.scribble_rounds({ count: num(rounds) }, locale)}</small>{/if}
     </div>
@@ -194,6 +288,7 @@
           <button type="button" class="btn-play scribble-choice" onclick={() => choose(choice)}><span aria-hidden="true">{pictureFor(language, choice)}</span>{display(choice)}</button>
         {/each}
       </div>
+      <button type="button" class="scribble-reroll" onclick={() => (choices = pickWords(words, 3))}><IconShuffle aria-hidden="true" />{m.scribble_other_words({}, locale)}</button>
     </div>
   {:else if view === 'draw'}
     <div class="scribble-stage">
@@ -212,12 +307,18 @@
   {:else if view === 'friend'}
     <div class="scribble-stage">
       <img class="scribble-drawing" src={drawing} alt={m.scribble_drawing_alt({}, locale)} />
-      <p class="scribble-prompt">{finished ? (right ? m.scribble_friend_right({}, locale) : m.scribble_wrong({ word: display(target) }, locale)) : m.scribble_friend_prompt({}, locale)}</p>
-      <div class="scribble-options">
-        {#each options as option (option)}
-          <button type="button" class="btn-play" class:right={finished && option === target} class:wrong={finished && option === picked && option !== target} disabled={finished} onclick={() => friendGuess(option)}>{display(option)}</button>
-        {/each}
-      </div>
+      <p class="scribble-prompt" aria-live="polite">
+        {#if finished}<span class="scribble-mark" class:right aria-hidden="true">{#if right}<IconCheck />{:else}<IconCross />{/if}</span>{/if}
+        {finished ? (right ? m.scribble_friend_right({}, locale) : m.scribble_wrong({ word: display(target) }, locale)) : hint === 'close' ? m.scribble_close({}, locale) : hint === 'wrong' ? m.scribble_try_again({}, locale) : m.scribble_friend_prompt({}, locale)}
+      </p>
+      {#if spell}
+        {#if !finished}
+          {@render spellForm(friendGuess)}
+          <button type="button" class="scribble-reroll" onclick={() => friendGuess('')}>{m.scribble_give_up({}, locale)}</button>
+        {/if}
+      {:else}
+        {@render optionButtons(friendGuess)}
+      {/if}
       {#if finished}<button type="button" class="btn-play btn-play-ink" onclick={startDrawing}>{m.scribble_swap({}, locale)}</button>{/if}
     </div>
   {:else if view === 'sent'}
@@ -251,4 +352,27 @@
   .scribble-drawing { width:100%;max-width:22rem;justify-self:center;border:2px solid #172a45;border-radius:1rem;box-shadow:4px 4px 0 #172a45; }
   .scribble-note { margin:0;text-align:center;font-size:.86rem;font-weight:700;opacity:.7; }
   .scribble-error { margin:0;text-align:center;color:#c4522e;font-weight:800; }
+  .scribble-options .btn-play { gap:.35rem; }
+  .scribble-options .btn-play :global(svg) { width:1.15rem;height:1.15rem; }
+  .scribble-mark { display:inline-grid;place-items:center;width:1.6rem;height:1.6rem;margin-inline-end:.35rem;border-radius:50%;background:#c4522e;color:#fffdf7;vertical-align:middle; }
+  .scribble-mark.right { background:#34824d; }
+  .scribble-mark :global(svg) { width:1.1rem;height:1.1rem; }
+  .scribble-round { display:flex;align-items:center;justify-content:space-between;gap:.6rem; }
+  .scribble-level { padding:.15rem .6rem;border-radius:999px;font-size:.8rem;font-weight:900;letter-spacing:.04em;text-transform:uppercase;background:#d9efdd;color:#1f5a33; }
+  .scribble-level.medium { background:#fbe9c4;color:#7a4f00; }
+  .scribble-level.hard { background:#f6d5c9;color:#8a2c12; }
+  .scribble-time { display:inline-flex;align-items:center;gap:.25rem;font-weight:900;font-variant-numeric:tabular-nums; }
+  .scribble-time :global(svg) { width:1.1rem;height:1.1rem; }
+  .scribble-time.low { color:#c4522e; }
+  .scribble-timer { height:.5rem;border-radius:999px;background:color-mix(in srgb, currentColor 14%, transparent);overflow:hidden; }
+  .scribble-timer i { display:block;height:100%;border-radius:inherit;background:#34824d;transition:width .2s linear, background-color .3s; }
+  .scribble-timer i.low { background:#c4522e; }
+  .scribble-spell { display:flex;gap:.5rem; }
+  .scribble-spell input { flex:1;min-width:0;padding:.6rem .8rem;border:2px solid currentColor;border-radius:.8rem;background:none;color:inherit;font:inherit;font-size:1.05rem;font-weight:800; }
+  .scribble-spell input.close { border-color:#e6a527; }
+  .scribble-reroll { display:inline-flex;align-items:center;justify-self:center;gap:.3rem;padding:.3rem .6rem;border:0;background:none;color:inherit;font:inherit;font-size:.9rem;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer;opacity:.8; }
+  .scribble-reroll :global(svg) { width:1.05rem;height:1.05rem; }
+  .scribble-setting { display:flex;align-items:center;gap:.7rem;padding:.2rem .3rem;cursor:pointer; }
+  .scribble-setting span { display:grid;gap:.1rem; }
+  .scribble-setting small { font-size:.82rem;font-weight:700;opacity:.7; }
 </style>

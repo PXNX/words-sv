@@ -1159,5 +1159,21 @@
   "scribble_invite_more": "Share elsewhere",
   "scribble_invite_copy": "Copy link",
   "scribble_invite_copied": "Link copied ✓",
-  "scribble_invite_text": "Let's play Scribble: draw and guess words in WordCircle!"
+  "scribble_invite_text": "Let's play Scribble: draw and guess words in WordCircle!",
+  "scribble_easy": "Easy",
+  "scribble_medium": "Medium",
+  "scribble_hard": "Hard",
+  "scribble_time_left": "Time left",
+  "scribble_timeout": "Time's up! It was: {word}",
+  "scribble_close": "So close! Just a little off – try again.",
+  "scribble_try_again": "Not quite – try again!",
+  "scribble_mark_right": "Right",
+  "scribble_mark_wrong": "Wrong",
+  "scribble_other_words": "Other words",
+  "scribble_give_up": "Give up",
+  "scribble_spell": "Spell the answer",
+  "scribble_spell_hint": "Type the word yourself instead of picking from four.",
+  "scribble_spell_label": "Your answer",
+  "scribble_spell_placeholder": "What is it?",
+  "scribble_spell_submit": "Guess"
 }
