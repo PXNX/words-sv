@@ -55,8 +55,9 @@
   {#if cloudSync.linked}
     {#if !inMiniApp}<button type="button" class="account-action quiet" onclick={signOut}>{m.account_sign_out({}, locale)}</button>{/if}
   {:else}
-    <!-- Shown (disabled) while the status is still loading, so the card keeps its height. -->
-    <button type="button" class="btn-play btn-play-sm account-action" disabled={phase === 'waiting' || cloudSync.linked === null || !network.online} onclick={signIn}><IconTelegram aria-hidden="true" />{m.sync_connect({}, locale)}</button>
+    <!-- Shown (disabled) only while the status check is running, so the card keeps its height. A check
+         that failed must not lock the button: signing in asks the server again and reports what went wrong. -->
+    <button type="button" class="btn-play btn-play-sm account-action" disabled={phase === 'waiting' || (cloudSync.linked === null && cloudSync.busy) || !network.online} onclick={signIn}><IconTelegram aria-hidden="true" />{m.sync_connect({}, locale)}</button>
   {/if}
 </div>
 
