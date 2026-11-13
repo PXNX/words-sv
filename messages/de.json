@@ -1191,5 +1191,15 @@
   "scribble_live_guessed": "{name} hat es erraten: {word}",
   "scribble_live_waiting": "{name} ist als Nächstes dran …",
   "scribble_live_waiting_anyone": "Warte auf die nächste Runde …",
-  "scribble_live_standings": "Wertung"
+  "scribble_live_standings": "Wertung",
+  "scribble_time_setting": "Zeit pro Runde",
+  "scribble_time_short": "Kurz",
+  "scribble_time_normal": "Normal",
+  "scribble_time_long": "Lang",
+  "scribble_speed_setting": "Liliths Zeichentempo",
+  "scribble_speed_slow": "Langsam",
+  "scribble_speed_normal": "Normal",
+  "scribble_speed_fast": "Schnell",
+  "scribble_live_round_time": "Zeit für diese Runde",
+  "scribble_seconds": "{seconds} s"
 }

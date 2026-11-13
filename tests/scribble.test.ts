@@ -105,3 +105,19 @@ describe('Scribble difficulty', async () => {
     expect(strokeColor(new Uint8ClampedArray(400), 10, 10, [[5, 5]])).toBeNull();
   });
 });
+
+describe('Scribble timing settings', async () => {
+  const { DIFFICULTIES, roundTiming } = await import('../src/lib/scribble/scribble');
+  it('scales the round with the time setting and the drawing with the speed', () => {
+    expect(roundTiming(DIFFICULTIES.easy, 'normal', 'normal')).toEqual({ seconds: 20, drawMs: 11_000 });
+    expect(roundTiming(DIFFICULTIES.easy, 'short', 'normal').seconds).toBe(12);
+    expect(roundTiming(DIFFICULTIES.easy, 'long', 'normal').seconds).toBe(32);
+    expect(roundTiming(DIFFICULTIES.easy, 'normal', 'fast').drawMs).toBeLessThan(11_000);
+    expect(roundTiming(DIFFICULTIES.easy, 'normal', 'slow').drawMs).toBeGreaterThan(11_000);
+  });
+
+  it('always lets Lilith finish before the clock runs out', () => {
+    const slowHard = roundTiming(DIFFICULTIES.hard, 'short', 'slow');
+    expect(slowHard.drawMs).toBeLessThan(slowHard.seconds * 1000);
+  });
+});
