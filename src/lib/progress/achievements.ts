@@ -23,7 +23,9 @@ export type AchievementId =
 	| 'story_15'
 	| 'grammar_200'
 	| 'mastered_200'
-	| 'streak_30';
+	| 'streak_30'
+	| 'scribble_champion'
+	| 'scribble_legend';
 
 export type Achievement = {
 	id: AchievementId;
@@ -36,6 +38,8 @@ export type AchievementInput = {
 	activity: ActivityEvent[];
 	bestStreak: number;
 	masteredWords: number;
+	/** Scribble matches won in Telegram groups (src/lib/scribble/scribbleWins.ts). */
+	scribbleWins?: number;
 };
 
 // Every mode that leaves an event in the activity log; clearing tricky words is a bonus, not a mode.
@@ -67,7 +71,10 @@ const ORDER: { id: AchievementId; target: number; value: (input: AchievementInpu
 	{ id: 'story_15', target: 15, value: (input) => completedIds(input.activity, 'story').length },
 	{ id: 'grammar_200', target: 200, value: (input) => countActivity(input.activity, 'grammar') },
 	{ id: 'mastered_200', target: 200, value: (input) => input.masteredWords },
-	{ id: 'streak_30', target: 30, value: (input) => input.bestStreak }
+	{ id: 'streak_30', target: 30, value: (input) => input.bestStreak },
+	// Winning a five-round Scribble match in a Telegram group: once, and ten times.
+	{ id: 'scribble_champion', target: 1, value: (input) => input.scribbleWins ?? 0 },
+	{ id: 'scribble_legend', target: 10, value: (input) => input.scribbleWins ?? 0 }
 ];
 
 export function buildAchievements(input: AchievementInput): Achievement[] {

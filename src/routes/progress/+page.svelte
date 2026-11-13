@@ -22,6 +22,7 @@
   import { slide } from 'svelte/transition';
   import AvatarEditor from '#lib/profile/AvatarEditor.svelte';
   import ProCard from '#lib/store/ProCard.svelte';
+  import { readScribbleWins } from '#lib/scribble/scribbleWins.js';
   import { cloudSync } from '#lib/sync/cloudSync.svelte.js';
   import { checkAchievementRewards, cosmetics } from '#lib/profile/cosmetics.svelte.js';
   import { dailyActivity, modeShares } from '#lib/progress/statsView.js';
@@ -118,7 +119,9 @@
     story_15: m.achievement_story_15({}, { locale: settings.interfaceLocale }),
     grammar_200: m.achievement_grammar_200({}, { locale: settings.interfaceLocale }),
     mastered_200: m.achievement_mastered_200({}, { locale: settings.interfaceLocale }),
-    streak_30: m.achievement_streak_30({}, { locale: settings.interfaceLocale })
+    streak_30: m.achievement_streak_30({}, { locale: settings.interfaceLocale }),
+    scribble_champion: m.achievement_scribble_champion({}, { locale: settings.interfaceLocale }),
+    scribble_legend: m.achievement_scribble_legend({}, { locale: settings.interfaceLocale })
   });
 
 
@@ -153,7 +156,8 @@
   const achievements = $derived(buildAchievements({
     activity,
     bestStreak: settings.streak.bestStreak,
-    masteredWords
+    masteredWords,
+    scribbleWins: readScribbleWins()
   }));
   const unlocked = $derived(unlockedCount(achievements));
   // The week as bars (minutes per day) and the modes played most this week.

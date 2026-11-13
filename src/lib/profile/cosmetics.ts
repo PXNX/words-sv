@@ -83,6 +83,9 @@ const catalog: Cosmetic[] = [
   badge('story_15', 'face', 'pear'),
   badge('mastered_200', 'face', 'long'),
   badge('streak_30', 'face', 'heart'),
+  // Scribble matches won in Telegram groups: a paint-pink top, then violet ink-coloured hair.
+  badge('scribble_champion', 'top', '#ff6fb5'),
+  badge('scribble_legend', 'hair', '#a64dff'),
   // Languages, invites, shop: single items so far.
   language('de', 'nose', 'snub'),
   language('en', 'eyes', 'wink'),

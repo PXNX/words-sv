@@ -74,7 +74,9 @@
     story_15: m.achievement_story_15({}, locale),
     grammar_200: m.achievement_grammar_200({}, locale),
     mastered_200: m.achievement_mastered_200({}, locale),
-    streak_30: m.achievement_streak_30({}, locale)
+    streak_30: m.achievement_streak_30({}, locale),
+    scribble_champion: m.achievement_scribble_champion({}, locale),
+    scribble_legend: m.achievement_scribble_legend({}, locale)
   });
   // How each reward is earned: its mode's own hint, the badge it comes with, or the high score.
   function rewardHint(id: RewardId): string {

@@ -1175,5 +1175,21 @@
   "scribble_spell_hint": "Type the word yourself instead of picking from four.",
   "scribble_spell_label": "Your answer",
   "scribble_spell_placeholder": "What is it?",
-  "scribble_spell_submit": "Guess"
+  "scribble_spell_submit": "Guess",
+  "achievement_scribble_champion": "Scribble champion",
+  "achievement_scribble_legend": "Scribble legend: 10 wins",
+  "scribble_live_loading": "Connecting to the group …",
+  "scribble_live_offline": "Lost the connection to the game – still trying …",
+  "scribble_live_expired": "This session expired. Press ▶️ Play in the chat again.",
+  "scribble_live_round": "Round {round} of {of}",
+  "scribble_live_turn_left": "{seconds} s left to start.",
+  "scribble_live_drawing_hint": "The others see every line right away.",
+  "scribble_live_canvas": "{name}'s drawing",
+  "scribble_live_watch": "{name} is drawing – what is it?",
+  "scribble_live_letters": "{count} letters",
+  "scribble_live_you_got_it": "You got it! {word} (+{points})",
+  "scribble_live_guessed": "{name} guessed it: {word}",
+  "scribble_live_waiting": "{name} draws next …",
+  "scribble_live_waiting_anyone": "Waiting for the next round …",
+  "scribble_live_standings": "Standings"
 }

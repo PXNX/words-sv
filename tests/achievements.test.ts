@@ -11,7 +11,7 @@ const empty = { activity: [], bestStreak: 0, masteredWords: 0 };
 describe('buildAchievements', () => {
 	it('starts with everything locked on a fresh install', () => {
 		const achievements = buildAchievements(empty);
-		expect(achievements).toHaveLength(18);
+		expect(achievements).toHaveLength(20);
 		expect(unlockedCount(achievements)).toBe(0);
 		expect(achievements.every((achievement) => achievement.value === 0)).toBe(true);
 	});
@@ -50,4 +50,15 @@ describe('buildAchievements', () => {
 		const achievement = buildAchievements({ ...empty, activity }).find((entry) => entry.id === 'all_rounder');
 		expect(achievement).toMatchObject({ value: 3, target: 11, done: false });
 	});
+});
+
+describe('Scribble achievements', () => {
+  it('unlock with the first and the tenth match won', async () => {
+    const { buildAchievements } = await import('../src/lib/progress/achievements');
+    const at = (wins: number) => buildAchievements({ activity: [], bestStreak: 0, masteredWords: 0, scribbleWins: wins });
+    expect(at(0).find((a) => a.id === 'scribble_champion')?.done).toBe(false);
+    expect(at(1).find((a) => a.id === 'scribble_champion')?.done).toBe(true);
+    expect(at(9).find((a) => a.id === 'scribble_legend')?.done).toBe(false);
+    expect(at(10).find((a) => a.id === 'scribble_legend')?.done).toBe(true);
+  });
 });

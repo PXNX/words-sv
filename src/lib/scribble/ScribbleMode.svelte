@@ -4,24 +4,22 @@
     right word, the more points.
   - Draw for a friend: pick one of three words, draw it, hand the phone over; the friend picks
     the word from four.
-  - In a Telegram group (opened from the bot's Scribble game with a session): the player whose turn
-    it is picks a word and draws it; the picture goes to the group, where the others guess it by
-    replying to it (bot/bot/scribble.py).
+  - In a Telegram group (opened from the bot's Scribble game with a session): live, with turns,
+    see GroupScribble.svelte.
 -->
 <script lang="ts">
-  import * as v from 'valibot';
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
   import { num } from '#lib/format/num.svelte.js';
   import { haptic } from '#lib/feedback/haptics.js';
   import { playErrorSound, playSuccessSound } from '#lib/feedback/sounds.js';
-  import { callApi, ApiError } from '#lib/api/client.js';
   import { groupGame } from '#lib/games/groupGame.svelte.js';
   import { pictureFor, pictureTranslations } from '#lib/learn/pictures.js';
   import { spokenWord, wordMetadata, type Language } from '#lib/data/vocabulary.js';
   import DrawPad from './DrawPad.svelte';
   import LilithSketch from './LilithSketch.svelte';
   import ScribbleInvite from './ScribbleInvite.svelte';
+  import GroupScribble from './GroupScribble.svelte';
   import { answerOptions, checkGuess, DIFFICULTIES, drawableWords, pickDifficulty, pickWords, roundPoints, type Difficulty } from './scribble';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconCross from '~icons/material-symbols/close-rounded';
@@ -29,12 +27,11 @@
   import IconShuffle from '~icons/material-symbols/shuffle-rounded';
   import IconBrush from '~icons/material-symbols/brush-rounded';
   import IconVisibility from '~icons/material-symbols/visibility-rounded';
-  import IconSend from '~icons/material-symbols/send-rounded';
   import IconArrowBack from '~icons/material-symbols/arrow-back-rounded';
 
   let { pools, language }: { pools: string[][]; language: string } = $props();
 
-  type View = 'menu' | 'guess' | 'choose' | 'draw' | 'pass' | 'friend' | 'sent';
+  type View = 'menu' | 'guess' | 'choose' | 'draw' | 'pass' | 'friend';
   const locale = $derived({ locale: settings.interfaceLocale });
   const lang = $derived(language as Language);
   const inGroup = $derived(groupGame.session?.game === 'scribble');
@@ -73,8 +70,6 @@
   let rounds = $state(0);
   let drawing = $state('');
   let lines = $state(0);
-  let sending = $state(false);
-  let error = $state('');
   let pad = $state<DrawPad>();
 
   const finished = $derived(picked !== null);
@@ -82,10 +77,6 @@
   const rule = $derived(DIFFICULTIES[difficulty]);
   const difficultyLabel = $derived(difficulty === 'easy' ? m.scribble_easy({}, locale) : difficulty === 'medium' ? m.scribble_medium({}, locale) : m.scribble_hard({}, locale));
   const display = (word: string) => spokenWord(lang, word);
-
-  $effect(() => {
-    if (inGroup && view === 'menu') startDrawing();
-  });
 
   function stopTimer() {
     if (timer) clearInterval(timer);
@@ -155,7 +146,6 @@
     choices = pickWords(words, 3);
     target = '';
     lines = 0;
-    error = '';
     view = 'choose';
   }
 
@@ -166,10 +156,6 @@
 
   function finishDrawing() {
     drawing = pad?.exportImage() ?? '';
-    if (inGroup) {
-      void sendToGroup();
-      return;
-    }
     options = answerOptions(target, words, language);
     resetAnswer();
     view = 'pass';
@@ -190,29 +176,6 @@
     return [...new Set([word, display(word), ...pictureTranslations(language, word)])];
   }
 
-  const SentSchema = v.object({ ok: v.literal(true) });
-  async function sendToGroup() {
-    const session = groupGame.session;
-    if (!session || sending) return;
-    sending = true;
-    error = '';
-    try {
-      await callApi('/api/games/scribble', SentSchema, { body: { session: session.session, word: display(target), answers: answersFor(target), image: drawing } });
-      haptic('win');
-      view = 'sent';
-    } catch (failure) {
-      const code = failure instanceof ApiError ? failure.code : '';
-      error = code === 'not_your_turn' ? m.scribble_error_turn({}, locale) : code === 'round_running' ? m.scribble_error_running({}, locale) : m.scribble_error_send({}, locale);
-    } finally {
-      sending = false;
-    }
-  }
-
-  function closeTelegram() {
-    const webApp = (window as { Telegram?: { WebApp?: { close?: () => void } } }).Telegram?.WebApp;
-    if (webApp?.close) webApp.close();
-    else history.back();
-  }
 </script>
 
 {#snippet optionButtons(onpick: (word: string) => void)}
@@ -245,6 +208,8 @@
 
   {#if words.length < 4}
     <p class="scribble-note">{m.scribble_unavailable({}, locale)}</p>
+  {:else if inGroup}
+    <GroupScribble {words} {language} />
   {:else if view === 'menu'}
     <div class="scribble-menu">
       <button type="button" class="scribble-card panel-play" onclick={startGuessing}>
@@ -282,7 +247,7 @@
     </div>
   {:else if view === 'choose'}
     <div class="scribble-stage">
-      <p class="scribble-prompt">{inGroup ? m.scribble_choose_group({}, locale) : m.scribble_choose({}, locale)}</p>
+      <p class="scribble-prompt">{m.scribble_choose({}, locale)}</p>
       <div class="scribble-options">
         {#each choices as choice (choice)}
           <button type="button" class="btn-play scribble-choice" onclick={() => choose(choice)}><span aria-hidden="true">{pictureFor(language, choice)}</span>{display(choice)}</button>
@@ -294,10 +259,7 @@
     <div class="scribble-stage">
       <p class="scribble-prompt">{m.scribble_draw_prompt({ word: display(target) }, locale)}</p>
       <DrawPad bind:this={pad} onchange={(count) => (lines = count)} />
-      <button type="button" class="btn-play btn-play-ink" disabled={lines === 0 || sending} onclick={finishDrawing}>
-        {#if inGroup}<IconSend aria-hidden="true" />{sending ? m.scribble_sending({}, locale) : m.scribble_send({}, locale)}{:else}{m.scribble_done({}, locale)}{/if}
-      </button>
-      {#if error}<p class="scribble-error" role="alert">{error}</p>{/if}
+      <button type="button" class="btn-play btn-play-ink" disabled={lines === 0} onclick={finishDrawing}>{m.scribble_done({}, locale)}</button>
     </div>
   {:else if view === 'pass'}
     <div class="scribble-stage">
@@ -320,12 +282,6 @@
         {@render optionButtons(friendGuess)}
       {/if}
       {#if finished}<button type="button" class="btn-play btn-play-ink" onclick={startDrawing}>{m.scribble_swap({}, locale)}</button>{/if}
-    </div>
-  {:else if view === 'sent'}
-    <div class="scribble-stage">
-      <img class="scribble-drawing" src={drawing} alt={m.scribble_drawing_alt({}, locale)} />
-      <p class="scribble-prompt">{m.scribble_sent({ word: display(target) }, locale)}</p>
-      <button type="button" class="btn-play btn-play-ink" onclick={closeTelegram}>{m.scribble_back_to_chat({}, locale)}</button>
     </div>
   {/if}
 </section>
@@ -351,7 +307,6 @@
   .scribble-choice span { font-size:1.3rem; }
   .scribble-drawing { width:100%;max-width:22rem;justify-self:center;border:2px solid #172a45;border-radius:1rem;box-shadow:4px 4px 0 #172a45; }
   .scribble-note { margin:0;text-align:center;font-size:.86rem;font-weight:700;opacity:.7; }
-  .scribble-error { margin:0;text-align:center;color:#c4522e;font-weight:800; }
   .scribble-options .btn-play { gap:.35rem; }
   .scribble-options .btn-play :global(svg) { width:1.15rem;height:1.15rem; }
   .scribble-mark { display:inline-grid;place-items:center;width:1.6rem;height:1.6rem;margin-inline-end:.35rem;border-radius:50%;background:#c4522e;color:#fffdf7;vertical-align:middle; }
