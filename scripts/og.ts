@@ -12,7 +12,7 @@ import { decompress } from 'wawoff2';
 import { DEFAULT_SITE_URL, SITE_NAME, imageSlug, pageTitle, pages, type PageMeta } from '../src/lib/seo.js';
 
 type IconifyIcon = { body: string; width?: number; height?: number };
-type IconifyCatalog = { width?: number; height?: number; icons: Record<string, IconifyIcon> };
+type IconifyCatalog = { width?: number; height?: number; icons: Record<string, IconifyIcon>; aliases?: Record<string, { parent: string }> };
 
 const require = createRequire(import.meta.url);
 const root = fileURLToPath(new URL('..', import.meta.url));
@@ -62,7 +62,8 @@ const brandMark = (x: number, y: number, size: number): string => `
 
 function emblem(iconName: string | null): string {
 	if (!iconName) return brandMark(720, 95, 440);
-	const icon = icons.icons[iconName];
+	// An alias such as `brush-rounded` points at its parent icon, as the app's icon imports resolve it.
+	const icon = icons.icons[iconName] ?? icons.icons[icons.aliases?.[iconName]?.parent ?? ''];
 	if (!icon) throw new Error(`Unknown material-symbols icon: ${iconName}`);
 	const size = 190;
 	const scale = size / (icon.width ?? icons.width ?? 24);
