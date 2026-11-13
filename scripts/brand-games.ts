@@ -84,6 +84,15 @@ function vocabSvg(): string {
   return frame(`${card}${choices}${run}${lilith(36, 120, 104)}${title('Word quiz')}`);
 }
 
+// A sheet of paper with a hand-drawn apple, a pencil still on it, and a guess bubble from the group.
+function scribbleSvg(): string {
+  const paper = `<g transform="rotate(-4 300 150)"><rect x="184" y="44" width="236" height="200" rx="14" fill="#0e1b2e" opacity=".5" transform="translate(5 6)"/><rect x="184" y="44" width="236" height="200" rx="14" fill="${CREAM}"/>
+<g fill="none" stroke="${NAVY}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M300 106c-14-14-58-12-62 30-4 38 26 70 48 66 8-2 10-6 14-6s6 4 14 6c22 4 52-28 48-66-4-42-48-44-62-30Z" stroke="${RED}"/><path d="M300 106c0-14 4-24 12-30"/><path d="M314 84c10-12 26-12 34-6-8 12-22 14-34 6Z" stroke="${GREEN}"/></g></g>`;
+  const pencil = `<g transform="translate(410 214) rotate(-38)"><rect x="-6" y="-70" width="16" height="70" rx="3" fill="${GOLD}"/><rect x="-6" y="-78" width="16" height="10" rx="3" fill="${RED}"/><path d="M-6 0h16l-8 16Z" fill="#f3d9a8"/><path d="M0 12h4l-2 4Z" fill="${NAVY}"/></g>`;
+  const bubble = `<g transform="translate(470 66)"><rect x="0" y="0" width="122" height="46" rx="23" fill="${GREEN}"/><path d="M22 44l-6 16 20-14Z" fill="${GREEN}"/><text x="50" y="30" text-anchor="middle" font-family="DM Sans 9pt" font-weight="800" font-size="19" fill="${CREAM}">Apfel?</text><path d="M90 23l6 6 12-12" fill="none" stroke="${CREAM}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+  return frame(`${paper}${pencil}${bubble}${lilith(512, 160, 100)}${title('Scribble')}`);
+}
+
 async function font(dir: string, path: string, name: string): Promise<string> {
   const ttf = join(dir, name);
   await writeFile(ttf, await decompress(await readFile(join(root, path))));
@@ -98,7 +107,7 @@ const fontDir = await mkdtemp(join(tmpdir(), 'brand-games-fonts-'));
 try {
   // The app's own DM Sans subset has no family name in it, so the bold cut comes from @fontsource.
   const fontFiles = [await font(fontDir, 'static/fonts/dm-serif-display-normal-latin.woff2', 'serif.ttf'), await font(fontDir, 'node_modules/@fontsource/dm-sans/files/dm-sans-latin-800-normal.woff2', 'sans.ttf')];
-  for (const [id, svg] of [['wordle', wordleSvg()], ['hangman', hangmanSvg()], ['vocab', vocabSvg()]] as const) {
+  for (const [id, svg] of [['wordle', wordleSvg()], ['hangman', hangmanSvg()], ['vocab', vocabSvg()], ['scribble', scribbleSvg()]] as const) {
     await writeFile(join(outDir, `game-${id}.svg`), svg);
     await writeFile(join(outDir, `game-${id}.png`), new Resvg(svg, { font: { fontFiles, loadSystemFonts: false, defaultFontFamily: 'DM Sans 9pt' } }).render().asPng());
     // The whole picture on a navy square: Telegram shows result thumbnails square, and a crop cuts some games apart.
@@ -108,4 +117,4 @@ try {
 } finally {
   await rm(fontDir, { recursive: true, force: true });
 }
-console.log('wrote brand/game-wordle, game-hangman, game-vocab (.svg/.png) and static/telegram/game-*.png');
+console.log('wrote brand/game-wordle, game-hangman, game-vocab, game-scribble (.svg/.png) and static/telegram/game-*.png');
