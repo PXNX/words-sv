@@ -13,7 +13,7 @@
   import { settings } from '#lib/state/settings.svelte.js';
   import { runJob } from '#lib/audio/backgroundJobs.svelte.js';
   import { forgetWordAudio } from '#lib/audio/wordBank.svelte.js';
-  import { activeEngine, naturalReady, naturalState, naturalSupported, piperMegabytes, prepareNatural, unloadNaturalVoices } from '#lib/story/naturalVoices.svelte.js';
+  import { activeEngine, downloadVoiceEngine, naturalReady, naturalState, naturalSupported, piperMegabytes, prepareNatural, unloadNaturalVoices, voiceDownloads } from '#lib/story/naturalVoices.svelte.js';
   import { cancelModelDownload, checkLocalModel, chooseModel, deleteModel, downloadModelFiles, localModel, modelGpuMB, pageMemoryMB, unloadLocalModel } from '#lib/conversation/localModel.svelte.js';
   import { chatModels, isRecommended, likelyFits, type ChatModel } from '#lib/conversation/models.js';
   import { unloadSupertonic } from '#lib/voice/supertonic.js';
@@ -63,8 +63,8 @@
   const mb = (value: number) => formatBytes(value * 1_000_000, settings.formatContext);
 
   // --- story voices ---------------------------------------------------------------------------
-  // Every voice engine is a card like the conversation models. Picking one (or its download button)
-  // chooses it and downloads its voices for the learning language; only the chosen engine downloads.
+  // Every voice engine is a card like the conversation models. Picking one chooses it; its download
+  // button only downloads, so several engines can download side by side without switching voice.
   const lang = $derived(settings.lang);
   const engine = $derived(activeEngine(lang));
   const voiceStatus = $derived(naturalReady(lang) ? 'ready' : naturalState.status[lang] ?? 'idle');
@@ -100,6 +100,8 @@
   function voiceState(id: VoiceEngineId): 'downloading' | 'failed' | 'downloaded' | 'none' | 'builtin' {
     const group = voiceGroups[id];
     if (!group) return 'builtin';
+    const download = voiceDownloads[id];
+    if (download) return download.error ? 'failed' : 'downloading';
     const chosen = settings.voiceQuality === id && engine === id;
     if (chosen && voiceStatus === 'loading') return 'downloading';
     if (chosen && voiceStatus === 'failed') return 'failed';
@@ -107,12 +109,14 @@
     return 'none';
   }
 
-  async function downloadVoices() {
+  // Downloads one engine's voices for the learning language without choosing it.
+  async function downloadVoice(id: VoiceEngineId) {
     const language = lang;
-    if (!(await confirmDownload(voiceDownloadMB(settings.voiceQuality), engineNames[activeEngine(language)]()))) return;
-    void runJob(`voices|${activeEngine(language)}|${language}`, engineNames[activeEngine(language)](), '/settings', async (control) => {
-      const report = window.setInterval(() => control.progress({ done: Math.round((naturalState.progress[language] ?? 0) * 100), total: 100 }), 500);
-      try { await prepareNatural(language); } finally { window.clearInterval(report); }
+    if (!(await confirmDownload(voiceDownloadMB(id), engineNames[id]()))) return;
+    const progress = () => (id === activeEngine(language) ? naturalState.progress[language] : voiceDownloads[id]?.progress) ?? 0;
+    void runJob(`voices|${id}|${language}`, engineNames[id](), '/settings', async (control) => {
+      const report = window.setInterval(() => control.progress({ done: Math.round(progress() * 100), total: 100 }), 500);
+      try { await downloadVoiceEngine(id, language); } finally { window.clearInterval(report); }
     }).finally(refresh);
   }
   // Choosing a voice only chooses it. A voice that is not on the device yet says so on its card
@@ -122,12 +126,6 @@
     settings.setVoiceQuality(id);
     // Already downloaded: load it now, so the first story does not wait.
     if (voiceGroups[id] && stored[voiceGroups[id]!]) void prepareNatural(lang).catch(() => undefined);
-  }
-  // The download button chooses the voice too: the download is always for the chosen engine.
-  function downloadVoice(id: VoiceEngineId) {
-    onvoicechange?.();
-    settings.setVoiceQuality(id);
-    void downloadVoices();
   }
 
   // --- conversation model -----------------------------------------------------------------------
@@ -155,9 +153,8 @@
     chooseNoLlm(false);
   }
   // Downloads only (no GPU), so several can run side by side; the conversation loads the chosen one.
-  // Downloading the first model also chooses it: that is what the learner is after.
+  // Downloading never chooses the model: picking its card does.
   async function downloadModel(model: ChatModel) {
-    if (noLlm || !localModel.downloaded.length) pickModel(model);
     if (!(await confirmDownload(model.downloadMB, model.label))) return;
     void downloadModelFiles(model.id).finally(refresh);
   }
@@ -236,14 +233,17 @@
           </button>
           {#if group}
             <div class="model-foot">
-              {#if state === 'downloading'}
+              {#if state === 'downloading' && voiceDownloads[id]}
+                {@const download = voiceDownloads[id]!}
+                <DownloadProgress progress={download.progress} phase="download" detail={`${mb(download.downloaded)} / ${mb(download.total)}`} />
+              {:else if state === 'downloading'}
                 <DownloadProgress progress={naturalState.progress[lang] ?? 0} phase="download" detail={`${mb(naturalState.downloaded[lang] ?? 0)} / ${mb(naturalState.total[lang] ?? voiceDownloadMB(id))}`} />
               {:else if state === 'downloaded'}
                 <span class="model-ok"><IconCheck aria-hidden="true" /> {chosen ? m.models_in_use({}, { locale }) : m.models_downloaded({}, { locale })}</span>
                 <button type="button" class="btn-play btn-play-sm btn-play-soft" class:confirm={confirming === group} onclick={() => remove(group)} onblur={() => { if (confirming === group) confirming = null; }}><IconDelete aria-hidden="true" />{confirming === group ? m.models_confirm({}, { locale }) : m.models_delete({}, { locale })}</button>
               {:else}
                 <span class="model-note" class:failed={state === 'failed'}>
-                  {#if state === 'failed'}<IconWarning aria-hidden="true" /> {m.models_download_failed({}, { locale })}{#if naturalState.error[lang]}<span class="model-error">{naturalState.error[lang]}</span>{/if}
+                  {#if state === 'failed'}<IconWarning aria-hidden="true" /> {m.models_download_failed({}, { locale })}{@const error = voiceDownloads[id]?.error ?? naturalState.error[lang]}{#if error}<span class="model-error">{error}</span>{/if}
                   {:else if chosen}{m.models_voice_fallback({}, { locale })}{:else}{m.models_not_downloaded({}, { locale })}{/if}
                 </span>
                 <button type="button" class="btn-play btn-play-sm btn-play-go" onclick={() => downloadVoice(id)}><IconDownload aria-hidden="true" />{state === 'failed' ? m.models_retry({}, { locale }) : m.models_download_size({ size: mb(voiceDownloadMB(id)) }, { locale })}</button>
