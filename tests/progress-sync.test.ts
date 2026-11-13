@@ -16,7 +16,7 @@ function fakeDatabase({ links = {}, snapshots = {} }: Fakes = {}) {
       if (/^\s*(CREATE|ALTER)/.test(sql)) return [{}];
       if (sql.startsWith('SELECT telegram_user_id FROM wordcircle_telegram_links')) return [links[params[0]] ? [{ telegram_user_id: links[params[0]] }] : []];
       if (sql.startsWith('SELECT revision, snapshot')) return [snapshots[params[0]] ? [snapshots[params[0]]] : []];
-      if (sql.startsWith('INSERT IGNORE INTO wordcircle_progress_snapshots')) {
+      if (sql.startsWith('INSERT INTO wordcircle_progress_snapshots')) {
         if (snapshots[params[0]]) return [{ affectedRows: 0 }];
         snapshots[params[0]] = { revision: 1, snapshot: params[1] };
         return [{ affectedRows: 1 }];

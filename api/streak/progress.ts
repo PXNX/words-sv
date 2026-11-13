@@ -26,15 +26,15 @@ const validDeviceId = (value: unknown): value is string => typeof value === 'str
 const COLUMNS = ['device_id', 'timezone', 'locale', 'day_key', 'vocab_correct', 'circle_completed', 'definitions_completed', 'wordle_completed', 'reading_completed', 'story_completed', 'grammar_correct', 'listen_completed', 'pronunciation_attempts', 'hangman_completed', 'taboo_completed', 'alltag_correct', 'sentence_completed', 'pro_shield_week', 'native_digits', 'current_qualified', 'last_qualified_day', 'streak_count', 'best_streak', 'vocabulary_goal', 'freezes', 'qualified_days', 'reward_collected', 'embers'];
 const UPSERT = `INSERT INTO wordcircle_streak_devices (${COLUMNS.join(', ')})
 	VALUES (${COLUMNS.map(() => '?').join(', ')})
-	ON DUPLICATE KEY UPDATE ${COLUMNS.slice(1).map((column) => `${column} = VALUES(${column})`).join(', ')}`;
+	ON CONFLICT (device_id) DO UPDATE SET ${COLUMNS.slice(1).map((column) => `${column} = EXCLUDED.${column}`).join(', ')}, last_seen_at = now()`;
 // Databases created before the daily reward or the writing goal get their columns on first use, so
 // a deploy never breaks streak syncing while the migrations in database-schema.sql are still pending.
 const MIGRATIONS = [
-	'ALTER TABLE wordcircle_streak_devices ADD COLUMN reward_collected TINYINT(1) NOT NULL DEFAULT 0, ADD COLUMN embers TINYINT UNSIGNED NULL',
-	'ALTER TABLE wordcircle_streak_devices ADD COLUMN sentence_completed TINYINT(1) NOT NULL DEFAULT 0',
-	'ALTER TABLE wordcircle_streak_devices ADD COLUMN taboo_completed TINYINT(1) NOT NULL DEFAULT 0',
-	'ALTER TABLE wordcircle_streak_devices ADD COLUMN pro_shield_week CHAR(8) NULL',
-	'ALTER TABLE wordcircle_streak_devices ADD COLUMN native_digits TINYINT(1) NOT NULL DEFAULT 0'
+	'ALTER TABLE wordcircle_streak_devices ADD COLUMN IF NOT EXISTS reward_collected SMALLINT NOT NULL DEFAULT 0, ADD COLUMN IF NOT EXISTS embers SMALLINT NULL',
+	'ALTER TABLE wordcircle_streak_devices ADD COLUMN IF NOT EXISTS sentence_completed SMALLINT NOT NULL DEFAULT 0',
+	'ALTER TABLE wordcircle_streak_devices ADD COLUMN IF NOT EXISTS taboo_completed SMALLINT NOT NULL DEFAULT 0',
+	'ALTER TABLE wordcircle_streak_devices ADD COLUMN IF NOT EXISTS pro_shield_week CHAR(8) NULL',
+	'ALTER TABLE wordcircle_streak_devices ADD COLUMN IF NOT EXISTS native_digits SMALLINT NOT NULL DEFAULT 0'
 ];
 
 async function upsert(db: Database, row: Record<string, unknown>) {
@@ -42,10 +42,9 @@ async function upsert(db: Database, row: Record<string, unknown>) {
 	try {
 		await db.execute(UPSERT, values);
 	} catch (error) {
-		if ((error as { code?: string } | null)?.code !== 'ER_BAD_FIELD_ERROR') throw error;
-		for (const migration of MIGRATIONS) {
-			await db.execute(migration).catch((migrationError: unknown) => { if ((migrationError as { code?: string } | null)?.code !== 'ER_DUP_FIELDNAME') throw migrationError; });
-		}
+		// 42703: undefined_column.
+		if ((error as { code?: string } | null)?.code !== '42703') throw error;
+		for (const migration of MIGRATIONS) await db.execute(migration);
 		await db.execute(UPSERT, values);
 	}
 }

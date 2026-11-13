@@ -48,7 +48,7 @@ async function creditInvite(db: Database, code: string, userId: number, telegram
 	try {
 		await db.execute('INSERT INTO wordcircle_telegram_invites (telegram_user_id, inviter_device_id) VALUES (?, ?)', [userId, inviter.device_id]);
 	} catch (error) {
-		if ((error as { code?: string } | null)?.code === 'ER_DUP_ENTRY') return 'known';
+		if ((error as { code?: string } | null)?.code === '23505') return 'known';
 		throw error;
 	}
 	// Compare-and-set, so two friends joining at once both count.
@@ -58,7 +58,7 @@ async function creditInvite(db: Database, code: string, userId: number, telegram
 		const embers = device.embers === null || device.embers === undefined ? Number(device.qualified_days ?? 0) % FREEZE_EVERY : Number(device.embers);
 		const freezes = Number(device.freezes ?? 0);
 		const next = addEmbers(embers, freezes, INVITE_EMBERS);
-		const [result] = await db.execute('UPDATE wordcircle_streak_devices SET embers = ?, freezes = ?, invite_freezes = LEAST(2, invite_freezes + ?) WHERE device_id = ? AND embers <=> ? AND freezes = ?', [next.embers, next.freezes, next.freezes - freezes, inviter.device_id, device.embers ?? null, freezes]);
+		const [result] = await db.execute('UPDATE wordcircle_streak_devices SET embers = ?, freezes = ?, invite_freezes = LEAST(2, invite_freezes + ?::int) WHERE device_id = ? AND embers IS NOT DISTINCT FROM ?::smallint AND freezes = ?', [next.embers, next.freezes, next.freezes - freezes, inviter.device_id, device.embers ?? null, freezes]);
 		if (result.affectedRows !== 1) continue;
 		if (inviter.chat_id) await telegramSender(inviter.chat_id, htmlMessage(inviteThanks(normalizeReminderLocale(device.locale), INVITE_EMBERS)), appUrl()).catch(() => undefined);
 		const [[invites]] = await db.execute('SELECT COUNT(*) AS count FROM wordcircle_telegram_invites WHERE inviter_device_id = ?', [inviter.device_id]);

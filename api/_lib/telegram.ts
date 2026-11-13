@@ -145,33 +145,30 @@ const TABLES = [
 		link_code VARCHAR(24) NULL UNIQUE,
 		chat_id BIGINT NULL,
 		telegram_user_id BIGINT NULL,
-		reminders TINYINT(1) NOT NULL DEFAULT 0,
+		reminders SMALLINT NOT NULL DEFAULT 0,
 		last_reminded_day CHAR(10) NULL,
-		updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-		INDEX wordcircle_telegram_links_user_idx (telegram_user_id),
+		updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
 		CONSTRAINT wordcircle_telegram_links_device_fk FOREIGN KEY (device_id) REFERENCES wordcircle_streak_devices(device_id) ON DELETE CASCADE
 	)`,
 	`CREATE TABLE IF NOT EXISTS wordcircle_telegram_invites (
 		telegram_user_id BIGINT NOT NULL PRIMARY KEY,
 		inviter_device_id VARCHAR(64) NOT NULL,
-		created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		INDEX wordcircle_telegram_invites_inviter_idx (inviter_device_id),
+		created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
 		CONSTRAINT wordcircle_telegram_invites_device_fk FOREIGN KEY (inviter_device_id) REFERENCES wordcircle_streak_devices(device_id) ON DELETE CASCADE
-	)`
+	)`,
+	'CREATE INDEX IF NOT EXISTS wordcircle_telegram_links_user_idx ON wordcircle_telegram_links (telegram_user_id)',
+	'CREATE INDEX IF NOT EXISTS wordcircle_telegram_invites_inviter_idx ON wordcircle_telegram_invites (inviter_device_id)'
 ];
 // Freezes forged from invite embers on the server; /api/streak/progress adds them on top of the
 // device's own count once, since the device otherwise wins with its lower, locally used-up count.
-const INVITE_FREEZES_COLUMN = 'ALTER TABLE wordcircle_streak_devices ADD COLUMN invite_freezes TINYINT UNSIGNED NOT NULL DEFAULT 0';
+const INVITE_FREEZES_COLUMN = 'ALTER TABLE wordcircle_streak_devices ADD COLUMN IF NOT EXISTS invite_freezes SMALLINT NOT NULL DEFAULT 0';
 
 let tablesReady: Promise<void> | undefined;
 /** Creates the Telegram tables on first use, like the reward columns in /api/streak/progress. */
 export function ensureTelegramTables(db: { execute: (sql: string, params?: unknown[]) => Promise<unknown> }) {
 	tablesReady ??= (async () => {
 		for (const statement of TABLES) await db.execute(statement);
-		await db.execute(INVITE_FREEZES_COLUMN).catch((error: unknown) => {
-		const code = (error as { code?: string } | null)?.code;
-		if (code !== 'ER_DUP_FIELDNAME') throw error;
-	});
+		await db.execute(INVITE_FREEZES_COLUMN);
 	})().catch((error: unknown) => { tablesReady = undefined; throw error; });
 	return tablesReady;
 }

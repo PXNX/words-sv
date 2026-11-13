@@ -3,19 +3,19 @@ import streakProgress from '../api/streak/progress.js';
 import { responseCapture } from './support/api';
 
 // An in-memory stand-in for the streak table: SELECT returns the stored row, the upsert stores the
-// columns it was given, and a missing column fails like MySQL until the migration has run.
+// columns it was given, and a missing column fails like Postgres until the migration has run.
 const table = new Map<string, Record<string, unknown>>();
 let columns = new Set<string>();
 const execute = vi.fn(async (sql: string, values: unknown[] = []) => {
   if (sql.startsWith('SELECT')) return [table.has(String(values[0])) ? [table.get(String(values[0]))] : []];
   if (sql.startsWith('ALTER')) {
-    for (const [, name] of sql.matchAll(/ADD COLUMN (\w+)/gu)) columns.add(name!);
+    for (const [, name] of sql.matchAll(/ADD COLUMN (?:IF NOT EXISTS )?(\w+)/gu)) columns.add(name!);
     return [{}];
   }
   if (sql.startsWith('INSERT')) {
     const names = /\(([^)]+)\)/u.exec(sql)![1]!.split(', ');
     const missing = names.find((name) => !columns.has(name));
-    if (missing) throw Object.assign(new Error(`Unknown column '${missing}'`), { code: 'ER_BAD_FIELD_ERROR' });
+    if (missing) throw Object.assign(new Error(`Unknown column '${missing}'`), { code: '42703' });
     table.set(String(values[0]), Object.fromEntries(names.map((name, index) => [name, values[index]])));
     return [{}];
   }

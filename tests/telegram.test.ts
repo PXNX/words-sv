@@ -44,7 +44,7 @@ function fakeDatabase({ devices = {}, links = [], invites = [] }: { devices?: Re
 			if (sql.includes('FROM wordcircle_telegram_links WHERE invite_code')) return [links.filter((entry) => entry.invite_code === params[0])];
 			if (sql.includes('FROM wordcircle_telegram_links WHERE telegram_user_id')) return [links.filter((entry) => entry.telegram_user_id === params[0])];
 			if (sql.startsWith('INSERT INTO wordcircle_telegram_invites')) {
-				if (invites.some((entry) => entry.telegram_user_id === params[0])) throw Object.assign(new Error('dup'), { code: 'ER_DUP_ENTRY' });
+				if (invites.some((entry) => entry.telegram_user_id === params[0])) throw Object.assign(new Error('dup'), { code: '23505' });
 				invites.push({ telegram_user_id: params[0], inviter_device_id: params[1] });
 				return [{}];
 			}

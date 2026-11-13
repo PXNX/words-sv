@@ -27,10 +27,10 @@ export function createPurchaseEndpoint({ databaseProvider = getDatabase, now = (
 			const { product, userId } = parseStorePayload(input.payload)!;
 			const db = databaseProvider();
 			await ensureStoreTables(db);
-			await db.execute('INSERT IGNORE INTO wordcircle_purchases (charge_id, telegram_user_id, product, stars) VALUES (?, ?, ?, ?)', [input.chargeId, userId, product.id, product.stars]);
+			await db.execute('INSERT INTO wordcircle_purchases (charge_id, telegram_user_id, product, stars) VALUES (?, ?, ?, ?) ON CONFLICT DO NOTHING', [input.chargeId, userId, product.id, product.stars]);
 			if (product.kind === 'pro') {
 				const until = new Date(input.subscriptionExpiration ? input.subscriptionExpiration * 1000 : now() + PRO_PERIOD_SECONDS * 1000);
-				await db.execute('INSERT INTO wordcircle_pro (telegram_user_id, pro_until) VALUES (?, ?) ON DUPLICATE KEY UPDATE pro_until = GREATEST(pro_until, VALUES(pro_until))', [userId, until]);
+				await db.execute('INSERT INTO wordcircle_pro (telegram_user_id, pro_until) VALUES (?, ?) ON CONFLICT (telegram_user_id) DO UPDATE SET pro_until = GREATEST(wordcircle_pro.pro_until, EXCLUDED.pro_until)', [userId, until]);
 			}
 			return respond(res, 200, { ok: true, problem: null, product: product.id });
 		} catch (error) {
