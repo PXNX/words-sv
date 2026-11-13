@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { createPushEndpoint } from '../api/push/index.js';
-import { endpointHash } from '../api/_lib/push.js';
+import { createPushEndpoint } from '../server/push/index.js';
+import { endpointHash } from '../server/_lib/push.js';
 import { responseCapture } from './support/api';
 
 // One route for Web Push: GET hands out the VAPID public key, POST subscribes a device or turns its
 // subscription off. A deployment may hold only a handful of serverless functions, so all three live
-// in api/push/index.ts.
+// in server/push/index.ts.
 function fakeDatabase() {
   const statements: Array<{ sql: string; params: unknown[] }> = [];
   return {

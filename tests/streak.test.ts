@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { applyStreakEvent, collectReward, reminderTypes, streakSummary, ALLTAG_GOAL, GRAMMAR_GOAL, PRONUNCIATION_GOAL, VOCABULARY_GOAL } from '../api/_lib/streak.js';
+import { applyStreakEvent, collectReward, reminderTypes, streakSummary, ALLTAG_GOAL, GRAMMAR_GOAL, PRONUNCIATION_GOAL, VOCABULARY_GOAL } from '../server/_lib/streak.js';
 
 process.env.CRON_SECRET ??= 'cron-secret-for-tests-0123456789abcdef';
 
@@ -106,7 +106,7 @@ describe('streak basic qualification', () => {
 	});
 });
 describe('reminder numbers', async () => {
-	const { reminderNotification, reminderNumber } = await import('../api/_lib/streak.js');
+	const { reminderNotification, reminderNumber } = await import('../server/_lib/streak.js');
 	it('uses Western digits unless the learner chose their own', () => {
 		expect(reminderNumber('fa', 45)).toBe('45');
 		expect(reminderNumber('fa', 45, true)).toBe('۴۵');

@@ -1,4 +1,4 @@
-import type { ApiResponse } from '../../api/_lib/http.js';
+import type { ApiResponse } from '../../server/_lib/http.js';
 
 /**
  * A response stand-in that is structurally an `ApiResponse` (Vercel's helpers) and also exposes the

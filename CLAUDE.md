@@ -28,7 +28,7 @@ SvelteKit app (static adapter, PWA), Svelte 5 runes, Paraglide i18n. Code is gro
 | PWA, reminders | `pwa/`, `reminders/` | `pwaInstall.svelte.ts`, `pwaUpdate.ts`, `pwaReminders.ts` |
 | App shell | `app/`, `routes/+layout.svelte` | `StartupLoader.svelte`, `TutorialDialog.svelte` |
 | Vocabulary data | `data/` | `vocabulary.ts` (word pools per language and level) |
-| Server functions (Vercel) | `api/` | streak sync, push, Telegram, progress sync |
+| API server (runs next to its PostgreSQL database, not on Vercel) | `server/` + `api/proxy.ts` | `server/main.ts` (Bun server, hourly reminders), endpoints for streak sync, push, Telegram, progress sync; Vercel only forwards `/api/*` through `api/proxy.ts` to `API_ORIGIN` |
 | Telegram bot (@word_circle_bot) | `bot/` (Python with PostgreSQL, runs as its own process, not on Vercel) | `bot/bot/main.py`, `bot/bot/store.py`, see `bot/README.md` |
 
 Conventions:
@@ -37,7 +37,7 @@ Conventions:
 - Heavy work (models, encoding) runs in a `*.worker.ts` behind a small client module; anything that can wait goes through `audio/priorityQueue.ts` as `'background'`.
 - Everything runs on the device; do not add cloud LLM or TTS calls. The opt-in exceptions are Edge voices and OpenRouter with the learner's own key (`conversation/openRouter.ts`, `cloudModel.svelte.ts`), which the router in `localModel.svelte.ts` uses only when the learner turned it on.
 - User-facing text goes in `messages/de.json` and `messages/en.json` (German is the base locale; other locales fall back to it).
-- `bun run lint`, `bun run check`, `bun run test` and `bun run build` are clean on `main`, and CI runs the same four. `bun lint` reads `eslint.config.ts`; the app, tests, scripts and the Vercel server functions in `api/` are all TypeScript.
+- `bun run lint`, `bun run check`, `bun run test` and `bun run build` are clean on `main`, and CI runs the same four. `bun lint` reads `eslint.config.ts`; the app, tests, scripts, the API server in `server/` and the Vercel proxy in `api/` are all TypeScript.
 
 ## Committing
 

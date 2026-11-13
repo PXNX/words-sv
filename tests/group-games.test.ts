@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { gameUrl, leaderboardRows, MAX_SCORES, validScore } from '../api/_lib/games.js';
-import { createGameSessionEndpoint } from '../api/telegram/game.js';
-import { createGameScoreEndpoint } from '../api/games/score.js';
+import { gameUrl, leaderboardRows, MAX_SCORES, validScore } from '../server/_lib/games.js';
+import { createGameSessionEndpoint } from '../server/telegram/game.js';
+import { createGameScoreEndpoint } from '../server/games/score.js';
 import { responseCapture } from './support/api';
 
 const secret = 'bridge-secret-for-tests-0123456789';

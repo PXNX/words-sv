@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { isoWeek, proCovers, useProShield } from '../src/lib/streak/proShield';
-import { isoWeek as serverIsoWeek, stateForToday } from '../api/_lib/streak.js';
+import { isoWeek as serverIsoWeek, stateForToday } from '../server/_lib/streak.js';
 
 const PRO = Date.UTC(2026, 11, 31);
 

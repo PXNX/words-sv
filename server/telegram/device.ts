@@ -52,7 +52,7 @@ export function createDeviceEndpoint({ databaseProvider = getDatabase }: { datab
 			return respond(res, 200, {
 				ok: true,
 				reminders: Boolean(link?.reminders && link?.chat_id),
-				// Linked to a Telegram account: progress is saved there (api/progress/sync.ts).
+				// Linked to a Telegram account: progress is saved there (server/progress/sync.ts).
 				linked: Boolean(link?.telegram_user_id),
 				connectUrl,
 				inviteUrl: link ? startLink(`i_${link.invite_code}`) : null,

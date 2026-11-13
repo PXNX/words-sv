@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { hangmanScore, sessionFromUrl, vocabScore, wordleScore } from '../src/lib/games/groupGameRules';
-import { MAX_SCORES } from '../api/_lib/games.js';
+import { MAX_SCORES } from '../server/_lib/games.js';
 
 const session = 'a'.repeat(32);
 

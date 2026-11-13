@@ -1,6 +1,6 @@
-# External reminder scheduler
+# Reminder scheduler and API server
 
-WordCircle intentionally has **no platform-managed cron configuration**. Instead, a scheduler you choose invokes the protected Vercel function at least once per hour:
+The endpoints in `server/` run as one long-running Bun process (`bun server/main.ts`) next to their PostgreSQL database, in a container on the server. The web app on Vercel has a single function, `api/proxy.ts`, which forwards every `/api/*` request to that server. The API server applies `database-schema.sql` (idempotent) on every start and runs the reminder job itself once an hour, so no outside scheduler is needed. The job can still be triggered by hand:
 
 ```sh
 curl --fail --silent --show-error \
@@ -8,21 +8,22 @@ curl --fail --silent --show-error \
   "https://words-sv.vercel.app/api/cron/reminders"
 ```
 
-The endpoint accepts `GET` or `POST`. It rejects missing or incorrect bearer credentials with `401`, returns no secret material, and is idempotent per device, local date, and reminder type. A safe scheduler cadence is hourly: this detects each device’s local new-day window and the final two hours before local midnight.
+The endpoint accepts `GET` or `POST`. It rejects missing or incorrect bearer credentials with `401`, returns no secret material, and is idempotent per device, local date, and reminder type. Without `CRON_SECRET` the server picks a random one at start, so only its own hourly run is authorized.
 
 ## Deployment variables
 
-Configure these variables in the Vercel project’s production and preview environments. Do not commit them or expose the private key in client code.
+On Vercel only `API_ORIGIN` is needed: the public base URL of the API server (without `/api`). The API server reads the rest from its environment file. Do not commit them or expose the private key in client code.
 
 | Variable | Purpose |
 |---|---|
-| `DATABASE_URL` | Durable MySQL/TiDB connection used for device state, subscriptions, and delivery deduplication. |
+| `DATABASE_URL` | PostgreSQL connection used for device state, subscriptions, sync and delivery deduplication. |
+| `PORT` | Optional; the port the API server listens on (default `3791`). |
 | `VAPID_SUBJECT` | VAPID contact subject used by the push sender. |
 | `VAPID_PUBLIC_KEY` | Public key returned only to the browser when a user explicitly enables reminders. |
 | `VAPID_PRIVATE_KEY` | Server-only VAPID signing key. |
-| `CRON_SECRET` | Long random bearer token for the external scheduler. |
+| `CRON_SECRET` | Optional; bearer token for triggering the reminder job by hand. |
 | `TELEGRAM_BOT_TOKEN` | Token of @word_circle_bot; the cron and invite thanks send messages through the Bot API with it. |
-| `TELEGRAM_BRIDGE_SECRET` | Long random bearer token the ptb-words bot sends to `/api/telegram/start` (its `WORDS_API_SECRET`). |
+| `TELEGRAM_BRIDGE_SECRET` | Long random bearer token the ptb-words bot sends to `/api/telegram/start` (the same value in the bot's `.env`). |
 | `TELEGRAM_BOT_USERNAME` | Optional; defaults to `word_circle_bot`, used to build the `t.me` links. |
 | `APP_URL` | Optional; defaults to `https://words-sv.vercel.app`, opened by the button under Telegram messages. |
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createRemindersEndpoint, cronAuthorized } from '../api/cron/reminders.js';
+import { createRemindersEndpoint, cronAuthorized } from '../server/cron/reminders.js';
 import { responseCapture } from './support/api';
 
 process.env.CRON_SECRET ??= 'cron-secret-for-tests-0123456789abcdef';
