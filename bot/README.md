@@ -16,7 +16,10 @@ Telegram bot [@word_circle_bot](https://t.me/word_circle_bot) for the WordCircle
 - In groups: `/games` posts a WordCircle game (Wordle, Hangman, Word quiz) through Telegram's gaming
   platform, `/top` shows the group's scoreboards. Play opens the mode with a session from WordCircle's
   server, which puts every finished round on the group's board (`setGameScore`). Each game has to be
-  created once with @BotFather (`/newgame`) under its short name: `wordle`, `hangman`, `vocab`.
+  created once with @BotFather (`/newgame`) under its short name: `wordle`, `hangman`, `vocab`, `scribble`.
+- Scribble (`/scribble`, or the button under `/games`): players take turns drawing a word in WordCircle;
+  the drawing is posted to the group and the others guess by replying to it. The first right guess scores,
+  the drawer too; after a right guess or two minutes the next player draws (`bot/scribble.py`).
 - `/version` shows the WordCircle version (from the repository's `package.json`, or `APP_VERSION`
   when only `bot/` is deployed) with a link to its changelog entry.
 - `/set_cmd` (admins only) sets the profile photo (`bot/res/img/profile.jpg`), name, description and short description in German and English.

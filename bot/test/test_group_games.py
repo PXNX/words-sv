@@ -10,8 +10,8 @@ from texts import TEXTS
 
 def test_games_match_the_server():
     server = (Path(__file__).resolve().parents[2] / "server" / "_lib" / "games.ts").read_text(encoding="utf-8")
-    assert "export const GROUP_GAMES = ['wordle', 'hangman', 'vocab'] as const;" in server
-    assert [game["id"] for game in GAMES] == ["wordle", "hangman", "vocab"]
+    assert "export const GROUP_GAMES = ['wordle', 'hangman', 'vocab', 'scribble'] as const;" in server
+    assert [game["id"] for game in GAMES] == ["wordle", "hangman", "vocab", "scribble"]
 
 
 def test_find_and_name():
@@ -26,7 +26,7 @@ def test_format_top_with_medals_and_escaping():
 
 
 def test_texts_in_both_languages():
-    for key in ("games_menu", "games_only_groups", "games_unavailable", "games_not_registered", "games_show", "games_pick_group", "games_play", "games_no_scores", "games_welcome"):
+    for key in ("games_menu", "games_only_groups", "games_unavailable", "games_not_registered", "games_show", "games_pick_group", "games_play", "games_scribble_button", "scribble_not_your_turn", "scribble_right", "scribble_next", "scribble_timeout", "scribble_skipped", "scribble_paused", "scribble_wait_guesses", "scribble_groups_only", "games_no_scores", "games_welcome"):
         assert key in TEXTS["de"] and key in TEXTS["en"]
 
 
@@ -42,7 +42,7 @@ def test_matching_games():
 def test_article_results_carry_logo_name_and_play_link():
     from group_games import article_results
     from games import GAMES
-    results = article_results(GAMES, "de")
+    results = article_results([game for game in GAMES if game["id"] != "scribble"], "de")
     assert [r.title for r in results] == ["Wordle", "Galgenmännchen", "Wortquiz"]
     assert results[0].thumbnail_url.endswith("/telegram/game-wordle.png")
     assert results[1].reply_markup.inline_keyboard[0][0].url.endswith("/hangman")

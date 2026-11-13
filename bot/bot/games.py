@@ -26,6 +26,11 @@ GAMES: Final[list[dict[str, str]]] = [
         "de_about": "Wähle die richtige Bedeutung. Deine längste Serie ist deine Punktzahl.",
         "en_about": "Pick the right meaning. Your longest run of right answers is your score.",
     },
+    {
+        "id": "scribble", "de": "Scribble", "en": "Scribble",
+        "de_about": "Reihum zeichnet einer ein Wort, die anderen raten. Wer zuerst richtig rät, punktet.",
+        "en_about": "Take turns: one draws a word, the others guess. The first right guess scores.",
+    },
 ]
 
 SCHEMA: Final[str] = """
@@ -58,9 +63,11 @@ def game_about(game_id: str, lang: str) -> str:
 def matching_games(query: str, lang: str) -> list[dict]:
     """The games an inline query asks for: all for an empty query or "games", else those whose id or name contains it."""
     wanted = (query or "").strip().lower()
+    # Scribble needs the group's chat for its turns, which games shared inline do not have: /scribble posts it.
+    games = [entry for entry in GAMES if entry["id"] != "scribble"]
     if wanted in ("", "games", "game", "spiele", "spiel"):
-        return list(GAMES)
-    return [entry for entry in GAMES if wanted in entry["id"] or wanted in game_name(entry["id"], lang).lower() or wanted in entry["en"].lower()]
+        return games
+    return [entry for entry in games if wanted in entry["id"] or wanted in game_name(entry["id"], lang).lower() or wanted in entry["en"].lower()]
 
 
 async def remember_game(pool: AsyncConnectionPool, chat_id: int, game: str, message_id: int) -> None:
