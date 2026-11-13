@@ -14,6 +14,7 @@ import type { ApiRequest, ApiResponse } from './_lib/http.js';
 import cronReminders from './cron/reminders.js';
 import donate from './donate/index.js';
 import gamesScore from './games/score.js';
+import gamesScribble from './games/scribble.js';
 import progressSync from './progress/sync.js';
 import push from './push/index.js';
 import store from './store/index.js';
@@ -30,6 +31,7 @@ export const ROUTES: Record<string, Handler> = {
 	'cron/reminders': cronReminders,
 	donate,
 	'games/score': gamesScore,
+	'games/scribble': gamesScribble,
 	'progress/sync': progressSync,
 	push,
 	store,
