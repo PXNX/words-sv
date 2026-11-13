@@ -9,7 +9,7 @@ from donations import CURRENCY, CUSTOM_MAX, CUSTOM_MIN, TIERS, build_payload, ch
 from settings.config import ADMINS, MINIAPP_URL, WORDS_URL
 from bot_profile import set_cmd
 from bridge import check_purchase, forward_start, is_bridge_payload, record_purchase
-from group_games import register_group_games
+from group_games import register_group_games, scribble_command
 from store import record_donation
 from texts import lang_of, t
 from version import APP_VERSION
@@ -29,6 +29,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await donate(update, context)
         return
     lang = _lang(update)
+    # t.me/word_circle_bot?startgroup=scribble (the app's invite button): the bot was just added to a
+    # group, or started in one, and posts Scribble there.
+    if context.args and context.args[0] == "scribble":
+        await scribble_command(update, context)
+        return
     # One-time links from the app: sign-in, reminders, invites.
     if context.args and is_bridge_payload(context.args[0]) and update.effective_user and update.effective_chat:
         result = await forward_start(context.args[0], update.effective_user.id, update.effective_chat.id)
