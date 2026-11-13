@@ -5,7 +5,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, LabeledPrice, U
 from telegram.constants import ParseMode
 from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes, MessageHandler, PreCheckoutQueryHandler, filters
 
-from donations import CURRENCY, TIERS, build_payload, check_checkout, parse_payload
+from donations import CURRENCY, CUSTOM_MAX, CUSTOM_MIN, TIERS, build_payload, check_checkout, parse_payload, valid_amount
 from settings.config import ADMINS, MINIAPP_URL, WORDS_URL
 from bot_profile import set_cmd
 from bridge import check_purchase, forward_start, is_bridge_payload, record_purchase
@@ -43,27 +43,45 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def donate(update: Update, context: ContextTypes.DEFAULT_TYPE):
     lang = _lang(update)
+    # /donate 750: an invoice for that amount straight away (from CUSTOM_MIN Stars on).
+    if context.args and context.args[0] != "donate":
+        amount = int(context.args[0]) if context.args[0].isdigit() else 0
+        if not valid_amount(amount):
+            await update.message.reply_text(t(lang, "donate_custom_range", min=CUSTOM_MIN, max=CUSTOM_MAX))
+            return
+        await _invoice(context, update.effective_chat.id, update.effective_user.id, lang, amount)
+        return
     buttons = [InlineKeyboardButton(t(lang, "tier", amount=amount), callback_data=f"donate:{amount}") for amount in TIERS]
     keyboard = [buttons[:3], buttons[3:]]
+    # More than the largest tier: /donate <amount>.
+    keyboard[-1].append(InlineKeyboardButton(t(lang, "tier_custom", min=CUSTOM_MIN), callback_data="donate:custom"))
     await update.message.reply_text(t(lang, "donate"), parse_mode=ParseMode.HTML, reply_markup=InlineKeyboardMarkup(keyboard), disable_web_page_preview=True)
+
+
+async def _invoice(context: ContextTypes.DEFAULT_TYPE, chat_id: int, user_id: int, lang: str, amount: int) -> None:
+    await context.bot.send_invoice(
+        chat_id=chat_id,
+        title=t(lang, "invoice_title"),
+        description=t(lang, "invoice_description", amount=amount),
+        payload=build_payload(amount, user_id),
+        provider_token="",
+        currency=CURRENCY,
+        prices=[LabeledPrice(t(lang, "invoice_label"), amount)],
+    )
 
 
 async def send_invoice(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
-    amount = int(query.data.split(":")[1])
+    lang = _lang(update)
+    choice = query.data.split(":")[1]
+    if choice == "custom":
+        await query.message.reply_text(t(lang, "donate_custom", min=CUSTOM_MIN, max=CUSTOM_MAX))
+        return
+    amount = int(choice)
     if amount not in TIERS:
         return
-    lang = _lang(update)
-    await context.bot.send_invoice(
-        chat_id=query.message.chat_id,
-        title=t(lang, "invoice_title"),
-        description=t(lang, "invoice_description", amount=amount),
-        payload=build_payload(amount, query.from_user.id),
-        provider_token="",
-        currency=CURRENCY,
-        prices=[LabeledPrice(t(lang, "invoice_label"), amount)],
-    )
+    await _invoice(context, query.message.chat_id, query.from_user.id, lang, amount)
 
 
 async def pre_checkout(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -132,7 +150,7 @@ def register_handlers(app: Application):
     register_group_games(app)
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler(["spenden", "donate"], donate))
-    app.add_handler(CallbackQueryHandler(send_invoice, pattern=r"^donate:\d+$"))
+    app.add_handler(CallbackQueryHandler(send_invoice, pattern=r"^donate:(\d+|custom)$"))
     app.add_handler(PreCheckoutQueryHandler(pre_checkout))
     app.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, successful_payment))
     app.add_handler(CommandHandler("paysupport", paysupport))

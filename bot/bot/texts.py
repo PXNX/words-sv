@@ -23,6 +23,9 @@ TEXTS = {
             "und sie wird <b>nicht erstattet</b>. Es gelten die <a href=\"{terms}\">Spendenbedingungen</a>."
         ),
         "tier": "⭐ {amount}",
+        "tier_custom": "⭐ {min}+",
+        "donate_custom": "Schreib /spenden und den Betrag, zum Beispiel <code>/spenden 750</code> – ab {min} bis {max} Stars.",
+        "donate_custom_range": "Bitte einen ganzen Betrag von {min} bis {max} Stars, zum Beispiel /spenden 750.",
         "invoice_title": "Spende an WordCircle",
         "invoice_description": "Freiwillige Spende über {amount} Stars ohne Gegenleistung. Keine Rückerstattung. Bedingungen: {terms}",
         "invoice_label": "Spende",
@@ -74,6 +77,9 @@ TEXTS = {
             "and is <b>not refunded</b>. The <a href=\"{terms}\">donation terms</a> (German) apply."
         ),
         "tier": "⭐ {amount}",
+        "tier_custom": "⭐ {min}+",
+        "donate_custom": "Send /donate with the amount, for example <code>/donate 750</code> – from {min} to {max} Stars.",
+        "donate_custom_range": "Please send a whole amount from {min} to {max} Stars, for example /donate 750.",
         "invoice_title": "Donation to WordCircle",
         "invoice_description": "Voluntary donation of {amount} Stars with nothing in return. No refunds. Terms: {terms}",
         "invoice_label": "Donation",
