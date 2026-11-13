@@ -30,6 +30,10 @@ export type RewardId = CosmeticMode | AchievementReward | ScoreReward | Language
 export type RewardSource = { kind: 'mode'; mode: CosmeticMode } | { kind: 'achievement'; achievement: AchievementId } | { kind: 'score'; score: ScoreId } | { kind: 'language'; language: Language; target: number } | { kind: 'invite'; target: number } | { kind: 'shop' };
 export type Cosmetic = { id: RewardId; part: AvatarPart; choice: string; source: RewardSource };
 
+// One reward may hand out several items at once (a bundle). The first reward wins a choice,
+// so the catalog keeps one record per part:choice but every reward id maps to its own list.
+export type Bundle = Record<RewardId, Cosmetic[]>;
+
 const mode = (id: CosmeticMode, part: AvatarPart, choice: string): Cosmetic => ({ id, part, choice, source: { kind: 'mode', mode: id } });
 const badge = (achievement: AchievementId, part: AvatarPart, choice: string): Cosmetic => ({ id: `achievement_${achievement}`, part, choice, source: { kind: 'achievement', achievement } });
 const score = (id: ScoreId, part: AvatarPart, choice: string): Cosmetic => ({ id: `score_${id}`, part, choice, source: { kind: 'score', score: id } });
@@ -40,8 +44,11 @@ const language = (code: Language, part: AvatarPart, choice: string): Cosmetic =>
 // Friends who joined through the invite link (counted by the server) that unlock the invite item.
 export const INVITE_REWARD_TARGET = 10;
 
-// Every reward is a distinct avatar choice that StoryCharacter can draw.
+// Every reward is a distinct avatar choice that StoryCharacter can draw. A badge may hand out
+// several items at once (a bundle): the entries below then repeat the reward id with a different
+// choice, and unlocking the reward unlocks all of its bundled choices together.
 const catalog: Cosmetic[] = [
+  // Modes: one item each, earned by playing really well.
   mode('vocab', 'extra', 'monocle'),
   mode('circle', 'extra', 'tyrolean'),
   mode('definitions', 'extra', 'pencil'),
@@ -54,6 +61,7 @@ const catalog: Cosmetic[] = [
   mode('reading', 'shirt', 'tie'),
   mode('listen', 'hair', '#9fc6e8'),
   mode('conversation', 'top', '#d4af37'),
+  // Achievements: one badge brings its item, some bring a second (the long road).
   badge('first_step', 'top', '#7fc8a9'),
   badge('streak_3', 'hair', '#2fae8f'),
   badge('vocab_100', 'shirt', 'sweater'),
@@ -75,18 +83,43 @@ const catalog: Cosmetic[] = [
   badge('story_15', 'face', 'pear'),
   badge('mastered_200', 'face', 'long'),
   badge('streak_30', 'face', 'heart'),
+  // Languages, invites, shop: single items so far.
   language('de', 'nose', 'snub'),
   language('en', 'eyes', 'wink'),
   language('fr', 'nose', 'heart'),
   language('it', 'eyes', 'starry'),
   language('es', 'nose', 'freckles'),
   { id: 'invite_ten', part: 'top', choice: '#2aabee', source: { kind: 'invite', target: INVITE_REWARD_TARGET } },
-  ...SHOP_ITEMS.map((item): Cosmetic => ({ id: item.id, part: item.part, choice: item.choice, source: { kind: 'shop' } }))
+  ...SHOP_ITEMS.map((item): Cosmetic => ({ id: item.id, part: item.part, choice: item.choice, source: { kind: 'shop' } })),
+  // Bundles: one reward id hands out several items. The badge rewards repeat
+  // their achievement id with the extra choices of the long road.
+  badge('streak_30', 'shirt', 'hoodie'),
+  badge('streak_30', 'shirt', 'blazer'),
+  badge('streak_30', 'shirt', 'cardigan'),
+  badge('streak_30', 'shirt', 'tshirt'),
+  badge('vocab_500', 'nose', 'pointy'),
+  badge('mastered_200', 'hair', '#5b3a8a'),
+  badge('mastered_200', 'hair', '#3d6fd1'),
+  badge('mastered_200', 'hairStyle', 'spiky'),
+  badge('mastered_200', 'hairStyle', 'mohawk'),
+  badge('all_rounder', 'extra', 'crown'),
+  badge('mastered_50', 'top', '#172a45'),
 ];
 
-export const cosmetics = Object.fromEntries(catalog.map((item) => [item.id, item])) as Record<RewardId, Cosmetic>;
-export const rewardIds = catalog.map((item) => item.id);
-export const cosmeticModes = catalog.flatMap((item) => (item.source.kind === 'mode' ? [item.source.mode] : []));
+// `cosmetics` keeps the FIRST Cosmetic entry for each RewardId so a bundle's many
+// choices all resolve to the same id (the first one wins).
+const cosmeticsMap = new Map<string, Cosmetic>();
+for (const item of catalog) {
+  if (!cosmeticsMap.has(item.id)) cosmeticsMap.set(item.id, item);
+}
+export const cosmetics = Object.fromEntries(cosmeticsMap.entries()) as Record<RewardId, Cosmetic>;
+// Unique reward ids, preserving catalog order.
+export const rewardIds = [...cosmeticsMap.keys()] as RewardId[];
+// Every mode that appears in a bundle (first occurrence per mode).
+export const cosmeticModes = catalog
+  .map((item): CosmeticMode | undefined => (item.source.kind === 'mode' ? item.source.mode : undefined))
+  .filter((m): m is CosmeticMode => m !== undefined);
+export const cosmeticModeIds = [...new Set(cosmeticModes)];
 
 // Runs of first-try answers that count as "really well" in the answer-by-answer modes. The other
 // modes unlock from a single flawless round (see each mode's call to unlockCosmetic).
