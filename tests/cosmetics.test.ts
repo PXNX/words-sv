@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { avatarAllowed, cosmeticModes, cosmetics, earnedAchievementRewards, earnedLanguageRewards, LANGUAGE_REWARD_TARGET, lockedIn, nextHangmanRun, nextRun, parseUnlocked, rewardFor, rewardIds } from '../src/lib/profile/cosmetics.js';
+import { avatarAllowed, cosmeticModeIds, cosmetics, earnedAchievementRewards, earnedLanguageRewards, LANGUAGE_REWARD_TARGET, lockedIn, nextHangmanRun, nextRun, parseUnlocked, rewardFor, rewardIds } from '../src/lib/profile/cosmetics.js';
 import { avatarChoices, defaultAvatar } from '../src/lib/profile/avatar.js';
 import { buildAchievements } from '../src/lib/progress/achievements.js';
 
@@ -11,7 +11,7 @@ describe('cosmetic rewards', () => {
       const { part, choice } = cosmetics[id];
       expect(avatarChoices[part] as readonly string[]).toContain(choice);
     }
-    expect(cosmeticModes).toHaveLength(12);
+    expect(cosmeticModeIds).toHaveLength(12);
     // Every achievement brings an item.
     for (const achievement of buildAchievements({ activity: [], bestStreak: 0, masteredWords: 0 })) expect(rewardIds).toContain(`achievement_${achievement.id}`);
   });
@@ -60,9 +60,33 @@ describe('cosmetic rewards', () => {
     expect(rewards('eyes')).toHaveLength(5);
     expect(rewards('face')).toHaveLength(3);
     // The basic choices stay free.
-    for (const nose of ['curve', 'button', 'round', 'pointy']) expect(lockedIn('nose', nose, [])).toBe(false);
+    for (const nose of ['curve', 'button', 'round']) expect(lockedIn('nose', nose, [])).toBe(false);
     expect(lockedIn('eyes', 'wink', [])).toBe(true);
     expect(cosmetics.language_en).toMatchObject({ part: 'eyes', choice: 'wink', source: { kind: 'language', language: 'en' } });
+  });
+
+  it('bundles several items into one achievement, unlocked together', () => {
+    // A badge hands out more than its first item; all of them share the badge's reward id.
+    for (const [part, choice, id] of [
+      ['shirt', 'hoodie', 'achievement_streak_30'],
+      ['shirt', 'blazer', 'achievement_streak_30'],
+      ['nose', 'pointy', 'achievement_vocab_500'],
+      ['hair', '#5b3a8a', 'achievement_mastered_200'],
+      ['hairStyle', 'mohawk', 'achievement_mastered_200'],
+      ['extra', 'crown', 'achievement_all_rounder'],
+      ['top', '#172a45', 'achievement_mastered_50']
+    ] as const) {
+      expect(rewardFor(part, choice)).toBe(id);
+      expect(lockedIn(part, choice, [])).toBe(true);
+      expect(lockedIn(part, choice, [id])).toBe(false);
+    }
+  });
+
+  it('leaves at least one free choice in every avatar part', () => {
+    // randomAvatar and a fresh profile pick from the free choices only (avatar.ts).
+    for (const [part, choices] of Object.entries(avatarChoices)) {
+      expect(choices.filter((choice) => !lockedIn(part as keyof typeof avatarChoices, choice, []))).not.toHaveLength(0);
+    }
   });
 
   it('unlocks a language item once enough words of that language are practised', () => {
