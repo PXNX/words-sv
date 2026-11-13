@@ -28,6 +28,18 @@ def test_foreign_payloads_are_ignored(payload):
     assert parse_payload(payload) is None
 
 
+def test_custom_amounts_from_500():
+    assert build_payload(750, 42) == "donation:750:42"
+    assert parse_payload("donation:750:42") == (750, 42)
+    assert parse_payload("donation:499:42") is None
+    assert parse_payload("donation:10001:42") is None
+
+
+def test_app_links_without_account_take_any_payer():
+    assert check_checkout("donation:600:0", "XTR", 600, 99) is None
+    assert check_checkout("donation:600:0", "XTR", 500, 99) == "wrong_amount"
+
+
 def test_checkout_accepts_matching_payment():
     assert check_checkout("donation:100:42", "XTR", 100, 42) is None
 
