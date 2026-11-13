@@ -46,13 +46,13 @@ export const STORE_TABLES = [
 		charge_id VARCHAR(255) NOT NULL PRIMARY KEY,
 		telegram_user_id BIGINT NOT NULL,
 		product VARCHAR(32) NOT NULL,
-		stars INT UNSIGNED NOT NULL,
-		created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		INDEX wordcircle_purchases_user_idx (telegram_user_id)
+		stars INTEGER NOT NULL,
+		created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 	)`,
+	'CREATE INDEX IF NOT EXISTS wordcircle_purchases_user_idx ON wordcircle_purchases (telegram_user_id)',
 	`CREATE TABLE IF NOT EXISTS wordcircle_pro (
 		telegram_user_id BIGINT NOT NULL PRIMARY KEY,
-		pro_until TIMESTAMP NOT NULL
+		pro_until TIMESTAMPTZ NOT NULL
 	)`
 ];
 

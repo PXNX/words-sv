@@ -11,15 +11,15 @@ import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 // devices never overwrite each other: a stale push gets the current snapshot back to merge first.
 
 const validDeviceId = (value: unknown): value is string => typeof value === 'string' && /^[a-zA-Z0-9_-]{16,64}$/.test(value);
-// Plenty for years of reviews and activity; MEDIUMTEXT holds 16 MB, Vercel bodies 4.5 MB.
+// Plenty for years of reviews and activity; well below the request body limit.
 export const MAX_SNAPSHOT_BYTES = 2_000_000;
 
 const TABLE = `CREATE TABLE IF NOT EXISTS wordcircle_progress_snapshots (
 	telegram_user_id BIGINT NOT NULL PRIMARY KEY,
-	revision INT UNSIGNED NOT NULL DEFAULT 0,
-	snapshot MEDIUMTEXT NOT NULL,
+	revision INTEGER NOT NULL DEFAULT 0,
+	snapshot TEXT NOT NULL,
 	updated_by_device VARCHAR(64) NULL,
-	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+	updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 )`;
 
 let tableReady: Promise<unknown> | undefined;
@@ -59,8 +59,8 @@ export function createSyncEndpoint({ databaseProvider = getDatabase }: { databas
 			if (Buffer.byteLength(body) > MAX_SNAPSHOT_BYTES) return respond(res, 413, { ok: false, error: 'snapshot_too_large' });
 			if (!Number.isSafeInteger(baseRevision) || baseRevision !== current.revision) return respond(res, 409, { ok: false, error: 'conflict', linked: true, ...current });
 			const [result] = row
-				? await db.execute('UPDATE wordcircle_progress_snapshots SET revision = revision + 1, snapshot = ?, updated_by_device = ? WHERE telegram_user_id = ? AND revision = ?', [body, deviceId, userId, current.revision])
-				: await db.execute('INSERT IGNORE INTO wordcircle_progress_snapshots (telegram_user_id, revision, snapshot, updated_by_device) VALUES (?, 1, ?, ?)', [userId, body, deviceId]);
+				? await db.execute('UPDATE wordcircle_progress_snapshots SET revision = revision + 1, snapshot = ?, updated_by_device = ?, updated_at = now() WHERE telegram_user_id = ? AND revision = ?', [body, deviceId, userId, current.revision])
+				: await db.execute('INSERT INTO wordcircle_progress_snapshots (telegram_user_id, revision, snapshot, updated_by_device) VALUES (?, 1, ?, ?) ON CONFLICT DO NOTHING', [userId, body, deviceId]);
 			if (result.affectedRows !== 1) {
 				// Another device won the race between the read and the write.
 				const [[latest]] = await db.execute('SELECT revision, snapshot FROM wordcircle_progress_snapshots WHERE telegram_user_id = ? LIMIT 1', [userId]);

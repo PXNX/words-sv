@@ -7,7 +7,7 @@ export const MAX_FREEZES = 2;
 export const DAILY_GOALS = [5, 8, 12];
 export const REMINDER_LOCALES = ['de', 'en', 'fa', 'pt', 'ru', 'ar', 'uk', 'hi', 'ml'];
 
-/** A streak row as stored (snake_case, from MySQL) or as the client sends it (camelCase). */
+/** A streak row as stored (snake_case, from the database) or as the client sends it (camelCase). */
 export interface StoredStreak {
 	day_key?: string;
 	dateKey?: string;

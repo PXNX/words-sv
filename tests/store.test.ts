@@ -15,7 +15,7 @@ function fakeDatabase(linkedUser: number | null = 42) {
     async execute(sql: string, params: any[] = []): Promise<any> {
       if (/^(CREATE|ALTER)/u.test(sql)) return [{}];
       if (sql.startsWith('SELECT telegram_user_id FROM wordcircle_telegram_links')) return [linkedUser ? [{ telegram_user_id: linkedUser }] : []];
-      if (sql.startsWith('INSERT IGNORE INTO wordcircle_purchases')) {
+      if (sql.startsWith('INSERT INTO wordcircle_purchases')) {
         if (!purchases.some((row) => row.charge_id === params[0])) purchases.push({ charge_id: params[0], telegram_user_id: params[1], product: params[2] });
         return [{}];
       }

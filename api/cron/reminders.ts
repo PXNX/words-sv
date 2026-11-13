@@ -38,7 +38,7 @@ async function sendTelegramReminders(db: Database, telegramSender: TelegramSende
 		[rows] = await db.execute('SELECT d.*, t.chat_id FROM wordcircle_streak_devices d INNER JOIN wordcircle_telegram_links t ON t.device_id = d.device_id WHERE t.reminders = 1 AND t.chat_id IS NOT NULL');
 	} catch (error) {
 		// Nobody has linked Telegram yet: /api/telegram/device creates the table on first use.
-		if ((error as { code?: string } | null)?.code === 'ER_NO_SUCH_TABLE') return { attempted: 0, delivered: 0 };
+		if ((error as { code?: string } | null)?.code === '42P01') return { attempted: 0, delivered: 0 };
 		throw error;
 	}
 	let attempted = 0;
@@ -79,7 +79,7 @@ export function createRemindersEndpoint({ databaseProvider = getDatabase, pushSe
 				try {
 					await db.execute('INSERT INTO wordcircle_reminder_deliveries (device_id, delivery_date, delivery_type) VALUES (?, ?, ?)', [row.device_id, summary.dateKey, type]);
 				} catch (error) {
-					if ((error as { code?: string } | null)?.code === 'ER_DUP_ENTRY') continue;
+					if ((error as { code?: string } | null)?.code === '23505') continue;
 					throw error;
 				}
 				attempted += 1;

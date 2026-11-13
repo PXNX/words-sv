@@ -52,13 +52,13 @@ const TABLE = `CREATE TABLE IF NOT EXISTS wordcircle_game_sessions (
 	chat_id BIGINT NULL,
 	message_id BIGINT NULL,
 	inline_message_id VARCHAR(255) NULL,
-	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	INDEX wordcircle_game_sessions_created_idx (created_at)
+	created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 )`;
+const INDEX = 'CREATE INDEX IF NOT EXISTS wordcircle_game_sessions_created_idx ON wordcircle_game_sessions (created_at)';
 
 let tableReady: Promise<unknown> | undefined;
 export function ensureGameTables(db: Database) {
-	tableReady ??= db.execute(TABLE).catch((error: unknown) => {
+	tableReady ??= db.execute(TABLE).then(() => db.execute(INDEX)).catch((error: unknown) => {
 		tableReady = undefined;
 		throw error;
 	});

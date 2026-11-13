@@ -32,8 +32,8 @@ export function createPushEndpoint({ databaseProvider = getDatabase }: { databas
 				const normalized = normalizeSubscription(subscription);
 				if (!validDeviceId(deviceId) || typeof timeZone !== 'string' || !isSupportedTimeZone(timeZone) || !normalized) return respond(res, 400, { ok: false, error: 'invalid_subscription' });
 				const db = databaseProvider();
-				await db.execute('INSERT INTO wordcircle_streak_devices (device_id, timezone, locale, day_key) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE timezone = VALUES(timezone), locale = VALUES(locale)', [deviceId, timeZone, normalizeReminderLocale(locale), dateKeyFor(timeZone)]);
-				await db.execute(`INSERT INTO wordcircle_push_subscriptions (endpoint_hash, device_id, endpoint, p256dh_key, auth_key, enabled) VALUES (?, ?, ?, ?, ?, 1) ON DUPLICATE KEY UPDATE device_id = VALUES(device_id), endpoint = VALUES(endpoint), p256dh_key = VALUES(p256dh_key), auth_key = VALUES(auth_key), enabled = 1`, [endpointHash(normalized.endpoint), deviceId, normalized.endpoint, normalized.keys.p256dh, normalized.keys.auth]);
+				await db.execute('INSERT INTO wordcircle_streak_devices (device_id, timezone, locale, day_key) VALUES (?, ?, ?, ?) ON CONFLICT (device_id) DO UPDATE SET timezone = EXCLUDED.timezone, locale = EXCLUDED.locale, last_seen_at = now()', [deviceId, timeZone, normalizeReminderLocale(locale), dateKeyFor(timeZone)]);
+				await db.execute(`INSERT INTO wordcircle_push_subscriptions (endpoint_hash, device_id, endpoint, p256dh_key, auth_key, enabled) VALUES (?, ?, ?, ?, ?, 1) ON CONFLICT (endpoint_hash) DO UPDATE SET device_id = EXCLUDED.device_id, endpoint = EXCLUDED.endpoint, p256dh_key = EXCLUDED.p256dh_key, auth_key = EXCLUDED.auth_key, enabled = 1, updated_at = now()`, [endpointHash(normalized.endpoint), deviceId, normalized.endpoint, normalized.keys.p256dh, normalized.keys.auth]);
 				return respond(res, 201, { ok: true, subscribed: true });
 			}
 			return respond(res, 400, { ok: false, error: 'invalid_action' });
