@@ -6,10 +6,11 @@
 <script lang="ts">
   import { m } from '#lib/paraglide/messages.js';
   import { settings } from '#lib/state/settings.svelte.js';
+  import type { LiveLine } from './scribble';
   import IconUndo from '~icons/material-symbols/undo-rounded';
   import IconDelete from '~icons/material-symbols/delete-outline-rounded';
 
-  let { onchange }: { onchange?: (lines: number) => void } = $props();
+  let { onchange, onlive }: { onchange?: (lines: number) => void; onlive?: (lines: LiveLine[]) => void } = $props();
 
   type Line = { color: string; size: number; points: Array<[number, number]> };
   const COLORS = ['#172a45', '#c4522e', '#e6a527', '#34824d', '#2a6fa8', '#8a4fb0'];
@@ -23,7 +24,13 @@
   let size = $state(SIZES[0]!);
   let current: Line | null = null;
 
+  function live() {
+    if (!onlive) return;
+    onlive((current ? [...lines, current] : lines).map((line) => ({ c: line.color, s: line.size, p: line.points.flatMap(([x, y]) => [Math.round(Math.max(0, Math.min(SIZE, x))), Math.round(Math.max(0, Math.min(SIZE, y)))]) })));
+  }
+
   function paint() {
+    live();
     const context = canvas?.getContext('2d');
     if (!context) return;
     context.fillStyle = '#ffffff';

@@ -1175,5 +1175,21 @@
   "scribble_spell_hint": "Tippe das Wort selbst, statt aus vier auszuwählen.",
   "scribble_spell_label": "Deine Antwort",
   "scribble_spell_placeholder": "Was ist das?",
-  "scribble_spell_submit": "Raten"
+  "scribble_spell_submit": "Raten",
+  "achievement_scribble_champion": "Scribble-Sieger",
+  "achievement_scribble_legend": "Scribble-Legende: 10 Siege",
+  "scribble_live_loading": "Verbinde mit der Gruppe …",
+  "scribble_live_offline": "Keine Verbindung zum Spiel – versuche es weiter …",
+  "scribble_live_expired": "Diese Runde ist abgelaufen. Drück im Chat noch einmal ▶️ Spielen.",
+  "scribble_live_round": "Runde {round} von {of}",
+  "scribble_live_turn_left": "Noch {seconds} s, um anzufangen.",
+  "scribble_live_drawing_hint": "Die anderen sehen jeden Strich sofort.",
+  "scribble_live_canvas": "Zeichnung von {name}",
+  "scribble_live_watch": "{name} zeichnet – was ist es?",
+  "scribble_live_letters": "{count} Buchstaben",
+  "scribble_live_you_got_it": "Du hast es! {word} (+{points})",
+  "scribble_live_guessed": "{name} hat es erraten: {word}",
+  "scribble_live_waiting": "{name} ist als Nächstes dran …",
+  "scribble_live_waiting_anyone": "Warte auf die nächste Runde …",
+  "scribble_live_standings": "Wertung"
 }
