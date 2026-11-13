@@ -50,6 +50,12 @@ export const pages: Record<string, PageMeta> = {
     kicker: 'Wortspiel',
     icon: 'extension-rounded'
   },
+  '/scribble': {
+    title: 'Scribble',
+    description: 'Zeichne Wörter und errate Zeichnungen – allein, zu zweit oder in deiner Telegram-Gruppe.',
+    kicker: 'Wortspiel',
+    icon: 'brush-rounded'
+  },
   '/taboo': {
     title: 'Taboo',
     description: 'Beschreibe ein Wort, ohne es oder seine Wortfamilie zu nennen – und sammle Punkte für die treffenden Stichwörter.',

@@ -112,3 +112,12 @@ export function hasPictures(language: string): boolean {
 export function picturedWords(language: string): string[] {
   return [...(INDEX[language]?.keys() ?? [])];
 }
+
+/** The other language's words on the same picture row(s) as `word`: "Apfel" → ["apple"]. Only German and English. */
+export function pictureTranslations(language: string, word: string): string[] {
+  const column = language === 'de' ? 1 : language === 'en' ? 2 : 0;
+  if (!column) return [];
+  const key = word.trim().toLocaleUpperCase();
+  const other = column === 1 ? 2 : 1;
+  return CONCEPTS.filter((concept) => (concept[column] ?? '').split('|').some((entry) => entry.trim().toLocaleUpperCase() === key)).flatMap((concept) => (concept[other] ?? '').split('|').map((entry) => entry.trim()).filter(Boolean));
+}

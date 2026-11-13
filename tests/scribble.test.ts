@@ -68,3 +68,12 @@ describe('Lilith drawing', () => {
     expect(strokes.reduce((sum, stroke) => sum + stroke.length, 0)).toBe(points.length);
   });
 });
+
+describe('picture translations', async () => {
+  const { pictureTranslations } = await import('../src/lib/learn/pictures');
+  it('finds the word of the other language on the same picture', () => {
+    expect(pictureTranslations('de', 'Apfel')).toEqual(['apple']);
+    expect(pictureTranslations('en', 'dog')).toEqual(['Hund']);
+    expect(pictureTranslations('fa', 'x')).toEqual([]);
+  });
+});

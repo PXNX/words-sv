@@ -41,6 +41,7 @@
   import IconSpellcheck from '~icons/material-symbols/spellcheck-rounded';
   import IconQuiz from '~icons/material-symbols/quiz-rounded';
   import IconHangman from '~icons/material-symbols/extension-rounded';
+  import IconBrush from '~icons/material-symbols/brush-rounded';
   import IconTaboo from '~icons/material-symbols/record-voice-over-rounded';
   import IconMic from '~icons/material-symbols/mic-rounded';
   import IconEmoji from '~icons/material-symbols/sentiment-satisfied-rounded';
@@ -162,6 +163,7 @@
     definitions: { icon: IconFactCheck, title: labels.modeDefinitions, text: labels.homeDefinitions },
     wordle: { icon: IconSpellcheck, title: labels.modeWordle, text: labels.homeWordle },
     hangman: { icon: IconHangman, title: labels.modeHangman, text: labels.homeHangman },
+    scribble: { icon: IconBrush, title: m.mode_scribble({}, { locale: settings.interfaceLocale }), text: m.home_scribble({}, { locale: settings.interfaceLocale }) },
     taboo: { icon: IconTaboo, title: labels.modeTaboo, text: labels.homeTaboo },
     stories: { icon: IconStory, title: labels.story, text: labels.homeStory },
     reading: { icon: IconMenuBook, title: labels.reading, text: labels.homeReading },

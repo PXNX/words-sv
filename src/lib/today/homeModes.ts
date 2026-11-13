@@ -8,7 +8,7 @@ export type Channel = (typeof CHANNELS)[number];
 export type HomeGroup = 'games' | 'stories' | 'writing' | 'vocabulary' | 'grammar';
 
 export type HomeModeId =
-  | 'circle' | 'definitions' | 'wordle' | 'hangman' | 'taboo'
+  | 'circle' | 'definitions' | 'wordle' | 'hangman' | 'taboo' | 'scribble'
   | 'stories' | 'reading' | 'listen' | 'conversation'
   | 'sentence' | 'fullText'
   | 'vocab' | 'pronunciation' | 'alltag' | 'dictionary' | 'falseFriends'
@@ -32,6 +32,7 @@ export const HOME_MODES: readonly HomeMode[] = [
   { id: 'wordle', href: '/wordle', group: 'games', channels: ['play', 'write'], streak: 'wordle' },
   { id: 'hangman', href: '/hangman', group: 'games', channels: ['play', 'words'], streak: 'hangman' },
   { id: 'taboo', href: '/taboo', group: 'games', channels: ['play', 'write', 'speak'], streak: 'taboo' },
+  { id: 'scribble', href: '/scribble', group: 'games', channels: ['play', 'words'], streak: null, languages: ['de', 'en'] },
   { id: 'stories', href: '/stories', group: 'stories', channels: ['read', 'hear'], streak: 'story' },
   { id: 'reading', href: '/reading', group: 'stories', channels: ['read'], streak: 'reading' },
   { id: 'listen', href: '/listen', group: 'stories', channels: ['hear'], streak: 'listen' },

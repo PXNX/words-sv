@@ -9,12 +9,12 @@ import type { Database } from './database.js';
 // and setGameScore puts it on the chat's scoreboard, which Telegram keeps and shows itself.
 
 /** The modes offered as group games; each id is also the game's short name at @BotFather. */
-export const GROUP_GAMES = ['wordle', 'hangman', 'vocab'] as const;
+export const GROUP_GAMES = ['wordle', 'hangman', 'vocab', 'scribble'] as const;
 export type GroupGame = (typeof GROUP_GAMES)[number];
 export const isGroupGame = (value: unknown): value is GroupGame => typeof value === 'string' && (GROUP_GAMES as readonly string[]).includes(value);
 
 /** The page a Play press opens. */
-export const GAME_ROUTES: Record<GroupGame, string> = { wordle: '/wordle', hangman: '/hangman', vocab: '/vocab' };
+export const GAME_ROUTES: Record<GroupGame, string> = { wordle: '/wordle', hangman: '/hangman', vocab: '/vocab', scribble: '/scribble' };
 
 // How a round becomes a score (higher is better, the only order Telegram ranks by). The page
 // computes it; the server only accepts what a real round can reach.
@@ -24,7 +24,9 @@ export const MAX_SCORES: Record<GroupGame, number> = {
 	// A won word: 100 plus 25 per miss left (of six), plus 10 per letter.
 	hangman: 100 + 25 * 6 + 10 * 20,
 	// First-try answers in a row in one session.
-	vocab: 500
+	vocab: 500,
+	// Scribble's points come from the bot (guesses in the chat), never from the page.
+	scribble: 0
 };
 
 /** A session is good for a day of rounds. */
