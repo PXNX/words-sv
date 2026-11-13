@@ -1,17 +1,30 @@
-"""The group side of the bot: /games posts a WordCircle game, Play opens it with a session, /top shows
-the scoreboards, and joining a group explains both. See games.py for how the scores get there."""
+"""The group side of the bot: /games opens the list of WordCircle games as inline results (logo, name,
+description, like search results), picking one posts it, Play opens it with a session, /top shows the
+scoreboards, and joining a group explains all that. See games.py for how the scores get there."""
 import logging
+from time import monotonic
 
-from telegram import ChatMemberUpdated, InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram import (
+    ChatMemberUpdated,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    InlineQueryResultArticle,
+    InlineQueryResultGame,
+    InputTextMessageContent,
+    Update,
+)
 from telegram.constants import ChatMemberStatus, ChatType
-from telegram.error import TelegramError
-from telegram.ext import Application, CallbackQueryHandler, ChatMemberHandler, CommandHandler, ContextTypes
+from telegram.error import BadRequest, TelegramError
+from telegram.ext import Application, CallbackQueryHandler, ChatMemberHandler, CommandHandler, ContextTypes, InlineQueryHandler
 
 from bridge import open_game
-from games import GAMES, find_game, format_top, game_name, posted_games, remember_game
+from games import GAMES, find_game, format_top, game_about, game_name, matching_games, posted_games, remember_game
+from settings.config import WORDS_URL
 from texts import lang_of, t
 
 logger = logging.getLogger(__name__)
+
+GAMES_RETRY_SECONDS = 600
 
 
 def _lang(update: Update) -> str:
@@ -24,22 +37,74 @@ def _is_group(update: Update) -> bool:
 
 async def post_game(update: Update, context: ContextTypes.DEFAULT_TYPE, game_id: str) -> None:
     chat = update.effective_chat
-    message = await context.bot.send_game(chat.id, game_id)
+    try:
+        message = await context.bot.send_game(chat.id, game_id)
+    except BadRequest as error:
+        # Every game has to be created once with @BotFather (/newgame) under its id.
+        if "game short name" not in str(error).lower():
+            raise
+        logger.error("Game %r is not registered with @BotFather (/newgame)", game_id)
+        await context.bot.send_message(chat.id, t(_lang(update), "games_not_registered"))
+        return
     await remember_game(context.bot_data["db"], chat.id, game_id, message.message_id)
 
 
 async def games_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """/games: a button per game; /games <id> or /game <id> posts that one directly."""
+    """/games: a button that lists the games as inline results right in the chat's input field;
+    /games <id> or /game <id> posts that one directly. In a private chat the button picks a group."""
     lang = _lang(update)
     if not _is_group(update):
-        await update.message.reply_text(t(lang, "games_only_groups"))
+        button = InlineKeyboardButton(t(lang, "games_pick_group"), switch_inline_query="games")
+        await update.message.reply_text(t(lang, "games_only_groups"), reply_markup=InlineKeyboardMarkup([[button]]))
         return
     game = find_game(context.args[0]) if context.args else None
     if game:
         await post_game(update, context, game["id"])
         return
-    buttons = [[InlineKeyboardButton(f"🎮 {game_name(entry['id'], lang)}", callback_data=f"game:{entry['id']}")] for entry in GAMES]
-    await update.message.reply_text(t(lang, "games_menu"), reply_markup=InlineKeyboardMarkup(buttons))
+    button = InlineKeyboardButton(t(lang, "games_show"), switch_inline_query_current_chat="games")
+    await update.message.reply_text(t(lang, "games_menu"), reply_markup=InlineKeyboardMarkup([[button]]))
+
+
+def thumbnail_url(game_id: str) -> str:
+    return f"{WORDS_URL.rstrip('/')}/telegram/game-{game_id}.png"
+
+
+def article_results(games: list[dict], lang: str) -> list[InlineQueryResultArticle]:
+    """The games as plain results: logo, name and description; picking one posts a card that opens the
+    game in WordCircle. Used until the games are registered with @BotFather (then they are real games)."""
+    results = []
+    for entry in games:
+        name, about = game_name(entry["id"], lang), game_about(entry["id"], lang)
+        play = InlineKeyboardButton(t(lang, "games_play", name=name), url=f"{WORDS_URL.rstrip('/')}/{entry['id']}")
+        results.append(InlineQueryResultArticle(
+            id=entry["id"],
+            title=name,
+            description=about,
+            thumbnail_url=thumbnail_url(entry["id"]),
+            thumbnail_width=256,
+            thumbnail_height=256,
+            input_message_content=InputTextMessageContent(f"🎮 <b>{name}</b>\n{about}"),
+            reply_markup=InlineKeyboardMarkup([[play]]),
+        ))
+    return results
+
+
+async def inline_games(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Inline results for @word_circle_bot (or the /games button): every game that matches the query.
+    Registered games come as Telegram games (photo, title and description from @BotFather, Play button
+    and the group's leaderboard); if Telegram does not know them yet, as articles with the same look."""
+    query = update.inline_query
+    lang = lang_of(query.from_user.language_code)
+    games = matching_games(query.query, lang)
+    # After a failure, try the real games again every few minutes, so registering them is picked up without a restart.
+    if monotonic() - context.bot_data.get("games_failed_at", -GAMES_RETRY_SECONDS) >= GAMES_RETRY_SECONDS:
+        try:
+            await query.answer([InlineQueryResultGame(id=entry["id"], game_short_name=entry["id"]) for entry in games], cache_time=300)
+            return
+        except BadRequest as error:
+            logger.error("Inline games failed (%s); register them with @BotFather (/newgame). Showing plain results.", error)
+            context.bot_data["games_failed_at"] = monotonic()
+    await query.answer(article_results(games, lang), cache_time=60)
 
 
 async def game_button(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -106,6 +171,7 @@ def register_group_games(app: Application):
     app.add_handler(CommandHandler(["games", "game", "spiele", "spiel"], games_command))
     app.add_handler(CommandHandler(["top", "leaderboard", "bestenliste"], top))
     app.add_handler(CallbackQueryHandler(game_button, pattern=r"^game:[a-z]+$"))
+    app.add_handler(InlineQueryHandler(inline_games))
     # Play presses carry the game's short name instead of callback data.
     app.add_handler(CallbackQueryHandler(play, game_pattern="^(" + "|".join(entry["id"] for entry in GAMES) + ")$"))
     app.add_handler(ChatMemberHandler(joined, ChatMemberHandler.MY_CHAT_MEMBER))

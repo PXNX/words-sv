@@ -9,7 +9,7 @@ from texts import TEXTS
 
 
 def test_games_match_the_server():
-    server = (Path(__file__).resolve().parents[2] / "api" / "_lib" / "games.ts").read_text(encoding="utf-8")
+    server = (Path(__file__).resolve().parents[2] / "server" / "_lib" / "games.ts").read_text(encoding="utf-8")
     assert "export const GROUP_GAMES = ['wordle', 'hangman', 'vocab'] as const;" in server
     assert [game["id"] for game in GAMES] == ["wordle", "hangman", "vocab"]
 
@@ -26,5 +26,24 @@ def test_format_top_with_medals_and_escaping():
 
 
 def test_texts_in_both_languages():
-    for key in ("games_menu", "games_only_groups", "games_unavailable", "games_no_scores", "games_welcome"):
+    for key in ("games_menu", "games_only_groups", "games_unavailable", "games_not_registered", "games_show", "games_pick_group", "games_play", "games_no_scores", "games_welcome"):
         assert key in TEXTS["de"] and key in TEXTS["en"]
+
+
+def test_matching_games():
+    from games import matching_games
+    assert [g["id"] for g in matching_games("", "en")] == ["wordle", "hangman", "vocab"]
+    assert [g["id"] for g in matching_games("games", "de")] == ["wordle", "hangman", "vocab"]
+    assert [g["id"] for g in matching_games("galgen", "de")] == ["hangman"]
+    assert [g["id"] for g in matching_games("quiz", "en")] == ["vocab"]
+    assert matching_games("chess", "en") == []
+
+
+def test_article_results_carry_logo_name_and_play_link():
+    from group_games import article_results
+    from games import GAMES
+    results = article_results(GAMES, "de")
+    assert [r.title for r in results] == ["Wordle", "Galgenmännchen", "Wortquiz"]
+    assert results[0].thumbnail_url.endswith("/telegram/game-wordle.png")
+    assert results[1].reply_markup.inline_keyboard[0][0].url.endswith("/hangman")
+    assert all(r.description for r in results)
