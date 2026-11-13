@@ -1,576 +1,1684 @@
 {
-  "ability": {},
-  "accept": {},
+  "ability": {
+    "definition": "The power or skill to do something."
+  },
+  "accept": {
+    "definition": "To say yes to something that is offered."
+  },
   "accident": {
     "definition": "An event that happens unexpectedly and causes damage or injury."
   },
   "account": {
     "definition": "A record or description of an event, experience, or situation."
   },
-  "achieve": {},
-  "act": {},
-  "addition": {},
-  "adjust": {},
+  "achieve": {
+    "definition": "To succeed in doing something after effort."
+  },
+  "act": {
+    "definition": "To do something, or to perform in a play."
+  },
+  "addition": {
+    "definition": "The act of putting something together with something else."
+  },
+  "adjust": {
+    "definition": "To change something slightly so that it fits or works better."
+  },
   "admire": {
     "definition": "To respect or like someone or something greatly."
   },
-  "admit": {},
-  "adult": {},
-  "advanced": {},
-  "advice": {},
-  "advise": {},
-  "affair": {},
-  "aged": {},
-  "agency": {},
-  "agent": {},
-  "air": {},
-  "aisle": {},
-  "alarm": {},
-  "alive": {},
-  "allow": {},
-  "alone": {},
-  "alright": {},
-  "ambition": {},
-  "amused": {},
+  "admit": {
+    "definition": "To say that something is true, often unwillingly."
+  },
+  "adult": {
+    "definition": "A person who is fully grown."
+  },
+  "advanced": {
+    "definition": "At a high level; not for beginners."
+  },
+  "advice": {
+    "definition": "Words that tell someone what you think they should do."
+  },
+  "advise": {
+    "definition": "To tell someone what you think they should do."
+  },
+  "affair": {
+    "definition": "An event, or a matter that concerns people."
+  },
+  "aged": {
+    "definition": "Old, or having a certain age."
+  },
+  "agency": {
+    "definition": "A business that arranges services for other people."
+  },
+  "agent": {
+    "definition": "A person who does business for someone else."
+  },
+  "air": {
+    "definition": "The mixture of gases around us that we breathe."
+  },
+  "aisle": {
+    "definition": "The narrow path between rows of seats or shelves."
+  },
+  "alarm": {
+    "definition": "A sound or device that warns of danger or wakes you."
+  },
+  "alive": {
+    "definition": "Living; not dead."
+  },
+  "allow": {
+    "definition": "To let someone do something."
+  },
+  "alone": {
+    "definition": "Without other people."
+  },
+  "alright": {
+    "definition": "Good enough; in an acceptable way."
+  },
+  "ambition": {
+    "definition": "A strong wish to achieve something."
+  },
+  "amused": {
+    "definition": "Finding something funny."
+  },
   "ancestor": {
     "definition": "A person from whom someone is descended."
   },
   "ancient": {
     "definition": "Belonging to a time long ago in history."
   },
-  "angel": {},
-  "ankle": {},
-  "annoy": {},
-  "annoying": {},
-  "anxious": {},
-  "appear": {},
-  "apply": {},
-  "area": {},
-  "argue": {},
+  "angel": {
+    "definition": "A messenger of God with wings, in religion."
+  },
+  "ankle": {
+    "definition": "The joint between the foot and the leg."
+  },
+  "annoy": {
+    "definition": "To make someone a little angry."
+  },
+  "annoying": {
+    "definition": "Making you feel a little angry."
+  },
+  "anxious": {
+    "definition": "Worried and nervous about something."
+  },
+  "appear": {
+    "definition": "To come into sight, or to seem."
+  },
+  "apply": {
+    "definition": "To ask for a job in writing, or to put something on a surface."
+  },
+  "area": {
+    "definition": "A part of a place, or the size of a surface."
+  },
+  "argue": {
+    "definition": "To speak angrily with someone who disagrees."
+  },
   "argument": {
     "definition": "A disagreement in which people express different opinions."
   },
-  "armchair": {},
-  "armed": {},
-  "asleep": {},
-  "athlete": {},
-  "atom": {},
-  "attack": {},
-  "attempt": {},
-  "attitude": {},
-  "audience": {},
-  "audio": {},
-  "author": {},
-  "average": {},
-  "avoid": {},
-  "award": {},
-  "awful": {},
-  "back": {},
-  "bake": {},
-  "balcony": {},
-  "balloon": {},
-  "bank": {},
-  "banking": {},
-  "barbecue": {},
-  "barber": {},
-  "bargain": {},
-  "base": {},
-  "basic": {},
-  "basket": {},
-  "batch": {},
-  "battery": {},
-  "bay": {},
-  "bear": {},
-  "beauty": {},
-  "beer": {},
-  "beg": {},
-  "beginner": {},
-  "being": {},
-  "belly": {},
-  "belong": {},
-  "belt": {},
-  "bench": {},
-  "bend": {},
-  "bill": {},
-  "bit": {},
-  "bite": {},
-  "blame": {},
-  "blanket": {},
-  "blonde": {},
-  "blood": {},
-  "bloom": {},
-  "blow": {},
-  "boil": {},
-  "boiled": {},
-  "bonus": {},
-  "bookcase": {},
-  "bookshop": {},
-  "bored": {},
-  "boss": {},
-  "bother": {},
-  "bra": {},
-  "brake": {},
-  "branch": {},
-  "brand": {},
-  "brave": {},
-  "break": {},
-  "breeze": {},
-  "bride": {},
-  "brown": {},
-  "budget": {},
-  "bug": {},
-  "bulb": {},
-  "burn": {},
-  "bury": {},
-  "bush": {},
-  "cab": {},
-  "calendar": {},
-  "call": {},
-  "camp": {},
-  "camping": {},
-  "campus": {},
-  "can": {},
-  "capital": {},
-  "captain": {},
-  "carrot": {},
-  "cash": {},
-  "cassette": {},
-  "castle": {},
-  "cause": {},
-  "cent": {},
-  "century": {},
-  "cereal": {},
-  "certain": {},
-  "chain": {},
-  "chairman": {},
-  "chance": {},
-  "chapter": {},
-  "chart": {},
-  "chat": {},
-  "cheap": {},
-  "check": {},
-  "cheek": {},
-  "cheer": {},
-  "chef": {},
-  "chemical": {},
-  "cheque": {},
-  "chess": {},
-  "chest": {},
-  "chin": {},
-  "chirp": {},
-  "choice": {},
-  "citizen": {},
-  "claim": {},
-  "classic": {},
-  "cleaner": {},
-  "clear": {},
-  "clerk": {},
-  "click": {},
-  "climb": {},
-  "climbing": {},
-  "clone": {},
-  "clown": {},
-  "clue": {},
-  "coast": {},
-  "coin": {},
-  "cola": {},
-  "column": {},
-  "comb": {},
-  "comic": {},
-  "common": {},
-  "company": {},
-  "compare": {},
-  "complain": {},
-  "complete": {},
-  "composer": {},
-  "concern": {},
-  "confuse": {},
-  "confused": {},
-  "consider": {},
-  "consist": {},
-  "contact": {},
-  "context": {},
-  "continue": {},
-  "contrast": {},
-  "control": {},
-  "cooker": {},
-  "cooking": {},
-  "cooler": {},
-  "copy": {},
-  "cost": {},
-  "count": {},
-  "country": {},
-  "couple": {},
-  "court": {},
-  "cover": {},
-  "crazy": {},
-  "cream": {},
-  "create": {},
-  "creative": {},
-  "creature": {},
-  "credit": {},
-  "cricket": {},
-  "crime": {},
-  "crisp": {},
-  "cross": {},
-  "crowd": {},
-  "crowded": {},
-  "crown": {},
-  "cruise": {},
-  "cry": {},
-  "cupboard": {},
-  "curry": {},
-  "curse": {},
-  "custom": {},
-  "customer": {},
-  "cycling": {},
-  "daily": {},
-  "dam": {},
-  "dancer": {},
-  "danger": {},
-  "daylight": {},
-  "dead": {},
-  "deal": {},
-  "death": {},
-  "debate": {},
-  "decide": {},
-  "degree": {},
-  "delay": {},
-  "dentist": {},
-  "depend": {},
-  "desert": {},
-  "dessert": {},
-  "destroy": {},
-  "detail": {},
-  "develop": {},
-  "diamond": {},
-  "diary": {},
-  "die": {},
-  "diet": {},
-  "dinosaur": {},
-  "direct": {},
-  "director": {},
-  "disagree": {},
-  "disco": {},
-  "discover": {},
-  "dislike": {},
-  "display": {},
-  "disturb": {},
-  "divide": {},
-  "dizzy": {},
-  "double": {},
-  "doubt": {},
-  "download": {},
-  "draw": {},
-  "drawer": {},
-  "drawing": {},
-  "dream": {},
-  "dress": {},
-  "dressed": {},
-  "drill": {},
-  "drive": {},
-  "drop": {},
-  "drug": {},
-  "dry": {},
-  "duck": {},
-  "dust": {},
-  "early": {},
-  "earn": {},
-  "earring": {},
-  "earth": {},
-  "east": {},
-  "editor": {},
-  "effect": {},
-  "effort": {},
-  "elderly": {},
-  "electric": {},
-  "elephant": {},
-  "elevator": {},
-  "email": {},
-  "empty": {},
-  "end": {},
-  "ending": {},
-  "enormous": {},
-  "enter": {},
-  "entrance": {},
-  "envelope": {},
-  "envy": {},
-  "episode": {},
-  "error": {},
-  "escape": {},
-  "essay": {},
-  "euro": {},
-  "evidence": {},
-  "exam": {},
-  "exchange": {},
-  "exercise": {},
-  "exist": {},
-  "expect": {},
-  "expert": {},
-  "explain": {},
-  "explore": {},
-  "express": {},
-  "extra": {},
-  "face": {},
-  "fact": {},
-  "fail": {},
-  "fall": {},
-  "familiar": {},
-  "fancy": {},
-  "fare": {},
-  "fashion": {},
-  "fault": {},
-  "fear": {},
-  "feather": {},
-  "feature": {},
-  "fee": {},
-  "feel": {},
-  "female": {},
-  "fence": {},
-  "fiction": {},
-  "fighter": {},
-  "figure": {},
-  "film": {},
-  "final": {},
-  "fit": {},
-  "fix": {},
-  "flea": {},
-  "flight": {},
-  "float": {},
-  "flood": {},
-  "flour": {},
-  "fog": {},
-  "folder": {},
-  "follow": {},
-  "fool": {},
-  "forbid": {},
-  "force": {},
-  "forest": {},
-  "fork": {},
-  "fortune": {},
-  "frame": {},
-  "frank": {},
-  "freedom": {},
-  "freeze": {},
-  "fresh": {},
-  "fridge": {},
-  "fried": {},
-  "frighten": {},
-  "front": {},
-  "fry": {},
-  "function": {},
-  "further": {},
-  "gallery": {},
-  "garage": {},
-  "garlic": {},
-  "gas": {},
-  "gate": {},
-  "gather": {},
-  "gender": {},
-  "gentle": {},
-  "given": {},
-  "globe": {},
-  "glove": {},
-  "gold": {},
-  "golden": {},
-  "golf": {},
-  "grace": {},
-  "graduate": {},
-  "granddad": {},
-  "grandson": {},
-  "granny": {},
-  "grateful": {},
-  "greedy": {},
-  "green": {},
-  "grilled": {},
-  "guard": {},
-  "gun": {},
-  "ham": {},
-  "hand": {},
-  "handbag": {},
-  "handle": {},
-  "harm": {},
-  "harmful": {},
-  "harmony": {},
-  "harvest": {},
-  "hate": {},
-  "head": {},
-  "heat": {},
-  "heating": {},
-  "help": {},
-  "helpful": {},
-  "hero": {},
-  "highway": {},
-  "hike": {},
-  "hiking": {},
-  "hit": {},
-  "hockey": {},
-  "hold": {},
-  "honey": {},
-  "horror": {},
-  "host": {},
-  "hug": {},
-  "human": {},
-  "hunter": {},
-  "hurry": {},
-  "ill": {},
-  "illegal": {},
-  "image": {},
-  "impact": {},
-  "impress": {},
-  "improve": {},
-  "inch": {},
-  "include": {},
-  "increase": {},
-  "indicate": {},
-  "indoor": {},
-  "injure": {},
-  "inner": {},
-  "insect": {},
-  "instant": {},
-  "interest": {},
-  "invade": {},
-  "invent": {},
-  "invite": {},
-  "issue": {},
-  "jam": {},
-  "jelly": {},
-  "joke": {},
-  "journey": {},
-  "joy": {},
-  "junior": {},
-  "junk": {},
-  "killer": {},
-  "kilo": {},
-  "kind": {},
-  "kindly": {},
-  "kingdom": {},
-  "kit": {},
-  "knock": {},
-  "lack": {},
-  "lake": {},
-  "lamp": {},
-  "land": {},
-  "lane": {},
-  "latest": {},
-  "law": {},
-  "lawyer": {},
-  "laziness": {},
-  "lead": {},
-  "learner": {},
-  "leather": {},
-  "left": {},
-  "leisure": {},
-  "lemon": {},
-  "lemonade": {},
-  "lend": {},
-  "level": {},
-  "liberty": {},
-  "lie": {},
-  "likely": {},
-  "lip": {},
-  "lively": {},
-  "load": {},
-  "local": {},
-  "lock": {},
-  "logical": {},
-  "loose": {},
-  "lose": {},
-  "lost": {},
-  "lot": {},
-  "lover": {},
-  "low": {},
-  "lyric": {},
-  "mad": {},
-  "magic": {},
-  "major": {},
-  "maker": {},
-  "male": {},
-  "mall": {},
-  "manage": {},
-  "manager": {},
-  "manner": {},
-  "mark": {},
-  "market": {},
-  "married": {},
-  "marry": {},
-  "material": {},
-  "matter": {},
-  "max": {},
-  "mean": {},
-  "meaning": {},
-  "medal": {},
-  "medical": {},
-  "melon": {},
-  "member": {},
-  "mention": {},
-  "menu": {},
-  "metal": {},
-  "method": {},
-  "midday": {},
-  "middle": {},
-  "midnight": {},
-  "military": {},
-  "mind": {},
-  "mirror": {},
-  "missing": {},
-  "mistake": {},
-  "mix": {},
-  "mobile": {},
-  "model": {},
-  "modern": {},
-  "mood": {},
-  "mosque": {},
-  "motorway": {},
-  "move": {},
-  "mug": {},
-  "murder": {},
-  "museum": {},
-  "mushroom": {},
-  "musical": {},
-  "mystery": {},
-  "napkin": {},
-  "nation": {},
-  "national": {},
-  "native": {},
-  "natural": {},
-  "nature": {},
-  "need": {},
-  "negative": {},
-  "nervous": {},
-  "net": {},
-  "noisy": {},
-  "noon": {},
-  "normal": {},
-  "north": {},
-  "notice": {},
-  "noun": {},
-  "novel": {},
-  "oak": {},
-  "offer": {},
-  "official": {},
-  "oil": {},
-  "olympic": {},
-  "onion": {},
-  "online": {},
-  "operate": {},
-  "opinion": {},
-  "oppose": {},
-  "opposite": {},
-  "order": {},
-  "original": {},
-  "orphan": {},
-  "oven": {},
-  "pacific": {},
-  "pack": {},
-  "painter": {},
-  "pal": {},
-  "pan": {},
-  "panic": {},
-  "park": {},
-  "part": {},
-  "pass": {},
-  "passage": {},
+  "armchair": {
+    "definition": "A soft chair with supports for the arms."
+  },
+  "armed": {
+    "definition": "Carrying a weapon."
+  },
+  "asleep": {
+    "definition": "Sleeping."
+  },
+  "athlete": {
+    "definition": "A person who is good at sports and trains for them."
+  },
+  "atom": {
+    "definition": "The smallest part of a chemical element."
+  },
+  "attack": {
+    "definition": "To try to hurt someone or damage something."
+  },
+  "attempt": {
+    "definition": "To try to do something."
+  },
+  "attitude": {
+    "definition": "The way you think and feel about something."
+  },
+  "audience": {
+    "definition": "The people who watch or listen to a performance."
+  },
+  "audio": {
+    "definition": "Sound that is recorded or played."
+  },
+  "author": {
+    "definition": "A person who writes books."
+  },
+  "average": {
+    "definition": "The usual or middle amount, or a level calculated from several numbers."
+  },
+  "avoid": {
+    "definition": "To keep away from something or someone."
+  },
+  "award": {
+    "definition": "A prize given for good work or for a victory."
+  },
+  "awful": {
+    "definition": "Very bad or unpleasant."
+  },
+  "back": {
+    "definition": "The part of the body behind you, or to return."
+  },
+  "bake": {
+    "definition": "To cook food such as bread in an oven."
+  },
+  "balcony": {
+    "definition": "A small platform outside a window with a rail."
+  },
+  "balloon": {
+    "definition": "A rubber bag filled with air that floats."
+  },
+  "bank": {
+    "definition": "A place that keeps money, or the land beside a river."
+  },
+  "banking": {
+    "definition": "The business of keeping and lending money."
+  },
+  "barbecue": {
+    "definition": "A meal cooked outdoors over a fire."
+  },
+  "barber": {
+    "definition": "A person whose job is cutting men's hair."
+  },
+  "bargain": {
+    "definition": "Something bought for less than the usual price."
+  },
+  "base": {
+    "definition": "The lowest part of something, or the main part of a place."
+  },
+  "basic": {
+    "definition": "Simple and at the first level."
+  },
+  "basket": {
+    "definition": "A container made of woven material with a handle."
+  },
+  "batch": {
+    "definition": "A group of things made or dealt with together."
+  },
+  "battery": {
+    "definition": "An object that stores electricity for a device."
+  },
+  "bay": {
+    "definition": "A part of the sea partly surrounded by land."
+  },
+  "bear": {
+    "definition": "To carry something, or to accept something difficult."
+  },
+  "beauty": {
+    "definition": "The quality of being lovely to look at."
+  },
+  "beer": {
+    "definition": "An alcoholic drink made from grain."
+  },
+  "beg": {
+    "definition": "To ask for something in a way that shows you need it very much."
+  },
+  "beginner": {
+    "definition": "A person who has just started to learn something."
+  },
+  "being": {
+    "definition": "A living creature."
+  },
+  "belly": {
+    "definition": "The front part of the body below the chest."
+  },
+  "belong": {
+    "definition": "To be owned by someone, or to fit in a place."
+  },
+  "belt": {
+    "definition": "A band of leather worn around the waist."
+  },
+  "bench": {
+    "definition": "A long seat for several people, often outdoors."
+  },
+  "bend": {
+    "definition": "To make something curved or not straight."
+  },
+  "bill": {
+    "definition": "A paper showing how much you must pay."
+  },
+  "bit": {
+    "definition": "A small piece or amount."
+  },
+  "bite": {
+    "definition": "To cut into something with your teeth."
+  },
+  "blame": {
+    "definition": "To say that someone caused something bad."
+  },
+  "blanket": {
+    "definition": "A thick soft cover for a bed."
+  },
+  "blonde": {
+    "definition": "With light yellow hair."
+  },
+  "blood": {
+    "definition": "The red liquid that flows through the body."
+  },
+  "bloom": {
+    "definition": "To open into flowers."
+  },
+  "blow": {
+    "definition": "To send air out of your mouth, or to move as air does."
+  },
+  "boil": {
+    "definition": "To heat a liquid until it bubbles."
+  },
+  "boiled": {
+    "definition": "Cooked in water that is bubbling."
+  },
+  "bonus": {
+    "definition": "An extra amount given on top of what is usual."
+  },
+  "bookcase": {
+    "definition": "A piece of furniture with shelves for books."
+  },
+  "bookshop": {
+    "definition": "A shop that sells books."
+  },
+  "bored": {
+    "definition": "Feeling tired because nothing interests you."
+  },
+  "boss": {
+    "definition": "The person in charge of a workplace."
+  },
+  "bother": {
+    "definition": "To annoy someone, or to make the effort."
+  },
+  "bra": {
+    "definition": "A piece of underwear worn to support the breasts."
+  },
+  "brake": {
+    "definition": "The part of a vehicle that makes it slow down."
+  },
+  "branch": {
+    "definition": "A part of a tree that grows out from the trunk."
+  },
+  "brand": {
+    "definition": "The name a company gives to its products."
+  },
+  "brave": {
+    "definition": "Not afraid of danger."
+  },
+  "break": {
+    "definition": "A short rest from work, or to damage something."
+  },
+  "breeze": {
+    "definition": "A light gentle wind."
+  },
+  "bride": {
+    "definition": "A woman on her wedding day."
+  },
+  "brown": {
+    "definition": "The colour of wood or coffee."
+  },
+  "budget": {
+    "definition": "A plan for how much money you can spend."
+  },
+  "bug": {
+    "definition": "A small insect, or a mistake in a computer programme."
+  },
+  "bulb": {
+    "definition": "The glass part of a lamp that gives light, or a round root vegetable."
+  },
+  "burn": {
+    "definition": "To be on fire, or to damage something with fire."
+  },
+  "bury": {
+    "definition": "To put something in the ground and cover it."
+  },
+  "bush": {
+    "definition": "A plant smaller than a tree with many branches."
+  },
+  "cab": {
+    "definition": "A car you pay to take you somewhere, or the front part of a lorry."
+  },
+  "calendar": {
+    "definition": "A chart of the days and months of a year."
+  },
+  "call": {
+    "definition": "To telephone someone, or to give a name to someone."
+  },
+  "camp": {
+    "definition": "A place where people stay in tents for a while."
+  },
+  "camping": {
+    "definition": "A holiday spent sleeping outdoors in a tent."
+  },
+  "campus": {
+    "definition": "The land and buildings of a university or college."
+  },
+  "can": {
+    "definition": "To be able to do something, or a metal container for food."
+  },
+  "capital": {
+    "definition": "The city where a country's government sits, or money used to start a business."
+  },
+  "captain": {
+    "definition": "The person in charge of a ship, a plane, or a sports team."
+  },
+  "carrot": {
+    "definition": "A long orange root vegetable."
+  },
+  "cash": {
+    "definition": "Money in coins and notes."
+  },
+  "cassette": {
+    "definition": "A small plastic box with tape inside for recording sound."
+  },
+  "castle": {
+    "definition": "A large strong building with towers, built long ago for defence."
+  },
+  "cause": {
+    "definition": "To make something happen, or the reason it happens."
+  },
+  "cent": {
+    "definition": "A small unit of money; one hundred of them make a dollar or a euro."
+  },
+  "century": {
+    "definition": "A period of one hundred years."
+  },
+  "cereal": {
+    "definition": "A breakfast food made from grain, or a plant such as wheat."
+  },
+  "certain": {
+    "definition": "Sure that something is right."
+  },
+  "chain": {
+    "definition": "Several metal rings joined together, or a group of shops with one owner."
+  },
+  "chairman": {
+    "definition": "The person who leads a meeting, a company, or a committee."
+  },
+  "chance": {
+    "definition": "A possibility that something will happen."
+  },
+  "chapter": {
+    "definition": "One of the parts that a book is divided into."
+  },
+  "chart": {
+    "definition": "A drawing that shows facts as a picture or a table."
+  },
+  "chat": {
+    "definition": "To talk in a friendly way."
+  },
+  "cheap": {
+    "definition": "Costing little money."
+  },
+  "check": {
+    "definition": "To look at something to make sure that it is right."
+  },
+  "cheek": {
+    "definition": "The soft side of the face below the eye."
+  },
+  "cheer": {
+    "definition": "To shout to show that you are pleased or supporting someone."
+  },
+  "chef": {
+    "definition": "A cook in a restaurant who plans the meals."
+  },
+  "chemical": {
+    "definition": "A substance used in chemistry or made by a chemical process."
+  },
+  "cheque": {
+    "definition": "A printed paper you sign to pay money from your bank account."
+  },
+  "chess": {
+    "definition": "A game for two players with pieces on a board of 64 squares."
+  },
+  "chest": {
+    "definition": "The front of the body between the neck and the stomach, or a big strong box."
+  },
+  "chin": {
+    "definition": "The part of the face below the mouth."
+  },
+  "chirp": {
+    "definition": "To make the short high sound of a small bird."
+  },
+  "choice": {
+    "definition": "The act of deciding between several things."
+  },
+  "citizen": {
+    "definition": "A person who legally belongs to a country."
+  },
+  "claim": {
+    "definition": "To say that something is true, or to ask for money you have a right to."
+  },
+  "classic": {
+    "definition": "Of the best quality, and respected over many years."
+  },
+  "cleaner": {
+    "definition": "A person whose job is cleaning, or a substance used for cleaning."
+  },
+  "clear": {
+    "definition": "Easy to see through or to understand."
+  },
+  "clerk": {
+    "definition": "An office worker who keeps records and deals with papers."
+  },
+  "click": {
+    "definition": "To press a button on a computer mouse."
+  },
+  "climb": {
+    "definition": "To go up something using your hands and feet."
+  },
+  "climbing": {
+    "definition": "The sport of going up rocks or mountains."
+  },
+  "clone": {
+    "definition": "A living thing copied from another, or to make such a copy."
+  },
+  "clown": {
+    "definition": "A funny performer with a painted face who makes people laugh."
+  },
+  "clue": {
+    "definition": "A fact that helps you find the answer to a question."
+  },
+  "coast": {
+    "definition": "The land along the edge of the sea."
+  },
+  "coin": {
+    "definition": "A piece of metal money."
+  },
+  "cola": {
+    "definition": "A sweet brown fizzy drink."
+  },
+  "column": {
+    "definition": "A tall stone post, or a line of print going down a page."
+  },
+  "comb": {
+    "definition": "A tool with teeth for tidying hair."
+  },
+  "comic": {
+    "definition": "Funny, or a magazine with picture stories."
+  },
+  "common": {
+    "definition": "Happening often, or shared by many people."
+  },
+  "company": {
+    "definition": "A business that sells goods or services."
+  },
+  "compare": {
+    "definition": "To look at two things to see how they differ."
+  },
+  "complain": {
+    "definition": "To say that you are not satisfied."
+  },
+  "complete": {
+    "definition": "Whole, with nothing missing, or to finish something."
+  },
+  "composer": {
+    "definition": "A person who writes music."
+  },
+  "concern": {
+    "definition": "To worry someone, or a matter that matters to people."
+  },
+  "confuse": {
+    "definition": "To make someone unable to understand."
+  },
+  "confused": {
+    "definition": "Unable to understand what is happening."
+  },
+  "consider": {
+    "definition": "To think carefully about something."
+  },
+  "consist": {
+    "definition": "To be made up of certain parts."
+  },
+  "contact": {
+    "definition": "To get in touch with someone, or a person you know."
+  },
+  "context": {
+    "definition": "The words around a word, or the situation around an event."
+  },
+  "continue": {
+    "definition": "To keep going without stopping."
+  },
+  "contrast": {
+    "definition": "A clear difference between two things."
+  },
+  "control": {
+    "definition": "To make something do what you want it to do."
+  },
+  "cooker": {
+    "definition": "A machine for cooking food, such as a stove."
+  },
+  "cooking": {
+    "definition": "The activity of preparing food with heat."
+  },
+  "cooler": {
+    "definition": "A box that keeps drinks cold, or something that makes air cool."
+  },
+  "copy": {
+    "definition": "To make something that is the same as another."
+  },
+  "cost": {
+    "definition": "The money you must pay for something."
+  },
+  "count": {
+    "definition": "To say numbers in order, or to find how many there are."
+  },
+  "country": {
+    "definition": "A land with its own government, or the land outside towns."
+  },
+  "couple": {
+    "definition": "Two people together, often a man and a woman."
+  },
+  "court": {
+    "definition": "A place where legal cases are decided, or an area for a ball game."
+  },
+  "cover": {
+    "definition": "To put something over another thing, or a lid."
+  },
+  "crazy": {
+    "definition": "Not sensible; very strange."
+  },
+  "cream": {
+    "definition": "A thick rich liquid from milk."
+  },
+  "create": {
+    "definition": "To make something new."
+  },
+  "creative": {
+    "definition": "Good at making new things and having ideas."
+  },
+  "creature": {
+    "definition": "A living animal of any kind."
+  },
+  "credit": {
+    "definition": "Money in a bank that you can use, or praise for work well done."
+  },
+  "cricket": {
+    "definition": "A game played with a bat and a ball by two teams of eleven."
+  },
+  "crime": {
+    "definition": "Something that is against the law."
+  },
+  "crisp": {
+    "definition": "Firm and dry and breaking with a sound, or a thin fried slice of potato."
+  },
+  "cross": {
+    "definition": "Angry, or to go from one side to the other."
+  },
+  "crowd": {
+    "definition": "A large group of people in one place."
+  },
+  "crowded": {
+    "definition": "Full of people."
+  },
+  "crown": {
+    "definition": "The round headpiece that a king or queen wears."
+  },
+  "cruise": {
+    "definition": "A holiday on a ship that visits several places."
+  },
+  "cry": {
+    "definition": "To have tears coming from your eyes, or to shout."
+  },
+  "cupboard": {
+    "definition": "A piece of furniture with shelves and doors."
+  },
+  "curry": {
+    "definition": "A dish of meat or vegetables cooked with hot spices."
+  },
+  "curse": {
+    "definition": "To say bad words because you are angry."
+  },
+  "custom": {
+    "definition": "Something people have done for a long time in a place or a family."
+  },
+  "customer": {
+    "definition": "A person who buys something from a shop or a business."
+  },
+  "cycling": {
+    "definition": "The activity of riding a bicycle."
+  },
+  "daily": {
+    "definition": "Happening every day."
+  },
+  "dam": {
+    "definition": "A wall built across a river to hold the water back."
+  },
+  "dancer": {
+    "definition": "A person who moves their body to music."
+  },
+  "danger": {
+    "definition": "The chance that someone will be hurt."
+  },
+  "daylight": {
+    "definition": "The natural light of the day, when the sun is up."
+  },
+  "dead": {
+    "definition": "No longer alive."
+  },
+  "deal": {
+    "definition": "An agreement between two sides, or to give out cards in a game."
+  },
+  "death": {
+    "definition": "The end of life."
+  },
+  "debate": {
+    "definition": "A formal discussion in which people give different opinions."
+  },
+  "decide": {
+    "definition": "To choose after thinking about the possibilities."
+  },
+  "degree": {
+    "definition": "A unit for measuring temperature, or a qualification from a university."
+  },
+  "delay": {
+    "definition": "To make something happen later than planned."
+  },
+  "dentist": {
+    "definition": "A doctor who looks after teeth."
+  },
+  "depend": {
+    "definition": "To need someone or something for help or support."
+  },
+  "desert": {
+    "definition": "A large dry area of land with almost no rain."
+  },
+  "dessert": {
+    "definition": "Sweet food eaten at the end of a meal."
+  },
+  "destroy": {
+    "definition": "To damage something so badly that it no longer exists."
+  },
+  "detail": {
+    "definition": "One small fact or feature of something bigger."
+  },
+  "develop": {
+    "definition": "To grow or change into something more advanced."
+  },
+  "diamond": {
+    "definition": "A very hard clear stone used in jewellery."
+  },
+  "diary": {
+    "definition": "A book in which you write what happens each day."
+  },
+  "die": {
+    "definition": "To stop living."
+  },
+  "diet": {
+    "definition": "The food you usually eat, or a plan to eat less."
+  },
+  "dinosaur": {
+    "definition": "A huge animal that lived on earth long before people."
+  },
+  "direct": {
+    "definition": "Going straight without stopping or turning, or to show the way."
+  },
+  "director": {
+    "definition": "A person who is in charge of a company, a film, or a play."
+  },
+  "disagree": {
+    "definition": "To have a different opinion from someone."
+  },
+  "disco": {
+    "definition": "A place or party where people dance to recorded music."
+  },
+  "discover": {
+    "definition": "To find something for the first time."
+  },
+  "dislike": {
+    "definition": "To not like something."
+  },
+  "display": {
+    "definition": "To put something where people can see it."
+  },
+  "disturb": {
+    "definition": "To interrupt someone or make them worried."
+  },
+  "divide": {
+    "definition": "To split something into parts."
+  },
+  "dizzy": {
+    "definition": "Feeling that everything is turning round."
+  },
+  "double": {
+    "definition": "Twice as much, or having two equal parts."
+  },
+  "doubt": {
+    "definition": "To think that something is probably not true."
+  },
+  "download": {
+    "definition": "To copy files from the internet onto your computer."
+  },
+  "draw": {
+    "definition": "To make a picture with a pencil or a pen."
+  },
+  "drawer": {
+    "definition": "A box that slides in and out of a piece of furniture."
+  },
+  "drawing": {
+    "definition": "A picture made with a pencil or a pen."
+  },
+  "dream": {
+    "definition": "The pictures your mind makes while you sleep."
+  },
+  "dress": {
+    "definition": "To put clothes on, or a piece of clothing worn by women."
+  },
+  "dressed": {
+    "definition": "Wearing clothes."
+  },
+  "drill": {
+    "definition": "A tool that makes holes, or an exercise that is repeated."
+  },
+  "drive": {
+    "definition": "To make a vehicle move and steer it."
+  },
+  "drop": {
+    "definition": "To let something fall, or a small amount of liquid."
+  },
+  "drug": {
+    "definition": "A medicine, or a substance that changes how the body or mind works."
+  },
+  "dry": {
+    "definition": "With no water or liquid."
+  },
+  "duck": {
+    "definition": "A water bird with a wide flat beak."
+  },
+  "dust": {
+    "definition": "Fine dry dirt that settles on surfaces."
+  },
+  "early": {
+    "definition": "Before the usual or expected time."
+  },
+  "earn": {
+    "definition": "To get money by working."
+  },
+  "earring": {
+    "definition": "A piece of jewellery worn on the ear."
+  },
+  "earth": {
+    "definition": "The planet we live on, or the soil."
+  },
+  "east": {
+    "definition": "The direction where the sun comes up."
+  },
+  "editor": {
+    "definition": "A person who prepares texts or films for publishing."
+  },
+  "effect": {
+    "definition": "A change that happens because of something else."
+  },
+  "effort": {
+    "definition": "The energy you use to do something."
+  },
+  "elderly": {
+    "definition": "Old, in a polite way."
+  },
+  "electric": {
+    "definition": "Working with electricity."
+  },
+  "elephant": {
+    "definition": "A very large grey animal with a long trunk."
+  },
+  "elevator": {
+    "definition": "A machine that carries people up and down in a building."
+  },
+  "email": {
+    "definition": "A message sent from one computer to another."
+  },
+  "empty": {
+    "definition": "With nothing inside."
+  },
+  "end": {
+    "definition": "The last part of something."
+  },
+  "ending": {
+    "definition": "The way a story or a film finishes."
+  },
+  "enormous": {
+    "definition": "Extremely large."
+  },
+  "enter": {
+    "definition": "To go into a place."
+  },
+  "entrance": {
+    "definition": "The way into a place."
+  },
+  "envelope": {
+    "definition": "A paper cover for a letter."
+  },
+  "envy": {
+    "definition": "To wish you had what someone else has."
+  },
+  "episode": {
+    "definition": "One part of a television series."
+  },
+  "error": {
+    "definition": "A mistake."
+  },
+  "escape": {
+    "definition": "To get away from a place where you are held."
+  },
+  "essay": {
+    "definition": "A short piece of writing about a subject."
+  },
+  "euro": {
+    "definition": "The money used in many European countries."
+  },
+  "evidence": {
+    "definition": "Facts that show what is true."
+  },
+  "exam": {
+    "definition": "A test of what you know or can do."
+  },
+  "exchange": {
+    "definition": "To give something and get something else in return."
+  },
+  "exercise": {
+    "definition": "Physical activity, or a task for practice."
+  },
+  "exist": {
+    "definition": "To be real or to live."
+  },
+  "expect": {
+    "definition": "To think that something will happen."
+  },
+  "expert": {
+    "definition": "A person who knows a lot about one subject."
+  },
+  "explain": {
+    "definition": "To make something clear by talking about it."
+  },
+  "explore": {
+    "definition": "To travel through a place to learn about it."
+  },
+  "express": {
+    "definition": "To say what you think or feel, or a fast train."
+  },
+  "extra": {
+    "definition": "More than is usual or needed."
+  },
+  "face": {
+    "definition": "To look towards someone, or the front of the head."
+  },
+  "fact": {
+    "definition": "Something that is true and can be proved."
+  },
+  "fail": {
+    "definition": "To not succeed at something."
+  },
+  "fall": {
+    "definition": "To drop down, or the season after summer."
+  },
+  "familiar": {
+    "definition": "Known to you because you have seen it before."
+  },
+  "fancy": {
+    "definition": "Not simple and special in style, or to want something."
+  },
+  "fare": {
+    "definition": "The money you pay to travel."
+  },
+  "fashion": {
+    "definition": "The style of clothes that is popular at a time."
+  },
+  "fault": {
+    "definition": "Responsibility for a mistake, or something wrong in a machine."
+  },
+  "fear": {
+    "definition": "The feeling you get when you are in danger."
+  },
+  "feather": {
+    "definition": "One of the light soft parts that cover a bird."
+  },
+  "feature": {
+    "definition": "An important part of something."
+  },
+  "fee": {
+    "definition": "Money you pay for a service."
+  },
+  "feel": {
+    "definition": "To notice something by touch, or to have an emotion."
+  },
+  "female": {
+    "definition": "Of the sex that can have babies."
+  },
+  "fence": {
+    "definition": "A barrier of wood or wire around a piece of land."
+  },
+  "fiction": {
+    "definition": "Stories about imagined people and events."
+  },
+  "fighter": {
+    "definition": "A person who fights, or a fast military plane."
+  },
+  "figure": {
+    "definition": "A number, or the shape of a person's body."
+  },
+  "film": {
+    "definition": "A story told in moving pictures."
+  },
+  "final": {
+    "definition": "Last, with nothing coming after it."
+  },
+  "fit": {
+    "definition": "Healthy and strong because of exercise, or the right size."
+  },
+  "fix": {
+    "definition": "To repair something that is broken."
+  },
+  "flea": {
+    "definition": "A very small jumping insect that lives on animals."
+  },
+  "flight": {
+    "definition": "A journey in a plane, or the act of flying."
+  },
+  "float": {
+    "definition": "To stay on the surface of water without sinking."
+  },
+  "flood": {
+    "definition": "A lot of water covering land that is usually dry."
+  },
+  "flour": {
+    "definition": "The powder from grain that you use for baking."
+  },
+  "fog": {
+    "definition": "Thick cloud close to the ground that makes it hard to see."
+  },
+  "folder": {
+    "definition": "A cover for keeping papers together."
+  },
+  "follow": {
+    "definition": "To go after someone or something."
+  },
+  "fool": {
+    "definition": "A person who does silly things."
+  },
+  "forbid": {
+    "definition": "To say that something is not allowed."
+  },
+  "force": {
+    "definition": "Physical power, or to make someone do something."
+  },
+  "forest": {
+    "definition": "A large area covered with trees."
+  },
+  "fork": {
+    "definition": "A tool with points used for eating or for gardening."
+  },
+  "fortune": {
+    "definition": "A very large amount of money, or luck."
+  },
+  "frame": {
+    "definition": "The border around a picture, or the bars that hold glasses."
+  },
+  "frank": {
+    "definition": "Saying exactly what you think in an honest way."
+  },
+  "freedom": {
+    "definition": "The right to do or say what you want."
+  },
+  "freeze": {
+    "definition": "To become hard and solid because of cold."
+  },
+  "fresh": {
+    "definition": "New and not old, or recently picked."
+  },
+  "fridge": {
+    "definition": "A cold cupboard that keeps food fresh."
+  },
+  "fried": {
+    "definition": "Cooked in hot oil."
+  },
+  "frighten": {
+    "definition": "To make someone suddenly afraid."
+  },
+  "front": {
+    "definition": "The part of something that faces forward."
+  },
+  "fry": {
+    "definition": "To cook food in hot oil."
+  },
+  "function": {
+    "definition": "The purpose of something, or a job that a machine does."
+  },
+  "further": {
+    "definition": "At a greater distance, or more."
+  },
+  "gallery": {
+    "definition": "A room or building where art is shown."
+  },
+  "garage": {
+    "definition": "A building for a car, or a place where cars are repaired."
+  },
+  "garlic": {
+    "definition": "A small white plant like an onion with a strong taste."
+  },
+  "gas": {
+    "definition": "A substance like air, or fuel used for cooking and heating."
+  },
+  "gate": {
+    "definition": "A door in a fence or a wall."
+  },
+  "gather": {
+    "definition": "To come together in a group, or to collect things."
+  },
+  "gender": {
+    "definition": "Whether a person is male or female."
+  },
+  "gentle": {
+    "definition": "Careful and soft, not rough."
+  },
+  "given": {
+    "definition": "Handed to someone as a gift, or stated as a fact."
+  },
+  "globe": {
+    "definition": "The round shape of the planet we live on, or a model of it."
+  },
+  "glove": {
+    "definition": "A covering for the hand with separate parts for the fingers."
+  },
+  "gold": {
+    "definition": "A valuable yellow metal, or the colour of it."
+  },
+  "golden": {
+    "definition": "Made of the valuable yellow metal, or its colour."
+  },
+  "golf": {
+    "definition": "A game in which a small white ball is hit into holes with clubs."
+  },
+  "grace": {
+    "definition": "A smooth and beautiful way of moving."
+  },
+  "graduate": {
+    "definition": "To finish your studies at a university."
+  },
+  "granddad": {
+    "definition": "An informal word for grandfather."
+  },
+  "grandson": {
+    "definition": "The son of your child."
+  },
+  "granny": {
+    "definition": "An informal word for grandmother."
+  },
+  "grateful": {
+    "definition": "Feeling thankful to someone."
+  },
+  "greedy": {
+    "definition": "Wanting much more than you need."
+  },
+  "green": {
+    "definition": "The colour of leaves and grass, or caring about the environment."
+  },
+  "grilled": {
+    "definition": "Cooked over heat or under it on a metal frame."
+  },
+  "guard": {
+    "definition": "A person who protects a place, or to protect it."
+  },
+  "gun": {
+    "definition": "A weapon that shoots bullets."
+  },
+  "ham": {
+    "definition": "The meat from the leg of a pig, eaten cold."
+  },
+  "hand": {
+    "definition": "The part of the body at the end of the arm."
+  },
+  "handbag": {
+    "definition": "A small bag for carrying money and personal things."
+  },
+  "handle": {
+    "definition": "The part you hold, or to deal with something."
+  },
+  "harm": {
+    "definition": "Damage or injury caused to someone."
+  },
+  "harmful": {
+    "definition": "Causing damage or injury."
+  },
+  "harmony": {
+    "definition": "A peaceful situation, or notes that sound good together."
+  },
+  "harvest": {
+    "definition": "The time when crops are collected, or to collect them."
+  },
+  "hate": {
+    "definition": "To dislike someone or something very much."
+  },
+  "head": {
+    "definition": "The top part of the body with the face, or to be in charge."
+  },
+  "heat": {
+    "definition": "The quality of being hot."
+  },
+  "heating": {
+    "definition": "The system that warms a building."
+  },
+  "help": {
+    "definition": "To make someone's task easier, or to give support."
+  },
+  "helpful": {
+    "definition": "Giving useful support or information."
+  },
+  "hero": {
+    "definition": "A person admired for brave deeds."
+  },
+  "highway": {
+    "definition": "A wide road for fast traffic between towns."
+  },
+  "hike": {
+    "definition": "To walk a long way in the countryside."
+  },
+  "hiking": {
+    "definition": "Long walks in the countryside for pleasure."
+  },
+  "hit": {
+    "definition": "To strike someone or something with force."
+  },
+  "hockey": {
+    "definition": "A team game played with curved sticks and a small ball."
+  },
+  "hold": {
+    "definition": "To have something in your hands or arms."
+  },
+  "honey": {
+    "definition": "A sweet golden food made by bees."
+  },
+  "horror": {
+    "definition": "A strong feeling of fear."
+  },
+  "host": {
+    "definition": "A person who invites guests, or to organise an event."
+  },
+  "hug": {
+    "definition": "To hold someone close with your arms."
+  },
+  "human": {
+    "definition": "A person, or belonging to people."
+  },
+  "hunter": {
+    "definition": "A person who kills wild animals for food or for sport."
+  },
+  "hurry": {
+    "definition": "To act quickly because there is little time."
+  },
+  "ill": {
+    "definition": "Not well; sick."
+  },
+  "illegal": {
+    "definition": "Not allowed by the law."
+  },
+  "image": {
+    "definition": "A picture of someone or something."
+  },
+  "impact": {
+    "definition": "A strong effect, or the moment when two things hit."
+  },
+  "impress": {
+    "definition": "To make someone admire you."
+  },
+  "improve": {
+    "definition": "To become better, or to make something better."
+  },
+  "inch": {
+    "definition": "A small unit of length, about 2.5 centimetres."
+  },
+  "include": {
+    "definition": "To have something as one of its parts."
+  },
+  "increase": {
+    "definition": "To become more or larger."
+  },
+  "indicate": {
+    "definition": "To show or point to something."
+  },
+  "indoor": {
+    "definition": "Inside a building."
+  },
+  "injure": {
+    "definition": "To hurt a part of the body."
+  },
+  "inner": {
+    "definition": "On the inside; further in."
+  },
+  "insect": {
+    "definition": "A small animal with six legs and a body in three parts."
+  },
+  "instant": {
+    "definition": "Happening at once, or a very short moment."
+  },
+  "interest": {
+    "definition": "The wish to know about something, or money paid for a loan."
+  },
+  "invade": {
+    "definition": "To enter a country with an army."
+  },
+  "invent": {
+    "definition": "To make something that did not exist before."
+  },
+  "invite": {
+    "definition": "To ask someone to come to an event."
+  },
+  "issue": {
+    "definition": "An important subject, or one copy of a magazine."
+  },
+  "jam": {
+    "definition": "Sweet food made from fruit cooked with sugar, or a traffic hold-up."
+  },
+  "jelly": {
+    "definition": "A soft sweet food that shakes."
+  },
+  "joke": {
+    "definition": "Something said to make people laugh."
+  },
+  "journey": {
+    "definition": "A trip from one place to another."
+  },
+  "joy": {
+    "definition": "A feeling of great happiness."
+  },
+  "junior": {
+    "definition": "Younger or less experienced."
+  },
+  "junk": {
+    "definition": "Old things that are not wanted."
+  },
+  "killer": {
+    "definition": "A person who kills another, or something very dangerous."
+  },
+  "kilo": {
+    "definition": "A unit of weight, one thousand grammes."
+  },
+  "kind": {
+    "definition": "Caring about other people, or a sort of something."
+  },
+  "kindly": {
+    "definition": "In a caring and helpful way."
+  },
+  "kingdom": {
+    "definition": "A country ruled by a king or queen."
+  },
+  "kit": {
+    "definition": "A set of tools or clothes for a particular activity."
+  },
+  "knock": {
+    "definition": "To hit a door to make a sound."
+  },
+  "lack": {
+    "definition": "To not have something that you need."
+  },
+  "lake": {
+    "definition": "A large area of water with land all around it."
+  },
+  "lamp": {
+    "definition": "A device that gives light in a room."
+  },
+  "land": {
+    "definition": "The solid part of the earth's surface, or to come down to the ground."
+  },
+  "lane": {
+    "definition": "A narrow road, or one strip of a wide road."
+  },
+  "latest": {
+    "definition": "Newest; most recent."
+  },
+  "law": {
+    "definition": "A rule made by the government that people must obey."
+  },
+  "lawyer": {
+    "definition": "A person whose job is to advise people about the law."
+  },
+  "laziness": {
+    "definition": "The habit of not wanting to work."
+  },
+  "lead": {
+    "definition": "To go in front and show the way, or a heavy soft grey metal."
+  },
+  "learner": {
+    "definition": "A person who is learning something."
+  },
+  "leather": {
+    "definition": "A material made from the skin of animals."
+  },
+  "left": {
+    "definition": "On the side of the body where the heart is, or the past of leave."
+  },
+  "leisure": {
+    "definition": "Free time when you can do what you like."
+  },
+  "lemon": {
+    "definition": "A yellow fruit with a sour taste."
+  },
+  "lemonade": {
+    "definition": "A drink made from lemons, water, and sugar."
+  },
+  "lend": {
+    "definition": "To give something to someone for a while."
+  },
+  "level": {
+    "definition": "A height or a standard, or flat and even."
+  },
+  "liberty": {
+    "definition": "The freedom to live or act as you choose."
+  },
+  "lie": {
+    "definition": "To say something that is not true, or to rest flat."
+  },
+  "likely": {
+    "definition": "Probably going to happen."
+  },
+  "lip": {
+    "definition": "One of the two soft edges of the mouth."
+  },
+  "lively": {
+    "definition": "Full of energy and activity."
+  },
+  "load": {
+    "definition": "The amount that something can carry, or to put goods on a vehicle."
+  },
+  "local": {
+    "definition": "Belonging to the area near you."
+  },
+  "lock": {
+    "definition": "To close something with a key, or the part a key turns."
+  },
+  "logical": {
+    "definition": "Following clear sensible reasoning."
+  },
+  "loose": {
+    "definition": "Not tight or not fixed firmly."
+  },
+  "lose": {
+    "definition": "To no longer have something because it is gone."
+  },
+  "lost": {
+    "definition": "Unable to find the way, or gone and not found."
+  },
+  "lot": {
+    "definition": "A large amount."
+  },
+  "lover": {
+    "definition": "A person you have a romantic relationship with."
+  },
+  "low": {
+    "definition": "Not high; near the ground."
+  },
+  "lyric": {
+    "definition": "The words of a song."
+  },
+  "mad": {
+    "definition": "Silly or angry, or not sane."
+  },
+  "magic": {
+    "definition": "The power to make impossible things happen."
+  },
+  "major": {
+    "definition": "Very large or important."
+  },
+  "maker": {
+    "definition": "A person or company that makes something."
+  },
+  "male": {
+    "definition": "Of the sex that does not have babies."
+  },
+  "mall": {
+    "definition": "A large building with many shops inside."
+  },
+  "manage": {
+    "definition": "To be in charge of something, or to succeed in doing it."
+  },
+  "manager": {
+    "definition": "A person who is in charge of a business or a team."
+  },
+  "manner": {
+    "definition": "The way something is done, or how someone behaves."
+  },
+  "mark": {
+    "definition": "A spot or a sign, or a point given for school work."
+  },
+  "market": {
+    "definition": "A place where people buy and sell things, often outdoors."
+  },
+  "married": {
+    "definition": "Having a husband or a wife."
+  },
+  "marry": {
+    "definition": "To become someone's husband or wife."
+  },
+  "material": {
+    "definition": "The substance something is made of, or cloth."
+  },
+  "matter": {
+    "definition": "To be important, or a subject."
+  },
+  "max": {
+    "definition": "The most possible; a short word for maximum."
+  },
+  "mean": {
+    "definition": "To have a certain sense, or unkind."
+  },
+  "meaning": {
+    "definition": "What a word or an action stands for."
+  },
+  "medal": {
+    "definition": "A metal disc given as a prize or an honour."
+  },
+  "medical": {
+    "definition": "About doctors and the treatment of illness."
+  },
+  "melon": {
+    "definition": "A large round sweet fruit with a thick skin."
+  },
+  "member": {
+    "definition": "A person who belongs to a group."
+  },
+  "mention": {
+    "definition": "To say something briefly."
+  },
+  "menu": {
+    "definition": "A list of the food you can order in a restaurant."
+  },
+  "metal": {
+    "definition": "A hard shiny material such as iron or gold."
+  },
+  "method": {
+    "definition": "A way of doing something."
+  },
+  "midday": {
+    "definition": "Twelve o'clock in the day."
+  },
+  "middle": {
+    "definition": "The central part of something."
+  },
+  "midnight": {
+    "definition": "Twelve o'clock at night."
+  },
+  "military": {
+    "definition": "About soldiers and the army."
+  },
+  "mind": {
+    "definition": "The part of you that thinks, or to care about something."
+  },
+  "mirror": {
+    "definition": "A piece of glass in which you can see yourself."
+  },
+  "missing": {
+    "definition": "Not there; lost or absent."
+  },
+  "mistake": {
+    "definition": "Something done wrong by accident."
+  },
+  "mix": {
+    "definition": "To put things together so that they become one."
+  },
+  "mobile": {
+    "definition": "A telephone you can carry, or able to move."
+  },
+  "model": {
+    "definition": "A small copy of something, or a person who shows clothes."
+  },
+  "modern": {
+    "definition": "Of the present time; not old-fashioned."
+  },
+  "mood": {
+    "definition": "The way you feel at a certain time."
+  },
+  "mosque": {
+    "definition": "A building where Muslims go to pray."
+  },
+  "motorway": {
+    "definition": "A wide road for fast traffic between cities."
+  },
+  "move": {
+    "definition": "To go from one place to another, or to change position."
+  },
+  "mug": {
+    "definition": "A large cup with a handle, or to rob someone in the street."
+  },
+  "murder": {
+    "definition": "To kill someone on purpose."
+  },
+  "museum": {
+    "definition": "A building where old or valuable things are shown."
+  },
+  "mushroom": {
+    "definition": "A small plant with a round top that grows in damp places."
+  },
+  "musical": {
+    "definition": "About music, or a play with songs."
+  },
+  "mystery": {
+    "definition": "Something that cannot be explained or understood."
+  },
+  "napkin": {
+    "definition": "A piece of cloth or paper for wiping your mouth at meals."
+  },
+  "nation": {
+    "definition": "A country and the people living in it."
+  },
+  "national": {
+    "definition": "Belonging to one particular country."
+  },
+  "native": {
+    "definition": "Born in a place, or belonging to it naturally."
+  },
+  "natural": {
+    "definition": "Made by nature, not by people."
+  },
+  "nature": {
+    "definition": "Everything in the world not made by people, such as plants and animals."
+  },
+  "need": {
+    "definition": "To require something because it is necessary."
+  },
+  "negative": {
+    "definition": "Bad or harmful, or saying no."
+  },
+  "nervous": {
+    "definition": "Worried and not relaxed."
+  },
+  "net": {
+    "definition": "Material with holes in it used to catch things, or the internet."
+  },
+  "noisy": {
+    "definition": "Making a lot of sound."
+  },
+  "noon": {
+    "definition": "Twelve o'clock in the day."
+  },
+  "normal": {
+    "definition": "Usual and as expected."
+  },
+  "north": {
+    "definition": "The direction on your left when you face the rising sun."
+  },
+  "notice": {
+    "definition": "To see or become aware of something."
+  },
+  "noun": {
+    "definition": "A word for a person, a place, or a thing."
+  },
+  "novel": {
+    "definition": "A long written story about invented people and events."
+  },
+  "oak": {
+    "definition": "A large tree with hard wood and nuts called acorns."
+  },
+  "offer": {
+    "definition": "To say that you are willing to give something."
+  },
+  "official": {
+    "definition": "Approved by a government or a person in charge."
+  },
+  "oil": {
+    "definition": "A thick liquid used for cooking or as fuel."
+  },
+  "olympic": {
+    "definition": "About the international games held every four years."
+  },
+  "onion": {
+    "definition": "A round vegetable with a strong taste and many layers."
+  },
+  "online": {
+    "definition": "Connected to the internet."
+  },
+  "operate": {
+    "definition": "To work or make something work, or to do a medical operation."
+  },
+  "opinion": {
+    "definition": "What you think about something."
+  },
+  "oppose": {
+    "definition": "To be against something and try to stop it."
+  },
+  "opposite": {
+    "definition": "As different as possible, or facing something."
+  },
+  "order": {
+    "definition": "To ask for something, or to tell someone what to do."
+  },
+  "original": {
+    "definition": "First, or new and different."
+  },
+  "orphan": {
+    "definition": "A child whose parents have died."
+  },
+  "oven": {
+    "definition": "The closed part of a cooker where food is baked."
+  },
+  "pacific": {
+    "definition": "Peaceful, or the ocean between Asia and America."
+  },
+  "pack": {
+    "definition": "To put things into a bag or a box for travel."
+  },
+  "painter": {
+    "definition": "A person who paints pictures or walls."
+  },
+  "pal": {
+    "definition": "A friend."
+  },
+  "pan": {
+    "definition": "A metal container with a handle for cooking."
+  },
+  "panic": {
+    "definition": "A sudden strong fear that stops you thinking."
+  },
+  "park": {
+    "definition": "To leave a car in a place for a while, or a public green area."
+  },
+  "part": {
+    "definition": "One piece of something bigger."
+  },
+  "pass": {
+    "definition": "To go by something, or to succeed in a test."
+  },
+  "passage": {
+    "definition": "A narrow way through, or a short part of a text."
+  },
   "pasta": {},
   "path": {},
   "patient": {},
