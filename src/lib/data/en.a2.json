@@ -1679,373 +1679,1105 @@
   "passage": {
     "definition": "A narrow way through, or a short part of a text."
   },
-  "pasta": {},
-  "path": {},
-  "patient": {},
-  "pea": {},
-  "peaceful": {},
-  "pear": {},
-  "pence": {},
-  "pepper": {},
-  "perfect": {},
-  "perform": {},
-  "perfume": {},
-  "petrol": {},
-  "physical": {},
-  "pile": {},
-  "pilgrim": {},
-  "pill": {},
-  "pilot": {},
-  "pink": {},
-  "pity": {},
+  "pasta": {
+    "definition": "An Italian food made from flour and water, cooked in boiling water."
+  },
+  "path": {
+    "definition": "A narrow track for walking, or the way something goes."
+  },
+  "patient": {
+    "definition": "Able to wait calmly, or a person receiving medical care."
+  },
+  "pea": {
+    "definition": "A small round green seed eaten as a vegetable."
+  },
+  "peaceful": {
+    "definition": "Quiet and calm."
+  },
+  "pear": {
+    "definition": "A sweet fruit with a lot of juice and a green or yellow skin."
+  },
+  "pence": {
+    "definition": "The plural of penny, a small unit of British money."
+  },
+  "pepper": {
+    "definition": "A hot-tasting powder used to flavour food, or a vegetable with a long shape."
+  },
+  "perfect": {
+    "definition": "So good that nothing could be better."
+  },
+  "perform": {
+    "definition": "To do something in front of an audience."
+  },
+  "perfume": {
+    "definition": "A liquid with a pleasant smell that you put on your skin."
+  },
+  "petrol": {
+    "definition": "The fuel used in cars."
+  },
+  "physical": {
+    "definition": "Connected with the body, or with real things you can touch."
+  },
+  "pile": {
+    "definition": "A number of things lying on top of each other."
+  },
+  "pilgrim": {
+    "definition": "A person who travels to a holy place."
+  },
+  "pill": {
+    "definition": "A small round piece of medicine you swallow."
+  },
+  "pilot": {
+    "definition": "A person who flies a plane."
+  },
+  "pink": {
+    "definition": "The colour you get by mixing red and white."
+  },
+  "pity": {
+    "definition": "A feeling of sadness for someone who is unhappy or unlucky."
+  },
   "planet": {
     "definition": "A large round object that moves around a star."
   },
-  "plant": {},
-  "plastic": {},
-  "plate": {},
-  "playful": {},
-  "pleasant": {},
-  "pleased": {},
-  "pleasing": {},
-  "plenty": {},
-  "plural": {},
-  "point": {},
-  "police": {},
-  "polite": {},
-  "pollute": {},
-  "popular": {},
-  "portrait": {},
-  "position": {},
-  "possible": {},
-  "post": {},
-  "pour": {},
-  "power": {},
-  "powerful": {},
-  "precise": {},
-  "predict": {},
-  "prefer": {},
-  "prepare": {},
-  "pressure": {},
-  "pretend": {},
-  "prevent": {},
-  "pride": {},
-  "print": {},
-  "printer": {},
-  "private": {},
-  "pro": {},
-  "produce": {},
-  "product": {},
-  "promise": {},
-  "proper": {},
-  "provide": {},
-  "public": {},
-  "publish": {},
-  "pull": {},
-  "purple": {},
-  "purpose": {},
-  "pursue": {},
-  "quality": {},
-  "queen": {},
-  "quick": {},
-  "quit": {},
-  "quiz": {},
-  "racket": {},
-  "raincoat": {},
-  "raise": {},
-  "range": {},
-  "rap": {},
-  "rate": {},
-  "rating": {},
-  "raw": {},
-  "ray": {},
-  "reach": {},
-  "receipt": {},
-  "receive": {},
-  "recent": {},
-  "record": {},
-  "recycle": {},
-  "red": {},
-  "refer": {},
-  "reflect": {},
-  "regret": {},
-  "regular": {},
-  "relax": {},
-  "relaxed": {},
-  "release": {},
-  "remain": {},
-  "remind": {},
-  "remote": {},
-  "rent": {},
-  "repair": {},
-  "replace": {},
-  "reply": {},
-  "report": {},
-  "request": {},
-  "research": {},
-  "response": {},
-  "retire": {},
-  "retired": {},
-  "return": {},
-  "reunion": {},
-  "reveal": {},
-  "rhythm": {},
-  "right": {},
-  "ring": {},
-  "road": {},
-  "roast": {},
-  "rob": {},
-  "robbery": {},
-  "robin": {},
-  "rock": {},
-  "roll": {},
-  "romance": {},
-  "romantic": {},
-  "roof": {},
-  "root": {},
-  "rope": {},
-  "royal": {},
-  "rugby": {},
-  "ruin": {},
-  "runner": {},
-  "running": {},
-  "rush": {},
-  "safe": {},
-  "sailing": {},
-  "sake": {},
-  "salt": {},
-  "sample": {},
-  "sandy": {},
-  "satisfy": {},
-  "sauce": {},
-  "sausage": {},
-  "scale": {},
-  "scarf": {},
-  "scene": {},
-  "scenery": {},
-  "schedule": {},
-  "scissors": {},
-  "scream": {},
-  "screen": {},
-  "screw": {},
-  "script": {},
-  "seafood": {},
-  "search": {},
-  "seaside": {},
-  "second": {},
-  "secret": {},
-  "seed": {},
-  "seek": {},
-  "seem": {},
-  "semester": {},
-  "send": {},
-  "senior": {},
-  "sense": {},
-  "separate": {},
-  "serve": {},
-  "set": {},
-  "sew": {},
-  "shade": {},
-  "shadow": {},
-  "shampoo": {},
-  "shape": {},
-  "share": {},
-  "shell": {},
-  "shine": {},
-  "shock": {},
-  "shoot": {},
-  "shore": {},
-  "shot": {},
-  "shout": {},
-  "show": {},
-  "shut": {},
-  "silence": {},
-  "silly": {},
-  "silver": {},
-  "similar": {},
-  "simple": {},
-  "singing": {},
-  "single": {},
-  "singular": {},
-  "sink": {},
-  "skate": {},
-  "skating": {},
-  "ski": {},
-  "skiing": {},
-  "slave": {},
-  "sleepy": {},
-  "slice": {},
-  "slide": {},
-  "slim": {},
-  "smoke": {},
-  "smooth": {},
-  "snack": {},
-  "snow": {},
-  "soap": {},
-  "society": {},
-  "sock": {},
-  "soda": {},
-  "soft": {},
-  "software": {},
-  "soldier": {},
-  "solution": {},
-  "sound": {},
-  "source": {},
-  "south": {},
-  "space": {},
-  "speaker": {},
-  "specific": {},
-  "speed": {},
-  "spell": {},
-  "spill": {},
-  "splash": {},
-  "split": {},
-  "spoon": {},
-  "spread": {},
-  "square": {},
-  "stadium": {},
-  "staff": {},
-  "stair": {},
-  "stamp": {},
-  "stand": {},
-  "state": {},
-  "statue": {},
-  "steak": {},
-  "steal": {},
-  "step": {},
-  "stomach": {},
-  "storm": {},
-  "stove": {},
-  "straight": {},
-  "stranger": {},
-  "strategy": {},
-  "strength": {},
-  "strike": {},
-  "string": {},
-  "study": {},
-  "stuff": {},
-  "style": {},
-  "succeed": {},
-  "success": {},
-  "sudden": {},
-  "suggest": {},
-  "suit": {},
-  "suitable": {},
-  "suitcase": {},
-  "summary": {},
-  "sunlight": {},
-  "supper": {},
-  "support": {},
-  "surf": {},
-  "surfing": {},
-  "surname": {},
-  "survive": {},
-  "swallow": {},
-  "sweat": {},
-  "sweater": {},
-  "sweet": {},
-  "swimsuit": {},
-  "symbol": {},
-  "symphony": {},
-  "system": {},
-  "talent": {},
-  "tap": {},
-  "tape": {},
-  "target": {},
-  "task": {},
-  "tear": {},
-  "teenage": {},
-  "teenager": {},
-  "terrify": {},
-  "text": {},
-  "textbook": {},
-  "thief": {},
-  "third": {},
-  "thirsty": {},
-  "thought": {},
-  "throw": {},
-  "tidy": {},
-  "tie": {},
-  "tights": {},
-  "tip": {},
-  "title": {},
-  "toast": {},
-  "toe": {},
-  "tone": {},
-  "tonight": {},
-  "tour": {},
-  "tourist": {},
-  "track": {},
-  "trade": {},
-  "traffic": {},
-  "train": {},
-  "training": {},
-  "tram": {},
-  "trap": {},
-  "travel": {},
-  "treasure": {},
-  "trick": {},
-  "trouble": {},
-  "trust": {},
-  "truth": {},
-  "try": {},
-  "tune": {},
-  "uneasy": {},
-  "unfair": {},
-  "unhappy": {},
-  "uniform": {},
-  "unit": {},
-  "unknown": {},
-  "unlike": {},
-  "unusual": {},
-  "upset": {},
-  "use": {},
-  "used": {},
-  "useful": {},
-  "usual": {},
-  "valley": {},
-  "value": {},
-  "verb": {},
-  "view": {},
-  "village": {},
-  "violent": {},
-  "violin": {},
-  "visitor": {},
-  "voice": {},
-  "walking": {},
-  "wallet": {},
-  "wander": {},
-  "wave": {},
-  "weak": {},
-  "wealth": {},
-  "web": {},
-  "website": {},
-  "wedding": {},
-  "weekday": {},
-  "weekly": {},
-  "weep": {},
-  "weigh": {},
-  "weight": {},
-  "west": {},
-  "wet": {},
-  "whole": {},
-  "wide": {},
-  "wild": {},
-  "windy": {},
-  "wine": {},
-  "winner": {},
-  "wisdom": {},
-  "wise": {},
-  "wish": {},
-  "wonder": {},
-  "wood": {},
-  "wooden": {},
-  "wool": {},
-  "worried": {},
-  "worry": {},
-  "worse": {},
-  "worst": {},
-  "writing": {},
-  "youth": {},
-  "zone": {}
+  "plant": {
+    "definition": "A living thing that grows in soil, or a factory."
+  },
+  "plastic": {
+    "definition": "A light artificial material made from chemicals."
+  },
+  "plate": {
+    "definition": "A flat round dish that you put food on."
+  },
+  "playful": {
+    "definition": "Full of fun and wanting to play."
+  },
+  "pleasant": {
+    "definition": "Nice and easy to be with or experience."
+  },
+  "pleased": {
+    "definition": "Happy and satisfied about something."
+  },
+  "pleasing": {
+    "definition": "Making you feel happy and satisfied."
+  },
+  "plenty": {
+    "definition": "More than enough."
+  },
+  "plural": {
+    "definition": "The form of a word used for more than one."
+  },
+  "point": {
+    "definition": "A thin sharp end, or a mark in a game."
+  },
+  "police": {
+    "definition": "The official group of people who catch criminals."
+  },
+  "polite": {
+    "definition": "Behaving in a kind and respectful way."
+  },
+  "pollute": {
+    "definition": "To make the air or water dirty and harmful."
+  },
+  "popular": {
+    "definition": "Liked by a lot of people."
+  },
+  "portrait": {
+    "definition": "A painting or photo of a person."
+  },
+  "position": {
+    "definition": "The place where someone or something is."
+  },
+  "possible": {
+    "definition": "Able to happen or be done."
+  },
+  "post": {
+    "definition": "To send a letter, or the mail service."
+  },
+  "pour": {
+    "definition": "To make a liquid flow out of a container."
+  },
+  "power": {
+    "definition": "The ability to control people or things, or energy such as electricity."
+  },
+  "powerful": {
+    "definition": "Having a lot of strength or control."
+  },
+  "precise": {
+    "definition": "Exact and correct in every detail."
+  },
+  "predict": {
+    "definition": "To say what you think will happen."
+  },
+  "prefer": {
+    "definition": "To like one thing more than another."
+  },
+  "prepare": {
+    "definition": "To get something ready."
+  },
+  "pressure": {
+    "definition": "The force of something pressing, or a feeling of stress."
+  },
+  "pretend": {
+    "definition": "To act as if something is true when it is not."
+  },
+  "prevent": {
+    "definition": "To stop something from happening."
+  },
+  "pride": {
+    "definition": "A feeling of being proud."
+  },
+  "print": {
+    "definition": "To produce words or pictures on paper."
+  },
+  "printer": {
+    "definition": "A machine that puts words or pictures onto paper."
+  },
+  "private": {
+    "definition": "Only for one person or group, and not for the public."
+  },
+  "pro": {
+    "definition": "Short for professional, or an advantage."
+  },
+  "produce": {
+    "definition": "To make or grow something."
+  },
+  "product": {
+    "definition": "Something that is made to be sold."
+  },
+  "promise": {
+    "definition": "To say that you will certainly do something."
+  },
+  "proper": {
+    "definition": "Right and suitable for the situation."
+  },
+  "provide": {
+    "definition": "To give someone something they need."
+  },
+  "public": {
+    "definition": "Available for everyone to use or see."
+  },
+  "publish": {
+    "definition": "To print and make a book or article available."
+  },
+  "pull": {
+    "definition": "To move something towards you."
+  },
+  "purple": {
+    "definition": "The colour you get by mixing red and blue."
+  },
+  "purpose": {
+    "definition": "The reason for doing something."
+  },
+  "pursue": {
+    "definition": "To follow someone or keep trying to do something."
+  },
+  "quality": {
+    "definition": "How good or bad something is."
+  },
+  "queen": {
+    "definition": "The female ruler of a country, or the wife of a king."
+  },
+  "quick": {
+    "definition": "Fast, or lasting only a short time."
+  },
+  "quit": {
+    "definition": "To stop doing something or leave a job."
+  },
+  "quiz": {
+    "definition": "A short test or game with questions."
+  },
+  "racket": {
+    "definition": "A bat with strings for hitting a ball, or a loud noise."
+  },
+  "raincoat": {
+    "definition": "A coat that keeps the rain off."
+  },
+  "raise": {
+    "definition": "To lift something up, or to increase it."
+  },
+  "range": {
+    "definition": "A set of similar things, or the limits between which something varies."
+  },
+  "rap": {
+    "definition": "A style of music with spoken rhymes."
+  },
+  "rate": {
+    "definition": "The speed or number of times something happens, or a price."
+  },
+  "rating": {
+    "definition": "A measure of how good something is."
+  },
+  "raw": {
+    "definition": "Not cooked, or not yet treated."
+  },
+  "ray": {
+    "definition": "A narrow line of light."
+  },
+  "reach": {
+    "definition": "To arrive at a place, or to stretch out for something."
+  },
+  "receipt": {
+    "definition": "A piece of paper showing what you paid for something."
+  },
+  "receive": {
+    "definition": "To get something that someone sends or gives you."
+  },
+  "recent": {
+    "definition": "Happening a short time ago."
+  },
+  "record": {
+    "definition": "A written account of something, or to store sound."
+  },
+  "recycle": {
+    "definition": "To treat waste so it can be used again."
+  },
+  "red": {
+    "definition": "The colour of blood."
+  },
+  "refer": {
+    "definition": "To mention something, or to send someone to another place for help."
+  },
+  "reflect": {
+    "definition": "To send back light or heat, or to think carefully."
+  },
+  "regret": {
+    "definition": "To feel sorry about something you did."
+  },
+  "regular": {
+    "definition": "Happening at the same times with equal gaps between."
+  },
+  "relax": {
+    "definition": "To rest and become calm."
+  },
+  "relaxed": {
+    "definition": "Calm and not worried."
+  },
+  "release": {
+    "definition": "To let someone or something go free, or to make available."
+  },
+  "remain": {
+    "definition": "To stay in the same place or state."
+  },
+  "remind": {
+    "definition": "To make someone remember something."
+  },
+  "remote": {
+    "definition": "Far away, or controlled from a distance."
+  },
+  "rent": {
+    "definition": "Money paid to live in someone else's house, or to pay it."
+  },
+  "repair": {
+    "definition": "To fix something that is broken."
+  },
+  "replace": {
+    "definition": "To put something new in place of something old."
+  },
+  "reply": {
+    "definition": "To answer someone."
+  },
+  "report": {
+    "definition": "A written or spoken account of something."
+  },
+  "request": {
+    "definition": "A polite or formal ask for something."
+  },
+  "research": {
+    "definition": "Careful study to find out new facts."
+  },
+  "response": {
+    "definition": "An answer or reaction."
+  },
+  "retire": {
+    "definition": "To stop working because of your age."
+  },
+  "retired": {
+    "definition": "No longer working because of age."
+  },
+  "return": {
+    "definition": "To go or come back, or to give something back."
+  },
+  "reunion": {
+    "definition": "A meeting of people who have not seen each other for a long time."
+  },
+  "reveal": {
+    "definition": "To show something that was hidden."
+  },
+  "rhythm": {
+    "definition": "A regular repeated pattern of sounds or movements."
+  },
+  "right": {
+    "definition": "Correct, or the side opposite left."
+  },
+  "ring": {
+    "definition": "A round band worn on a finger, or the sound of a bell."
+  },
+  "road": {
+    "definition": "A hard way for cars and other vehicles to travel on."
+  },
+  "roast": {
+    "definition": "To cook meat or vegetables in an oven."
+  },
+  "rob": {
+    "definition": "To steal from someone or a place."
+  },
+  "robbery": {
+    "definition": "The crime of stealing money or things."
+  },
+  "robin": {
+    "definition": "A small bird with a red breast."
+  },
+  "rock": {
+    "definition": "Hard stone, or a style of loud popular music."
+  },
+  "roll": {
+    "definition": "To move by turning over and over, or a small round piece of bread."
+  },
+  "romance": {
+    "definition": "A love affair, or a feeling of love."
+  },
+  "romantic": {
+    "definition": "Connected with love, or showing loving feelings."
+  },
+  "roof": {
+    "definition": "The covering on top of a building."
+  },
+  "root": {
+    "definition": "The part of a plant that grows under the ground."
+  },
+  "rope": {
+    "definition": "A very thick strong string."
+  },
+  "royal": {
+    "definition": "Connected with a king or queen."
+  },
+  "rugby": {
+    "definition": "A game in which players carry or kick an oval ball."
+  },
+  "ruin": {
+    "definition": "To damage something completely."
+  },
+  "runner": {
+    "definition": "A person who runs, or the person in charge of something."
+  },
+  "running": {
+    "definition": "The act of moving quickly on your feet, or in operation."
+  },
+  "rush": {
+    "definition": "To move or do something very quickly."
+  },
+  "safe": {
+    "definition": "Not in danger, or not likely to cause harm."
+  },
+  "sailing": {
+    "definition": "The sport of travelling in a boat with a sail."
+  },
+  "sake": {
+    "definition": "The purpose or good of someone or something."
+  },
+  "salt": {
+    "definition": "The white powder used to give food a strong taste."
+  },
+  "sample": {
+    "definition": "A small amount that shows what the whole is like."
+  },
+  "sandy": {
+    "definition": "Covered with sand."
+  },
+  "satisfy": {
+    "definition": "To make someone pleased by giving them what they want."
+  },
+  "sauce": {
+    "definition": "A thick liquid that you put on food to flavour it."
+  },
+  "sausage": {
+    "definition": "Meat in a long thin skin, eaten as food."
+  },
+  "scale": {
+    "definition": "The size of something, or a machine for weighing."
+  },
+  "scarf": {
+    "definition": "A long piece of cloth worn around the neck."
+  },
+  "scene": {
+    "definition": "A part of a play or film, or the place where something happened."
+  },
+  "scenery": {
+    "definition": "The natural things you can see around you, such as hills and trees."
+  },
+  "schedule": {
+    "definition": "A plan that shows the times when things will happen."
+  },
+  "scissors": {
+    "definition": "A tool with two blades for cutting paper or cloth."
+  },
+  "scream": {
+    "definition": "To give a loud high cry of fear or pain."
+  },
+  "screen": {
+    "definition": "The flat surface of a television or computer that shows pictures."
+  },
+  "screw": {
+    "definition": "A small piece of metal with a pointed end that holds things together."
+  },
+  "script": {
+    "definition": "The written words of a play or film, or handwriting."
+  },
+  "seafood": {
+    "definition": "Fish and other animals from the sea eaten as food."
+  },
+  "search": {
+    "definition": "To look carefully for something."
+  },
+  "seaside": {
+    "definition": "The area next to the sea where people go on holiday."
+  },
+  "second": {
+    "definition": "Coming after the first; the next one."
+  },
+  "secret": {
+    "definition": "Something you do not tell other people."
+  },
+  "seed": {
+    "definition": "The small hard part of a plant from which a new plant grows."
+  },
+  "seek": {
+    "definition": "To try to find or get something."
+  },
+  "seem": {
+    "definition": "To appear to be something."
+  },
+  "semester": {
+    "definition": "One of the two periods of a school or university year."
+  },
+  "send": {
+    "definition": "To make something go somewhere, especially by post."
+  },
+  "senior": {
+    "definition": "Older, or higher in rank."
+  },
+  "sense": {
+    "definition": "The ability to feel or understand, or a meaning."
+  },
+  "separate": {
+    "definition": "Not joined to something else."
+  },
+  "serve": {
+    "definition": "To give food or drinks to people, or to be a servant."
+  },
+  "set": {
+    "definition": "To put something in a place, or a group of things that belong together."
+  },
+  "sew": {
+    "definition": "To join cloth with a needle and thread."
+  },
+  "shade": {
+    "definition": "An area away from the sun, or a device that lowers the light."
+  },
+  "shadow": {
+    "definition": "A dark shape made when something blocks the light."
+  },
+  "shampoo": {
+    "definition": "A liquid soap for washing hair."
+  },
+  "shape": {
+    "definition": "The outer form of something."
+  },
+  "share": {
+    "definition": "To give part of something to other people."
+  },
+  "shell": {
+    "definition": "The hard covering of an egg or a sea creature."
+  },
+  "shine": {
+    "definition": "To give out bright light."
+  },
+  "shock": {
+    "definition": "To surprise and upset someone very much."
+  },
+  "shoot": {
+    "definition": "To fire a gun, or to kick or throw a ball at a goal."
+  },
+  "shore": {
+    "definition": "The land along the edge of the sea or a lake."
+  },
+  "shot": {
+    "definition": "The act of firing a gun, or an attempt to score in sport."
+  },
+  "shout": {
+    "definition": "To say something very loudly."
+  },
+  "show": {
+    "definition": "To let someone see something."
+  },
+  "shut": {
+    "definition": "To close something."
+  },
+  "silence": {
+    "definition": "The state of making no sound at all."
+  },
+  "silly": {
+    "definition": "Not sensible, in a harmless way."
+  },
+  "silver": {
+    "definition": "A shiny grey-white metal used for jewellery."
+  },
+  "similar": {
+    "definition": "Almost the same."
+  },
+  "simple": {
+    "definition": "Easy to do or understand; not complicated."
+  },
+  "singing": {
+    "definition": "The act of making music with your voice."
+  },
+  "single": {
+    "definition": "Only one, or not married."
+  },
+  "singular": {
+    "definition": "The form of a word used for one person or thing."
+  },
+  "sink": {
+    "definition": "A basin with taps, or to go under water."
+  },
+  "skate": {
+    "definition": "To move on ice wearing blades, or to ride on wheels."
+  },
+  "skating": {
+    "definition": "The sport of moving on ice or wheels."
+  },
+  "ski": {
+    "definition": "To move over snow on long narrow boards."
+  },
+  "skiing": {
+    "definition": "The sport of moving over snow on long boards."
+  },
+  "slave": {
+    "definition": "A person who is owned by someone and forced to work."
+  },
+  "sleepy": {
+    "definition": "Tired and ready to sleep."
+  },
+  "slice": {
+    "definition": "A thin flat piece cut from something."
+  },
+  "slide": {
+    "definition": "To move smoothly over a surface."
+  },
+  "slim": {
+    "definition": "Thin in an attractive way."
+  },
+  "smoke": {
+    "definition": "The grey cloud that rises from a fire."
+  },
+  "smooth": {
+    "definition": "Having a surface that is not rough."
+  },
+  "snack": {
+    "definition": "A small amount of food eaten between meals."
+  },
+  "snow": {
+    "definition": "Soft white pieces of frozen water that fall in winter."
+  },
+  "soap": {
+    "definition": "A substance used with water for washing."
+  },
+  "society": {
+    "definition": "People living together in an organized community."
+  },
+  "sock": {
+    "definition": "A soft covering for your foot, worn inside a shoe."
+  },
+  "soda": {
+    "definition": "A sweet drink with bubbles, or water with gas in it."
+  },
+  "soft": {
+    "definition": "Not hard, or not loud."
+  },
+  "software": {
+    "definition": "The programs that a computer runs."
+  },
+  "soldier": {
+    "definition": "A member of an army."
+  },
+  "solution": {
+    "definition": "A way of solving a problem, or a liquid with something dissolved in it."
+  },
+  "sound": {
+    "definition": "Something you can hear."
+  },
+  "source": {
+    "definition": "The place something comes from."
+  },
+  "south": {
+    "definition": "The direction opposite to north."
+  },
+  "space": {
+    "definition": "An empty area, or the area beyond the earth where the stars are."
+  },
+  "speaker": {
+    "definition": "A person who is talking, or the part of a device that makes sound."
+  },
+  "specific": {
+    "definition": "Clear and exact, not general."
+  },
+  "speed": {
+    "definition": "How fast something moves."
+  },
+  "spell": {
+    "definition": "To say or write the letters of a word in the right order."
+  },
+  "spill": {
+    "definition": "To let liquid fall out of a container by accident."
+  },
+  "splash": {
+    "definition": "To make liquid fly up in drops."
+  },
+  "split": {
+    "definition": "To divide into parts or groups."
+  },
+  "spoon": {
+    "definition": "A tool with a round end used for eating soup or stirring."
+  },
+  "spread": {
+    "definition": "To open something out, or to put a layer of something on bread."
+  },
+  "square": {
+    "definition": "A shape with four equal sides and four right angles."
+  },
+  "stadium": {
+    "definition": "A large sports ground with seats around it."
+  },
+  "staff": {
+    "definition": "The people who work for a company or school."
+  },
+  "stair": {
+    "definition": "One of a set of steps inside a building."
+  },
+  "stamp": {
+    "definition": "A small piece of paper you stick on a letter, or a tool that prints a mark."
+  },
+  "stand": {
+    "definition": "To be on your feet with your body upright."
+  },
+  "state": {
+    "definition": "The condition something is in, or a country with its own government."
+  },
+  "statue": {
+    "definition": "A figure of a person or animal made from stone or metal."
+  },
+  "steak": {
+    "definition": "A thick flat piece of meat or fish."
+  },
+  "steal": {
+    "definition": "To take something that does not belong to you."
+  },
+  "step": {
+    "definition": "One movement of a foot, or a stage in a process."
+  },
+  "stomach": {
+    "definition": "The part of your body where food goes after you swallow it."
+  },
+  "storm": {
+    "definition": "Very bad weather with strong wind and rain."
+  },
+  "stove": {
+    "definition": "A device used for cooking food."
+  },
+  "straight": {
+    "definition": "Going in one direction without curving."
+  },
+  "stranger": {
+    "definition": "A person you do not know."
+  },
+  "strategy": {
+    "definition": "A plan for reaching a goal."
+  },
+  "strength": {
+    "definition": "The quality of being strong."
+  },
+  "strike": {
+    "definition": "To hit something, or to stop work as a protest."
+  },
+  "string": {
+    "definition": "Thin cord used for tying things."
+  },
+  "study": {
+    "definition": "To spend time learning about a subject."
+  },
+  "stuff": {
+    "definition": "Things in general, or to fill something tightly."
+  },
+  "style": {
+    "definition": "The way something is done, designed, or worn."
+  },
+  "succeed": {
+    "definition": "To reach the goal you wanted."
+  },
+  "success": {
+    "definition": "The reaching of a goal, or a person who does well."
+  },
+  "sudden": {
+    "definition": "Happening quickly and without warning."
+  },
+  "suggest": {
+    "definition": "To offer an idea for someone to consider."
+  },
+  "suit": {
+    "definition": "A jacket with trousers or a skirt in the same cloth, or to be right for someone."
+  },
+  "suitable": {
+    "definition": "Right for a purpose or situation."
+  },
+  "suitcase": {
+    "definition": "A case with a handle for carrying clothes when you travel."
+  },
+  "summary": {
+    "definition": "A short account of the main points."
+  },
+  "sunlight": {
+    "definition": "The light that comes from the sun."
+  },
+  "supper": {
+    "definition": "A light evening meal."
+  },
+  "support": {
+    "definition": "To help someone, or to hold something up."
+  },
+  "surf": {
+    "definition": "To ride on waves on a board."
+  },
+  "surfing": {
+    "definition": "The sport of riding on waves on a board."
+  },
+  "surname": {
+    "definition": "The name a family shares."
+  },
+  "survive": {
+    "definition": "To continue to live after something dangerous."
+  },
+  "swallow": {
+    "definition": "To make food or drink go down your throat."
+  },
+  "sweat": {
+    "definition": "The liquid that comes out of your skin when you are hot."
+  },
+  "sweater": {
+    "definition": "A warm knitted top with sleeves."
+  },
+  "sweet": {
+    "definition": "Tasting like sugar."
+  },
+  "swimsuit": {
+    "definition": "A piece of clothing worn for swimming."
+  },
+  "symbol": {
+    "definition": "A sign or picture that stands for something."
+  },
+  "symphony": {
+    "definition": "A long piece of music written for an orchestra."
+  },
+  "system": {
+    "definition": "A set of connected parts or rules that work together."
+  },
+  "talent": {
+    "definition": "A natural ability to do something well."
+  },
+  "tap": {
+    "definition": "A device that lets water out of a pipe, or to hit something lightly."
+  },
+  "tape": {
+    "definition": "A long narrow band used for sticking or recording."
+  },
+  "target": {
+    "definition": "Something you aim at, or a goal."
+  },
+  "task": {
+    "definition": "A piece of work you have to do."
+  },
+  "tear": {
+    "definition": "A drop of water that comes from your eye, or to pull paper apart."
+  },
+  "teenage": {
+    "definition": "Between thirteen and nineteen years old."
+  },
+  "teenager": {
+    "definition": "A person between thirteen and nineteen years old."
+  },
+  "terrify": {
+    "definition": "To make someone extremely frightened."
+  },
+  "text": {
+    "definition": "Written words, or a message sent by phone."
+  },
+  "textbook": {
+    "definition": "A book used for studying a subject."
+  },
+  "thief": {
+    "definition": "A person who steals things."
+  },
+  "third": {
+    "definition": "Coming after the second."
+  },
+  "thirsty": {
+    "definition": "Feeling that you need to drink."
+  },
+  "thought": {
+    "definition": "An idea in your mind, or the act of thinking."
+  },
+  "throw": {
+    "definition": "To send something through the air with your hand."
+  },
+  "tidy": {
+    "definition": "Neat and in order."
+  },
+  "tie": {
+    "definition": "To fasten things with string, or a band of cloth worn around the neck."
+  },
+  "tights": {
+    "definition": "A thin tight piece of clothing covering the legs."
+  },
+  "tip": {
+    "definition": "The pointed end of something, a piece of advice, or extra money for a waiter."
+  },
+  "title": {
+    "definition": "The name of a book, film, or song."
+  },
+  "toast": {
+    "definition": "Bread made brown and crisp by heat, or a wish of good health before drinking."
+  },
+  "toe": {
+    "definition": "One of the five parts at the end of your foot."
+  },
+  "tone": {
+    "definition": "The quality of a sound, or the way someone speaks."
+  },
+  "tonight": {
+    "definition": "The evening or night of today."
+  },
+  "tour": {
+    "definition": "A journey to visit several places."
+  },
+  "tourist": {
+    "definition": "A person who visits a place on holiday."
+  },
+  "track": {
+    "definition": "A narrow path, or a rail for trains, or a song on an album."
+  },
+  "trade": {
+    "definition": "The buying and selling of goods."
+  },
+  "traffic": {
+    "definition": "The vehicles moving on a road."
+  },
+  "train": {
+    "definition": "A line of carriages pulled along a railway."
+  },
+  "training": {
+    "definition": "The process of learning the skills for a job or sport."
+  },
+  "tram": {
+    "definition": "An electric vehicle that runs on rails in a town."
+  },
+  "trap": {
+    "definition": "A device for catching animals, or a difficult situation you cannot escape."
+  },
+  "travel": {
+    "definition": "To go from one place to another, often far away."
+  },
+  "treasure": {
+    "definition": "Valuable things such as gold and jewels."
+  },
+  "trick": {
+    "definition": "Something clever you do to cheat or amuse someone."
+  },
+  "trouble": {
+    "definition": "A problem or difficulty."
+  },
+  "trust": {
+    "definition": "To believe that someone is honest and will not harm you."
+  },
+  "truth": {
+    "definition": "The real facts about something."
+  },
+  "try": {
+    "definition": "To make an effort to do something."
+  },
+  "tune": {
+    "definition": "A series of musical notes that is easy to remember."
+  },
+  "uneasy": {
+    "definition": "Worried and not comfortable."
+  },
+  "unfair": {
+    "definition": "Not treating everyone in the same way."
+  },
+  "unhappy": {
+    "definition": "Sad and not satisfied."
+  },
+  "uniform": {
+    "definition": "Special clothes worn by everyone in a group, such as pupils or soldiers."
+  },
+  "unit": {
+    "definition": "A single thing or group, or a measure used for counting."
+  },
+  "unknown": {
+    "definition": "Not known about."
+  },
+  "unlike": {
+    "definition": "Different from."
+  },
+  "unusual": {
+    "definition": "Not common; different from what usually happens."
+  },
+  "upset": {
+    "definition": "Sad or worried because something bad happened."
+  },
+  "use": {
+    "definition": "To do something with an object for a purpose."
+  },
+  "used": {
+    "definition": "Not new; having had an owner before."
+  },
+  "useful": {
+    "definition": "Helping you do something."
+  },
+  "usual": {
+    "definition": "Happening most of the time; normal."
+  },
+  "valley": {
+    "definition": "Low land between hills or mountains."
+  },
+  "value": {
+    "definition": "How much something is worth."
+  },
+  "verb": {
+    "definition": "A word that shows an action or a state, such as run or be."
+  },
+  "view": {
+    "definition": "What you can see from a place, or an opinion."
+  },
+  "village": {
+    "definition": "A small group of houses in the countryside."
+  },
+  "violent": {
+    "definition": "Using force to hurt people or damage things."
+  },
+  "violin": {
+    "definition": "A small wooden instrument with four strings, played with a bow."
+  },
+  "visitor": {
+    "definition": "A person who comes to see a place or a person."
+  },
+  "voice": {
+    "definition": "The sound you make when you speak or sing."
+  },
+  "walking": {
+    "definition": "The activity of going somewhere on foot."
+  },
+  "wallet": {
+    "definition": "A small flat case for carrying money and cards."
+  },
+  "wander": {
+    "definition": "To walk slowly with no clear direction."
+  },
+  "wave": {
+    "definition": "To move your hand to say hello, or a raised moving line of water."
+  },
+  "weak": {
+    "definition": "Not strong."
+  },
+  "wealth": {
+    "definition": "A large amount of money and property."
+  },
+  "web": {
+    "definition": "The internet, or the net a spider makes."
+  },
+  "website": {
+    "definition": "A set of pages on the internet about one subject."
+  },
+  "wedding": {
+    "definition": "The ceremony in which two people marry."
+  },
+  "weekday": {
+    "definition": "Any day from Monday to Friday."
+  },
+  "weekly": {
+    "definition": "Happening once a week."
+  },
+  "weep": {
+    "definition": "To cry."
+  },
+  "weigh": {
+    "definition": "To measure how heavy something is."
+  },
+  "weight": {
+    "definition": "How heavy something is."
+  },
+  "west": {
+    "definition": "The direction where the sun goes down."
+  },
+  "wet": {
+    "definition": "Covered with water or another liquid."
+  },
+  "whole": {
+    "definition": "Complete; with nothing left out."
+  },
+  "wide": {
+    "definition": "Measuring a large amount from side to side."
+  },
+  "wild": {
+    "definition": "Living or growing in nature, not kept by people."
+  },
+  "windy": {
+    "definition": "With a lot of wind."
+  },
+  "wine": {
+    "definition": "An alcoholic drink made from grapes."
+  },
+  "winner": {
+    "definition": "The person or team that wins."
+  },
+  "wisdom": {
+    "definition": "The quality of knowing the right thing to do, gained from experience."
+  },
+  "wise": {
+    "definition": "Able to judge things well because of experience."
+  },
+  "wish": {
+    "definition": "To want something that is not easy to get."
+  },
+  "wonder": {
+    "definition": "To want to know about something, or a feeling of surprise."
+  },
+  "wood": {
+    "definition": "The hard material that trees are made of."
+  },
+  "wooden": {
+    "definition": "Made of wood."
+  },
+  "wool": {
+    "definition": "The soft thick hair of sheep, used to make clothes."
+  },
+  "worried": {
+    "definition": "Unhappy because you think something bad may happen."
+  },
+  "worry": {
+    "definition": "To think about problems and feel unhappy."
+  },
+  "worse": {
+    "definition": "Less good than something else."
+  },
+  "worst": {
+    "definition": "The most bad of all."
+  },
+  "writing": {
+    "definition": "Words put down on paper or a screen, or the activity of putting them down."
+  },
+  "youth": {
+    "definition": "The time when you are young, or young people."
+  },
+  "zone": {
+    "definition": "An area with a special purpose or rule."
+  }
 }
