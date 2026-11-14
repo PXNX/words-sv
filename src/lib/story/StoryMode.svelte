@@ -888,7 +888,7 @@ const firstTry = $derived(interactiveIndices.filter((index) => !wrong[index]?.le
         {#each onStage as member (member)}
           <figure class:active={speaker === member} class:speaking={lipSync.speaker === member} class:dimmed={speaker !== null && speaker !== member} class:pet={smallAnimals.includes(member)} animate:flip={{ duration: reduceMotion ? 0 : 350 }} in:fly={{ x: -140, duration: reduceMotion ? 0 : 520 }} out:fly={{ x: 320, duration: reduceMotion ? 0 : 480 }}>
             <span class="story-beam" aria-hidden="true"></span>
-            <StoryCharacter id={member} mood={castMood(member)} holding={staging.holding[member] ?? null} talking={!lipSync.speaker && miming === currentIndex && current?.kind === 'line' && current.speaker === member} mouth={lipSync.speaker === member ? lipSync.open : null} label={characterNames[member][lang]} />
+            <StoryCharacter id={member} mood={castMood(member)} holding={staging.holding[member] ?? null} talking={!lipSync.speaker && miming === currentIndex && current?.kind === 'line' && current.speaker === member} mouth={lipSync.speaker === member ? lipSync.open : null} label={characterNames[member][lang]} purring={member === 'lilith' && purring} />
             {#if member === 'lilith'}<button type="button" class="story-pet" onclick={petLilith} aria-label={labels.petLilith}></button>{/if}
             {#if member === 'lilith' && heartsShown}
               {#key hearts}<span class="story-hearts" aria-hidden="true">{#each [0, 1, 2] as heart (heart)}<svg viewBox="0 0 24 22" style:--heart={heart}><path d="M12 21C5.2 15.4 1 11.6 1 7.1A5.6 5.6 0 0 1 12 5.2 5.6 5.6 0 0 1 23 7.1c0 4.5-4.2 8.3-11 13.9Z" /></svg>{/each}</span>{/key}

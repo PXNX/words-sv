@@ -7,7 +7,7 @@
   // `holding` puts an item in their hand (or, for Lilith, in a bowl at her paws); `still` stops the
   // blinking and wagging, for the small faces in the transcript. `avatar` draws a learner's own
   // character instead; Kumar is drawn as the learner's character whenever they have made one.
-  let { id, talking = false, label = '', mood: feeling = 'neutral', mouth = null, holding = null, still = false, avatar = null, walking = false }: { id: CharacterId; talking?: boolean; label?: string; mood?: Mood; mouth?: number | null; holding?: HeldItem | null; still?: boolean; avatar?: Avatar | null; walking?: boolean } = $props();
+  let { id, talking = false, label = '', mood: feeling = 'neutral', mouth = null, holding = null, still = false, avatar = null, walking = false, purring = false }: { id: CharacterId; talking?: boolean; label?: string; mood?: Mood; mouth?: number | null; holding?: HeldItem | null; still?: boolean; avatar?: Avatar | null; walking?: boolean; purring?: boolean } = $props();
   // The animals know the five basic moods; the finer ones map onto the closest of those.
   const animalMoods: Record<Mood, Mood> = { neutral: 'neutral', happy: 'happy', sad: 'sad', surprised: 'surprised', curious: 'curious', angry: 'sad', worried: 'sad', laughing: 'happy', sleepy: 'neutral' };
   const lipSynced = $derived(mouth !== null);
@@ -441,7 +441,7 @@
       <path d="M-20 138h30q-2 11-15 11t-15-11Z" fill="#d64b45" /><path d="M-20 138h30" stroke="#9c2a25" stroke-width="1.6" />
     {/if}
     <!-- the head sits a little smaller than life, like the round fluffy face in her portrait -->
-    <g class="cat-head" class:cat-purr={mood === 'happy'}><g transform="rotate({lilithTilt} 60 64) translate(60 66) scale(.86) translate(-60 -62)">
+    <g class="cat-head" class:cat-purr={mood === 'happy' || purring}><g transform="rotate({lilithTilt} 60 64) translate(60 66) scale(.86) translate(-60 -62)">
       <!-- ears, drooping when she is sad -->
       <g transform={mood === 'sad' ? 'rotate(-24 42 40)' : undefined}><g class="cat-ear cat-ear-left"><path d="M29 50Q24 30 28 15q14 7 27 18Z" fill="url(#{uid}-ear)" /><path d="M33 44q-3-13-1-22 9 5 16 12Z" fill="#7a5646" /><path d="M35 42l4-6M38 44l5-5" stroke="#f4e9da" stroke-width="1" opacity=".8" /></g></g>
       <g transform={mood === 'sad' ? 'rotate(24 78 40)' : undefined}><g class="cat-ear cat-ear-right"><path d="M91 50Q96 30 92 15q-14 7-27 18Z" fill="url(#{uid}-ear)" /><path d="M87 44q3-13 1-22-9 5-16 12Z" fill="#7a5646" /><path d="M85 42l-4-6M82 44l-5-5" stroke="#f4e9da" stroke-width="1" opacity=".8" /></g></g>

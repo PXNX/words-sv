@@ -360,7 +360,7 @@
           <span class="home-cast-note">{labels.homeCast}</span>
         </div>
       </div>
-      <div class="home-family"><span class="home-family-people" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="tom" /></span><button type="button" class="home-lilith-pet" class:petting onclick={petLilith} onanimationend={() => (petting = false)} aria-label={labels.petLilith}><span class="home-lilith" class:loving={lilith === 'loving'}><StoryCharacter id="lilith" mood={petting && lilith !== 'loving' ? 'happy' : lilithFace(lilith)} />{#if lilith === 'loving'}<span class="home-lilith-hearts" aria-hidden="true"><span>♥</span><span>♥</span></span>{/if}</span></button></div>
+      <div class="home-family"><span class="home-family-people" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="tom" /></span><button type="button" class="home-lilith-pet" class:petting onclick={petLilith} onanimationend={() => (petting = false)} aria-label={labels.petLilith}><span class="home-lilith" class:loving={lilith === 'loving'}><StoryCharacter id="lilith" mood={petting && lilith !== 'loving' ? 'happy' : lilithFace(lilith)} purring={petting} />{#if lilith === 'loving'}<span class="home-lilith-hearts" aria-hidden="true"><span>♥</span><span>♥</span></span>{/if}</span></button></div>
     </header>
     <!-- One daily card: the streak, the next best step and what is waiting to be continued. -->
     <MissedStreakSheet repair={repairOffer} />

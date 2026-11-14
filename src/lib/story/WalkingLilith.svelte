@@ -8,9 +8,10 @@
   import { onMount } from 'svelte';
   import { prefersReducedMotion } from 'svelte/motion';
   import StoryCharacter from './StoryCharacter.svelte';
+  import { soundEffectSeconds } from '#lib/feedback/sounds.js';
   import type { Mood } from './stories.js';
 
-  let { mood = 'happy', from = 'right', label = '', onpet }: { mood?: Mood; from?: 'left' | 'right'; label?: string; onpet?: () => void } = $props();
+  let { mood = 'happy', from = 'right', label = '', onpet, purring = false }: { mood?: Mood; from?: 'left' | 'right'; label?: string; onpet?: () => void; purring?: boolean } = $props();
 
   const SPEED_PX_PER_S = 70;
   let area = $state<HTMLDivElement | null>(null);
@@ -20,6 +21,9 @@
   let walking = $state(false);
   let facingLeft = $state(false);
   let petted = $state(0);
+  // The purr sound lasts as long as the nod: she purrs while it plays, then settles back.
+  let purringNow = $state(false);
+  let purrTimer = 0;
   let timer = 0;
 
   function bounds() {
@@ -43,6 +47,9 @@
   }
   function pet() {
     petted += 1;
+    purringNow = true;
+    window.clearTimeout(purrTimer);
+    purrTimer = window.setTimeout(() => (purringNow = false), soundEffectSeconds.purr * 1000);
     onpet?.();
   }
 
@@ -56,7 +63,10 @@
     duration = 0;
     x = from === 'right' ? max + (cat?.offsetWidth ?? 0) : -(cat?.offsetWidth ?? 0);
     requestAnimationFrame(() => requestAnimationFrame(() => walkTo(max / 2)));
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.clearTimeout(timer);
+      window.clearTimeout(purrTimer);
+    };
   });
 </script>
 
@@ -65,7 +75,7 @@
     style={`transform:translateX(${x}px);transition-duration:${duration}s`}
     ontransitionend={(event) => { if (event.propertyName === 'transform' && event.target === cat && walking) rest(); }}>
     <span class="walk-flip" class:left={facingLeft}>
-      {#key petted}<span class="walk-body" class:petted={petted > 0}><StoryCharacter id="lilith" mood={walking ? 'happy' : mood} {walking} /></span>{/key}
+      {#key petted}<span class="walk-body" class:petted={petted > 0}><StoryCharacter id="lilith" mood={walking || purring || purringNow ? 'happy' : mood} {walking} purring={purring || purringNow} /></span>{/key}
     </span>
     {#if petted}{#key petted}<span class="walk-hearts" aria-hidden="true"><b>♥</b><b>♥</b></span>{/key}{/if}
   </button>
