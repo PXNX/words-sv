@@ -31,14 +31,16 @@ const ON_DEMAND = [/\/(llm|supertonic|styleTts)\.worker-[^/]+\.js$/, /\/workers\
 const ON_DEMAND_CACHE = 'wordcircle-on-demand';
 const onDemandPaths = new Set(immutable.map(({ path }) => pathnameOf(path)).filter((path) => ON_DEMAND.some((pattern) => pattern.test(path))));
 // How long a navigation waits for the network before showing the cached page.
-const NAVIGATION_TIMEOUT_MS = 3500;
+const NAVIGATION_TIMEOUT_MS = 1200;
 const precached = new Set([...immutable, ...assets].map(({ path }) => pathnameOf(path)).filter((path) => !ON_DEMAND.some((pattern) => pattern.test(path))));
 
 // Tells open tabs how far the new version's download is (UpdateAppHint shows it while Lilith fetches it).
 async function reportInstallProgress(done: number, total: number) {
 	for (const client of await self.clients.matchAll({ includeUncontrolled: true, type: 'window' })) client.postMessage({ type: 'INSTALL_PROGRESS', done, total });
 }
-const INSTALL_BATCH = 8;
+// Four at a time rather than eight: on a slow connection the install shares the pipe with the page
+// the learner is already using, and it should not starve it.
+const INSTALL_BATCH = 4;
 
 self.addEventListener('install', (event) => {
 	event.waitUntil(
@@ -98,8 +100,9 @@ self.addEventListener('fetch', (event) => {
 			// back to this build's cached page (or the app shell) when offline or too slow. Newer HTML references
 			// hashed assets that are not in this build's cache, so those are fetched normally as well.
 			if (request.mode === 'navigate') {
-				// A bad connection is worse than none: it can hang for half a minute. After a few seconds
-				// the cached page is shown, and the network answer still refreshes the cache for next time.
+				// A bad connection is worse than none: it can hang for half a minute. After about a
+				// second the cached page is shown, and the network answer still refreshes the cache
+				// for next time.
 				const cached = await cache.match(pageKey(url.pathname)) ?? await cache.match(SHELL);
 				const network = fetch(request).then((response) => {
 					if (response.ok) void cache.put(pageKey(url.pathname), response.clone()).catch(() => undefined);
