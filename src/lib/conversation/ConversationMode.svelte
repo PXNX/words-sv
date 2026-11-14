@@ -31,6 +31,8 @@
   import { pickPartner, type Partner } from './partners.js';
   import { storiesFor } from '#lib/story/storyPacks.svelte.js';
   import { activeModelLabel, checkLocalModel, chosenModel, generateReply, interruptReply, loadLocalModel, localModel, modelGpuMB } from './localModel.svelte.js';
+  import { setCloudMode } from './cloudModel.svelte.js';
+  import { isUsageLimitError } from './openRouter.js';
   import { aiAvailable, usesAi } from './aiChoice.svelte.js';
   import AiSwitch from './AiSwitch.svelte';
   import { choicesOpen, replyChoices, respond, startScript, type ScriptState, type ScriptTurn, type ScriptWord, type Verdict } from './scripted.js';
@@ -79,6 +81,10 @@
     loading: m.conversation_loading({}, { locale }),
     unsupported: m.conversation_unsupported({}, { locale }),
     failed: m.conversation_failed({}, { locale }),
+    replyCloud: m.conversation_reply_cloud({}, { locale }),
+    replyDevice: m.conversation_reply_device({}, { locale }),
+    retry: m.conversation_retry({}, { locale }),
+    useDevice: m.conversation_use_device({}, { locale }),
     words: m.conversation_words({}, { locale }),
     wordsUsed: (count: number, total: number) => m.conversation_words_used({ count: num(count), total: num(total) }, { locale }),
     listening: m.conversation_listening({}, { locale }),
@@ -129,6 +135,8 @@
   let roundToken = 0;
   // Without AI: the round's scripted dialogue (scripted.ts), and how the last answer went.
   let scripted = $state(false);
+  // Why the partner's last reply failed; the note offers what can fix it.
+  let replyError = $state<'' | 'limit' | 'cloud' | 'device'>('');
   let script = $state<ScriptState | null>(null);
   let lastVerdict = $state<Verdict | null>(null);
   let showChoices = $state(false);
@@ -291,6 +299,7 @@
       }));
     } catch (error) {
       console.error('Conversation reply failed', error);
+      replyError = classifyReplyError(error);
     }
     if (token !== roundToken) return;
     draftReply = '';
@@ -325,9 +334,40 @@
     await deliver(turn.line, token);
   }
 
+  /** What went wrong with a cloud reply, so the note can offer the action that fixes it. */
+  function classifyReplyError(error: unknown): 'limit' | 'cloud' | 'device' {
+    if (isUsageLimitError(error)) return 'limit';
+    const text = error instanceof Error ? error.message : String(error);
+    return text.startsWith('openrouter_') ? 'cloud' : 'device';
+  }
+
+  /** The note beside the failed reply, and the actions that can fix it. */
+  const errorNote = $derived(replyError === 'limit' ? m.cloud_limit({}, { locale }) : replyError === 'cloud' ? labels.replyCloud : labels.replyDevice);
+
+  /** Tries the failed reply once more. */
+  function retryReply() {
+    replyError = '';
+    void partnerTurn();
+  }
+
+  /** Answers from now on with the model on this device instead of OpenRouter. */
+  async function useDeviceModel() {
+    replyError = '';
+    setCloudMode('off');
+    await checkLocalModel(true);
+    if (localModel.status === 'unsupported') { replyError = 'device'; return; }
+    if (!localModel.cached && !(await confirmDownload(chosenModel().downloadMB, chosenModel().label))) { replyError = 'cloud'; return; }
+    phase = 'thinking';
+    draftReply = '';
+    await loadLocalModel();
+    if (localModel.status === 'ready') void partnerTurn();
+    else { phase = 'waiting'; replyError = 'device'; }
+  }
+
   async function submit(text: string) {
     const clean = text.trim();
     if (!clean || phase === 'thinking' || phase === 'speaking' || scriptDone) return;
+    replyError = '';
     stopListening();
     stopAudio();
     typed = '';
@@ -347,6 +387,7 @@
     stopListening();
     stopAudio();
     interruptReply();
+    replyError = '';
     if (!partner) drawPartner();
     const token = roundToken;
     // With AI only when the model is downloaded and not switched off; if it then fails to load,
@@ -390,6 +431,7 @@
     stopListening();
     stopAudio();
     draftReply = '';
+    replyError = '';
     drawPartner();
     void startRound();
   }
@@ -524,6 +566,20 @@
           <div class="talk-bubble"><span class="talk-who">{partner?.name}</span>{#if draftReply}<p lang={lang} dir="auto">{draftReply}</p>{:else}<p class="talk-dots" aria-hidden="true"><span></span><span></span><span></span></p>{/if}</div>
         </li>
       {/if}
+      {#if replyError}
+        <li class="talk-turn">
+          {#if partner}<span class="talk-face" aria-hidden="true"><StoryCharacter id={partner.id} mood="curious" still /></span>{/if}
+          <div class="talk-bubble talk-error-bubble">
+            <span class="talk-who">{partner?.name}</span>
+            <p class="talk-error-text" lang={lang}>{errorNote}</p>
+            <div class="talk-error-actions">
+              <button type="button" class="talk-error-btn" onclick={retryReply}>{labels.retry}</button>
+              {#if localModel.provider === 'cloud'}<button type="button" class="talk-error-btn" onclick={() => void useDeviceModel()}>{labels.useDevice}</button>{/if}
+              <a class="talk-error-btn" href="/settings">{labels.changeModel}</a>
+            </div>
+          </div>
+        </li>
+      {/if}
       {#if liveHeard}
         <li class="talk-turn mine"><div class="talk-bubble live"><span class="talk-who">{labels.you}</span><p lang={lang} dir="auto">{liveHeard}</p></div></li>
       {/if}
@@ -619,6 +675,13 @@
   .talk-bubble.live { opacity:.7;border-style:dashed;box-shadow:none; }
   .talk-who { font-size:.8125rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;opacity:.55; }
   .talk-bubble p { margin:0;font-size:1rem;line-height:1.45; }
+  /* A failed cloud reply, with the actions that can fix it instead of a dead end. */
+  .talk-error-bubble { background:#fbe6b5;border-color:#b54442;box-shadow:2px 2px 0 #b54442; }
+  .talk-error-text { color:#b54442;font-weight:800; }
+  .talk-error-actions { display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.35rem; }
+  .talk-error-btn { padding:.3rem .7rem;border:2px solid #172a45;border-radius:.7rem;background:#fffdf7;color:#172a45;font-family:inherit;font-size:.85rem;font-weight:900;text-decoration:none;cursor:pointer; }
+  .talk-error-btn:hover { background:#fbe6b5; }
+  .talk-error-btn:focus-visible { outline:3px dashed #172a45;outline-offset:2px; }
   .talk-replay { flex:none;display:grid;place-items:center;width:1.9rem;height:1.9rem;padding:0;border:2px solid #172a45;border-radius:50%;background:#fffdf7;color:#172a45;cursor:pointer;transition:transform .15s ease; }
   .talk-replay:active { transform:scale(.9); }
   .talk-replay.playing { background:#e6a527; }
