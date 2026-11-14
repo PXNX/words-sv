@@ -17,37 +17,53 @@
   "amateur": {},
   "anchor": {},
   "anchored": {},
-  "angle": {},
+  "angle": {
+    "definition": "The space between two lines that meet, measured in degrees."
+  },
   "antics": {},
   "apt": {},
   "aqua": {},
   "aquarium": {},
   "avid": {},
   "awe": {},
-  "bald": {},
+  "bald": {
+    "definition": "With no hair on the head."
+  },
   "batter": {},
   "battered": {},
-  "battery": {},
+  "battery": {
+    "definition": "An object that stores electricity for a device."
+  },
   "bearded": {},
   "benign": {},
   "bequeath": {},
   "bliss": {},
   "blister": {},
-  "bloom": {},
-  "boast": {},
+  "bloom": {
+    "definition": "To open into flowers."
+  },
+  "boast": {
+    "definition": "To talk with too much pride about yourself."
+  },
   "bouquet": {},
   "bribe": {},
   "bribery": {},
-  "brief": {},
+  "brief": {
+    "definition": "Lasting only a short time, or using few words."
+  },
   "bubbly": {},
   "buffer": {},
   "buffoon": {},
   "bulk": {},
   "bulky": {},
-  "burst": {},
+  "burst": {
+    "definition": "To break open suddenly."
+  },
   "buzzer": {},
   "bypass": {},
-  "calf": {},
+  "calf": {
+    "definition": "A young cow, or the back part of the lower leg."
+  },
   "calorie": {},
   "campaign": {},
   "candid": {},
@@ -55,7 +71,9 @@
   "carrier": {},
   "cast": {},
   "cavity": {},
-  "chart": {},
+  "chart": {
+    "definition": "A drawing that shows facts as a picture or a table."
+  },
   "charter": {},
   "chauffer": {},
   "chill": {},
@@ -66,7 +84,9 @@
   "cite": {},
   "clammy": {},
   "clan": {},
-  "class": {},
+  "class": {
+    "definition": "A group of students who learn together, or one lesson."
+  },
   "classy": {},
   "clench": {},
   "climax": {},
@@ -86,13 +106,17 @@
   "conform": {},
   "conjure": {},
   "conserve": {},
-  "contest": {},
+  "contest": {
+    "definition": "A competition in which people try to win."
+  },
   "contract": {},
   "convict": {},
   "corps": {},
   "coupled": {},
   "coverage": {},
-  "craft": {},
+  "craft": {
+    "definition": "A skill in making things by hand, or a boat."
+  },
   "crave": {},
   "craving": {},
   "creamy": {},
@@ -115,7 +139,9 @@
   "demo": {},
   "depict": {},
   "descent": {},
-  "desert": {},
+  "desert": {
+    "definition": "A large dry area of land with almost no rain."
+  },
   "detest": {},
   "detritus": {},
   "devotee": {},
@@ -131,13 +157,19 @@
   "docile": {},
   "dominant": {},
   "drawback": {},
-  "drill": {},
-  "drive": {},
+  "drill": {
+    "definition": "A tool that makes holes, or an exercise that is repeated."
+  },
+  "drive": {
+    "definition": "To make a car or other vehicle move and steer it."
+  },
   "durable": {},
   "duration": {},
   "dutiful": {},
   "eclectic": {},
-  "ecstasy": {},
+  "ecstasy": {
+    "definition": "A feeling of great happiness."
+  },
   "ecstatic": {},
   "ego": {},
   "elastic": {},
@@ -149,7 +181,9 @@
   "elude": {},
   "elusive": {},
   "embark": {},
-  "engineer": {},
+  "engineer": {
+    "definition": "A person who designs machines, roads, or buildings."
+  },
   "engross": {},
   "envisage": {},
   "ethical": {},
@@ -176,9 +210,13 @@
   "fiend": {},
   "fiendish": {},
   "firewall": {},
-  "firm": {},
+  "firm": {
+    "definition": "Hard and solid, or a business company."
+  },
   "fissure": {},
-  "fit": {},
+  "fit": {
+    "definition": "The right size, or healthy."
+  },
   "fixture": {},
   "flask": {},
   "flatter": {},
@@ -191,7 +229,9 @@
   "forfeit": {},
   "fossil": {},
   "fraction": {},
-  "frost": {},
+  "frost": {
+    "definition": "A thin layer of ice that forms on cold surfaces."
+  },
   "frosty": {},
   "fuse": {},
   "fusion": {},
@@ -207,7 +247,9 @@
   "goose": {},
   "gourmet": {},
   "graft": {},
-  "ground": {},
+  "ground": {
+    "definition": "The surface of the earth you stand on."
+  },
   "grounds": {},
   "gruesome": {},
   "grumble": {},
@@ -218,9 +260,13 @@
   "gypsy": {},
   "hack": {},
   "haggle": {},
-  "hanging": {},
+  "hanging": {
+    "definition": "Something fixed so it hangs, or the act of killing by rope."
+  },
   "harass": {},
-  "harvest": {},
+  "harvest": {
+    "definition": "The time when crops are collected, or to collect them."
+  },
   "hedgehog": {},
   "heifer": {},
   "heighten": {},
@@ -229,7 +275,9 @@
   "honk": {},
   "hostess": {},
   "hostile": {},
-  "house": {},
+  "house": {
+    "definition": "A building where people live."
+  },
   "humble": {},
   "immense": {},
   "imp": {},
@@ -251,23 +299,31 @@
   "isolate": {},
   "isolated": {},
   "jersey": {},
-  "jog": {},
+  "jog": {
+    "definition": "To run slowly for exercise."
+  },
   "juvenile": {},
   "lap": {},
   "lapse": {},
   "latent": {},
-  "launch": {},
+  "launch": {
+    "definition": "To send something into the air, or to start a new project."
+  },
   "lavatory": {},
   "legacy": {},
   "lethargy": {},
   "liaison": {},
   "linear": {},
-  "lodge": {},
+  "lodge": {
+    "definition": "A small house, or to stay somewhere as a paying guest."
+  },
   "loom": {},
   "lust": {},
   "macabre": {},
   "magnetic": {},
-  "man": {},
+  "man": {
+    "definition": "An adult male person."
+  },
   "manicure": {},
   "marginal": {},
   "marvel": {},
@@ -284,7 +340,9 @@
   "muscular": {},
   "naive": {},
   "naivety": {},
-  "nature": {},
+  "nature": {
+    "definition": "Everything in the world not made by people, such as plants and animals."
+  },
   "niche": {},
   "norms": {},
   "notable": {},
@@ -294,14 +352,20 @@
   "occupant": {},
   "oddity": {},
   "orchard": {},
-  "orphan": {},
+  "orphan": {
+    "definition": "A child whose parents have died."
+  },
   "otter": {},
   "outset": {},
   "overalls": {},
   "oversee": {},
   "overseer": {},
-  "pace": {},
-  "paddle": {},
+  "pace": {
+    "definition": "The speed at which something happens."
+  },
+  "paddle": {
+    "definition": "A short oar used to move a small boat."
+  },
   "panorama": {},
   "parasite": {
     "definition": "An organism that lives on or in another organism and takes from it."
@@ -313,7 +377,9 @@
   "peasant": {},
   "pedicure": {},
   "pendulum": {},
-  "perfect": {},
+  "perfect": {
+    "definition": "So good that nothing could be better."
+  },
   "physique": {},
   "pigeon": {},
   "pinnacle": {},
@@ -348,9 +414,13 @@
   "provoke": {},
   "prowl": {},
   "psyche": {},
-  "pupil": {},
+  "pupil": {
+    "definition": "A child at school, or the dark centre of the eye."
+  },
   "purity": {},
-  "puzzle": {},
+  "puzzle": {
+    "definition": "A game or question that needs thinking to solve."
+  },
   "quarry": {},
   "query": {},
   "quest": {},
@@ -367,10 +437,14 @@
   "realist": {},
   "reap": {},
   "reassure": {},
-  "recall": {},
+  "recall": {
+    "definition": "To remember something, or to ask for a product to be returned."
+  },
   "recess": {},
   "recharge": {},
-  "recite": {},
+  "recite": {
+    "definition": "To say a poem or list aloud from memory."
+  },
   "reenact": {},
   "refresh": {},
   "relapse": {
@@ -386,11 +460,15 @@
   "resent": {},
   "resin": {},
   "resonate": {},
-  "resort": {},
+  "resort": {
+    "definition": "A place people go on holiday, or to do something as a last choice."
+  },
   "respite": {},
   "retrace": {},
   "revere": {},
-  "rich": {},
+  "rich": {
+    "definition": "Having a lot of money."
+  },
   "riveting": {},
   "robust": {},
   "rotate": {},
@@ -423,7 +501,9 @@
   "shambles": {},
   "shed": {},
   "showy": {},
-  "signal": {},
+  "signal": {
+    "definition": "A sound or movement that gives a message."
+  },
   "sketch": {},
   "slack": {},
   "slob": {},
@@ -475,7 +555,9 @@
   "timid": {},
   "tinker": {},
   "tomb": {},
-  "tone": {},
+  "tone": {
+    "definition": "The quality of a sound, or the way someone speaks."
+  },
   "torment": {},
   "tract": {},
   "tranquil": {},
@@ -484,7 +566,9 @@
   "trauma": {},
   "tread": {},
   "trying": {},
-  "tune": {},
+  "tune": {
+    "definition": "A series of musical notes that is easy to remember."
+  },
   "turmoil": {},
   "twitch": {},
   "tycoon": {},
@@ -504,13 +588,17 @@
   "vicious": {},
   "violet": {},
   "vitality": {},
-  "voice": {},
+  "voice": {
+    "definition": "The sound you make when you speak or sing."
+  },
   "wares": {},
   "wary": {},
   "washtub": {},
   "wayside": {},
   "wicked": {},
-  "wing": {},
+  "wing": {
+    "definition": "The part of a bird or plane that it flies with."
+  },
   "wizened": {},
   "woo": {},
   "wooded": {},

@@ -8,7 +8,9 @@
   "abolish": {
     "definition": "To officially end a system, rule, or practice."
   },
-  "abundant": {},
+  "abundant": {
+    "definition": "Existing in large amounts; more than enough."
+  },
   "accrue": {},
   "acreage": {},
   "additive": {},
@@ -19,7 +21,9 @@
   "adverse": {
     "definition": "Harmful or unfavourable."
   },
-  "agency": {},
+  "agency": {
+    "definition": "A business that arranges services for other people."
+  },
   "aghast": {},
   "agile": {},
   "agility": {},
@@ -64,7 +68,9 @@
   "bout": {},
   "brandish": {},
   "brevity": {},
-  "brief": {},
+  "brief": {
+    "definition": "Lasting only a short time, or using few words."
+  },
   "brim": {},
   "brink": {},
   "brood": {},
@@ -114,11 +120,15 @@
   "detract": {},
   "deviant": {},
   "diffuse": {},
-  "diligent": {},
+  "diligent": {
+    "definition": "Working hard and carefully."
+  },
   "diminish": {},
   "disperse": {},
   "distill": {},
-  "dive": {},
+  "dive": {
+    "definition": "To jump into water head first."
+  },
   "drabness": {},
   "dribble": {},
   "drudgery": {},
@@ -149,7 +159,9 @@
   "ethos": {},
   "euphoria": {},
   "euphoric": {},
-  "exact": {},
+  "exact": {
+    "definition": "Completely correct and precise."
+  },
   "exalted": {},
   "exorcism": {},
   "exorcist": {},
@@ -173,7 +185,9 @@
   "gambit": {},
   "gauche": {},
   "genomic": {},
-  "glint": {},
+  "glint": {
+    "definition": "A flash of light from a shiny surface."
+  },
   "glitz": {},
   "glitzy": {},
   "gout": {},
@@ -182,8 +196,12 @@
   "hamper": {},
   "hapless": {},
   "haughty": {},
-  "haven": {},
-  "hazard": {},
+  "haven": {
+    "definition": "A safe peaceful place."
+  },
+  "hazard": {
+    "definition": "Something that can be dangerous."
+  },
   "helm": {},
   "herald": {},
   "hermetic": {
@@ -235,7 +253,9 @@
   "menace": {},
   "menacing": {},
   "menial": {},
-  "mere": {},
+  "mere": {
+    "definition": "Nothing more than; only."
+  },
   "merger": {},
   "merit": {},
   "mesh": {},
@@ -271,9 +291,13 @@
   "pedestal": {},
   "perch": {},
   "perverse": {},
-  "phantom": {},
+  "phantom": {
+    "definition": "A ghost, or something imagined."
+  },
   "phase": {},
-  "plane": {},
+  "plane": {
+    "definition": "A vehicle with wings that flies through the air."
+  },
   "pluck": {},
   "plum": {},
   "plumage": {},
@@ -326,7 +350,9 @@
   "salivary": {},
   "scroll": {},
   "secular": {},
-  "secure": {},
+  "secure": {
+    "definition": "Safe and protected, or firmly fixed."
+  },
   "seedy": {},
   "seismic": {},
   "shamble": {},
@@ -356,7 +382,9 @@
   "stultify": {},
   "subsidy": {},
   "subsist": {},
-  "succeed": {},
+  "succeed": {
+    "definition": "To reach the goal you wanted."
+  },
   "succumb": {},
   "suffuse": {},
   "sulphur": {},
@@ -370,7 +398,9 @@
   "tactile": {},
   "tedium": {},
   "teem": {},
-  "temper": {},
+  "temper": {
+    "definition": "A tendency to become angry quickly."
+  },
   "tenacity": {},
   "tetchy": {},
   "thicket": {},
@@ -400,12 +430,16 @@
   "vortex": {},
   "wallow": {},
   "wane": {},
-  "wax": {},
+  "wax": {
+    "definition": "A soft substance that melts easily, used for candles."
+  },
   "wayward": {},
   "wheeze": {},
   "whir": {},
   "wistful": {},
-  "wither": {},
+  "wither": {
+    "definition": "To become weaker and dry up, as plants do."
+  },
   "wordage": {},
   "wrack": {},
   "zoology": {}
