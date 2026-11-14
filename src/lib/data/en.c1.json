@@ -1,609 +1,2006 @@
 {
-  "abound": {},
+  "abound": {
+    "type": "verb",
+    "definition": "To be full of, or to exist in large numbers."
+  },
   "absolute": {
-    "definition": "Complete and not limited in any way."
+    "definition": "Complete and not limited in any way.",
+    "type": "noun"
   },
-  "acidic": {},
-  "acoustic": {},
-  "acre": {},
-  "adjoin": {},
-  "advisory": {},
-  "agonize": {},
-  "aimless": {},
-  "alienate": {},
-  "align": {},
-  "allege": {},
-  "altruism": {},
-  "amateur": {},
-  "anchor": {},
-  "anchored": {},
+  "acidic": {
+    "type": "noun",
+    "definition": "Sour and sharp, like an acid."
+  },
+  "acoustic": {
+    "type": "adjective",
+    "definition": "Relating to sound or hearing."
+  },
+  "acre": {
+    "type": "noun",
+    "definition": "A unit of land area, about half a hectare."
+  },
+  "adjoin": {
+    "type": "verb",
+    "definition": "To be next to or join something."
+  },
+  "advisory": {
+    "type": "noun",
+    "definition": "Giving advice, or a warning about weather."
+  },
+  "agonize": {
+    "type": "verb",
+    "definition": "To suffer great mental pain, or worry a lot."
+  },
+  "aimless": {
+    "type": "adjective",
+    "definition": "Without a goal or direction."
+  },
+  "alienate": {
+    "type": "verb",
+    "definition": "To make someone feel alone or unfriendly."
+  },
+  "align": {
+    "type": "verb",
+    "definition": "To put things in a straight line."
+  },
+  "allege": {
+    "type": "verb",
+    "definition": "To say something without proof."
+  },
+  "altruism": {
+    "type": "noun",
+    "definition": "Caring for others without reward."
+  },
+  "amateur": {
+    "type": "noun",
+    "definition": "A person who does something for fun, not money."
+  },
+  "anchor": {
+    "type": "noun",
+    "definition": "A heavy metal object dropped to hold a boat still."
+  },
+  "anchored": {
+    "type": "adjective",
+    "definition": "Fixed firmly in place, or secured."
+  },
   "angle": {
-    "definition": "The space between two lines that meet, measured in degrees."
+    "definition": "The space between two lines that meet, measured in degrees.",
+    "type": "noun"
   },
-  "antics": {},
-  "apt": {},
-  "aqua": {},
-  "aquarium": {},
-  "avid": {},
-  "awe": {},
+  "antics": {
+    "type": "noun",
+    "definition": "Silly or playful actions."
+  },
+  "apt": {
+    "type": "noun",
+    "definition": "Suitable, or likely to do something."
+  },
+  "aqua": {
+    "type": "noun",
+    "definition": "A greenish-blue colour."
+  },
+  "aquarium": {
+    "type": "noun",
+    "definition": "A tank for keeping fish and water plants."
+  },
+  "avid": {
+    "type": "adjective",
+    "definition": "Very keen and enthusiastic."
+  },
+  "awe": {
+    "type": "noun",
+    "definition": "A feeling of great wonder and respect."
+  },
   "bald": {
-    "definition": "With no hair on the head."
+    "definition": "With no hair on the head.",
+    "type": "adjective"
   },
-  "batter": {},
-  "battered": {},
+  "batter": {
+    "type": "verb",
+    "definition": "To hit many times, or a thick liquid for cooking."
+  },
+  "battered": {
+    "type": "adjective",
+    "definition": "Hurt by being hit, or damaged by use."
+  },
   "battery": {
-    "definition": "An object that stores electricity for a device."
+    "definition": "An object that stores electricity for a device.",
+    "type": "noun"
   },
-  "bearded": {},
-  "benign": {},
-  "bequeath": {},
-  "bliss": {},
-  "blister": {},
+  "bearded": {
+    "type": "adjective",
+    "definition": "Having a beard."
+  },
+  "benign": {
+    "type": "noun",
+    "definition": "Gentle and kind, or not dangerous."
+  },
+  "bequeath": {
+    "type": "verb",
+    "definition": "To leave something to someone in a will."
+  },
+  "bliss": {
+    "type": "noun",
+    "definition": "Perfect happiness."
+  },
+  "blister": {
+    "type": "noun",
+    "definition": "A bubble of fluid on the skin, or to form one."
+  },
   "bloom": {
-    "definition": "To open into flowers."
+    "definition": "To open into flowers.",
+    "type": "verb"
   },
   "boast": {
-    "definition": "To talk with too much pride about yourself."
+    "definition": "To talk with too much pride about yourself.",
+    "type": "verb"
   },
-  "bouquet": {},
-  "bribe": {},
-  "bribery": {},
+  "bouquet": {
+    "type": "noun",
+    "definition": "A bunch of flowers."
+  },
+  "bribe": {
+    "type": "noun",
+    "definition": "Money given to make someone do something wrong."
+  },
+  "bribery": {
+    "type": "noun",
+    "definition": "The crime of giving money for favours."
+  },
   "brief": {
-    "definition": "Lasting only a short time, or using few words."
+    "definition": "Lasting only a short time, or using few words.",
+    "type": "noun"
   },
-  "bubbly": {},
-  "buffer": {},
-  "buffoon": {},
-  "bulk": {},
-  "bulky": {},
+  "bubbly": {
+    "type": "adjective",
+    "definition": "Full of bubbles, or lively and cheerful."
+  },
+  "buffer": {
+    "type": "noun",
+    "definition": "Something that softens a shock, or a temporary store."
+  },
+  "buffoon": {
+    "type": "noun",
+    "definition": "A silly person who makes others laugh."
+  },
+  "bulk": {
+    "type": "noun",
+    "definition": "The main part of something, or size."
+  },
+  "bulky": {
+    "type": "noun",
+    "definition": "Taking up much space; large and heavy."
+  },
   "burst": {
-    "definition": "To break open suddenly."
+    "definition": "To break open suddenly.",
+    "type": "verb"
   },
-  "buzzer": {},
-  "bypass": {},
+  "buzzer": {
+    "type": "noun",
+    "definition": "A device that makes a short buzzing sound."
+  },
+  "bypass": {
+    "type": "verb",
+    "definition": "To go around something, or a road that avoids a town."
+  },
   "calf": {
-    "definition": "A young cow, or the back part of the lower leg."
+    "definition": "A young cow, or the back part of the lower leg.",
+    "type": "noun"
   },
-  "calorie": {},
-  "campaign": {},
-  "candid": {},
-  "canoe": {},
-  "carrier": {},
-  "cast": {},
-  "cavity": {},
+  "calorie": {
+    "type": "noun",
+    "definition": "A unit of energy in food."
+  },
+  "campaign": {
+    "type": "noun",
+    "definition": "A planned series of actions for a goal."
+  },
+  "candid": {
+    "type": "noun",
+    "definition": "Honest and direct, or not posed."
+  },
+  "canoe": {
+    "type": "noun",
+    "definition": "A small narrow boat moved by a paddle."
+  },
+  "carrier": {
+    "type": "noun",
+    "definition": "A person or thing that carries, or a ship with planes."
+  },
+  "cast": {
+    "type": "verb",
+    "definition": "To throw, or a group of actors in a play."
+  },
+  "cavity": {
+    "type": "noun",
+    "definition": "A hole or empty space, as in a tooth."
+  },
   "chart": {
-    "definition": "A drawing that shows facts as a picture or a table."
+    "definition": "A drawing that shows facts as a picture or a table.",
+    "type": "noun"
   },
-  "charter": {},
-  "chauffer": {},
-  "chill": {},
-  "chilly": {},
-  "chisel": {},
-  "churn": {},
-  "citation": {},
-  "cite": {},
-  "clammy": {},
-  "clan": {},
+  "charter": {
+    "type": "noun",
+    "definition": "A written grant of rights, or to rent a plane."
+  },
+  "chauffer": {
+    "type": "noun",
+    "definition": "A person paid to drive someone."
+  },
+  "chill": {
+    "type": "verb",
+    "definition": "To cool, or a feeling of cold."
+  },
+  "chilly": {
+    "type": "adjective",
+    "definition": "Rather cold."
+  },
+  "chisel": {
+    "type": "noun",
+    "definition": "A sharp tool for cutting stone, or to cheat."
+  },
+  "churn": {
+    "type": "verb",
+    "definition": "To stir cream into butter, or to upset the stomach."
+  },
+  "citation": {
+    "type": "noun",
+    "definition": "A mention of a source, or a legal notice."
+  },
+  "cite": {
+    "type": "verb",
+    "definition": "To refer to a source, or to name as an example."
+  },
+  "clammy": {
+    "type": "noun",
+    "definition": "Damp and sticky, as skin in fear."
+  },
+  "clan": {
+    "type": "noun",
+    "definition": "A close group of families."
+  },
   "class": {
-    "definition": "A group of students who learn together, or one lesson."
+    "definition": "A group of students who learn together, or one lesson.",
+    "type": "noun"
   },
-  "classy": {},
-  "clench": {},
-  "climax": {},
-  "clinical": {},
-  "cloak": {},
-  "clutch": {},
-  "clutter": {},
-  "commend": {},
-  "compel": {},
-  "comply": {},
-  "comprise": {},
-  "con": {},
-  "conceive": {},
-  "concerto": {},
-  "concur": {},
-  "confide": {},
-  "conform": {},
-  "conjure": {},
-  "conserve": {},
+  "classy": {
+    "type": "noun",
+    "definition": "Stylish and elegant."
+  },
+  "clench": {
+    "type": "verb",
+    "definition": "To close the hand tightly, or the teeth."
+  },
+  "climax": {
+    "type": "noun",
+    "definition": "The most exciting or important point."
+  },
+  "clinical": {
+    "type": "noun",
+    "definition": "Cold and unemotional, or of a clinic."
+  },
+  "cloak": {
+    "type": "noun",
+    "definition": "A loose outer garment, or to hide."
+  },
+  "clutch": {
+    "type": "verb",
+    "definition": "To hold tightly, or a device that joins parts."
+  },
+  "clutter": {
+    "type": "noun",
+    "definition": "A messy collection of things."
+  },
+  "commend": {
+    "type": "verb",
+    "definition": "To praise or approve of someone."
+  },
+  "compel": {
+    "type": "verb",
+    "definition": "To force someone to do something."
+  },
+  "comply": {
+    "type": "verb",
+    "definition": "To do what is asked or required."
+  },
+  "comprise": {
+    "type": "verb",
+    "definition": "To consist of, or contain."
+  },
+  "con": {
+    "type": "noun",
+    "definition": "Against, or to trick someone."
+  },
+  "conceive": {
+    "type": "verb",
+    "definition": "To think of an idea; to become pregnant."
+  },
+  "concerto": {
+    "type": "noun",
+    "definition": "A piece of music for a solo instrument and orchestra."
+  },
+  "concur": {
+    "type": "verb",
+    "definition": "To agree with someone."
+  },
+  "confide": {
+    "type": "verb",
+    "definition": "To tell someone a secret."
+  },
+  "conform": {
+    "type": "verb",
+    "definition": "To follow rules or what others do."
+  },
+  "conjure": {
+    "type": "verb",
+    "definition": "To call up, as magic, or to think of something."
+  },
+  "conserve": {
+    "type": "verb",
+    "definition": "To protect, or use carefully."
+  },
   "contest": {
-    "definition": "A competition in which people try to win."
+    "definition": "A competition in which people try to win.",
+    "type": "noun"
   },
-  "contract": {},
-  "convict": {},
-  "corps": {},
-  "coupled": {},
-  "coverage": {},
+  "contract": {
+    "type": "noun",
+    "definition": "A binding agreement, or to catch a disease."
+  },
+  "convict": {
+    "type": "noun",
+    "definition": "A person found guilty, or to prove guilty."
+  },
+  "corps": {
+    "type": "noun",
+    "definition": "A large group of soldiers or workers."
+  },
+  "coupled": {
+    "type": "adjective",
+    "definition": "Joined together, or in a pair."
+  },
+  "coverage": {
+    "type": "noun",
+    "definition": "The reporting of an event, or protection."
+  },
   "craft": {
-    "definition": "A skill in making things by hand, or a boat."
+    "definition": "A skill in making things by hand, or a boat.",
+    "type": "noun"
   },
-  "crave": {},
-  "craving": {},
-  "creamy": {},
-  "credible": {},
-  "criteria": {},
-  "crude": {},
-  "crumb": {},
-  "crumble": {},
-  "cynic": {},
-  "cynical": {},
-  "cynicism": {},
-  "darkroom": {},
-  "daunt": {},
-  "daunting": {},
-  "daydream": {},
-  "debut": {},
-  "deceit": {},
-  "degrade": {},
-  "demise": {},
-  "demo": {},
-  "depict": {},
-  "descent": {},
+  "crave": {
+    "type": "verb",
+    "definition": "To want something very much."
+  },
+  "craving": {
+    "type": "noun",
+    "definition": "A strong wish for something."
+  },
+  "creamy": {
+    "type": "noun",
+    "definition": "Soft and pale, like cream."
+  },
+  "credible": {
+    "type": "noun",
+    "definition": "Believable and trustworthy."
+  },
+  "criteria": {
+    "type": "noun",
+    "definition": "The standards used to judge something."
+  },
+  "crude": {
+    "type": "noun",
+    "definition": "Rough and not finished, or rude."
+  },
+  "crumb": {
+    "type": "noun",
+    "definition": "A tiny piece of bread."
+  },
+  "crumble": {
+    "type": "verb",
+    "definition": "To break into small pieces."
+  },
+  "cynic": {
+    "type": "noun",
+    "definition": "A person who trusts no one."
+  },
+  "cynical": {
+    "type": "noun",
+    "definition": "Believing people act only from self-interest."
+  },
+  "cynicism": {
+    "type": "noun",
+    "definition": "Distrust of other people's motives."
+  },
+  "darkroom": {
+    "type": "noun",
+    "definition": "A room without light for developing photos."
+  },
+  "daunt": {
+    "type": "verb",
+    "definition": "To make someone feel afraid or less confident."
+  },
+  "daunting": {
+    "type": "adjective",
+    "definition": "Making someone feel afraid or discouraged."
+  },
+  "daydream": {
+    "type": "noun",
+    "definition": "A pleasant thought while awake."
+  },
+  "debut": {
+    "type": "noun",
+    "definition": "A first public appearance."
+  },
+  "deceit": {
+    "type": "noun",
+    "definition": "The act of tricking someone."
+  },
+  "degrade": {
+    "type": "verb",
+    "definition": "To lower in quality, or to shame."
+  },
+  "demise": {
+    "type": "noun",
+    "definition": "Death, or the end of something."
+  },
+  "demo": {
+    "type": "noun",
+    "definition": "Short for demonstration, or a sample recording."
+  },
+  "depict": {
+    "type": "verb",
+    "definition": "To show or describe in art or words."
+  },
+  "descent": {
+    "type": "noun",
+    "definition": "The act of coming down, or family origin."
+  },
   "desert": {
-    "definition": "A large dry area of land with almost no rain."
+    "definition": "A large dry area of land with almost no rain.",
+    "type": "noun"
   },
-  "detest": {},
-  "detritus": {},
-  "devotee": {},
-  "discard": {},
-  "disdain": {},
-  "dislodge": {},
-  "dismal": {},
-  "dismay": {},
-  "dispense": {},
-  "dissect": {},
-  "dither": {},
-  "diverge": {},
-  "docile": {},
-  "dominant": {},
-  "drawback": {},
+  "detest": {
+    "type": "verb",
+    "definition": "To hate very much."
+  },
+  "detritus": {
+    "type": "noun",
+    "definition": "Small pieces of waste or rubble."
+  },
+  "devotee": {
+    "type": "noun",
+    "definition": "A person very devoted to something."
+  },
+  "discard": {
+    "type": "verb",
+    "definition": "To throw away."
+  },
+  "disdain": {
+    "type": "noun",
+    "definition": "A feeling that something is not worth respect."
+  },
+  "dislodge": {
+    "type": "verb",
+    "definition": "To force something out of its place."
+  },
+  "dismal": {
+    "type": "adjective",
+    "definition": "Very bad, or depressing."
+  },
+  "dismay": {
+    "type": "noun",
+    "definition": "A feeling of shock and disappointment."
+  },
+  "dispense": {
+    "type": "verb",
+    "definition": "To give out, or to do without."
+  },
+  "dissect": {
+    "type": "verb",
+    "definition": "To cut apart, or to analyse in detail."
+  },
+  "dither": {
+    "type": "verb",
+    "definition": "To be unable to decide."
+  },
+  "diverge": {
+    "type": "verb",
+    "definition": "To move apart, or differ."
+  },
+  "docile": {
+    "type": "adjective",
+    "definition": "Easy to manage or teach."
+  },
+  "dominant": {
+    "type": "adjective",
+    "definition": "Most important, or controlling."
+  },
+  "drawback": {
+    "type": "noun",
+    "definition": "A disadvantage."
+  },
   "drill": {
-    "definition": "A tool that makes holes, or an exercise that is repeated."
+    "definition": "A tool that makes holes, or an exercise that is repeated.",
+    "type": "noun"
   },
   "drive": {
-    "definition": "To make a car or other vehicle move and steer it."
+    "definition": "To make a car or other vehicle move and steer it.",
+    "type": "verb"
   },
-  "durable": {},
-  "duration": {},
-  "dutiful": {},
-  "eclectic": {},
+  "durable": {
+    "type": "adjective",
+    "definition": "Able to last a long time."
+  },
+  "duration": {
+    "type": "adjective",
+    "definition": "How long something lasts."
+  },
+  "dutiful": {
+    "type": "noun",
+    "definition": "Doing what is expected; obedient."
+  },
+  "eclectic": {
+    "type": "noun",
+    "definition": "Made of things from many different sources."
+  },
   "ecstasy": {
-    "definition": "A feeling of great happiness."
+    "definition": "A feeling of great happiness.",
+    "type": "noun"
   },
-  "ecstatic": {},
-  "ego": {},
-  "elastic": {},
-  "elevate": {},
-  "elitist": {},
+  "ecstatic": {
+    "type": "adjective",
+    "definition": "Extremely happy."
+  },
+  "ego": {
+    "type": "noun",
+    "definition": "A person's sense of self-importance."
+  },
+  "elastic": {
+    "type": "adjective",
+    "definition": "Able to stretch and return."
+  },
+  "elevate": {
+    "type": "verb",
+    "definition": "To lift up, or promote."
+  },
+  "elitist": {
+    "type": "noun",
+    "definition": "Believing a select group is best."
+  },
   "elongate": {
-    "definition": "To make or become longer."
+    "definition": "To make or become longer.",
+    "type": "verb"
   },
-  "elude": {},
-  "elusive": {},
-  "embark": {},
+  "elude": {
+    "type": "verb",
+    "definition": "To escape or avoid."
+  },
+  "elusive": {
+    "type": "adjective",
+    "definition": "Hard to find or catch."
+  },
+  "embark": {
+    "type": "verb",
+    "definition": "To begin a journey or project."
+  },
   "engineer": {
-    "definition": "A person who designs machines, roads, or buildings."
+    "definition": "A person who designs machines, roads, or buildings.",
+    "type": "noun"
   },
-  "engross": {},
-  "envisage": {},
-  "ethical": {},
-  "evoke": {},
-  "ewe": {},
-  "exert": {},
-  "exhaust": {},
-  "exodus": {},
-  "exotic": {},
-  "expedite": {},
-  "expire": {},
-  "exploit": {},
-  "exterior": {},
-  "facial": {},
-  "faction": {},
-  "fanatic": {},
-  "fanciful": {},
-  "farce": {},
-  "fatality": {},
-  "fatigue": {},
-  "fiddle": {},
-  "fiddler": {},
-  "fiddly": {},
-  "fiend": {},
-  "fiendish": {},
-  "firewall": {},
+  "engross": {
+    "type": "verb",
+    "definition": "To take all of someone's attention."
+  },
+  "envisage": {
+    "type": "verb",
+    "definition": "To imagine something in the future."
+  },
+  "ethical": {
+    "type": "adjective",
+    "definition": "Relating to what is right and wrong."
+  },
+  "evoke": {
+    "type": "verb",
+    "definition": "To bring a memory or feeling to mind."
+  },
+  "ewe": {
+    "type": "noun",
+    "definition": "A female sheep."
+  },
+  "exert": {
+    "type": "verb",
+    "definition": "To use force or effort."
+  },
+  "exhaust": {
+    "type": "verb",
+    "definition": "To use up, or to make very tired."
+  },
+  "exodus": {
+    "type": "noun",
+    "definition": "A large group leaving a place."
+  },
+  "exotic": {
+    "type": "noun",
+    "definition": "From far away; strikingly unusual."
+  },
+  "expedite": {
+    "type": "verb",
+    "definition": "To speed up a process."
+  },
+  "expire": {
+    "type": "verb",
+    "definition": "To come to an end, or to die."
+  },
+  "exploit": {
+    "type": "verb",
+    "definition": "To use unfairly, or a brave act."
+  },
+  "exterior": {
+    "type": "noun",
+    "definition": "The outside of something."
+  },
+  "facial": {
+    "type": "adjective",
+    "definition": "Relating to the face."
+  },
+  "faction": {
+    "type": "noun",
+    "definition": "A small group inside a larger one."
+  },
+  "fanatic": {
+    "type": "noun",
+    "definition": "A person with extreme enthusiasm."
+  },
+  "fanciful": {
+    "type": "noun",
+    "definition": "Imaginative, or not based on fact."
+  },
+  "farce": {
+    "type": "noun",
+    "definition": "A joke, or a silly situation."
+  },
+  "fatality": {
+    "type": "noun",
+    "definition": "A death caused by an accident or disease."
+  },
+  "fatigue": {
+    "type": "noun",
+    "definition": "Great tiredness, or to tire."
+  },
+  "fiddle": {
+    "type": "verb",
+    "definition": "To play with something nervously, or a violin."
+  },
+  "fiddler": {
+    "type": "noun",
+    "definition": "A person who plays the violin."
+  },
+  "fiddly": {
+    "type": "adverb",
+    "definition": "Needing careful small movements."
+  },
+  "fiend": {
+    "type": "noun",
+    "definition": "A wicked person, or someone addicted."
+  },
+  "fiendish": {
+    "type": "adjective",
+    "definition": "Very cruel or clever."
+  },
+  "firewall": {
+    "type": "noun",
+    "definition": "A wall to stop fire, or a computer safety system."
+  },
   "firm": {
-    "definition": "Hard and solid, or a business company."
+    "definition": "Hard and solid, or a business company.",
+    "type": "adjective"
   },
-  "fissure": {},
+  "fissure": {
+    "type": "noun",
+    "definition": "A crack in something."
+  },
   "fit": {
-    "definition": "The right size, or healthy."
+    "definition": "The right size, or healthy.",
+    "type": "noun"
   },
-  "fixture": {},
-  "flask": {},
-  "flatter": {},
-  "flattery": {},
-  "flick": {},
-  "flicker": {},
-  "flourish": {},
-  "folktale": {},
-  "forensic": {},
-  "forfeit": {},
-  "fossil": {},
-  "fraction": {},
+  "fixture": {
+    "type": "noun",
+    "definition": "Something fixed in place, or a regular event."
+  },
+  "flask": {
+    "type": "noun",
+    "definition": "A small bottle with a narrow neck."
+  },
+  "flatter": {
+    "type": "verb",
+    "definition": "To praise too much to gain favour."
+  },
+  "flattery": {
+    "type": "noun",
+    "definition": "Excessive praise, often not true."
+  },
+  "flick": {
+    "type": "noun",
+    "definition": "A quick light movement, or to move so."
+  },
+  "flicker": {
+    "type": "verb",
+    "definition": "To shine unsteadily."
+  },
+  "flourish": {
+    "type": "verb",
+    "definition": "To grow well, or a bold gesture."
+  },
+  "folktale": {
+    "type": "noun",
+    "definition": "A traditional story of a people."
+  },
+  "forensic": {
+    "type": "adjective",
+    "definition": "Relating to courts or scientific proof."
+  },
+  "forfeit": {
+    "type": "verb",
+    "definition": "To lose something as a penalty."
+  },
+  "fossil": {
+    "type": "noun",
+    "definition": "The remains of an ancient plant or animal."
+  },
+  "fraction": {
+    "type": "noun",
+    "definition": "A part of a whole, or a small piece."
+  },
   "frost": {
-    "definition": "A thin layer of ice that forms on cold surfaces."
+    "definition": "A thin layer of ice that forms on cold surfaces.",
+    "type": "noun"
   },
-  "frosty": {},
-  "fuse": {},
-  "fusion": {},
-  "gadget": {},
-  "gape": {},
-  "gem": {},
-  "genome": {},
-  "ghostly": {},
-  "gig": {},
-  "glean": {},
-  "glum": {},
-  "gnaw": {},
-  "goose": {},
-  "gourmet": {},
-  "graft": {},
+  "frosty": {
+    "type": "adjective",
+    "definition": "Covered with frost, or cold in manner."
+  },
+  "fuse": {
+    "type": "noun",
+    "definition": "A device that stops too much current, or to join."
+  },
+  "fusion": {
+    "type": "noun",
+    "definition": "The joining of two things into one."
+  },
+  "gadget": {
+    "type": "noun",
+    "definition": "A small clever device."
+  },
+  "gape": {
+    "type": "verb",
+    "definition": "To stare with the mouth open."
+  },
+  "gem": {
+    "type": "noun",
+    "definition": "A precious stone, or something excellent."
+  },
+  "genome": {
+    "type": "noun",
+    "definition": "The full set of genes in an organism."
+  },
+  "ghostly": {
+    "type": "adjective",
+    "definition": "Like a ghost, or pale and faint."
+  },
+  "gig": {
+    "type": "noun",
+    "definition": "A short job, or a performance."
+  },
+  "glean": {
+    "type": "verb",
+    "definition": "To collect information bit by bit."
+  },
+  "glum": {
+    "type": "noun",
+    "definition": "Sad and quiet."
+  },
+  "gnaw": {
+    "type": "verb",
+    "definition": "To bite and chew at something."
+  },
+  "goose": {
+    "type": "noun",
+    "definition": "A large water bird, or a foolish person."
+  },
+  "gourmet": {
+    "type": "noun",
+    "definition": "A person who knows good food."
+  },
+  "graft": {
+    "type": "verb",
+    "definition": "To join plants, or to work hard."
+  },
   "ground": {
-    "definition": "The surface of the earth you stand on."
+    "definition": "The surface of the earth you stand on.",
+    "type": "noun"
   },
-  "grounds": {},
-  "gruesome": {},
-  "grumble": {},
-  "gush": {},
-  "gushing": {},
-  "gusto": {},
-  "gutsy": {},
-  "gypsy": {},
-  "hack": {},
-  "haggle": {},
+  "grounds": {
+    "type": "noun",
+    "definition": "Reasons, or land around a building."
+  },
+  "gruesome": {
+    "type": "adjective",
+    "definition": "Very unpleasant and shocking."
+  },
+  "grumble": {
+    "type": "verb",
+    "definition": "To complain in a low voice."
+  },
+  "gush": {
+    "type": "verb",
+    "definition": "To flow out fast, or to speak too warmly."
+  },
+  "gushing": {
+    "type": "adjective",
+    "definition": "Flowing out, or showing too much feeling."
+  },
+  "gusto": {
+    "type": "noun",
+    "definition": "Great enjoyment and energy."
+  },
+  "gutsy": {
+    "type": "noun",
+    "definition": "Brave and determined."
+  },
+  "gypsy": {
+    "type": "noun",
+    "definition": "A member of a travelling people, or a free spirit."
+  },
+  "hack": {
+    "type": "verb",
+    "definition": "To cut roughly, or to break into a computer."
+  },
+  "haggle": {
+    "type": "verb",
+    "definition": "To argue about a price."
+  },
   "hanging": {
-    "definition": "Something fixed so it hangs, or the act of killing by rope."
+    "definition": "Something fixed so it hangs, or the act of killing by rope.",
+    "type": "adjective"
   },
-  "harass": {},
+  "harass": {
+    "type": "verb",
+    "definition": "To trouble someone repeatedly."
+  },
   "harvest": {
-    "definition": "The time when crops are collected, or to collect them."
+    "definition": "The time when crops are collected, or to collect them.",
+    "type": "noun"
   },
-  "hedgehog": {},
-  "heifer": {},
-  "heighten": {},
-  "heroine": {},
-  "homely": {},
-  "honk": {},
-  "hostess": {},
-  "hostile": {},
+  "hedgehog": {
+    "type": "noun",
+    "definition": "A small animal with spines."
+  },
+  "heifer": {
+    "type": "noun",
+    "definition": "A young cow that has not had a calf."
+  },
+  "heighten": {
+    "type": "verb",
+    "definition": "To make higher or stronger."
+  },
+  "heroine": {
+    "type": "noun",
+    "definition": "A woman admired for bravery."
+  },
+  "homely": {
+    "type": "adverb",
+    "definition": "Simple and cozy, or plain-looking."
+  },
+  "honk": {
+    "type": "verb",
+    "definition": "To make the sound of a horn, or of a goose."
+  },
+  "hostess": {
+    "type": "noun",
+    "definition": "A woman who receives guests."
+  },
+  "hostile": {
+    "type": "noun",
+    "definition": "Unfriendly, or against someone."
+  },
   "house": {
-    "definition": "A building where people live."
+    "definition": "A building where people live.",
+    "type": "noun"
   },
-  "humble": {},
-  "immense": {},
-  "imp": {},
-  "impede": {},
-  "impish": {},
-  "incision": {},
-  "incisor": {},
-  "induct": {},
-  "inherent": {},
-  "innovate": {},
-  "insecure": {},
+  "humble": {
+    "type": "adjective",
+    "definition": "Not proud; modest."
+  },
+  "immense": {
+    "type": "adjective",
+    "definition": "Extremely large."
+  },
+  "imp": {
+    "type": "noun",
+    "definition": "A small mischievous spirit, or a bad child."
+  },
+  "impede": {
+    "type": "verb",
+    "definition": "To slow or block progress."
+  },
+  "impish": {
+    "type": "noun",
+    "definition": "Playfully naughty."
+  },
+  "incision": {
+    "type": "noun",
+    "definition": "A cut made during surgery."
+  },
+  "incisor": {
+    "type": "noun",
+    "definition": "A front tooth for cutting food."
+  },
+  "induct": {
+    "type": "verb",
+    "definition": "To formally bring someone into a group."
+  },
+  "inherent": {
+    "type": "noun",
+    "definition": "Existing as a natural part of something."
+  },
+  "innovate": {
+    "type": "verb",
+    "definition": "To introduce something new."
+  },
+  "insecure": {
+    "type": "adjective",
+    "definition": "Not safe, or lacking confidence."
+  },
   "integral": {
-    "definition": "Necessary and important as part of a whole."
+    "definition": "Necessary and important as part of a whole.",
+    "type": "noun"
   },
-  "intuit": {},
-  "invoice": {},
-  "irate": {},
-  "irony": {},
-  "isolate": {},
-  "isolated": {},
-  "jersey": {},
+  "intuit": {
+    "type": "verb",
+    "definition": "To know something without reasoning."
+  },
+  "invoice": {
+    "type": "noun",
+    "definition": "A list of goods with prices to pay."
+  },
+  "irate": {
+    "type": "adjective",
+    "definition": "Very angry."
+  },
+  "irony": {
+    "type": "noun",
+    "definition": "The opposite of what is expected, said with humour."
+  },
+  "isolate": {
+    "type": "verb",
+    "definition": "To keep apart from others."
+  },
+  "isolated": {
+    "type": "adjective",
+    "definition": "Alone, or far from others."
+  },
+  "jersey": {
+    "type": "noun",
+    "definition": "A knitted warm top, or a sports shirt."
+  },
   "jog": {
-    "definition": "To run slowly for exercise."
+    "definition": "To run slowly for exercise.",
+    "type": "verb"
   },
-  "juvenile": {},
-  "lap": {},
-  "lapse": {},
-  "latent": {},
+  "juvenile": {
+    "type": "noun",
+    "definition": "Young, or for young people."
+  },
+  "lap": {
+    "type": "noun",
+    "definition": "The top of the thighs when seated, or to move around."
+  },
+  "lapse": {
+    "type": "noun",
+    "definition": "A temporary failure, or a short break."
+  },
+  "latent": {
+    "type": "noun",
+    "definition": "Present but not yet active."
+  },
   "launch": {
-    "definition": "To send something into the air, or to start a new project."
+    "definition": "To send something into the air, or to start a new project.",
+    "type": "verb"
   },
-  "lavatory": {},
-  "legacy": {},
-  "lethargy": {},
-  "liaison": {},
-  "linear": {},
+  "lavatory": {
+    "type": "noun",
+    "definition": "A room with a toilet, or a sink."
+  },
+  "legacy": {
+    "type": "noun",
+    "definition": "Something left from the past, or money in a will."
+  },
+  "lethargy": {
+    "type": "noun",
+    "definition": "A lack of energy; sleepiness."
+  },
+  "liaison": {
+    "type": "noun",
+    "definition": "Communication between groups, or a secret affair."
+  },
+  "linear": {
+    "type": "adjective",
+    "definition": "In a straight line."
+  },
   "lodge": {
-    "definition": "A small house, or to stay somewhere as a paying guest."
+    "definition": "A small house, or to stay somewhere as a paying guest.",
+    "type": "noun"
   },
-  "loom": {},
-  "lust": {},
-  "macabre": {},
-  "magnetic": {},
+  "loom": {
+    "type": "noun",
+    "definition": "A machine for weaving, or to appear darkly."
+  },
+  "lust": {
+    "type": "noun",
+    "definition": "A very strong desire, often sexual."
+  },
+  "macabre": {
+    "type": "adjective",
+    "definition": "Connected with death in a frightening way."
+  },
+  "magnetic": {
+    "type": "adjective",
+    "definition": "Having the power of a magnet, or charming."
+  },
   "man": {
-    "definition": "An adult male person."
+    "definition": "An adult male person.",
+    "type": "noun"
   },
-  "manicure": {},
-  "marginal": {},
-  "marvel": {},
-  "maternal": {},
-  "midwife": {},
-  "mingle": {},
-  "minutiae": {},
+  "manicure": {
+    "type": "noun",
+    "definition": "A beauty treatment for hands and nails."
+  },
+  "marginal": {
+    "type": "noun",
+    "definition": "Small and not important, or at the edge."
+  },
+  "marvel": {
+    "type": "verb",
+    "definition": "To feel great surprise, or a wonder."
+  },
+  "maternal": {
+    "type": "adjective",
+    "definition": "Relating to a mother."
+  },
+  "midwife": {
+    "type": "noun",
+    "definition": "A person who helps at births."
+  },
+  "mingle": {
+    "type": "verb",
+    "definition": "To mix with others socially."
+  },
+  "minutiae": {
+    "type": "noun",
+    "definition": "Small details."
+  },
   "misplace": {
-    "definition": "To put something somewhere and then be unable to find it."
+    "definition": "To put something somewhere and then be unable to find it.",
+    "type": "verb"
   },
-  "monotony": {},
-  "motley": {},
-  "munch": {},
-  "muscular": {},
-  "naive": {},
-  "naivety": {},
+  "monotony": {
+    "type": "noun",
+    "definition": "Boring sameness."
+  },
+  "motley": {
+    "type": "noun",
+    "definition": "Made of many different parts."
+  },
+  "munch": {
+    "type": "verb",
+    "definition": "To eat noisily."
+  },
+  "muscular": {
+    "type": "noun",
+    "definition": "Strong and with muscles."
+  },
+  "naive": {
+    "type": "adjective",
+    "definition": "Too simple and trusting."
+  },
+  "naivety": {
+    "type": "noun",
+    "definition": "The state of being too trusting."
+  },
   "nature": {
-    "definition": "Everything in the world not made by people, such as plants and animals."
+    "definition": "Everything in the world not made by people, such as plants and animals.",
+    "type": "noun"
   },
-  "niche": {},
-  "norms": {},
-  "notable": {},
-  "numb": {},
-  "oblige": {},
-  "obscure": {},
-  "occupant": {},
-  "oddity": {},
-  "orchard": {},
+  "niche": {
+    "type": "noun",
+    "definition": "A small space, or a special market."
+  },
+  "norms": {
+    "type": "noun",
+    "definition": "The usual standards in a group."
+  },
+  "notable": {
+    "type": "adjective",
+    "definition": "Worthy of notice; important."
+  },
+  "numb": {
+    "type": "adjective",
+    "definition": "Without feeling, or unable to think."
+  },
+  "oblige": {
+    "type": "verb",
+    "definition": "To help someone, or to force."
+  },
+  "obscure": {
+    "type": "adjective",
+    "definition": "Not clear, or to hide."
+  },
+  "occupant": {
+    "type": "noun",
+    "definition": "A person living in or using a place."
+  },
+  "oddity": {
+    "type": "noun",
+    "definition": "A strange thing or person."
+  },
+  "orchard": {
+    "type": "noun",
+    "definition": "A field of fruit trees."
+  },
   "orphan": {
-    "definition": "A child whose parents have died."
+    "definition": "A child whose parents have died.",
+    "type": "noun"
   },
-  "otter": {},
-  "outset": {},
-  "overalls": {},
-  "oversee": {},
-  "overseer": {},
+  "otter": {
+    "type": "noun",
+    "definition": "A playful water animal."
+  },
+  "outset": {
+    "type": "noun",
+    "definition": "The beginning of something."
+  },
+  "overalls": {
+    "type": "noun",
+    "definition": "A one-piece work garment."
+  },
+  "oversee": {
+    "type": "verb",
+    "definition": "To watch over and direct."
+  },
+  "overseer": {
+    "type": "noun",
+    "definition": "A person who watches over workers."
+  },
   "pace": {
-    "definition": "The speed at which something happens."
+    "definition": "The speed at which something happens.",
+    "type": "noun"
   },
   "paddle": {
-    "definition": "A short oar used to move a small boat."
+    "definition": "A short oar used to move a small boat.",
+    "type": "noun"
   },
-  "panorama": {},
+  "panorama": {
+    "type": "noun",
+    "definition": "A wide view of a large area."
+  },
   "parasite": {
-    "definition": "An organism that lives on or in another organism and takes from it."
+    "definition": "An organism that lives on or in another organism and takes from it.",
+    "type": "noun"
   },
-  "paternal": {},
-  "pathos": {},
-  "paywall": {},
-  "peacock": {},
-  "peasant": {},
-  "pedicure": {},
-  "pendulum": {},
+  "paternal": {
+    "type": "adjective",
+    "definition": "Relating to a father."
+  },
+  "pathos": {
+    "type": "noun",
+    "definition": "A feeling of pity or sadness."
+  },
+  "paywall": {
+    "type": "noun",
+    "definition": "A system that charges for online content."
+  },
+  "peacock": {
+    "type": "noun",
+    "definition": "A bird with a large colourful tail."
+  },
+  "peasant": {
+    "type": "noun",
+    "definition": "A poor farmer of low status."
+  },
+  "pedicure": {
+    "type": "noun",
+    "definition": "A beauty treatment for feet and nails."
+  },
+  "pendulum": {
+    "type": "noun",
+    "definition": "A weight swinging from a fixed point."
+  },
   "perfect": {
-    "definition": "So good that nothing could be better."
+    "definition": "So good that nothing could be better.",
+    "type": "adjective"
   },
-  "physique": {},
-  "pigeon": {},
-  "pinnacle": {},
-  "pioneer": {},
-  "placid": {},
-  "plague": {},
-  "plaque": {},
+  "physique": {
+    "type": "noun",
+    "definition": "The shape and build of a body."
+  },
+  "pigeon": {
+    "type": "noun",
+    "definition": "A common city bird, or to cheat someone."
+  },
+  "pinnacle": {
+    "type": "noun",
+    "definition": "The highest point, or a tall peak."
+  },
+  "pioneer": {
+    "type": "noun",
+    "definition": "A person who goes first into a new field."
+  },
+  "placid": {
+    "type": "noun",
+    "definition": "Calm and peaceful."
+  },
+  "plague": {
+    "type": "noun",
+    "definition": "A deadly disease, or a great trouble."
+  },
+  "plaque": {
+    "type": "noun",
+    "definition": "A flat piece of metal with words, or a tooth deposit."
+  },
   "plaster": {
-    "definition": "A material spread on walls or used to cover an injury."
+    "definition": "A material spread on walls or used to cover an injury.",
+    "type": "noun"
   },
-  "ploy": {},
-  "plumbing": {},
-  "plummet": {},
-  "plunge": {},
-  "poetess": {},
-  "poise": {},
-  "portable": {},
-  "portray": {},
-  "pose": {},
-  "posture": {},
-  "pounce": {},
-  "preach": {},
-  "preacher": {},
-  "premier": {},
-  "premise": {},
-  "premises": {},
-  "profess": {},
-  "profound": {},
-  "prolific": {},
-  "prop": {},
-  "prophet": {},
-  "provoke": {},
-  "prowl": {},
-  "psyche": {},
+  "ploy": {
+    "type": "noun",
+    "definition": "A clever trick to gain an advantage."
+  },
+  "plumbing": {
+    "type": "noun",
+    "definition": "The pipes and system for water in a building."
+  },
+  "plummet": {
+    "type": "verb",
+    "definition": "To fall straight down fast."
+  },
+  "plunge": {
+    "type": "verb",
+    "definition": "To jump or fall into something suddenly."
+  },
+  "poetess": {
+    "type": "noun",
+    "definition": "A woman poet."
+  },
+  "poise": {
+    "type": "noun",
+    "definition": "Balance and calm composure."
+  },
+  "portable": {
+    "type": "adjective",
+    "definition": "Able to be carried easily."
+  },
+  "portray": {
+    "type": "verb",
+    "definition": "To play a role, or describe something."
+  },
+  "pose": {
+    "type": "verb",
+    "definition": "To put the body in a position, or a problem."
+  },
+  "posture": {
+    "type": "noun",
+    "definition": "The way the body is held, or an attitude."
+  },
+  "pounce": {
+    "type": "verb",
+    "definition": "To jump suddenly on something."
+  },
+  "preach": {
+    "type": "verb",
+    "definition": "To give a religious talk, or to moralise."
+  },
+  "preacher": {
+    "type": "noun",
+    "definition": "A person who gives religious talks."
+  },
+  "premier": {
+    "type": "noun",
+    "definition": "First in importance, or a first showing."
+  },
+  "premise": {
+    "type": "noun",
+    "definition": "An idea on which an argument is built."
+  },
+  "premises": {
+    "type": "noun",
+    "definition": "A building and its land."
+  },
+  "profess": {
+    "type": "verb",
+    "definition": "To claim, often falsely."
+  },
+  "profound": {
+    "type": "adjective",
+    "definition": "Very deep, or very great."
+  },
+  "prolific": {
+    "type": "noun",
+    "definition": "Producing a lot of work or young."
+  },
+  "prop": {
+    "type": "noun",
+    "definition": "A support, or to support."
+  },
+  "prophet": {
+    "type": "noun",
+    "definition": "A person who speaks for God, or predicts."
+  },
+  "provoke": {
+    "type": "verb",
+    "definition": "To cause a reaction, especially anger."
+  },
+  "prowl": {
+    "type": "verb",
+    "definition": "To move quietly, looking for prey."
+  },
+  "psyche": {
+    "type": "noun",
+    "definition": "The mind or soul."
+  },
   "pupil": {
-    "definition": "A child at school, or the dark centre of the eye."
+    "definition": "A child at school, or the dark centre of the eye.",
+    "type": "noun"
   },
-  "purity": {},
+  "purity": {
+    "type": "noun",
+    "definition": "The state of being clean or pure."
+  },
   "puzzle": {
-    "definition": "A game or question that needs thinking to solve."
+    "definition": "A game or question that needs thinking to solve.",
+    "type": "noun"
   },
-  "quarry": {},
-  "query": {},
-  "quest": {},
-  "quip": {},
-  "quirk": {},
-  "quirky": {},
-  "radiator": {},
-  "rally": {},
-  "rapport": {},
-  "rarity": {},
-  "raunchy": {},
-  "readable": {},
-  "realism": {},
-  "realist": {},
-  "reap": {},
-  "reassure": {},
+  "quarry": {
+    "type": "noun",
+    "definition": "A place where stone is dug, or hunted animal."
+  },
+  "query": {
+    "type": "noun",
+    "definition": "A question, or to ask one."
+  },
+  "quest": {
+    "type": "noun",
+    "definition": "A long search for something."
+  },
+  "quip": {
+    "type": "noun",
+    "definition": "A clever funny remark."
+  },
+  "quirk": {
+    "type": "noun",
+    "definition": "A strange habit or feature."
+  },
+  "quirky": {
+    "type": "adjective",
+    "definition": "Having strange habits or features."
+  },
+  "radiator": {
+    "type": "noun",
+    "definition": "A device that heats a room."
+  },
+  "rally": {
+    "type": "verb",
+    "definition": "To come together for a cause, or to recover."
+  },
+  "rapport": {
+    "type": "noun",
+    "definition": "A close understanding between people."
+  },
+  "rarity": {
+    "type": "noun",
+    "definition": "Something very uncommon."
+  },
+  "raunchy": {
+    "type": "noun",
+    "definition": "Rude and sexually suggestive."
+  },
+  "readable": {
+    "type": "adjective",
+    "definition": "Easy to read."
+  },
+  "realism": {
+    "type": "noun",
+    "definition": "Accepting things as they are, in art or thought."
+  },
+  "realist": {
+    "type": "noun",
+    "definition": "A person who accepts things as they are."
+  },
+  "reap": {
+    "type": "verb",
+    "definition": "To cut and gather crops, or get a result."
+  },
+  "reassure": {
+    "type": "verb",
+    "definition": "To remove someone's doubt."
+  },
   "recall": {
-    "definition": "To remember something, or to ask for a product to be returned."
+    "definition": "To remember something, or to ask for a product to be returned.",
+    "type": "verb"
   },
-  "recess": {},
-  "recharge": {},
+  "recess": {
+    "type": "noun",
+    "definition": "A short break, or a hidden space."
+  },
+  "recharge": {
+    "type": "verb",
+    "definition": "To fill with energy again, or to charge a battery."
+  },
   "recite": {
-    "definition": "To say a poem or list aloud from memory."
+    "definition": "To say a poem or list aloud from memory.",
+    "type": "verb"
   },
-  "reenact": {},
-  "refresh": {},
+  "reenact": {
+    "type": "verb",
+    "definition": "To act out something again."
+  },
+  "refresh": {
+    "type": "verb",
+    "definition": "To make fresh or energetic again."
+  },
   "relapse": {
-    "definition": "To become ill again after seeming to recover."
+    "definition": "To become ill again after seeming to recover.",
+    "type": "verb"
   },
-  "remedial": {},
-  "remorse": {},
-  "removed": {},
-  "render": {},
-  "renown": {},
-  "repel": {},
-  "repute": {},
-  "resent": {},
-  "resin": {},
-  "resonate": {},
+  "remedial": {
+    "type": "noun",
+    "definition": "Giving extra help to those who need it."
+  },
+  "remorse": {
+    "type": "noun",
+    "definition": "Deep regret for doing wrong."
+  },
+  "removed": {
+    "type": "adjective",
+    "definition": "Distant in relationship, or taken away."
+  },
+  "render": {
+    "type": "verb",
+    "definition": "To make something, or to give."
+  },
+  "renown": {
+    "type": "noun",
+    "definition": "Fame for something good."
+  },
+  "repel": {
+    "type": "verb",
+    "definition": "To push away, or to disgust."
+  },
+  "repute": {
+    "type": "noun",
+    "definition": "The opinion people have, or to consider."
+  },
+  "resent": {
+    "type": "verb",
+    "definition": "To feel bitterness about something."
+  },
+  "resin": {
+    "type": "noun",
+    "definition": "A sticky substance from trees, or a plastic material."
+  },
+  "resonate": {
+    "type": "verb",
+    "definition": "To produce a deep sound, or to feel important."
+  },
   "resort": {
-    "definition": "A place people go on holiday, or to do something as a last choice."
+    "definition": "A place people go on holiday, or to do something as a last choice.",
+    "type": "noun"
   },
-  "respite": {},
-  "retrace": {},
-  "revere": {},
+  "respite": {
+    "type": "noun",
+    "definition": "A short rest from something hard."
+  },
+  "retrace": {
+    "type": "verb",
+    "definition": "To go back over the same path."
+  },
+  "revere": {
+    "type": "verb",
+    "definition": "To respect and admire greatly."
+  },
   "rich": {
-    "definition": "Having a lot of money."
+    "definition": "Having a lot of money.",
+    "type": "adjective"
   },
-  "riveting": {},
-  "robust": {},
-  "rotate": {},
-  "roundup": {},
-  "rumble": {},
-  "rustle": {},
-  "ruthless": {},
-  "salivate": {},
-  "saloon": {},
-  "salvage": {},
-  "salve": {},
-  "sanctity": {},
-  "sap": {},
-  "sarcasm": {},
-  "sauna": {},
-  "scathing": {},
+  "riveting": {
+    "type": "adjective",
+    "definition": "Holding attention completely."
+  },
+  "robust": {
+    "type": "noun",
+    "definition": "Strong and healthy."
+  },
+  "rotate": {
+    "type": "verb",
+    "definition": "To turn around a centre."
+  },
+  "roundup": {
+    "type": "noun",
+    "definition": "A collection of the best things, or gathering animals."
+  },
+  "rumble": {
+    "type": "noun",
+    "definition": "A deep low sound, or a fight."
+  },
+  "rustle": {
+    "type": "noun",
+    "definition": "A soft crackling sound, or to steal cattle."
+  },
+  "ruthless": {
+    "type": "adjective",
+    "definition": "Without pity or mercy."
+  },
+  "salivate": {
+    "type": "verb",
+    "definition": "To make saliva, or to want food very much."
+  },
+  "saloon": {
+    "type": "noun",
+    "definition": "A bar, or a type of car."
+  },
+  "salvage": {
+    "type": "verb",
+    "definition": "To save something from damage, or the saved goods."
+  },
+  "salve": {
+    "type": "noun",
+    "definition": "A soothing cream, or to ease pain."
+  },
+  "sanctity": {
+    "type": "noun",
+    "definition": "The state of being holy."
+  },
+  "sap": {
+    "type": "noun",
+    "definition": "The liquid in a plant, or to weaken."
+  },
+  "sarcasm": {
+    "type": "noun",
+    "definition": "Words that mean the opposite, to mock."
+  },
+  "sauna": {
+    "type": "noun",
+    "definition": "A room for steam bathing."
+  },
+  "scathing": {
+    "type": "adjective",
+    "definition": "Very harsh and critical."
+  },
   "scenario": {
-    "definition": "A possible situation or set of events."
+    "definition": "A possible situation or set of events.",
+    "type": "noun"
   },
-  "scoff": {},
-  "scorn": {},
-  "scornful": {},
-  "scramble": {},
-  "scrutiny": {},
-  "sedate": {},
-  "seedling": {},
-  "sentient": {},
-  "sequel": {},
-  "settee": {},
-  "shambles": {},
-  "shed": {},
-  "showy": {},
+  "scoff": {
+    "type": "verb",
+    "definition": "To laugh at in a rude way."
+  },
+  "scorn": {
+    "type": "noun",
+    "definition": "A feeling that something is worthless."
+  },
+  "scornful": {
+    "type": "adjective",
+    "definition": "Full of scorn; contemptuous."
+  },
+  "scramble": {
+    "type": "verb",
+    "definition": "To move quickly and awkwardly, or to mix."
+  },
+  "scrutiny": {
+    "type": "adjective",
+    "definition": "Close and careful examination."
+  },
+  "sedate": {
+    "type": "noun",
+    "definition": "Calm and quiet, or to calm with drugs."
+  },
+  "seedling": {
+    "type": "noun",
+    "definition": "A young plant."
+  },
+  "sentient": {
+    "type": "adjective",
+    "definition": "Able to feel and think."
+  },
+  "sequel": {
+    "type": "noun",
+    "definition": "A film or book that continues a story."
+  },
+  "settee": {
+    "type": "noun",
+    "definition": "A long upholstered seat for several people."
+  },
+  "shambles": {
+    "type": "noun",
+    "definition": "A state of total disorder."
+  },
+  "shed": {
+    "type": "verb",
+    "definition": "To let fall, or a small building."
+  },
+  "showy": {
+    "type": "noun",
+    "definition": "Bright and attention-getting, but not deep."
+  },
   "signal": {
-    "definition": "A sound or movement that gives a message."
+    "definition": "A sound or movement that gives a message.",
+    "type": "noun"
   },
-  "sketch": {},
-  "slack": {},
-  "slob": {},
-  "smug": {},
-  "snail": {},
-  "snooze": {},
-  "spacious": {},
-  "spartan": {},
-  "specimen": {},
+  "sketch": {
+    "type": "noun",
+    "definition": "A quick drawing, or a short comedy scene."
+  },
+  "slack": {
+    "type": "adjective",
+    "definition": "Not tight, or lazy."
+  },
+  "slob": {
+    "type": "noun",
+    "definition": "A dirty, lazy person."
+  },
+  "smug": {
+    "type": "adjective",
+    "definition": "Too pleased with yourself."
+  },
+  "snail": {
+    "type": "noun",
+    "definition": "A slow animal with a shell."
+  },
+  "snooze": {
+    "type": "noun",
+    "definition": "A short sleep, or to sleep lightly."
+  },
+  "spacious": {
+    "type": "adjective",
+    "definition": "Having much space."
+  },
+  "spartan": {
+    "type": "noun",
+    "definition": "Simple and without comfort."
+  },
+  "specimen": {
+    "type": "noun",
+    "definition": "A sample, or an example of something."
+  },
   "splatter": {
-    "definition": "To scatter drops of liquid over a surface."
+    "definition": "To scatter drops of liquid over a surface.",
+    "type": "verb"
   },
-  "sprawl": {},
-  "sprout": {},
-  "squander": {},
-  "staccato": {},
-  "stagger": {},
-  "stamina": {},
-  "staple": {},
-  "stately": {},
-  "stiffen": {},
-  "stimuli": {},
-  "stock": {},
-  "stoke": {},
-  "strap": {},
-  "stray": {},
-  "stuffy": {},
-  "suburban": {},
-  "suburbia": {},
-  "suds": {},
-  "suffice": {},
-  "suitor": {},
-  "supple": {},
-  "swap": {},
-  "synopsis": {},
-  "tact": {},
-  "tactful": {},
-  "tailor": {},
-  "tangle": {},
-  "tangled": {},
-  "tantrum": {},
-  "tastebud": {},
-  "taut": {},
-  "tedious": {},
-  "tedium": {},
-  "telltale": {},
-  "terrain": {},
-  "till": {},
-  "timid": {},
-  "tinker": {},
-  "tomb": {},
+  "sprawl": {
+    "type": "verb",
+    "definition": "To spread out over a large area."
+  },
+  "sprout": {
+    "type": "noun",
+    "definition": "A young shoot of a plant, or to grow one."
+  },
+  "squander": {
+    "type": "verb",
+    "definition": "To waste money or time."
+  },
+  "staccato": {
+    "type": "noun",
+    "definition": "Music played in short, separate notes."
+  },
+  "stagger": {
+    "type": "verb",
+    "definition": "To walk unsteadily, or to arrange in turns."
+  },
+  "stamina": {
+    "type": "noun",
+    "definition": "The energy to keep going."
+  },
+  "staple": {
+    "type": "noun",
+    "definition": "A main product, or a small wire fastener."
+  },
+  "stately": {
+    "type": "adverb",
+    "definition": "Grand and dignified."
+  },
+  "stiffen": {
+    "type": "verb",
+    "definition": "To become hard, or to make rigid."
+  },
+  "stimuli": {
+    "type": "noun",
+    "definition": "Things that cause a response."
+  },
+  "stock": {
+    "type": "noun",
+    "definition": "A supply, or a share in a company."
+  },
+  "stoke": {
+    "type": "verb",
+    "definition": "To add fuel to a fire, or to stir up feelings."
+  },
+  "strap": {
+    "type": "noun",
+    "definition": "A band of material, or to fasten with one."
+  },
+  "stray": {
+    "type": "verb",
+    "definition": "To wander, or an animal without a home."
+  },
+  "stuffy": {
+    "type": "adjective",
+    "definition": "Not fresh, or too formal."
+  },
+  "suburban": {
+    "type": "adjective",
+    "definition": "Relating to the area around a city."
+  },
+  "suburbia": {
+    "type": "noun",
+    "definition": "The suburbs of a city, as a way of life."
+  },
+  "suds": {
+    "type": "noun",
+    "definition": "Bubbles of soap in water."
+  },
+  "suffice": {
+    "type": "verb",
+    "definition": "To be enough."
+  },
+  "suitor": {
+    "type": "noun",
+    "definition": "A man who courts a woman, or makes an offer."
+  },
+  "supple": {
+    "type": "noun",
+    "definition": "Bending easily without breaking."
+  },
+  "swap": {
+    "type": "verb",
+    "definition": "To exchange things."
+  },
+  "synopsis": {
+    "type": "noun",
+    "definition": "A short summary of a story."
+  },
+  "tact": {
+    "type": "noun",
+    "definition": "Skill in dealing with others without offence."
+  },
+  "tactful": {
+    "type": "noun",
+    "definition": "Showing skill in avoiding offence."
+  },
+  "tailor": {
+    "type": "noun",
+    "definition": "A person who makes or alters clothes."
+  },
+  "tangle": {
+    "type": "noun",
+    "definition": "A twisted mess, or to become twisted."
+  },
+  "tangled": {
+    "type": "adjective",
+    "definition": "Twisted together, or complex."
+  },
+  "tantrum": {
+    "type": "noun",
+    "definition": "A sudden burst of anger, often in a child."
+  },
+  "tastebud": {
+    "type": "noun",
+    "definition": "A small organ on the tongue for taste."
+  },
+  "taut": {
+    "type": "noun",
+    "definition": "Pulled tight."
+  },
+  "tedious": {
+    "type": "noun",
+    "definition": "Boring and long."
+  },
+  "tedium": {
+    "type": "noun",
+    "definition": "The state of being boring."
+  },
+  "telltale": {
+    "type": "noun",
+    "definition": "Something that reveals a secret, or a gossip."
+  },
+  "terrain": {
+    "type": "noun",
+    "definition": "The shape and features of land."
+  },
+  "till": {
+    "type": "preposition",
+    "definition": "Until, or a cash drawer, or to prepare land."
+  },
+  "timid": {
+    "type": "adjective",
+    "definition": "Lacking courage; shy."
+  },
+  "tinker": {
+    "type": "verb",
+    "definition": "To fix or adjust small things."
+  },
+  "tomb": {
+    "type": "noun",
+    "definition": "A place for the dead, or a burial vault."
+  },
   "tone": {
-    "definition": "The quality of a sound, or the way someone speaks."
+    "definition": "The quality of a sound, or the way someone speaks.",
+    "type": "noun"
   },
-  "torment": {},
-  "tract": {},
-  "tranquil": {},
-  "transfix": {},
-  "transit": {},
-  "trauma": {},
-  "tread": {},
-  "trying": {},
+  "torment": {
+    "type": "noun",
+    "definition": "Great suffering, or to cause it."
+  },
+  "tract": {
+    "type": "noun",
+    "definition": "A part of the body, or a small pamphlet."
+  },
+  "tranquil": {
+    "type": "adjective",
+    "definition": "Very calm and peaceful."
+  },
+  "transfix": {
+    "type": "verb",
+    "definition": "To hold attention completely."
+  },
+  "transit": {
+    "type": "noun",
+    "definition": "The act of moving, or public transport."
+  },
+  "trauma": {
+    "type": "noun",
+    "definition": "A deep emotional shock, or injury."
+  },
+  "tread": {
+    "type": "verb",
+    "definition": "To step, or the part of a shoe that touches ground."
+  },
+  "trying": {
+    "type": "adjective",
+    "definition": "Difficult to bear; testing patience."
+  },
   "tune": {
-    "definition": "A series of musical notes that is easy to remember."
+    "definition": "A series of musical notes that is easy to remember.",
+    "type": "noun"
   },
-  "turmoil": {},
-  "twitch": {},
-  "tycoon": {},
-  "unison": {},
-  "unmanned": {},
-  "unplug": {},
-  "unsettle": {},
-  "untangle": {},
-  "upheaval": {},
-  "usher": {},
-  "utensil": {},
-  "venerate": {},
-  "verandah": {},
-  "verdict": {},
-  "vertical": {},
-  "verve": {},
-  "vicious": {},
-  "violet": {},
-  "vitality": {},
+  "turmoil": {
+    "type": "noun",
+    "definition": "Great confusion and disorder."
+  },
+  "twitch": {
+    "type": "noun",
+    "definition": "A sudden small movement, or to move so."
+  },
+  "tycoon": {
+    "type": "noun",
+    "definition": "A rich and powerful business person."
+  },
+  "unison": {
+    "type": "noun",
+    "definition": "Doing or saying something at the same time."
+  },
+  "unmanned": {
+    "type": "adjective",
+    "definition": "Without a crew, or shaken."
+  },
+  "unplug": {
+    "type": "verb",
+    "definition": "To remove a plug from a socket."
+  },
+  "unsettle": {
+    "type": "verb",
+    "definition": "To make someone anxious, or to disrupt."
+  },
+  "untangle": {
+    "type": "verb",
+    "definition": "To free from knots."
+  },
+  "upheaval": {
+    "type": "noun",
+    "definition": "A sudden big change, often violent."
+  },
+  "usher": {
+    "type": "noun",
+    "definition": "A person who shows seats, or to bring in."
+  },
+  "utensil": {
+    "type": "noun",
+    "definition": "A tool used in the kitchen."
+  },
+  "venerate": {
+    "type": "verb",
+    "definition": "To respect deeply."
+  },
+  "verandah": {
+    "type": "noun",
+    "definition": "A roofed open space along a house."
+  },
+  "verdict": {
+    "type": "noun",
+    "definition": "The decision of a jury, or a judgment."
+  },
+  "vertical": {
+    "type": "noun",
+    "definition": "Straight up and down."
+  },
+  "verve": {
+    "type": "noun",
+    "definition": "Energy and enthusiasm."
+  },
+  "vicious": {
+    "type": "noun",
+    "definition": "Cruel and violent."
+  },
+  "violet": {
+    "type": "noun",
+    "definition": "A purple colour, or a small flower."
+  },
+  "vitality": {
+    "type": "noun",
+    "definition": "Energy and liveliness."
+  },
   "voice": {
-    "definition": "The sound you make when you speak or sing."
+    "definition": "The sound you make when you speak or sing.",
+    "type": "noun"
   },
-  "wares": {},
-  "wary": {},
-  "washtub": {},
-  "wayside": {},
-  "wicked": {},
+  "wares": {
+    "type": "noun",
+    "definition": "Goods for sale."
+  },
+  "wary": {
+    "type": "noun",
+    "definition": "Careful and cautious."
+  },
+  "washtub": {
+    "type": "noun",
+    "definition": "A large container for washing clothes."
+  },
+  "wayside": {
+    "type": "noun",
+    "definition": "The side of a road or path."
+  },
+  "wicked": {
+    "type": "adjective",
+    "definition": "Very bad, or used for emphasis."
+  },
   "wing": {
-    "definition": "The part of a bird or plane that it flies with."
+    "definition": "The part of a bird or plane that it flies with.",
+    "type": "noun"
   },
-  "wizened": {},
-  "woo": {},
-  "wooded": {},
-  "wrangle": {},
-  "wrench": {},
-  "wry": {},
-  "zany": {}
+  "wizened": {
+    "type": "adjective",
+    "definition": "Wrinkled from age."
+  },
+  "woo": {
+    "type": "verb",
+    "definition": "To court someone, or to win support."
+  },
+  "wooded": {
+    "type": "adjective",
+    "definition": "Covered with trees."
+  },
+  "wrangle": {
+    "type": "verb",
+    "definition": "To argue noisily, or to manage."
+  },
+  "wrench": {
+    "type": "verb",
+    "definition": "To twist, or a tool for turning nuts."
+  },
+  "wry": {
+    "type": "noun",
+    "definition": "Dryly humorous, often at one's own expense."
+  },
+  "zany": {
+    "type": "noun",
+    "definition": "Funny in a crazy way."
+  }
 }
