@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { installShare } from '../src/lib/pwa/pwaUpdate';
+import { installBytes, installShare } from '../src/lib/pwa/pwaUpdate';
 
 describe('update progress', () => {
   it('reads the service worker install progress', () => {
@@ -8,5 +8,12 @@ describe('update progress', () => {
     expect(installShare({ type: 'INSTALL_PROGRESS', done: 1, total: 0 })).toBeNull();
     expect(installShare({ type: 'CHECK_REMINDERS' })).toBeNull();
     expect(installShare(null)).toBeNull();
+  });
+
+  it('reads the cached payload bytes behind the speed display', () => {
+    expect(installBytes({ type: 'INSTALL_PROGRESS', done: 40, total: 160, bytes: 262144 })).toBe(262144);
+    expect(installBytes({ type: 'INSTALL_PROGRESS', done: 40, total: 160, bytes: 0 })).toBeNull();
+    expect(installBytes({ type: 'CHECK_REMINDERS', bytes: 262144 })).toBeNull();
+    expect(installBytes(null)).toBeNull();
   });
 });

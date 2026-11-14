@@ -24,8 +24,10 @@
   const locale = $derived({ locale: settings.interfaceLocale });
   const share = $derived(clampProgress(progress));
   const title = $derived(label || (phase === 'load' ? m.progress_load({}, locale) : phase === 'update' ? m.progress_update({}, locale) : m.progress_download({}, locale)));
-  const speed = $derived(phase === 'download' && bytesPerSecond ? formatSpeed(bytesPerSecond, settings.formatContext) : '');
+  const speed = $derived((phase === 'download' || phase === 'update') && bytesPerSecond ? formatSpeed(bytesPerSecond, settings.formatContext) : '');
   const facts = $derived([speed, detail].filter(Boolean).join(' · '));
+  // A compact sheet still has room for the speed; other compact loaders have no speed to show.
+  const showFacts = $derived(Boolean(facts) && (!compact || Boolean(speed)));
 </script>
 
 <div class="download-progress" class:compact data-phase={phase}>
@@ -36,7 +38,7 @@
   <div class="download-progress-bar" class:indeterminate={share === null} role="progressbar" aria-label={title} aria-valuemin="0" aria-valuemax="100" aria-valuenow={share === null ? undefined : Math.round(share * 100)}>
     <span style={share === null ? '' : `width:${Math.max(2, share * 100)}%`}></span>
   </div>
-  {#if facts && !compact}<p>{facts}</p>{/if}
+  {#if showFacts}<p>{facts}</p>{/if}
 </div>
 
 <style>

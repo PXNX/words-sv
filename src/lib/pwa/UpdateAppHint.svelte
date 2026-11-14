@@ -13,6 +13,7 @@
   import { settings } from '#lib/state/settings.svelte.js';
   import { takeOverUpdate } from '#lib/pwa/pwaUpdate.js';
   import { introFlow } from '#lib/app/intro.svelte.js';
+  import { createSpeedMeter } from '#lib/offline/downloadSpeed.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
 
@@ -21,12 +22,15 @@
   let started = false;
   // Unknown until the service worker reports its first batch, then 0..1.
   let progress = $state<number | null>(null);
+  // The payload bytes cached so far, as a speed ("1.4 MB/s") while the new version downloads.
+  let speed = $state(0);
+  const meter = createSpeedMeter();
 
   // The first run's introduction is left alone: the sheet waits until the learner is through it.
   $effect(() => {
     if (!updated.current || introFlow.active || started) return;
     started = true;
-    void takeOverUpdate({ minDurationMs: CELEBRATE_MS, onProgress: (share) => (progress = Math.max(progress ?? 0, share)) });
+    void takeOverUpdate({ minDurationMs: CELEBRATE_MS, onProgress: (share) => (progress = Math.max(progress ?? 0, share)), onBytes: (bytes) => (speed = meter.sample(bytes)) });
   });
 </script>
 
@@ -37,7 +41,7 @@
       <!-- Lilith walks while she fetches the files and hops for joy once they are all there -->
       <span class="update-lilith" class:done={progress === 1} aria-hidden="true"><StoryCharacter id="lilith" mood="happy" walking={progress !== 1} /></span>
       <p id="update-text">{m.update_app_hint({}, { locale: settings.interfaceLocale })}</p>
-      <div class="update-progress"><DownloadProgress {progress} phase="update" compact /></div>
+      <div class="update-progress"><DownloadProgress {progress} phase="update" compact bytesPerSecond={speed} /></div>
     </div>
   </div>
 {/if}

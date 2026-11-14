@@ -35,12 +35,22 @@ const NAVIGATION_TIMEOUT_MS = 1200;
 const precached = new Set([...immutable, ...assets].map(({ path }) => pathnameOf(path)).filter((path) => !ON_DEMAND.some((pattern) => pattern.test(path))));
 
 // Tells open tabs how far the new version's download is (UpdateAppHint shows it while Lilith fetches it).
-async function reportInstallProgress(done: number, total: number) {
-	for (const client of await self.clients.matchAll({ includeUncontrolled: true, type: 'window' })) client.postMessage({ type: 'INSTALL_PROGRESS', done, total });
+// `bytes` are the payload bytes cached so far, so the page can show a download speed.
+async function reportInstallProgress(done: number, total: number, bytes: number) {
+	for (const client of await self.clients.matchAll({ includeUncontrolled: true, type: 'window' })) client.postMessage({ type: 'INSTALL_PROGRESS', done, total, bytes });
 }
 // Four at a time rather than eight: on a slow connection the install shares the pipe with the page
 // the learner is already using, and it should not starve it.
 const INSTALL_BATCH = 4;
+
+// Caches one file and returns the bytes it took; the length is unknown for some servers, then 0.
+async function cacheFile(cache: Cache, file: string): Promise<number> {
+	const response = await fetch(file);
+	if (!response.ok) throw new Error(`Failed to fetch ${file}: ${response.status}`);
+	const bytes = Number(response.headers.get('content-length')) || 0;
+	await cache.put(file, response);
+	return bytes;
+}
 
 self.addEventListener('install', (event) => {
 	event.waitUntil(
@@ -49,16 +59,18 @@ self.addEventListener('install', (event) => {
 			const files = [...precached, SHELL];
 			const total = files.length + pages.length;
 			let done = 0;
+			let bytes = 0;
 			// In small batches rather than one addAll, so progress can be reported; any failed file still fails the install.
 			for (let index = 0; index < files.length; index += INSTALL_BATCH) {
 				const batch = files.slice(index, index + INSTALL_BATCH);
-				await Promise.all(batch.map((file) => cache.add(file)));
+				const sizes = await Promise.all(batch.map((file) => cacheFile(cache, file)));
 				done += batch.length;
-				void reportInstallProgress(done, total);
+				bytes += sizes.reduce((sum, size) => sum + size, 0);
+				void reportInstallProgress(done, total, bytes);
 			}
 			// Not every page route has a page of its own (e.g. /stats only redirects); those fall back to the shell.
-			await Promise.all(pages.map((page) => cache.add(page).catch(() => undefined)));
-			void reportInstallProgress(total, total);
+			await Promise.all(pages.map(async (page) => { bytes += await cacheFile(cache, page).catch(() => 0); }));
+			void reportInstallProgress(total, total, bytes);
 		})()
 	);
 });
