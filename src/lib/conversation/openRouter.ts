@@ -35,16 +35,28 @@ export function chunkText(payload: string): string | 'done' | null {
   }
 }
 
-/** A readable reason for a failed request (bad key, no credit, unknown model, rate limit). */
+/** A readable reason for a failed request (bad key, no credit, unknown model, rate or usage limit). */
 export function requestError(status: number, body: string): Error {
-  let message: string;
+  let message = '';
+  let metadata = '';
   try {
-    message = (JSON.parse(body) as { error?: { message?: string } }).error?.message ?? '';
+    const value = JSON.parse(body) as { error?: { message?: string; metadata?: { limit_source?: string; error_type?: string } } };
+    message = value.error?.message ?? '';
+    metadata = `${value.error?.metadata?.limit_source ?? ''} ${value.error?.metadata?.error_type ?? ''}`;
   } catch {
     message = body.slice(0, 200);
   }
-  const reason = status === 401 ? 'openrouter_key' : status === 402 ? 'openrouter_credit' : status === 404 ? 'openrouter_model' : status === 429 ? 'openrouter_rate' : 'openrouter_error';
+  const text = `${message} ${metadata}`;
+  // A spent limit is not the same as empty credit: OpenRouter's free models and the key's budgets cap
+  // usage ("usage limit", "daily limit", "budget limit exceeded", metadata.limit_source) instead of billing it.
+  const limited = !/rate.?limit/iu.test(text) && /usage.?limit|daily.?limit|limit.?reached|limit.?exceeded|budget|limit_source/iu.test(text);
+  const reason = limited ? 'openrouter_limit' : status === 401 ? 'openrouter_key' : status === 402 ? 'openrouter_credit' : status === 404 ? 'openrouter_model' : status === 429 ? 'openrouter_rate' : 'openrouter_error';
   return new Error(message ? `${reason}: ${message}` : reason);
+}
+
+/** Whether a failed request was OpenRouter's usage limit (a free-model daily cap or a spent key budget). */
+export function isUsageLimitError(error: unknown): boolean {
+  return error instanceof Error && error.message.startsWith('openrouter_limit');
 }
 
 export interface CloudRequest {

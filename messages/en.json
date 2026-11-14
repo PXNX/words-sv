@@ -985,6 +985,7 @@
   "cloud_status_active": "Answering now: {model}",
   "cloud_status_standby": "Ready; the model on your device comes first.",
   "cloud_privacy": "When OpenRouter answers, your messages and texts go to OpenRouter and the model's provider. The key stays in this browser only.",
+  "cloud_limit": "OpenRouter reached its usage limit, so no answer came back. It resets on its own; try again later or choose another model.",
   "hardware_title": "Your device",
   "hardware_ram": "Memory",
   "hardware_cores": "CPU cores",

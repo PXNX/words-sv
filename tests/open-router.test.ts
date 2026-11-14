@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { chunkText, parseSse, requestError, streamCloudReply } from '../src/lib/conversation/openRouter';
+import { chunkText, isUsageLimitError, parseSse, requestError, streamCloudReply } from '../src/lib/conversation/openRouter';
 
 const chunk = (content: string) => `data: ${JSON.stringify({ choices: [{ delta: { content } }] })}\n\n`;
 
@@ -22,6 +22,19 @@ describe('OpenRouter client', () => {
     expect(requestError(401, '{"error":{"message":"No auth"}}').message).toBe('openrouter_key: No auth');
     expect(requestError(402, '').message).toBe('openrouter_credit');
     expect(requestError(404, 'not found').message).toBe('openrouter_model: not found');
+  });
+
+  it('names a spent usage limit, not a rate limit', () => {
+    expect(requestError(403, '{"error":{"message":"You have reached your usage limit","metadata":{"limit_source":"openrouter_key_limit"}}}').message).toBe('openrouter_limit: You have reached your usage limit');
+    expect(requestError(403, '{"error":{"message":"Daily limit reached","metadata":{"limit_source":"openrouter_guardrail_budget"}}}').message).toBe('openrouter_limit: Daily limit reached');
+    expect(requestError(403, '{"error":{"message":"Budget limit exceeded"}}').message).toBe('openrouter_limit: Budget limit exceeded');
+    expect(requestError(429, '{"error":{"message":"Rate limit exceeded"}}').message).toBe('openrouter_rate: Rate limit exceeded');
+  });
+
+  it('flags usage-limit errors for the UI', () => {
+    expect(isUsageLimitError(requestError(403, '{"error":{"message":"Usage limit reached"}}'))).toBe(true);
+    expect(isUsageLimitError(requestError(401, '{"error":{"message":"No auth"}}'))).toBe(false);
+    expect(isUsageLimitError('plain string')).toBe(false);
   });
 
   it('streams a reply with the key, the model and the messages', async () => {

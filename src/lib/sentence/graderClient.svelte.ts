@@ -10,8 +10,9 @@ import { checkLocalModel, localModel } from '#lib/conversation/localModel.svelte
 import type { Language } from '#lib/data/vocabulary.js';
 import { grade, type GradeMode, type GradeResult } from './grading.js';
 import { ensureLlmGraderLoaded, gradeWithLlm } from './llmGrader.js';
+import { isUsageLimitError } from '#lib/conversation/openRouter.js';
 
-export type GraderNotice = '' | 'failed';
+export type GraderNotice = '' | 'failed' | 'limit';
 /** unsupported: no WebGPU · missing: not downloaded yet · loading: downloading or loading into memory. */
 export type GraderAvailability = 'checking' | 'unsupported' | 'missing' | 'loading' | 'ready';
 
@@ -49,8 +50,8 @@ export async function runGrade(text: string, language: Language, mode: GradeMode
       return grade(text, language, mode);
     }
     return await gradeWithLlm(text, language, mode, topic);
-  } catch {
-    grader.notice = 'failed';
+  } catch (error) {
+    grader.notice = isUsageLimitError(error) ? 'limit' : 'failed';
     return grade(text, language, mode);
   } finally {
     grader.busy = false;

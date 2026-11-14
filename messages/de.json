@@ -985,6 +985,7 @@
   "cloud_status_active": "Antwortet gerade: {model}",
   "cloud_status_standby": "Bereit; das Modell auf dem Gerät hat Vorrang.",
   "cloud_privacy": "Wenn OpenRouter antwortet, gehen deine Nachrichten und Texte an OpenRouter und den Anbieter des Modells. Der Schlüssel bleibt nur in diesem Browser.",
+  "cloud_limit": "OpenRouter hat sein Nutzungslimit erreicht, daher kam keine Antwort. Es löst sich von selbst; versuch es später erneut oder wähle ein anderes Modell.",
   "hardware_title": "Dein Gerät",
   "hardware_ram": "Arbeitsspeicher",
   "hardware_cores": "Prozessorkerne",

@@ -49,6 +49,7 @@
     {/if}
   {/if}
   {#if grader.notice === 'failed'}<p class="grader-warn">{m.grade_ai_failed({}, locale)}</p>{/if}
+  {#if grader.notice === 'limit'}<p class="grader-warn">{m.cloud_limit({}, locale)}</p>{/if}
 </div>
 
 <style>
