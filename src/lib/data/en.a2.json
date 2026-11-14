@@ -1,2783 +1,3710 @@
 {
   "ability": {
-    "definition": "The power or skill to do something."
+    "definition": "The power or skill to do something.",
+    "type": "noun"
   },
   "accept": {
-    "definition": "To say yes to something that is offered."
+    "definition": "To say yes to something that is offered.",
+    "type": "verb"
   },
   "accident": {
-    "definition": "An event that happens unexpectedly and causes damage or injury."
+    "definition": "An event that happens unexpectedly and causes damage or injury.",
+    "type": "noun"
   },
   "account": {
-    "definition": "A record or description of an event, experience, or situation."
+    "definition": "A record or description of an event, experience, or situation.",
+    "type": "noun"
   },
   "achieve": {
-    "definition": "To succeed in doing something after effort."
+    "definition": "To succeed in doing something after effort.",
+    "type": "verb"
   },
   "act": {
-    "definition": "To do something, or to perform in a play."
+    "definition": "To do something, or to perform in a play.",
+    "type": "verb"
   },
   "addition": {
-    "definition": "The act of putting something together with something else."
+    "definition": "The act of putting something together with something else.",
+    "type": "noun"
   },
   "adjust": {
-    "definition": "To change something slightly so that it fits or works better."
+    "definition": "To change something slightly so that it fits or works better.",
+    "type": "verb"
   },
   "admire": {
-    "definition": "To respect or like someone or something greatly."
+    "definition": "To respect or like someone or something greatly.",
+    "type": "verb"
   },
   "admit": {
-    "definition": "To say that something is true, often unwillingly."
+    "definition": "To say that something is true, often unwillingly.",
+    "type": "verb"
   },
   "adult": {
-    "definition": "A person who is fully grown."
+    "definition": "A person who is fully grown.",
+    "type": "noun"
   },
   "advanced": {
-    "definition": "At a high level; not for beginners."
+    "definition": "At a high level; not for beginners.",
+    "type": "adjective"
   },
   "advice": {
-    "definition": "Words that tell someone what you think they should do."
+    "definition": "Words that tell someone what you think they should do.",
+    "type": "noun"
   },
   "advise": {
-    "definition": "To tell someone what you think they should do."
+    "definition": "To tell someone what you think they should do.",
+    "type": "verb"
   },
   "affair": {
-    "definition": "An event, or a matter that concerns people."
+    "definition": "An event, or a matter that concerns people.",
+    "type": "noun"
   },
   "aged": {
-    "definition": "Old, or having a certain age."
+    "definition": "Old, or having a certain age.",
+    "type": "adjective"
   },
   "agency": {
-    "definition": "A business that arranges services for other people."
+    "definition": "A business that arranges services for other people.",
+    "type": "noun"
   },
   "agent": {
-    "definition": "A person who does business for someone else."
+    "definition": "A person who does business for someone else.",
+    "type": "noun"
   },
   "air": {
-    "definition": "The mixture of gases around us that we breathe."
+    "definition": "The mixture of gases around us that we breathe.",
+    "type": "noun"
   },
   "aisle": {
-    "definition": "The narrow path between rows of seats or shelves."
+    "definition": "The narrow path between rows of seats or shelves.",
+    "type": "noun"
   },
   "alarm": {
-    "definition": "A sound or device that warns of danger or wakes you."
+    "definition": "A sound or device that warns of danger or wakes you.",
+    "type": "noun"
   },
   "alive": {
-    "definition": "Living; not dead."
+    "definition": "Living; not dead.",
+    "type": "noun"
   },
   "allow": {
-    "definition": "To let someone do something."
+    "definition": "To let someone do something.",
+    "type": "verb"
   },
   "alone": {
-    "definition": "Without other people."
+    "definition": "Without other people.",
+    "type": "adjective"
   },
   "alright": {
-    "definition": "Good enough; in an acceptable way."
+    "definition": "Good enough; in an acceptable way.",
+    "type": "noun"
   },
   "ambition": {
-    "definition": "A strong wish to achieve something."
+    "definition": "A strong wish to achieve something.",
+    "type": "noun"
   },
   "amused": {
-    "definition": "Finding something funny."
+    "definition": "Finding something funny.",
+    "type": "adjective"
   },
   "ancestor": {
-    "definition": "A person from whom someone is descended."
+    "definition": "A person from whom someone is descended.",
+    "type": "noun"
   },
   "ancient": {
-    "definition": "Belonging to a time long ago in history."
+    "definition": "Belonging to a time long ago in history.",
+    "type": "adjective"
   },
   "angel": {
-    "definition": "A messenger of God with wings, in religion."
+    "definition": "A messenger of God with wings, in religion.",
+    "type": "noun"
   },
   "ankle": {
-    "definition": "The joint between the foot and the leg."
+    "definition": "The joint between the foot and the leg.",
+    "type": "noun"
   },
   "annoy": {
-    "definition": "To make someone a little angry."
+    "definition": "To make someone a little angry.",
+    "type": "verb"
   },
   "annoying": {
-    "definition": "Making you feel a little angry."
+    "definition": "Making you feel a little angry.",
+    "type": "adjective"
   },
   "anxious": {
-    "definition": "Worried and nervous about something."
+    "definition": "Worried and nervous about something.",
+    "type": "noun"
   },
   "appear": {
-    "definition": "To come into sight, or to seem."
+    "definition": "To come into sight, or to seem.",
+    "type": "verb"
   },
   "apply": {
-    "definition": "To ask for a job in writing, or to put something on a surface."
+    "definition": "To ask for a job in writing, or to put something on a surface.",
+    "type": "verb"
   },
   "area": {
-    "definition": "A part of a place, or the size of a surface."
+    "definition": "A part of a place, or the size of a surface.",
+    "type": "noun"
   },
   "argue": {
-    "definition": "To speak angrily with someone who disagrees."
+    "definition": "To speak angrily with someone who disagrees.",
+    "type": "verb"
   },
   "argument": {
-    "definition": "A disagreement in which people express different opinions."
+    "definition": "A disagreement in which people express different opinions.",
+    "type": "noun"
   },
   "armchair": {
-    "definition": "A soft chair with supports for the arms."
+    "definition": "A soft chair with supports for the arms.",
+    "type": "noun"
   },
   "armed": {
-    "definition": "Carrying a weapon."
+    "definition": "Carrying a weapon.",
+    "type": "adjective"
   },
   "asleep": {
-    "definition": "Sleeping."
+    "definition": "Sleeping.",
+    "type": "noun"
   },
   "athlete": {
-    "definition": "A person who is good at sports and trains for them."
+    "definition": "A person who is good at sports and trains for them.",
+    "type": "noun"
   },
   "atom": {
-    "definition": "The smallest part of a chemical element."
+    "definition": "The smallest part of a chemical element.",
+    "type": "noun"
   },
   "attack": {
-    "definition": "To try to hurt someone or damage something."
+    "definition": "To try to hurt someone or damage something.",
+    "type": "verb"
   },
   "attempt": {
-    "definition": "To try to do something."
+    "definition": "To try to do something.",
+    "type": "verb"
   },
   "attitude": {
-    "definition": "The way you think and feel about something."
+    "definition": "The way you think and feel about something.",
+    "type": "noun"
   },
   "audience": {
-    "definition": "The people who watch or listen to a performance."
+    "definition": "The people who watch or listen to a performance.",
+    "type": "noun"
   },
   "audio": {
-    "definition": "Sound that is recorded or played."
+    "definition": "Sound that is recorded or played.",
+    "type": "noun"
   },
   "author": {
-    "definition": "A person who writes books."
+    "definition": "A person who writes books.",
+    "type": "noun"
   },
   "average": {
-    "definition": "The usual or middle amount, or a level calculated from several numbers."
+    "definition": "The usual or middle amount, or a level calculated from several numbers.",
+    "type": "noun"
   },
   "avoid": {
-    "definition": "To keep away from something or someone."
+    "definition": "To keep away from something or someone.",
+    "type": "verb"
   },
   "award": {
-    "definition": "A prize given for good work or for a victory."
+    "definition": "A prize given for good work or for a victory.",
+    "type": "noun"
   },
   "awful": {
-    "definition": "Very bad or unpleasant."
+    "definition": "Very bad or unpleasant.",
+    "type": "adjective"
   },
   "back": {
-    "definition": "The part of the body behind you, or to return."
+    "definition": "The part of the body behind you, or to return.",
+    "type": "noun"
   },
   "bake": {
-    "definition": "To cook food such as bread in an oven."
+    "definition": "To cook food such as bread in an oven.",
+    "type": "verb"
   },
   "balcony": {
-    "definition": "A small platform outside a window with a rail."
+    "definition": "A small platform outside a window with a rail.",
+    "type": "noun"
   },
   "balloon": {
-    "definition": "A rubber bag filled with air that floats."
+    "definition": "A rubber bag filled with air that floats.",
+    "type": "noun"
   },
   "bank": {
-    "definition": "A place that keeps money, or the land beside a river."
+    "definition": "A place that keeps money, or the land beside a river.",
+    "type": "noun"
   },
   "banking": {
-    "definition": "The business of keeping and lending money."
+    "definition": "The business of keeping and lending money.",
+    "type": "noun"
   },
   "barbecue": {
-    "definition": "A meal cooked outdoors over a fire."
+    "definition": "A meal cooked outdoors over a fire.",
+    "type": "noun"
   },
   "barber": {
-    "definition": "A person whose job is cutting men's hair."
+    "definition": "A person whose job is cutting men's hair.",
+    "type": "noun"
   },
   "bargain": {
-    "definition": "Something bought for less than the usual price."
+    "definition": "Something bought for less than the usual price.",
+    "type": "noun"
   },
   "base": {
-    "definition": "The lowest part of something, or the main part of a place."
+    "definition": "The lowest part of something, or the main part of a place.",
+    "type": "noun"
   },
   "basic": {
-    "definition": "Simple and at the first level."
+    "definition": "Simple and at the first level.",
+    "type": "noun"
   },
   "basket": {
-    "definition": "A container made of woven material with a handle."
+    "definition": "A container made of woven material with a handle.",
+    "type": "noun"
   },
   "batch": {
-    "definition": "A group of things made or dealt with together."
+    "definition": "A group of things made or dealt with together.",
+    "type": "noun"
   },
   "battery": {
-    "definition": "An object that stores electricity for a device."
+    "definition": "An object that stores electricity for a device.",
+    "type": "noun"
   },
   "bay": {
-    "definition": "A part of the sea partly surrounded by land."
+    "definition": "A part of the sea partly surrounded by land.",
+    "type": "noun"
   },
   "bear": {
-    "definition": "To carry something, or to accept something difficult."
+    "definition": "To carry something, or to accept something difficult.",
+    "type": "verb"
   },
   "beauty": {
-    "definition": "The quality of being lovely to look at."
+    "definition": "The quality of being lovely to look at.",
+    "type": "noun"
   },
   "beer": {
-    "definition": "An alcoholic drink made from grain."
+    "definition": "An alcoholic drink made from grain.",
+    "type": "noun"
   },
   "beg": {
-    "definition": "To ask for something in a way that shows you need it very much."
+    "definition": "To ask for something in a way that shows you need it very much.",
+    "type": "verb"
   },
   "beginner": {
-    "definition": "A person who has just started to learn something."
+    "definition": "A person who has just started to learn something.",
+    "type": "noun"
   },
   "being": {
-    "definition": "A living creature."
+    "definition": "A living creature.",
+    "type": "noun"
   },
   "belly": {
-    "definition": "The front part of the body below the chest."
+    "definition": "The front part of the body below the chest.",
+    "type": "noun"
   },
   "belong": {
-    "definition": "To be owned by someone, or to fit in a place."
+    "definition": "To be owned by someone, or to fit in a place.",
+    "type": "verb"
   },
   "belt": {
-    "definition": "A band of leather worn around the waist."
+    "definition": "A band of leather worn around the waist.",
+    "type": "noun"
   },
   "bench": {
-    "definition": "A long seat for several people, often outdoors."
+    "definition": "A long seat for several people, often outdoors.",
+    "type": "noun"
   },
   "bend": {
-    "definition": "To make something curved or not straight."
+    "definition": "To make something curved or not straight.",
+    "type": "verb"
   },
   "bill": {
-    "definition": "A paper showing how much you must pay."
+    "definition": "A paper showing how much you must pay.",
+    "type": "noun"
   },
   "bit": {
-    "definition": "A small piece or amount."
+    "definition": "A small piece or amount.",
+    "type": "noun"
   },
   "bite": {
-    "definition": "To cut into something with your teeth."
+    "definition": "To cut into something with your teeth.",
+    "type": "verb"
   },
   "blame": {
-    "definition": "To say that someone caused something bad."
+    "definition": "To say that someone caused something bad.",
+    "type": "verb"
   },
   "blanket": {
-    "definition": "A thick soft cover for a bed."
+    "definition": "A thick soft cover for a bed.",
+    "type": "noun"
   },
   "blonde": {
-    "definition": "With light yellow hair."
+    "definition": "With light yellow hair.",
+    "type": "adjective"
   },
   "blood": {
-    "definition": "The red liquid that flows through the body."
+    "definition": "The red liquid that flows through the body.",
+    "type": "noun"
   },
   "bloom": {
-    "definition": "To open into flowers."
+    "definition": "To open into flowers.",
+    "type": "verb"
   },
   "blow": {
-    "definition": "To send air out of your mouth, or to move as air does."
+    "definition": "To send air out of your mouth, or to move as air does.",
+    "type": "verb"
   },
   "boil": {
-    "definition": "To heat a liquid until it bubbles."
+    "definition": "To heat a liquid until it bubbles.",
+    "type": "verb"
   },
   "boiled": {
-    "definition": "Cooked in water that is bubbling."
+    "definition": "Cooked in water that is bubbling.",
+    "type": "adjective"
   },
   "bonus": {
-    "definition": "An extra amount given on top of what is usual."
+    "definition": "An extra amount given on top of what is usual.",
+    "type": "noun"
   },
   "bookcase": {
-    "definition": "A piece of furniture with shelves for books."
+    "definition": "A piece of furniture with shelves for books.",
+    "type": "noun"
   },
   "bookshop": {
-    "definition": "A shop that sells books."
+    "definition": "A shop that sells books.",
+    "type": "noun"
   },
   "bored": {
-    "definition": "Feeling tired because nothing interests you."
+    "definition": "Feeling tired because nothing interests you.",
+    "type": "adjective"
   },
   "boss": {
-    "definition": "The person in charge of a workplace."
+    "definition": "The person in charge of a workplace.",
+    "type": "noun"
   },
   "bother": {
-    "definition": "To annoy someone, or to make the effort."
+    "definition": "To annoy someone, or to make the effort.",
+    "type": "verb"
   },
   "bra": {
-    "definition": "A piece of underwear worn to support the breasts."
+    "definition": "A piece of underwear worn to support the breasts.",
+    "type": "noun"
   },
   "brake": {
-    "definition": "The part of a vehicle that makes it slow down."
+    "definition": "The part of a vehicle that makes it slow down.",
+    "type": "noun"
   },
   "branch": {
-    "definition": "A part of a tree that grows out from the trunk."
+    "definition": "A part of a tree that grows out from the trunk.",
+    "type": "noun"
   },
   "brand": {
-    "definition": "The name a company gives to its products."
+    "definition": "The name a company gives to its products.",
+    "type": "noun"
   },
   "brave": {
-    "definition": "Not afraid of danger."
+    "definition": "Not afraid of danger.",
+    "type": "adjective"
   },
   "break": {
-    "definition": "A short rest from work, or to damage something."
+    "definition": "A short rest from work, or to damage something.",
+    "type": "noun"
   },
   "breeze": {
-    "definition": "A light gentle wind."
+    "definition": "A light gentle wind.",
+    "type": "noun"
   },
   "bride": {
-    "definition": "A woman on her wedding day."
+    "definition": "A woman on her wedding day.",
+    "type": "noun"
   },
   "brown": {
-    "definition": "The colour of wood or coffee."
+    "definition": "The colour of wood or coffee.",
+    "type": "noun"
   },
   "budget": {
-    "definition": "A plan for how much money you can spend."
+    "definition": "A plan for how much money you can spend.",
+    "type": "noun"
   },
   "bug": {
-    "definition": "A small insect, or a mistake in a computer programme."
+    "definition": "A small insect, or a mistake in a computer programme.",
+    "type": "noun"
   },
   "bulb": {
-    "definition": "The glass part of a lamp that gives light, or a round root vegetable."
+    "definition": "The glass part of a lamp that gives light, or a round root vegetable.",
+    "type": "noun"
   },
   "burn": {
-    "definition": "To be on fire, or to damage something with fire."
+    "definition": "To be on fire, or to damage something with fire.",
+    "type": "verb"
   },
   "bury": {
-    "definition": "To put something in the ground and cover it."
+    "definition": "To put something in the ground and cover it.",
+    "type": "verb"
   },
   "bush": {
-    "definition": "A plant smaller than a tree with many branches."
+    "definition": "A plant smaller than a tree with many branches.",
+    "type": "noun"
   },
   "cab": {
-    "definition": "A car you pay to take you somewhere, or the front part of a lorry."
+    "definition": "A car you pay to take you somewhere, or the front part of a lorry.",
+    "type": "noun"
   },
   "calendar": {
-    "definition": "A chart of the days and months of a year."
+    "definition": "A chart of the days and months of a year.",
+    "type": "noun"
   },
   "call": {
-    "definition": "To telephone someone, or to give a name to someone."
+    "definition": "To telephone someone, or to give a name to someone.",
+    "type": "verb"
   },
   "camp": {
-    "definition": "A place where people stay in tents for a while."
+    "definition": "A place where people stay in tents for a while.",
+    "type": "noun"
   },
   "camping": {
-    "definition": "A holiday spent sleeping outdoors in a tent."
+    "definition": "A holiday spent sleeping outdoors in a tent.",
+    "type": "noun"
   },
   "campus": {
-    "definition": "The land and buildings of a university or college."
+    "definition": "The land and buildings of a university or college.",
+    "type": "noun"
   },
   "can": {
-    "definition": "To be able to do something, or a metal container for food."
+    "definition": "To be able to do something, or a metal container for food.",
+    "type": "verb"
   },
   "capital": {
-    "definition": "The city where a country's government sits, or money used to start a business."
+    "definition": "The city where a country's government sits, or money used to start a business.",
+    "type": "noun"
   },
   "captain": {
-    "definition": "The person in charge of a ship, a plane, or a sports team."
+    "definition": "The person in charge of a ship, a plane, or a sports team.",
+    "type": "noun"
   },
   "carrot": {
-    "definition": "A long orange root vegetable."
+    "definition": "A long orange root vegetable.",
+    "type": "noun"
   },
   "cash": {
-    "definition": "Money in coins and notes."
+    "definition": "Money in coins and notes.",
+    "type": "noun"
   },
   "cassette": {
-    "definition": "A small plastic box with tape inside for recording sound."
+    "definition": "A small plastic box with tape inside for recording sound.",
+    "type": "noun"
   },
   "castle": {
-    "definition": "A large strong building with towers, built long ago for defence."
+    "definition": "A large strong building with towers, built long ago for defence.",
+    "type": "noun"
   },
   "cause": {
-    "definition": "To make something happen, or the reason it happens."
+    "definition": "To make something happen, or the reason it happens.",
+    "type": "verb"
   },
   "cent": {
-    "definition": "A small unit of money; one hundred of them make a dollar or a euro."
+    "definition": "A small unit of money; one hundred of them make a dollar or a euro.",
+    "type": "noun"
   },
   "century": {
-    "definition": "A period of one hundred years."
+    "definition": "A period of one hundred years.",
+    "type": "noun"
   },
   "cereal": {
-    "definition": "A breakfast food made from grain, or a plant such as wheat."
+    "definition": "A breakfast food made from grain, or a plant such as wheat.",
+    "type": "noun"
   },
   "certain": {
-    "definition": "Sure that something is right."
+    "definition": "Sure that something is right.",
+    "type": "noun"
   },
   "chain": {
-    "definition": "Several metal rings joined together, or a group of shops with one owner."
+    "definition": "Several metal rings joined together, or a group of shops with one owner.",
+    "type": "noun"
   },
   "chairman": {
-    "definition": "The person who leads a meeting, a company, or a committee."
+    "definition": "The person who leads a meeting, a company, or a committee.",
+    "type": "noun"
   },
   "chance": {
-    "definition": "A possibility that something will happen."
+    "definition": "A possibility that something will happen.",
+    "type": "noun"
   },
   "chapter": {
-    "definition": "One of the parts that a book is divided into."
+    "definition": "One of the parts that a book is divided into.",
+    "type": "noun"
   },
   "chart": {
-    "definition": "A drawing that shows facts as a picture or a table."
+    "definition": "A drawing that shows facts as a picture or a table.",
+    "type": "noun"
   },
   "chat": {
-    "definition": "To talk in a friendly way."
+    "definition": "To talk in a friendly way.",
+    "type": "verb"
   },
   "cheap": {
-    "definition": "Costing little money."
+    "definition": "Costing little money.",
+    "type": "noun"
   },
   "check": {
-    "definition": "To look at something to make sure that it is right."
+    "definition": "To look at something to make sure that it is right.",
+    "type": "verb"
   },
   "cheek": {
-    "definition": "The soft side of the face below the eye."
+    "definition": "The soft side of the face below the eye.",
+    "type": "noun"
   },
   "cheer": {
-    "definition": "To shout to show that you are pleased or supporting someone."
+    "definition": "To shout to show that you are pleased or supporting someone.",
+    "type": "verb"
   },
   "chef": {
-    "definition": "A cook in a restaurant who plans the meals."
+    "definition": "A cook in a restaurant who plans the meals.",
+    "type": "noun"
   },
   "chemical": {
-    "definition": "A substance used in or produced by chemistry."
+    "definition": "A substance used in or produced by chemistry.",
+    "type": "noun"
   },
   "cheque": {
-    "definition": "A printed paper you sign to pay money from your bank account."
+    "definition": "A printed paper you sign to pay money from your bank account.",
+    "type": "noun"
   },
   "chess": {
-    "definition": "A game for two players with pieces on a board of 64 squares."
+    "definition": "A game for two players with pieces on a board of 64 squares.",
+    "type": "noun"
   },
   "chest": {
-    "definition": "The front of the body between the neck and the stomach, or a big strong box."
+    "definition": "The front of the body between the neck and the stomach, or a big strong box.",
+    "type": "noun"
   },
   "chin": {
-    "definition": "The part of the face below the mouth."
+    "definition": "The part of the face below the mouth.",
+    "type": "noun"
   },
   "chirp": {
-    "definition": "To make the short high sound of a small bird."
+    "definition": "To make the short high sound of a small bird.",
+    "type": "verb"
   },
   "choice": {
-    "definition": "The act of deciding between several things."
+    "definition": "The act of deciding between several things.",
+    "type": "noun"
   },
   "citizen": {
-    "definition": "A person who legally belongs to a country."
+    "definition": "A person who legally belongs to a country.",
+    "type": "noun"
   },
   "claim": {
-    "definition": "To say that something is true, or to ask for money you have a right to."
+    "definition": "To say that something is true, or to ask for money you have a right to.",
+    "type": "verb"
   },
   "classic": {
-    "definition": "Of the best quality, and respected over many years."
+    "definition": "Of the best quality, and respected over many years.",
+    "type": "noun"
   },
   "cleaner": {
-    "definition": "A person whose job is cleaning, or a substance used for cleaning."
+    "definition": "A person whose job is cleaning, or a substance used for cleaning.",
+    "type": "noun"
   },
   "clear": {
-    "definition": "Easy to see through or to understand."
+    "definition": "Easy to see through or to understand.",
+    "type": "adjective"
   },
   "clerk": {
-    "definition": "An office worker who keeps records and deals with papers."
+    "definition": "An office worker who keeps records and deals with papers.",
+    "type": "noun"
   },
   "click": {
-    "definition": "To press a button on a computer mouse."
+    "definition": "To press a button on a computer mouse.",
+    "type": "verb"
   },
   "climb": {
-    "definition": "To go up something using your hands and feet."
+    "definition": "To go up something using your hands and feet.",
+    "type": "verb"
   },
   "climbing": {
-    "definition": "The sport of going up rocks or mountains."
+    "definition": "The sport of going up rocks or mountains.",
+    "type": "noun"
   },
   "clone": {
-    "definition": "A living thing copied from another, or to make such a copy."
+    "definition": "A living thing copied from another, or to make such a copy.",
+    "type": "noun"
   },
   "clown": {
-    "definition": "A funny performer with a painted face who makes people laugh."
+    "definition": "A funny performer with a painted face who makes people laugh.",
+    "type": "noun"
   },
   "clue": {
-    "definition": "A fact that helps you find the answer to a question."
+    "definition": "A fact that helps you find the answer to a question.",
+    "type": "noun"
   },
   "coast": {
-    "definition": "The land along the edge of the sea."
+    "definition": "The land along the edge of the sea.",
+    "type": "noun"
   },
   "coin": {
-    "definition": "A piece of metal money."
+    "definition": "A piece of metal money.",
+    "type": "noun"
   },
   "cola": {
-    "definition": "A sweet brown fizzy drink."
+    "definition": "A sweet brown fizzy drink.",
+    "type": "noun"
   },
   "column": {
-    "definition": "A tall stone post, or a line of print going down a page."
+    "definition": "A tall stone post, or a line of print going down a page.",
+    "type": "noun"
   },
   "comb": {
-    "definition": "A tool with teeth for tidying hair."
+    "definition": "A tool with teeth for tidying hair.",
+    "type": "noun"
   },
   "comic": {
-    "definition": "Funny, or a magazine with picture stories."
+    "definition": "Funny, or a magazine with picture stories.",
+    "type": "noun"
   },
   "common": {
-    "definition": "Happening often, or shared by many people."
+    "definition": "Happening often, or shared by many people.",
+    "type": "adjective"
   },
   "company": {
-    "definition": "A business that sells goods or services."
+    "definition": "A business that sells goods or services.",
+    "type": "noun"
   },
   "compare": {
-    "definition": "To look at two things to see how they differ."
+    "definition": "To look at two things to see how they differ.",
+    "type": "verb"
   },
   "complain": {
-    "definition": "To say that you are not satisfied."
+    "definition": "To say that you are not satisfied.",
+    "type": "verb"
   },
   "complete": {
-    "definition": "Whole, with nothing missing, or to finish something."
+    "definition": "Whole, with nothing missing, or to finish something.",
+    "type": "noun"
   },
   "composer": {
-    "definition": "A person who writes music."
+    "definition": "A person who writes music.",
+    "type": "noun"
   },
   "concern": {
-    "definition": "To worry someone, or a matter that matters to people."
+    "definition": "To worry someone, or a matter that matters to people.",
+    "type": "verb"
   },
   "confuse": {
-    "definition": "To make someone unable to understand."
+    "definition": "To make someone unable to understand.",
+    "type": "verb"
   },
   "confused": {
-    "definition": "Unable to understand what is happening."
+    "definition": "Unable to understand what is happening.",
+    "type": "adjective"
   },
   "consider": {
-    "definition": "To think carefully about something."
+    "definition": "To think carefully about something.",
+    "type": "verb"
   },
   "consist": {
-    "definition": "To be made up of certain parts."
+    "definition": "To be made up of certain parts.",
+    "type": "verb"
   },
   "contact": {
-    "definition": "To get in touch with someone, or a person you know."
+    "definition": "To get in touch with someone, or a person you know.",
+    "type": "verb"
   },
   "context": {
-    "definition": "The words around a word, or the situation around an event."
+    "definition": "The words around a word, or the situation around an event.",
+    "type": "noun"
   },
   "continue": {
-    "definition": "To keep going without stopping."
+    "definition": "To keep going without stopping.",
+    "type": "verb"
   },
   "contrast": {
-    "definition": "A clear difference between two things."
+    "definition": "A clear difference between two things.",
+    "type": "noun"
   },
   "control": {
-    "definition": "To make something do what you want it to do."
+    "definition": "To make something do what you want it to do.",
+    "type": "verb"
   },
   "cooker": {
-    "definition": "A machine for cooking food, such as a stove."
+    "definition": "A machine for cooking food, such as a stove.",
+    "type": "noun"
   },
   "cooking": {
-    "definition": "The activity of preparing food with heat."
+    "definition": "The activity of preparing food with heat.",
+    "type": "noun"
   },
   "cooler": {
-    "definition": "A box that keeps drinks cold, or something that makes air cool."
+    "definition": "A box that keeps drinks cold, or something that makes air cool.",
+    "type": "noun"
   },
   "copy": {
-    "definition": "To make something that is the same as another."
+    "definition": "To make something that is the same as another.",
+    "type": "verb"
   },
   "cost": {
-    "definition": "The money you must pay for something."
+    "definition": "The money you must pay for something.",
+    "type": "noun"
   },
   "count": {
-    "definition": "To say numbers in order, or to find how many there are."
+    "definition": "To say numbers in order, or to find how many there are.",
+    "type": "verb"
   },
   "country": {
-    "definition": "A land with its own government, or the land outside towns."
+    "definition": "A land with its own government, or the land outside towns.",
+    "type": "noun"
   },
   "couple": {
-    "definition": "Two people together, often a man and a woman."
+    "definition": "Two people together, often a man and a woman.",
+    "type": "noun"
   },
   "court": {
-    "definition": "A place where legal cases are decided, or an area for a ball game."
+    "definition": "A place where legal cases are decided, or an area for a ball game.",
+    "type": "noun"
   },
   "cover": {
-    "definition": "To put something over another thing, or a lid."
+    "definition": "To put something over another thing, or a lid.",
+    "type": "verb"
   },
   "crazy": {
-    "definition": "Not sensible; very strange."
+    "definition": "Not sensible; very strange.",
+    "type": "adjective"
   },
   "cream": {
-    "definition": "A thick rich liquid from milk."
+    "definition": "A thick rich liquid from milk.",
+    "type": "noun"
   },
   "create": {
-    "definition": "To make something new."
+    "definition": "To make something new.",
+    "type": "verb"
   },
   "creative": {
-    "definition": "Good at making new things and having ideas."
+    "definition": "Good at making new things and having ideas.",
+    "type": "noun"
   },
   "creature": {
-    "definition": "A living animal of any kind."
+    "definition": "A living animal of any kind.",
+    "type": "noun"
   },
   "credit": {
-    "definition": "Money in a bank that you can use, or praise for work well done."
+    "definition": "Money in a bank that you can use, or praise for work well done.",
+    "type": "noun"
   },
   "cricket": {
-    "definition": "A game played with a bat and a ball by two teams of eleven."
+    "definition": "A game played with a bat and a ball by two teams of eleven.",
+    "type": "noun"
   },
   "crime": {
-    "definition": "Something that is against the law."
+    "definition": "Something that is against the law.",
+    "type": "noun"
   },
   "crisp": {
-    "definition": "Firm and dry and breaking with a sound, or a thin fried slice of potato."
+    "definition": "Firm and dry and breaking with a sound, or a thin fried slice of potato.",
+    "type": "noun"
   },
   "cross": {
-    "definition": "Angry, or to go from one side to the other."
+    "definition": "Angry, or to go from one side to the other.",
+    "type": "noun"
   },
   "crowd": {
-    "definition": "A large group of people in one place."
+    "definition": "A large group of people in one place.",
+    "type": "noun"
   },
   "crowded": {
-    "definition": "Full of people."
+    "definition": "Full of people.",
+    "type": "adjective"
   },
   "crown": {
-    "definition": "The round headpiece that a king or queen wears."
+    "definition": "The round headpiece that a king or queen wears.",
+    "type": "noun"
   },
   "cruise": {
-    "definition": "A holiday on a ship that visits several places."
+    "definition": "A holiday on a ship that visits several places.",
+    "type": "noun"
   },
   "cry": {
-    "definition": "To have tears coming from your eyes, or to shout."
+    "definition": "To have tears coming from your eyes, or to shout.",
+    "type": "verb"
   },
   "cupboard": {
-    "definition": "A piece of furniture with shelves and doors."
+    "definition": "A piece of furniture with shelves and doors.",
+    "type": "noun"
   },
   "curry": {
-    "definition": "A dish of meat or vegetables cooked with hot spices."
+    "definition": "A dish of meat or vegetables cooked with hot spices.",
+    "type": "noun"
   },
   "curse": {
-    "definition": "To say bad words because you are angry."
+    "definition": "To say bad words because you are angry.",
+    "type": "verb"
   },
   "custom": {
-    "definition": "Something people have done for a long time in a place or a family."
+    "definition": "Something people have done for a long time in a place or a family.",
+    "type": "noun"
   },
   "customer": {
-    "definition": "A person who buys something from a shop or a business."
+    "definition": "A person who buys something from a shop or a business.",
+    "type": "noun"
   },
   "cycling": {
-    "definition": "The activity of riding a bicycle."
+    "definition": "The activity of riding a bicycle.",
+    "type": "noun"
   },
   "daily": {
-    "definition": "Happening every day."
+    "definition": "Happening every day.",
+    "type": "adjective"
   },
   "dam": {
-    "definition": "A wall built across a river to hold the water back."
+    "definition": "A wall built across a river to hold the water back.",
+    "type": "noun"
   },
   "dancer": {
-    "definition": "A person who moves their body to music."
+    "definition": "A person who moves their body to music.",
+    "type": "noun"
   },
   "danger": {
-    "definition": "The chance that someone will be hurt."
+    "definition": "The chance that someone will be hurt.",
+    "type": "noun"
   },
   "daylight": {
-    "definition": "The natural light of the day, when the sun is up."
+    "definition": "The natural light of the day, when the sun is up.",
+    "type": "noun"
   },
   "dead": {
-    "definition": "No longer alive."
+    "definition": "No longer alive.",
+    "type": "adjective"
   },
   "deal": {
-    "definition": "An agreement between two sides, or to give out cards in a game."
+    "definition": "An agreement between two sides, or to give out cards in a game.",
+    "type": "noun"
   },
   "death": {
-    "definition": "The end of life."
+    "definition": "The end of life.",
+    "type": "noun"
   },
   "debate": {
-    "definition": "A formal discussion in which people give different opinions."
+    "definition": "A formal discussion in which people give different opinions.",
+    "type": "noun"
   },
   "decide": {
-    "definition": "To choose after thinking about the possibilities."
+    "definition": "To choose after thinking about the possibilities.",
+    "type": "verb"
   },
   "degree": {
-    "definition": "A unit for measuring temperature, or a qualification from a university."
+    "definition": "A unit for measuring temperature, or a qualification from a university.",
+    "type": "noun"
   },
   "delay": {
-    "definition": "To make something happen later than planned."
+    "definition": "To make something happen later than planned.",
+    "type": "verb"
   },
   "dentist": {
-    "definition": "A doctor who looks after teeth."
+    "definition": "A doctor who looks after teeth.",
+    "type": "noun"
   },
   "depend": {
-    "definition": "To need someone or something for help or support."
+    "definition": "To need someone or something for help or support.",
+    "type": "verb"
   },
   "desert": {
-    "definition": "A large dry area of land with almost no rain."
+    "definition": "A large dry area of land with almost no rain.",
+    "type": "noun"
   },
   "dessert": {
-    "definition": "Sweet food eaten at the end of a meal."
+    "definition": "Sweet food eaten at the end of a meal.",
+    "type": "noun"
   },
   "destroy": {
-    "definition": "To damage something so badly that it no longer exists."
+    "definition": "To damage something so badly that it no longer exists.",
+    "type": "verb"
   },
   "detail": {
-    "definition": "One small fact or feature of something bigger."
+    "definition": "One small fact or feature of something bigger.",
+    "type": "noun"
   },
   "develop": {
-    "definition": "To grow or change into something more advanced."
+    "definition": "To grow or change into something more advanced.",
+    "type": "verb"
   },
   "diamond": {
-    "definition": "A very hard clear stone used in jewellery."
+    "definition": "A very hard clear stone used in jewellery.",
+    "type": "noun"
   },
   "diary": {
-    "definition": "A book in which you write what happens each day."
+    "definition": "A book in which you write what happens each day.",
+    "type": "noun"
   },
   "die": {
-    "definition": "To stop living."
+    "definition": "To stop living.",
+    "type": "verb"
   },
   "diet": {
-    "definition": "The food you usually eat, or a plan to eat less."
+    "definition": "The food you usually eat, or a plan to eat less.",
+    "type": "noun"
   },
   "dinosaur": {
-    "definition": "A huge animal that lived on earth long before people."
+    "definition": "A huge animal that lived on earth long before people.",
+    "type": "noun"
   },
   "direct": {
-    "definition": "Going straight without stopping or turning, or to show the way."
+    "definition": "Going straight without stopping or turning, or to show the way.",
+    "type": "noun"
   },
   "director": {
-    "definition": "A person who is in charge of a company, a film, or a play."
+    "definition": "A person who is in charge of a company, a film, or a play.",
+    "type": "noun"
   },
   "disagree": {
-    "definition": "To have a different opinion from someone."
+    "definition": "To have a different opinion from someone.",
+    "type": "verb"
   },
   "disco": {
-    "definition": "A place or party where people dance to recorded music."
+    "definition": "A place or party where people dance to recorded music.",
+    "type": "noun"
   },
   "discover": {
-    "definition": "To find something for the first time."
+    "definition": "To find something for the first time.",
+    "type": "verb"
   },
   "dislike": {
-    "definition": "To not like something."
+    "definition": "To not like something.",
+    "type": "verb"
   },
   "display": {
-    "definition": "To put something where people can see it."
+    "definition": "To put something where people can see it.",
+    "type": "verb"
   },
   "disturb": {
-    "definition": "To interrupt someone or make them worried."
+    "definition": "To interrupt someone or make them worried.",
+    "type": "verb"
   },
   "divide": {
-    "definition": "To split something into parts."
+    "definition": "To split something into parts.",
+    "type": "verb"
   },
   "dizzy": {
-    "definition": "Feeling that everything is turning round."
+    "definition": "Feeling that everything is turning round.",
+    "type": "adjective"
   },
   "double": {
-    "definition": "Twice as much, or having two equal parts."
+    "definition": "Twice as much, or having two equal parts.",
+    "type": "numeral"
   },
   "doubt": {
-    "definition": "To think that something is probably not true."
+    "definition": "To think that something is probably not true.",
+    "type": "verb"
   },
   "download": {
-    "definition": "To copy files from the internet onto your computer."
+    "definition": "To copy files from the internet onto your computer.",
+    "type": "verb"
   },
   "draw": {
-    "definition": "To make a picture with a pencil or a pen."
+    "definition": "To make a picture with a pencil or a pen.",
+    "type": "verb"
   },
   "drawer": {
-    "definition": "A box that slides in and out of a piece of furniture."
+    "definition": "A box that slides in and out of a piece of furniture.",
+    "type": "noun"
   },
   "drawing": {
-    "definition": "A picture made with a pencil or a pen."
+    "definition": "A picture made with a pencil or a pen.",
+    "type": "noun"
   },
   "dream": {
-    "definition": "The pictures your mind makes while you sleep."
+    "definition": "The pictures your mind makes while you sleep.",
+    "type": "noun"
   },
   "dress": {
-    "definition": "To put clothes on, or a piece of clothing worn by women."
+    "definition": "To put clothes on, or a piece of clothing worn by women.",
+    "type": "verb"
   },
   "dressed": {
-    "definition": "Wearing clothes."
+    "definition": "Wearing clothes.",
+    "type": "adjective"
   },
   "drill": {
-    "definition": "A tool that makes holes, or an exercise that is repeated."
+    "definition": "A tool that makes holes, or an exercise that is repeated.",
+    "type": "noun"
   },
   "drive": {
-    "definition": "To make a vehicle move and steer it."
+    "definition": "To make a vehicle move and steer it.",
+    "type": "verb"
   },
   "drop": {
-    "definition": "To let something fall, or a small amount of liquid."
+    "definition": "To let something fall, or a small amount of liquid.",
+    "type": "verb"
   },
   "drug": {
-    "definition": "A medicine, or a substance that changes how the body or mind works."
+    "definition": "A medicine, or a substance that changes how the body or mind works.",
+    "type": "noun"
   },
   "dry": {
-    "definition": "With no water or liquid."
+    "definition": "With no water or liquid.",
+    "type": "adjective"
   },
   "duck": {
-    "definition": "A water bird with a wide flat beak."
+    "definition": "A water bird with a wide flat beak.",
+    "type": "noun"
   },
   "dust": {
-    "definition": "Fine dry dirt that settles on surfaces."
+    "definition": "Fine dry dirt that settles on surfaces.",
+    "type": "noun"
   },
   "early": {
-    "definition": "Before the usual or expected time."
+    "definition": "Before the usual or expected time.",
+    "type": "adjective"
   },
   "earn": {
-    "definition": "To get money by working."
+    "definition": "To get money by working.",
+    "type": "verb"
   },
   "earring": {
-    "definition": "A piece of jewellery worn on the ear."
+    "definition": "A piece of jewellery worn on the ear.",
+    "type": "noun"
   },
   "earth": {
-    "definition": "The planet we live on, or the soil."
+    "definition": "The planet we live on, or the soil.",
+    "type": "noun"
   },
   "east": {
-    "definition": "The direction where the sun comes up."
+    "definition": "The direction where the sun comes up.",
+    "type": "noun"
   },
   "editor": {
-    "definition": "A person who prepares texts or films for publishing."
+    "definition": "A person who prepares texts or films for publishing.",
+    "type": "noun"
   },
   "effect": {
-    "definition": "A change that happens because of something else."
+    "definition": "A change that happens because of something else.",
+    "type": "noun"
   },
   "effort": {
-    "definition": "The energy you use to do something."
+    "definition": "The energy you use to do something.",
+    "type": "noun"
   },
   "elderly": {
-    "definition": "Old, in a polite way."
+    "definition": "Old, in a polite way.",
+    "type": "adverb"
   },
   "electric": {
-    "definition": "Working with electricity."
+    "definition": "Working with electricity.",
+    "type": "noun"
   },
   "elephant": {
-    "definition": "A very large grey animal with a long trunk."
+    "definition": "A very large grey animal with a long trunk.",
+    "type": "noun"
   },
   "elevator": {
-    "definition": "A machine that carries people up and down in a building."
+    "definition": "A machine that carries people up and down in a building.",
+    "type": "noun"
   },
   "email": {
-    "definition": "A message sent from one computer to another."
+    "definition": "A message sent from one computer to another.",
+    "type": "noun"
   },
   "empty": {
-    "definition": "With nothing inside."
+    "definition": "With nothing inside.",
+    "type": "adjective"
   },
   "end": {
-    "definition": "The last part of something."
+    "definition": "The last part of something.",
+    "type": "noun"
   },
   "ending": {
-    "definition": "The way a story or a film finishes."
+    "definition": "The way a story or a film finishes.",
+    "type": "noun"
   },
   "enormous": {
-    "definition": "Extremely large."
+    "definition": "Extremely large.",
+    "type": "adjective"
   },
   "enter": {
-    "definition": "To go into a place."
+    "definition": "To go into a place.",
+    "type": "verb"
   },
   "entrance": {
-    "definition": "The way into a place."
+    "definition": "The way into a place.",
+    "type": "noun"
   },
   "envelope": {
-    "definition": "A paper cover for a letter."
+    "definition": "A paper cover for a letter.",
+    "type": "noun"
   },
   "envy": {
-    "definition": "To wish you had what someone else has."
+    "definition": "To wish you had what someone else has.",
+    "type": "verb"
   },
   "episode": {
-    "definition": "One part of a television series."
+    "definition": "One part of a television series.",
+    "type": "noun"
   },
   "error": {
-    "definition": "A mistake."
+    "definition": "A mistake.",
+    "type": "noun"
   },
   "escape": {
-    "definition": "To get away from a place where you are held."
+    "definition": "To get away from a place where you are held.",
+    "type": "verb"
   },
   "essay": {
-    "definition": "A short piece of writing about a subject."
+    "definition": "A short piece of writing about a subject.",
+    "type": "noun"
   },
   "euro": {
-    "definition": "The money used in many European countries."
+    "definition": "The money used in many European countries.",
+    "type": "noun"
   },
   "evidence": {
-    "definition": "Facts that show what is true."
+    "definition": "Facts that show what is true.",
+    "type": "noun"
   },
   "exam": {
-    "definition": "A test of what you know or can do."
+    "definition": "A test of what you know or can do.",
+    "type": "noun"
   },
   "exchange": {
-    "definition": "To give something and get something else in return."
+    "definition": "To give something and get something else in return.",
+    "type": "verb"
   },
   "exercise": {
-    "definition": "Physical activity, or a task for practice."
+    "definition": "Physical activity, or a task for practice.",
+    "type": "noun"
   },
   "exist": {
-    "definition": "To be real or to live."
+    "definition": "To be real or to live.",
+    "type": "verb"
   },
   "expect": {
-    "definition": "To think that something will happen."
+    "definition": "To think that something will happen.",
+    "type": "verb"
   },
   "expert": {
-    "definition": "A person who knows a lot about one subject."
+    "definition": "A person who knows a lot about one subject.",
+    "type": "noun"
   },
   "explain": {
-    "definition": "To make something clear by talking about it."
+    "definition": "To make something clear by talking about it.",
+    "type": "verb"
   },
   "explore": {
-    "definition": "To travel through a place to learn about it."
+    "definition": "To travel through a place to learn about it.",
+    "type": "verb"
   },
   "express": {
-    "definition": "To say what you think or feel, or a fast train."
+    "definition": "To say what you think or feel, or a fast train.",
+    "type": "verb"
   },
   "extra": {
-    "definition": "More than is usual or needed."
+    "definition": "More than is usual or needed.",
+    "type": "adjective"
   },
   "face": {
-    "definition": "To look towards someone, or the front of the head."
+    "definition": "To look towards someone, or the front of the head.",
+    "type": "verb"
   },
   "fact": {
-    "definition": "Something that is true and can be proved."
+    "definition": "Something that is true and can be proved.",
+    "type": "noun"
   },
   "fail": {
-    "definition": "To not succeed at something."
+    "definition": "To not succeed at something.",
+    "type": "verb"
   },
   "fall": {
-    "definition": "To drop down, or the season after summer."
+    "definition": "To drop down, or the season after summer.",
+    "type": "verb"
   },
   "familiar": {
-    "definition": "Known to you because you have seen it before."
+    "definition": "Known to you because you have seen it before.",
+    "type": "noun"
   },
   "fancy": {
-    "definition": "Not simple and special in style, or to want something."
+    "definition": "Not simple and special in style, or to want something.",
+    "type": "adjective"
   },
   "fare": {
-    "definition": "The money you pay to travel."
+    "definition": "The money you pay to travel.",
+    "type": "noun"
   },
   "fashion": {
-    "definition": "The style of clothes that is popular at a time."
+    "definition": "The style of clothes that is popular at a time.",
+    "type": "noun"
   },
   "fault": {
-    "definition": "Responsibility for a mistake, or something wrong in a machine."
+    "definition": "Responsibility for a mistake, or something wrong in a machine.",
+    "type": "noun"
   },
   "fear": {
-    "definition": "The feeling you get when you are in danger."
+    "definition": "The feeling you get when you are in danger.",
+    "type": "noun"
   },
   "feather": {
-    "definition": "One of the light soft parts that cover a bird."
+    "definition": "One of the light soft parts that cover a bird.",
+    "type": "noun"
   },
   "feature": {
-    "definition": "An important part of something."
+    "definition": "An important part of something.",
+    "type": "noun"
   },
   "fee": {
-    "definition": "Money you pay for a service."
+    "definition": "Money you pay for a service.",
+    "type": "noun"
   },
   "feel": {
-    "definition": "To notice something by touch, or to have an emotion."
+    "definition": "To notice something by touch, or to have an emotion.",
+    "type": "verb"
   },
   "female": {
-    "definition": "Of the sex that can have babies."
+    "definition": "Of the sex that can have babies.",
+    "type": "noun"
   },
   "fence": {
-    "definition": "A barrier of wood or wire around a piece of land."
+    "definition": "A barrier of wood or wire around a piece of land.",
+    "type": "noun"
   },
   "fiction": {
-    "definition": "Stories about imagined people and events."
+    "definition": "Stories about imagined people and events.",
+    "type": "noun"
   },
   "fighter": {
-    "definition": "A person who fights, or a fast military plane."
+    "definition": "A person who fights, or a fast military plane.",
+    "type": "noun"
   },
   "figure": {
-    "definition": "A number, or the shape of a person's body."
+    "definition": "A number, or the shape of a person's body.",
+    "type": "noun"
   },
   "film": {
-    "definition": "A story told in moving pictures."
+    "definition": "A story told in moving pictures.",
+    "type": "noun"
   },
   "final": {
-    "definition": "Last, with nothing coming after it."
+    "definition": "Last, with nothing coming after it.",
+    "type": "noun"
   },
   "fit": {
-    "definition": "Healthy and strong because of exercise, or the right size."
+    "definition": "Healthy and strong because of exercise, or the right size.",
+    "type": "noun"
   },
   "fix": {
-    "definition": "To repair something that is broken."
+    "definition": "To repair something that is broken.",
+    "type": "verb"
   },
   "flea": {
-    "definition": "A very small jumping insect that lives on animals."
+    "definition": "A very small jumping insect that lives on animals.",
+    "type": "noun"
   },
   "flight": {
-    "definition": "A journey in a plane, or the act of flying."
+    "definition": "A journey in a plane, or the act of flying.",
+    "type": "noun"
   },
   "float": {
-    "definition": "To stay on the surface of water without sinking."
+    "definition": "To stay on the surface of water without sinking.",
+    "type": "verb"
   },
   "flood": {
-    "definition": "A lot of water covering land that is usually dry."
+    "definition": "A lot of water covering land that is usually dry.",
+    "type": "noun"
   },
   "flour": {
-    "definition": "The powder from grain that you use for baking."
+    "definition": "The powder from grain that you use for baking.",
+    "type": "noun"
   },
   "fog": {
-    "definition": "Thick cloud close to the ground that makes it hard to see."
+    "definition": "Thick cloud close to the ground that makes it hard to see.",
+    "type": "noun"
   },
   "folder": {
-    "definition": "A cover for keeping papers together."
+    "definition": "A cover for keeping papers together.",
+    "type": "noun"
   },
   "follow": {
-    "definition": "To go after someone or something."
+    "definition": "To go after someone or something.",
+    "type": "verb"
   },
   "fool": {
-    "definition": "A person who does silly things."
+    "definition": "A person who does silly things.",
+    "type": "noun"
   },
   "forbid": {
-    "definition": "To say that something is not allowed."
+    "definition": "To say that something is not allowed.",
+    "type": "verb"
   },
   "force": {
-    "definition": "Physical power, or to make someone do something."
+    "definition": "Physical power, or to make someone do something.",
+    "type": "noun"
   },
   "forest": {
-    "definition": "A large area covered with trees."
+    "definition": "A large area covered with trees.",
+    "type": "noun"
   },
   "fork": {
-    "definition": "A tool with points used for eating or for gardening."
+    "definition": "A tool with points used for eating or for gardening.",
+    "type": "noun"
   },
   "fortune": {
-    "definition": "A very large amount of money, or luck."
+    "definition": "A very large amount of money, or luck.",
+    "type": "noun"
   },
   "frame": {
-    "definition": "The border around a picture, or the bars that hold glasses."
+    "definition": "The border around a picture, or the bars that hold glasses.",
+    "type": "noun"
   },
   "frank": {
-    "definition": "Saying exactly what you think in an honest way."
+    "definition": "Saying exactly what you think in an honest way.",
+    "type": "noun"
   },
   "freedom": {
-    "definition": "The right to do or say what you want."
+    "definition": "The right to do or say what you want.",
+    "type": "noun"
   },
   "freeze": {
-    "definition": "To become hard and solid because of cold."
+    "definition": "To become hard and solid because of cold.",
+    "type": "verb"
   },
   "fresh": {
-    "definition": "New and not old, or recently picked."
+    "definition": "New and not old, or recently picked.",
+    "type": "noun"
   },
   "fridge": {
-    "definition": "A cold cupboard that keeps food fresh."
+    "definition": "A cold cupboard that keeps food fresh.",
+    "type": "noun"
   },
   "fried": {
-    "definition": "Cooked in hot oil."
+    "definition": "Cooked in hot oil.",
+    "type": "adjective"
   },
   "frighten": {
-    "definition": "To make someone suddenly afraid."
+    "definition": "To make someone suddenly afraid.",
+    "type": "verb"
   },
   "front": {
-    "definition": "The part of something that faces forward."
+    "definition": "The part of something that faces forward.",
+    "type": "noun"
   },
   "fry": {
-    "definition": "To cook food in hot oil."
+    "definition": "To cook food in hot oil.",
+    "type": "verb"
   },
   "function": {
-    "definition": "The purpose of something, or a job that a machine does."
+    "definition": "The purpose of something, or a job that a machine does.",
+    "type": "noun"
   },
   "further": {
-    "definition": "At a greater distance, or more."
+    "definition": "At a greater distance, or more.",
+    "type": "adjective"
   },
   "gallery": {
-    "definition": "A room or building where art is shown."
+    "definition": "A room or building where art is shown.",
+    "type": "noun"
   },
   "garage": {
-    "definition": "A building for a car, or a place where cars are repaired."
+    "definition": "A building for a car, or a place where cars are repaired.",
+    "type": "noun"
   },
   "garlic": {
-    "definition": "A small white plant like an onion with a strong taste."
+    "definition": "A small white plant like an onion with a strong taste.",
+    "type": "noun"
   },
   "gas": {
-    "definition": "A substance like air, or fuel used for cooking and heating."
+    "definition": "A substance like air, or fuel used for cooking and heating.",
+    "type": "noun"
   },
   "gate": {
-    "definition": "A door in a fence or a wall."
+    "definition": "A door in a fence or a wall.",
+    "type": "noun"
   },
   "gather": {
-    "definition": "To come together in a group, or to collect things."
+    "definition": "To come together in a group, or to collect things.",
+    "type": "verb"
   },
   "gender": {
-    "definition": "Whether a person is male or female."
+    "definition": "Whether a person is male or female.",
+    "type": "adjective"
   },
   "gentle": {
-    "definition": "Careful and soft, not rough."
+    "definition": "Careful and soft, not rough.",
+    "type": "noun"
   },
   "given": {
-    "definition": "Handed to someone as a gift, or stated as a fact."
+    "definition": "Handed to someone as a gift, or stated as a fact.",
+    "type": "noun"
   },
   "globe": {
-    "definition": "The round shape of the planet we live on, or a model of it."
+    "definition": "The round shape of the planet we live on, or a model of it.",
+    "type": "noun"
   },
   "glove": {
-    "definition": "A covering for the hand with separate parts for the fingers."
+    "definition": "A covering for the hand with separate parts for the fingers.",
+    "type": "noun"
   },
   "gold": {
-    "definition": "A valuable yellow metal, or the colour of it."
+    "definition": "A valuable yellow metal, or the colour of it.",
+    "type": "noun"
   },
   "golden": {
-    "definition": "Made of the valuable yellow metal, or its colour."
+    "definition": "Made of the valuable yellow metal, or its colour.",
+    "type": "noun"
   },
   "golf": {
-    "definition": "A game in which a small white ball is hit into holes with clubs."
+    "definition": "A game in which a small white ball is hit into holes with clubs.",
+    "type": "noun"
   },
   "grace": {
-    "definition": "A smooth and beautiful way of moving."
+    "definition": "A smooth and beautiful way of moving.",
+    "type": "noun"
   },
   "graduate": {
-    "definition": "To finish your studies at a university."
+    "definition": "To finish your studies at a university.",
+    "type": "verb"
   },
   "granddad": {
-    "definition": "An informal word for grandfather."
+    "definition": "An informal word for grandfather.",
+    "type": "noun"
   },
   "grandson": {
-    "definition": "The son of your child."
+    "definition": "The son of your child.",
+    "type": "noun"
   },
   "granny": {
-    "definition": "An informal word for grandmother."
+    "definition": "An informal word for grandmother.",
+    "type": "noun"
   },
   "grateful": {
-    "definition": "Feeling thankful to someone."
+    "definition": "Feeling thankful to someone.",
+    "type": "adjective"
   },
   "greedy": {
-    "definition": "Wanting much more than you need."
+    "definition": "Wanting much more than you need.",
+    "type": "noun"
   },
   "green": {
-    "definition": "The colour of leaves and grass, or caring about the environment."
+    "definition": "The colour of leaves and grass, or caring about the environment.",
+    "type": "noun"
   },
   "grilled": {
-    "definition": "Cooked over heat or under it on a metal frame."
+    "definition": "Cooked over heat or under it on a metal frame.",
+    "type": "adjective"
   },
   "guard": {
-    "definition": "A person who protects a place, or to protect it."
+    "definition": "A person who protects a place, or to protect it.",
+    "type": "noun"
   },
   "gun": {
-    "definition": "A weapon that shoots bullets."
+    "definition": "A weapon that shoots bullets.",
+    "type": "noun"
   },
   "ham": {
-    "definition": "The meat from the leg of a pig, eaten cold."
+    "definition": "The meat from the leg of a pig, eaten cold.",
+    "type": "noun"
   },
   "hand": {
-    "definition": "The part of the body at the end of the arm."
+    "definition": "The part of the body at the end of the arm.",
+    "type": "noun"
   },
   "handbag": {
-    "definition": "A small bag for carrying money and personal things."
+    "definition": "A small bag for carrying money and personal things.",
+    "type": "noun"
   },
   "handle": {
-    "definition": "The part you hold, or to deal with something."
+    "definition": "The part you hold, or to deal with something.",
+    "type": "noun"
   },
   "harm": {
-    "definition": "Damage or injury caused to someone."
+    "definition": "Damage or injury caused to someone.",
+    "type": "noun"
   },
   "harmful": {
-    "definition": "Causing damage or injury."
+    "definition": "Causing damage or injury.",
+    "type": "adjective"
   },
   "harmony": {
-    "definition": "A peaceful situation, or notes that sound good together."
+    "definition": "A peaceful situation, or notes that sound good together.",
+    "type": "noun"
   },
   "harvest": {
-    "definition": "The time when crops are collected, or to collect them."
+    "definition": "The time when crops are collected, or to collect them.",
+    "type": "noun"
   },
   "hate": {
-    "definition": "To dislike someone or something very much."
+    "definition": "To dislike someone or something very much.",
+    "type": "verb"
   },
   "head": {
-    "definition": "The top part of the body with the face, or to be in charge."
+    "definition": "The top part of the body with the face, or to be in charge.",
+    "type": "noun"
   },
   "heat": {
-    "definition": "The quality of being hot."
+    "definition": "The quality of being hot.",
+    "type": "noun"
   },
   "heating": {
-    "definition": "The system that warms a building."
+    "definition": "The system that warms a building.",
+    "type": "noun"
   },
   "help": {
-    "definition": "To make someone's task easier, or to give support."
+    "definition": "To make someone's task easier, or to give support.",
+    "type": "verb"
   },
   "helpful": {
-    "definition": "Giving useful support or information."
+    "definition": "Giving useful support or information.",
+    "type": "noun"
   },
   "hero": {
-    "definition": "A person admired for brave deeds."
+    "definition": "A person admired for brave deeds.",
+    "type": "noun"
   },
   "highway": {
-    "definition": "A wide road for fast traffic between towns."
+    "definition": "A wide road for fast traffic between towns.",
+    "type": "noun"
   },
   "hike": {
-    "definition": "To walk a long way in the countryside."
+    "definition": "To walk a long way in the countryside.",
+    "type": "verb"
   },
   "hiking": {
-    "definition": "Long walks in the countryside for pleasure."
+    "definition": "Long walks in the countryside for pleasure.",
+    "type": "adjective"
   },
   "hit": {
-    "definition": "To strike someone or something with force."
+    "definition": "To strike someone or something with force.",
+    "type": "verb"
   },
   "hockey": {
-    "definition": "A team game played with curved sticks and a small ball."
+    "definition": "A team game played with curved sticks and a small ball.",
+    "type": "noun"
   },
   "hold": {
-    "definition": "To have something in your hands or arms."
+    "definition": "To have something in your hands or arms.",
+    "type": "verb"
   },
   "honey": {
-    "definition": "A sweet golden food made by bees."
+    "definition": "A sweet golden food made by bees.",
+    "type": "noun"
   },
   "horror": {
-    "definition": "A strong feeling of fear."
+    "definition": "A strong feeling of fear.",
+    "type": "noun"
   },
   "host": {
-    "definition": "A person who invites guests, or to organise an event."
+    "definition": "A person who invites guests, or to organise an event.",
+    "type": "noun"
   },
   "hug": {
-    "definition": "To hold someone close with your arms."
+    "definition": "To hold someone close with your arms.",
+    "type": "verb"
   },
   "human": {
-    "definition": "A person, or belonging to people."
+    "definition": "A person, or belonging to people.",
+    "type": "noun"
   },
   "hunter": {
-    "definition": "A person who kills wild animals for food or for sport."
+    "definition": "A person who kills wild animals for food or for sport.",
+    "type": "noun"
   },
   "hurry": {
-    "definition": "To act quickly because there is little time."
+    "definition": "To act quickly because there is little time.",
+    "type": "verb"
   },
   "ill": {
-    "definition": "Not well; sick."
+    "definition": "Not well; sick.",
+    "type": "adjective"
   },
   "illegal": {
-    "definition": "Not allowed by the law."
+    "definition": "Not allowed by the law.",
+    "type": "adjective"
   },
   "image": {
-    "definition": "A picture of someone or something."
+    "definition": "A picture of someone or something.",
+    "type": "noun"
   },
   "impact": {
-    "definition": "A strong effect, or the moment when two things hit."
+    "definition": "A strong effect, or the moment when two things hit.",
+    "type": "noun"
   },
   "impress": {
-    "definition": "To make someone admire you."
+    "definition": "To make someone admire you.",
+    "type": "verb"
   },
   "improve": {
-    "definition": "To become better, or to make something better."
+    "definition": "To become better, or to make something better.",
+    "type": "verb"
   },
   "inch": {
-    "definition": "A small unit of length, about 2.5 centimetres."
+    "definition": "A small unit of length, about 2.5 centimetres.",
+    "type": "noun"
   },
   "include": {
-    "definition": "To have something as one of its parts."
+    "definition": "To have something as one of its parts.",
+    "type": "verb"
   },
   "increase": {
-    "definition": "To become more or larger."
+    "definition": "To become more or larger.",
+    "type": "verb"
   },
   "indicate": {
-    "definition": "To show or point to something."
+    "definition": "To show or point to something.",
+    "type": "verb"
   },
   "indoor": {
-    "definition": "Inside a building."
+    "definition": "Inside a building.",
+    "type": "noun"
   },
   "injure": {
-    "definition": "To hurt a part of the body."
+    "definition": "To hurt a part of the body.",
+    "type": "verb"
   },
   "inner": {
-    "definition": "On the inside; further in."
+    "definition": "On the inside; further in.",
+    "type": "adjective"
   },
   "insect": {
-    "definition": "A small animal with six legs and a body in three parts."
+    "definition": "A small animal with six legs and a body in three parts.",
+    "type": "noun"
   },
   "instant": {
-    "definition": "Happening at once, or a very short moment."
+    "definition": "Happening at once, or a very short moment.",
+    "type": "adjective"
   },
   "interest": {
-    "definition": "The wish to know about something, or money paid for a loan."
+    "definition": "The wish to know about something, or money paid for a loan.",
+    "type": "noun"
   },
   "invade": {
-    "definition": "To enter a country with an army."
+    "definition": "To enter a country with an army.",
+    "type": "verb"
   },
   "invent": {
-    "definition": "To make something that did not exist before."
+    "definition": "To make something that did not exist before.",
+    "type": "verb"
   },
   "invite": {
-    "definition": "To ask someone to come to an event."
+    "definition": "To ask someone to come to an event.",
+    "type": "verb"
   },
   "issue": {
-    "definition": "An important subject, or one copy of a magazine."
+    "definition": "An important subject, or one copy of a magazine.",
+    "type": "noun"
   },
   "jam": {
-    "definition": "Sweet food made from fruit cooked with sugar, or a traffic hold-up."
+    "definition": "Sweet food made from fruit cooked with sugar, or a traffic hold-up.",
+    "type": "noun"
   },
   "jelly": {
-    "definition": "A soft sweet food that shakes."
+    "definition": "A soft sweet food that shakes.",
+    "type": "noun"
   },
   "joke": {
-    "definition": "Something said to make people laugh."
+    "definition": "Something said to make people laugh.",
+    "type": "noun"
   },
   "journey": {
-    "definition": "A trip from one place to another."
+    "definition": "A trip from one place to another.",
+    "type": "noun"
   },
   "joy": {
-    "definition": "A feeling of great happiness."
+    "definition": "A feeling of great happiness.",
+    "type": "noun"
   },
   "junior": {
-    "definition": "Younger or less experienced."
+    "definition": "Younger or less experienced.",
+    "type": "noun"
   },
   "junk": {
-    "definition": "Old things that are not wanted."
+    "definition": "Old things that are not wanted.",
+    "type": "noun"
   },
   "killer": {
-    "definition": "A person who kills another, or something very dangerous."
+    "definition": "A person who kills another, or something very dangerous.",
+    "type": "noun"
   },
   "kilo": {
-    "definition": "A unit of weight, one thousand grammes."
+    "definition": "A unit of weight, one thousand grammes.",
+    "type": "noun"
   },
   "kind": {
-    "definition": "Caring about other people, or a sort of something."
+    "definition": "Caring about other people, or a sort of something.",
+    "type": "noun"
   },
   "kindly": {
-    "definition": "In a caring and helpful way."
+    "definition": "In a caring and helpful way.",
+    "type": "adjective"
   },
   "kingdom": {
-    "definition": "A country ruled by a king or queen."
+    "definition": "A country ruled by a king or queen.",
+    "type": "noun"
   },
   "kit": {
-    "definition": "A set of tools or clothes for a particular activity."
+    "definition": "A set of tools or clothes for a particular activity.",
+    "type": "noun"
   },
   "knock": {
-    "definition": "To hit a door to make a sound."
+    "definition": "To hit a door to make a sound.",
+    "type": "verb"
   },
   "lack": {
-    "definition": "To not have something that you need."
+    "definition": "To not have something that you need.",
+    "type": "verb"
   },
   "lake": {
-    "definition": "A large area of water with land all around it."
+    "definition": "A large area of water with land all around it.",
+    "type": "noun"
   },
   "lamp": {
-    "definition": "A device that gives light in a room."
+    "definition": "A device that gives light in a room.",
+    "type": "noun"
   },
   "land": {
-    "definition": "The solid part of the earth's surface, or to come down to the ground."
+    "definition": "The solid part of the earth's surface, or to come down to the ground.",
+    "type": "noun"
   },
   "lane": {
-    "definition": "A narrow road, or one strip of a wide road."
+    "definition": "A narrow road, or one strip of a wide road.",
+    "type": "noun"
   },
   "latest": {
-    "definition": "Newest; most recent."
+    "definition": "Newest; most recent.",
+    "type": "noun"
   },
   "law": {
-    "definition": "A rule made by the government that people must obey."
+    "definition": "A rule made by the government that people must obey.",
+    "type": "noun"
   },
   "lawyer": {
-    "definition": "A person whose job is to advise people about the law."
+    "definition": "A person whose job is to advise people about the law.",
+    "type": "noun"
   },
   "laziness": {
-    "definition": "The habit of not wanting to work."
+    "definition": "The habit of not wanting to work.",
+    "type": "noun"
   },
   "lead": {
-    "definition": "To go in front and show the way, or a heavy soft grey metal."
+    "definition": "To go in front and show the way, or a heavy soft grey metal.",
+    "type": "verb"
   },
   "learner": {
-    "definition": "A person who is learning something."
+    "definition": "A person who is learning something.",
+    "type": "noun"
   },
   "leather": {
-    "definition": "A material made from the skin of animals."
+    "definition": "A material made from the skin of animals.",
+    "type": "noun"
   },
   "left": {
-    "definition": "On the side of the body where the heart is, or the past of leave."
+    "definition": "On the side of the body where the heart is, or the past of leave.",
+    "type": "adjective"
   },
   "leisure": {
-    "definition": "Free time when you can do what you like."
+    "definition": "Free time when you can do what you like.",
+    "type": "noun"
   },
   "lemon": {
-    "definition": "A yellow fruit with a sour taste."
+    "definition": "A yellow fruit with a sour taste.",
+    "type": "noun"
   },
   "lemonade": {
-    "definition": "A drink made from lemons, water, and sugar."
+    "definition": "A drink made from lemons, water, and sugar.",
+    "type": "noun"
   },
   "lend": {
-    "definition": "To give something to someone for a while."
+    "definition": "To give something to someone for a while.",
+    "type": "verb"
   },
   "level": {
-    "definition": "A height or a standard, or flat and even."
+    "definition": "A height or a standard, or flat and even.",
+    "type": "noun"
   },
   "liberty": {
-    "definition": "The freedom to live or act as you choose."
+    "definition": "The freedom to live or act as you choose.",
+    "type": "noun"
   },
   "lie": {
-    "definition": "To say something that is not true, or to rest flat."
+    "definition": "To say something that is not true, or to rest flat.",
+    "type": "verb"
   },
   "likely": {
-    "definition": "Probably going to happen."
+    "definition": "Probably going to happen.",
+    "type": "adverb"
   },
   "lip": {
-    "definition": "One of the two soft edges of the mouth."
+    "definition": "One of the two soft edges of the mouth.",
+    "type": "noun"
   },
   "lively": {
-    "definition": "Full of energy and activity."
+    "definition": "Full of energy and activity.",
+    "type": "adjective"
   },
   "load": {
-    "definition": "The amount that something can carry, or to put goods on a vehicle."
+    "definition": "The amount that something can carry, or to put goods on a vehicle.",
+    "type": "noun"
   },
   "local": {
-    "definition": "Belonging to the area near you."
+    "definition": "Belonging to the area near you.",
+    "type": "adjective"
   },
   "lock": {
-    "definition": "To close something with a key, or the part a key turns."
+    "definition": "To close something with a key, or the part a key turns.",
+    "type": "verb"
   },
   "logical": {
-    "definition": "Following clear sensible reasoning."
+    "definition": "Following clear sensible reasoning.",
+    "type": "noun"
   },
   "loose": {
-    "definition": "Not tight or not fixed firmly."
+    "definition": "Not tight or not fixed firmly.",
+    "type": "adjective"
   },
   "lose": {
-    "definition": "To no longer have something because it is gone."
+    "definition": "To no longer have something because it is gone.",
+    "type": "verb"
   },
   "lost": {
-    "definition": "Unable to find the way, or gone and not found."
+    "definition": "Unable to find the way, or gone and not found.",
+    "type": "adjective"
   },
   "lot": {
-    "definition": "A large amount."
+    "definition": "A large amount.",
+    "type": "noun"
   },
   "lover": {
-    "definition": "A person you have a romantic relationship with."
+    "definition": "A person you have a romantic relationship with.",
+    "type": "noun"
   },
   "low": {
-    "definition": "Not high; near the ground."
+    "definition": "Not high; near the ground.",
+    "type": "adjective"
   },
   "lyric": {
-    "definition": "The words of a song."
+    "definition": "The words of a song.",
+    "type": "noun"
   },
   "mad": {
-    "definition": "Silly or angry, or not sane."
+    "definition": "Silly or angry, or not sane.",
+    "type": "noun"
   },
   "magic": {
-    "definition": "The power to make impossible things happen."
+    "definition": "The power to make impossible things happen.",
+    "type": "noun"
   },
   "major": {
-    "definition": "Very large or important."
+    "definition": "Very large or important.",
+    "type": "adjective"
   },
   "maker": {
-    "definition": "A person or company that makes something."
+    "definition": "A person or company that makes something.",
+    "type": "noun"
   },
   "male": {
-    "definition": "Of the sex that does not have babies."
+    "definition": "Of the sex that does not have babies.",
+    "type": "noun"
   },
   "mall": {
-    "definition": "A large building with many shops inside."
+    "definition": "A large building with many shops inside.",
+    "type": "noun"
   },
   "manage": {
-    "definition": "To be in charge of something, or to succeed in doing it."
+    "definition": "To be in charge of something, or to succeed in doing it.",
+    "type": "verb"
   },
   "manager": {
-    "definition": "A person who is in charge of a business or a team."
+    "definition": "A person who is in charge of a business or a team.",
+    "type": "noun"
   },
   "manner": {
-    "definition": "The way something is done, or how someone behaves."
+    "definition": "The way something is done, or how someone behaves.",
+    "type": "noun"
   },
   "mark": {
-    "definition": "A spot or a sign, or a point given for school work."
+    "definition": "A spot or a sign, or a point given for school work.",
+    "type": "noun"
   },
   "market": {
-    "definition": "A place where people buy and sell things, often outdoors."
+    "definition": "A place where people buy and sell things, often outdoors.",
+    "type": "noun"
   },
   "married": {
-    "definition": "Having a husband or a wife."
+    "definition": "Having a husband or a wife.",
+    "type": "adjective"
   },
   "marry": {
-    "definition": "To become someone's husband or wife."
+    "definition": "To become someone's husband or wife.",
+    "type": "verb"
   },
   "material": {
-    "definition": "The substance something is made of, or cloth."
+    "definition": "The substance something is made of, or cloth.",
+    "type": "noun"
   },
   "matter": {
-    "definition": "To be important, or a subject."
+    "definition": "To be important, or a subject.",
+    "type": "verb"
   },
   "max": {
-    "definition": "The most possible; a short word for maximum."
+    "definition": "The most possible; a short word for maximum.",
+    "type": "noun"
   },
   "mean": {
-    "definition": "To have a certain sense, or unkind."
+    "definition": "To have a certain sense, or unkind.",
+    "type": "verb"
   },
   "meaning": {
-    "definition": "What a word or an action stands for."
+    "definition": "What a word or an action stands for.",
+    "type": "adjective"
   },
   "medal": {
-    "definition": "A metal disc given as a prize or an honour."
+    "definition": "A metal disc given as a prize or an honour.",
+    "type": "noun"
   },
   "medical": {
-    "definition": "About doctors and the treatment of illness."
+    "definition": "About doctors and the treatment of illness.",
+    "type": "noun"
   },
   "melon": {
-    "definition": "A large round sweet fruit with a thick skin."
+    "definition": "A large round sweet fruit with a thick skin.",
+    "type": "noun"
   },
   "member": {
-    "definition": "A person who belongs to a group."
+    "definition": "A person who belongs to a group.",
+    "type": "noun"
   },
   "mention": {
-    "definition": "To say something briefly."
+    "definition": "To say something briefly.",
+    "type": "verb"
   },
   "menu": {
-    "definition": "A list of the food you can order in a restaurant."
+    "definition": "A list of the food you can order in a restaurant.",
+    "type": "noun"
   },
   "metal": {
-    "definition": "A hard shiny material such as iron or gold."
+    "definition": "A hard shiny material such as iron or gold.",
+    "type": "noun"
   },
   "method": {
-    "definition": "A way of doing something."
+    "definition": "A way of doing something.",
+    "type": "noun"
   },
   "midday": {
-    "definition": "Twelve o'clock in the day."
+    "definition": "Twelve o'clock in the day.",
+    "type": "noun"
   },
   "middle": {
-    "definition": "The central part of something."
+    "definition": "The central part of something.",
+    "type": "noun"
   },
   "midnight": {
-    "definition": "Twelve o'clock at night."
+    "definition": "Twelve o'clock at night.",
+    "type": "noun"
   },
   "military": {
-    "definition": "About soldiers and the army."
+    "definition": "About soldiers and the army.",
+    "type": "adjective"
   },
   "mind": {
-    "definition": "The part of you that thinks, or to care about something."
+    "definition": "The part of you that thinks, or to care about something.",
+    "type": "noun"
   },
   "mirror": {
-    "definition": "A piece of glass in which you can see yourself."
+    "definition": "A piece of glass in which you can see yourself.",
+    "type": "noun"
   },
   "missing": {
-    "definition": "Not there; lost or absent."
+    "definition": "Not there; lost or absent.",
+    "type": "adjective"
   },
   "mistake": {
-    "definition": "Something done wrong by accident."
+    "definition": "Something done wrong by accident.",
+    "type": "noun"
   },
   "mix": {
-    "definition": "To put things together so that they become one."
+    "definition": "To put things together so that they become one.",
+    "type": "verb"
   },
   "mobile": {
-    "definition": "A telephone you can carry, or able to move."
+    "definition": "A telephone you can carry, or able to move.",
+    "type": "noun"
   },
   "model": {
-    "definition": "A small copy of something, or a person who shows clothes."
+    "definition": "A small copy of something, or a person who shows clothes.",
+    "type": "noun"
   },
   "modern": {
-    "definition": "Of the present time; not old-fashioned."
+    "definition": "Of the present time; not old-fashioned.",
+    "type": "noun"
   },
   "mood": {
-    "definition": "The way you feel at a certain time."
+    "definition": "The way you feel at a certain time.",
+    "type": "noun"
   },
   "mosque": {
-    "definition": "A building where Muslims go to pray."
+    "definition": "A building where Muslims go to pray.",
+    "type": "noun"
   },
   "motorway": {
-    "definition": "A wide road for fast traffic between cities."
+    "definition": "A wide road for fast traffic between cities.",
+    "type": "noun"
   },
   "move": {
-    "definition": "To go from one place to another, or to change position."
+    "definition": "To go from one place to another, or to change position.",
+    "type": "verb"
   },
   "mug": {
-    "definition": "A large cup with a handle, or to rob someone in the street."
+    "definition": "A large cup with a handle, or to rob someone in the street.",
+    "type": "noun"
   },
   "murder": {
-    "definition": "To kill someone on purpose."
+    "definition": "To kill someone on purpose.",
+    "type": "verb"
   },
   "museum": {
-    "definition": "A building where old or valuable things are shown."
+    "definition": "A building where old or valuable things are shown.",
+    "type": "noun"
   },
   "mushroom": {
-    "definition": "A small plant with a round top that grows in damp places."
+    "definition": "A small plant with a round top that grows in damp places.",
+    "type": "noun"
   },
   "musical": {
-    "definition": "About music, or a play with songs."
+    "definition": "About music, or a play with songs.",
+    "type": "noun"
   },
   "mystery": {
-    "definition": "Something that cannot be explained or understood."
+    "definition": "Something that cannot be explained or understood.",
+    "type": "noun"
   },
   "napkin": {
-    "definition": "A piece of cloth or paper for wiping your mouth at meals."
+    "definition": "A piece of cloth or paper for wiping your mouth at meals.",
+    "type": "noun"
   },
   "nation": {
-    "definition": "A country and the people living in it."
+    "definition": "A country and the people living in it.",
+    "type": "noun"
   },
   "national": {
-    "definition": "Belonging to one particular country."
+    "definition": "Belonging to one particular country.",
+    "type": "adjective"
   },
   "native": {
-    "definition": "Born in a place, or belonging to it naturally."
+    "definition": "Born in a place, or belonging to it naturally.",
+    "type": "noun"
   },
   "natural": {
-    "definition": "Made by nature, not by people."
+    "definition": "Made by nature, not by people.",
+    "type": "noun"
   },
   "nature": {
-    "definition": "Everything in the world not made by people, such as plants and animals."
+    "definition": "Everything in the world not made by people, such as plants and animals.",
+    "type": "noun"
   },
   "need": {
-    "definition": "To require something because it is necessary."
+    "definition": "To require something because it is necessary.",
+    "type": "verb"
   },
   "negative": {
-    "definition": "Bad or harmful, or saying no."
+    "definition": "Bad or harmful, or saying no.",
+    "type": "noun"
   },
   "nervous": {
-    "definition": "Worried and not relaxed."
+    "definition": "Worried and not relaxed.",
+    "type": "noun"
   },
   "net": {
-    "definition": "Material with holes in it used to catch things, or the internet."
+    "definition": "Material with holes in it used to catch things, or the internet.",
+    "type": "noun"
   },
   "noisy": {
-    "definition": "Making a lot of sound."
+    "definition": "Making a lot of sound.",
+    "type": "adjective"
   },
   "noon": {
-    "definition": "Twelve o'clock in the day."
+    "definition": "Twelve o'clock in the day.",
+    "type": "noun"
   },
   "normal": {
-    "definition": "Usual and as expected."
+    "definition": "Usual and as expected.",
+    "type": "noun"
   },
   "north": {
-    "definition": "The direction on your left when you face the rising sun."
+    "definition": "The direction on your left when you face the rising sun.",
+    "type": "noun"
   },
   "notice": {
-    "definition": "To see or become aware of something."
+    "definition": "To see or become aware of something.",
+    "type": "verb"
   },
   "noun": {
-    "definition": "A word for a person, a place, or a thing."
+    "definition": "A word for a person, a place, or a thing.",
+    "type": "noun"
   },
   "novel": {
-    "definition": "A long written story about invented people and events."
+    "definition": "A long written story about invented people and events.",
+    "type": "noun"
   },
   "oak": {
-    "definition": "A large tree with hard wood and nuts called acorns."
+    "definition": "A large tree with hard wood and nuts called acorns.",
+    "type": "noun"
   },
   "offer": {
-    "definition": "To say that you are willing to give something."
+    "definition": "To say that you are willing to give something.",
+    "type": "verb"
   },
   "official": {
-    "definition": "Approved by a government or a person in charge."
+    "definition": "Approved by a government or a person in charge.",
+    "type": "noun"
   },
   "oil": {
-    "definition": "A thick liquid used for cooking or as fuel."
+    "definition": "A thick liquid used for cooking or as fuel.",
+    "type": "noun"
   },
   "olympic": {
-    "definition": "About the international games held every four years."
+    "definition": "About the international games held every four years.",
+    "type": "noun"
   },
   "onion": {
-    "definition": "A round vegetable with a strong taste and many layers."
+    "definition": "A round vegetable with a strong taste and many layers.",
+    "type": "noun"
   },
   "online": {
-    "definition": "Connected to the internet."
+    "definition": "Connected to the internet.",
+    "type": "adjective"
   },
   "operate": {
-    "definition": "To work or make something work, or to do a medical operation."
+    "definition": "To work or make something work, or to do a medical operation.",
+    "type": "verb"
   },
   "opinion": {
-    "definition": "What you think about something."
+    "definition": "What you think about something.",
+    "type": "adjective"
   },
   "oppose": {
-    "definition": "To be against something and try to stop it."
+    "definition": "To be against something and try to stop it.",
+    "type": "verb"
   },
   "opposite": {
-    "definition": "As different as possible, or facing something."
+    "definition": "As different as possible, or facing something.",
+    "type": "adjective"
   },
   "order": {
-    "definition": "To ask for something, or to tell someone what to do."
+    "definition": "To ask for something, or to tell someone what to do.",
+    "type": "verb"
   },
   "original": {
-    "definition": "First, or new and different."
+    "definition": "First, or new and different.",
+    "type": "noun"
   },
   "orphan": {
-    "definition": "A child whose parents have died."
+    "definition": "A child whose parents have died.",
+    "type": "noun"
   },
   "oven": {
-    "definition": "The closed part of a cooker where food is baked."
+    "definition": "The closed part of a cooker where food is baked.",
+    "type": "noun"
   },
   "pacific": {
-    "definition": "Peaceful, or the ocean between Asia and America."
+    "definition": "Peaceful, or the ocean between Asia and America.",
+    "type": "noun"
   },
   "pack": {
-    "definition": "To put things into a bag or a box for travel."
+    "definition": "To put things into a bag or a box for travel.",
+    "type": "verb"
   },
   "painter": {
-    "definition": "A person who paints pictures or walls."
+    "definition": "A person who paints pictures or walls.",
+    "type": "noun"
   },
   "pal": {
-    "definition": "A friend."
+    "definition": "A friend.",
+    "type": "noun"
   },
   "pan": {
-    "definition": "A metal container with a handle for cooking."
+    "definition": "A metal container with a handle for cooking.",
+    "type": "noun"
   },
   "panic": {
-    "definition": "A sudden strong fear that stops you thinking."
+    "definition": "A sudden strong fear that stops you thinking.",
+    "type": "noun"
   },
   "park": {
-    "definition": "To leave a car in a place for a while, or a public green area."
+    "definition": "To leave a car in a place for a while, or a public green area.",
+    "type": "verb"
   },
   "part": {
-    "definition": "One piece of something bigger."
+    "definition": "One piece of something bigger.",
+    "type": "noun"
   },
   "pass": {
-    "definition": "To go by something, or to succeed in a test."
+    "definition": "To go by something, or to succeed in a test.",
+    "type": "verb"
   },
   "passage": {
-    "definition": "A narrow way through, or a short part of a text."
+    "definition": "A narrow way through, or a short part of a text.",
+    "type": "noun"
   },
   "pasta": {
-    "definition": "An Italian food made from flour and water, cooked in boiling water."
+    "definition": "An Italian food made from flour and water, cooked in boiling water.",
+    "type": "noun"
   },
   "path": {
-    "definition": "A narrow track for walking, or the way something goes."
+    "definition": "A narrow track for walking, or the way something goes.",
+    "type": "noun"
   },
   "patient": {
-    "definition": "Able to wait calmly, or a person receiving medical care."
+    "definition": "Able to wait calmly, or a person receiving medical care.",
+    "type": "adjective"
   },
   "pea": {
-    "definition": "A small round green seed eaten as a vegetable."
+    "definition": "A small round green seed eaten as a vegetable.",
+    "type": "noun"
   },
   "peaceful": {
-    "definition": "Quiet and calm."
+    "definition": "Quiet and calm.",
+    "type": "noun"
   },
   "pear": {
-    "definition": "A sweet fruit with a lot of juice and a green or yellow skin."
+    "definition": "A sweet fruit with a lot of juice and a green or yellow skin.",
+    "type": "noun"
   },
   "pence": {
-    "definition": "The plural of penny, a small unit of British money."
+    "definition": "The plural of penny, a small unit of British money.",
+    "type": "noun"
   },
   "pepper": {
-    "definition": "A hot-tasting powder used to flavour food, or a vegetable with a long shape."
+    "definition": "A hot-tasting powder used to flavour food, or a vegetable with a long shape.",
+    "type": "noun"
   },
   "perfect": {
-    "definition": "So good that nothing could be better."
+    "definition": "So good that nothing could be better.",
+    "type": "adjective"
   },
   "perform": {
-    "definition": "To do something in front of an audience."
+    "definition": "To do something in front of an audience.",
+    "type": "verb"
   },
   "perfume": {
-    "definition": "A liquid with a pleasant smell that you put on your skin."
+    "definition": "A liquid with a pleasant smell that you put on your skin.",
+    "type": "noun"
   },
   "petrol": {
-    "definition": "The fuel used in cars."
+    "definition": "The fuel used in cars.",
+    "type": "noun"
   },
   "physical": {
-    "definition": "Connected with the body, or with real things you can touch."
+    "definition": "Connected with the body, or with real things you can touch.",
+    "type": "adjective"
   },
   "pile": {
-    "definition": "A number of things lying on top of each other."
+    "definition": "A number of things lying on top of each other.",
+    "type": "noun"
   },
   "pilgrim": {
-    "definition": "A person who travels to a holy place."
+    "definition": "A person who travels to a holy place.",
+    "type": "noun"
   },
   "pill": {
-    "definition": "A small round piece of medicine you swallow."
+    "definition": "A small round piece of medicine you swallow.",
+    "type": "noun"
   },
   "pilot": {
-    "definition": "A person who flies a plane."
+    "definition": "A person who flies a plane.",
+    "type": "noun"
   },
   "pink": {
-    "definition": "The colour you get by mixing red and white."
+    "definition": "The colour you get by mixing red and white.",
+    "type": "noun"
   },
   "pity": {
-    "definition": "A feeling of sadness for someone who is unhappy or unlucky."
+    "definition": "A feeling of sadness for someone who is unhappy or unlucky.",
+    "type": "noun"
   },
   "planet": {
-    "definition": "A large round object that moves around a star."
+    "definition": "A large round object that moves around a star.",
+    "type": "noun"
   },
   "plant": {
-    "definition": "A living thing that grows in soil, or a factory."
+    "definition": "A living thing that grows in soil, or a factory.",
+    "type": "noun"
   },
   "plastic": {
-    "definition": "A light artificial material made from chemicals."
+    "definition": "A light artificial material made from chemicals.",
+    "type": "noun"
   },
   "plate": {
-    "definition": "A flat round dish that you put food on."
+    "definition": "A flat round dish that you put food on.",
+    "type": "noun"
   },
   "playful": {
-    "definition": "Full of fun and wanting to play."
+    "definition": "Full of fun and wanting to play.",
+    "type": "adjective"
   },
   "pleasant": {
-    "definition": "Nice and easy to be with or experience."
+    "definition": "Nice and easy to be with or experience.",
+    "type": "noun"
   },
   "pleased": {
-    "definition": "Happy and satisfied about something."
+    "definition": "Happy and satisfied about something.",
+    "type": "adjective"
   },
   "pleasing": {
-    "definition": "Making you feel happy and satisfied."
+    "definition": "Making you feel happy and satisfied.",
+    "type": "adjective"
   },
   "plenty": {
-    "definition": "More than enough."
+    "definition": "More than enough.",
+    "type": "adjective"
   },
   "plural": {
-    "definition": "The form of a word used for more than one."
+    "definition": "The form of a word used for more than one.",
+    "type": "noun"
   },
   "point": {
-    "definition": "A thin sharp end, or a mark in a game."
+    "definition": "A thin sharp end, or a mark in a game.",
+    "type": "noun"
   },
   "police": {
-    "definition": "The official group of people who catch criminals."
+    "definition": "The official group of people who catch criminals.",
+    "type": "noun"
   },
   "polite": {
-    "definition": "Behaving in a kind and respectful way."
+    "definition": "Behaving in a kind and respectful way.",
+    "type": "noun"
   },
   "pollute": {
-    "definition": "To make the air or water dirty and harmful."
+    "definition": "To make the air or water dirty and harmful.",
+    "type": "verb"
   },
   "popular": {
-    "definition": "Liked by a lot of people."
+    "definition": "Liked by a lot of people.",
+    "type": "noun"
   },
   "portrait": {
-    "definition": "A painting or photo of a person."
+    "definition": "A painting or photo of a person.",
+    "type": "noun"
   },
   "position": {
-    "definition": "The place where someone or something is."
+    "definition": "The place where someone or something is.",
+    "type": "noun"
   },
   "possible": {
-    "definition": "Able to happen or be done."
+    "definition": "Able to happen or be done.",
+    "type": "adjective"
   },
   "post": {
-    "definition": "To send a letter, or the mail service."
+    "definition": "To send a letter, or the mail service.",
+    "type": "verb"
   },
   "pour": {
-    "definition": "To make a liquid flow out of a container."
+    "definition": "To make a liquid flow out of a container.",
+    "type": "verb"
   },
   "power": {
-    "definition": "The ability to control people or things, or energy such as electricity."
+    "definition": "The ability to control people or things, or energy such as electricity.",
+    "type": "noun"
   },
   "powerful": {
-    "definition": "Having a lot of strength or control."
+    "definition": "Having a lot of strength or control.",
+    "type": "adjective"
   },
   "precise": {
-    "definition": "Exact and correct in every detail."
+    "definition": "Exact and correct in every detail.",
+    "type": "noun"
   },
   "predict": {
-    "definition": "To say what you think will happen."
+    "definition": "To say what you think will happen.",
+    "type": "verb"
   },
   "prefer": {
-    "definition": "To like one thing more than another."
+    "definition": "To like one thing more than another.",
+    "type": "verb"
   },
   "prepare": {
-    "definition": "To get something ready."
+    "definition": "To get something ready.",
+    "type": "verb"
   },
   "pressure": {
-    "definition": "The force of something pressing, or a feeling of stress."
+    "definition": "The force of something pressing, or a feeling of stress.",
+    "type": "noun"
   },
   "pretend": {
-    "definition": "To act as if something is true when it is not."
+    "definition": "To act as if something is true when it is not.",
+    "type": "verb"
   },
   "prevent": {
-    "definition": "To stop something from happening."
+    "definition": "To stop something from happening.",
+    "type": "verb"
   },
   "pride": {
-    "definition": "A feeling of being proud."
+    "definition": "A feeling of being proud.",
+    "type": "noun"
   },
   "print": {
-    "definition": "To produce words or pictures on paper."
+    "definition": "To produce words or pictures on paper.",
+    "type": "verb"
   },
   "printer": {
-    "definition": "A machine that puts words or pictures onto paper."
+    "definition": "A machine that puts words or pictures onto paper.",
+    "type": "noun"
   },
   "private": {
-    "definition": "Only for one person or group, and not for the public."
+    "definition": "Only for one person or group, and not for the public.",
+    "type": "noun"
   },
   "pro": {
-    "definition": "Short for professional, or an advantage."
+    "definition": "Short for professional, or an advantage.",
+    "type": "noun"
   },
   "produce": {
-    "definition": "To make or grow something."
+    "definition": "To make or grow something.",
+    "type": "verb"
   },
   "product": {
-    "definition": "Something that is made to be sold."
+    "definition": "Something that is made to be sold.",
+    "type": "noun"
   },
   "promise": {
-    "definition": "To say that you will certainly do something."
+    "definition": "To say that you will certainly do something.",
+    "type": "verb"
   },
   "proper": {
-    "definition": "Right and suitable for the situation."
+    "definition": "Right and suitable for the situation.",
+    "type": "noun"
   },
   "provide": {
-    "definition": "To give someone something they need."
+    "definition": "To give someone something they need.",
+    "type": "verb"
   },
   "public": {
-    "definition": "Available for everyone to use or see."
+    "definition": "Available for everyone to use or see.",
+    "type": "noun"
   },
   "publish": {
-    "definition": "To print and make a book or article available."
+    "definition": "To print and make a book or article available.",
+    "type": "verb"
   },
   "pull": {
-    "definition": "To move something towards you."
+    "definition": "To move something towards you.",
+    "type": "verb"
   },
   "purple": {
-    "definition": "The colour you get by mixing red and blue."
+    "definition": "The colour you get by mixing red and blue.",
+    "type": "noun"
   },
   "purpose": {
-    "definition": "The reason for doing something."
+    "definition": "The reason for doing something.",
+    "type": "noun"
   },
   "pursue": {
-    "definition": "To follow someone or keep trying to do something."
+    "definition": "To follow someone or keep trying to do something.",
+    "type": "verb"
   },
   "quality": {
-    "definition": "How good or bad something is."
+    "definition": "How good or bad something is.",
+    "type": "adjective"
   },
   "queen": {
-    "definition": "The female ruler of a country, or the wife of a king."
+    "definition": "The female ruler of a country, or the wife of a king.",
+    "type": "noun"
   },
   "quick": {
-    "definition": "Fast, or lasting only a short time."
+    "definition": "Fast, or lasting only a short time.",
+    "type": "noun"
   },
   "quit": {
-    "definition": "To stop doing something or leave a job."
+    "definition": "To stop doing something or leave a job.",
+    "type": "verb"
   },
   "quiz": {
-    "definition": "A short test or game with questions."
+    "definition": "A short test or game with questions.",
+    "type": "noun"
   },
   "racket": {
-    "definition": "A bat with strings for hitting a ball, or a loud noise."
+    "definition": "A bat with strings for hitting a ball, or a loud noise.",
+    "type": "noun"
   },
   "raincoat": {
-    "definition": "A coat that keeps the rain off."
+    "definition": "A coat that keeps the rain off.",
+    "type": "noun"
   },
   "raise": {
-    "definition": "To lift something up, or to increase it."
+    "definition": "To lift something up, or to increase it.",
+    "type": "verb"
   },
   "range": {
-    "definition": "A set of similar things, or the limits between which something varies."
+    "definition": "A set of similar things, or the limits between which something varies.",
+    "type": "noun"
   },
   "rap": {
-    "definition": "A style of music with spoken rhymes."
+    "definition": "A style of music with spoken rhymes.",
+    "type": "noun"
   },
   "rate": {
-    "definition": "The speed or number of times something happens, or a price."
+    "definition": "The speed or number of times something happens, or a price.",
+    "type": "noun"
   },
   "rating": {
-    "definition": "A measure of how good something is."
+    "definition": "A measure of how good something is.",
+    "type": "noun"
   },
   "raw": {
-    "definition": "Not cooked, or not yet treated."
+    "definition": "Not cooked, or not yet treated.",
+    "type": "adjective"
   },
   "ray": {
-    "definition": "A narrow line of light."
+    "definition": "A narrow line of light.",
+    "type": "noun"
   },
   "reach": {
-    "definition": "To arrive at a place, or to stretch out for something."
+    "definition": "To arrive at a place, or to stretch out for something.",
+    "type": "verb"
   },
   "receipt": {
-    "definition": "A piece of paper showing what you paid for something."
+    "definition": "A piece of paper showing what you paid for something.",
+    "type": "noun"
   },
   "receive": {
-    "definition": "To get something that someone sends or gives you."
+    "definition": "To get something that someone sends or gives you.",
+    "type": "verb"
   },
   "recent": {
-    "definition": "Happening a short time ago."
+    "definition": "Happening a short time ago.",
+    "type": "adjective"
   },
   "record": {
-    "definition": "A written account of something, or to store sound."
+    "definition": "A written account of something, or to store sound.",
+    "type": "noun"
   },
   "recycle": {
-    "definition": "To treat waste so it can be used again."
+    "definition": "To treat waste so it can be used again.",
+    "type": "verb"
   },
   "red": {
-    "definition": "The colour of blood."
+    "definition": "The colour of blood.",
+    "type": "noun"
   },
   "refer": {
-    "definition": "To mention something, or to send someone to another place for help."
+    "definition": "To mention something, or to send someone to another place for help.",
+    "type": "verb"
   },
   "reflect": {
-    "definition": "To send back light or heat, or to think carefully."
+    "definition": "To send back light or heat, or to think carefully.",
+    "type": "verb"
   },
   "regret": {
-    "definition": "To feel sorry about something you did."
+    "definition": "To feel sorry about something you did.",
+    "type": "verb"
   },
   "regular": {
-    "definition": "Happening at the same times with equal gaps between."
+    "definition": "Happening at the same times with equal gaps between.",
+    "type": "adjective"
   },
   "relax": {
-    "definition": "To rest and become calm."
+    "definition": "To rest and become calm.",
+    "type": "verb"
   },
   "relaxed": {
-    "definition": "Calm and not worried."
+    "definition": "Calm and not worried.",
+    "type": "adjective"
   },
   "release": {
-    "definition": "To let someone or something go free, or to make available."
+    "definition": "To let someone or something go free, or to make available.",
+    "type": "verb"
   },
   "remain": {
-    "definition": "To stay in the same place or state."
+    "definition": "To stay in the same place or state.",
+    "type": "verb"
   },
   "remind": {
-    "definition": "To make someone remember something."
+    "definition": "To make someone remember something.",
+    "type": "verb"
   },
   "remote": {
-    "definition": "Far away, or controlled from a distance."
+    "definition": "Far away, or controlled from a distance.",
+    "type": "adjective"
   },
   "rent": {
-    "definition": "Money paid to live in someone else's house, or to pay it."
+    "definition": "Money paid to live in someone else's house, or to pay it.",
+    "type": "noun"
   },
   "repair": {
-    "definition": "To fix something that is broken."
+    "definition": "To fix something that is broken.",
+    "type": "verb"
   },
   "replace": {
-    "definition": "To put something new in place of something old."
+    "definition": "To put something new in place of something old.",
+    "type": "verb"
   },
   "reply": {
-    "definition": "To answer someone."
+    "definition": "To answer someone.",
+    "type": "verb"
   },
   "report": {
-    "definition": "A written or spoken account of something."
+    "definition": "A written or spoken account of something.",
+    "type": "noun"
   },
   "request": {
-    "definition": "A polite or formal ask for something."
+    "definition": "A polite or formal ask for something.",
+    "type": "noun"
   },
   "research": {
-    "definition": "Careful study to find out new facts."
+    "definition": "Careful study to find out new facts.",
+    "type": "noun"
   },
   "response": {
-    "definition": "An answer or reaction."
+    "definition": "An answer or reaction.",
+    "type": "noun"
   },
   "retire": {
-    "definition": "To stop working because of your age."
+    "definition": "To stop working because of your age.",
+    "type": "verb"
   },
   "retired": {
-    "definition": "No longer working because of age."
+    "definition": "No longer working because of age.",
+    "type": "adjective"
   },
   "return": {
-    "definition": "To go or come back, or to give something back."
+    "definition": "To go or come back, or to give something back.",
+    "type": "verb"
   },
   "reunion": {
-    "definition": "A meeting of people who have not seen each other for a long time."
+    "definition": "A meeting of people who have not seen each other for a long time.",
+    "type": "noun"
   },
   "reveal": {
-    "definition": "To show something that was hidden."
+    "definition": "To show something that was hidden.",
+    "type": "verb"
   },
   "rhythm": {
-    "definition": "A regular repeated pattern of sounds or movements."
+    "definition": "A regular repeated pattern of sounds or movements.",
+    "type": "noun"
   },
   "right": {
-    "definition": "Correct, or the side opposite left."
+    "definition": "Correct, or the side opposite left.",
+    "type": "noun"
   },
   "ring": {
-    "definition": "A round band worn on a finger, or the sound of a bell."
+    "definition": "A round band worn on a finger, or the sound of a bell.",
+    "type": "noun"
   },
   "road": {
-    "definition": "A hard way for cars and other vehicles to travel on."
+    "definition": "A hard way for cars and other vehicles to travel on.",
+    "type": "noun"
   },
   "roast": {
-    "definition": "To cook meat or vegetables in an oven."
+    "definition": "To cook meat or vegetables in an oven.",
+    "type": "verb"
   },
   "rob": {
-    "definition": "To steal from someone or a place."
+    "definition": "To steal from someone or a place.",
+    "type": "verb"
   },
   "robbery": {
-    "definition": "The crime of stealing money or things."
+    "definition": "The crime of stealing money or things.",
+    "type": "noun"
   },
   "robin": {
-    "definition": "A small bird with a red breast."
+    "definition": "A small bird with a red breast.",
+    "type": "noun"
   },
   "rock": {
-    "definition": "Hard stone, or a style of loud popular music."
+    "definition": "Hard stone, or a style of loud popular music.",
+    "type": "adjective"
   },
   "roll": {
-    "definition": "To move by turning over and over, or a small round piece of bread."
+    "definition": "To move by turning over and over, or a small round piece of bread.",
+    "type": "verb"
   },
   "romance": {
-    "definition": "A love affair, or a feeling of love."
+    "definition": "A love affair, or a feeling of love.",
+    "type": "noun"
   },
   "romantic": {
-    "definition": "Connected with love, or showing loving feelings."
+    "definition": "Connected with love, or showing loving feelings.",
+    "type": "adjective"
   },
   "roof": {
-    "definition": "The covering on top of a building."
+    "definition": "The covering on top of a building.",
+    "type": "noun"
   },
   "root": {
-    "definition": "The part of a plant that grows under the ground."
+    "definition": "The part of a plant that grows under the ground.",
+    "type": "noun"
   },
   "rope": {
-    "definition": "A very thick strong string."
+    "definition": "A very thick strong string.",
+    "type": "noun"
   },
   "royal": {
-    "definition": "Connected with a king or queen."
+    "definition": "Connected with a king or queen.",
+    "type": "adjective"
   },
   "rugby": {
-    "definition": "A game in which players carry or kick an oval ball."
+    "definition": "A game in which players carry or kick an oval ball.",
+    "type": "noun"
   },
   "ruin": {
-    "definition": "To damage something completely."
+    "definition": "To damage something completely.",
+    "type": "verb"
   },
   "runner": {
-    "definition": "A person who runs, or the person in charge of something."
+    "definition": "A person who runs, or the person in charge of something.",
+    "type": "noun"
   },
   "running": {
-    "definition": "The act of moving quickly on your feet, or in operation."
+    "definition": "The act of moving quickly on your feet, or in operation.",
+    "type": "noun"
   },
   "rush": {
-    "definition": "To move or do something very quickly."
+    "definition": "To move or do something very quickly.",
+    "type": "verb"
   },
   "safe": {
-    "definition": "Not in danger, or not likely to cause harm."
+    "definition": "Not in danger, or not likely to cause harm.",
+    "type": "adjective"
   },
   "sailing": {
-    "definition": "The sport of travelling in a boat with a sail."
+    "definition": "The sport of travelling in a boat with a sail.",
+    "type": "noun"
   },
   "sake": {
-    "definition": "The purpose or good of someone or something."
+    "definition": "The purpose or good of someone or something.",
+    "type": "noun"
   },
   "salt": {
-    "definition": "The white powder used to give food a strong taste."
+    "definition": "The white powder used to give food a strong taste.",
+    "type": "noun"
   },
   "sample": {
-    "definition": "A small amount that shows what the whole is like."
+    "definition": "A small amount that shows what the whole is like.",
+    "type": "noun"
   },
   "sandy": {
-    "definition": "Covered with sand."
+    "definition": "Covered with sand.",
+    "type": "adjective"
   },
   "satisfy": {
-    "definition": "To make someone pleased by giving them what they want."
+    "definition": "To make someone pleased by giving them what they want.",
+    "type": "verb"
   },
   "sauce": {
-    "definition": "A thick liquid that you put on food to flavour it."
+    "definition": "A thick liquid that you put on food to flavour it.",
+    "type": "noun"
   },
   "sausage": {
-    "definition": "Meat in a long thin skin, eaten as food."
+    "definition": "Meat in a long thin skin, eaten as food.",
+    "type": "noun"
   },
   "scale": {
-    "definition": "The size of something, or a machine for weighing."
+    "definition": "The size of something, or a machine for weighing.",
+    "type": "noun"
   },
   "scarf": {
-    "definition": "A long piece of cloth worn around the neck."
+    "definition": "A long piece of cloth worn around the neck.",
+    "type": "noun"
   },
   "scene": {
-    "definition": "A part of a play or film, or the place where something happened."
+    "definition": "A part of a play or film, or the place where something happened.",
+    "type": "noun"
   },
   "scenery": {
-    "definition": "The natural things you can see around you, such as hills and trees."
+    "definition": "The natural things you can see around you, such as hills and trees.",
+    "type": "noun"
   },
   "schedule": {
-    "definition": "A plan that shows the times when things will happen."
+    "definition": "A plan that shows the times when things will happen.",
+    "type": "noun"
   },
   "scissors": {
-    "definition": "A tool with two blades for cutting paper or cloth."
+    "definition": "A tool with two blades for cutting paper or cloth.",
+    "type": "noun"
   },
   "scream": {
-    "definition": "To give a loud high cry of fear or pain."
+    "definition": "To give a loud high cry of fear or pain.",
+    "type": "verb"
   },
   "screen": {
-    "definition": "The flat surface of a television or computer that shows pictures."
+    "definition": "The flat surface of a television or computer that shows pictures.",
+    "type": "noun"
   },
   "screw": {
-    "definition": "A small piece of metal with a pointed end that holds things together."
+    "definition": "A small piece of metal with a pointed end that holds things together.",
+    "type": "noun"
   },
   "script": {
-    "definition": "The written words of a play or film, or handwriting."
+    "definition": "The written words of a play or film, or handwriting.",
+    "type": "noun"
   },
   "seafood": {
-    "definition": "Fish and other animals from the sea eaten as food."
+    "definition": "Fish and other animals from the sea eaten as food.",
+    "type": "noun"
   },
   "search": {
-    "definition": "To look carefully for something."
+    "definition": "To look carefully for something.",
+    "type": "verb"
   },
   "seaside": {
-    "definition": "The area next to the sea where people go on holiday."
+    "definition": "The area next to the sea where people go on holiday.",
+    "type": "noun"
   },
   "second": {
-    "definition": "Coming after the first; the next one."
+    "definition": "Coming after the first; the next one.",
+    "type": "numeral"
   },
   "secret": {
-    "definition": "Something you do not tell other people."
+    "definition": "Something you do not tell other people.",
+    "type": "noun"
   },
   "seed": {
-    "definition": "The small hard part of a plant from which a new plant grows."
+    "definition": "The small hard part of a plant from which a new plant grows.",
+    "type": "noun"
   },
   "seek": {
-    "definition": "To try to find or get something."
+    "definition": "To try to find or get something.",
+    "type": "verb"
   },
   "seem": {
-    "definition": "To appear to be something."
+    "definition": "To appear to be something.",
+    "type": "verb"
   },
   "semester": {
-    "definition": "One of the two periods of a school or university year."
+    "definition": "One of the two periods of a school or university year.",
+    "type": "noun"
   },
   "send": {
-    "definition": "To make something go somewhere, especially by post."
+    "definition": "To make something go somewhere, especially by post.",
+    "type": "verb"
   },
   "senior": {
-    "definition": "Older, or higher in rank."
+    "definition": "Older, or higher in rank.",
+    "type": "noun"
   },
   "sense": {
-    "definition": "The ability to feel or understand, or a meaning."
+    "definition": "The ability to feel or understand, or a meaning.",
+    "type": "noun"
   },
   "separate": {
-    "definition": "Not joined to something else."
+    "definition": "Not joined to something else.",
+    "type": "adjective"
   },
   "serve": {
-    "definition": "To give food or drinks to people, or to be a servant."
+    "definition": "To give food or drinks to people, or to be a servant.",
+    "type": "verb"
   },
   "set": {
-    "definition": "To put something in a place, or a group of things that belong together."
+    "definition": "To put something in a place, or a group of things that belong together.",
+    "type": "verb"
   },
   "sew": {
-    "definition": "To join cloth with a needle and thread."
+    "definition": "To join cloth with a needle and thread.",
+    "type": "verb"
   },
   "shade": {
-    "definition": "An area away from the sun, or a device that lowers the light."
+    "definition": "An area away from the sun, or a device that lowers the light.",
+    "type": "noun"
   },
   "shadow": {
-    "definition": "A dark shape made when something blocks the light."
+    "definition": "A dark shape made when something blocks the light.",
+    "type": "noun"
   },
   "shampoo": {
-    "definition": "A liquid soap for washing hair."
+    "definition": "A liquid soap for washing hair.",
+    "type": "noun"
   },
   "shape": {
-    "definition": "The outer form of something."
+    "definition": "The outer form of something.",
+    "type": "noun"
   },
   "share": {
-    "definition": "To give part of something to other people."
+    "definition": "To give part of something to other people.",
+    "type": "verb"
   },
   "shell": {
-    "definition": "The hard covering of an egg or a sea creature."
+    "definition": "The hard covering of an egg or a sea creature.",
+    "type": "noun"
   },
   "shine": {
-    "definition": "To give out bright light."
+    "definition": "To give out bright light.",
+    "type": "verb"
   },
   "shock": {
-    "definition": "To surprise and upset someone very much."
+    "definition": "To surprise and upset someone very much.",
+    "type": "verb"
   },
   "shoot": {
-    "definition": "To fire a gun, or to kick or throw a ball at a goal."
+    "definition": "To fire a gun, or to kick or throw a ball at a goal.",
+    "type": "verb"
   },
   "shore": {
-    "definition": "The land along the edge of the sea or a lake."
+    "definition": "The land along the edge of the sea or a lake.",
+    "type": "noun"
   },
   "shot": {
-    "definition": "The act of firing a gun, or an attempt to score in sport."
+    "definition": "The act of firing a gun, or an attempt to score in sport.",
+    "type": "noun"
   },
   "shout": {
-    "definition": "To say something very loudly."
+    "definition": "To say something very loudly.",
+    "type": "verb"
   },
   "show": {
-    "definition": "To let someone see something."
+    "definition": "To let someone see something.",
+    "type": "verb"
   },
   "shut": {
-    "definition": "To close something."
+    "definition": "To close something.",
+    "type": "verb"
   },
   "silence": {
-    "definition": "The state of making no sound at all."
+    "definition": "The state of making no sound at all.",
+    "type": "noun"
   },
   "silly": {
-    "definition": "Not sensible, in a harmless way."
+    "definition": "Not sensible, in a harmless way.",
+    "type": "adjective"
   },
   "silver": {
-    "definition": "A shiny grey-white metal used for jewellery."
+    "definition": "A shiny grey-white metal used for jewellery.",
+    "type": "noun"
   },
   "similar": {
-    "definition": "Almost the same."
+    "definition": "Almost the same.",
+    "type": "noun"
   },
   "simple": {
-    "definition": "Easy to do or understand; not complicated."
+    "definition": "Easy to do or understand; not complicated.",
+    "type": "adjective"
   },
   "singing": {
-    "definition": "The act of making music with your voice."
+    "definition": "The act of making music with your voice.",
+    "type": "noun"
   },
   "single": {
-    "definition": "Only one, or not married."
+    "definition": "Only one, or not married.",
+    "type": "numeral"
   },
   "singular": {
-    "definition": "The form of a word used for one person or thing."
+    "definition": "The form of a word used for one person or thing.",
+    "type": "noun"
   },
   "sink": {
-    "definition": "A basin with taps, or to go under water."
+    "definition": "A basin with taps, or to go under water.",
+    "type": "noun"
   },
   "skate": {
-    "definition": "To move on ice wearing blades, or to ride on wheels."
+    "definition": "To move on ice wearing blades, or to ride on wheels.",
+    "type": "verb"
   },
   "skating": {
-    "definition": "The sport of moving on ice or wheels."
+    "definition": "The sport of moving on ice or wheels.",
+    "type": "noun"
   },
   "ski": {
-    "definition": "To move over snow on long narrow boards."
+    "definition": "To move over snow on long narrow boards.",
+    "type": "verb"
   },
   "skiing": {
-    "definition": "The sport of moving over snow on long boards."
+    "definition": "The sport of moving over snow on long boards.",
+    "type": "noun"
   },
   "slave": {
-    "definition": "A person who is owned by someone and forced to work."
+    "definition": "A person who is owned by someone and forced to work.",
+    "type": "noun"
   },
   "sleepy": {
-    "definition": "Tired and ready to sleep."
+    "definition": "Tired and ready to sleep.",
+    "type": "noun"
   },
   "slice": {
-    "definition": "A thin flat piece cut from something."
+    "definition": "A thin flat piece cut from something.",
+    "type": "noun"
   },
   "slide": {
-    "definition": "To move smoothly over a surface."
+    "definition": "To move smoothly over a surface.",
+    "type": "verb"
   },
   "slim": {
-    "definition": "Thin in an attractive way."
+    "definition": "Thin in an attractive way.",
+    "type": "noun"
   },
   "smoke": {
-    "definition": "The grey cloud that rises from a fire."
+    "definition": "The grey cloud that rises from a fire.",
+    "type": "noun"
   },
   "smooth": {
-    "definition": "Having a surface that is not rough."
+    "definition": "Having a surface that is not rough.",
+    "type": "adjective"
   },
   "snack": {
-    "definition": "A small amount of food eaten between meals."
+    "definition": "A small amount of food eaten between meals.",
+    "type": "noun"
   },
   "snow": {
-    "definition": "Soft white pieces of frozen water that fall in winter."
+    "definition": "Soft white pieces of frozen water that fall in winter.",
+    "type": "noun"
   },
   "soap": {
-    "definition": "A substance used with water for washing."
+    "definition": "A substance used with water for washing.",
+    "type": "noun"
   },
   "society": {
-    "definition": "People living together in an organized community."
+    "definition": "People living together in an organized community.",
+    "type": "noun"
   },
   "sock": {
-    "definition": "A soft covering for your foot, worn inside a shoe."
+    "definition": "A soft covering for your foot, worn inside a shoe.",
+    "type": "noun"
   },
   "soda": {
-    "definition": "A sweet drink with bubbles, or water with gas in it."
+    "definition": "A sweet drink with bubbles, or water with gas in it.",
+    "type": "noun"
   },
   "soft": {
-    "definition": "Not hard, or not loud."
+    "definition": "Not hard, or not loud.",
+    "type": "adjective"
   },
   "software": {
-    "definition": "The programs that a computer runs."
+    "definition": "The programs that a computer runs.",
+    "type": "noun"
   },
   "soldier": {
-    "definition": "A member of an army."
+    "definition": "A member of an army.",
+    "type": "noun"
   },
   "solution": {
-    "definition": "A way of solving a problem, or a liquid with something dissolved in it."
+    "definition": "A way of solving a problem, or a liquid with something dissolved in it.",
+    "type": "noun"
   },
   "sound": {
-    "definition": "Something you can hear."
+    "definition": "Something you can hear.",
+    "type": "noun"
   },
   "source": {
-    "definition": "The place something comes from."
+    "definition": "The place something comes from.",
+    "type": "noun"
   },
   "south": {
-    "definition": "The direction opposite to north."
+    "definition": "The direction opposite to north.",
+    "type": "noun"
   },
   "space": {
-    "definition": "An empty area, or the area beyond the earth where the stars are."
+    "definition": "An empty area, or the area beyond the earth where the stars are.",
+    "type": "noun"
   },
   "speaker": {
-    "definition": "A person who is talking, or the part of a device that makes sound."
+    "definition": "A person who is talking, or the part of a device that makes sound.",
+    "type": "noun"
   },
   "specific": {
-    "definition": "Clear and exact, not general."
+    "definition": "Clear and exact, not general.",
+    "type": "noun"
   },
   "speed": {
-    "definition": "How fast something moves."
+    "definition": "How fast something moves.",
+    "type": "adjective"
   },
   "spell": {
-    "definition": "To say or write the letters of a word in the right order."
+    "definition": "To say or write the letters of a word in the right order.",
+    "type": "verb"
   },
   "spill": {
-    "definition": "To let liquid fall out of a container by accident."
+    "definition": "To let liquid fall out of a container by accident.",
+    "type": "verb"
   },
   "splash": {
-    "definition": "To make liquid fly up in drops."
+    "definition": "To make liquid fly up in drops.",
+    "type": "verb"
   },
   "split": {
-    "definition": "To divide into parts or groups."
+    "definition": "To divide into parts or groups.",
+    "type": "verb"
   },
   "spoon": {
-    "definition": "A tool with a round end used for eating soup or stirring."
+    "definition": "A tool with a round end used for eating soup or stirring.",
+    "type": "noun"
   },
   "spread": {
-    "definition": "To open something out, or to put a layer of something on bread."
+    "definition": "To open something out, or to put a layer of something on bread.",
+    "type": "verb"
   },
   "square": {
-    "definition": "A shape with four equal sides and four right angles."
+    "definition": "A shape with four equal sides and four right angles.",
+    "type": "noun"
   },
   "stadium": {
-    "definition": "A large sports ground with seats around it."
+    "definition": "A large sports ground with seats around it.",
+    "type": "noun"
   },
   "staff": {
-    "definition": "The people who work for a company or school."
+    "definition": "The people who work for a company or school.",
+    "type": "noun"
   },
   "stair": {
-    "definition": "One of a set of steps inside a building."
+    "definition": "One of a set of steps inside a building.",
+    "type": "noun"
   },
   "stamp": {
-    "definition": "A small piece of paper you stick on a letter, or a tool that prints a mark."
+    "definition": "A small piece of paper you stick on a letter, or a tool that prints a mark.",
+    "type": "noun"
   },
   "stand": {
-    "definition": "To be on your feet with your body upright."
+    "definition": "To be on your feet with your body upright.",
+    "type": "verb"
   },
   "state": {
-    "definition": "The condition something is in, or a country with its own government."
+    "definition": "The condition something is in, or a country with its own government.",
+    "type": "noun"
   },
   "statue": {
-    "definition": "A figure of a person or animal made from stone or metal."
+    "definition": "A figure of a person or animal made from stone or metal.",
+    "type": "noun"
   },
   "steak": {
-    "definition": "A thick flat piece of meat or fish."
+    "definition": "A thick flat piece of meat or fish.",
+    "type": "noun"
   },
   "steal": {
-    "definition": "To take something that does not belong to you."
+    "definition": "To take something that does not belong to you.",
+    "type": "verb"
   },
   "step": {
-    "definition": "One movement of a foot, or a stage in a process."
+    "definition": "One movement of a foot, or a stage in a process.",
+    "type": "noun"
   },
   "stomach": {
-    "definition": "The part of your body where food goes after you swallow it."
+    "definition": "The part of your body where food goes after you swallow it.",
+    "type": "noun"
   },
   "storm": {
-    "definition": "Very bad weather with strong wind and rain."
+    "definition": "Very bad weather with strong wind and rain.",
+    "type": "adjective"
   },
   "stove": {
-    "definition": "A device used for cooking food."
+    "definition": "A device used for cooking food.",
+    "type": "noun"
   },
   "straight": {
-    "definition": "Going in one direction without curving."
+    "definition": "Going in one direction without curving.",
+    "type": "noun"
   },
   "stranger": {
-    "definition": "A person you do not know."
+    "definition": "A person you do not know.",
+    "type": "noun"
   },
   "strategy": {
-    "definition": "A plan for reaching a goal."
+    "definition": "A plan for reaching a goal.",
+    "type": "noun"
   },
   "strength": {
-    "definition": "The quality of being strong."
+    "definition": "The quality of being strong.",
+    "type": "noun"
   },
   "strike": {
-    "definition": "To hit something, or to stop work as a protest."
+    "definition": "To hit something, or to stop work as a protest.",
+    "type": "verb"
   },
   "string": {
-    "definition": "Thin cord used for tying things."
+    "definition": "Thin cord used for tying things.",
+    "type": "adjective"
   },
   "study": {
-    "definition": "To spend time learning about a subject."
+    "definition": "To spend time learning about a subject.",
+    "type": "verb"
   },
   "stuff": {
-    "definition": "Things in general, or to fill something tightly."
+    "definition": "Things in general, or to fill something tightly.",
+    "type": "noun"
   },
   "style": {
-    "definition": "The way something is done, designed, or worn."
+    "definition": "The way something is done, designed, or worn.",
+    "type": "noun"
   },
   "succeed": {
-    "definition": "To reach the goal you wanted."
+    "definition": "To reach the goal you wanted.",
+    "type": "verb"
   },
   "success": {
-    "definition": "The reaching of a goal, or a person who does well."
+    "definition": "The reaching of a goal, or a person who does well.",
+    "type": "noun"
   },
   "sudden": {
-    "definition": "Happening quickly and without warning."
+    "definition": "Happening quickly and without warning.",
+    "type": "adjective"
   },
   "suggest": {
-    "definition": "To offer an idea for someone to consider."
+    "definition": "To offer an idea for someone to consider.",
+    "type": "verb"
   },
   "suit": {
-    "definition": "A jacket with trousers or a skirt in the same cloth, or to be right for someone."
+    "definition": "A jacket with trousers or a skirt in the same cloth, or to be right for someone.",
+    "type": "noun"
   },
   "suitable": {
-    "definition": "Right for a purpose or situation."
+    "definition": "Right for a purpose or situation.",
+    "type": "noun"
   },
   "suitcase": {
-    "definition": "A case with a handle for carrying clothes when you travel."
+    "definition": "A case with a handle for carrying clothes when you travel.",
+    "type": "noun"
   },
   "summary": {
-    "definition": "A short account of the main points."
+    "definition": "A short account of the main points.",
+    "type": "noun"
   },
   "sunlight": {
-    "definition": "The light that comes from the sun."
+    "definition": "The light that comes from the sun.",
+    "type": "noun"
   },
   "supper": {
-    "definition": "A light evening meal."
+    "definition": "A light evening meal.",
+    "type": "noun"
   },
   "support": {
-    "definition": "To help someone, or to hold something up."
+    "definition": "To help someone, or to hold something up.",
+    "type": "verb"
   },
   "surf": {
-    "definition": "To ride on waves on a board."
+    "definition": "To ride on waves on a board.",
+    "type": "verb"
   },
   "surfing": {
-    "definition": "The sport of riding on waves on a board."
+    "definition": "The sport of riding on waves on a board.",
+    "type": "noun"
   },
   "surname": {
-    "definition": "The name a family shares."
+    "definition": "The name a family shares.",
+    "type": "noun"
   },
   "survive": {
-    "definition": "To continue to live after something dangerous."
+    "definition": "To continue to live after something dangerous.",
+    "type": "verb"
   },
   "swallow": {
-    "definition": "To make food or drink go down your throat."
+    "definition": "To make food or drink go down your throat.",
+    "type": "verb"
   },
   "sweat": {
-    "definition": "The liquid that comes out of your skin when you are hot."
+    "definition": "The liquid that comes out of your skin when you are hot.",
+    "type": "noun"
   },
   "sweater": {
-    "definition": "A warm knitted top with sleeves."
+    "definition": "A warm knitted top with sleeves.",
+    "type": "noun"
   },
   "sweet": {
-    "definition": "Tasting like sugar."
+    "definition": "Tasting like sugar.",
+    "type": "noun"
   },
   "swimsuit": {
-    "definition": "A piece of clothing worn for swimming."
+    "definition": "A piece of clothing worn for swimming.",
+    "type": "noun"
   },
   "symbol": {
-    "definition": "A sign or picture that stands for something."
+    "definition": "A sign or picture that stands for something.",
+    "type": "noun"
   },
   "symphony": {
-    "definition": "A long piece of music written for an orchestra."
+    "definition": "A long piece of music written for an orchestra.",
+    "type": "noun"
   },
   "system": {
-    "definition": "A set of connected parts or rules that work together."
+    "definition": "A set of connected parts or rules that work together.",
+    "type": "noun"
   },
   "talent": {
-    "definition": "A natural ability to do something well."
+    "definition": "A natural ability to do something well.",
+    "type": "noun"
   },
   "tap": {
-    "definition": "A device that lets water out of a pipe, or to hit something lightly."
+    "definition": "A device that lets water out of a pipe, or to hit something lightly.",
+    "type": "noun"
   },
   "tape": {
-    "definition": "A long narrow band used for sticking or recording."
+    "definition": "A long narrow band used for sticking or recording.",
+    "type": "noun"
   },
   "target": {
-    "definition": "Something you aim at, or a goal."
+    "definition": "Something you aim at, or a goal.",
+    "type": "noun"
   },
   "task": {
-    "definition": "A piece of work you have to do."
+    "definition": "A piece of work you have to do.",
+    "type": "noun"
   },
   "tear": {
-    "definition": "A drop of water that comes from your eye, or to pull paper apart."
+    "definition": "A drop of water that comes from your eye, or to pull paper apart.",
+    "type": "noun"
   },
   "teenage": {
-    "definition": "Between thirteen and nineteen years old."
+    "definition": "Between thirteen and nineteen years old.",
+    "type": "noun"
   },
   "teenager": {
-    "definition": "A person between thirteen and nineteen years old."
+    "definition": "A person between thirteen and nineteen years old.",
+    "type": "noun"
   },
   "terrify": {
-    "definition": "To make someone extremely frightened."
+    "definition": "To make someone extremely frightened.",
+    "type": "verb"
   },
   "text": {
-    "definition": "Written words, or a message sent by phone."
+    "definition": "Written words, or a message sent by phone.",
+    "type": "noun"
   },
   "textbook": {
-    "definition": "A book used for studying a subject."
+    "definition": "A book used for studying a subject.",
+    "type": "noun"
   },
   "thief": {
-    "definition": "A person who steals things."
+    "definition": "A person who steals things.",
+    "type": "noun"
   },
   "third": {
-    "definition": "Coming after the second."
+    "definition": "Coming after the second.",
+    "type": "numeral"
   },
   "thirsty": {
-    "definition": "Feeling that you need to drink."
+    "definition": "Feeling that you need to drink.",
+    "type": "adjective"
   },
   "thought": {
-    "definition": "An idea in your mind, or the act of thinking."
+    "definition": "An idea in your mind, or the act of thinking.",
+    "type": "noun"
   },
   "throw": {
-    "definition": "To send something through the air with your hand."
+    "definition": "To send something through the air with your hand.",
+    "type": "verb"
   },
   "tidy": {
-    "definition": "Neat and in order."
+    "definition": "Neat and in order.",
+    "type": "noun"
   },
   "tie": {
-    "definition": "To fasten things with string, or a band of cloth worn around the neck."
+    "definition": "To fasten things with string, or a band of cloth worn around the neck.",
+    "type": "verb"
   },
   "tights": {
-    "definition": "A thin tight piece of clothing covering the legs."
+    "definition": "A thin tight piece of clothing covering the legs.",
+    "type": "noun"
   },
   "tip": {
-    "definition": "The pointed end of something, a piece of advice, or extra money for a waiter."
+    "definition": "The pointed end of something, a piece of advice, or extra money for a waiter.",
+    "type": "noun"
   },
   "title": {
-    "definition": "The name of a book, film, or song."
+    "definition": "The name of a book, film, or song.",
+    "type": "noun"
   },
   "toast": {
-    "definition": "Bread made brown and crisp by heat, or a wish of good health before drinking."
+    "definition": "Bread made brown and crisp by heat, or a wish of good health before drinking.",
+    "type": "noun"
   },
   "toe": {
-    "definition": "One of the five parts at the end of your foot."
+    "definition": "One of the five parts at the end of your foot.",
+    "type": "noun"
   },
   "tone": {
-    "definition": "The quality of a sound, or the way someone speaks."
+    "definition": "The quality of a sound, or the way someone speaks.",
+    "type": "noun"
   },
   "tonight": {
-    "definition": "The evening or night of today."
+    "definition": "The evening or night of today.",
+    "type": "noun"
   },
   "tour": {
-    "definition": "A journey to visit several places."
+    "definition": "A journey to visit several places.",
+    "type": "noun"
   },
   "tourist": {
-    "definition": "A person who visits a place on holiday."
+    "definition": "A person who visits a place on holiday.",
+    "type": "noun"
   },
   "track": {
-    "definition": "A narrow path, or a rail for trains, or a song on an album."
+    "definition": "A narrow path, or a rail for trains, or a song on an album.",
+    "type": "noun"
   },
   "trade": {
-    "definition": "The buying and selling of goods."
+    "definition": "The buying and selling of goods.",
+    "type": "noun"
   },
   "traffic": {
-    "definition": "The vehicles moving on a road."
+    "definition": "The vehicles moving on a road.",
+    "type": "noun"
   },
   "train": {
-    "definition": "A line of carriages pulled along a railway."
+    "definition": "A line of carriages pulled along a railway.",
+    "type": "noun"
   },
   "training": {
-    "definition": "The process of learning the skills for a job or sport."
+    "definition": "The process of learning the skills for a job or sport.",
+    "type": "noun"
   },
   "tram": {
-    "definition": "An electric vehicle that runs on rails in a town."
+    "definition": "An electric vehicle that runs on rails in a town.",
+    "type": "noun"
   },
   "trap": {
-    "definition": "A device for catching animals, or a difficult situation you cannot escape."
+    "definition": "A device for catching animals, or a difficult situation you cannot escape.",
+    "type": "noun"
   },
   "travel": {
-    "definition": "To go from one place to another, often far away."
+    "definition": "To go from one place to another, often far away.",
+    "type": "verb"
   },
   "treasure": {
-    "definition": "Valuable things such as gold and jewels."
+    "definition": "Valuable things such as gold and jewels.",
+    "type": "noun"
   },
   "trick": {
-    "definition": "Something clever you do to cheat or amuse someone."
+    "definition": "Something clever you do to cheat or amuse someone.",
+    "type": "noun"
   },
   "trouble": {
-    "definition": "A problem or difficulty."
+    "definition": "A problem or difficulty.",
+    "type": "noun"
   },
   "trust": {
-    "definition": "To believe that someone is honest and will not harm you."
+    "definition": "To believe that someone is honest and will not harm you.",
+    "type": "verb"
   },
   "truth": {
-    "definition": "The real facts about something."
+    "definition": "The real facts about something.",
+    "type": "noun"
   },
   "try": {
-    "definition": "To make an effort to do something."
+    "definition": "To make an effort to do something.",
+    "type": "verb"
   },
   "tune": {
-    "definition": "A series of musical notes that is easy to remember."
+    "definition": "A series of musical notes that is easy to remember.",
+    "type": "noun"
   },
   "uneasy": {
-    "definition": "Worried and not comfortable."
+    "definition": "Worried and not comfortable.",
+    "type": "noun"
   },
   "unfair": {
-    "definition": "Not treating everyone in the same way."
+    "definition": "Not treating everyone in the same way.",
+    "type": "adjective"
   },
   "unhappy": {
-    "definition": "Sad and not satisfied."
+    "definition": "Sad and not satisfied.",
+    "type": "noun"
   },
   "uniform": {
-    "definition": "Special clothes worn by everyone in a group, such as pupils or soldiers."
+    "definition": "Special clothes worn by everyone in a group, such as pupils or soldiers.",
+    "type": "noun"
   },
   "unit": {
-    "definition": "A single thing or group, or a measure used for counting."
+    "definition": "A single thing or group, or a measure used for counting.",
+    "type": "noun"
   },
   "unknown": {
-    "definition": "Not known about."
+    "definition": "Not known about.",
+    "type": "adjective"
   },
   "unlike": {
-    "definition": "Different from."
+    "definition": "Different from.",
+    "type": "adjective"
   },
   "unusual": {
-    "definition": "Not common; different from what usually happens."
+    "definition": "Not common; different from what usually happens.",
+    "type": "adjective"
   },
   "upset": {
-    "definition": "Sad or worried because something bad happened."
+    "definition": "Sad or worried because something bad happened.",
+    "type": "noun"
   },
   "use": {
-    "definition": "To do something with an object for a purpose."
+    "definition": "To do something with an object for a purpose.",
+    "type": "verb"
   },
   "used": {
-    "definition": "Not new; having had an owner before."
+    "definition": "Not new; having had an owner before.",
+    "type": "adjective"
   },
   "useful": {
-    "definition": "Helping you do something."
+    "definition": "Helping you do something.",
+    "type": "noun"
   },
   "usual": {
-    "definition": "Happening most of the time; normal."
+    "definition": "Happening most of the time; normal.",
+    "type": "adjective"
   },
   "valley": {
-    "definition": "Low land between hills or mountains."
+    "definition": "Low land between hills or mountains.",
+    "type": "noun"
   },
   "value": {
-    "definition": "How much something is worth."
+    "definition": "How much something is worth.",
+    "type": "adjective"
   },
   "verb": {
-    "definition": "A word that shows an action or a state, such as run or be."
+    "definition": "A word that shows an action or a state, such as run or be.",
+    "type": "noun"
   },
   "view": {
-    "definition": "What you can see from a place, or an opinion."
+    "definition": "What you can see from a place, or an opinion.",
+    "type": "adjective"
   },
   "village": {
-    "definition": "A small group of houses in the countryside."
+    "definition": "A small group of houses in the countryside.",
+    "type": "noun"
   },
   "violent": {
-    "definition": "Using force to hurt people or damage things."
+    "definition": "Using force to hurt people or damage things.",
+    "type": "noun"
   },
   "violin": {
-    "definition": "A small wooden instrument with four strings, played with a bow."
+    "definition": "A small wooden instrument with four strings, played with a bow.",
+    "type": "noun"
   },
   "visitor": {
-    "definition": "A person who comes to see a place or a person."
+    "definition": "A person who comes to see a place or a person.",
+    "type": "noun"
   },
   "voice": {
-    "definition": "The sound you make when you speak or sing."
+    "definition": "The sound you make when you speak or sing.",
+    "type": "noun"
   },
   "walking": {
-    "definition": "The activity of going somewhere on foot."
+    "definition": "The activity of going somewhere on foot.",
+    "type": "noun"
   },
   "wallet": {
-    "definition": "A small flat case for carrying money and cards."
+    "definition": "A small flat case for carrying money and cards.",
+    "type": "noun"
   },
   "wander": {
-    "definition": "To walk slowly with no clear direction."
+    "definition": "To walk slowly with no clear direction.",
+    "type": "verb"
   },
   "wave": {
-    "definition": "To move your hand to say hello, or a raised moving line of water."
+    "definition": "To move your hand to say hello, or a raised moving line of water.",
+    "type": "verb"
   },
   "weak": {
-    "definition": "Not strong."
+    "definition": "Not strong.",
+    "type": "adjective"
   },
   "wealth": {
-    "definition": "A large amount of money and property."
+    "definition": "A large amount of money and property.",
+    "type": "noun"
   },
   "web": {
-    "definition": "The internet, or the net a spider makes."
+    "definition": "The internet, or the net a spider makes.",
+    "type": "noun"
   },
   "website": {
-    "definition": "A set of pages on the internet about one subject."
+    "definition": "A set of pages on the internet about one subject.",
+    "type": "noun"
   },
   "wedding": {
-    "definition": "The ceremony in which two people marry."
+    "definition": "The ceremony in which two people marry.",
+    "type": "noun"
   },
   "weekday": {
-    "definition": "Any day from Monday to Friday."
+    "definition": "Any day from Monday to Friday.",
+    "type": "adjective"
   },
   "weekly": {
-    "definition": "Happening once a week."
+    "definition": "Happening once a week.",
+    "type": "adjective"
   },
   "weep": {
-    "definition": "To cry."
+    "definition": "To cry.",
+    "type": "verb"
   },
   "weigh": {
-    "definition": "To measure how heavy something is."
+    "definition": "To measure how heavy something is.",
+    "type": "verb"
   },
   "weight": {
-    "definition": "How heavy something is."
+    "definition": "How heavy something is.",
+    "type": "adjective"
   },
   "west": {
-    "definition": "The direction where the sun goes down."
+    "definition": "The direction where the sun goes down.",
+    "type": "noun"
   },
   "wet": {
-    "definition": "Covered with water or another liquid."
+    "definition": "Covered with water or another liquid.",
+    "type": "adjective"
   },
   "whole": {
-    "definition": "Complete; with nothing left out."
+    "definition": "Complete; with nothing left out.",
+    "type": "noun"
   },
   "wide": {
-    "definition": "Measuring a large amount from side to side."
+    "definition": "Measuring a large amount from side to side.",
+    "type": "noun"
   },
   "wild": {
-    "definition": "Living or growing in nature, not kept by people."
+    "definition": "Living or growing in nature, not kept by people.",
+    "type": "noun"
   },
   "windy": {
-    "definition": "With a lot of wind."
+    "definition": "With a lot of wind.",
+    "type": "adjective"
   },
   "wine": {
-    "definition": "An alcoholic drink made from grapes."
+    "definition": "An alcoholic drink made from grapes.",
+    "type": "noun"
   },
   "winner": {
-    "definition": "The person or team that wins."
+    "definition": "The person or team that wins.",
+    "type": "noun"
   },
   "wisdom": {
-    "definition": "The quality of knowing the right thing to do, gained from experience."
+    "definition": "The quality of knowing the right thing to do, gained from experience.",
+    "type": "noun"
   },
   "wise": {
-    "definition": "Able to judge things well because of experience."
+    "definition": "Able to judge things well because of experience.",
+    "type": "adjective"
   },
   "wish": {
-    "definition": "To want something that is not easy to get."
+    "definition": "To want something that is not easy to get.",
+    "type": "verb"
   },
   "wonder": {
-    "definition": "To want to know about something, or a feeling of surprise."
+    "definition": "To want to know about something, or a feeling of surprise.",
+    "type": "verb"
   },
   "wood": {
-    "definition": "The hard material that trees are made of."
+    "definition": "The hard material that trees are made of.",
+    "type": "noun"
   },
   "wooden": {
-    "definition": "Made of wood."
+    "definition": "Made of wood.",
+    "type": "noun"
   },
   "wool": {
-    "definition": "The soft thick hair of sheep, used to make clothes."
+    "definition": "The soft thick hair of sheep, used to make clothes.",
+    "type": "noun"
   },
   "worried": {
-    "definition": "Unhappy because you think something bad may happen."
+    "definition": "Unhappy because you think something bad may happen.",
+    "type": "adjective"
   },
   "worry": {
-    "definition": "To think about problems and feel unhappy."
+    "definition": "To think about problems and feel unhappy.",
+    "type": "verb"
   },
   "worse": {
-    "definition": "Less good than something else."
+    "definition": "Less good than something else.",
+    "type": "adjective"
   },
   "worst": {
-    "definition": "The most bad of all."
+    "definition": "The most bad of all.",
+    "type": "noun"
   },
   "writing": {
-    "definition": "Words put down on paper or a screen, or the activity of putting them down."
+    "definition": "Words put down on paper or a screen, or the activity of putting them down.",
+    "type": "adjective"
   },
   "youth": {
-    "definition": "The time when you are young, or young people."
+    "definition": "The time when you are young, or young people.",
+    "type": "noun"
   },
   "zone": {
-    "definition": "An area with a special purpose or rule."
+    "definition": "An area with a special purpose or rule.",
+    "type": "noun"
   }
 }
