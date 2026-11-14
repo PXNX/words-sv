@@ -7,8 +7,12 @@
   },
   "absurd": {},
   "abuse": {},
-  "access": {},
-  "ache": {},
+  "access": {
+    "definition": "The right or chance to use or see something."
+  },
+  "ache": {
+    "definition": "A continuous dull pain."
+  },
   "acid": {},
   "actual": {},
   "acute": {},
@@ -21,7 +25,9 @@
   },
   "adore": {},
   "adorn": {},
-  "advance": {},
+  "advance": {
+    "definition": "To move forward, or a payment made early."
+  },
   "advent": {},
   "adverse": {
     "definition": "Harmful or unfavourable."
@@ -30,7 +36,9 @@
     "definition": "Not appearing to become old or belonging to a particular age."
   },
   "agony": {},
-  "aim": {},
+  "aim": {
+    "definition": "To point a weapon or a camera, or a purpose."
+  },
   "aircraft": {},
   "aircrew": {},
   "alert": {},
@@ -49,9 +57,15 @@
   "anchor": {},
   "anguish": {},
   "animate": {},
-  "antique": {},
-  "appeal": {},
-  "approach": {},
+  "antique": {
+    "definition": "Old and valuable because of its age."
+  },
+  "appeal": {
+    "definition": "To make a serious request, or to be attractive."
+  },
+  "approach": {
+    "definition": "To come near to something, or a way of dealing with it."
+  },
   "arch": {},
   "arctic": {},
   "arena": {},
@@ -79,7 +93,9 @@
   "backup": {},
   "backyard": {},
   "badge": {},
-  "balance": {},
+  "balance": {
+    "definition": "An even distribution of weight, or the amount of money in an account."
+  },
   "balanced": {},
   "balky": {},
   "ballad": {},
@@ -88,9 +104,15 @@
   "ban": {},
   "banker": {},
   "bankrupt": {},
-  "bare": {},
-  "bargain": {},
-  "bark": {},
+  "bare": {
+    "definition": "Not covered by clothes, or without decoration."
+  },
+  "bargain": {
+    "definition": "Something bought for less than the usual price."
+  },
+  "bark": {
+    "definition": "The rough outer covering of a tree, or the sound a dog makes."
+  },
   "barley": {},
   "barn": {},
   "barren": {},
@@ -99,11 +121,17 @@
   "beak": {},
   "beam": {},
   "bearing": {},
-  "beat": {},
+  "beat": {
+    "definition": "To hit repeatedly, or to defeat someone in a game."
+  },
   "beautify": {},
   "bellow": {},
-  "bend": {},
-  "benefit": {},
+  "bend": {
+    "definition": "To make something curved or not straight."
+  },
+  "benefit": {
+    "definition": "An advantage or profit gained from something."
+  },
   "berry": {},
   "bestow": {},
   "betray": {},
@@ -119,16 +147,22 @@
   "blade": {},
   "blast": {},
   "blaze": {},
-  "blend": {},
+  "blend": {
+    "definition": "To mix things together thoroughly."
+  },
   "blink": {},
   "bloody": {},
   "blooming": {},
   "blossom": {},
   "blur": {},
   "blurt": {},
-  "blush": {},
+  "blush": {
+    "definition": "To become red in the face from shame or shyness."
+  },
   "boiling": {},
-  "bold": {},
+  "bold": {
+    "definition": "Brave and confident, or thick and dark in colour."
+  },
   "bolt": {},
   "bombard": {},
   "bomber": {},
@@ -142,17 +176,27 @@
   "bossy": {},
   "botany": {},
   "bothered": {},
-  "bottle": {},
-  "bounce": {},
+  "bottle": {
+    "definition": "A tall container with a narrow neck, used for liquid."
+  },
+  "bounce": {
+    "definition": "To spring back after hitting a surface."
+  },
   "bourbon": {},
-  "bow": {},
+  "bow": {
+    "definition": "To bend the head or body forward, or a weapon for shooting arrows."
+  },
   "boxer": {},
   "bracket": {},
   "brag": {},
-  "brake": {},
+  "brake": {
+    "definition": "The part of a vehicle that makes it slow down."
+  },
   "bravery": {},
   "breakup": {},
-  "breed": {},
+  "breed": {
+    "definition": "A type of animal, or to produce young animals."
+  },
   "breezy": {},
   "brewery": {},
   "broaden": {},
@@ -161,19 +205,25 @@
   "browser": {},
   "bruise": {},
   "bud": {},
-  "budget": {},
+  "budget": {
+    "definition": "A plan for how much money you can spend."
+  },
   "bulimia": {},
   "bully": {},
   "bum": {},
   "bumper": {},
   "bun": {},
-  "burden": {},
+  "burden": {
+    "definition": "A heavy load, or a difficult responsibility."
+  },
   "burglary": {},
   "burgle": {},
   "burial": {},
   "bustle": {},
   "bustling": {},
-  "butcher": {},
+  "butcher": {
+    "definition": "A person who cuts and sells meat."
+  },
   "buzz": {},
   "cabinet": {},
   "cable": {},
@@ -195,7 +245,9 @@
   "catalyst": {},
   "catchy": {},
   "catering": {},
-  "cause": {},
+  "cause": {
+    "definition": "To make something happen, or the reason it happens."
+  },
   "cease": {},
   "ceiling": {},
   "cellar": {},
@@ -205,12 +257,16 @@
   "certify": {},
   "chaotic": {},
   "charming": {},
-  "chase": {},
+  "chase": {
+    "definition": "To run after someone to catch them."
+  },
   "cheat": {},
   "cheeky": {},
   "cherry": {},
   "chew": {},
-  "chief": {},
+  "chief": {
+    "definition": "Most important, or the leader of a group."
+  },
   "childish": {},
   "chimney": {},
   "chip": {},
@@ -221,7 +277,9 @@
   "clam": {},
   "clap": {},
   "clarify": {},
-  "classic": {},
+  "classic": {
+    "definition": "Of the best quality, and respected over many years."
+  },
   "clause": {},
   "clerical": {},
   "client": {},
@@ -229,7 +287,9 @@
   "closure": {},
   "clothing": {},
   "clumsy": {},
-  "coach": {},
+  "coach": {
+    "definition": "A person who trains a sports team, or a long-distance bus."
+  },
   "coaching": {},
   "coarse": {},
   "cocktail": {},
@@ -237,12 +297,18 @@
   "coconut": {},
   "coherent": {},
   "coincide": {},
-  "collapse": {},
+  "collapse": {
+    "definition": "To fall down suddenly, or a sudden failure."
+  },
   "colon": {},
   "colonial": {},
   "coma": {},
-  "comb": {},
-  "comment": {},
+  "comb": {
+    "definition": "A tool with teeth for tidying hair."
+  },
+  "comment": {
+    "definition": "A remark expressing an opinion."
+  },
   "commerce": {},
   "commute": {},
   "compile": {},
@@ -252,10 +318,14 @@
   "concede": {},
   "conceit": {},
   "conceive": {},
-  "concern": {},
+  "concern": {
+    "definition": "To worry someone, or a matter that matters to people."
+  },
   "concrete": {},
   "condemn": {},
-  "conduct": {},
+  "conduct": {
+    "definition": "To organize and carry out, or behaviour."
+  },
   "cone": {},
   "confess": {},
   "confine": {},
@@ -266,11 +336,15 @@
   "constant": {},
   "consult": {},
   "contempt": {},
-  "content": {},
+  "content": {
+    "definition": "The things inside something, or satisfied."
+  },
   "contract": {},
   "converse": {},
   "convert": {},
-  "cool": {},
+  "cool": {
+    "definition": "Slightly cold, in a pleasant way."
+  },
   "cope": {},
   "copper": {},
   "coral": {},
@@ -278,14 +352,20 @@
   "cornet": {},
   "corona": {},
   "corporal": {},
-  "correct": {},
+  "correct": {
+    "definition": "Right, with no mistakes."
+  },
   "corridor": {},
   "corrupt": {},
   "costly": {},
   "costume": {},
   "cottage": {},
-  "cough": {},
-  "counter": {},
+  "cough": {
+    "definition": "To force air out of the lungs with a sudden noise."
+  },
+  "counter": {
+    "definition": "A flat surface for serving food, or to oppose an argument."
+  },
   "courtesy": {},
   "coward": {},
   "cowardly": {},
@@ -298,15 +378,21 @@
   "creek": {},
   "creepy": {},
   "crew": {},
-  "criminal": {},
+  "criminal": {
+    "definition": "A person who has committed a crime, or relating to crime."
+  },
   "cripple": {},
   "crucial": {},
   "cruelty": {},
-  "cruise": {},
+  "cruise": {
+    "definition": "A holiday on a ship that visits several places."
+  },
   "cube": {},
   "cubism": {},
   "cuff": {},
-  "cure": {},
+  "cure": {
+    "definition": "To make an illness go away, or a treatment that does this."
+  },
   "curl": {},
   "cursor": {},
   "cyberpet": {},
@@ -320,7 +406,9 @@
   "dated": {},
   "dawn": {},
   "daytime": {},
-  "dear": {},
+  "dear": {
+    "definition": "Loved, or used at the start of a letter to a friend."
+  },
   "debit": {},
   "decade": {},
   "decay": {},
@@ -328,27 +416,39 @@
   "decent": {},
   "decisive": {},
   "deck": {},
-  "decline": {},
+  "decline": {
+    "definition": "To become less, or to refuse politely."
+  },
   "decorate": {},
   "deduce": {},
   "deem": {},
   "deep": {},
   "deer": {},
-  "defeat": {},
+  "defeat": {
+    "definition": "To win against someone, or a loss."
+  },
   "deficit": {},
   "defy": {},
   "delegate": {},
   "delicacy": {},
-  "delight": {},
+  "delight": {
+    "definition": "Great pleasure."
+  },
   "demolish": {},
   "denim": {},
   "dense": {},
   "dental": {},
-  "deposit": {},
+  "deposit": {
+    "definition": "Money paid as a first part, or to put money in a bank."
+  },
   "deputy": {},
   "descend": {},
-  "designer": {},
-  "desire": {},
+  "designer": {
+    "definition": "A person who plans how things will look."
+  },
+  "desire": {
+    "definition": "A strong wish for something."
+  },
   "desktop": {},
   "despise": {},
   "destiny": {},
@@ -393,13 +493,19 @@
   "doorway": {},
   "dorm": {},
   "dose": {},
-  "double": {},
-  "doubt": {},
+  "double": {
+    "definition": "Twice as much, or having two equal parts."
+  },
+  "doubt": {
+    "definition": "To think that something is probably not true."
+  },
   "doubtful": {},
   "dove": {},
   "down": {},
   "downfall": {},
-  "download": {},
+  "download": {
+    "definition": "To copy files from the internet onto your computer."
+  },
   "downsize": {},
   "dowry": {},
   "drain": {},
@@ -441,8 +547,12 @@
   "engulf": {},
   "enhance": {},
   "entitle": {},
-  "envy": {},
-  "equal": {},
+  "envy": {
+    "definition": "To wish you had what someone else has."
+  },
+  "equal": {
+    "definition": "The same in size, amount, or value."
+  },
   "equation": {},
   "equip": {},
   "equity": {},
@@ -451,7 +561,9 @@
   "eruption": {},
   "essayist": {},
   "estate": {},
-  "estimate": {},
+  "estimate": {
+    "definition": "To guess an amount using the information you have."
+  },
   "ethic": {},
   "ethnic": {},
   "evacuate": {},
@@ -471,7 +583,9 @@
   "existing": {},
   "exotic": {},
   "expected": {},
-  "expert": {},
+  "expert": {
+    "definition": "A person who knows a lot about one subject."
+  },
   "explode": {},
   "exploit": {},
   "explorer": {},
@@ -486,38 +600,62 @@
   "fabulous": {},
   "factor": {},
   "faculty": {},
-  "faint": {},
+  "faint": {
+    "definition": "Barely able to be seen or heard, or to become unconscious."
+  },
   "faith": {},
   "falter": {},
   "fame": {},
   "far": {},
-  "fat": {},
+  "fat": {
+    "definition": "With a lot of flesh on the body; not thin."
+  },
   "fatal": {},
   "fate": {},
   "faulty": {},
-  "fear": {},
+  "fear": {
+    "definition": "The feeling you get when you are in danger."
+  },
   "fearsome": {},
   "feat": {},
-  "feature": {},
+  "feature": {
+    "definition": "An important part of something."
+  },
   "federal": {},
   "feedback": {},
-  "fellow": {},
-  "female": {},
+  "fellow": {
+    "definition": "A man, or belonging to the same group."
+  },
+  "female": {
+    "definition": "Of the sex that can have babies."
+  },
   "fierce": {},
   "fighting": {},
-  "file": {},
+  "file": {
+    "definition": "A box or folder for keeping papers in order."
+  },
   "filial": {},
-  "finance": {},
-  "fine": {},
-  "fire": {},
+  "finance": {
+    "definition": "The management of money."
+  },
+  "fine": {
+    "definition": "Good enough; well and happy."
+  },
+  "fire": {
+    "definition": "The flames and heat produced when something burns."
+  },
   "firearm": {},
   "firmness": {},
   "fiscal": {},
-  "fit": {},
+  "fit": {
+    "definition": "The right size, or healthy."
+  },
   "fixed": {},
   "flame": {},
   "flap": {},
-  "flash": {},
+  "flash": {
+    "definition": "A sudden bright light, or to shine briefly."
+  },
   "flaw": {},
   "flawless": {},
   "flax": {},
@@ -529,21 +667,29 @@
   "fluency": {},
   "fluid": {},
   "flutter": {},
-  "focus": {},
+  "focus": {
+    "definition": "To give all your attention to one thing."
+  },
   "follower": {},
   "folly": {},
   "footnote": {},
-  "force": {},
+  "force": {
+    "definition": "Physical power, or to make someone do something."
+  },
   "foreman": {},
   "foresee": {},
   "forestry": {},
   "foul": {},
   "found": {},
   "fox": {},
-  "frame": {},
+  "frame": {
+    "definition": "The border around a picture, or the bars that hold glasses."
+  },
   "fraud": {},
   "freak": {},
-  "free": {},
+  "free": {
+    "definition": "Costing no money, or not held in prison."
+  },
   "friendly": {},
   "frigate": {},
   "frontier": {},
@@ -580,12 +726,18 @@
   "goat": {},
   "god": {},
   "godly": {},
-  "good": {},
+  "good": {
+    "definition": "Of high quality; pleasant or right."
+  },
   "goodwill": {},
   "gook": {},
   "gorge": {},
-  "gossip": {},
-  "grade": {},
+  "gossip": {
+    "definition": "Talk about other people's private lives."
+  },
+  "grade": {
+    "definition": "A mark given for school work, or a level in a school."
+  },
   "gradual": {},
   "grain": {},
   "grand": {},
@@ -597,7 +749,9 @@
   "grip": {},
   "gross": {},
   "growing": {},
-  "guard": {},
+  "guard": {
+    "definition": "A person who protects a place, or to protect it."
+  },
   "gulp": {},
   "gum": {},
   "gunshot": {},
@@ -605,18 +759,26 @@
   "habitant": {},
   "hail": {},
   "hairy": {},
-  "hammer": {},
+  "hammer": {
+    "definition": "A tool with a heavy head for hitting nails."
+  },
   "handicap": {},
   "handout": {},
   "handrail": {},
-  "hang": {},
+  "hang": {
+    "definition": "To fix something at the top so it hangs down."
+  },
   "hardware": {},
-  "harm": {},
+  "harm": {
+    "definition": "Damage or injury caused to someone."
+  },
   "harmless": {},
   "harrow": {},
   "haste": {},
   "hatching": {},
-  "haunt": {},
+  "haunt": {
+    "definition": "To appear in a place as a ghost, or to worry you for a long time."
+  },
   "haunting": {},
   "hay": {},
   "heap": {},
@@ -637,7 +799,9 @@
   "hospice": {},
   "hourly": {},
   "hover": {},
-  "hug": {},
+  "hug": {
+    "definition": "To hold someone close with your arms."
+  },
   "humane": {},
   "humanist": {},
   "humble": {},
@@ -668,7 +832,9 @@
   "impulse": {},
   "inborn": {},
   "incense": {},
-  "inch": {},
+  "inch": {
+    "definition": "A small unit of length, about 2.5 centimetres."
+  },
   "incur": {},
   "indebted": {},
   "indent": {},
@@ -684,7 +850,9 @@
   "infringe": {},
   "inhabit": {},
   "inherit": {},
-  "initial": {},
+  "initial": {
+    "definition": "Happening at the beginning, or the first letter of a name."
+  },
   "injured": {},
   "innate": {},
   "input": {},
@@ -702,14 +870,24 @@
   "investor": {},
   "invoke": {},
   "islander": {},
-  "issue": {},
+  "issue": {
+    "definition": "An important subject, or one copy of a magazine."
+  },
   "itch": {},
-  "jam": {},
+  "jam": {
+    "definition": "Sweet food made from fruit cooked with sugar, or a traffic hold-up."
+  },
   "jaw": {},
-  "jog": {},
-  "joint": {},
+  "jog": {
+    "definition": "To run slowly for exercise."
+  },
+  "joint": {
+    "definition": "A place where two parts meet, as in the body, or shared by two people."
+  },
   "judo": {},
-  "jump": {},
+  "jump": {
+    "definition": "To push yourself off the ground with your legs."
+  },
   "juror": {},
   "jury": {},
   "justify": {},
@@ -722,7 +900,9 @@
   "knot": {},
   "known": {},
   "label": {},
-  "lack": {},
+  "lack": {
+    "definition": "To not have something that you need."
+  },
   "lame": {},
   "lance": {},
   "landing": {},
@@ -741,8 +921,12 @@
   "layabout": {},
   "leaflet": {},
   "leak": {},
-  "lean": {},
-  "leap": {},
+  "lean": {
+    "definition": "To bend your body, or thin with little fat."
+  },
+  "leap": {
+    "definition": "To jump a long way or high in the air."
+  },
   "learning": {},
   "lease": {},
   "leash": {},
@@ -752,7 +936,9 @@
   "lengthen": {},
   "lengthy": {},
   "leopard": {},
-  "level": {},
+  "level": {
+    "definition": "A height or standard, or flat."
+  },
   "liberal": {},
   "lick": {},
   "lid": {},
@@ -761,32 +947,46 @@
   "lighten": {},
   "lighting": {},
   "limb": {},
-  "line": {},
+  "line": {
+    "definition": "A long thin mark, or a row of people."
+  },
   "linen": {},
   "liner": {},
   "ling": {},
   "linger": {},
-  "list": {},
+  "list": {
+    "definition": "Several things written one below the other."
+  },
   "listener": {},
   "literal": {},
   "litter": {},
-  "living": {},
-  "load": {},
+  "living": {
+    "definition": "The money you earn to pay for the things you need."
+  },
+  "load": {
+    "definition": "The amount that something can carry, or to put goods on a vehicle."
+  },
   "loan": {},
   "lobby": {},
   "lousy": {},
   "lower": {},
   "lowland": {},
   "lush": {},
-  "luxury": {},
+  "luxury": {
+    "definition": "Great comfort in expensive surroundings."
+  },
   "lyrics": {},
   "madam": {},
   "madame": {},
   "madness": {},
   "maestro": {},
   "magnify": {},
-  "major": {},
-  "make": {},
+  "major": {
+    "definition": "Very large or important."
+  },
+  "make": {
+    "definition": "To create or produce something."
+  },
   "malady": {},
   "malaria": {},
   "mango": {},
@@ -795,7 +995,9 @@
   "marathon": {},
   "margin": {},
   "mask": {},
-  "mass": {},
+  "mass": {
+    "definition": "A large amount of something, or the amount of material in an object."
+  },
   "massacre": {},
   "massage": {},
   "masseur": {},
@@ -803,7 +1005,9 @@
   "mastery": {},
   "mate": {},
   "mature": {},
-  "mean": {},
+  "mean": {
+    "definition": "To have a certain sense, or to be unkind to someone."
+  },
   "means": {},
   "media": {},
   "mediocre": {},
@@ -813,7 +1017,9 @@
   "mercy": {},
   "merge": {},
   "merger": {},
-  "mess": {},
+  "mess": {
+    "definition": "An untidy or dirty situation."
+  },
   "metaphor": {},
   "metric": {},
   "micro": {},
@@ -828,14 +1034,18 @@
   "missile": {},
   "mist": {},
   "mistreat": {},
-  "mix": {},
+  "mix": {
+    "definition": "To put things together so that they become one."
+  },
   "mixture": {},
   "mobility": {},
   "mock": {},
   "modest": {},
   "mogul": {},
   "moody": {},
-  "moral": {},
+  "moral": {
+    "definition": "Connected with right and wrong behaviour."
+  },
   "morality": {},
   "mortal": {},
   "mortar": {},
@@ -843,7 +1053,9 @@
   "mortify": {},
   "motion": {},
   "motorist": {},
-  "mount": {},
+  "mount": {
+    "definition": "To climb onto something or organize an event."
+  },
   "mournful": {},
   "mover": {},
   "moving": {},
@@ -853,7 +1065,9 @@
   "mumble": {},
   "murmur": {},
   "muse": {},
-  "musical": {},
+  "musical": {
+    "definition": "About music, or a play with songs."
+  },
   "mutable": {},
   "mutter": {},
   "mutton": {},
@@ -865,7 +1079,9 @@
   "navigate": {},
   "navy": {},
   "neat": {},
-  "need": {},
+  "need": {
+    "definition": "To require something because it is necessary."
+  },
   "needless": {},
   "needy": {},
   "neglect": {},
@@ -875,7 +1091,9 @@
   "nobility": {},
   "noble": {},
   "nobleman": {},
-  "nod": {},
+  "nod": {
+    "definition": "To move your head up and down to show yes."
+  },
   "nomad": {},
   "nominee": {},
   "nostril": {},
@@ -890,13 +1108,17 @@
   "obedient": {},
   "obey": {},
   "obituary": {},
-  "object": {},
+  "object": {
+    "definition": "A thing you can see and touch, or to say you disagree."
+  },
   "observer": {},
   "obsess": {},
   "odd": {},
   "offend": {},
   "offender": {},
-  "official": {},
+  "official": {
+    "definition": "Approved by a government or a person in charge."
+  },
   "offshore": {},
   "ointment": {},
   "olive": {},
@@ -907,10 +1129,14 @@
   "optimism": {},
   "optimist": {},
   "optional": {},
-  "oral": {},
+  "oral": {
+    "definition": "Spoken rather than written, or connected with the mouth."
+  },
   "orator": {},
   "orchid": {},
-  "original": {},
+  "original": {
+    "definition": "First, or new and different."
+  },
   "ornament": {},
   "ounce": {},
   "outback": {},
@@ -921,7 +1147,9 @@
   "outgrow": {},
   "outing": {},
   "outlet": {},
-  "outline": {},
+  "outline": {
+    "definition": "A line showing the shape of something, or a short plan."
+  },
   "outlive": {},
   "outlook": {},
   "output": {},
@@ -951,11 +1179,15 @@
   "pancake": {},
   "pandemic": {},
   "panel": {},
-  "panic": {},
+  "panic": {
+    "definition": "A sudden strong fear that stops you thinking."
+  },
   "papaya": {},
   "parade": {},
   "paradox": {},
-  "part": {},
+  "part": {
+    "definition": "One piece of something bigger."
+  },
   "particle": {},
   "partisan": {},
   "pastor": {},
@@ -990,8 +1222,12 @@
   "phase": {},
   "pickle": {},
   "picky": {},
-  "picture": {},
-  "pin": {},
+  "picture": {
+    "definition": "A drawing, a painting, or a photograph."
+  },
+  "pin": {
+    "definition": "A short thin piece of metal with a point."
+  },
   "pine": {},
   "pint": {},
   "piracy": {},
@@ -1003,17 +1239,23 @@
   "plead": {},
   "plot": {},
   "pluck": {},
-  "plug": {},
+  "plug": {
+    "definition": "A device that connects an appliance to electricity, or to block a hole."
+  },
   "plum": {},
   "plumber": {},
   "plus": {},
-  "poison": {},
+  "poison": {
+    "definition": "A substance that can kill or harm you."
+  },
   "polio": {},
   "polish": {},
   "polity": {},
   "polo": {},
   "ponder": {},
-  "pop": {},
+  "pop": {
+    "definition": "Music with a strong beat that many young people like."
+  },
   "porch": {},
   "portion": {},
   "pose": {},
@@ -1021,20 +1263,32 @@
   "postal": {},
   "postpone": {},
   "potent": {},
-  "pound": {},
-  "powder": {},
-  "praise": {},
+  "pound": {
+    "definition": "A unit of money in Britain, or a unit of weight."
+  },
+  "powder": {
+    "definition": "A dry substance made of very small grains."
+  },
+  "praise": {
+    "definition": "Words that show you admire someone."
+  },
   "prance": {},
   "prawn": {},
   "precede": {},
   "prefect": {},
   "prehuman": {},
   "prejudge": {},
-  "present": {},
+  "present": {
+    "definition": "A gift, or the time we live in now."
+  },
   "prestige": {},
-  "pretend": {},
+  "pretend": {
+    "definition": "To act as if something is true when it is not."
+  },
   "prevail": {},
-  "price": {},
+  "price": {
+    "definition": "The amount of money something costs."
+  },
   "prick": {},
   "primary": {},
   "prime": {},
@@ -1042,10 +1296,14 @@
   "priority": {},
   "probable": {},
   "probe": {},
-  "process": {},
+  "process": {
+    "definition": "A series of actions done to reach a result."
+  },
   "profile": {},
   "profit": {},
-  "progress": {},
+  "progress": {
+    "definition": "Movement towards a better state."
+  },
   "prohibit": {},
   "project": {},
   "prom": {},
@@ -1054,7 +1312,9 @@
   "prose": {},
   "prospect": {},
   "prosper": {},
-  "protest": {},
+  "protest": {
+    "definition": "A strong public complaint."
+  },
   "proven": {},
   "province": {},
   "pudding": {},
@@ -1069,10 +1329,18 @@
   "quarrel": {},
   "queer": {},
   "query": {},
-  "question": {},
-  "queue": {},
-  "quiet": {},
-  "quit": {},
+  "question": {
+    "definition": "A sentence that asks for information."
+  },
+  "queue": {
+    "definition": "A line of people waiting for their turn."
+  },
+  "quiet": {
+    "definition": "With little or no sound."
+  },
+  "quit": {
+    "definition": "To stop doing something or leave a job."
+  },
   "quotable": {},
   "quote": {},
   "racism": {},
@@ -1088,11 +1356,15 @@
   "rally": {},
   "ram": {},
   "ramp": {},
-  "range": {},
+  "range": {
+    "definition": "A set of similar things, or the limits between which something varies."
+  },
   "ranger": {},
   "rape": {},
   "rash": {},
-  "rate": {},
+  "rate": {
+    "definition": "The speed or number of times something happens, or a price."
+  },
   "rattle": {},
   "ravage": {},
   "reaction": {},
@@ -1111,10 +1383,14 @@
   "refuge": {},
   "refugee": {},
   "refute": {},
-  "regard": {},
+  "regard": {
+    "definition": "To think of someone in a particular way."
+  },
   "reggae": {},
   "regime": {},
-  "regret": {},
+  "regret": {
+    "definition": "To feel sorry about something you did."
+  },
   "regulate": {},
   "rejoin": {},
   "related": {},
@@ -1125,7 +1401,9 @@
   "relieve": {},
   "relieved": {},
   "remains": {},
-  "remark": {},
+  "remark": {
+    "definition": "Something you say, or to say something."
+  },
   "reminder": {},
   "rental": {},
   "repaint": {},
@@ -1133,8 +1411,12 @@
   "repress": {},
   "reprint": {},
   "reprove": {},
-  "research": {},
-  "resident": {},
+  "research": {
+    "definition": "Careful study to find out new facts."
+  },
+  "resident": {
+    "definition": "A person who lives in a place."
+  },
   "resign": {},
   "resonant": {},
   "resume": {},
@@ -1146,42 +1428,62 @@
   "revenge": {},
   "revenue": {},
   "reverse": {},
-  "review": {},
+  "review": {
+    "definition": "To look at something again and say what you think of it."
+  },
   "revival": {},
   "revive": {},
   "revolve": {},
-  "reward": {},
+  "reward": {
+    "definition": "Something good given for your effort or help."
+  },
   "rhyme": {},
   "rhythmic": {},
   "rib": {},
-  "riddle": {},
+  "riddle": {
+    "definition": "A difficult question with a clever answer."
+  },
   "rider": {},
   "ridge": {},
   "rim": {},
   "rip": {},
-  "risk": {},
+  "risk": {
+    "definition": "The chance that something bad may happen."
+  },
   "risky": {},
   "rite": {},
   "ritual": {},
   "rival": {},
   "roam": {},
   "roar": {},
-  "roast": {},
-  "rock": {},
+  "roast": {
+    "definition": "To cook meat or vegetables in an oven."
+  },
+  "rock": {
+    "definition": "Hard stone, or a style of loud popular music."
+  },
   "rocket": {},
   "rocky": {},
-  "roll": {},
+  "roll": {
+    "definition": "To move by turning over and over, or a small round piece of bread."
+  },
   "roommate": {},
   "rosy": {},
-  "round": {},
+  "round": {
+    "definition": "Shaped like a circle or a ball."
+  },
   "route": {},
-  "row": {},
+  "row": {
+    "definition": "A line of things or people next to each other."
+  },
   "royalty": {},
   "rub": {},
   "rubble": {},
   "rug": {},
   "ruinous": {},
-  "rule": {},
+  "rule": {
+    "definition": "A statement saying what you must or must not do."
+  },
   "rural": {},
   "rusty": {},
   "sack": {},
@@ -1193,20 +1495,34 @@
   "salsa": {},
   "salty": {},
   "sanitary": {},
-  "saw": {},
-  "say": {},
-  "scan": {},
+  "saw": {
+    "definition": "A tool with a metal edge for cutting wood, or the past of see."
+  },
+  "say": {
+    "definition": "To speak words."
+  },
+  "scan": {
+    "definition": "To look over something quickly, or to copy a picture electronically."
+  },
   "scandal": {},
   "scar": {},
   "scarlet": {},
   "scent": {},
-  "schedule": {},
+  "schedule": {
+    "definition": "A plan that shows the times when things will happen."
+  },
   "scheme": {},
   "scooter": {},
   "scramble": {},
-  "scratch": {},
-  "screen": {},
-  "screw": {},
+  "scratch": {
+    "definition": "To mark a surface with something sharp."
+  },
+  "screen": {
+    "definition": "The flat surface of a television or computer that shows pictures."
+  },
+  "screw": {
+    "definition": "A small piece of metal with a pointed end that holds things together."
+  },
   "scribble": {},
   "scrooge": {},
   "scuba": {},
@@ -1216,15 +1532,23 @@
   "sector": {},
   "seesaw": {},
   "segment": {},
-  "select": {},
+  "select": {
+    "definition": "To choose something carefully."
+  },
   "selfless": {},
   "seller": {},
   "seminar": {},
   "senator": {},
-  "sense": {},
+  "sense": {
+    "definition": "The ability to feel or understand, or a meaning."
+  },
   "sensible": {},
-  "sentence": {},
-  "separate": {},
+  "sentence": {
+    "definition": "A group of words that makes a complete statement."
+  },
+  "separate": {
+    "definition": "Not joined to something else."
+  },
   "serene": {},
   "serial": {},
   "servant": {},
@@ -1237,19 +1561,29 @@
   "shaky": {},
   "shatter": {},
   "shed": {},
-  "shell": {},
+  "shell": {
+    "definition": "The hard covering of an egg or a sea creature."
+  },
   "shield": {},
-  "shift": {},
+  "shift": {
+    "definition": "A period of work, or to move something slightly."
+  },
   "shipping": {},
-  "shock": {},
+  "shock": {
+    "definition": "To surprise and upset someone very much."
+  },
   "shooting": {},
   "shoplift": {},
   "showbiz": {},
   "showcase": {},
-  "shower": {},
+  "shower": {
+    "definition": "A place where you stand under falling water to wash."
+  },
   "shrink": {},
   "shrug": {},
-  "sigh": {},
+  "sigh": {
+    "definition": "To breathe out slowly to show you are tired or relieved."
+  },
   "signify": {},
   "sincere": {},
   "sketch": {},
@@ -1261,16 +1595,24 @@
   "slang": {},
   "slap": {},
   "slash": {},
-  "slice": {},
-  "slide": {},
-  "slight": {},
+  "slice": {
+    "definition": "A thin flat piece cut from something."
+  },
+  "slide": {
+    "definition": "To move smoothly over a surface."
+  },
+  "slight": {
+    "definition": "Small in amount or degree."
+  },
   "sliver": {},
   "sloppy": {},
   "smash": {},
   "snap": {},
   "sneak": {},
   "sneer": {},
-  "sneeze": {},
+  "sneeze": {
+    "definition": "To blow air out of your nose suddenly and noisily."
+  },
   "sniff": {},
   "snore": {},
   "snowball": {},
@@ -1281,14 +1623,20 @@
   "sob": {},
   "sociable": {},
   "softness": {},
-  "soil": {},
+  "soil": {
+    "definition": "The top layer of earth where plants grow."
+  },
   "solar": {},
   "solidity": {},
   "solo": {},
   "solvent": {},
   "sonnet": {},
-  "sort": {},
-  "sound": {},
+  "sort": {
+    "definition": "A type of thing, or to arrange things in groups."
+  },
+  "sound": {
+    "definition": "Something you can hear."
+  },
   "soviet": {},
   "soybean": {},
   "spa": {},
@@ -1302,15 +1650,25 @@
   "speeder": {},
   "spin": {},
   "spite": {},
-  "splash": {},
+  "splash": {
+    "definition": "To make liquid fly up in drops."
+  },
   "splatter": {
     "definition": "To scatter drops of liquid over a surface."
   },
-  "split": {},
-  "sponsor": {},
-  "spot": {},
+  "split": {
+    "definition": "To divide into parts or groups."
+  },
+  "sponsor": {
+    "definition": "A person or company that pays for an event or activity."
+  },
+  "spot": {
+    "definition": "A small round mark, or to see something suddenly."
+  },
   "spray": {},
-  "spread": {},
+  "spread": {
+    "definition": "To open something out, or to put a layer of something on bread."
+  },
   "sprint": {},
   "spur": {},
   "squad": {},
@@ -1322,19 +1680,27 @@
   "stain": {},
   "stake": {},
   "stammer": {},
-  "stamp": {},
-  "standard": {},
+  "stamp": {
+    "definition": "A small piece of paper you stick on a letter, or a tool that prints a mark."
+  },
+  "standard": {
+    "definition": "A level of quality that is expected."
+  },
   "standby": {},
   "stanza": {},
   "startle": {},
   "starve": {},
   "starving": {},
-  "state": {},
+  "state": {
+    "definition": "The condition something is in, or a country with its own government."
+  },
   "steely": {},
   "steer": {},
   "stern": {},
   "stew": {},
-  "stick": {},
+  "stick": {
+    "definition": "A thin piece of wood, or to fasten things together."
+  },
   "stiff": {},
   "stingy": {},
   "stink": {},
@@ -1342,19 +1708,31 @@
   "stock": {},
   "stool": {},
   "stopover": {},
-  "store": {},
-  "strain": {},
+  "store": {
+    "definition": "A shop, or to keep something for later."
+  },
+  "strain": {
+    "definition": "Pressure or worry, or to injure a muscle by pulling it too hard."
+  },
   "strait": {},
   "strand": {},
   "strangle": {},
-  "stress": {},
+  "stress": {
+    "definition": "Worry caused by a difficult situation, or to give importance to something."
+  },
   "stride": {},
   "striking": {},
-  "strip": {},
+  "strip": {
+    "definition": "A long narrow piece of something, or to remove a covering."
+  },
   "strive": {},
   "stroke": {},
-  "struggle": {},
-  "stuff": {},
+  "struggle": {
+    "definition": "To try hard against difficulty, or a hard fight."
+  },
+  "stuff": {
+    "definition": "Things in general, or to fill something tightly."
+  },
   "stylist": {},
   "submit": {},
   "subplot": {},
@@ -1368,10 +1746,14 @@
   "sunbeam": {},
   "superb": {},
   "supplier": {},
-  "supply": {},
+  "supply": {
+    "definition": "To provide something that is needed."
+  },
   "suppress": {},
   "surge": {},
-  "suspect": {},
+  "suspect": {
+    "definition": "To think someone may have done something wrong, or a person police think did it."
+  },
   "suspend": {},
   "sustain": {},
   "swan": {},
@@ -1390,15 +1772,21 @@
   "tame": {},
   "tan": {},
   "tanned": {},
-  "tap": {},
+  "tap": {
+    "definition": "A device that lets water out of a pipe, or to hit something lightly."
+  },
   "tatter": {},
   "tattoo": {},
   "taunt": {},
-  "tease": {},
+  "tease": {
+    "definition": "To make fun of someone in a playful or unkind way."
+  },
   "teaspoon": {},
   "tender": {},
   "terrace": {},
-  "test": {},
+  "test": {
+    "definition": "A set of questions to show what someone knows."
+  },
   "testify": {},
   "theme": {},
   "theorist": {},
@@ -1406,17 +1794,23 @@
   "thesis": {},
   "thigh": {},
   "thinker": {},
-  "thirst": {},
+  "thirst": {
+    "definition": "The feeling that you need to drink."
+  },
   "thread": {},
   "threaten": {},
   "thrill": {},
   "thrilled": {},
   "throat": {},
   "tickle": {},
-  "time": {},
+  "time": {
+    "definition": "The passing of minutes, hours, days, and years."
+  },
   "timeless": {},
   "timing": {},
-  "tip": {},
+  "tip": {
+    "definition": "The pointed end of something, a piece of advice, or extra money for a waiter."
+  },
   "tiptoe": {},
   "tiresome": {},
   "toenail": {},
@@ -1430,11 +1824,19 @@
   "torture": {},
   "tough": {},
   "toxic": {},
-  "trace": {},
-  "track": {},
-  "trade": {},
+  "trace": {
+    "definition": "A small sign that something was there, or to follow its path."
+  },
+  "track": {
+    "definition": "A narrow path, or a rail for trains, or a song on an album."
+  },
+  "trade": {
+    "definition": "The buying and selling of goods."
+  },
   "trader": {},
-  "trail": {},
+  "trail": {
+    "definition": "A rough path, or a series of marks left behind."
+  },
   "trailer": {},
   "trainee": {},
   "trainer": {},
@@ -1442,29 +1844,39 @@
   "traitor": {},
   "tramp": {},
   "trample": {},
-  "transfer": {},
+  "transfer": {
+    "definition": "To move something from one place to another."
+  },
   "transmit": {},
   "traverse": {},
   "tray": {},
   "tread": {},
-  "treat": {},
+  "treat": {
+    "definition": "To behave towards someone, or to give medical care."
+  },
   "treaty": {},
   "trek": {},
   "tremor": {},
   "trial": {},
   "triangle": {},
   "tribe": {},
-  "trick": {},
+  "trick": {
+    "definition": "Something clever you do to cheat or amuse someone."
+  },
   "tricky": {},
   "trio": {},
-  "trip": {},
+  "trip": {
+    "definition": "A journey to a place and back."
+  },
   "trivial": {},
   "trolley": {},
   "troop": {},
   "trophy": {},
   "tropic": {},
   "trunk": {},
-  "trust": {},
+  "trust": {
+    "definition": "To believe that someone is honest and will not harm you."
+  },
   "trusty": {},
   "truthful": {},
   "tub": {},
@@ -1494,12 +1906,18 @@
   "unsure": {},
   "untie": {},
   "unwise": {},
-  "update": {},
+  "update": {
+    "definition": "To make something more modern, or the latest information."
+  },
   "upgrade": {},
   "upright": {},
-  "upset": {},
+  "upset": {
+    "definition": "Sad or worried because something bad happened."
+  },
   "urban": {},
-  "urge": {},
+  "urge": {
+    "definition": "A strong wish to do something, or to advise strongly."
+  },
   "user": {},
   "usher": {},
   "utility": {},
@@ -1507,7 +1925,9 @@
   "vacant": {},
   "vaccine": {},
   "valid": {},
-  "value": {},
+  "value": {
+    "definition": "How much something is worth."
+  },
   "vanish": {},
   "vanity": {},
   "varied": {},
@@ -1534,41 +1954,61 @@
   "vow": {},
   "wage": {},
   "waist": {},
-  "wait": {},
+  "wait": {
+    "definition": "To stay in a place until something happens."
+  },
   "walker": {},
   "walnut": {},
-  "want": {},
+  "want": {
+    "definition": "To wish to have something."
+  },
   "warship": {},
   "wartime": {},
   "wasp": {},
-  "water": {},
+  "water": {
+    "definition": "The clear liquid we drink and that fills rivers and seas."
+  },
   "weaken": {},
   "wealthy": {},
   "weary": {},
   "weave": {},
   "wed": {},
   "weed": {},
-  "welcome": {},
+  "welcome": {
+    "definition": "Words said to greet someone when they arrive."
+  },
   "welfare": {},
   "western": {},
   "wheat": {},
   "whip": {},
-  "whisper": {},
-  "whistle": {},
+  "whisper": {
+    "definition": "To speak very quietly."
+  },
+  "whistle": {
+    "definition": "To make a high sound by blowing through your lips."
+  },
   "widen": {},
   "widow": {},
   "width": {},
   "will": {},
   "willing": {},
-  "win": {},
-  "wind": {},
+  "win": {
+    "definition": "To be first or best in a game or competition."
+  },
+  "wind": {
+    "definition": "Air that moves across the land."
+  },
   "winding": {},
   "wink": {},
   "wipe": {},
-  "wire": {},
+  "wire": {
+    "definition": "Thin metal thread used to carry electricity."
+  },
   "wit": {},
   "withdraw": {},
-  "witness": {},
+  "witness": {
+    "definition": "A person who saw something happen."
+  },
   "witty": {},
   "wolf": {},
   "wondrous": {},
@@ -1576,15 +2016,21 @@
   "worldly": {},
   "worm": {},
   "worrying": {},
-  "worse": {},
+  "worse": {
+    "definition": "Less good than something else."
+  },
   "worsen": {},
   "worship": {},
-  "wound": {},
+  "wound": {
+    "definition": "An injury that breaks the skin."
+  },
   "wreck": {},
   "yacht": {},
   "yawn": {},
   "yearn": {},
-  "yell": {},
+  "yell": {
+    "definition": "To shout very loudly."
+  },
   "yield": {},
   "youthful": {},
   "yummy": {},
