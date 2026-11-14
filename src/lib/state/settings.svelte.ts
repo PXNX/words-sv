@@ -1,7 +1,7 @@
 import { LEARNING_STYLES, type LearningStyle } from '#lib/today/homeModes.js';
 import { requiresCumulativePool } from '#lib/circle/engine.js';
 import { chatModel, DEFAULT_CHAT_MODEL, type ChatModelId } from '#lib/conversation/models.js';
-import { ownsClipKey, storedVoiceEngine, voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
+import { engineFor, ownsClipKey, setBrowserVoicesUsable, storedVoiceEngine, voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
 import { wordPools, isLanguage, isVocabularyLevel, type Language, type VocabularyLevel, warmLanguage, refreshHintableBaseWords } from '#lib/data/vocabulary.js';
 import { normalizeVocabularyGoal, dateKey, readStreak, repairCandidate, repairStreak as repairStoredStreak, syncStreak, syncStreakGoal, type ClientStreak, type StreakRepair, type StreakEvent } from '#lib/streak/clientStreak.js';
 import { recordActivity, type ActivityKind } from '#lib/progress/activity.js';
@@ -149,6 +149,10 @@ class SettingsStore {
     learningStyle = $state<LearningStyle>(readStored(LEARNING_STYLE_KEY, LEARNING_STYLES, 'mixed'));
     voiceQuality = $state<VoiceQuality>(readVoiceQuality());
     naturalModel = $state<NaturalModel>(readNaturalModel());
+    // Whether the browser's own voices can speak at all (voice/browserVoices.ts reports it once at
+    // startup); without them the `standard` engine hands over to a rendered one. Optimistic until
+    // then, so a slow voice list never pulls a model download.
+    browserVoices = $state(true);
     dialects = $state(typeof localStorage === 'undefined' || localStorage.getItem(DIALECTS_KEY) !== 'off');
     lang = $state<Language>(readLanguage());
     chatModel = $state<ChatModelId>(readChatModel(this.lang));
@@ -197,13 +201,20 @@ class SettingsStore {
     localStorage.setItem(VIBRATION_KEY, next ? 'on' : 'off');
     if (next) void import('#lib/feedback/haptics.js').then(({ haptic }) => haptic('success', true));
   }
-  // Every voice except the browser's own is played as rendered audio clips.
+  // Every voice except the browser's own is played as rendered audio clips; where the browser has
+  // no voices at all, its engine has already fallen back to one that renders them (engines.ts).
   get clipVoices() {
-    return voiceEngines[this.voiceQuality].clips;
+    // Read for the dependency: the answer from browserVoices.ts decides which engine speaks.
+    void this.browserVoices;
+    return voiceEngines[engineFor(this.voiceQuality, this.lang)].clips;
   }
   // Which voices rendered clips belong to, so caches never mix one engine's audio with another's.
   get clipVoiceKey() {
     return ownsClipKey(this.voiceQuality) ? this.voiceQuality : this.naturalModel;
+  }
+  setBrowserVoices(usable: boolean) {
+    this.browserVoices = usable;
+    setBrowserVoicesUsable(usable);
   }
   setVoiceQuality(next: VoiceQuality) {
     this.voiceQuality = next;

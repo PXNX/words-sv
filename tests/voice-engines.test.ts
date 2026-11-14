@@ -10,6 +10,13 @@ describe('voice engines', () => {
     expect(speaksLanguage('supertonic', 'it')).toBe(false);
   });
 
+  it('speaks with the browser where it has voices, and with Piper where it has none', () => {
+    expect(engineFor('standard', 'de', { webgpu: false, browserVoices: true })).toBe('standard');
+    expect(engineFor('standard', 'de', { webgpu: false, browserVoices: false })).toBe('natural');
+    // Without an answer yet (or outside a device) the browser keeps the engine, as it always did.
+    expect(engineFor('standard', 'de', { webgpu: false })).toBe('standard');
+  });
+
   it('moves a stored VoxCPM setting to Piper and keeps current ones', () => {
     expect(storedVoiceEngine('voxcpm')).toBe('natural');
     expect(storedVoiceEngine('supertonic')).toBe('supertonic');
@@ -73,9 +80,10 @@ describe('voice engine registry', () => {
   it('ends every fallback chain at an engine that runs everywhere', () => {
     for (const id of voiceEngineIds) {
       for (const language of ['de', 'en', 'fr', 'it', 'es', 'pt', 'uk'] as const) {
-        const engine = engineFor(id, language, { webgpu: false });
+        const engine = engineFor(id, language, { webgpu: false, browserVoices: false });
         expect(voiceEngines[engine].webgpu).toBeFalsy();
         expect(speaksLanguage(engine, language)).toBe(true);
+        expect(engine).not.toBe('standard');
       }
     }
   });

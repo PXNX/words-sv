@@ -3,13 +3,14 @@
 All speech goes through `src/lib/story/naturalVoices.svelte.ts` (`synthesizeNatural`, `playNatural`).
 The settings' "Story voices" choice (`settings.voiceQuality`) picks an engine from
 `src/lib/voice/engines.ts`; `engineFor()` falls back to Piper where the chosen engine cannot speak
-the language or the device lacks WebGPU. Every heavy engine runs in its own worker, behind a
+the language, the device lacks WebGPU, or the browser has no voices of its own (`standard`, see
+`src/lib/voice/browserVoices.ts` — Telegram's Mini App webviews list none). Every heavy engine runs in its own worker, behind a
 foreground-first queue (`src/lib/audio/priorityQueue.ts`), so a line the open mode needs is never
 stuck behind background rendering (word bank, listening stories).
 
 | Engine | Where it runs | Languages | Download (WebGPU / WASM) | Voices |
 |---|---|---|---|---|
-| `standard` | browser `speechSynthesis` | all | none | the device's |
+| `standard` | browser `speechSynthesis` | all | none | the device's (Piper speaks where the browser has no voices) |
 | `natural` | Piper, `static/voices/piper-worker.js` | all | ~30–120 MB per language | several per language |
 | `recorded` | MP3s in `static/voices/` + Piper | all | small | cast reference lines only |
 | `supertonic` | Supertonic 2, `voice/supertonic.worker.ts` | en, es, pt, fr | ~260 MB | 5 female, 5 male |
