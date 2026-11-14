@@ -296,7 +296,9 @@
   "babysit": {
     "definition": "To look after children while their parents are out."
   },
-  "back": {},
+  "back": {
+    "definition": "The rear part of the body, or to support someone."
+  },
   "backache": {
     "definition": "Pain in the back."
   },
@@ -327,7 +329,9 @@
   "bang": {
     "definition": "A sudden loud noise, or to hit something hard."
   },
-  "bar": {},
+  "bar": {
+    "definition": "A place that serves drinks, or a long piece of metal."
+  },
   "barbecue": {
     "definition": "A meal cooked outdoors on a grill."
   },
@@ -355,7 +359,9 @@
   "basis": {
     "definition": "The main reason or idea something is based on."
   },
-  "bat": {},
+  "bat": {
+    "definition": "A wooden stick for hitting a ball, or a small flying animal."
+  },
   "bathe": {
     "definition": "To wash yourself or someone else in a bath."
   },
@@ -398,7 +404,9 @@
   "bet": {
     "definition": "To risk money on the result of something."
   },
-  "bill": {},
+  "bill": {
+    "definition": "A piece of paper showing money you owe."
+  },
   "bin": {
     "definition": "A container for rubbish or for storing things."
   },
@@ -432,7 +440,9 @@
   "blind": {
     "definition": "Unable to see."
   },
-  "block": {},
+  "block": {
+    "definition": "A solid piece of material, or to stop something moving."
+  },
   "blog": {
     "definition": "A website where someone writes regularly about a topic."
   },
@@ -640,7 +650,9 @@
   "capture": {
     "definition": "To catch someone or something and keep them."
   },
-  "care": {},
+  "care": {
+    "definition": "To feel concern for someone, or to look after them."
+  },
   "career": {
     "definition": "The series of jobs a person does in their working life."
   },
@@ -674,7 +686,9 @@
   "cave": {
     "definition": "A large natural hole in the side of a hill or under the ground."
   },
-  "cell": {},
+  "cell": {
+    "definition": "A small room in a prison, or the smallest part of a living thing."
+  },
   "central": {
     "definition": "In the middle, or most important."
   },
@@ -978,163 +992,477 @@
   "cycle": {
     "definition": "A series of events that repeat, or to ride a bicycle."
   },
-  "daisy": {},
-  "damage": {},
-  "damaged": {},
-  "damp": {},
-  "dare": {},
-  "darkness": {},
-  "date": {},
-  "dating": {},
-  "daze": {},
-  "dazzle": {},
-  "deadline": {},
-  "deadly": {},
-  "deaf": {},
-  "deal": {},
-  "dealer": {},
-  "debris": {},
-  "debt": {},
-  "decision": {},
-  "declare": {},
-  "decline": {},
-  "decrease": {},
-  "dedicate": {},
-  "deed": {},
-  "defeat": {},
-  "defend": {},
-  "defender": {},
-  "define": {},
-  "definite": {},
-  "delay": {},
-  "delete": {},
-  "delicate": {},
-  "delight": {},
-  "deliver": {},
-  "delivery": {},
-  "demand": {},
-  "deny": {},
-  "depart": {},
-  "deposit": {},
-  "deprive": {},
-  "depth": {},
-  "derive": {},
-  "deserve": {},
-  "design": {},
-  "designer": {},
-  "desire": {},
-  "despair": {},
-  "device": {},
-  "devotion": {},
-  "diagram": {},
-  "dial": {},
-  "diameter": {},
-  "diaper": {},
-  "differ": {},
-  "dig": {},
-  "digital": {},
-  "diligent": {},
-  "dioxide": {},
-  "direct": {},
-  "dirt": {},
-  "disable": {},
-  "disabled": {},
-  "disaster": {},
-  "discount": {},
-  "disease": {},
-  "dislike": {},
-  "display": {},
-  "dissolve": {},
-  "distance": {},
-  "distant": {},
-  "district": {},
-  "dive": {},
-  "diver": {},
-  "diverse": {},
-  "divide": {},
-  "divine": {},
-  "diving": {},
-  "divorced": {},
-  "doc": {},
-  "document": {},
-  "dolphin": {},
-  "dot": {},
-  "downward": {},
-  "doze": {},
-  "dozen": {},
-  "drag": {},
-  "dramatic": {},
-  "drown": {},
-  "drunk": {},
-  "dude": {},
-  "dull": {},
-  "dump": {},
-  "dustbin": {},
-  "dusty": {},
-  "duty": {},
-  "duvet": {},
-  "dynasty": {},
-  "eager": {},
-  "earache": {},
-  "earnest": {},
-  "eastern": {},
-  "eco": {},
-  "ecology": {},
-  "economic": {},
-  "economy": {},
-  "ecstasy": {},
-  "edge": {},
-  "edition": {},
-  "educate": {},
-  "elbow": {},
-  "election": {},
-  "electron": {},
-  "element": {},
-  "emerge": {},
-  "emotion": {},
-  "emperor": {},
-  "emphasis": {},
-  "empire": {},
-  "enable": {},
-  "enclose": {},
-  "endanger": {},
-  "endless": {},
-  "endure": {},
-  "enemy": {},
-  "engage": {},
-  "engaged": {},
-  "engine": {},
-  "enrich": {},
-  "ensure": {},
-  "entire": {},
-  "entry": {},
-  "equal": {},
-  "equality": {},
-  "era": {},
-  "escape": {},
-  "essence": {},
-  "estimate": {},
-  "eternal": {},
-  "eternity": {},
-  "even": {},
-  "evident": {},
-  "exact": {},
-  "examine": {},
-  "examiner": {},
-  "excess": {},
-  "exchange": {},
-  "excuse": {},
-  "exit": {},
-  "expand": {},
-  "expense": {},
-  "expose": {},
-  "express": {},
-  "extend": {},
-  "extent": {},
-  "extinct": {},
-  "extra": {},
-  "extreme": {},
-  "eyesight": {},
+  "daisy": {
+    "definition": "A small white flower with a yellow centre."
+  },
+  "damage": {
+    "definition": "Harm done to something."
+  },
+  "damaged": {
+    "definition": "Broken or harmed."
+  },
+  "damp": {
+    "definition": "Slightly wet."
+  },
+  "dare": {
+    "definition": "To be brave enough to do something."
+  },
+  "darkness": {
+    "definition": "The absence of light."
+  },
+  "date": {
+    "definition": "A particular day, or a romantic meeting."
+  },
+  "dating": {
+    "definition": "Meeting someone regularly because you are romantically interested."
+  },
+  "daze": {
+    "definition": "A confused state after a shock or a blow."
+  },
+  "dazzle": {
+    "definition": "To blind someone briefly with bright light."
+  },
+  "deadline": {
+    "definition": "The latest time by which something must be finished."
+  },
+  "deadly": {
+    "definition": "Able to cause death."
+  },
+  "deaf": {
+    "definition": "Unable to hear."
+  },
+  "deal": {
+    "definition": "An agreement, or to give out cards."
+  },
+  "dealer": {
+    "definition": "A person who buys and sells things."
+  },
+  "debris": {
+    "definition": "Broken pieces left after something is destroyed."
+  },
+  "debt": {
+    "definition": "Money that you owe to someone."
+  },
+  "decision": {
+    "definition": "A choice you make after thinking."
+  },
+  "declare": {
+    "definition": "To say something officially and firmly."
+  },
+  "decline": {
+    "definition": "To become less, or to refuse politely."
+  },
+  "decrease": {
+    "definition": "To become smaller in size or amount."
+  },
+  "dedicate": {
+    "definition": "To give your time and effort to something."
+  },
+  "deed": {
+    "definition": "An action, especially a good one."
+  },
+  "defeat": {
+    "definition": "To win against someone, or a loss."
+  },
+  "defend": {
+    "definition": "To protect someone or something from attack."
+  },
+  "defender": {
+    "definition": "A person who protects something, or a player who stops attacks."
+  },
+  "define": {
+    "definition": "To explain the exact meaning of something."
+  },
+  "definite": {
+    "definition": "Certain and clear."
+  },
+  "delay": {
+    "definition": "A period of waiting, or to make something late."
+  },
+  "delete": {
+    "definition": "To remove text or data."
+  },
+  "delicate": {
+    "definition": "Easily broken or damaged, or finely made."
+  },
+  "delight": {
+    "definition": "Great pleasure."
+  },
+  "deliver": {
+    "definition": "To take goods or letters to a place."
+  },
+  "delivery": {
+    "definition": "The act of bringing something to a place."
+  },
+  "demand": {
+    "definition": "To ask for something firmly, or a strong need."
+  },
+  "deny": {
+    "definition": "To say that something is not true."
+  },
+  "depart": {
+    "definition": "To leave a place, especially on a journey."
+  },
+  "deposit": {
+    "definition": "Money paid as a first part, or to put money in a bank."
+  },
+  "deprive": {
+    "definition": "To take something away from someone who needs it."
+  },
+  "depth": {
+    "definition": "The distance from the top to the bottom."
+  },
+  "derive": {
+    "definition": "To get something from a source."
+  },
+  "deserve": {
+    "definition": "To have earned something by your actions."
+  },
+  "design": {
+    "definition": "The way something is planned and made."
+  },
+  "designer": {
+    "definition": "A person who plans how things will look."
+  },
+  "desire": {
+    "definition": "A strong wish for something."
+  },
+  "despair": {
+    "definition": "The feeling that there is no hope."
+  },
+  "device": {
+    "definition": "A machine or tool made for a purpose."
+  },
+  "devotion": {
+    "definition": "Great love and loyalty."
+  },
+  "diagram": {
+    "definition": "A simple drawing that explains how something works."
+  },
+  "dial": {
+    "definition": "The round face of a clock or meter, or to call a number."
+  },
+  "diameter": {
+    "definition": "The distance across a circle through its centre."
+  },
+  "diaper": {
+    "definition": "A cloth or paper worn by a baby that absorbs waste."
+  },
+  "differ": {
+    "definition": "To be unlike something else."
+  },
+  "dig": {
+    "definition": "To break up and move soil."
+  },
+  "digital": {
+    "definition": "Using numbers or electronic signals."
+  },
+  "diligent": {
+    "definition": "Working hard and carefully."
+  },
+  "dioxide": {
+    "definition": "A compound with two oxygen atoms, as in carbon dioxide."
+  },
+  "direct": {
+    "definition": "Going straight, or to guide something."
+  },
+  "dirt": {
+    "definition": "Soil or dust that makes things unclean."
+  },
+  "disable": {
+    "definition": "To make something stop working."
+  },
+  "disabled": {
+    "definition": "Having a condition that limits movement or the senses."
+  },
+  "disaster": {
+    "definition": "An event that causes great damage."
+  },
+  "discount": {
+    "definition": "A reduction in the usual price."
+  },
+  "disease": {
+    "definition": "An illness of the body."
+  },
+  "dislike": {
+    "definition": "To not like someone or something."
+  },
+  "display": {
+    "definition": "To show something so it can be seen."
+  },
+  "dissolve": {
+    "definition": "To mix with a liquid until it becomes part of it."
+  },
+  "distance": {
+    "definition": "The space between two places."
+  },
+  "distant": {
+    "definition": "Far away."
+  },
+  "district": {
+    "definition": "An area of a town or country."
+  },
+  "dive": {
+    "definition": "To jump into water head first."
+  },
+  "diver": {
+    "definition": "A person who swims under water."
+  },
+  "diverse": {
+    "definition": "Very different from each other."
+  },
+  "divide": {
+    "definition": "To separate something into parts."
+  },
+  "divine": {
+    "definition": "Coming from a god, or wonderful."
+  },
+  "diving": {
+    "definition": "The sport of jumping into water."
+  },
+  "divorced": {
+    "definition": "No longer married."
+  },
+  "doc": {
+    "definition": "A short word for doctor, or a computer document."
+  },
+  "document": {
+    "definition": "A paper or computer file with information."
+  },
+  "dolphin": {
+    "definition": "An intelligent sea animal that swims in groups."
+  },
+  "dot": {
+    "definition": "A small round mark."
+  },
+  "downward": {
+    "definition": "Towards a lower place."
+  },
+  "doze": {
+    "definition": "To sleep lightly for a short time."
+  },
+  "dozen": {
+    "definition": "A group of twelve."
+  },
+  "drag": {
+    "definition": "To pull something heavy along the ground."
+  },
+  "dramatic": {
+    "definition": "Sudden and exciting, or relating to plays."
+  },
+  "drown": {
+    "definition": "To die under water because you cannot breathe."
+  },
+  "drunk": {
+    "definition": "Having had too much alcohol."
+  },
+  "dude": {
+    "definition": "An informal word for a man."
+  },
+  "dull": {
+    "definition": "Not interesting, or not bright."
+  },
+  "dump": {
+    "definition": "To get rid of something, or a place for rubbish."
+  },
+  "dustbin": {
+    "definition": "A container for household rubbish."
+  },
+  "dusty": {
+    "definition": "Covered with fine dry dirt."
+  },
+  "duty": {
+    "definition": "Something you must do, or a tax on goods."
+  },
+  "duvet": {
+    "definition": "A thick soft cover filled with feathers for a bed."
+  },
+  "dynasty": {
+    "definition": "A series of rulers from the same family."
+  },
+  "eager": {
+    "definition": "Very keen to do something."
+  },
+  "earache": {
+    "definition": "Pain inside the ear."
+  },
+  "earnest": {
+    "definition": "Serious and sincere."
+  },
+  "eastern": {
+    "definition": "In or from the east."
+  },
+  "eco": {
+    "definition": "Connected with protecting the environment."
+  },
+  "ecology": {
+    "definition": "The study of how living things relate to their surroundings."
+  },
+  "economic": {
+    "definition": "Connected with money, trade, and industry."
+  },
+  "economy": {
+    "definition": "The system of money and business in a country."
+  },
+  "ecstasy": {
+    "definition": "A feeling of great happiness."
+  },
+  "edge": {
+    "definition": "The outer limit of a surface, or the sharp side of a blade."
+  },
+  "edition": {
+    "definition": "One form in which a book or newspaper is published."
+  },
+  "educate": {
+    "definition": "To teach someone over a period of time."
+  },
+  "elbow": {
+    "definition": "The joint in the middle of the arm."
+  },
+  "election": {
+    "definition": "The process of choosing someone by voting."
+  },
+  "electron": {
+    "definition": "A very small part of an atom with a negative charge."
+  },
+  "element": {
+    "definition": "One of the simple substances that everything is made of."
+  },
+  "emerge": {
+    "definition": "To come out of a place or situation."
+  },
+  "emotion": {
+    "definition": "A strong feeling such as love or anger."
+  },
+  "emperor": {
+    "definition": "The male ruler of an empire."
+  },
+  "emphasis": {
+    "definition": "Special importance given to something."
+  },
+  "empire": {
+    "definition": "A group of countries ruled by one person or government."
+  },
+  "enable": {
+    "definition": "To make it possible for someone to do something."
+  },
+  "enclose": {
+    "definition": "To surround something, or to put it inside an envelope."
+  },
+  "endanger": {
+    "definition": "To put someone or something in danger."
+  },
+  "endless": {
+    "definition": "Going on forever, or seeming to."
+  },
+  "endure": {
+    "definition": "To suffer something difficult patiently."
+  },
+  "enemy": {
+    "definition": "A person who is against you."
+  },
+  "engage": {
+    "definition": "To take part in something, or to attract attention."
+  },
+  "engaged": {
+    "definition": "Having promised to marry someone, or busy."
+  },
+  "engine": {
+    "definition": "The part of a vehicle that makes it move."
+  },
+  "enrich": {
+    "definition": "To make something richer or better."
+  },
+  "ensure": {
+    "definition": "To make certain that something happens."
+  },
+  "entire": {
+    "definition": "Whole; with no part missing."
+  },
+  "entry": {
+    "definition": "The act of going in, or a piece of writing in a diary."
+  },
+  "equal": {
+    "definition": "The same in size, amount, or value."
+  },
+  "equality": {
+    "definition": "The state of being treated the same as everyone else."
+  },
+  "era": {
+    "definition": "A long period of history with a particular character."
+  },
+  "escape": {
+    "definition": "To get away from a place or situation."
+  },
+  "essence": {
+    "definition": "The most important quality of something."
+  },
+  "estimate": {
+    "definition": "To guess an amount using the information you have."
+  },
+  "eternal": {
+    "definition": "Lasting forever."
+  },
+  "eternity": {
+    "definition": "Time without end."
+  },
+  "even": {
+    "definition": "Flat and level, or equal, or used to stress a point."
+  },
+  "evident": {
+    "definition": "Easy to see or understand."
+  },
+  "exact": {
+    "definition": "Completely correct and precise."
+  },
+  "examine": {
+    "definition": "To look at something closely and carefully."
+  },
+  "examiner": {
+    "definition": "A person who tests how much someone knows."
+  },
+  "excess": {
+    "definition": "More than is needed or allowed."
+  },
+  "exchange": {
+    "definition": "The act of giving one thing and getting another."
+  },
+  "excuse": {
+    "definition": "A reason given to explain a mistake or absence."
+  },
+  "exit": {
+    "definition": "The way out of a place."
+  },
+  "expand": {
+    "definition": "To become larger, or to make something larger."
+  },
+  "expense": {
+    "definition": "The money you spend on something."
+  },
+  "expose": {
+    "definition": "To uncover something, or to make it known."
+  },
+  "express": {
+    "definition": "To say what you think or feel, or a fast train."
+  },
+  "extend": {
+    "definition": "To make something longer or bigger."
+  },
+  "extent": {
+    "definition": "How large or serious something is."
+  },
+  "extinct": {
+    "definition": "No longer existing, as of an animal species."
+  },
+  "extra": {
+    "definition": "More than usual or needed."
+  },
+  "extreme": {
+    "definition": "Very great in degree."
+  },
+  "eyesight": {
+    "definition": "The ability to see."
+  },
   "facility": {},
   "fade": {},
   "failure": {},
