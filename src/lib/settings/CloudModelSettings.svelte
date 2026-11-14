@@ -55,6 +55,7 @@
       {:else}{m.cloud_status_standby({}, locale)}{/if}
     </p>
     <p class="cloud-note">{m.cloud_privacy({}, locale)}</p>
+    <p class="cloud-note">{m.cloud_free_model({}, locale)}</p>
   </div>
 </section>
 

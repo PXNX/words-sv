@@ -980,6 +980,7 @@
   "cloud_forget": "Vergessen",
   "cloud_model": "Modell für {language}",
   "cloud_models_link": "Modelle ansehen",
+  "cloud_free_model": "Das Standardmodell ist eines der kostenlosen OpenRouter-Modelle; es kostet nichts.",
   "cloud_status_no_key": "Ohne Schlüssel bleibt alles auf dem Gerät.",
   "cloud_status_active": "Antwortet gerade: {model}",
   "cloud_status_standby": "Bereit; das Modell auf dem Gerät hat Vorrang.",

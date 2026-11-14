@@ -11,7 +11,7 @@ export const OPENROUTER_CHAT_URL = 'https://openrouter.ai/api/v1/chat/completion
 export const OPENROUTER_KEYS_URL = 'https://openrouter.ai/settings/keys';
 export const OPENROUTER_MODELS_URL = 'https://openrouter.ai/models';
 /** A small, fast, multilingual model as the starting suggestion; any OpenRouter model id works. */
-export const DEFAULT_CLOUD_MODEL = 'google/gemini-2.5-flash';
+export const DEFAULT_CLOUD_MODEL = 'qwen/qwen-2.5-72b-instruct:free';
 
 /** Splits streamed text into complete server-sent-event `data:` payloads and the unfinished rest. */
 export function parseSse(buffer: string): { payloads: string[]; rest: string } {
