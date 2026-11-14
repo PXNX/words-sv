@@ -38,6 +38,8 @@ import { haptic } from '#lib/feedback/haptics.js';
 	import { adoptMiniAppProfile } from '#lib/settings/telegramClient.js';
 	import IconHome from '~icons/material-symbols/home-rounded';
 	import AppDock from '#lib/app/AppDock.svelte';
+	import NavProgress from '#lib/app/NavProgress.svelte';
+	import { preloadDestinationsOfPage } from '#lib/app/navigationPreload.js';
 	import { introFlow } from '#lib/app/intro.svelte.js';
 	let { children } = $props();
 	let hydrated = $state(false);
@@ -75,6 +77,14 @@ import { haptic } from '#lib/feedback/haptics.js';
 		if (language === previousLanguage) return;
 		previousLanguage = language;
 		if (settings.clipVoices) void prepareNatural(language);
+	});
+
+	// Ahead of the tap: the destinations linked on the page that just opened are fetched while the
+	// learner is still choosing, so a slow connection only delays the very first visit to a page.
+	$effect(() => {
+		const path = routePath;
+		if (!hydrated) return;
+		return preloadDestinationsOfPage(path);
 	});
 
 	onNavigate((navigation) => {
@@ -183,6 +193,7 @@ onMount(() => {
 	{:else}
 		<main class="game-shell">
 			<section class="game-paper" class:paper-wide={isHome} class:paper-list={isListPage} class:paper-full={routePath === '/settings'} aria-label={shellLabel}>
+				<NavProgress />
 				{#if !isHub}<button class="btn-play btn-play-round home-trigger" onclick={() => void goto('/')} aria-label={homeLabel}><IconHome aria-hidden="true" /></button>{/if}
 				{@render children()}
 				{#if showDock}<AppDock path={routePath} />{/if}
