@@ -56,6 +56,12 @@ export const pages: Record<string, PageMeta> = {
     kicker: 'Wortspiel',
     icon: 'brush-rounded'
   },
+  '/script': {
+    title: 'Schrift',
+    description: 'Lerne die kyrillischen Buchstaben der Ukraine und wie sie gelesen werden – mit Karteikarten und Quiz.',
+    kicker: 'Wortschatz',
+    icon: 'translate-rounded'
+  },
   '/taboo': {
     title: 'Taboo',
     description: 'Beschreibe ein Wort, ohne es oder seine Wortfamilie zu nennen – und sammle Punkte für die treffenden Stichwörter.',

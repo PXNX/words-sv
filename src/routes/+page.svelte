@@ -38,6 +38,7 @@ import { haptic } from '#lib/feedback/haptics.js';
   import IconSettings from '~icons/material-symbols/settings-rounded';
   import IconChevronRight from '~icons/material-symbols/chevron-right-rounded';
   import IconDictionary from '~icons/material-symbols/menu-book-rounded';
+  import IconTranslate from '~icons/material-symbols/translate-rounded';
   import IconCrossword from '~icons/material-symbols/crossword-rounded';
   import IconSpellcheck from '~icons/material-symbols/spellcheck-rounded';
   import IconQuiz from '~icons/material-symbols/quiz-rounded';
@@ -107,6 +108,8 @@ import { haptic } from '#lib/feedback/haptics.js';
     modeHangman: m.mode_hangman({}, { locale: settings.interfaceLocale }),
     modeTaboo: m.mode_taboo({}, { locale: settings.interfaceLocale }),
     pronunciation: m.mode_pronunciation({}, { locale: settings.interfaceLocale }),
+    modeScript: m.mode_script({}, { locale: settings.interfaceLocale }),
+    homeScript: m.home_script({}, { locale: settings.interfaceLocale }),
     alltag: m.mode_alltag({}, { locale: settings.interfaceLocale }),
     wordQuiz: m.mode_word_quiz({}, { locale: settings.interfaceLocale }),
     modeSentence: m.mode_sentence({}, { locale: settings.interfaceLocale }),
@@ -174,6 +177,7 @@ import { haptic } from '#lib/feedback/haptics.js';
     fullText: { icon: IconArticle, title: labels.modeFullText, text: labels.homeFullText },
     vocab: { icon: IconQuiz, title: labels.wordQuiz, text: labels.homeVocab },
     pronunciation: { icon: IconMic, title: labels.pronunciation, text: labels.homePronunciation },
+    script: { icon: IconTranslate, title: labels.modeScript, text: labels.homeScript },
     alltag: { icon: IconEmoji, title: labels.alltag, text: labels.homeAlltag },
     dictionary: { icon: IconDictionary, title: m.dictionary_title({}, { locale: settings.interfaceLocale }), text: m.home_dictionary({}, { locale: settings.interfaceLocale }) },
     falseFriends: { icon: IconSwapHoriz, title: labels.grammarFalseFriends, text: labels.homeFalseFriends },

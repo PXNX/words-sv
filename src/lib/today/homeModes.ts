@@ -11,7 +11,7 @@ export type HomeModeId =
   | 'circle' | 'definitions' | 'wordle' | 'hangman' | 'taboo' | 'scribble'
   | 'stories' | 'reading' | 'listen' | 'conversation'
   | 'sentence' | 'fullText'
-  | 'vocab' | 'pronunciation' | 'alltag' | 'dictionary' | 'falseFriends'
+  | 'vocab' | 'pronunciation' | 'script' | 'alltag' | 'dictionary' | 'falseFriends'
   | 'grammarFill' | 'grammarDetermine' | 'grammarOrder' | 'grammarForms';
 
 export type HomeMode = {
@@ -41,6 +41,7 @@ export const HOME_MODES: readonly HomeMode[] = [
   { id: 'fullText', href: '/sentence/full', group: 'writing', channels: ['write'], streak: 'sentence' },
   { id: 'vocab', href: '/vocab', group: 'vocabulary', channels: ['words', 'hear', 'read'], streak: 'vocab' },
   { id: 'pronunciation', href: '/pronunciation', group: 'vocabulary', channels: ['speak', 'hear'], streak: 'pronunciation' },
+  { id: 'script', href: '/script', group: 'vocabulary', channels: ['read', 'words'], streak: null, languages: ['uk'] },
   { id: 'alltag', href: '/alltag', group: 'vocabulary', channels: ['words'], streak: 'alltag' },
   { id: 'dictionary', href: '/dictionary', group: 'vocabulary', channels: ['words', 'read'], streak: null },
   { id: 'falseFriends', href: '/grammar?mode=falsefriends', group: 'vocabulary', channels: ['words'], streak: 'grammar' },
