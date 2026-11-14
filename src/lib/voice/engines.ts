@@ -6,7 +6,9 @@
  * Modes never talk to an engine directly: they call naturalVoices.svelte.ts (synthesizeNatural /
  * playNatural), which dispatches here.
  *
- *   standard   – the browser's own speechSynthesis voices. Instant, offline, robotic.
+ *   standard   – the browser's own speechSynthesis voices. Instant, offline, robotic. Where the
+ *                browser lists no voice at all (Telegram's Mini App webviews, for one), Piper speaks
+ *                instead, so the learner still hears the word.
  *   natural    – Piper neural voices, generated on the device in static/voices/piper-worker.js.
  *   recorded   – pre-recorded Piper clips for the cast's reference lines, live Piper for the rest.
  *   supertonic – Supertonic 2 (Supertone), generated on the device in voice/supertonic.worker.ts.
@@ -109,7 +111,7 @@ const kittenVoices: readonly EngineVoice[] = ([
 ] as const).map(([id, name]) => ({ id, name, gender: id.endsWith('-f') ? 'female' as const : 'male' as const, accent: 'en-us' }));
 
 export const voiceEngines: Record<VoiceEngineId, VoiceEngine> = {
-  standard: { id: 'standard', name: 'Browser', runtime: 'browser', onDevice: true, clips: false, languages: 'all', fallback: 'standard' },
+  standard: { id: 'standard', name: 'Browser', runtime: 'browser', onDevice: true, clips: false, languages: 'all', fallback: 'natural' },
   natural: { id: 'natural', name: 'Piper', runtime: 'piper', onDevice: true, clips: true, languages: 'all', fallback: 'standard', tier: 'small', licence: 'per voice (MIT, CC0, CC-BY)' },
   recorded: { id: 'recorded', name: 'Piper (recorded)', runtime: 'piper', onDevice: true, clips: true, languages: 'all', fallback: 'natural', tier: 'small' },
   supertonic: {
@@ -162,12 +164,16 @@ export function speaksLanguage(engine: VoiceEngineId, language: Language): boole
   return languages === 'all' || languages.includes(language);
 }
 
-export type DeviceAbilities = { webgpu: boolean };
+export type DeviceAbilities = { webgpu: boolean; browserVoices?: boolean };
 
 // `navigator.gpu` existing is not enough: many browsers (Linux Chrome without a flag, for one) have
 // it but hand out no adapter. probeWebGpu() asks once at startup; until it answers, the API's
 // presence counts.
 let webgpuAdapter: boolean | null = null;
+
+// Whether the browser's own speechSynthesis has any voice (voice/browserVoices.ts asks once at
+// startup). Optimistic until it answers, so a slow voice list never pulls a model download.
+let browserVoicesUsable = true;
 
 /** Asks the browser for a WebGPU adapter once, so engines that need one can fall back in time. */
 export async function probeWebGpu(): Promise<boolean> {
@@ -186,12 +192,19 @@ export function setWebGpuUsable(usable: boolean) {
   webgpuAdapter = usable;
 }
 
+/** Whether the browser's own voices can speak; voice/browserVoices.ts reports it. */
+export function setBrowserVoicesUsable(usable: boolean) {
+  browserVoicesUsable = usable;
+}
+
 export function deviceAbilities(): DeviceAbilities {
-  return { webgpu: typeof navigator !== 'undefined' && 'gpu' in navigator && webgpuAdapter !== false };
+  return { webgpu: typeof navigator !== 'undefined' && 'gpu' in navigator && webgpuAdapter !== false, browserVoices: browserVoicesUsable };
 }
 
 function usable(engine: VoiceEngineId, language: Language, device: DeviceAbilities) {
-  return speaksLanguage(engine, language) && (!voiceEngines[engine].webgpu || device.webgpu);
+  return speaksLanguage(engine, language)
+    && (!voiceEngines[engine].webgpu || device.webgpu)
+    && (engine !== 'standard' || device.browserVoices !== false);
 }
 
 /** The engine that actually speaks `language` when `chosen` is selected, on this device. */

@@ -9,6 +9,9 @@ entries, section names and summaries are never translated.
 
 ## Unreleased
 
+### Fixed
+- Speak in Telegram's Mini App again: its webview lists no voices of its own, so the browser voice was silent; the app now hears that and speaks with its rendered voices instead
+
 ### Improved
 - Put the learning language and the interface language together in one box in the settings, each with its own name, hint and dropdown, so it is clear which language is being learnt and which one the app speaks
 - Widen the pages on tablets and desktops: the framed sheet grows, the home screen shows its two columns earlier, and the progress panels and repeat groups sit side by side instead of trailing down one phone column (phones unchanged)

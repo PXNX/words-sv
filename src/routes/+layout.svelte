@@ -24,6 +24,7 @@ import { initGroupGame } from '#lib/games/groupGame.svelte.js';
 import { cloudSync, startCloudSync } from '#lib/sync/cloudSync.svelte.js';
 import { refreshStore } from '#lib/store/storeClient.svelte.js';
 import { probeWebGpu, setWebGpuUsable } from '#lib/voice/engines.js';
+import { watchBrowserVoices } from '#lib/voice/browserVoices.js';
 import { webgpu } from '#lib/app/webgpuCheck.svelte.js';
 import { checkAchievementRewards, checkLanguageRewards } from '#lib/profile/cosmetics.svelte.js';
 import { readVocabularyProgressByLanguage } from '#lib/vocab/spacedRepetition.js';
@@ -120,6 +121,9 @@ onMount(() => {
     // A finished WebGPU check (it runs before the first model) decides; otherwise a quick adapter probe.
     if (webgpu.result) setWebGpuUsable(webgpu.result.status === 'ok');
     else void probeWebGpu();
+    // Whether the browser can speak with its own voices at all: Telegram's Mini App webviews often
+    // list none, and the `standard` engine then speaks with a rendered voice instead.
+    const stopWatchingVoices = watchBrowserVoices((usable) => settings.setBrowserVoices(usable));
     // Removed voice engines' downloads (VoxCPM's 1.6 GB) are dead weight; free them once idle.
     setTimeout(() => void import('#lib/offline/storage.js').then(({ deleteRetiredStorage }) => deleteRetiredStorage()), 15_000);
     void autoUpdateOnStart();
@@ -152,6 +156,7 @@ onMount(() => {
 		const orientation = screen.orientation as ScreenOrientation & { lock?: (type: 'portrait') => Promise<void> };
 		void orientation?.lock?.('portrait').catch(() => undefined);
 		return () => {
+			stopWatchingVoices();
 			document.removeEventListener('gesturestart', blockGesture);
 			document.removeEventListener('gesturechange', blockGesture);
 			document.removeEventListener('gestureend', blockGesture);
