@@ -2651,146 +2651,426 @@
   "myth": {
     "definition": "An ancient story about gods and heroes, or a false belief."
   },
-  "nail": {},
-  "naked": {},
-  "name": {},
-  "nap": {},
-  "narrate": {},
-  "narrow": {},
-  "nasty": {},
-  "near": {},
-  "nearby": {},
-  "necklace": {},
-  "nectar": {},
-  "needle": {},
-  "nephew": {},
-  "ness": {},
-  "net": {},
-  "network": {},
-  "neutral": {},
-  "newborn": {},
-  "newcomer": {},
-  "nickname": {},
-  "niece": {},
-  "nod": {},
-  "nonsense": {},
-  "northern": {},
-  "notice": {},
-  "notion": {},
-  "novelist": {},
-  "nuclear": {},
-  "nucleus": {},
-  "numerous": {},
-  "nurse": {},
-  "nutrient": {},
-  "object": {},
-  "observe": {},
-  "obstacle": {},
-  "obtain": {},
-  "obvious": {},
-  "occasion": {},
-  "occupy": {},
-  "occur": {},
-  "ocean": {},
-  "oily": {},
-  "onstage": {},
-  "opening": {},
-  "opposite": {},
-  "oppress": {},
-  "option": {},
-  "oral": {},
-  "orbit": {},
-  "orderly": {},
-  "ordinary": {},
-  "organ": {},
-  "organic": {},
-  "organism": {},
-  "origin": {},
-  "outdoor": {},
-  "outer": {},
-  "outlaw": {},
-  "outline": {},
-  "outward": {},
-  "outweigh": {},
-  "overcome": {},
-  "overwork": {},
-  "owe": {},
-  "owing": {},
-  "own": {},
-  "oxygen": {},
-  "pace": {},
-  "package": {},
-  "packing": {},
-  "paddle": {},
-  "paid": {},
-  "pain": {},
-  "painful": {},
-  "pale": {},
-  "palm": {},
-  "paradise": {},
-  "parcel": {},
-  "pardon": {},
-  "parental": {},
-  "parking": {},
-  "parrot": {},
-  "partial": {},
-  "passion": {},
-  "passive": {},
-  "passport": {},
-  "password": {},
-  "past": {},
-  "patience": {},
-  "patient": {},
-  "patrol": {},
-  "pattern": {},
-  "pause": {},
-  "peanut": {},
-  "peculiar": {},
-  "penny": {},
-  "permit": {},
-  "persuade": {},
-  "phantom": {},
-  "pharmacy": {},
-  "phoenix": {},
-  "phrase": {},
-  "physics": {},
-  "pick": {},
-  "pie": {},
-  "piety": {},
-  "pillow": {},
-  "pin": {},
-  "pipe": {},
-  "pit": {},
-  "place": {},
-  "plain": {},
-  "plan": {},
-  "plant": {},
-  "plastic": {},
-  "platform": {},
-  "please": {},
-  "plug": {},
-  "poet": {},
-  "poetry": {},
-  "poison": {},
-  "pole": {},
-  "policy": {},
-  "politics": {},
-  "pond": {},
-  "popcorn": {},
-  "pork": {},
-  "port": {},
-  "positive": {},
-  "possess": {},
-  "postcard": {},
-  "postman": {},
-  "pot": {},
-  "pottery": {},
-  "pound": {},
-  "poverty": {},
-  "powder": {},
-  "praise": {},
-  "prayer": {},
-  "precious": {},
+  "nail": {
+    "definition": "The hard part at the end of a finger or toe, or a thin metal pin."
+  },
+  "naked": {
+    "definition": "Not wearing any clothes."
+  },
+  "name": {
+    "definition": "The word by which someone or something is called."
+  },
+  "nap": {
+    "definition": "A short sleep during the day."
+  },
+  "narrate": {
+    "definition": "To tell a story or describe events."
+  },
+  "narrow": {
+    "definition": "Small in width; not wide."
+  },
+  "nasty": {
+    "definition": "Very unpleasant."
+  },
+  "near": {
+    "definition": "Not far away."
+  },
+  "nearby": {
+    "definition": "Close to where you are."
+  },
+  "necklace": {
+    "definition": "A piece of jewellery worn around the neck."
+  },
+  "nectar": {
+    "definition": "The sweet liquid in flowers that bees collect."
+  },
+  "needle": {
+    "definition": "A thin pointed tool for sewing, or a leaf of a pine tree."
+  },
+  "nephew": {
+    "definition": "The son of your brother or sister."
+  },
+  "ness": {
+    "definition": "A suffix that turns an adjective into a noun, as in kindness."
+  },
+  "net": {
+    "definition": "Material with holes used to catch things, or the internet."
+  },
+  "network": {
+    "definition": "A group of connected people, computers, or roads."
+  },
+  "neutral": {
+    "definition": "Not supporting either side in an argument."
+  },
+  "newborn": {
+    "definition": "A baby that has just been born."
+  },
+  "newcomer": {
+    "definition": "A person who has recently arrived in a place or group."
+  },
+  "nickname": {
+    "definition": "A friendly name used instead of someone's real name."
+  },
+  "niece": {
+    "definition": "The daughter of your brother or sister."
+  },
+  "nod": {
+    "definition": "To move your head up and down to show yes."
+  },
+  "nonsense": {
+    "definition": "Words or ideas that make no sense."
+  },
+  "northern": {
+    "definition": "In or from the north."
+  },
+  "notice": {
+    "definition": "To see or become aware of something, or a sign."
+  },
+  "notion": {
+    "definition": "An idea or belief."
+  },
+  "novelist": {
+    "definition": "A person who writes long stories."
+  },
+  "nuclear": {
+    "definition": "Using the energy released by splitting atoms."
+  },
+  "nucleus": {
+    "definition": "The central part of an atom or a cell."
+  },
+  "numerous": {
+    "definition": "Many; existing in large numbers."
+  },
+  "nurse": {
+    "definition": "A person who cares for sick people."
+  },
+  "nutrient": {
+    "definition": "A substance in food that living things need to grow."
+  },
+  "object": {
+    "definition": "A thing you can see and touch, or to say you disagree."
+  },
+  "observe": {
+    "definition": "To watch something carefully."
+  },
+  "obstacle": {
+    "definition": "Something that blocks your way or makes progress difficult."
+  },
+  "obtain": {
+    "definition": "To get something."
+  },
+  "obvious": {
+    "definition": "Easy to see or understand."
+  },
+  "occasion": {
+    "definition": "A time when something happens, or a special event."
+  },
+  "occupy": {
+    "definition": "To fill a space or a period of time."
+  },
+  "occur": {
+    "definition": "To happen."
+  },
+  "ocean": {
+    "definition": "A very large area of sea."
+  },
+  "oily": {
+    "definition": "Covered with oil, or containing a lot of oil."
+  },
+  "onstage": {
+    "definition": "On the part of a theatre where actors perform."
+  },
+  "opening": {
+    "definition": "A hole or gap, or the start of something."
+  },
+  "opposite": {
+    "definition": "As different as possible, or facing something."
+  },
+  "oppress": {
+    "definition": "To treat a group of people cruelly and unfairly."
+  },
+  "option": {
+    "definition": "A choice between possibilities."
+  },
+  "oral": {
+    "definition": "Spoken rather than written, or connected with the mouth."
+  },
+  "orbit": {
+    "definition": "The curved path of an object around a planet or star."
+  },
+  "orderly": {
+    "definition": "Tidy and well organised."
+  },
+  "ordinary": {
+    "definition": "Normal and not special."
+  },
+  "organ": {
+    "definition": "A part of the body with a special job, such as the heart."
+  },
+  "organic": {
+    "definition": "Grown without artificial chemicals."
+  },
+  "organism": {
+    "definition": "A living thing, such as an animal or plant."
+  },
+  "origin": {
+    "definition": "The place or point where something began."
+  },
+  "outdoor": {
+    "definition": "Happening or used outside a building."
+  },
+  "outer": {
+    "definition": "On the outside; further out."
+  },
+  "outlaw": {
+    "definition": "To make something illegal, or a criminal."
+  },
+  "outline": {
+    "definition": "A line showing the shape of something, or a short plan."
+  },
+  "outward": {
+    "definition": "Going away from the centre."
+  },
+  "outweigh": {
+    "definition": "To be more important or heavier than something else."
+  },
+  "overcome": {
+    "definition": "To succeed in dealing with a problem."
+  },
+  "overwork": {
+    "definition": "To make someone work too hard."
+  },
+  "owe": {
+    "definition": "To have to pay money back to someone."
+  },
+  "owing": {
+    "definition": "Still to be paid."
+  },
+  "own": {
+    "definition": "Belonging to a particular person, or to have something as property."
+  },
+  "oxygen": {
+    "definition": "The gas in the air that living things need to breathe."
+  },
+  "pace": {
+    "definition": "The speed at which something happens."
+  },
+  "package": {
+    "definition": "Something wrapped in paper or put in a box."
+  },
+  "packing": {
+    "definition": "The act of putting things into bags or boxes."
+  },
+  "paddle": {
+    "definition": "A short oar used to move a small boat."
+  },
+  "paid": {
+    "definition": "Receiving money for work, or having given money."
+  },
+  "pain": {
+    "definition": "An unpleasant feeling in the body."
+  },
+  "painful": {
+    "definition": "Causing pain."
+  },
+  "pale": {
+    "definition": "Light in colour, or looking unwell."
+  },
+  "palm": {
+    "definition": "The inside of the hand, or a tropical tree."
+  },
+  "paradise": {
+    "definition": "A place or state of perfect happiness."
+  },
+  "parcel": {
+    "definition": "Something wrapped in paper for sending by post."
+  },
+  "pardon": {
+    "definition": "Forgiveness, or a polite word when you did not hear."
+  },
+  "parental": {
+    "definition": "Connected with parents."
+  },
+  "parking": {
+    "definition": "The act of leaving a vehicle somewhere for a time."
+  },
+  "parrot": {
+    "definition": "A colourful bird that can copy speech."
+  },
+  "partial": {
+    "definition": "Not complete, or favouring one side."
+  },
+  "passion": {
+    "definition": "A very strong feeling of enthusiasm or love."
+  },
+  "passive": {
+    "definition": "Accepting what happens without acting."
+  },
+  "passport": {
+    "definition": "An official book that lets you travel to other countries."
+  },
+  "password": {
+    "definition": "A secret word that lets you use a system."
+  },
+  "past": {
+    "definition": "The time before now."
+  },
+  "patience": {
+    "definition": "The ability to wait calmly."
+  },
+  "patient": {
+    "definition": "Able to wait calmly, or a person receiving medical care."
+  },
+  "patrol": {
+    "definition": "To move around an area regularly to guard it."
+  },
+  "pattern": {
+    "definition": "A repeated design, or a regular way things happen."
+  },
+  "pause": {
+    "definition": "To stop for a short time before continuing."
+  },
+  "peanut": {
+    "definition": "A small nut that grows under the ground."
+  },
+  "peculiar": {
+    "definition": "Strange or unusual."
+  },
+  "penny": {
+    "definition": "A small coin worth one hundredth of a pound."
+  },
+  "permit": {
+    "definition": "To allow something."
+  },
+  "persuade": {
+    "definition": "To make someone agree to do something."
+  },
+  "phantom": {
+    "definition": "A ghost, or something imagined."
+  },
+  "pharmacy": {
+    "definition": "A shop where medicines are prepared and sold."
+  },
+  "phoenix": {
+    "definition": "A bird in old stories that is born again from its ashes."
+  },
+  "phrase": {
+    "definition": "A small group of words used together."
+  },
+  "physics": {
+    "definition": "The science of energy, forces, and matter."
+  },
+  "pick": {
+    "definition": "To choose, or to take a flower from a plant."
+  },
+  "pie": {
+    "definition": "A baked food with pastry around a filling."
+  },
+  "piety": {
+    "definition": "Strong respect for God and religion."
+  },
+  "pillow": {
+    "definition": "A soft cushion for your head in bed."
+  },
+  "pin": {
+    "definition": "A short thin piece of metal with a point."
+  },
+  "pipe": {
+    "definition": "A tube that carries water or gas."
+  },
+  "pit": {
+    "definition": "A large deep hole in the ground."
+  },
+  "place": {
+    "definition": "A particular area or position."
+  },
+  "plain": {
+    "definition": "Simple and without decoration, or easy to understand."
+  },
+  "plan": {
+    "definition": "An idea about what you will do and how."
+  },
+  "plant": {
+    "definition": "A living thing that grows in soil, or a factory."
+  },
+  "plastic": {
+    "definition": "A light artificial material made from chemicals."
+  },
+  "platform": {
+    "definition": "The raised area beside a railway track, or a place to speak from."
+  },
+  "please": {
+    "definition": "To make someone happy, or a polite word when asking."
+  },
+  "plug": {
+    "definition": "A device that connects an appliance to electricity, or to block a hole."
+  },
+  "poet": {
+    "definition": "A person who writes poems."
+  },
+  "poetry": {
+    "definition": "Poems as a form of literature."
+  },
+  "poison": {
+    "definition": "A substance that can kill or harm you."
+  },
+  "pole": {
+    "definition": "A long thin piece of wood or metal, or one end of the earth's axis."
+  },
+  "policy": {
+    "definition": "A plan of action agreed by a government or company."
+  },
+  "politics": {
+    "definition": "The activities of governments and parties."
+  },
+  "pond": {
+    "definition": "A small area of still water."
+  },
+  "popcorn": {
+    "definition": "Corn that is heated until it bursts open."
+  },
+  "pork": {
+    "definition": "The meat of a pig."
+  },
+  "port": {
+    "definition": "A town or place where ships load and unload."
+  },
+  "positive": {
+    "definition": "Hopeful and confident, or certain."
+  },
+  "possess": {
+    "definition": "To have or own something."
+  },
+  "postcard": {
+    "definition": "A card with a picture that you send by post."
+  },
+  "postman": {
+    "definition": "A person who delivers letters."
+  },
+  "pot": {
+    "definition": "A deep round container for cooking or for plants."
+  },
+  "pottery": {
+    "definition": "Objects made from clay and baked hard."
+  },
+  "pound": {
+    "definition": "A unit of money in Britain, or a unit of weight."
+  },
+  "poverty": {
+    "definition": "The state of being very poor."
+  },
+  "powder": {
+    "definition": "A dry substance made of very small grains."
+  },
+  "praise": {
+    "definition": "Words that show you admire someone."
+  },
+  "prayer": {
+    "definition": "Words you say when you speak to God."
+  },
+  "precious": {
+    "definition": "Very valuable or loved."
+  },
   "prefix": {},
   "pregnant": {},
   "prepared": {},
