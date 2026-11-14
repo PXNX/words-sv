@@ -407,6 +407,10 @@ html.dark { --play-line: #0b1626; }
   .gender-masculine .gender-shape { border-radius: .06em; }
   .gender-feminine .gender-shape { border-radius: 50%; }
   .gender-neuter .gender-shape { clip-path: polygon(50% 4%, 100% 96%, 0 96%); }
+  /* A word in another script: the word itself stays on one line, its Latin reading sits small below. */
+  .has-transliteration { display: inline-flex; flex-direction: column; align-items: center; line-height: 1.15; }
+  .word-row { display: inline-flex; align-items: baseline; }
+  .word-transliteration { font-size: .72em; font-weight: 600; opacity: .6; margin-top: .05em; }
   html.dark .gender-masculine { --gender: #7fa7f0; }
   html.dark .gender-feminine { --gender: #f08a85; }
   html.dark .gender-neuter { --gender: #6fcf8e; }

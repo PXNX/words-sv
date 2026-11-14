@@ -14,6 +14,7 @@
   import { num } from '#lib/format/num.svelte.js';
   import { haptic } from '#lib/feedback/haptics.js';
   import { loadLevel, vocabularyLevels, type Language } from '#lib/data/vocabulary.js';
+  import { transliterate } from '#lib/script/script.js';
   import { lookupReadingWord, type ReadingWordInfo } from '#lib/story/readingWords.js';
   import { markWordForRepeat } from '#lib/vocab/spacedRepetition.js';
   import { dueReviewEntries } from '#lib/review/ledger.js';
@@ -62,6 +63,7 @@
   const hits = $derived(index && query.trim() ? search(index, query, baseOf) : []);
   const recentEntries = $derived(index ? recent.map((word) => index!.byWord.get(word)).filter((entry): entry is DictionaryEntry => Boolean(entry)) : []);
   const info = $derived<ReadingWordInfo | null>(chosen ? lookupReadingWord(settings.lang, chosen.spelling) : null);
+  const reading = $derived(chosen ? transliterate(settings.lang, chosen.spelling) : '');
   const parts = $derived.by(() => {
     if (!chosen || !index || settings.lang !== 'de' || !/^\p{Lu}/u.test(chosen.spelling)) return null;
     const known = new Set(index.byWord.keys());
@@ -156,6 +158,7 @@
   {#if chosen}
     <div class="dictionary-detail" lang={settings.lang}>
       <p class="dictionary-meta"><span class="dictionary-level">{chosen.level.toUpperCase()}</span>{#if chosen.type}<span>{chosen.type}</span>{/if}</p>
+      {#if reading}<p class="dictionary-transliteration" lang={settings.lang}>{reading}</p>{/if}
       {#if chosen.definition}<p class="dictionary-definition">{chosen.definition}</p>{/if}
       {#if info?.plural && info.plural !== chosen.spelling}<p class="dictionary-line"><strong lang={settings.interfaceLocale}>{m.dictionary_plural({}, locale)}</strong> die {info.plural}</p>{/if}
       {#if info?.cases.length}
@@ -208,6 +211,7 @@
   .dictionary-detail { display:grid;gap:.55rem; }
   .dictionary-meta { display:flex;align-items:center;gap:.5rem;margin:0;font-size:.84rem;font-weight:800;opacity:.75; }
   .dictionary-definition { margin:0;font-size:.95rem;font-weight:700;line-height:1.45; }
+  .dictionary-transliteration { margin:0;font-size:.9rem;font-weight:700;opacity:.6; }
   .dictionary-line { margin:0;font-size:.9rem; }
   .dictionary-line strong { margin-inline-end:.35rem;font-size:.8125rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;opacity:.65; }
   .dictionary-cases { border-collapse:collapse;font-size:.9rem; }

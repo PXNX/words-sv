@@ -539,7 +539,7 @@
         <!-- The word itself: on a meaning card from the start, on every other card as the answer. -->
         <div class="quiz-word-row">
           {#if currentPicture}<span class="quiz-picture small" aria-hidden="true">{currentPicture}</span>{/if}
-          <p class="quiz-word" class:learn-fade-in={promptKind !== 'meaning'}><GenderedWord word={currentWord} language={settings.lang} /></p>
+          <p class="quiz-word" class:learn-fade-in={promptKind !== 'meaning'}><GenderedWord word={currentWord} language={settings.lang} withTransliteration /></p>
           <button class="btn-play btn-play-soft btn-play-round" onclick={speak} disabled={!canHear} aria-label={labels.listen} title={labels.listen}><IconVolume aria-hidden="true" /></button>
         </div>
         <!-- The definition's lines are kept from the start on a meaning card, so the word above never moves. -->
@@ -614,7 +614,7 @@
               onclick={chooseAnswer}
               disabled={answerStatus !== null}
               class="btn-play btn-play-choice justify-between gap-[.65rem] text-left touch-manipulation disabled:opacity-100 {isDefinitionPrompt ? 'two-lines' : ''} {optionStateClasses(word)}"
-            ><span class="flex-1">{#if isDefinitionPrompt}{definitions[word]}{:else}<GenderedWord {word} language={settings.lang} />{/if}</span><span class="choice-mark">{#if answerStatus !== null && word === currentWord}<IconCheck class="text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && word === selectedChoice}<IconClose class="text-[#c0392b] dark:text-[#ffc2b8]" aria-label={labels.tryAgain} />{/if}</span></button>
+            ><span class="flex-1">{#if isDefinitionPrompt}{definitions[word]}{:else}<GenderedWord {word} language={settings.lang} withTransliteration />{/if}</span><span class="choice-mark">{#if answerStatus !== null && word === currentWord}<IconCheck class="text-[#fffdf7]" aria-label={labels.correct} />{:else if answerStatus === 'wrong' && word === selectedChoice}<IconClose class="text-[#c0392b] dark:text-[#ffc2b8]" aria-label={labels.tryAgain} />{/if}</span></button>
           {/each}
         </div>
       {:else}
