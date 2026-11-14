@@ -37,14 +37,15 @@ export function chunkText(payload: string): string | 'done' | null {
 
 /** A readable reason for a failed request (bad key, no credit, unknown model, rate or usage limit). */
 export function requestError(status: number, body: string): Error {
-  let message = '';
-  let metadata = '';
+  let message: string;
+  let metadata: string;
   try {
     const value = JSON.parse(body) as { error?: { message?: string; metadata?: { limit_source?: string; error_type?: string } } };
     message = value.error?.message ?? '';
     metadata = `${value.error?.metadata?.limit_source ?? ''} ${value.error?.metadata?.error_type ?? ''}`;
   } catch {
     message = body.slice(0, 200);
+    metadata = '';
   }
   const text = `${message} ${metadata}`;
   // A spent limit is not the same as empty credit: OpenRouter's free models and the key's budgets cap
