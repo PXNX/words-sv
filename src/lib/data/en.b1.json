@@ -2054,205 +2054,603 @@
   "hut": {
     "definition": "A small simple building."
   },
-  "identity": {},
-  "idiom": {},
-  "idol": {},
-  "ignore": {},
-  "illness": {},
-  "imitate": {},
-  "impair": {},
-  "improper": {},
-  "incident": {},
-  "income": {},
-  "increase": {},
-  "indirect": {},
-  "industry": {},
-  "inform": {},
-  "inhale": {},
-  "initial": {},
-  "inject": {},
-  "injury": {},
-  "ink": {},
-  "innocent": {},
-  "insane": {},
-  "inscribe": {},
-  "insight": {},
-  "insist": {},
-  "inspire": {},
-  "instance": {},
-  "intend": {},
-  "intense": {},
-  "interact": {},
-  "interest": {},
-  "internal": {},
-  "interval": {},
-  "invasion": {},
-  "invest": {},
-  "involve": {},
-  "involved": {},
-  "iron": {},
-  "ironing": {},
-  "irritate": {},
-  "isle": {},
-  "ivory": {},
-  "jade": {},
-  "jar": {},
-  "jazz": {},
-  "jealous": {},
-  "jewel": {},
-  "jog": {},
-  "jogging": {},
-  "joint": {},
-  "joke": {},
-  "journal": {},
-  "judge": {},
-  "jug": {},
-  "juicy": {},
-  "jumper": {},
-  "jungle": {},
-  "justice": {},
-  "kettle": {},
-  "keyboard": {},
-  "kid": {},
-  "killing": {},
-  "kindness": {},
-  "kiss": {},
-  "kitten": {},
-  "knit": {},
-  "knock": {},
-  "lab": {},
-  "ladder": {},
-  "lamb": {},
-  "land": {},
-  "landlord": {},
-  "last": {},
-  "lasting": {},
-  "laugh": {},
-  "laughter": {},
-  "launch": {},
-  "lawful": {},
-  "lay": {},
-  "layer": {},
-  "lead": {},
-  "leading": {},
-  "league": {},
-  "lean": {},
-  "leap": {},
-  "leave": {},
-  "lecture": {},
-  "legal": {},
-  "length": {},
-  "lessen": {},
-  "lettuce": {},
-  "level": {},
-  "liar": {},
-  "liberate": {},
-  "lie": {},
-  "lifelong": {},
-  "lift": {},
-  "light": {},
-  "lighter": {},
-  "likeness": {},
-  "limit": {},
-  "limited": {},
-  "limp": {},
-  "link": {},
-  "liquid": {},
-  "literary": {},
-  "live": {},
-  "liver": {},
-  "loaf": {},
-  "locate": {},
-  "location": {},
-  "lock": {},
-  "lodge": {},
-  "log": {},
-  "logic": {},
-  "logo": {},
-  "lorry": {},
-  "loss": {},
-  "lottery": {},
-  "loud": {},
-  "loyal": {},
-  "loyalty": {},
-  "luggage": {},
-  "lung": {},
-  "luxury": {},
-  "magical": {},
-  "magician": {},
-  "mail": {},
-  "mailbox": {},
-  "main": {},
-  "maintain": {},
-  "majority": {},
-  "male": {},
-  "mankind": {},
-  "maple": {},
-  "marble": {},
-  "march": {},
-  "marine": {},
-  "marked": {},
-  "market": {},
-  "marriage": {},
-  "mash": {},
-  "mass": {},
-  "massive": {},
-  "match": {},
-  "maximum": {},
-  "mayor": {},
-  "measure": {},
-  "mechanic": {},
-  "meditate": {},
-  "medium": {},
-  "melt": {},
-  "mend": {},
-  "mental": {},
-  "mention": {},
-  "merchant": {},
-  "mere": {},
-  "mess": {},
-  "messy": {},
-  "mild": {},
-  "mile": {},
-  "mineral": {},
-  "minimum": {},
-  "minor": {},
-  "minority": {},
-  "miracle": {},
-  "mischief": {},
-  "misery": {},
-  "mislead": {},
-  "mission": {},
-  "misty": {},
-  "model": {},
-  "modem": {},
-  "moderate": {},
-  "modify": {},
-  "moisture": {},
-  "molecule": {},
-  "monitor": {},
-  "monk": {},
-  "monster": {},
-  "monthly": {},
-  "monument": {},
-  "moral": {},
-  "mosquito": {},
-  "moss": {},
-  "motivate": {},
-  "motive": {},
-  "motor": {},
-  "motto": {},
-  "mount": {},
-  "mourn": {},
-  "movement": {},
-  "mud": {},
-  "mule": {},
-  "murder": {},
-  "murderer": {},
-  "muscle": {},
-  "mustard": {},
-  "mutual": {},
-  "myth": {},
+  "identity": {
+    "definition": "Who or what someone or something is."
+  },
+  "idiom": {
+    "definition": "A group of words with a meaning that is not clear from the words themselves."
+  },
+  "idol": {
+    "definition": "A person or thing that is greatly admired."
+  },
+  "ignore": {
+    "definition": "To pay no attention to something."
+  },
+  "illness": {
+    "definition": "A period of being unwell."
+  },
+  "imitate": {
+    "definition": "To copy the way someone does something."
+  },
+  "impair": {
+    "definition": "To damage something so it works less well."
+  },
+  "improper": {
+    "definition": "Not correct or not socially acceptable."
+  },
+  "incident": {
+    "definition": "An event, often an unpleasant one."
+  },
+  "income": {
+    "definition": "The money you receive regularly from work or investments."
+  },
+  "increase": {
+    "definition": "To become larger in amount."
+  },
+  "indirect": {
+    "definition": "Not going straight, or not stated openly."
+  },
+  "industry": {
+    "definition": "The making of goods in factories, or a type of business."
+  },
+  "inform": {
+    "definition": "To tell someone about something."
+  },
+  "inhale": {
+    "definition": "To breathe air into your lungs."
+  },
+  "initial": {
+    "definition": "Happening at the beginning, or the first letter of a name."
+  },
+  "inject": {
+    "definition": "To put liquid into the body with a needle."
+  },
+  "injury": {
+    "definition": "Harm done to the body."
+  },
+  "ink": {
+    "definition": "The coloured liquid used for writing and printing."
+  },
+  "innocent": {
+    "definition": "Not guilty of any wrong."
+  },
+  "insane": {
+    "definition": "Seriously mentally ill, or very foolish."
+  },
+  "inscribe": {
+    "definition": "To write words on a surface as a permanent mark."
+  },
+  "insight": {
+    "definition": "A clear understanding of something complex."
+  },
+  "insist": {
+    "definition": "To say firmly that something must happen."
+  },
+  "inspire": {
+    "definition": "To make someone want to do something great."
+  },
+  "instance": {
+    "definition": "A single example of something."
+  },
+  "intend": {
+    "definition": "To plan to do something."
+  },
+  "intense": {
+    "definition": "Extremely strong or serious."
+  },
+  "interact": {
+    "definition": "To talk to and work with other people."
+  },
+  "interest": {
+    "definition": "The wish to know about something, or money paid on savings."
+  },
+  "internal": {
+    "definition": "Inside something or someone."
+  },
+  "interval": {
+    "definition": "A period of time between two events."
+  },
+  "invasion": {
+    "definition": "The act of entering a country with an army."
+  },
+  "invest": {
+    "definition": "To put money into something to earn more later."
+  },
+  "involve": {
+    "definition": "To include someone or something as a necessary part."
+  },
+  "involved": {
+    "definition": "Taking part in something, or complicated."
+  },
+  "iron": {
+    "definition": "A hard grey metal, or a device for smoothing clothes."
+  },
+  "ironing": {
+    "definition": "The activity of smoothing clothes with a hot device."
+  },
+  "irritate": {
+    "definition": "To make someone slightly angry, or to make skin sore."
+  },
+  "isle": {
+    "definition": "An island."
+  },
+  "ivory": {
+    "definition": "The hard white material from the tusks of elephants."
+  },
+  "jade": {
+    "definition": "A hard green stone used for jewellery."
+  },
+  "jar": {
+    "definition": "A container with a wide mouth, often made of glass."
+  },
+  "jazz": {
+    "definition": "A lively style of music with improvisation."
+  },
+  "jealous": {
+    "definition": "Unhappy because someone has something you want."
+  },
+  "jewel": {
+    "definition": "A precious stone."
+  },
+  "jog": {
+    "definition": "To run slowly for exercise."
+  },
+  "jogging": {
+    "definition": "Running slowly as exercise."
+  },
+  "joint": {
+    "definition": "A place where two parts meet, as in the body, or shared by two people."
+  },
+  "joke": {
+    "definition": "Something said to make people laugh."
+  },
+  "journal": {
+    "definition": "A magazine on a serious subject, or a diary."
+  },
+  "judge": {
+    "definition": "To decide about something, or the person who decides in court."
+  },
+  "jug": {
+    "definition": "A container for pouring liquids."
+  },
+  "juicy": {
+    "definition": "Full of juice."
+  },
+  "jumper": {
+    "definition": "A warm piece of clothing with sleeves that you pull over your head."
+  },
+  "jungle": {
+    "definition": "A thick tropical forest."
+  },
+  "justice": {
+    "definition": "Fair treatment for everyone."
+  },
+  "kettle": {
+    "definition": "A container that boils water."
+  },
+  "keyboard": {
+    "definition": "The set of keys on a computer or piano."
+  },
+  "kid": {
+    "definition": "A child, or to joke with someone."
+  },
+  "killing": {
+    "definition": "The act of causing death."
+  },
+  "kindness": {
+    "definition": "The quality of caring about others and helping them."
+  },
+  "kiss": {
+    "definition": "To touch with the lips to show love."
+  },
+  "kitten": {
+    "definition": "A young cat."
+  },
+  "knit": {
+    "definition": "To make clothes from wool using long needles."
+  },
+  "knock": {
+    "definition": "To hit a door to make a sound."
+  },
+  "lab": {
+    "definition": "A room used for scientific experiments."
+  },
+  "ladder": {
+    "definition": "Two long side pieces joined by steps for climbing."
+  },
+  "lamb": {
+    "definition": "A young sheep, or its meat."
+  },
+  "land": {
+    "definition": "The dry part of the earth, or to come down to the ground."
+  },
+  "landlord": {
+    "definition": "The owner of a house or flat that someone rents."
+  },
+  "last": {
+    "definition": "Coming after all the others, or to continue in time."
+  },
+  "lasting": {
+    "definition": "Continuing for a long time."
+  },
+  "laugh": {
+    "definition": "To make sounds that show you are amused."
+  },
+  "laughter": {
+    "definition": "The sound of people laughing."
+  },
+  "launch": {
+    "definition": "To send something into the air, or to start a new project."
+  },
+  "lawful": {
+    "definition": "Allowed by the law."
+  },
+  "lay": {
+    "definition": "To put something down carefully."
+  },
+  "layer": {
+    "definition": "A thickness of something that covers a surface."
+  },
+  "lead": {
+    "definition": "To go first and show the way, or a heavy grey metal."
+  },
+  "leading": {
+    "definition": "Most important or most successful."
+  },
+  "league": {
+    "definition": "A group of sports teams that play against each other."
+  },
+  "lean": {
+    "definition": "To bend your body, or thin with little fat."
+  },
+  "leap": {
+    "definition": "To jump a long way or high in the air."
+  },
+  "leave": {
+    "definition": "To go away from a place, or time off work."
+  },
+  "lecture": {
+    "definition": "A long talk given to teach students."
+  },
+  "legal": {
+    "definition": "Allowed by the law, or connected with the law."
+  },
+  "length": {
+    "definition": "How long something is from one end to the other."
+  },
+  "lessen": {
+    "definition": "To become smaller in amount or degree."
+  },
+  "lettuce": {
+    "definition": "A green leafy vegetable used in salads."
+  },
+  "level": {
+    "definition": "A height or standard, or flat."
+  },
+  "liar": {
+    "definition": "A person who tells lies."
+  },
+  "liberate": {
+    "definition": "To set someone free."
+  },
+  "lie": {
+    "definition": "To say something untrue, or to rest flat."
+  },
+  "lifelong": {
+    "definition": "Continuing for the whole of your life."
+  },
+  "lift": {
+    "definition": "To move something to a higher place, or a machine that does this."
+  },
+  "light": {
+    "definition": "Brightness, or not heavy, or to make something burn."
+  },
+  "lighter": {
+    "definition": "A small device that makes a flame."
+  },
+  "likeness": {
+    "definition": "The quality of being similar."
+  },
+  "limit": {
+    "definition": "The greatest amount allowed."
+  },
+  "limited": {
+    "definition": "Restricted in amount or extent."
+  },
+  "limp": {
+    "definition": "To walk with difficulty because of a bad leg."
+  },
+  "link": {
+    "definition": "A connection between two things, or a ring in a chain."
+  },
+  "liquid": {
+    "definition": "A substance that flows, like water."
+  },
+  "literary": {
+    "definition": "Connected with literature and serious writing."
+  },
+  "live": {
+    "definition": "To be alive, or happening now on television."
+  },
+  "liver": {
+    "definition": "The large organ that cleans the blood."
+  },
+  "loaf": {
+    "definition": "A large piece of baked bread."
+  },
+  "locate": {
+    "definition": "To find the place of something."
+  },
+  "location": {
+    "definition": "The place where something is."
+  },
+  "lock": {
+    "definition": "To close with a key, or the part a key turns."
+  },
+  "lodge": {
+    "definition": "A small house, or to stay somewhere as a paying guest."
+  },
+  "log": {
+    "definition": "A thick piece of cut wood, or to write down details."
+  },
+  "logic": {
+    "definition": "A clear way of thinking about what follows from what."
+  },
+  "logo": {
+    "definition": "A symbol or design used by a company."
+  },
+  "lorry": {
+    "definition": "A large vehicle for carrying goods."
+  },
+  "loss": {
+    "definition": "The fact of no longer having something."
+  },
+  "lottery": {
+    "definition": "A game in which numbers are drawn and some people win money."
+  },
+  "loud": {
+    "definition": "Making a lot of noise."
+  },
+  "loyal": {
+    "definition": "Always supporting someone or something."
+  },
+  "loyalty": {
+    "definition": "The quality of always supporting someone."
+  },
+  "luggage": {
+    "definition": "The bags you take when you travel."
+  },
+  "lung": {
+    "definition": "One of the two organs you breathe with."
+  },
+  "luxury": {
+    "definition": "Great comfort in expensive surroundings."
+  },
+  "magical": {
+    "definition": "Wonderful, or connected with magic."
+  },
+  "magician": {
+    "definition": "A person who performs tricks that seem impossible."
+  },
+  "mail": {
+    "definition": "Letters and parcels sent by post."
+  },
+  "mailbox": {
+    "definition": "A box where letters are put for collection."
+  },
+  "main": {
+    "definition": "Most important or largest."
+  },
+  "maintain": {
+    "definition": "To keep something in good condition, or to keep it as it is."
+  },
+  "majority": {
+    "definition": "More than half of the people or things."
+  },
+  "male": {
+    "definition": "Belonging to the sex that does not have babies."
+  },
+  "mankind": {
+    "definition": "All human beings."
+  },
+  "maple": {
+    "definition": "A tree that turns gold or red in autumn, or its sweet syrup."
+  },
+  "marble": {
+    "definition": "A hard smooth stone used for statues and floors."
+  },
+  "march": {
+    "definition": "To walk with regular steps like a soldier."
+  },
+  "marine": {
+    "definition": "Connected with the sea."
+  },
+  "marked": {
+    "definition": "Easy to notice."
+  },
+  "market": {
+    "definition": "A place where people buy and sell things."
+  },
+  "marriage": {
+    "definition": "The relationship between a husband and a wife."
+  },
+  "mash": {
+    "definition": "To press food until it becomes a soft mass."
+  },
+  "mass": {
+    "definition": "A large amount of something, or the amount of material in an object."
+  },
+  "massive": {
+    "definition": "Very large and heavy."
+  },
+  "match": {
+    "definition": "A game between two teams, or a small stick that makes fire."
+  },
+  "maximum": {
+    "definition": "The greatest amount possible."
+  },
+  "mayor": {
+    "definition": "The leader of a town or city government."
+  },
+  "measure": {
+    "definition": "To find the size or amount of something."
+  },
+  "mechanic": {
+    "definition": "A person who repairs vehicles and machines."
+  },
+  "meditate": {
+    "definition": "To be quiet and calm while you focus your mind."
+  },
+  "medium": {
+    "definition": "In the middle of a range, or a way of communicating."
+  },
+  "melt": {
+    "definition": "To become liquid because of heat."
+  },
+  "mend": {
+    "definition": "To repair something broken."
+  },
+  "mental": {
+    "definition": "Connected with thinking and the mind."
+  },
+  "mention": {
+    "definition": "To speak about something briefly."
+  },
+  "merchant": {
+    "definition": "A person who buys and sells goods in large amounts."
+  },
+  "mere": {
+    "definition": "Nothing more than; only."
+  },
+  "mess": {
+    "definition": "An untidy or dirty situation."
+  },
+  "messy": {
+    "definition": "Untidy and dirty."
+  },
+  "mild": {
+    "definition": "Not strong or serious, or pleasantly warm."
+  },
+  "mile": {
+    "definition": "A unit of distance, about 1.6 kilometres."
+  },
+  "mineral": {
+    "definition": "A natural substance found in the ground, such as iron."
+  },
+  "minimum": {
+    "definition": "The smallest amount possible."
+  },
+  "minor": {
+    "definition": "Not very important or serious."
+  },
+  "minority": {
+    "definition": "Less than half of the people or things."
+  },
+  "miracle": {
+    "definition": "Something wonderful that seems impossible."
+  },
+  "mischief": {
+    "definition": "Behaviour that causes small problems, usually for fun."
+  },
+  "misery": {
+    "definition": "Great unhappiness."
+  },
+  "mislead": {
+    "definition": "To make someone believe something untrue."
+  },
+  "mission": {
+    "definition": "An important job that a person or group is sent to do."
+  },
+  "misty": {
+    "definition": "Covered with thin cloud that makes it hard to see."
+  },
+  "model": {
+    "definition": "A small copy, or a person who shows clothes."
+  },
+  "modem": {
+    "definition": "A device that connects a computer to the internet."
+  },
+  "moderate": {
+    "definition": "Neither very large nor very small."
+  },
+  "modify": {
+    "definition": "To change something slightly."
+  },
+  "moisture": {
+    "definition": "Small amounts of water in the air or on a surface."
+  },
+  "molecule": {
+    "definition": "The smallest group of atoms in a substance."
+  },
+  "monitor": {
+    "definition": "A computer screen, or to watch something carefully."
+  },
+  "monk": {
+    "definition": "A man who lives in a monastery and dedicates his life to religion."
+  },
+  "monster": {
+    "definition": "A frightening imaginary creature."
+  },
+  "monthly": {
+    "definition": "Happening once a month."
+  },
+  "monument": {
+    "definition": "A building or statue built to remember a person or event."
+  },
+  "moral": {
+    "definition": "Connected with right and wrong behaviour."
+  },
+  "mosquito": {
+    "definition": "A small flying insect that bites and drinks blood."
+  },
+  "moss": {
+    "definition": "A soft green plant that grows on wet rocks and trees."
+  },
+  "motivate": {
+    "definition": "To make someone want to do something."
+  },
+  "motive": {
+    "definition": "The reason someone does something."
+  },
+  "motor": {
+    "definition": "An engine that makes a machine work."
+  },
+  "motto": {
+    "definition": "A short phrase that expresses what someone believes."
+  },
+  "mount": {
+    "definition": "To climb onto something or organize an event."
+  },
+  "mourn": {
+    "definition": "To feel very sad because someone has died."
+  },
+  "movement": {
+    "definition": "The act of moving, or a group working for a change."
+  },
+  "mud": {
+    "definition": "Wet soft earth."
+  },
+  "mule": {
+    "definition": "An animal with a horse mother and a donkey father."
+  },
+  "murder": {
+    "definition": "The crime of killing someone on purpose."
+  },
+  "murderer": {
+    "definition": "A person who kills someone on purpose."
+  },
+  "muscle": {
+    "definition": "A part of the body that can tighten to make you move."
+  },
+  "mustard": {
+    "definition": "A yellow spicy sauce made from seeds."
+  },
+  "mutual": {
+    "definition": "Felt or done by two people towards each other."
+  },
+  "myth": {
+    "definition": "An ancient story about gods and heroes, or a false belief."
+  },
   "nail": {},
   "naked": {},
   "name": {},
