@@ -343,3 +343,25 @@ repeated. Conventions in this repo win over the plan where they differ: commits 
 - [x] Forced updates with a Lilith sheet, a what's new sheet after each update (1.3.0).
 - [x] Service-worker caches are already keyed by the build version.
 - [x] Version in the Telegram bot's `/version` (from `package.json`, `APP_VERSION` as override).
+
+## 12. Models asked for that could not be added (blocked)
+
+Asked for on 2026-11-14. None runs in a stock browser runtime, so none is wired in — the gate in
+`docs/voice-engines.md` ("Adding an engine", step 4) — and each is recorded in that doc's "Not
+wired in" list instead (commit `bed3a0d`). What would unblock each:
+
+- [ ] `IndexTeam/IndexTTS-2.5` (TTS): PyTorch-only weights (5.5 GB of `.pth`), needs the `index-tts`
+  Python package and an NVIDIA GPU; no ONNX export, no transformers.js or browser example.
+  Zero-shot voice cloning, so no named voices for the cast; of the app's languages only en/es
+  overlap. bilibili-model-license (click-through, Chinese law, forbids improving other models).
+  Unblocked by: an onnx-community-style ONNX build or an official browser demo, plus a licence review.
+- [ ] `higurashi-ai/Haru-4B` (speech dialogue, not TTS): full-duplex speech-in/speech-out in 133 ms
+  frames over a Qwen3.5-4B backbone with a VibeVoice codec and MeanFlow head; PyTorch or MLX only,
+  ~12 GB VRAM, needs a character card and a reference clip; no WebLLM/MLC build for the conversation
+  models either, and a research base model that does not answer like an assistant. Unblocked by: a
+  browser runtime, which would still need a new streaming audio-in/audio-out mode in the app.
+- [ ] `FluidVoice-Labs/fluid-speech-pro` (ASR, not TTS): speech-to-text, and the app has no feature
+  that transcribes speech. The Transformers weights need Transformers 5.22+ (the app runs
+  transformers.js 4.3.2); the ONNX build targets onnx-asr / sherpa-onnx (Python and C++ runtimes),
+  not onnxruntime-web. Unblocked by: a transformers.js build plus a product decision on what the
+  app transcribes.
