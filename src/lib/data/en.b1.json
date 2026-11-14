@@ -3818,281 +3818,835 @@
   "southern": {
     "definition": "In or from the south."
   },
-  "souvenir": {},
-  "sparkle": {},
-  "speed": {},
-  "spelling": {},
-  "sphere": {},
-  "spice": {},
-  "spicy": {},
-  "spider": {},
-  "spinach": {},
-  "spiral": {},
-  "spirit": {},
-  "split": {},
-  "spoil": {},
-  "sponge": {},
-  "sponsor": {},
-  "sports": {},
-  "stable": {},
-  "stall": {},
-  "standard": {},
-  "star": {},
-  "stare": {},
-  "status": {},
-  "stay": {},
-  "steady": {},
-  "steam": {},
-  "steel": {},
-  "steep": {},
-  "stem": {},
-  "stick": {},
-  "sticker": {},
-  "sticky": {},
-  "stir": {},
-  "storage": {},
-  "stormy": {},
-  "strain": {},
-  "straw": {},
-  "stream": {},
-  "stress": {},
-  "stressed": {},
-  "stretch": {},
-  "stricken": {},
-  "strike": {},
-  "strip": {},
-  "stripe": {},
-  "struggle": {},
-  "stubborn": {},
-  "stuck": {},
-  "studio": {},
-  "stuffed": {},
-  "stumble": {},
-  "stun": {},
-  "stunning": {},
-  "stupid": {},
-  "stylish": {},
-  "suffer": {},
-  "suffix": {},
-  "suicide": {},
-  "summit": {},
-  "sunbathe": {},
-  "sundial": {},
-  "sunrise": {},
-  "sunset": {},
-  "superior": {},
-  "supply": {},
-  "support": {},
-  "suppose": {},
-  "surface": {},
-  "surgeon": {},
-  "surgery": {},
-  "surprise": {},
-  "surround": {},
-  "survival": {},
-  "survivor": {},
-  "suspect": {},
-  "swarm": {},
-  "swear": {},
-  "sweat": {},
-  "swell": {},
-  "swimmer": {},
-  "switch": {},
-  "swollen": {},
-  "sword": {},
-  "sympathy": {},
-  "symptom": {},
-  "syndrome": {},
-  "tablet": {},
-  "take": {},
-  "takeaway": {},
-  "tale": {},
-  "talented": {},
-  "talk": {},
-  "tank": {},
-  "tape": {},
-  "taste": {},
-  "tasty": {},
-  "tax": {},
-  "teaching": {},
-  "teammate": {},
-  "teamwork": {},
-  "tear": {},
-  "tease": {},
-  "teen": {},
-  "telegram": {},
-  "teller": {},
-  "temper": {},
-  "tempt": {},
-  "tend": {},
-  "tendency": {},
-  "tense": {},
-  "tension": {},
-  "tent": {},
-  "term": {},
-  "terminal": {},
-  "terrific": {},
-  "terror": {},
-  "thankful": {},
-  "theft": {},
-  "theory": {},
-  "thirst": {},
-  "thorough": {},
-  "threat": {},
-  "thriller": {},
-  "thumb": {},
-  "thump": {},
-  "thunder": {},
-  "tick": {},
-  "tide": {},
-  "tie": {},
-  "tighten": {},
-  "tile": {},
-  "timely": {},
-  "tin": {},
-  "tiny": {},
-  "tire": {},
-  "tiring": {},
-  "tissue": {},
-  "tobacco": {},
-  "tongue": {},
-  "top": {},
-  "tornado": {},
-  "toss": {},
-  "total": {},
-  "touch": {},
-  "tour": {},
-  "tourism": {},
-  "trace": {},
-  "tragedy": {},
-  "tragic": {},
-  "trail": {},
-  "transfer": {},
-  "trash": {},
-  "treat": {},
-  "tremble": {},
-  "trend": {},
-  "trigger": {},
-  "trim": {},
-  "triumph": {},
-  "tropical": {},
-  "trouble": {},
-  "trumpet": {},
-  "tumble": {},
-  "tuna": {},
-  "turning": {},
-  "turtle": {},
-  "twin": {},
-  "twist": {},
-  "type": {},
-  "typical": {},
-  "unable": {},
-  "unafraid": {},
-  "unclear": {},
-  "uncover": {},
-  "underage": {},
-  "undergo": {},
-  "undo": {},
-  "undress": {},
-  "unfit": {},
-  "unfold": {},
-  "unheard": {},
-  "unify": {},
-  "union": {},
-  "unique": {},
-  "unite": {},
-  "universe": {},
-  "unlikely": {},
-  "unlucky": {},
-  "unpack": {},
-  "untidy": {},
-  "unwanted": {},
-  "unwell": {},
-  "update": {},
-  "uplifted": {},
-  "upload": {},
-  "upper": {},
-  "upstairs": {},
-  "upward": {},
-  "urge": {},
-  "urgent": {},
-  "usage": {},
-  "useless": {},
-  "vacancy": {},
-  "vague": {},
-  "vain": {},
-  "valuable": {},
-  "van": {},
-  "variety": {},
-  "various": {},
-  "vary": {},
-  "vast": {},
-  "vehicle": {},
-  "vein": {},
-  "vessel": {},
-  "vet": {},
-  "vice": {},
-  "victim": {},
-  "victory": {},
-  "view": {},
-  "violence": {},
-  "virtual": {},
-  "virus": {},
-  "visa": {},
-  "visible": {},
-  "vision": {},
-  "visual": {},
-  "vivid": {},
-  "volcano": {},
-  "volume": {},
-  "vote": {},
-  "vowel": {},
-  "voyage": {},
-  "wagon": {},
-  "wake": {},
-  "ward": {},
-  "wardrobe": {},
-  "warm": {},
-  "warmth": {},
-  "warn": {},
-  "warning": {},
-  "warranty": {},
-  "warrior": {},
-  "washbowl": {},
-  "waste": {},
-  "wasteful": {},
-  "wave": {},
-  "wax": {},
-  "weakness": {},
-  "weapon": {},
-  "webcam": {},
-  "weird": {},
-  "welcome": {},
-  "wetland": {},
-  "whale": {},
-  "while": {},
-  "whisper": {},
-  "whistle": {},
-  "whole": {},
-  "wildlife": {},
-  "wing": {},
-  "wire": {},
-  "wither": {},
-  "witness": {},
-  "wizard": {},
-  "wonder": {},
-  "working": {},
-  "workout": {},
-  "workshop": {},
-  "worn": {},
-  "worst": {},
-  "worth": {},
-  "worthy": {},
-  "wound": {},
-  "wrap": {},
-  "wrapping": {},
-  "wrist": {},
-  "written": {},
-  "yell": {},
-  "yoga": {}
+  "souvenir": {
+    "definition": "Something you buy to remember a place or a trip."
+  },
+  "sparkle": {
+    "definition": "To shine with many small bright points of light."
+  },
+  "speed": {
+    "definition": "How fast something moves."
+  },
+  "spelling": {
+    "definition": "The way letters are put together to write a word."
+  },
+  "sphere": {
+    "definition": "A round solid shape like a ball."
+  },
+  "spice": {
+    "definition": "A strong-tasting powder from a plant, used in cooking."
+  },
+  "spicy": {
+    "definition": "Having a strong hot taste from spices."
+  },
+  "spider": {
+    "definition": "A small creature with eight legs that spins webs."
+  },
+  "spinach": {
+    "definition": "A dark green leafy vegetable."
+  },
+  "spiral": {
+    "definition": "A curve that goes round and round a central point."
+  },
+  "spirit": {
+    "definition": "The part of a person that is not the body, or a feeling of energy."
+  },
+  "split": {
+    "definition": "To divide into parts or groups."
+  },
+  "spoil": {
+    "definition": "To ruin something, or to give a child everything they want."
+  },
+  "sponge": {
+    "definition": "A soft material full of holes that holds water."
+  },
+  "sponsor": {
+    "definition": "A person or company that pays for an event or activity."
+  },
+  "sports": {
+    "definition": "Games and activities that involve physical effort."
+  },
+  "stable": {
+    "definition": "Firm and not likely to change or fall."
+  },
+  "stall": {
+    "definition": "A table or small shop where things are sold."
+  },
+  "standard": {
+    "definition": "A level of quality that is expected."
+  },
+  "star": {
+    "definition": "A bright point of light in the night sky, or a famous performer."
+  },
+  "stare": {
+    "definition": "To look at something for a long time."
+  },
+  "status": {
+    "definition": "The position or rank of someone or something."
+  },
+  "stay": {
+    "definition": "To remain in a place instead of leaving."
+  },
+  "steady": {
+    "definition": "Firm and not shaking or changing."
+  },
+  "steam": {
+    "definition": "The hot gas that water turns into when it boils."
+  },
+  "steel": {
+    "definition": "A strong metal made from iron."
+  },
+  "steep": {
+    "definition": "Rising or falling sharply."
+  },
+  "stem": {
+    "definition": "The long thin part of a plant that holds the flower or leaves."
+  },
+  "stick": {
+    "definition": "A thin piece of wood, or to fasten things together."
+  },
+  "sticker": {
+    "definition": "A small piece of paper with glue on the back."
+  },
+  "sticky": {
+    "definition": "Covered with something that holds to whatever it touches."
+  },
+  "stir": {
+    "definition": "To mix something by moving a spoon around in it."
+  },
+  "storage": {
+    "definition": "The act of keeping things until they are needed, or space for this."
+  },
+  "stormy": {
+    "definition": "With strong winds and heavy rain."
+  },
+  "strain": {
+    "definition": "Pressure or worry, or to injure a muscle by pulling it too hard."
+  },
+  "straw": {
+    "definition": "Hollow dried stems of grain, or a thin tube for drinking."
+  },
+  "stream": {
+    "definition": "A small narrow river, or a flow of something."
+  },
+  "stress": {
+    "definition": "Worry caused by a difficult situation, or to give importance to something."
+  },
+  "stressed": {
+    "definition": "Worried and unable to relax."
+  },
+  "stretch": {
+    "definition": "To make something longer or wider by pulling it."
+  },
+  "stricken": {
+    "definition": "Badly affected by something unpleasant."
+  },
+  "strike": {
+    "definition": "To hit something, or to stop work as a protest."
+  },
+  "strip": {
+    "definition": "A long narrow piece of something, or to remove a covering."
+  },
+  "stripe": {
+    "definition": "A long narrow band of colour."
+  },
+  "struggle": {
+    "definition": "To try hard against difficulty, or a hard fight."
+  },
+  "stubborn": {
+    "definition": "Refusing to change your mind."
+  },
+  "stuck": {
+    "definition": "Unable to move or get free."
+  },
+  "studio": {
+    "definition": "A room where an artist works or a programme is recorded."
+  },
+  "stuffed": {
+    "definition": "Filled tightly with something."
+  },
+  "stumble": {
+    "definition": "To hit your foot and almost fall."
+  },
+  "stun": {
+    "definition": "To shock or surprise someone very much."
+  },
+  "stunning": {
+    "definition": "Extremely beautiful or impressive."
+  },
+  "stupid": {
+    "definition": "Not clever; showing a lack of sense."
+  },
+  "stylish": {
+    "definition": "Fashionable and attractive in design."
+  },
+  "suffer": {
+    "definition": "To feel pain or have something unpleasant happen to you."
+  },
+  "suffix": {
+    "definition": "Letters added to the end of a word to change it."
+  },
+  "suicide": {
+    "definition": "The act of killing yourself."
+  },
+  "summit": {
+    "definition": "The top of a mountain, or a meeting of world leaders."
+  },
+  "sunbathe": {
+    "definition": "To sit or lie in the sun to get darker skin."
+  },
+  "sundial": {
+    "definition": "An old device that shows the time using a shadow."
+  },
+  "sunrise": {
+    "definition": "The time when the sun comes up."
+  },
+  "sunset": {
+    "definition": "The time when the sun goes down."
+  },
+  "superior": {
+    "definition": "Better than someone or something else."
+  },
+  "supply": {
+    "definition": "To provide something that is needed."
+  },
+  "support": {
+    "definition": "To help someone, or to hold something up."
+  },
+  "suppose": {
+    "definition": "To think that something is likely true."
+  },
+  "surface": {
+    "definition": "The outside or top layer of something."
+  },
+  "surgeon": {
+    "definition": "A doctor who performs operations."
+  },
+  "surgery": {
+    "definition": "Medical treatment in which a doctor cuts into the body."
+  },
+  "surprise": {
+    "definition": "An unexpected event, or the feeling it causes."
+  },
+  "surround": {
+    "definition": "To be all around something."
+  },
+  "survival": {
+    "definition": "The state of continuing to live after danger."
+  },
+  "survivor": {
+    "definition": "A person who continues to live after something dangerous."
+  },
+  "suspect": {
+    "definition": "To think someone may have done something wrong, or a person police think did it."
+  },
+  "swarm": {
+    "definition": "A large group of insects moving together."
+  },
+  "swear": {
+    "definition": "To promise seriously, or to use rude words."
+  },
+  "sweat": {
+    "definition": "The liquid that comes out of your skin when you are hot."
+  },
+  "swell": {
+    "definition": "To become larger, often from injury or water."
+  },
+  "swimmer": {
+    "definition": "A person who swims."
+  },
+  "switch": {
+    "definition": "To change from one thing to another, or a button that turns power on and off."
+  },
+  "swollen": {
+    "definition": "Larger than normal because of injury or illness."
+  },
+  "sword": {
+    "definition": "A weapon with a long sharp metal blade."
+  },
+  "sympathy": {
+    "definition": "The feeling of being sorry for someone's trouble."
+  },
+  "symptom": {
+    "definition": "A sign that you have an illness."
+  },
+  "syndrome": {
+    "definition": "A set of symptoms that often appear together."
+  },
+  "tablet": {
+    "definition": "A small round pill, or a flat computer with a touch screen."
+  },
+  "take": {
+    "definition": "To get hold of something and carry it with you."
+  },
+  "takeaway": {
+    "definition": "A meal bought from a restaurant to eat elsewhere."
+  },
+  "tale": {
+    "definition": "A story, especially an exciting or invented one."
+  },
+  "talented": {
+    "definition": "Having a natural ability to do something well."
+  },
+  "talk": {
+    "definition": "To speak to someone."
+  },
+  "tank": {
+    "definition": "A large container for liquid or gas, or a military vehicle."
+  },
+  "tape": {
+    "definition": "A long narrow band used for sticking or recording."
+  },
+  "taste": {
+    "definition": "To notice the flavour of something with your tongue."
+  },
+  "tasty": {
+    "definition": "Having a pleasant flavour."
+  },
+  "tax": {
+    "definition": "Money you must pay to the government."
+  },
+  "teaching": {
+    "definition": "The work of a teacher."
+  },
+  "teammate": {
+    "definition": "Another member of your team."
+  },
+  "teamwork": {
+    "definition": "The act of working well together as a group."
+  },
+  "tear": {
+    "definition": "A drop of water that comes from your eye, or to pull paper apart."
+  },
+  "tease": {
+    "definition": "To make fun of someone in a playful or unkind way."
+  },
+  "teen": {
+    "definition": "Short for teenager; a person aged 13 to 19."
+  },
+  "telegram": {
+    "definition": "A short message sent by telegraph."
+  },
+  "teller": {
+    "definition": "A person who takes and pays out money in a bank."
+  },
+  "temper": {
+    "definition": "A tendency to become angry quickly."
+  },
+  "tempt": {
+    "definition": "To make someone want to do something they should not."
+  },
+  "tend": {
+    "definition": "To usually do something, or to look after someone."
+  },
+  "tendency": {
+    "definition": "A habit of behaving in a certain way."
+  },
+  "tense": {
+    "definition": "Nervous and unable to relax, or tight."
+  },
+  "tension": {
+    "definition": "A feeling of nervousness or unfriendliness."
+  },
+  "tent": {
+    "definition": "A shelter made of cloth held up by poles."
+  },
+  "term": {
+    "definition": "A fixed period of time, or a word for a particular thing."
+  },
+  "terminal": {
+    "definition": "The building where travellers get on planes or buses."
+  },
+  "terrific": {
+    "definition": "Very good or very great."
+  },
+  "terror": {
+    "definition": "A feeling of extreme fear."
+  },
+  "thankful": {
+    "definition": "Pleased and grateful about something."
+  },
+  "theft": {
+    "definition": "The crime of stealing."
+  },
+  "theory": {
+    "definition": "An idea meant to explain something."
+  },
+  "thirst": {
+    "definition": "The feeling that you need to drink."
+  },
+  "thorough": {
+    "definition": "Careful and complete in every detail."
+  },
+  "threat": {
+    "definition": "A warning that you will harm someone, or a possible danger."
+  },
+  "thriller": {
+    "definition": "An exciting story about crime or danger."
+  },
+  "thumb": {
+    "definition": "The short thick finger at the side of your hand."
+  },
+  "thump": {
+    "definition": "To hit something heavily, or the dull sound it makes."
+  },
+  "thunder": {
+    "definition": "The loud noise you hear after lightning."
+  },
+  "tick": {
+    "definition": "A mark showing something is correct, or the sound of a clock."
+  },
+  "tide": {
+    "definition": "The regular rise and fall of the sea."
+  },
+  "tie": {
+    "definition": "To fasten things with string, or a band of cloth worn around the neck."
+  },
+  "tighten": {
+    "definition": "To make something firmer or closer."
+  },
+  "tile": {
+    "definition": "A flat square piece of baked clay used to cover roofs or floors."
+  },
+  "timely": {
+    "definition": "Happening at exactly the right moment."
+  },
+  "tin": {
+    "definition": "A soft metal, or a metal container for food."
+  },
+  "tiny": {
+    "definition": "Extremely small."
+  },
+  "tire": {
+    "definition": "To become tired, or a thick rubber ring around a wheel."
+  },
+  "tiring": {
+    "definition": "Making you feel tired."
+  },
+  "tissue": {
+    "definition": "The material that forms the parts of a body, or a thin paper for the nose."
+  },
+  "tobacco": {
+    "definition": "The dried leaves used to make cigarettes."
+  },
+  "tongue": {
+    "definition": "The soft part inside your mouth used for tasting and talking."
+  },
+  "top": {
+    "definition": "The highest part of something."
+  },
+  "tornado": {
+    "definition": "A violent storm with a strong spinning wind."
+  },
+  "toss": {
+    "definition": "To throw something lightly."
+  },
+  "total": {
+    "definition": "Complete, or the whole amount."
+  },
+  "touch": {
+    "definition": "To put your hand or fingers on something."
+  },
+  "tour": {
+    "definition": "A journey to visit several places."
+  },
+  "tourism": {
+    "definition": "The business of holidays and travel."
+  },
+  "trace": {
+    "definition": "A small sign that something was there, or to follow its path."
+  },
+  "tragedy": {
+    "definition": "A very sad event, or a serious play with a sad ending."
+  },
+  "tragic": {
+    "definition": "Very sad, especially because someone dies."
+  },
+  "trail": {
+    "definition": "A rough path, or a series of marks left behind."
+  },
+  "transfer": {
+    "definition": "To move something from one place to another."
+  },
+  "trash": {
+    "definition": "Waste things that are thrown away."
+  },
+  "treat": {
+    "definition": "To behave towards someone, or to give medical care."
+  },
+  "tremble": {
+    "definition": "To shake slightly, with fear or weakness."
+  },
+  "trend": {
+    "definition": "A general change or a popular fashion."
+  },
+  "trigger": {
+    "definition": "To cause something to start, or the part of a gun you pull."
+  },
+  "trim": {
+    "definition": "To cut a small amount away to make neat."
+  },
+  "triumph": {
+    "definition": "A great victory or success."
+  },
+  "tropical": {
+    "definition": "From or like the hot regions near the equator."
+  },
+  "trouble": {
+    "definition": "A problem or difficulty."
+  },
+  "trumpet": {
+    "definition": "A brass musical instrument you blow into."
+  },
+  "tumble": {
+    "definition": "To fall suddenly and roll over."
+  },
+  "tuna": {
+    "definition": "A large sea fish often sold in tins."
+  },
+  "turning": {
+    "definition": "A place where a road goes in another direction."
+  },
+  "turtle": {
+    "definition": "An animal with a hard shell that lives in water or on land."
+  },
+  "twin": {
+    "definition": "One of two children born at the same time to one mother."
+  },
+  "twist": {
+    "definition": "To turn something in a circle, or to bend it out of shape."
+  },
+  "type": {
+    "definition": "A kind of thing, or to write using a keyboard."
+  },
+  "typical": {
+    "definition": "Having the usual qualities of its kind."
+  },
+  "unable": {
+    "definition": "Not having the power or chance to do something."
+  },
+  "unafraid": {
+    "definition": "Not frightened."
+  },
+  "unclear": {
+    "definition": "Not easy to see or understand."
+  },
+  "uncover": {
+    "definition": "To remove a covering, or to find out something hidden."
+  },
+  "underage": {
+    "definition": "Younger than the age the law allows."
+  },
+  "undergo": {
+    "definition": "To experience something difficult, such as treatment."
+  },
+  "undo": {
+    "definition": "To open or unfasten something, or to cancel an action."
+  },
+  "undress": {
+    "definition": "To take your clothes off."
+  },
+  "unfit": {
+    "definition": "Not healthy enough for sport, or not suitable for something."
+  },
+  "unfold": {
+    "definition": "To open something that was folded."
+  },
+  "unheard": {
+    "definition": "Not heard, or not known about before."
+  },
+  "unify": {
+    "definition": "To join separate parts into one whole."
+  },
+  "union": {
+    "definition": "An organization of workers, or the act of joining together."
+  },
+  "unique": {
+    "definition": "Being the only one of its kind."
+  },
+  "unite": {
+    "definition": "To join together for a common purpose."
+  },
+  "universe": {
+    "definition": "All of space and everything in it."
+  },
+  "unlikely": {
+    "definition": "Not probable."
+  },
+  "unlucky": {
+    "definition": "Having bad luck."
+  },
+  "unpack": {
+    "definition": "To take things out of a bag or box."
+  },
+  "untidy": {
+    "definition": "Not neat; in disorder."
+  },
+  "unwanted": {
+    "definition": "Not wanted by anyone."
+  },
+  "unwell": {
+    "definition": "Ill."
+  },
+  "update": {
+    "definition": "To make something more modern, or the latest information."
+  },
+  "uplifted": {
+    "definition": "Filled with hope and happiness."
+  },
+  "upload": {
+    "definition": "To send data to the internet or a larger computer."
+  },
+  "upper": {
+    "definition": "Higher in position."
+  },
+  "upstairs": {
+    "definition": "On a higher floor of a building."
+  },
+  "upward": {
+    "definition": "Moving or pointing towards a higher place."
+  },
+  "urge": {
+    "definition": "A strong wish to do something, or to advise strongly."
+  },
+  "urgent": {
+    "definition": "Needing attention straight away."
+  },
+  "usage": {
+    "definition": "The way something is used, or the amount used."
+  },
+  "useless": {
+    "definition": "Not able to do anything helpful."
+  },
+  "vacancy": {
+    "definition": "A job that is free, or a room in a hotel that is free."
+  },
+  "vague": {
+    "definition": "Not clear or exact."
+  },
+  "vain": {
+    "definition": "Too proud of your appearance, or without success."
+  },
+  "valuable": {
+    "definition": "Worth a lot of money, or very useful."
+  },
+  "van": {
+    "definition": "A vehicle for carrying goods."
+  },
+  "variety": {
+    "definition": "A number of different types of things."
+  },
+  "various": {
+    "definition": "Several different."
+  },
+  "vary": {
+    "definition": "To be different, or to change."
+  },
+  "vast": {
+    "definition": "Extremely large."
+  },
+  "vehicle": {
+    "definition": "A machine such as a car or bus that carries people or goods."
+  },
+  "vein": {
+    "definition": "A tube in the body that carries blood to the heart."
+  },
+  "vessel": {
+    "definition": "A ship, or a container for liquid."
+  },
+  "vet": {
+    "definition": "A doctor who treats animals."
+  },
+  "vice": {
+    "definition": "A bad habit, or a tool that holds things tightly."
+  },
+  "victim": {
+    "definition": "A person who is harmed by something."
+  },
+  "victory": {
+    "definition": "A win in a battle, game, or election."
+  },
+  "view": {
+    "definition": "What you can see from a place, or an opinion."
+  },
+  "violence": {
+    "definition": "Behaviour meant to hurt people physically."
+  },
+  "virtual": {
+    "definition": "Made by computers, or almost the real thing."
+  },
+  "virus": {
+    "definition": "A tiny living thing that causes illness, or a harmful computer program."
+  },
+  "visa": {
+    "definition": "An official mark in a passport allowing you to enter a country."
+  },
+  "visible": {
+    "definition": "Able to be seen."
+  },
+  "vision": {
+    "definition": "The ability to see, or an idea of how things could be."
+  },
+  "visual": {
+    "definition": "Connected with seeing or sight."
+  },
+  "vivid": {
+    "definition": "Very bright in colour, or producing clear pictures in the mind."
+  },
+  "volcano": {
+    "definition": "A mountain that can throw out hot melted rock."
+  },
+  "volume": {
+    "definition": "The amount of space something fills, or how loud a sound is."
+  },
+  "vote": {
+    "definition": "To choose in an election by marking a paper or raising a hand."
+  },
+  "vowel": {
+    "definition": "One of the letters a, e, i, o, u."
+  },
+  "voyage": {
+    "definition": "A long journey by sea or in space."
+  },
+  "wagon": {
+    "definition": "A vehicle with four wheels pulled by animals or a train."
+  },
+  "wake": {
+    "definition": "To stop sleeping, or to make someone stop sleeping."
+  },
+  "ward": {
+    "definition": "A large room in a hospital with beds for patients."
+  },
+  "wardrobe": {
+    "definition": "A large cupboard for hanging clothes in."
+  },
+  "warm": {
+    "definition": "Fairly hot in a pleasant way, or friendly."
+  },
+  "warmth": {
+    "definition": "A pleasant feeling of heat, or friendliness."
+  },
+  "warn": {
+    "definition": "To tell someone about possible danger."
+  },
+  "warning": {
+    "definition": "Words telling you about a possible danger."
+  },
+  "warranty": {
+    "definition": "A written promise to repair goods if they break."
+  },
+  "warrior": {
+    "definition": "A fighter in a battle in the past."
+  },
+  "washbowl": {
+    "definition": "A large bowl used for washing."
+  },
+  "waste": {
+    "definition": "To use something badly, or unwanted material left over."
+  },
+  "wasteful": {
+    "definition": "Using more than is needed."
+  },
+  "wave": {
+    "definition": "To move your hand to say hello, or a raised moving line of water."
+  },
+  "wax": {
+    "definition": "A soft substance that melts easily, used for candles."
+  },
+  "weakness": {
+    "definition": "A lack of strength, or a fault in something."
+  },
+  "weapon": {
+    "definition": "An object used to hurt people, such as a gun."
+  },
+  "webcam": {
+    "definition": "A camera that sends pictures over the internet."
+  },
+  "weird": {
+    "definition": "Very strange."
+  },
+  "welcome": {
+    "definition": "To be glad to see someone arrive, or used to greet them."
+  },
+  "wetland": {
+    "definition": "An area of land that is often covered with water."
+  },
+  "whale": {
+    "definition": "A very large sea animal that breathes air."
+  },
+  "while": {
+    "definition": "During the time that something else happens."
+  },
+  "whisper": {
+    "definition": "To speak very quietly."
+  },
+  "whistle": {
+    "definition": "To make a high sound by blowing through your lips."
+  },
+  "whole": {
+    "definition": "Complete; with nothing left out."
+  },
+  "wildlife": {
+    "definition": "The animals and plants living naturally in a place."
+  },
+  "wing": {
+    "definition": "The part of a bird or plane that it flies with."
+  },
+  "wire": {
+    "definition": "Thin metal thread used to carry electricity."
+  },
+  "wither": {
+    "definition": "To become weaker and dry up, as plants do."
+  },
+  "witness": {
+    "definition": "A person who saw something happen."
+  },
+  "wizard": {
+    "definition": "A man in stories with magic power."
+  },
+  "wonder": {
+    "definition": "To want to know about something, or a feeling of surprise."
+  },
+  "working": {
+    "definition": "Having a job, or machine that is not broken."
+  },
+  "workout": {
+    "definition": "A period of physical exercise."
+  },
+  "workshop": {
+    "definition": "A room where things are made or a group class."
+  },
+  "worn": {
+    "definition": "Damaged by long use, or very tired."
+  },
+  "worst": {
+    "definition": "The most bad of all."
+  },
+  "worth": {
+    "definition": "Having a certain value, or deserving something."
+  },
+  "worthy": {
+    "definition": "Deserving respect or attention."
+  },
+  "wound": {
+    "definition": "An injury that breaks the skin."
+  },
+  "wrap": {
+    "definition": "To cover something by folding paper or cloth around it."
+  },
+  "wrapping": {
+    "definition": "Paper or plastic that covers a product."
+  },
+  "wrist": {
+    "definition": "The joint between your hand and your arm."
+  },
+  "written": {
+    "definition": "Put down in words on paper or a screen."
+  },
+  "yell": {
+    "definition": "To shout very loudly."
+  },
+  "yoga": {
+    "definition": "A set of exercises and stretches done slowly, from India."
+  }
 }
