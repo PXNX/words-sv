@@ -22,6 +22,7 @@
   import InstallAppHint from '#lib/pwa/InstallAppHint.svelte';
   import UpdateAppHint from '#lib/pwa/UpdateAppHint.svelte';
   import { playSoundEffect } from '#lib/feedback/sounds.js';
+import { haptic } from '#lib/feedback/haptics.js';
   import { playableLanguages, type Language } from '#lib/data/vocabulary.js';
   import { REPAIR_WORDS, lilithFace, lilithMood, modeDone, type StreakMode, type StreakRepair } from '#lib/streak/clientStreak.js';
   import TodayBadge from '#lib/streak/TodayBadge.svelte';
@@ -204,10 +205,40 @@
     return id === 'vocab' ? wordDue : id === 'reading' ? readingDue : id === 'grammarFill' ? grammarDue : 0;
   }
   let petting = $state(false);
+  // A short tap pets her (purr + wiggle); holding her bursts hearts above her head.
+  let hearts = $state(0);
+  let heartsShown = $state(false);
+  let heartsTimer = 0;
+  let heldLong = $state(false);
+  let holdTimer = 0;
   function petLilith() {
     playSoundEffect(settings.sound, 'purr');
     petting = false;
     requestAnimationFrame(() => (petting = true));
+  }
+  function burstHearts() {
+    hearts += 1;
+    heartsShown = true;
+    window.clearTimeout(heartsTimer);
+    heartsTimer = window.setTimeout(() => (heartsShown = false), 2200);
+  }
+  function pressLilith() {
+    heldLong = false;
+    window.clearTimeout(holdTimer);
+    holdTimer = window.setTimeout(() => {
+      heldLong = true;
+      burstHearts();
+      haptic('win');
+    }, 600);
+  }
+  function releaseLilith() {
+    window.clearTimeout(holdTimer);
+    if (!heldLong) petLilith();
+    else heldLong = false;
+  }
+  // Keyboard taps (Enter, Space) arrive as clicks without pointer events.
+  function clickLilith(event: MouseEvent) {
+    if (event.detail === 0) petLilith();
   }
   let todayPlan = $state<TodayPlan | null>(null);
   let repairOffer = $state<StreakRepair | null>(null);
@@ -360,7 +391,7 @@
           <span class="home-cast-note">{labels.homeCast}</span>
         </div>
       </div>
-      <div class="home-family"><span class="home-family-people" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="tom" /></span><button type="button" class="home-lilith-pet" class:petting onclick={petLilith} onanimationend={() => (petting = false)} aria-label={labels.petLilith}><span class="home-lilith" class:loving={lilith === 'loving'}><StoryCharacter id="lilith" mood={petting && lilith !== 'loving' ? 'happy' : lilithFace(lilith)} purring={petting} />{#if lilith === 'loving'}<span class="home-lilith-hearts" aria-hidden="true"><span>♥</span><span>♥</span></span>{/if}</span></button></div>
+      <div class="home-family"><span class="home-family-people" aria-hidden="true"><StoryCharacter id="mia" /><StoryCharacter id="tom" /></span><button type="button" class="home-lilith-pet" class:petting onpointerdown={pressLilith} onpointerup={releaseLilith} onpointerleave={() => window.clearTimeout(holdTimer)} onpointercancel={() => window.clearTimeout(holdTimer)} onclick={clickLilith} onanimationend={() => (petting = false)} aria-label={labels.petLilith}><span class="home-lilith" class:loving={lilith === 'loving'}><StoryCharacter id="lilith" mood={petting && lilith !== 'loving' ? 'happy' : lilithFace(lilith)} purring={petting} />{#if lilith === 'loving'}<span class="home-lilith-hearts" aria-hidden="true"><span>♥</span><span>♥</span></span>{/if}{#if heartsShown}{#key hearts}<span class="home-lilith-burst" aria-hidden="true"><b>♥</b><b>♥</b><b>♥</b></span>{/key}{/if}</span></button></div>
     </header>
     <!-- One daily card: the streak, the next best step and what is waiting to be continued. -->
     <MissedStreakSheet repair={repairOffer} />
@@ -465,6 +496,12 @@
   .home-lilith-hearts { position:absolute;inset:-.4rem 0 auto;display:flex;justify-content:center;gap:.15rem;color:#d9546a;font-size:.9rem;line-height:1;pointer-events:none; }
   .home-lilith-hearts span { display:block;animation:lilith-heart 2s ease-in-out infinite; }
   .home-lilith-hearts span:last-child { margin-top:.35rem;font-size:.7rem;animation-delay:.7s; }
+  /* A hold bursts hearts once above her head, like the story's petting. */
+  .home-lilith-burst { position:absolute;inset:-.6rem 0 auto;display:flex;justify-content:center;gap:.18rem;color:#d9546a;pointer-events:none; }
+  .home-lilith-burst b { font-size:.95rem;line-height:1;animation:home-burst 1.6s ease-out forwards; }
+  .home-lilith-burst b:nth-child(2) { margin-top:.35rem;font-size:.78rem;animation-delay:.12s; }
+  .home-lilith-burst b:nth-child(3) { margin-top:.7rem;font-size:.62rem;animation-delay:.24s; }
+  @keyframes home-burst { 0% { opacity:0;translate:0 .2rem;scale:.6; } 25% { opacity:1; } 100% { opacity:0;translate:0 -1.1rem;scale:1.15; } }
   @keyframes lilith-heart { 0% { opacity:0;translate:0 .3rem;scale:.7; } 35% { opacity:1; } 100% { opacity:0;translate:0 -1rem;scale:1; } }
   .home-lilith-pet { display:block;margin-inline-start:-1.25rem;padding:0;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transform-origin:50% 100%; }
   .home-lilith-pet:focus-visible { outline:3px dashed var(--sun);outline-offset:2px;border-radius:1rem; }
@@ -551,6 +588,7 @@
   @media (prefers-reduced-motion:reduce) {
     .home-title,.home-family-people :global(.story-character),.home-lilith,.home-lilith-pet.petting,.home-games .card-play,.home-today-icon,.home-today-start :global(svg),.home-mix-step.done .home-mix-icon { animation:none; }
     .home-lilith-hearts span { animation:none;opacity:1; }
+    .home-lilith-burst { display:none; }
     .home-games .card-play:hover .home-icon { animation:none;rotate:none; }
   }
   @media (min-width:640px) {
