@@ -1463,203 +1463,597 @@
   "eyesight": {
     "definition": "The ability to see."
   },
-  "facility": {},
-  "fade": {},
-  "failure": {},
-  "faint": {},
-  "fair": {},
-  "faithful": {},
-  "fake": {},
-  "fall": {},
-  "fallen": {},
-  "fancy": {},
-  "fantasy": {},
-  "faraway": {},
-  "farewell": {},
-  "farming": {},
-  "farmland": {},
-  "fasten": {},
-  "fax": {},
-  "feast": {},
-  "feed": {},
-  "fellow": {},
-  "ferry": {},
-  "festive": {},
-  "fetch": {},
-  "fifth": {},
-  "fight": {},
-  "filling": {},
-  "film": {},
-  "filter": {},
-  "finance": {},
-  "finding": {},
-  "fine": {},
-  "finger": {},
-  "firework": {},
-  "firm": {},
-  "fish": {},
-  "fit": {},
-  "fitness": {},
-  "fix": {},
-  "flash": {},
-  "flat": {},
-  "float": {},
-  "flock": {},
-  "flood": {},
-  "flow": {},
-  "flu": {},
-  "fluent": {},
-  "flunk": {},
-  "flute": {},
-  "fold": {},
-  "folk": {},
-  "fond": {},
-  "fondness": {},
-  "fool": {},
-  "foolish": {},
-  "foot": {},
-  "forecast": {},
-  "forehead": {},
-  "forgive": {},
-  "form": {},
-  "formal": {},
-  "format": {},
-  "former": {},
-  "formula": {},
-  "fountain": {},
-  "fragment": {},
-  "freezer": {},
-  "freezing": {},
-  "frequent": {},
-  "freshman": {},
-  "fright": {},
-  "frost": {},
-  "frozen": {},
-  "fry": {},
-  "fuel": {},
-  "function": {},
-  "fund": {},
-  "funeral": {},
-  "fur": {},
-  "furnish": {},
-  "fuss": {},
-  "future": {},
-  "gain": {},
-  "gall": {},
-  "gallon": {},
-  "gap": {},
-  "garment": {},
-  "gay": {},
-  "gene": {},
-  "general": {},
-  "generate": {},
-  "generous": {},
-  "genetic": {},
-  "genetics": {},
-  "geology": {},
-  "gesture": {},
-  "giant": {},
-  "gifted": {},
-  "giggle": {},
-  "ginger": {},
-  "giraffe": {},
-  "glance": {},
-  "glide": {},
-  "glimpse": {},
-  "glint": {},
-  "global": {},
-  "glorious": {},
-  "glory": {},
-  "goddess": {},
-  "golfer": {},
-  "goods": {},
-  "gorgeous": {},
-  "gorilla": {},
-  "gossip": {},
-  "govern": {},
-  "governor": {},
-  "gown": {},
-  "grab": {},
-  "graceful": {},
-  "graduate": {},
-  "grant": {},
-  "graph": {},
-  "graphic": {},
-  "graphics": {},
-  "grave": {},
-  "gravy": {},
-  "greeting": {},
-  "grill": {},
-  "groom": {},
-  "group": {},
-  "grouping": {},
-  "growth": {},
-  "guess": {},
-  "guidance": {},
-  "guide": {},
-  "guilt": {},
-  "guilty": {},
-  "gym": {},
-  "habitat": {},
-  "hammer": {},
-  "handball": {},
-  "handle": {},
-  "handy": {},
-  "hang": {},
-  "hanging": {},
-  "hardship": {},
-  "harness": {},
-  "hasty": {},
-  "hatch": {},
-  "hate": {},
-  "hatred": {},
-  "haunt": {},
-  "haven": {},
-  "hazard": {},
-  "headline": {},
-  "heal": {},
-  "healing": {},
-  "hearing": {},
-  "hearted": {},
-  "hearty": {},
-  "heat": {},
-  "heater": {},
-  "heaven": {},
-  "heavenly": {},
-  "heel": {},
-  "height": {},
-  "helmet": {},
-  "helpless": {},
-  "herd": {},
-  "hesitate": {},
-  "hidden": {},
-  "hip": {},
-  "hire": {},
-  "historic": {},
-  "hit": {},
-  "hiv": {},
-  "holy": {},
-  "homeless": {},
-  "honest": {},
-  "honesty": {},
-  "hop": {},
-  "hope": {},
-  "hopeful": {},
-  "hopeless": {},
-  "horizon": {},
-  "horn": {},
-  "horrible": {},
-  "horrify": {},
-  "hostel": {},
-  "huge": {},
-  "human": {},
-  "humanity": {},
-  "humid": {},
-  "humorous": {},
-  "hunger": {},
-  "hunt": {},
-  "hurt": {},
-  "hut": {},
+  "facility": {
+    "definition": "A building or service provided for a purpose."
+  },
+  "fade": {
+    "definition": "To become paler or weaker over time."
+  },
+  "failure": {
+    "definition": "A lack of success."
+  },
+  "faint": {
+    "definition": "Barely able to be seen or heard, or to become unconscious."
+  },
+  "fair": {
+    "definition": "Treating people equally, or light in colour."
+  },
+  "faithful": {
+    "definition": "Always loyal and trustworthy."
+  },
+  "fake": {
+    "definition": "Not genuine; made to look real."
+  },
+  "fall": {
+    "definition": "To drop down, or the season after summer."
+  },
+  "fallen": {
+    "definition": "Having dropped to the ground."
+  },
+  "fancy": {
+    "definition": "Special and not simple, or to want something."
+  },
+  "fantasy": {
+    "definition": "A story or idea about things that cannot really happen."
+  },
+  "faraway": {
+    "definition": "A long distance away."
+  },
+  "farewell": {
+    "definition": "Goodbye, said when someone is leaving."
+  },
+  "farming": {
+    "definition": "The work of growing crops and keeping animals."
+  },
+  "farmland": {
+    "definition": "Land used for growing crops or keeping animals."
+  },
+  "fasten": {
+    "definition": "To close or join something firmly."
+  },
+  "fax": {
+    "definition": "A copy of a document sent along a telephone line."
+  },
+  "feast": {
+    "definition": "A large special meal."
+  },
+  "feed": {
+    "definition": "To give food to a person or an animal."
+  },
+  "fellow": {
+    "definition": "A man, or belonging to the same group."
+  },
+  "ferry": {
+    "definition": "A boat that carries people and cars across water."
+  },
+  "festive": {
+    "definition": "Cheerful and connected with a celebration."
+  },
+  "fetch": {
+    "definition": "To go and get something and bring it back."
+  },
+  "fifth": {
+    "definition": "Coming after the fourth."
+  },
+  "fight": {
+    "definition": "To use force against someone."
+  },
+  "filling": {
+    "definition": "The food inside a sandwich or cake."
+  },
+  "film": {
+    "definition": "A story told in moving pictures."
+  },
+  "filter": {
+    "definition": "A device that removes things from liquid or air."
+  },
+  "finance": {
+    "definition": "The management of money."
+  },
+  "finding": {
+    "definition": "Something that has been discovered."
+  },
+  "fine": {
+    "definition": "Good enough, or a sum of money paid as a punishment."
+  },
+  "finger": {
+    "definition": "One of the five long parts at the end of the hand."
+  },
+  "firework": {
+    "definition": "A device that explodes with colour and noise."
+  },
+  "firm": {
+    "definition": "Hard and solid, or a business company."
+  },
+  "fish": {
+    "definition": "An animal that lives in water."
+  },
+  "fit": {
+    "definition": "The right size, or healthy."
+  },
+  "fitness": {
+    "definition": "The state of being healthy and strong."
+  },
+  "fix": {
+    "definition": "To repair something."
+  },
+  "flash": {
+    "definition": "A sudden bright light, or to shine briefly."
+  },
+  "flat": {
+    "definition": "Smooth and level, or a set of rooms to live in."
+  },
+  "float": {
+    "definition": "To rest on the surface of water."
+  },
+  "flock": {
+    "definition": "A group of birds or sheep."
+  },
+  "flood": {
+    "definition": "A large amount of water covering dry land."
+  },
+  "flow": {
+    "definition": "To move steadily like water."
+  },
+  "flu": {
+    "definition": "An illness like a bad cold with a fever."
+  },
+  "fluent": {
+    "definition": "Able to speak a language easily and well."
+  },
+  "flunk": {
+    "definition": "To fail a test or a course."
+  },
+  "flute": {
+    "definition": "A long thin musical instrument you blow into."
+  },
+  "fold": {
+    "definition": "To bend something over itself."
+  },
+  "folk": {
+    "definition": "People in general, or traditional in style."
+  },
+  "fond": {
+    "definition": "Liking someone or something very much."
+  },
+  "fondness": {
+    "definition": "A gentle liking for something."
+  },
+  "fool": {
+    "definition": "A person who acts without good sense."
+  },
+  "foolish": {
+    "definition": "Not sensible."
+  },
+  "foot": {
+    "definition": "The part of the body you stand on."
+  },
+  "forecast": {
+    "definition": "A statement about what will happen, as with weather."
+  },
+  "forehead": {
+    "definition": "The part of the face above the eyes."
+  },
+  "forgive": {
+    "definition": "To stop being angry with someone for a mistake."
+  },
+  "form": {
+    "definition": "A shape, or a printed paper with spaces to fill in."
+  },
+  "formal": {
+    "definition": "Following official rules; not relaxed."
+  },
+  "format": {
+    "definition": "The way something is arranged or presented."
+  },
+  "former": {
+    "definition": "Belonging to an earlier time."
+  },
+  "formula": {
+    "definition": "A set of symbols stating a scientific rule, or a plan."
+  },
+  "fountain": {
+    "definition": "A structure that sends water into the air."
+  },
+  "fragment": {
+    "definition": "A small broken piece of something."
+  },
+  "freezer": {
+    "definition": "A very cold cupboard that keeps food frozen."
+  },
+  "freezing": {
+    "definition": "Extremely cold."
+  },
+  "frequent": {
+    "definition": "Happening often."
+  },
+  "freshman": {
+    "definition": "A student in their first year at college."
+  },
+  "fright": {
+    "definition": "A sudden feeling of fear."
+  },
+  "frost": {
+    "definition": "A thin layer of ice that forms on cold surfaces."
+  },
+  "frozen": {
+    "definition": "Hardened by cold, or kept at a very low temperature."
+  },
+  "fry": {
+    "definition": "To cook food in hot oil."
+  },
+  "fuel": {
+    "definition": "A material burned to make heat or power."
+  },
+  "function": {
+    "definition": "The purpose of something."
+  },
+  "fund": {
+    "definition": "Money collected for a purpose."
+  },
+  "funeral": {
+    "definition": "The ceremony held after someone dies."
+  },
+  "fur": {
+    "definition": "The soft thick hair that covers some animals."
+  },
+  "furnish": {
+    "definition": "To put furniture in a room."
+  },
+  "fuss": {
+    "definition": "Unnecessary worry or excitement about something small."
+  },
+  "future": {
+    "definition": "The time that has not yet come."
+  },
+  "gain": {
+    "definition": "To get something useful, or an increase."
+  },
+  "gall": {
+    "definition": "Bold rude behaviour, or a bitter liquid from the liver."
+  },
+  "gallon": {
+    "definition": "A unit for measuring liquid, about 4.5 litres in Britain."
+  },
+  "gap": {
+    "definition": "An empty space between two things."
+  },
+  "garment": {
+    "definition": "A piece of clothing."
+  },
+  "gay": {
+    "definition": "Sexually attracted to people of the same sex."
+  },
+  "gene": {
+    "definition": "A part of a cell that passes on qualities to children."
+  },
+  "general": {
+    "definition": "About the whole of something, not one part."
+  },
+  "generate": {
+    "definition": "To produce something such as power or ideas."
+  },
+  "generous": {
+    "definition": "Happy to give money or help to others."
+  },
+  "genetic": {
+    "definition": "Relating to genes and what is passed to children."
+  },
+  "genetics": {
+    "definition": "The study of genes and inherited qualities."
+  },
+  "geology": {
+    "definition": "The study of rocks and the earth's structure."
+  },
+  "gesture": {
+    "definition": "A movement of the hands or head that shows meaning."
+  },
+  "giant": {
+    "definition": "Extremely large, or an imaginary huge person."
+  },
+  "gifted": {
+    "definition": "Having great natural ability."
+  },
+  "giggle": {
+    "definition": "To laugh in a silly light way."
+  },
+  "ginger": {
+    "definition": "A spicy root used in cooking, or a red-brown colour."
+  },
+  "giraffe": {
+    "definition": "A tall African animal with a very long neck."
+  },
+  "glance": {
+    "definition": "To look at something very quickly."
+  },
+  "glide": {
+    "definition": "To move smoothly and easily."
+  },
+  "glimpse": {
+    "definition": "A quick look at something you see for a moment."
+  },
+  "glint": {
+    "definition": "A flash of light from a shiny surface."
+  },
+  "global": {
+    "definition": "Relating to the whole world."
+  },
+  "glorious": {
+    "definition": "Wonderful and deserving praise."
+  },
+  "glory": {
+    "definition": "Great honour and fame."
+  },
+  "goddess": {
+    "definition": "A female god."
+  },
+  "golfer": {
+    "definition": "A person who plays golf."
+  },
+  "goods": {
+    "definition": "Things that are made to be sold."
+  },
+  "gorgeous": {
+    "definition": "Extremely beautiful."
+  },
+  "gorilla": {
+    "definition": "A very large strong ape from Africa."
+  },
+  "gossip": {
+    "definition": "Talk about other people's private lives."
+  },
+  "govern": {
+    "definition": "To control a country and make its laws."
+  },
+  "governor": {
+    "definition": "A person who leads a state or an institution."
+  },
+  "gown": {
+    "definition": "A long dress worn on formal occasions."
+  },
+  "grab": {
+    "definition": "To take hold of something suddenly."
+  },
+  "graceful": {
+    "definition": "Moving in a smooth and attractive way."
+  },
+  "graduate": {
+    "definition": "A person who has finished their studies."
+  },
+  "grant": {
+    "definition": "Money given for a purpose, or to allow something."
+  },
+  "graph": {
+    "definition": "A drawing that shows how numbers relate to each other."
+  },
+  "graphic": {
+    "definition": "A drawing or picture, or very clear and vivid."
+  },
+  "graphics": {
+    "definition": "Pictures and designs, especially on a computer."
+  },
+  "grave": {
+    "definition": "A place in the ground where a dead person lies."
+  },
+  "gravy": {
+    "definition": "A thin sauce made from meat juices."
+  },
+  "greeting": {
+    "definition": "Words or actions used when you meet someone."
+  },
+  "grill": {
+    "definition": "The part of a cooker that heats food from above, or to cook this way."
+  },
+  "groom": {
+    "definition": "A man on his wedding day, or to clean an animal."
+  },
+  "group": {
+    "definition": "A number of people or things together."
+  },
+  "grouping": {
+    "definition": "A set of things put together by a shared quality."
+  },
+  "growth": {
+    "definition": "The process of becoming larger."
+  },
+  "guess": {
+    "definition": "To give an answer without being certain."
+  },
+  "guidance": {
+    "definition": "Help and advice about what to do."
+  },
+  "guide": {
+    "definition": "A person who shows the way, or a book with information."
+  },
+  "guilt": {
+    "definition": "The feeling that you have done something wrong."
+  },
+  "guilty": {
+    "definition": "Having done something wrong, or feeling shame about it."
+  },
+  "gym": {
+    "definition": "A place with equipment for exercise, or physical education."
+  },
+  "habitat": {
+    "definition": "The natural home of an animal or plant."
+  },
+  "hammer": {
+    "definition": "A tool with a heavy head for hitting nails."
+  },
+  "handball": {
+    "definition": "A game in which players throw a ball into a goal."
+  },
+  "handle": {
+    "definition": "The part you hold, or to deal with something."
+  },
+  "handy": {
+    "definition": "Useful and easy to use."
+  },
+  "hang": {
+    "definition": "To fix something at the top so it hangs down."
+  },
+  "hanging": {
+    "definition": "Something fixed so it hangs, or the act of killing by rope."
+  },
+  "hardship": {
+    "definition": "A difficult situation with little money or comfort."
+  },
+  "harness": {
+    "definition": "A set of straps for controlling an animal or holding a person."
+  },
+  "hasty": {
+    "definition": "Done too quickly and without care."
+  },
+  "hatch": {
+    "definition": "To break out of an egg, or a small door in a floor."
+  },
+  "hate": {
+    "definition": "A very strong dislike."
+  },
+  "hatred": {
+    "definition": "An extremely strong feeling of dislike."
+  },
+  "haunt": {
+    "definition": "To appear in a place as a ghost, or to worry you for a long time."
+  },
+  "haven": {
+    "definition": "A safe peaceful place."
+  },
+  "hazard": {
+    "definition": "Something that can be dangerous."
+  },
+  "headline": {
+    "definition": "The title printed in large letters above a newspaper story."
+  },
+  "heal": {
+    "definition": "To become healthy again after an injury."
+  },
+  "healing": {
+    "definition": "The process of becoming healthy again."
+  },
+  "hearing": {
+    "definition": "The ability to hear, or an official meeting."
+  },
+  "hearted": {
+    "definition": "Having a certain kind of heart, as in kind-hearted."
+  },
+  "hearty": {
+    "definition": "Loud and full of energy, or a big satisfying meal."
+  },
+  "heat": {
+    "definition": "Warmth, or to make something warm."
+  },
+  "heater": {
+    "definition": "A device that makes a room or water warm."
+  },
+  "heaven": {
+    "definition": "The place where God lives, in many religions."
+  },
+  "heavenly": {
+    "definition": "Coming from heaven, or extremely pleasant."
+  },
+  "heel": {
+    "definition": "The back part of the foot."
+  },
+  "height": {
+    "definition": "How tall something is, or how high it is."
+  },
+  "helmet": {
+    "definition": "A hard hat that protects the head."
+  },
+  "helpless": {
+    "definition": "Unable to do anything to help yourself."
+  },
+  "herd": {
+    "definition": "A large group of animals that live together."
+  },
+  "hesitate": {
+    "definition": "To pause before doing something because you are unsure."
+  },
+  "hidden": {
+    "definition": "Not able to be seen."
+  },
+  "hip": {
+    "definition": "The part of the body where the leg joins the side."
+  },
+  "hire": {
+    "definition": "To pay to use something for a time, or to employ someone."
+  },
+  "historic": {
+    "definition": "Important in history."
+  },
+  "hit": {
+    "definition": "To strike with force, or a great success."
+  },
+  "hiv": {
+    "definition": "A virus that damages the body's ability to fight illness."
+  },
+  "holy": {
+    "definition": "Connected with God or religion."
+  },
+  "homeless": {
+    "definition": "Having no place to live."
+  },
+  "honest": {
+    "definition": "Always telling the truth."
+  },
+  "honesty": {
+    "definition": "The quality of being truthful."
+  },
+  "hop": {
+    "definition": "To jump on one leg."
+  },
+  "hope": {
+    "definition": "To want something and believe it can happen."
+  },
+  "hopeful": {
+    "definition": "Feeling that something good will happen."
+  },
+  "hopeless": {
+    "definition": "With no hope, or very bad."
+  },
+  "horizon": {
+    "definition": "The line where the sky seems to meet the land or sea."
+  },
+  "horn": {
+    "definition": "A hard pointed growth on some animals' heads, or a device that makes a warning sound."
+  },
+  "horrible": {
+    "definition": "Very unpleasant."
+  },
+  "horrify": {
+    "definition": "To shock someone very much."
+  },
+  "hostel": {
+    "definition": "A cheap place where travellers can sleep."
+  },
+  "huge": {
+    "definition": "Extremely large."
+  },
+  "human": {
+    "definition": "A person, or belonging to people."
+  },
+  "humanity": {
+    "definition": "All people together, or kindness towards others."
+  },
+  "humid": {
+    "definition": "Having a lot of water in the air."
+  },
+  "humorous": {
+    "definition": "Funny and amusing."
+  },
+  "hunger": {
+    "definition": "The feeling that you need food."
+  },
+  "hunt": {
+    "definition": "To chase animals to kill them, or to search for something."
+  },
+  "hurt": {
+    "definition": "To cause pain or injury."
+  },
+  "hut": {
+    "definition": "A small simple building."
+  },
   "identity": {},
   "idiom": {},
   "idol": {},
