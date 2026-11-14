@@ -22,7 +22,7 @@
   import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
   import ModelStatus from '#lib/offline/ModelStatus.svelte';
   import { confirmDownload } from '#lib/offline/downloadConsent.svelte.js';
-  import { modelProgressPhase } from '#lib/offline/progressPhase.js';
+  import { loadingPhase, modelProgressPhase } from '#lib/offline/progressPhase.js';
   import { deleteGroup, formatBytes, groupBytes, groupStored, keepStoragePersistent, storageSummary, storedGroupIds, type StoredGroup } from '#lib/offline/storage.js';
   import IconDownload from '~icons/material-symbols/download-rounded';
   import IconDelete from '~icons/material-symbols/delete-rounded';
@@ -288,7 +288,7 @@
               <DownloadProgress progress={download.progress} phase="download" bytesPerSecond={download.bytesPerSecond} />
               <button type="button" class="btn-play btn-play-sm btn-play-soft" onclick={() => cancelModelDownload(model.id)}><IconClose aria-hidden="true" />{m.models_cancel({}, { locale })}</button>
             {:else if state === 'loading'}
-              <DownloadProgress progress={localModel.progress} phase={modelProgressPhase(localModel.text)} bytesPerSecond={localModel.bytesPerSecond} />
+              <DownloadProgress progress={localModel.progress} phase={loadingPhase(localModel.text, Boolean(localModel.downloads[model.id]))} bytesPerSecond={localModel.downloads[model.id] ? localModel.bytesPerSecond : 0} />
             {:else if state === 'loaded' || state === 'downloaded'}
               <span class="model-state">
                 <ModelStatus downloaded inMemory={state === 'loaded'} downloadMB={model.downloadMB} memoryMB={modelGpuMB(model)} hint={false} />

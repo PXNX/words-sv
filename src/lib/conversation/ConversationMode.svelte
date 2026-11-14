@@ -25,7 +25,7 @@
   import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
   import ModelStatus from '#lib/offline/ModelStatus.svelte';
   import { confirmDownload } from '#lib/offline/downloadConsent.svelte.js';
-  import { modelProgressPhase } from '#lib/offline/progressPhase.js';
+  import { loadingPhase, modelProgressPhase } from '#lib/offline/progressPhase.js';
   import { voiceEngines } from '#lib/voice/engines.js';
   import { chatMessages, cleanReply, LEVEL_WORD_SAMPLE, pickTargetWords, usedWords, type Turn } from './conversation.js';
   import { pickPartner, type Partner } from './partners.js';
@@ -466,7 +466,7 @@
       {#if localModel.status === 'unsupported'}
         <p class="talk-hint">{labels.unsupported}</p>
       {:else if localModel.status === 'loading'}
-        <DownloadProgress progress={localModel.progress} phase={modelProgressPhase(localModel.text)} bytesPerSecond={localModel.bytesPerSecond} detail={chosenModel().label} />
+        <DownloadProgress progress={localModel.progress} phase={loadingPhase(localModel.text, Boolean(localModel.downloads[chosenModel().id]))} bytesPerSecond={localModel.downloads[chosenModel().id] ? localModel.bytesPerSecond : 0} detail={chosenModel().label} />
         <p class="talk-hint">{labels.scriptedLoading}</p>
       {:else if localModel.status === 'failed'}
         <p class="talk-error">{labels.failed}</p>

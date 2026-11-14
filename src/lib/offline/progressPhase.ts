@@ -12,6 +12,14 @@ export function modelProgressPhase(text: string): ProgressPhase {
   return 'download';
 }
 
+/**
+ * Phase for a model being loaded: 'load' once its files are on the device and it is only being
+ * read into memory (no download running), else the phase from WebLLM's report.
+ */
+export function loadingPhase(text: string, downloading: boolean): ProgressPhase {
+  return downloading ? modelProgressPhase(text) : 'load';
+}
+
 /** 0..1 clamped, or null for an unknown amount (indeterminate bar). */
 export function clampProgress(value: number | null | undefined): number | null {
   if (value === null || value === undefined || !Number.isFinite(value)) return null;

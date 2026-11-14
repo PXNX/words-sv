@@ -12,7 +12,7 @@
   import ModelStatus from '#lib/offline/ModelStatus.svelte';
   import { confirmDownload } from '#lib/offline/downloadConsent.svelte.js';
   import DownloadProgress from '#lib/offline/DownloadProgress.svelte';
-  import { modelProgressPhase } from '#lib/offline/progressPhase.js';
+  import { loadingPhase } from '#lib/offline/progressPhase.js';
   import { formatBytes } from '#lib/offline/storage.js';
   import AiSwitch from '#lib/conversation/AiSwitch.svelte';
   import { prefersWithoutAi } from '#lib/conversation/aiChoice.svelte.js';
@@ -35,7 +35,7 @@
     <button type="button" class="btn-play btn-play-ink" onclick={() => void download()}><IconDownload aria-hidden="true" />{m.grade_model_download({}, locale)}</button>
     {#if localModel.status === 'failed'}<p class="grader-warn">{m.grade_model_failed({}, locale)}</p>{/if}
   {:else if availability === 'loading'}
-    <DownloadProgress progress={localModel.progress} phase={modelProgressPhase(localModel.text)} bytesPerSecond={localModel.bytesPerSecond} detail={model.label} />
+    <DownloadProgress progress={localModel.progress} phase={loadingPhase(localModel.text, Boolean(localModel.downloads[model.id]))} bytesPerSecond={localModel.downloads[model.id] ? localModel.bytesPerSecond : 0} detail={model.label} />
     <p>{m.grade_model_loading_rules({}, locale)}</p>
   {:else if availability === 'unsupported'}
     <p class="grader-warn">{m.grade_model_unsupported({}, locale)}</p>
