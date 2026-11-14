@@ -3071,255 +3071,753 @@
   "precious": {
     "definition": "Very valuable or loved."
   },
-  "prefix": {},
-  "pregnant": {},
-  "prepared": {},
-  "presence": {},
-  "present": {},
-  "preserve": {},
-  "press": {},
-  "previous": {},
-  "priest": {},
-  "print": {},
-  "prison": {},
-  "prisoner": {},
-  "privacy": {},
-  "prize": {},
-  "proceed": {},
-  "process": {},
-  "proclaim": {},
-  "producer": {},
-  "progress": {},
-  "promise": {},
-  "promote": {},
-  "pronoun": {},
-  "proof": {},
-  "property": {},
-  "proposal": {},
-  "propose": {},
-  "protect": {},
-  "protest": {},
-  "proud": {},
-  "prove": {},
-  "proverb": {},
-  "pub": {},
-  "public": {},
-  "pullover": {},
-  "pump": {},
-  "punish": {},
-  "pupil": {},
-  "puppy": {},
-  "pure": {},
-  "purify": {},
-  "purse": {},
-  "push": {},
-  "puzzle": {},
-  "quake": {},
-  "qualify": {},
-  "quality": {},
-  "quantity": {},
-  "queue": {},
-  "race": {},
-  "racial": {},
-  "rage": {},
-  "rail": {},
-  "railroad": {},
-  "railway": {},
-  "rainfall": {},
-  "rank": {},
-  "rap": {},
-  "rapid": {},
-  "rare": {},
-  "ration": {},
-  "rational": {},
-  "razor": {},
-  "reach": {},
-  "react": {},
-  "reality": {},
-  "rebuild": {},
-  "recall": {},
-  "recite": {},
-  "reclaim": {},
-  "record": {},
-  "recover": {},
-  "recovery": {},
-  "recycled": {},
-  "reduce": {},
-  "reef": {},
-  "referee": {},
-  "refund": {},
-  "refusal": {},
-  "refuse": {},
-  "regain": {},
-  "regard": {},
-  "region": {},
-  "regional": {},
-  "register": {},
-  "reject": {},
-  "relate": {},
-  "relation": {},
-  "relative": {},
-  "relaxing": {},
-  "release": {},
-  "reliable": {},
-  "religion": {},
-  "rely": {},
-  "remark": {},
-  "remedy": {},
-  "remove": {},
-  "renew": {},
-  "repay": {},
-  "reply": {},
-  "report": {},
-  "republic": {},
-  "request": {},
-  "require": {},
-  "rescue": {},
-  "resemble": {},
-  "reserve": {},
-  "resident": {},
-  "resist": {},
-  "resolve": {},
-  "resort": {},
-  "resource": {},
-  "respect": {},
-  "respond": {},
-  "rest": {},
-  "restore": {},
-  "restrict": {},
-  "result": {},
-  "retail": {},
-  "retain": {},
-  "retell": {},
-  "reunify": {},
-  "revise": {},
-  "revision": {},
-  "reward": {},
-  "rewrite": {},
-  "rid": {},
-  "riddle": {},
-  "ripe": {},
-  "rise": {},
-  "risk": {},
-  "roadside": {},
-  "robot": {},
-  "rolling": {},
-  "room": {},
-  "rotten": {},
-  "rough": {},
-  "round": {},
-  "routine": {},
-  "rubber": {},
-  "rubbish": {},
-  "ruin": {},
-  "runaway": {},
-  "runway": {},
-  "rush": {},
-  "sacred": {},
-  "sadness": {},
-  "safari": {},
-  "safety": {},
-  "salesman": {},
-  "salmon": {},
-  "sand": {},
-  "sandal": {},
-  "saucepan": {},
-  "saucer": {},
-  "scan": {},
-  "scare": {},
-  "scared": {},
-  "scary": {},
-  "scatter": {},
-  "scenic": {},
-  "scholar": {},
-  "scold": {},
-  "scope": {},
-  "score": {},
-  "scratch": {},
-  "scream": {},
-  "search": {},
-  "season": {},
-  "seawater": {},
-  "seaweed": {},
-  "secret": {},
-  "secure": {},
-  "security": {},
-  "seize": {},
-  "select": {},
-  "selfish": {},
-  "sequence": {},
-  "series": {},
-  "serious": {},
-  "server": {},
-  "service": {},
-  "session": {},
-  "setting": {},
-  "settle": {},
-  "settler": {},
-  "severe": {},
-  "sex": {},
-  "shadow": {},
-  "shadowy": {},
-  "shake": {},
-  "shallow": {},
-  "shame": {},
-  "shameful": {},
-  "shape": {},
-  "sharp": {},
-  "shave": {},
-  "sheer": {},
-  "sheet": {},
-  "shelter": {},
-  "sheriff": {},
-  "shift": {},
-  "shiny": {},
-  "ship": {},
-  "shiver": {},
-  "shocked": {},
-  "shocking": {},
-  "shop": {},
-  "shopper": {},
-  "shortage": {},
-  "shout": {},
-  "shrimp": {},
-  "shut": {},
-  "sickness": {},
-  "sidewalk": {},
-  "sigh": {},
-  "sign": {},
-  "signal": {},
-  "signpost": {},
-  "silent": {},
-  "silk": {},
-  "simplify": {},
-  "single": {},
-  "sink": {},
-  "skate": {},
-  "skeleton": {},
-  "ski": {},
-  "skin": {},
-  "slavery": {},
-  "sleep": {},
-  "sleeve": {},
-  "slight": {},
-  "slip": {},
-  "slogan": {},
-  "slope": {},
-  "slot": {},
-  "slow": {},
-  "smell": {},
-  "smile": {},
-  "smoker": {},
-  "sneeze": {},
-  "soil": {},
-  "solid": {},
-  "soothe": {},
-  "sore": {},
-  "sorrow": {},
-  "sort": {},
-  "soul": {},
-  "sour": {},
-  "southern": {},
+  "prefix": {
+    "definition": "Letters added to the beginning of a word to change its meaning."
+  },
+  "pregnant": {
+    "definition": "Expecting a baby."
+  },
+  "prepared": {
+    "definition": "Ready for something that may happen."
+  },
+  "presence": {
+    "definition": "The fact of being in a place."
+  },
+  "present": {
+    "definition": "In a place now, or a gift, or to show something formally."
+  },
+  "preserve": {
+    "definition": "To keep something in its original state."
+  },
+  "press": {
+    "definition": "To push something firmly, or newspapers and journalists."
+  },
+  "previous": {
+    "definition": "Coming before the one mentioned now."
+  },
+  "priest": {
+    "definition": "A person who performs religious duties."
+  },
+  "print": {
+    "definition": "To produce words or pictures on paper."
+  },
+  "prison": {
+    "definition": "A building where criminals are kept."
+  },
+  "prisoner": {
+    "definition": "A person kept in prison."
+  },
+  "privacy": {
+    "definition": "The right to keep your personal life secret."
+  },
+  "prize": {
+    "definition": "Something given to the winner of a competition."
+  },
+  "proceed": {
+    "definition": "To continue doing something."
+  },
+  "process": {
+    "definition": "A series of actions done to reach a result."
+  },
+  "proclaim": {
+    "definition": "To announce something publicly."
+  },
+  "producer": {
+    "definition": "A person or company that makes goods or films."
+  },
+  "progress": {
+    "definition": "Movement towards a better state."
+  },
+  "promise": {
+    "definition": "To say that you will certainly do something."
+  },
+  "promote": {
+    "definition": "To move someone to a higher job, or to advertise something."
+  },
+  "pronoun": {
+    "definition": "A word used instead of a noun, such as she or it."
+  },
+  "proof": {
+    "definition": "Evidence that shows something is true."
+  },
+  "property": {
+    "definition": "A building or land that someone owns."
+  },
+  "proposal": {
+    "definition": "A formal plan or suggestion."
+  },
+  "propose": {
+    "definition": "To suggest a plan, or to ask someone to marry you."
+  },
+  "protect": {
+    "definition": "To keep someone or something safe."
+  },
+  "protest": {
+    "definition": "A strong public complaint."
+  },
+  "proud": {
+    "definition": "Feeling pleased about something you or others have done."
+  },
+  "prove": {
+    "definition": "To show that something is true."
+  },
+  "proverb": {
+    "definition": "A short well-known saying with a piece of advice."
+  },
+  "pub": {
+    "definition": "A place where people buy and drink alcohol."
+  },
+  "public": {
+    "definition": "Available for everyone to use or see."
+  },
+  "pullover": {
+    "definition": "A warm top that you pull over your head."
+  },
+  "pump": {
+    "definition": "A machine that moves liquid or air, or to force liquid out."
+  },
+  "punish": {
+    "definition": "To make someone suffer because they did something wrong."
+  },
+  "pupil": {
+    "definition": "A child at school, or the dark centre of the eye."
+  },
+  "puppy": {
+    "definition": "A young dog."
+  },
+  "pure": {
+    "definition": "Not mixed with anything else."
+  },
+  "purify": {
+    "definition": "To remove harmful or dirty things from something."
+  },
+  "purse": {
+    "definition": "A small bag for money."
+  },
+  "push": {
+    "definition": "To press something to move it away from you."
+  },
+  "puzzle": {
+    "definition": "A game or question that needs thinking to solve."
+  },
+  "quake": {
+    "definition": "To shake violently, as the ground does in an earthquake."
+  },
+  "qualify": {
+    "definition": "To reach the standard needed for something."
+  },
+  "quality": {
+    "definition": "How good or bad something is."
+  },
+  "quantity": {
+    "definition": "An amount of something."
+  },
+  "queue": {
+    "definition": "A line of people waiting for their turn."
+  },
+  "race": {
+    "definition": "A competition to see who is fastest."
+  },
+  "racial": {
+    "definition": "Connected with the different groups people belong to by birth."
+  },
+  "rage": {
+    "definition": "Very strong anger."
+  },
+  "rail": {
+    "definition": "One of the metal bars a train runs on."
+  },
+  "railroad": {
+    "definition": "A track with metal rails for trains."
+  },
+  "railway": {
+    "definition": "A system of tracks and trains."
+  },
+  "rainfall": {
+    "definition": "The amount of rain that falls in a place."
+  },
+  "rank": {
+    "definition": "A position in an organization or a list."
+  },
+  "rap": {
+    "definition": "A style of music with spoken rhymes."
+  },
+  "rapid": {
+    "definition": "Happening very quickly."
+  },
+  "rare": {
+    "definition": "Not happening or existing very often."
+  },
+  "ration": {
+    "definition": "A fixed amount of something each person may have."
+  },
+  "rational": {
+    "definition": "Based on reason rather than feeling."
+  },
+  "razor": {
+    "definition": "A sharp tool for cutting hair from the skin."
+  },
+  "reach": {
+    "definition": "To arrive at a place, or to stretch out for something."
+  },
+  "react": {
+    "definition": "To behave in a certain way because of something."
+  },
+  "reality": {
+    "definition": "The way things really are."
+  },
+  "rebuild": {
+    "definition": "To build something again after it was damaged."
+  },
+  "recall": {
+    "definition": "To remember something, or to ask for a product to be returned."
+  },
+  "recite": {
+    "definition": "To say a poem or list aloud from memory."
+  },
+  "reclaim": {
+    "definition": "To get something back that was lost or taken."
+  },
+  "record": {
+    "definition": "A written account of something, or to store sound."
+  },
+  "recover": {
+    "definition": "To become well again, or to get something back."
+  },
+  "recovery": {
+    "definition": "The process of getting better after illness or damage."
+  },
+  "recycled": {
+    "definition": "Used again after being treated."
+  },
+  "reduce": {
+    "definition": "To make something smaller or less."
+  },
+  "reef": {
+    "definition": "A line of rock or coral just below the sea surface."
+  },
+  "referee": {
+    "definition": "The official who makes sure players follow the rules."
+  },
+  "refund": {
+    "definition": "Money given back to you for something you returned."
+  },
+  "refusal": {
+    "definition": "The act of saying no to something."
+  },
+  "refuse": {
+    "definition": "To say that you will not do or accept something."
+  },
+  "regain": {
+    "definition": "To get something back again."
+  },
+  "regard": {
+    "definition": "To think of someone in a particular way."
+  },
+  "region": {
+    "definition": "A large area of a country or the world."
+  },
+  "regional": {
+    "definition": "Connected with one particular area."
+  },
+  "register": {
+    "definition": "An official list, or to put your name on one."
+  },
+  "reject": {
+    "definition": "To refuse to accept something or someone."
+  },
+  "relate": {
+    "definition": "To show or see a connection between things."
+  },
+  "relation": {
+    "definition": "The way two things are connected, or a family member."
+  },
+  "relative": {
+    "definition": "A member of your family."
+  },
+  "relaxing": {
+    "definition": "Making you feel calm and free from worry."
+  },
+  "release": {
+    "definition": "To let someone or something go free, or to make available."
+  },
+  "reliable": {
+    "definition": "Able to be trusted to work well."
+  },
+  "religion": {
+    "definition": "Belief in and worship of a god or gods."
+  },
+  "rely": {
+    "definition": "To depend on someone or something."
+  },
+  "remark": {
+    "definition": "Something you say, or to say something."
+  },
+  "remedy": {
+    "definition": "A way of solving a problem or curing an illness."
+  },
+  "remove": {
+    "definition": "To take something away from a place."
+  },
+  "renew": {
+    "definition": "To make something valid for longer, or to begin again."
+  },
+  "repay": {
+    "definition": "To pay money back to someone."
+  },
+  "reply": {
+    "definition": "To answer someone."
+  },
+  "report": {
+    "definition": "A written or spoken account of something."
+  },
+  "republic": {
+    "definition": "A country ruled by an elected government, not a king."
+  },
+  "request": {
+    "definition": "A polite or formal ask for something."
+  },
+  "require": {
+    "definition": "To need something, or to demand it officially."
+  },
+  "rescue": {
+    "definition": "To save someone from danger."
+  },
+  "resemble": {
+    "definition": "To look like someone or something else."
+  },
+  "reserve": {
+    "definition": "To keep something for future use, or to book a seat."
+  },
+  "resident": {
+    "definition": "A person who lives in a place."
+  },
+  "resist": {
+    "definition": "To try to stop something happening, or to fight back."
+  },
+  "resolve": {
+    "definition": "To find an answer to a problem."
+  },
+  "resort": {
+    "definition": "A place people go on holiday, or to do something as a last choice."
+  },
+  "resource": {
+    "definition": "Something useful you can use, such as money or materials."
+  },
+  "respect": {
+    "definition": "Admiration for someone, or to treat them politely."
+  },
+  "respond": {
+    "definition": "To answer or react to something."
+  },
+  "rest": {
+    "definition": "To stop working for a while, or the part that is left."
+  },
+  "restore": {
+    "definition": "To bring something back to its earlier good state."
+  },
+  "restrict": {
+    "definition": "To keep something within limits."
+  },
+  "result": {
+    "definition": "Something that happens because of something else."
+  },
+  "retail": {
+    "definition": "The sale of goods to the public in shops."
+  },
+  "retain": {
+    "definition": "To keep something or continue to have it."
+  },
+  "retell": {
+    "definition": "To tell a story again in your own words."
+  },
+  "reunify": {
+    "definition": "To bring parts of a country together again."
+  },
+  "revise": {
+    "definition": "To change something after studying it again."
+  },
+  "revision": {
+    "definition": "The act of studying again or changing something."
+  },
+  "reward": {
+    "definition": "Something good given for your effort or help."
+  },
+  "rewrite": {
+    "definition": "To write something again in a different way."
+  },
+  "rid": {
+    "definition": "To remove something unwanted."
+  },
+  "riddle": {
+    "definition": "A difficult question with a clever answer."
+  },
+  "ripe": {
+    "definition": "Ready to be eaten, as of fruit."
+  },
+  "rise": {
+    "definition": "To go up, or an increase."
+  },
+  "risk": {
+    "definition": "The chance that something bad may happen."
+  },
+  "roadside": {
+    "definition": "The land beside a road."
+  },
+  "robot": {
+    "definition": "A machine that can do jobs on its own."
+  },
+  "rolling": {
+    "definition": "Moving along by turning over and over."
+  },
+  "room": {
+    "definition": "A part of a building with walls, or space for something."
+  },
+  "rotten": {
+    "definition": "Decayed and no longer good to eat."
+  },
+  "rough": {
+    "definition": "Not smooth, or not gentle."
+  },
+  "round": {
+    "definition": "Shaped like a circle or a ball."
+  },
+  "routine": {
+    "definition": "The usual order in which you do things."
+  },
+  "rubber": {
+    "definition": "A soft elastic material, or a small piece used to remove pencil marks."
+  },
+  "rubbish": {
+    "definition": "Things that are thrown away, or something of poor quality."
+  },
+  "ruin": {
+    "definition": "To damage something completely."
+  },
+  "runaway": {
+    "definition": "Someone who has run away, or out of control."
+  },
+  "runway": {
+    "definition": "The long strip where planes take off and land."
+  },
+  "rush": {
+    "definition": "To move or do something very quickly."
+  },
+  "sacred": {
+    "definition": "Holy and deserving great respect."
+  },
+  "sadness": {
+    "definition": "The feeling of being unhappy."
+  },
+  "safari": {
+    "definition": "A trip to watch wild animals, especially in Africa."
+  },
+  "safety": {
+    "definition": "The state of being protected from danger."
+  },
+  "salesman": {
+    "definition": "A man whose job is selling things."
+  },
+  "salmon": {
+    "definition": "A large fish with pink flesh that swims up rivers."
+  },
+  "sand": {
+    "definition": "Tiny grains of rock found on beaches and in deserts."
+  },
+  "sandal": {
+    "definition": "A light open shoe held on by straps."
+  },
+  "saucepan": {
+    "definition": "A deep round pot with a handle for cooking."
+  },
+  "saucer": {
+    "definition": "A small plate that a cup stands on."
+  },
+  "scan": {
+    "definition": "To look over something quickly, or to copy a picture electronically."
+  },
+  "scare": {
+    "definition": "To make someone feel afraid."
+  },
+  "scared": {
+    "definition": "Frightened."
+  },
+  "scary": {
+    "definition": "Making you feel frightened."
+  },
+  "scatter": {
+    "definition": "To throw things over a wide area."
+  },
+  "scenic": {
+    "definition": "Having beautiful natural views."
+  },
+  "scholar": {
+    "definition": "A person who studies a subject deeply."
+  },
+  "scold": {
+    "definition": "To speak angrily to someone who did something wrong."
+  },
+  "scope": {
+    "definition": "The range of things a subject or plan covers."
+  },
+  "score": {
+    "definition": "The number of points in a game, or to win a point."
+  },
+  "scratch": {
+    "definition": "To mark a surface with something sharp."
+  },
+  "scream": {
+    "definition": "To give a loud high cry of fear or pain."
+  },
+  "search": {
+    "definition": "To look carefully for something."
+  },
+  "season": {
+    "definition": "One of the four parts of the year."
+  },
+  "seawater": {
+    "definition": "The salty water of the sea."
+  },
+  "seaweed": {
+    "definition": "A plant that grows in the sea."
+  },
+  "secret": {
+    "definition": "Something you do not tell other people."
+  },
+  "secure": {
+    "definition": "Safe and protected, or firmly fixed."
+  },
+  "security": {
+    "definition": "Protection from danger or crime."
+  },
+  "seize": {
+    "definition": "To take hold of something suddenly and firmly."
+  },
+  "select": {
+    "definition": "To choose something carefully."
+  },
+  "selfish": {
+    "definition": "Caring only about yourself."
+  },
+  "sequence": {
+    "definition": "A set of things in a particular order."
+  },
+  "series": {
+    "definition": "A number of similar things one after another."
+  },
+  "serious": {
+    "definition": "Important or severe, or not joking."
+  },
+  "server": {
+    "definition": "A computer that supplies data to others, or a person who serves food."
+  },
+  "service": {
+    "definition": "Work done for customers, or a system that helps the public."
+  },
+  "session": {
+    "definition": "A period of time used for one activity."
+  },
+  "setting": {
+    "definition": "The place and time where a story happens."
+  },
+  "settle": {
+    "definition": "To end an argument, or to go and live somewhere."
+  },
+  "settler": {
+    "definition": "A person who moves to a new area to live there."
+  },
+  "severe": {
+    "definition": "Very bad or harsh."
+  },
+  "sex": {
+    "definition": "Being male or female, or physical activity between lovers."
+  },
+  "shadow": {
+    "definition": "A dark shape made when something blocks the light."
+  },
+  "shadowy": {
+    "definition": "Dark because of shadows."
+  },
+  "shake": {
+    "definition": "To move quickly from side to side."
+  },
+  "shallow": {
+    "definition": "Not deep."
+  },
+  "shame": {
+    "definition": "The bad feeling you have when you did something wrong."
+  },
+  "shameful": {
+    "definition": "So bad that it makes you feel shame."
+  },
+  "shape": {
+    "definition": "The outer form of something."
+  },
+  "sharp": {
+    "definition": "Having a fine edge that cuts easily."
+  },
+  "shave": {
+    "definition": "To cut hair from your face or body."
+  },
+  "sheer": {
+    "definition": "Complete, or very steep."
+  },
+  "sheet": {
+    "definition": "A large flat piece of cloth for a bed, or a piece of paper."
+  },
+  "shelter": {
+    "definition": "A place that protects you from weather or danger."
+  },
+  "sheriff": {
+    "definition": "An official who keeps law and order in an area."
+  },
+  "shift": {
+    "definition": "A period of work, or to move something slightly."
+  },
+  "shiny": {
+    "definition": "Bright because it reflects light."
+  },
+  "ship": {
+    "definition": "A large boat that carries people or goods at sea."
+  },
+  "shiver": {
+    "definition": "To shake slightly because you are cold or afraid."
+  },
+  "shocked": {
+    "definition": "Very surprised and upset."
+  },
+  "shocking": {
+    "definition": "Very surprising in an unpleasant way."
+  },
+  "shop": {
+    "definition": "A place where goods are sold, or to buy things."
+  },
+  "shopper": {
+    "definition": "A person who is buying things."
+  },
+  "shortage": {
+    "definition": "A time when there is not enough of something."
+  },
+  "shout": {
+    "definition": "To say something very loudly."
+  },
+  "shrimp": {
+    "definition": "A small sea animal with a soft shell, eaten as food."
+  },
+  "shut": {
+    "definition": "To close something."
+  },
+  "sickness": {
+    "definition": "The state of being ill, or the urge to vomit."
+  },
+  "sidewalk": {
+    "definition": "A path beside a road for people to walk on."
+  },
+  "sigh": {
+    "definition": "To breathe out slowly to show you are tired or relieved."
+  },
+  "sign": {
+    "definition": "A notice giving information, or to write your name."
+  },
+  "signal": {
+    "definition": "A sound or movement that gives a message."
+  },
+  "signpost": {
+    "definition": "A sign at a road junction showing directions."
+  },
+  "silent": {
+    "definition": "Making no sound."
+  },
+  "silk": {
+    "definition": "A fine smooth cloth made by an insect."
+  },
+  "simplify": {
+    "definition": "To make something easier to understand."
+  },
+  "single": {
+    "definition": "Only one, or not married."
+  },
+  "sink": {
+    "definition": "A basin with taps, or to go under water."
+  },
+  "skate": {
+    "definition": "To move on ice wearing blades, or to ride on wheels."
+  },
+  "skeleton": {
+    "definition": "The bones that support a body."
+  },
+  "ski": {
+    "definition": "To move over snow on long narrow boards."
+  },
+  "skin": {
+    "definition": "The outer covering of a body."
+  },
+  "slavery": {
+    "definition": "The system of owning people as property."
+  },
+  "sleep": {
+    "definition": "To rest with your eyes closed and mind not active."
+  },
+  "sleeve": {
+    "definition": "The part of a piece of clothing that covers your arm."
+  },
+  "slight": {
+    "definition": "Small in amount or degree."
+  },
+  "slip": {
+    "definition": "To slide by accident and lose your balance."
+  },
+  "slogan": {
+    "definition": "A short phrase used in advertising."
+  },
+  "slope": {
+    "definition": "A surface that is higher at one end."
+  },
+  "slot": {
+    "definition": "A narrow opening to put something into."
+  },
+  "slow": {
+    "definition": "Not moving or happening quickly."
+  },
+  "smell": {
+    "definition": "To notice something with your nose, or the quality you notice."
+  },
+  "smile": {
+    "definition": "To turn your mouth up to show you are happy."
+  },
+  "smoker": {
+    "definition": "A person who smokes tobacco."
+  },
+  "sneeze": {
+    "definition": "To blow air out of your nose suddenly and noisily."
+  },
+  "soil": {
+    "definition": "The top layer of earth where plants grow."
+  },
+  "solid": {
+    "definition": "Hard and firm, not liquid or gas."
+  },
+  "soothe": {
+    "definition": "To make someone calmer or pain less severe."
+  },
+  "sore": {
+    "definition": "Painful when touched."
+  },
+  "sorrow": {
+    "definition": "A deep feeling of sadness."
+  },
+  "sort": {
+    "definition": "A type of thing, or to arrange things in groups."
+  },
+  "soul": {
+    "definition": "The part of a person that many believe lives after death."
+  },
+  "sour": {
+    "definition": "Having a sharp taste, like a lemon."
+  },
+  "southern": {
+    "definition": "In or from the south."
+  },
   "souvenir": {},
   "sparkle": {},
   "speed": {},
