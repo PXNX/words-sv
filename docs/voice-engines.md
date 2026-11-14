@@ -89,6 +89,22 @@ non-commercial licence, so it cannot be reused. Stored `voxcpm` settings now use
 - **Chatterbox** (`onnx-community/chatterbox-ONNX`, MIT): transformers.js supports it, but there is
   no official browser demo, it needs about 1.4 GB, and voices are cloned from reference audio, of
   which it ships one; the multilingual build has no transformers.js config.
+- **Fluid Speech Pro** (`FluidVoice-Labs/fluid-speech-pro`, CC BY 4.0, 0.63B, 25 European languages):
+  speech-to-text, and the app has no feature that transcribes speech. The Transformers weights need
+  Transformers 5.22 or newer (the app runs transformers.js 4.3.2); the ONNX build
+  (`FluidVoice-Labs/fluid-speech-pro-onnx`, 801 MB int8) targets onnx-asr and sherpa-onnx, Python and
+  C++ runtimes with their own graph layout, not onnxruntime-web, and there is no browser example.
+- **Haru-4B** (`higurashi-ai/Haru-4B`, Apache 2.0, 5B in bfloat16): not a voice engine but a
+  full-duplex spoken-dialogue model that listens and speaks in 133 ms frames over a Qwen3.5-4B
+  backbone with a VibeVoice codec and a MeanFlow audio head. PyTorch or MLX on a 12 GB GPU, a
+  character card and a reference clip; no WebLLM build for the conversation models, no browser
+  runtime, and as a research base model it does not answer like an assistant.
+- **IndexTTS-2.5** (`IndexTeam/IndexTTS-2.5`, bilibili-model-license, ~0.8B GPT backbone, 5.5 GB of
+  PyTorch weights, zh/en/ja/es/ar): zero-shot voice cloning, so no named voices for the cast to pick,
+  and of the app's languages only English and Spanish overlap. Inference needs the `index-tts` Python
+  package, an NVIDIA GPU and four auxiliary models fetched outside the repo; there is no ONNX export
+  and no browser example. The bilibili licence is a click-through agreement under Chinese law that
+  also forbids using the model to improve other AI models.
 - **Qwen3-TTS, Orpheus, CosyVoice and other large models** with WebGPU builds under
   `danyalmalik/*-ONNX-WebGPU`: made for Quick Inference's patched runtime, as VoxCPM was.
 - **OmniVoice** (`Gigsu/vocoloco-onnx`): the browser weights are licensed CC-BY-NC (non-commercial),
