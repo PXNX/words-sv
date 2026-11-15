@@ -45,9 +45,24 @@ async def forward_start(payload: str, user_id: int, chat_id: int, client: httpx.
     return body.get("result") if body else None
 
 
+def _cut(value: str | None, units: int) -> str:
+    """The start of `value` within `units` UTF-16 code units, which is how the server measures length.
+
+    A plain slice counts code points, so a name of emoji passed the cut here and was then rejected.
+    """
+    kept: list[str] = []
+    used = 0
+    for char in value or "":
+        used += 2 if ord(char) > 0xFFFF else 1
+        if used > units:
+            break
+        kept.append(char)
+    return "".join(kept)
+
+
 async def open_game(game: str, user_id: int, first_name: str, chat_id: int | None, message_id: int | None, inline_message_id: str | None, client: httpx.AsyncClient | None = None) -> str | None:
     """The page a Play press opens (with its game session), or None when the server is not reachable."""
-    data = {"game": game, "userId": user_id, "firstName": (first_name or "")[:64]}
+    data = {"game": game, "userId": user_id, "firstName": _cut(first_name, 64)}
     if inline_message_id:
         data["inlineMessageId"] = inline_message_id
     else:
@@ -75,5 +90,5 @@ async def record_purchase(payload: str, currency: str, amount: int, user_id: int
 
 async def scribble_guess(chat_id: int, reply_to: int, user_id: int, first_name: str, text: str, client: httpx.AsyncClient | None = None) -> str | None:
     """A Scribble guess replied in the chat: "right", "close", "wrong" or "none" (not a running round), None when unreachable."""
-    body = await post("/api/telegram/scribble", {"chatId": chat_id, "replyTo": reply_to, "userId": user_id, "firstName": (first_name or "")[:64], "text": (text or "")[:200]}, client)
+    body = await post("/api/telegram/scribble", {"chatId": chat_id, "replyTo": reply_to, "userId": user_id, "firstName": _cut(first_name, 64), "text": _cut(text, 200)}, client)
     return body.get("result") if body else None

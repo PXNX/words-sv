@@ -23,6 +23,14 @@ def _lang(update: Update) -> str:
     return lang_of(update.effective_user.language_code if update.effective_user else None)
 
 
+def _app_button(update: Update, label: str, url: str) -> InlineKeyboardButton:
+    """Opens the app inside Telegram in a private chat; groups only allow a plain link button."""
+    chat = update.effective_chat
+    if chat and chat.type != "private":
+        return InlineKeyboardButton(label, url=url)
+    return InlineKeyboardButton(label, web_app=WebAppInfo(url))
+
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # t.me/word_circle_bot?start=donate jumps straight to the tiers, e.g. from the WordCircle app.
     if context.args and context.args[0] == "donate":
@@ -37,12 +45,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # One-time links from the app: sign-in, reminders, invites.
     if context.args and is_bridge_payload(context.args[0]) and update.effective_user and update.effective_chat:
         result = await forward_start(context.args[0], update.effective_user.id, update.effective_chat.id)
-        button = InlineKeyboardMarkup([[InlineKeyboardButton(t(lang, "open_app"), web_app=WebAppInfo(WORDS_URL))]])
+        button = InlineKeyboardMarkup([[_app_button(update, t(lang, "open_app"), WORDS_URL)]])
         await update.message.reply_text(t(lang, f"bridge_{result}" if result in BRIDGE_RESULTS else "bridge_failed"), reply_markup=button)
         return
-    rows = [[InlineKeyboardButton(t(lang, "open_app"), web_app=WebAppInfo(WORDS_URL))]]
+    rows = [[_app_button(update, t(lang, "open_app"), WORDS_URL)]]
     if MINIAPP_URL:
-        rows.append([InlineKeyboardButton(t(lang, "open_donate_app"), web_app=WebAppInfo(MINIAPP_URL))])
+        rows.append([_app_button(update, t(lang, "open_donate_app"), MINIAPP_URL)])
     await update.message.reply_text(t(lang, "start"), parse_mode=ParseMode.HTML, reply_markup=InlineKeyboardMarkup(rows), disable_web_page_preview=True)
 
 
