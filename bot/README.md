@@ -13,15 +13,18 @@ Telegram bot [@word_circle_bot](https://t.me/word_circle_bot) for the WordCircle
 - Forwards the app's one-time `/start` links (`l_…` sign-in, `r_…` reminders, `i_…` invites) to
   WordCircle's `/api/telegram/start` and replies with the result. Needs `TELEGRAM_BRIDGE_SECRET`, the
   same value the app's server has.
-- In groups: `/games` posts a WordCircle game (Wordle, Hangman, Word quiz) through Telegram's gaming
-  platform, `/top` shows the group's scoreboards. Play opens the mode with a session from WordCircle's
-  server, which puts every finished round on the group's board (`setGameScore`). Each game has to be
-  created once with @BotFather (`/newgame`) under its short name: `wordle`, `hangman`, `vocab`, `scribble`.
-- Scribble (`/scribble`, or the button under `/games`): players take turns drawing a word in WordCircle,
-  live: whoever presses Play watches the drawing appear and guesses there, or replies to the bot's "now
-  drawing" message in the chat. The faster the right guess, the more points for guesser and drawer; after five
-  rounds the bot posts the standings and the winner. The rounds run in WordCircle's server
-  (`server/_lib/scribbleGame.ts`); the bot only forwards guesses replied in the chat.
+- In groups the bot only posts Telegram game messages (picture, Play button, the group's scoreboard),
+  never other messages: `/games` posts all games (Wordle, Hangman, Word quiz, Scribble), `/games <id>`
+  or `/scribble` one of them, and typing `@word_circle_bot` in any chat offers them as inline game results.
+  `/top` shows the group's scoreboards. Play opens the mode with a session from WordCircle's server,
+  which puts every finished round on the game message's board (`setGameScore`). Each game has to be
+  created once with @BotFather (`/newgame`) under its short name: `wordle`, `hangman`, `vocab`, `scribble`
+  (a 640×360 picture each: `static/telegram/game-<id>-640.png`). A game not created yet is left out
+  (and logged) until it is.
+- Scribble: players take turns drawing a word in WordCircle, live. Whoever presses Play watches the
+  drawing appear and guesses on that page; guesses show as speech bubbles over the players' faces. The
+  faster the right guess, the more points for guesser and drawer; after five rounds the page shows the
+  winner. The rounds run in WordCircle's server (`server/_lib/scribbleGame.ts`); nothing goes to the chat.
 - `/version` shows the WordCircle version (from the repository's `package.json`, or `APP_VERSION`
   when only `bot/` is deployed) with a link to its changelog entry.
 - `/set_cmd` (admins only) sets the profile photo (`bot/res/img/profile.jpg`), name, description and short description in German and English.

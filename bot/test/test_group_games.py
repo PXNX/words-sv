@@ -2,6 +2,8 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "bot"))
 
 from games import GAMES, find_game, format_top, game_name
@@ -26,24 +28,54 @@ def test_format_top_with_medals_and_escaping():
 
 
 def test_texts_in_both_languages():
-    for key in ("games_menu", "games_only_groups", "games_unavailable", "games_not_registered", "games_show", "games_pick_group", "games_play", "games_scribble_button", "games_no_scores", "games_welcome"):
+    for key in ("games_only_groups", "games_unavailable", "games_pick_group", "games_no_scores"):
         assert key in TEXTS["de"] and key in TEXTS["en"]
 
 
 def test_matching_games():
     from games import matching_games
-    assert [g["id"] for g in matching_games("", "en")] == ["wordle", "hangman", "vocab"]
-    assert [g["id"] for g in matching_games("games", "de")] == ["wordle", "hangman", "vocab"]
+    assert [g["id"] for g in matching_games("", "en")] == ["wordle", "hangman", "vocab", "scribble"]
+    assert [g["id"] for g in matching_games("games", "de")] == ["wordle", "hangman", "vocab", "scribble"]
     assert [g["id"] for g in matching_games("galgen", "de")] == ["hangman"]
     assert [g["id"] for g in matching_games("quiz", "en")] == ["vocab"]
     assert matching_games("chess", "en") == []
 
 
-def test_article_results_carry_logo_name_and_play_link():
-    from group_games import article_results
-    from games import GAMES
-    results = article_results([game for game in GAMES if game["id"] != "scribble"], "de")
-    assert [r.title for r in results] == ["Wordle", "Galgenmännchen", "Wortquiz"]
-    assert results[0].thumbnail_url.endswith("/telegram/game-wordle.png")
-    assert results[1].reply_markup.inline_keyboard[0][0].url.endswith("/hangman")
-    assert all(r.description for r in results)
+class FakeInlineQuery:
+    """Refuses any answer that contains a game Telegram does not know, like answerInlineQuery does."""
+
+    def __init__(self, registered):
+        self.registered = set(registered)
+        self.query = ""
+        self.from_user = SimpleNamespace(language_code="en")
+        self.answered = None
+        self.tries = 0
+
+    async def answer(self, results, cache_time=0):
+        from telegram.error import BadRequest
+        self.tries += 1
+        if any(result.game_short_name not in self.registered for result in results):
+            raise BadRequest("Game_invalid")
+        self.answered = [result.game_short_name for result in results]
+
+
+@pytest.mark.asyncio
+async def test_inline_offers_only_real_games_and_remembers_missing_ones():
+    from group_games import inline_games
+    context = SimpleNamespace(bot_data={})
+    query = FakeInlineQuery(["wordle", "hangman", "scribble"])
+    await inline_games(SimpleNamespace(inline_query=query), context)
+    assert query.answered == ["wordle", "hangman", "scribble"]
+    assert set(context.bot_data["missing_games"]) == {"vocab"}
+    # The next query goes through at once, without the missing game.
+    again = FakeInlineQuery(["wordle", "hangman", "scribble"])
+    await inline_games(SimpleNamespace(inline_query=again), context)
+    assert again.answered == ["wordle", "hangman", "scribble"] and again.tries == 1
+
+
+@pytest.mark.asyncio
+async def test_inline_with_no_registered_game_answers_empty():
+    from group_games import inline_games
+    query = FakeInlineQuery([])
+    await inline_games(SimpleNamespace(inline_query=query), SimpleNamespace(bot_data={}))
+    assert query.answered == []

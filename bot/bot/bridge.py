@@ -87,8 +87,3 @@ async def record_purchase(payload: str, currency: str, amount: int, user_id: int
     )
     return bool(body and body.get("problem") is None)
 
-
-async def scribble_guess(chat_id: int, reply_to: int, user_id: int, first_name: str, text: str, client: httpx.AsyncClient | None = None) -> str | None:
-    """A Scribble guess replied in the chat: "right", "close", "wrong" or "none" (not a running round), None when unreachable."""
-    body = await post("/api/telegram/scribble", {"chatId": chat_id, "replyTo": reply_to, "userId": user_id, "firstName": _cut(first_name, 64), "text": _cut(text, 200)}, client)
-    return body.get("result") if body else None
