@@ -150,6 +150,8 @@
   let repairCount = $state(0);
   let repairDone = $state(false);
   let repairAvailable = $state(false);
+  // The length of the streak that can be brought back (not the best one ever).
+  let repairLength = $state(0);
   const dueMode = $derived(page.url.searchParams.get('due') === '1');
   const currentWord = $derived(queue[position] ?? '');
   const currentDefinition = $derived(definitions[currentWord] ?? '');
@@ -425,7 +427,9 @@
   }
 
   onMount(() => {
-    repairAvailable = repairMode && Boolean(settings.repairCandidate());
+    const candidate = repairMode ? settings.repairCandidate() : null;
+    repairAvailable = Boolean(candidate);
+    repairLength = candidate?.streakCount ?? 0;
     speechSupported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
     if (!speechSupported) {
       if (!naturalMode) speechStatus = labels.speechUnavailable;
@@ -483,7 +487,7 @@
     <div class="w-[min(100%,28rem)] grid gap-[.3rem] px-[.9rem] py-[.65rem] panel-play text-center" aria-live="polite">
       <p class="m-0 text-accent text-[.8125rem] font-black tracking-[.12em] uppercase">{labels.repairTitle}</p>
       {#if repairAvailable}
-        <p class="m-0 text-base-content/70 text-[.875rem] font-bold leading-[1.4]">{labels.repairHint(settings.streak.bestStreak, REPAIR_WORDS)}</p>
+        <p class="m-0 text-base-content/70 text-[.875rem] font-bold leading-[1.4]">{labels.repairHint(repairLength, REPAIR_WORDS)}</p>
         <p class="m-0 text-base-content text-[.9rem] font-extrabold tabular-nums">{labels.repairProgress(repairCount, REPAIR_WORDS)}</p>
       {:else}
         <p class="m-0 text-base-content/60 text-[.875rem] font-bold">{labels.repairNone}</p>
