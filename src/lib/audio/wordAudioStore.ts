@@ -34,7 +34,16 @@ function openDatabase(): Promise<IDBDatabase | null> {
 			const database = request.result;
 			if (!database.objectStoreNames.contains(STORE)) database.createObjectStore(STORE);
 		};
-		request.onsuccess = () => resolve(request.result);
+		request.onsuccess = () => {
+			const database = request.result;
+			// Deleting the word audio in the settings needs every connection closed; holding this one
+			// open would block the delete until the tab is closed. The next read simply opens it again.
+			database.onversionchange = () => {
+				database.close();
+				opening = null;
+			};
+			resolve(database);
+		};
 		request.onerror = () => resolve(null);
 		request.onblocked = () => resolve(null);
 	});
