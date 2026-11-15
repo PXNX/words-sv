@@ -52,6 +52,16 @@ async function cacheFile(cache: Cache, file: string): Promise<number> {
 	return bytes;
 }
 
+// Keeps a page fetched from the network only when it belongs to this build. While a newer
+// deployment's worker is still installing (or failed to), the network already answers with its
+// HTML; stored here, it would open offline pointing at scripts this cache does not hold.
+async function storeOwnPage(cache: Cache, key: string, response: Response) {
+	const html = await response.text();
+	const scripts = html.match(/\/_app\/immutable\/[^"'\s)]+/gu) ?? [];
+	if (!scripts.length || !scripts.every((path) => precached.has(path) || onDemandPaths.has(path))) return;
+	await cache.put(key, new Response(html, { status: response.status, statusText: response.statusText, headers: response.headers }));
+}
+
 self.addEventListener('install', (event) => {
 	event.waitUntil(
 		(async () => {
@@ -117,7 +127,7 @@ self.addEventListener('fetch', (event) => {
 				// for next time.
 				const cached = await cache.match(pageKey(url.pathname)) ?? await cache.match(SHELL);
 				const network = fetch(request).then((response) => {
-					if (response.ok) void cache.put(pageKey(url.pathname), response.clone()).catch(() => undefined);
+					if (response.ok) void storeOwnPage(cache, pageKey(url.pathname), response.clone()).catch(() => undefined);
 					return response;
 				});
 				if (!cached) return network;
