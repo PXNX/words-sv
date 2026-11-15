@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { avatarAllowed, cosmeticModeIds, cosmetics, earnedAchievementRewards, earnedLanguageRewards, LANGUAGE_REWARD_TARGET, lockedIn, nextHangmanRun, nextRun, parseUnlocked, rewardFor, rewardIds } from '../src/lib/profile/cosmetics.js';
-import { avatarChoices, defaultAvatar } from '../src/lib/profile/avatar.js';
+import { avatarChoices, defaultAvatar, seededAvatar } from '../src/lib/profile/avatar.js';
 import { buildAchievements } from '../src/lib/progress/achievements.js';
 
 describe('cosmetic rewards', () => {
@@ -102,5 +102,15 @@ describe('invite reward', async () => {
     expect(earnedInviteRewards(INVITE_REWARD_TARGET, [])).toEqual(['invite_ten']);
     expect(earnedInviteRewards(25, ['invite_ten'])).toEqual([]);
     expect(cosmetics.invite_ten).toMatchObject({ part: 'top', choice: '#2aabee' });
+  });
+});
+
+describe('seeded avatars for other players', () => {
+  it('gives the same free character for the same seed', () => {
+    expect(seededAvatar(123456)).toEqual(seededAvatar(123456));
+    for (const seed of [1, 42, 99999, 4294967295]) {
+      const avatar = seededAvatar(seed);
+      for (const [part, choice] of Object.entries(avatar)) expect(lockedIn(part as keyof typeof avatarChoices, String(choice), [])).toBe(false);
+    }
   });
 });

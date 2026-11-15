@@ -54,6 +54,27 @@ export function randomAvatar(unlocked: readonly RewardId[] = []): Avatar {
   };
 }
 
+// A fixed character for a seed (another player who never made an avatar): basic choices only.
+export function seededAvatar(seed: number): Avatar {
+  let state = Math.abs(Math.trunc(seed)) % 2147483647 || 1;
+  const next = <T>(items: readonly T[], part: AvatarPart): T => {
+    const open = items.filter((item) => !lockedIn(part, String(item), []));
+    state = (state * 48271) % 2147483647;
+    return open[state % open.length]!;
+  };
+  return {
+    skin: next(avatarChoices.skin, 'skin'),
+    face: next(avatarChoices.face, 'face'),
+    eyes: next(avatarChoices.eyes, 'eyes'),
+    nose: next(avatarChoices.nose, 'nose'),
+    hairStyle: next(avatarChoices.hairStyle, 'hairStyle'),
+    hair: next(avatarChoices.hair, 'hair'),
+    shirt: next(avatarChoices.shirt, 'shirt'),
+    top: next(avatarChoices.top, 'top'),
+    extra: 'none'
+  };
+}
+
 // Whatever was stored, only known choices come back; anything unknown falls back to the default.
 export function parseAvatar(raw: string | null): Avatar | null {
   if (!raw) return null;
