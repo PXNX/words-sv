@@ -12,7 +12,7 @@
   import { readReviewLedger, type ReviewLedger } from '#lib/review/ledger.js';
   import { activityFor, readActivity, type ActivityEvent } from '#lib/progress/activity.js';
   import { buildWeeklyRecap, weekStartTimestamp } from '#lib/progress/weeklyRecap.js';
-  import { buildAchievements, unlockedCount, type AchievementId } from '#lib/progress/achievements.js';
+  import { buildAchievements, readEarnedAchievements, unlockedCount, type AchievementId } from '#lib/progress/achievements.js';
   import IconCheck from '~icons/material-symbols/check-circle-rounded';
   import IconFlame from '~icons/material-symbols/local-fire-department-rounded';
   import IconEdit from '~icons/material-symbols/edit-rounded';
@@ -157,7 +157,8 @@
     activity,
     bestStreak: settings.streak.bestStreak,
     masteredWords,
-    scribbleWins: readScribbleWins()
+    scribbleWins: readScribbleWins(),
+    earned: readEarnedAchievements()
   }));
   const unlocked = $derived(unlockedCount(achievements));
   // The week as bars (minutes per day) and the modes played most this week.

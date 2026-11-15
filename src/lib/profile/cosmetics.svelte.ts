@@ -7,7 +7,7 @@
 import { readScribbleWins } from '#lib/scribble/scribbleWins.js';
 import type { AvatarPart } from './avatar.js';
 import { COSMETICS_KEY, earnedAchievementRewards, earnedInviteRewards, earnedLanguageRewards, lockedIn, nextHangmanRun, nextRun, parseUnlocked, type CosmeticMode, type RewardId } from './cosmetics.js';
-import { buildAchievements } from '#lib/progress/achievements.js';
+import { buildAchievements, readEarnedAchievements, rememberEarnedAchievements } from '#lib/progress/achievements.js';
 import { readActivity } from '#lib/progress/activity.js';
 import type { Language } from '#lib/data/vocabulary.js';
 
@@ -68,7 +68,8 @@ export function recordHangmanResult(won: boolean): void {
  * mode updates the streak), and on the progress page with the full count of mastered words.
  */
 export function checkAchievementRewards({ bestStreak, masteredWords }: { bestStreak: number; masteredWords: number }): void {
-  const achievements = buildAchievements({ activity: readActivity(), bestStreak, masteredWords, scribbleWins: readScribbleWins() });
+  const achievements = buildAchievements({ activity: readActivity(), bestStreak, masteredWords, scribbleWins: readScribbleWins(), earned: readEarnedAchievements() });
+  rememberEarnedAchievements(achievements);
   for (const id of earnedAchievementRewards(achievements, cosmeticState.unlocked)) unlockCosmetic(id);
 }
 

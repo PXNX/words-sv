@@ -62,3 +62,17 @@ describe('Scribble achievements', () => {
     expect(at(10).find((a) => a.id === 'scribble_legend')?.done).toBe(true);
   });
 });
+
+describe('earned achievements', () => {
+	it('stay finished after the activity log dropped their events', async () => {
+		const { readEarnedAchievements, rememberEarnedAchievements } = await import('../src/lib/progress/achievements');
+		const saved = new Map<string, string>();
+		const storage = { getItem: (key: string) => saved.get(key) ?? null, setItem: (key: string, value: string) => { saved.set(key, value); } };
+		rememberEarnedAchievements(buildAchievements({ ...empty, activity: events(100, 'vocab') }), storage);
+		expect(readEarnedAchievements(storage)).toEqual(['first_step', 'vocab_100']);
+		// The capped log later only holds other modes.
+		const later = buildAchievements({ ...empty, activity: events(3, 'grammar'), earned: readEarnedAchievements(storage) });
+		expect(later.find((achievement) => achievement.id === 'vocab_100')).toMatchObject({ done: true, value: 100 });
+		expect(later.find((achievement) => achievement.id === 'grammar_50')).toMatchObject({ done: false, value: 3 });
+	});
+});

@@ -40,6 +40,8 @@ export type AchievementInput = {
 	masteredWords: number;
 	/** Scribble matches won in Telegram groups (src/lib/scribble/scribbleWins.ts). */
 	scribbleWins?: number;
+	/** Achievements finished earlier (see `readEarnedAchievements`); they stay finished. */
+	earned?: readonly string[];
 };
 
 // Every mode that leaves an event in the activity log; clearing tricky words is a bonus, not a mode.
@@ -79,9 +81,38 @@ const ORDER: { id: AchievementId; target: number; value: (input: AchievementInpu
 
 export function buildAchievements(input: AchievementInput): Achievement[] {
 	return ORDER.map(({ id, target, value }) => {
-		const current = Math.max(0, value(input));
+		// The activity log only keeps the latest events, so its counts can fall again; an achievement
+		// that was reached once must not lock itself after enough other activity.
+		const current = input.earned?.includes(id) ? target : Math.max(0, value(input));
 		return { id, value: Math.min(current, target), target, done: current >= target };
 	});
+}
+
+// The finished achievements, kept apart from the capped activity log. The key starts with
+// `wordcircle-`, so it travels with the progress sync (lists of ids are joined).
+export const EARNED_ACHIEVEMENTS_KEY = 'wordcircle-achievements-earned-v1';
+
+export function readEarnedAchievements(storage: Pick<Storage, 'getItem'> | undefined = globalThis.localStorage): string[] {
+	try {
+		const saved: unknown = JSON.parse(storage?.getItem(EARNED_ACHIEVEMENTS_KEY) ?? '[]');
+		return Array.isArray(saved) ? saved.filter((id): id is string => typeof id === 'string') : [];
+	} catch {
+		return [];
+	}
+}
+
+/** Remembers every finished achievement; returns the ids now stored. */
+export function rememberEarnedAchievements(achievements: Achievement[], storage: Pick<Storage, 'getItem' | 'setItem'> | undefined = globalThis.localStorage): string[] {
+	const earned = readEarnedAchievements(storage);
+	const added = achievements.filter((achievement) => achievement.done && !earned.includes(achievement.id)).map((achievement) => achievement.id);
+	if (!added.length) return earned;
+	const next = [...earned, ...added];
+	try {
+		storage?.setItem(EARNED_ACHIEVEMENTS_KEY, JSON.stringify(next));
+	} catch {
+		/* full storage: the next check tries again */
+	}
+	return next;
 }
 
 export function unlockedCount(achievements: Achievement[]): number {
