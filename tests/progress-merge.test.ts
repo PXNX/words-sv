@@ -47,6 +47,24 @@ describe('progress merge', () => {
     expect(JSON.parse(mergeEntry('wordcircle-streak-state-v1', yesterday, today))).toEqual({ dateKey: '2026-11-05', vocabCorrect: 2, streakCount: 3, bestStreak: 20 });
   });
 
+  it('carries a live streak into a day this device has not played yet', () => {
+    const fresh = JSON.stringify({ dateKey: '2026-11-05', vocabCorrect: 0, qualified: false, streakCount: 0, lastQualifiedDay: null, freezes: 0, qualifiedDays: 0, bestStreak: 0 });
+    const account = JSON.stringify({ dateKey: '2026-11-04', vocabCorrect: 12, qualified: true, streakCount: 40, lastQualifiedDay: '2026-11-04', freezes: 2, qualifiedDays: 120, bestStreak: 40 });
+    expect(JSON.parse(mergeEntry('wordcircle-streak-state-v1', fresh, account))).toEqual({ dateKey: '2026-11-05', vocabCorrect: 0, qualified: false, streakCount: 40, lastQualifiedDay: '2026-11-04', freezes: 2, qualifiedDays: 120, bestStreak: 40 });
+  });
+
+  it('does not revive a streak that ended days ago', () => {
+    const fresh = JSON.stringify({ dateKey: '2026-11-05', streakCount: 0, lastQualifiedDay: null, bestStreak: 0 });
+    const old = JSON.stringify({ dateKey: '2026-11-01', streakCount: 40, lastQualifiedDay: '2026-11-01', bestStreak: 40 });
+    expect(JSON.parse(mergeEntry('wordcircle-streak-state-v1', fresh, old))).toMatchObject({ streakCount: 0, lastQualifiedDay: null, bestStreak: 40 });
+  });
+
+  it('keeps this device’s daily goal on a shared day', () => {
+    const a = JSON.stringify({ dateKey: '2026-11-05', vocabularyGoal: 5, vocabCorrect: 1 });
+    const b = JSON.stringify({ dateKey: '2026-11-05', vocabularyGoal: 12, vocabCorrect: 3 });
+    expect(JSON.parse(mergeEntry('wordcircle-streak-state-v1', a, b))).toEqual({ dateKey: '2026-11-05', vocabularyGoal: 5, vocabCorrect: 3 });
+  });
+
   it('adds up a shared day by keeping the higher counters and every finished mode', () => {
     const a = JSON.stringify({ dateKey: '2026-11-05', vocabCorrect: 2, wordleCompleted: true, circleCompleted: false });
     const b = JSON.stringify({ dateKey: '2026-11-05', vocabCorrect: 6, wordleCompleted: false, circleCompleted: true });

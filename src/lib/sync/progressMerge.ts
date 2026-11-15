@@ -64,6 +64,10 @@ function parse(raw: string): { ok: true; value: Json } | { ok: false } {
   }
 }
 
+function previousDay(day: string): string {
+  return new Date(Date.parse(`${day}T00:00:00.000Z`) - 86_400_000).toISOString().slice(0, 10);
+}
+
 function mergeArrays(local: Json[], remote: Json[]): Json[] {
   const primitive = (value: Json) => value === null || typeof value !== 'object';
   if (local.every(primitive) && remote.every(primitive)) return [...local, ...remote.filter((value) => !local.includes(value))];
@@ -95,12 +99,22 @@ export function mergeJson(local: Json, remote: Json): Json {
       const older = newer === remote ? local : remote;
       // Lifetime records still keep the better of both.
       const best = Math.max(Number(newer.bestStreak) || 0, Number(older.bestStreak) || 0);
-      return 'bestStreak' in newer ? { ...newer, bestStreak: best } : newer;
+      const day: Record<string, Json> = 'bestStreak' in newer ? { ...newer, bestStreak: best } : { ...newer };
+      // A device that has not played yet today (new, or idle for a while) holds the newer day but
+      // not the streak: the other side's is still alive when it qualified the day before, so it is
+      // carried into today instead of being replaced by an empty one.
+      const lastOf = (side: Record<string, Json>) => (isDay(side.lastQualifiedDay) ? side.lastQualifiedDay : '');
+      if (lastOf(older) > lastOf(newer) && lastOf(older) >= previousDay(newer.dateKey as string)) {
+        for (const key of ['lastQualifiedDay', 'streakCount', 'freezes', 'embers', 'proShieldWeek']) if (key in older) day[key] = older[key]!;
+        day.qualifiedDays = Math.max(Number(newer.qualifiedDays) || 0, Number(older.qualifiedDays) || 0);
+      }
+      return day;
     }
     const merged: Record<string, Json> = { ...remote, ...local };
     // Each local key exists on both devices: if it isn't in `remote` it is purely local, so the
-    // result already has the right value — no undefined access.
-    for (const key of Object.keys(local)) if (key in remote) merged[key] = mergeJson(local[key]!, remote[key]!);
+    // result already has the right value — no undefined access. The daily goal is this device's
+    // setting, not a counter, so the higher one must not win.
+    for (const key of Object.keys(local)) if (key in remote && key !== 'vocabularyGoal') merged[key] = mergeJson(local[key]!, remote[key]!);
     return merged;
   }
   if (typeof local === 'number' && typeof remote === 'number') return Math.max(local, remote);
