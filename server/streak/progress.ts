@@ -1,6 +1,6 @@
 import { getDatabase } from '../_lib/database.js';
 import { isMethod, readJson, respond } from '../_lib/http.js';
-import { applyStreakEvent, collectReward, isSupportedTimeZone, normalizeReminderLocale, normalizeVocabularyGoal, stateForToday, streakSummary } from '../_lib/streak.js';
+import { FREEZE_EVERY, MAX_FREEZES, applyStreakEvent, collectReward, dateKeyFor, isSupportedTimeZone, normalizeReminderLocale, normalizeVocabularyGoal, stateForToday, streakSummary } from '../_lib/streak.js';
 import type { Database } from '../_lib/database.js';
 import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 
@@ -75,8 +75,27 @@ export default async function streakProgress(req: ApiRequest, res: ApiResponse) 
 		const [rows] = await db.execute('SELECT * FROM wordcircle_streak_devices WHERE device_id = ? LIMIT 1', [deviceId]);
 		const reminderLocale = normalizeReminderLocale(locale ?? rows[0]?.locale);
 		const proUntil = await readProUntil(db, deviceId);
-		const merged = stateForToday(rows[0], timeZone, new Date(), proUntil);
 		const inviteFreezes = counter(rows[0]?.invite_freezes, 2);
+		const now = new Date();
+		const today = dateKeyFor(timeZone, now);
+		// A device that qualified on an earlier day the server never saw (played offline) is further along than
+		// the stored row. Its streak is taken over before the day rolls, so the missed sync neither
+		// resets the streak nor spends a freeze for a day that was played.
+		let stored = rows[0];
+		const snapshotDay = snapshot && typeof snapshot === 'object' && snapshot.dateKey === today ? snapshot.lastQualifiedDay : null;
+		if (typeof snapshotDay === 'string' && /^\d{4}-\d{2}-\d{2}$/u.test(snapshotDay) && snapshotDay < today && snapshotDay > String(stored?.last_qualified_day ?? '')) {
+			stored = {
+				...stored,
+				last_qualified_day: snapshotDay,
+				streak_count: counter(snapshot?.streakCount, 100000),
+				freezes: Math.min(MAX_FREEZES, counter(snapshot?.freezes, MAX_FREEZES) + inviteFreezes),
+				...(typeof snapshot?.embers === 'number' ? { embers: counter(snapshot.embers, FREEZE_EVERY) } : {})
+			};
+		}
+		// The event counts on top of what the server stored. The snapshot already includes it, so it is
+		// merged afterwards; adding the event to the merged state would count every answer twice.
+		const rolled = stateForToday(stored, timeZone, now, proUntil);
+		const merged = event === 'reward_collected' ? rolled : applyStreakEvent(rolled, timeZone, event, now);
 		// A device that played offline sends its snapshot along, so the server never loses progress and
 		// never awards the same day twice.
 		if (snapshot && typeof snapshot === 'object' && snapshot.dateKey === merged.dateKey) {
@@ -107,7 +126,8 @@ export default async function streakProgress(req: ApiRequest, res: ApiResponse) 
 				merged.streakCount = Math.max(merged.streakCount, counter(snapshot.streakCount, 100000));
 			}
 		}
-		let next = applyStreakEvent(merged, timeZone, event);
+		// Settles the day again with the snapshot's counters; only the ember is still to be applied.
+		let next = applyStreakEvent(merged, timeZone, event === 'reward_collected' ? event : 'sync', now);
 		// An ember collected offline is collected here too; collecting is idempotent per day.
 		if (snapshot?.rewardCollected && snapshot.dateKey === next.dateKey) next = collectReward(next);
 		const bestStreak = Math.max(counter(rows[0]?.best_streak), counter(snapshot?.bestStreak, 100000), next.bestStreak ?? 0, next.streakCount);

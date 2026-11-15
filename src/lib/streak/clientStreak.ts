@@ -239,11 +239,33 @@ export function readStreak(now = new Date()) {
 	} catch { return defaultState(now); }
 }
 
-/** The server's streak over the device's: every field the server sent wins, the rest stay. */
+const DAY_COUNTERS = ['vocabCorrect', 'grammarCorrect', 'pronunciationAttempts', 'alltagCorrect'] as const;
+const DAY_FLAGS = ['circleCompleted', 'definitionsCompleted', 'wordleCompleted', 'readingCompleted', 'storyCompleted', 'listenCompleted', 'hangmanCompleted', 'tabooCompleted', 'sentenceCompleted'] as const;
+
+/**
+ * The server's streak over the device's: every field the server sent wins, the rest stay. Today's
+ * progress never goes backwards though: answers given while the request was on its way are not in
+ * the reply yet, so the higher counter and every finished mode are kept and the day settled again.
+ */
 export function mergeServerStreak(local: ClientStreak, server: ServerStreak): ClientStreak {
-	const merged: Record<string, unknown> = { ...local };
-	for (const [key, value] of Object.entries(server)) if (value !== undefined) merged[key] = value;
-	return merged as ClientStreak;
+	const values: Record<string, unknown> = { ...local };
+	for (const [key, value] of Object.entries(server)) if (value !== undefined) values[key] = value;
+	const merged = values as ClientStreak;
+	if (merged.dateKey !== local.dateKey) return merged;
+	let ahead = false;
+	for (const key of DAY_COUNTERS) {
+		if (local[key] > merged[key]) {
+			merged[key] = local[key];
+			ahead = true;
+		}
+	}
+	for (const key of DAY_FLAGS) {
+		if (local[key] && !merged[key]) {
+			merged[key] = true;
+			ahead = true;
+		}
+	}
+	return ahead ? settleQualification(merged) : merged;
 }
 
 export function writeStreak(state: ClientStreak) {
@@ -279,8 +301,12 @@ function settleQualification(state: ClientStreak, force = false): ClientStreak {
 		return next;
 	}
 	next.qualifiedDays = state.qualifiedDays + 1;
-	next.streakCount = state.lastQualifiedDay === previousDate(state.dateKey) ? state.streakCount + 1 : 1;
-	next.lastQualifiedDay = state.dateKey;
+	// A last qualified day that is not in the past means the clock went back (a flight west, a changed
+	// time zone): that day already counted, so the streak stays as it is instead of starting over.
+	const ahead = Boolean(state.lastQualifiedDay && state.lastQualifiedDay >= state.dateKey);
+	if (ahead) next.streakCount = Math.max(1, state.streakCount);
+	else next.streakCount = state.lastQualifiedDay === previousDate(state.dateKey) ? state.streakCount + 1 : 1;
+	next.lastQualifiedDay = ahead ? state.lastQualifiedDay : state.dateKey;
 	next.bestStreak = Math.max(state.bestStreak, next.streakCount);
 	return next;
 }
@@ -417,18 +443,26 @@ export function modeDone(state: ClientStreak, mode: StreakMode): boolean {
 	return state.pronunciationAttempts >= PRONUNCIATION_GOAL;
 }
 
-export async function syncStreak(event: StreakEvent, fallback = readStreak()) {
-	const optimistic = applyLocalEvent(fallback, event);
+/**
+ * Sends an event that `applyLocalEvent` already counted on the device. The reply is merged into
+ * what the device stores by then, not into the state the request left with, so events recorded
+ * while it was on its way survive.
+ */
+export async function pushStreak(event: StreakEvent, optimistic: ClientStreak) {
 	void publishReminderState(optimistic);
 	// The /api functions only exist on Vercel; under `vite dev` every call would just 404.
 	if (import.meta.env?.DEV) return optimistic;
 	try {
 		const { streak } = await callApi('/api/streak/progress', StreakReplySchema, { body: { deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), nativeDigits: reminderNativeDigits(), event, snapshot: optimistic } });
-		const saved = writeStreak(mergeServerStreak(optimistic, streak));
+		const saved = writeStreak(mergeServerStreak(readStreak(), streak));
 		void publishReminderState(saved);
 		return saved;
 	} catch { /* Offline play retains the local cache and retries with the next event. */ }
-	return optimistic;
+	return readStreak();
+}
+
+export async function syncStreak(event: StreakEvent, fallback = readStreak()) {
+	return pushStreak(event, applyLocalEvent(fallback, event));
 }
 
 export async function syncStreakGoal(goal: number, fallback = readStreak()) {

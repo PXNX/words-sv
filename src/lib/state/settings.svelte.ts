@@ -3,7 +3,7 @@ import { requiresCumulativePool } from '#lib/circle/engine.js';
 import { chatModel, DEFAULT_CHAT_MODEL, type ChatModelId } from '#lib/conversation/models.js';
 import { engineFor, ownsClipKey, setBrowserVoicesUsable, storedVoiceEngine, voiceEngineIds, voiceEngines, type VoiceEngineId } from '#lib/voice/engines.js';
 import { wordPools, isLanguage, isVocabularyLevel, type Language, type VocabularyLevel, warmLanguage, refreshHintableBaseWords } from '#lib/data/vocabulary.js';
-import { normalizeVocabularyGoal, dateKey, readStreak, repairCandidate, repairStreak as repairStoredStreak, syncStreak, syncStreakGoal, type ClientStreak, type StreakRepair, type StreakEvent } from '#lib/streak/clientStreak.js';
+import { normalizeVocabularyGoal, dateKey, readStreak, repairCandidate, repairStreak as repairStoredStreak, applyLocalEvent, pushStreak, syncStreak, syncStreakGoal, type ClientStreak, type StreakRepair, type StreakEvent } from '#lib/streak/clientStreak.js';
 import { recordActivity, type ActivityKind } from '#lib/progress/activity.js';
 import { logAnswer } from '#lib/progress/eventLog.js';
 import type { EventMode } from '#lib/progress/events.js';
@@ -333,7 +333,10 @@ class SettingsStore {
     if (kind) recordActivity(kind);
     const mode = EVENT_MODE_BY_STREAK[event];
     if (mode) logAnswer(this.lang, mode, `${event.toUpperCase()}:${dateKey()}`, mode === 'alltag' ? true : null, { level: this.vocabularyLevel });
-    this.streak = await syncStreak(event, this.streak);
+    // Counted on the device at once: an answer given while an earlier request is still on its way
+    // must build on this one, and a slow connection must not hold the day's progress back.
+    this.streak = applyLocalEvent(this.streak, event);
+    this.streak = await pushStreak(event, this.streak);
   }
   // The goal lives in the streak state, so it travels with the snapshot and survives a reload.
   dailyGoal() {

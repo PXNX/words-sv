@@ -183,4 +183,21 @@ describe('server streak merge', async () => {
 		const merged = mergeServerStreak({ ...local, vocabCorrect: 4, embers: 2 }, { dateKey: TODAY, qualified: true, streakCount: 7, lastQualifiedDay: TODAY, vocabCorrect: 6, embers: undefined });
 		expect(merged).toMatchObject({ vocabCorrect: 6, embers: 2, streakCount: 7, qualified: true });
 	});
+
+	test('answers given while the request was on its way are not taken back', () => {
+		const local = { ...readStreak(NOW), dateKey: TODAY, vocabCorrect: 3, circleCompleted: true, streakCount: 4, lastQualifiedDay: YESTERDAY };
+		const merged = mergeServerStreak(local, { dateKey: TODAY, qualified: false, streakCount: 4, lastQualifiedDay: YESTERDAY, vocabCorrect: 1, circleCompleted: false });
+		// The finished circle qualifies the day on top of the server's streak.
+		expect(merged).toMatchObject({ vocabCorrect: 3, circleCompleted: true, qualified: true, streakCount: 5, lastQualifiedDay: TODAY });
+	});
+});
+
+describe('a clock that went back', () => {
+	test('qualifying on a day before the last qualified one keeps the streak', () => {
+		store.clear();
+		seed({ dateKey: TODAY, lastQualifiedDay: TODAY, streakCount: 31, bestStreak: 31 });
+		const earlier = new Date(NOW.getTime() - 24 * 60 * 60 * 1000);
+		const next = applyLocalEvent(readStreak(earlier), 'circle_completed', earlier);
+		expect(next).toMatchObject({ qualified: true, streakCount: 31, lastQualifiedDay: TODAY });
+	});
 });

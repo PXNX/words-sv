@@ -260,8 +260,12 @@ function settleQualification(state: StreakState): StreakState {
 		return next;
 	}
 	next.qualifiedDays = state.qualifiedDays + 1;
-	next.streakCount = state.lastQualifiedDay === previousDateKey(state.dateKey) ? state.streakCount + 1 : 1;
-	next.lastQualifiedDay = state.dateKey;
+	// A last qualified day that is not in the past means the clock went back (a flight west, a changed
+	// time zone): that day already counted, so the streak stays as it is instead of starting over.
+	const ahead = Boolean(state.lastQualifiedDay && state.lastQualifiedDay >= state.dateKey);
+	if (ahead) next.streakCount = Math.max(1, state.streakCount);
+	else next.streakCount = state.lastQualifiedDay === previousDateKey(state.dateKey) ? state.streakCount + 1 : 1;
+	next.lastQualifiedDay = ahead ? state.lastQualifiedDay : state.dateKey;
 	next.bestStreak = Math.max(state.bestStreak ?? 0, next.streakCount);
 	return next;
 }

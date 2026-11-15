@@ -52,3 +52,40 @@ describe('best streak', () => {
     expect(Number.isFinite(row.best_streak)).toBe(true);
   });
 });
+
+describe('device snapshot', () => {
+  const all = ['device_id', 'timezone', 'locale', 'day_key', 'vocab_correct', 'circle_completed', 'definitions_completed', 'wordle_completed', 'reading_completed', 'story_completed', 'grammar_correct', 'listen_completed', 'pronunciation_attempts', 'hangman_completed', 'taboo_completed', 'alltag_correct', 'sentence_completed', 'pro_shield_week', 'native_digits', 'current_qualified', 'last_qualified_day', 'streak_count', 'best_streak', 'vocabulary_goal', 'freezes', 'qualified_days', 'reward_collected', 'embers'];
+  const day = (offset: number) => new Date(Date.now() + offset * 86_400_000).toISOString().slice(0, 10);
+
+  it('counts an answer once although the snapshot already includes it', async () => {
+    table.clear();
+    columns = new Set(all);
+    for (let answer = 1; answer <= 3; answer += 1) {
+      const { body } = await post({ event: 'vocab_correct', snapshot: { dateKey: day(0), vocabCorrect: answer, vocabularyGoal: 8 } });
+      expect(body.streak.vocabCorrect).toBe(answer);
+    }
+  });
+
+  it('keeps the progress of a snapshot that is further along', async () => {
+    table.clear();
+    columns = new Set(all);
+    const { body } = await post({ event: 'vocab_correct', snapshot: { dateKey: day(0), vocabCorrect: 8, vocabularyGoal: 8 } });
+    expect(body.streak).toMatchObject({ vocabCorrect: 8, qualified: true, streakCount: 1 });
+  });
+
+  it('keeps the streak and the freeze after a day played offline', async () => {
+    table.clear();
+    columns = new Set(all);
+    table.set(deviceId, { device_id: deviceId, day_key: day(-2), last_qualified_day: day(-2), current_qualified: 1, streak_count: 5, best_streak: 5, freezes: 1, qualified_days: 5, vocabulary_goal: 8 });
+    const { body } = await post({ event: 'sync', snapshot: { dateKey: day(0), lastQualifiedDay: day(-1), streakCount: 6, freezes: 1, qualifiedDays: 6, vocabularyGoal: 8 } });
+    expect(body.streak).toMatchObject({ streakCount: 6, lastQualifiedDay: day(-1), freezes: 1, qualified: false, canProtectStreak: true });
+  });
+
+  it('still spends a freeze for a day nobody played', async () => {
+    table.clear();
+    columns = new Set(all);
+    table.set(deviceId, { device_id: deviceId, day_key: day(-2), last_qualified_day: day(-2), current_qualified: 1, streak_count: 5, best_streak: 5, freezes: 1, qualified_days: 5, vocabulary_goal: 8 });
+    const { body } = await post({ event: 'sync', snapshot: { dateKey: day(0), lastQualifiedDay: day(-1), streakCount: 5, freezes: 0, qualifiedDays: 5, vocabularyGoal: 8 } });
+    expect(body.streak).toMatchObject({ streakCount: 5, freezes: 0 });
+  });
+});
