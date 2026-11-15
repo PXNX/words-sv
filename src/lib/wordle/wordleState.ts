@@ -25,7 +25,9 @@ export function readWordleState(serialized: string | null | undefined, context: 
     if (!state || state.version !== STATE_VERSION || state.language !== language || state.level !== level) return null;
     if (typeof state.target !== 'string' || !candidates.includes(state.target)) return null;
     if (!Array.isArray(state.entries) || state.entries.length >= wordLength + 1) return null;
-    if (typeof state.guess !== 'string' || state.guess !== normalizePlayableWord(state.guess) || Array.from(state.guess).length >= wordLength) return null;
+    // A full row is a guess the game rejected (not a word, or tried before): its letters stay on the
+    // board to be corrected, so it has to restore too instead of throwing the whole round away.
+    if (typeof state.guess !== 'string' || state.guess !== normalizePlayableWord(state.guess) || Array.from(state.guess).length > wordLength) return null;
 
     const used = new Set<string>();
     for (const entry of state.entries) {

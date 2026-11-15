@@ -58,3 +58,13 @@ describe('Wordle saved round', () => {
     expect(readWordleState('{not-json', context)).toBeNull();
   });
 });
+
+describe('Wordle saved round with a rejected row', () => {
+  const context = { language: 'de', level: 'a1', candidates: ['APFEL', 'TASSE', 'KÄLTE'] };
+
+  it('restores a round whose current row is a full, rejected guess', () => {
+    const serialized = writeWordleState({ ...context, target: 'APFEL', entries: [{ word: 'TASSE', marks: evaluateWordleGuess('APFEL', 'TASSE') }], guess: 'XQXQX' });
+    expect(readWordleState(serialized, context)).toMatchObject({ target: 'APFEL', guess: 'XQXQX' });
+    expect(readWordleState(writeWordleState({ ...context, target: 'APFEL', entries: [], guess: 'XQXQXQ' }), context)).toBeNull();
+  });
+});
