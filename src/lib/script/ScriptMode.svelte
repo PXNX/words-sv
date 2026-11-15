@@ -43,7 +43,9 @@
     const letters = shuffled([...info.letters], Math.random);
     questions = letters.map((letter) => {
       const askScript = Math.random() < 0.5;
-      const others = shuffled(letters.filter((other) => other.letter !== letter.letter), Math.random).slice(0, 3);
+      // Two letters can share a Latin reading (И and Й are both "y"): such a twin is never offered
+      // next to the asked letter, or a right answer would be marked wrong.
+      const others = shuffled(letters.filter((other) => other.letter !== letter.letter && other.latin !== letter.latin), Math.random).slice(0, 3);
       const options = askScript
         ? shuffled([letter, ...others], Math.random).map((option) => option.letter)
         : shuffled([letter, ...others], Math.random).map((option) => option.latin);

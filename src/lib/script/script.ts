@@ -59,7 +59,7 @@ export function scriptFor(language: Language): ScriptInfo | undefined {
  * Letters the script does not know pass through, so a mixed word stays readable. */
 export function transliterate(language: Language, word: string): string {
   const info = scripts[language];
-  if (!info) return '';
+  if (!info || !word) return '';
   const graphemes = [...info.letters].sort((a, b) => b.letter.length - a.letter.length);
   const chars = [...word];
   let out = '';
