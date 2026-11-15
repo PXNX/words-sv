@@ -25,7 +25,7 @@ export const MAX_SCORES: Record<GroupGame, number> = {
 	hangman: 100 + 25 * 6 + 10 * 20,
 	// First-try answers in a row in one session.
 	vocab: 500,
-	// Scribble's points come from the bot (guesses in the chat), never from the page.
+	// Scribble's points come from right guesses checked on the server, never from the page.
 	scribble: 0
 };
 

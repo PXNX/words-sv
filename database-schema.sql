@@ -119,9 +119,8 @@ CREATE TABLE IF NOT EXISTS wordcircle_pro (
   pro_until TIMESTAMPTZ NOT NULL
 );
 
--- Scribble in Telegram groups: players take turns drawing a word, the others guess by replying to
--- the picture. The bot (bot/bot/scribble.py) runs the turns and checks guesses; the API server
--- (server/games/scribble.ts) posts the drawing and opens the round.
+-- Scribble in Telegram groups: players take turns drawing a word, the others guess on the page.
+-- The API server (server/_lib/scribbleGame.ts) runs the turns and checks guesses.
 CREATE TABLE IF NOT EXISTS wordcircle_scribble_players (
   chat_id BIGINT NOT NULL,
   user_id BIGINT NOT NULL,
@@ -175,3 +174,29 @@ CREATE TABLE IF NOT EXISTS wordcircle_scribble_champions (
 -- Round time, chosen by the drawer; the group's last choice is the next default.
 ALTER TABLE wordcircle_scribble_rounds ADD COLUMN IF NOT EXISTS seconds INTEGER NOT NULL DEFAULT 90;
 ALTER TABLE wordcircle_scribble_state ADD COLUMN IF NOT EXISTS round_seconds INTEGER NOT NULL DEFAULT 90;
+
+-- Scribble without chat messages: a game shared inline is a table too (its scores go to the inline
+-- message), and the last match's winner is shown on the players' pages for a minute.
+ALTER TABLE wordcircle_scribble_state ADD COLUMN IF NOT EXISTS inline_message_id VARCHAR(255) NULL;
+ALTER TABLE wordcircle_scribble_state ADD COLUMN IF NOT EXISTS champion_name VARCHAR(64) NULL;
+ALTER TABLE wordcircle_scribble_state ADD COLUMN IF NOT EXISTS champion_points INTEGER NULL;
+ALTER TABLE wordcircle_scribble_state ADD COLUMN IF NOT EXISTS champion_wins INTEGER NULL;
+ALTER TABLE wordcircle_scribble_state ADD COLUMN IF NOT EXISTS champion_at TIMESTAMPTZ NULL;
+
+-- Live Scribble on the page: each player's avatar (as the app stores it, checked when drawn), every
+-- guess of a round for the speech bubbles, and letters of the word revealed over time when the
+-- drawer turns that on (the group's last choice is the next default).
+ALTER TABLE wordcircle_scribble_players ADD COLUMN IF NOT EXISTS avatar VARCHAR(400) NULL;
+ALTER TABLE wordcircle_scribble_rounds ADD COLUMN IF NOT EXISTS reveal BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE wordcircle_scribble_state ADD COLUMN IF NOT EXISTS reveal BOOLEAN NOT NULL DEFAULT true;
+CREATE TABLE IF NOT EXISTS wordcircle_scribble_guesses (
+  id BIGSERIAL PRIMARY KEY,
+  round_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  first_name VARCHAR(64) NOT NULL DEFAULT '',
+  text VARCHAR(64) NOT NULL,
+  -- 'wrong', 'close' or 'right'; only wrong guesses are shown with their text.
+  result VARCHAR(8) NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS wordcircle_scribble_guesses_round_idx ON wordcircle_scribble_guesses (round_id, id);

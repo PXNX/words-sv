@@ -2,30 +2,36 @@ import * as v from 'valibot';
 import { getDatabase } from '../_lib/database.js';
 import { isMethod, readJson, respond } from '../_lib/http.js';
 import { ensureGameTables, SessionIdSchema, SESSION_TTL_MS, telegramApi } from '../_lib/games.js';
-import { bareWord, claimTurn, cleanLines, currentRound, guess, joinPlayer, MATCH_ROUNDS, ROUND_SECONDS, ROUND_TIMES, roundSeconds, saveLines, startRound, TURN_SECONDS, validRoundSeconds, winsOf, type Telegram } from '../_lib/scribbleGame.js';
+import { bareWord, claimTurn, cleanAvatar, cleanLines, currentRound, guess, joinPlayer, MATCH_ROUNDS, recentChampion, recentGuesses, revealPattern, ROUND_SECONDS, ROUND_TIMES, roundSeconds, saveLines, startRound, tableKey, TURN_SECONDS, validRoundSeconds, winsOf, type Table, type Telegram } from '../_lib/scribbleGame.js';
 import type { Database, Row } from '../_lib/database.js';
 import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 
 // Live Scribble for the page opened from a group's Scribble game (server/_lib/scribbleGame.ts):
 // `state` is polled about once a second and answers the player's role, the round (with the
-// drawer's lines when they changed) and the match standings; the drawer `start`s a round with the
-// chosen word and sends its `lines` as they grow; everybody else sends `guess`es.
+// drawer's lines when they changed), the round's latest guesses (speech bubbles; only wrong ones
+// with their text) and the players with their avatars and match points; the drawer `start`s a round
+// with the chosen word and sends its `lines` as they grow; everybody else sends `guess`es.
 const Text = v.pipe(v.string(), v.trim(), v.minLength(1), v.maxLength(64));
 const Request = v.variant('action', [
-	v.object({ action: v.literal('state'), session: SessionIdSchema, since: v.optional(v.number(), -1), locale: v.optional(v.string(), 'en') }),
-	v.object({ action: v.literal('start'), session: SessionIdSchema, word: Text, answers: v.pipe(v.array(Text), v.minLength(1), v.maxLength(12)), seconds: v.optional(v.number(), ROUND_SECONDS) }),
+	v.object({ action: v.literal('state'), session: SessionIdSchema, since: v.optional(v.number(), -1), locale: v.optional(v.string(), 'en'), avatar: v.optional(v.nullable(v.pipe(v.string(), v.maxLength(400)))) }),
+	v.object({ action: v.literal('start'), session: SessionIdSchema, word: Text, answers: v.pipe(v.array(Text), v.minLength(1), v.maxLength(12)), seconds: v.optional(v.number(), ROUND_SECONDS), reveal: v.optional(v.boolean(), false) }),
 	v.object({ action: v.literal('lines'), session: SessionIdSchema, round: v.number(), lines: v.unknown() }),
 	v.object({ action: v.literal('guess'), session: SessionIdSchema, text: v.pipe(v.string(), v.maxLength(64)) })
 ]);
 
-type Player = { userId: number; name: string; chatId: number; gameMessageId: number };
+type Player = { userId: number; name: string; chatId: number; table: Table };
+
+/** A player's id on the page: stable, ties bubbles to faces, and is not their Telegram id. */
+const playerId = (userId: unknown) => Number((BigInt(Math.trunc(Number(userId) || 0)) * 2654435761n) % 4294967296n);
 
 async function player(db: Database, session: string): Promise<Player | 'unknown' | 'expired' | 'no_chat'> {
-	const [[row]] = await db.execute('SELECT telegram_user_id, first_name, game, chat_id, message_id, created_at FROM wordcircle_game_sessions WHERE id = ? LIMIT 1', [session]);
+	const [[row]] = await db.execute('SELECT telegram_user_id, first_name, game, chat_id, message_id, inline_message_id, created_at FROM wordcircle_game_sessions WHERE id = ? LIMIT 1', [session]);
 	if (!row || row.game !== 'scribble') return 'unknown';
 	if (Date.now() - new Date(row.created_at).getTime() > SESSION_TTL_MS) return 'expired';
-	if (!row.chat_id || !row.message_id) return 'no_chat';
-	return { userId: Number(row.telegram_user_id), name: String(row.first_name ?? ''), chatId: Number(row.chat_id), gameMessageId: Number(row.message_id) };
+	const inlineMessageId = row.inline_message_id ? String(row.inline_message_id) : null;
+	if (!inlineMessageId && !(row.chat_id && row.message_id)) return 'no_chat';
+	const key = tableKey(inlineMessageId ? null : Number(row.chat_id), inlineMessageId);
+	return { userId: Number(row.telegram_user_id), name: String(row.first_name ?? ''), chatId: key, table: { key, messageId: Number(row.message_id ?? 0), inlineMessageId } };
 }
 
 function roundView(round: Row | undefined, me: number, since: number) {
@@ -40,6 +46,8 @@ function roundView(round: Row | undefined, me: number, since: number) {
 		drawer: String(round.drawer_name ?? ''),
 		mine,
 		letters: bareWord(String(round.word)).length,
+		// The word's slots: revealed letters (when the drawer turned that on) for the guessers, all of them once it is over.
+		pattern: mine || ended ? [...bareWord(String(round.word))] : revealPattern(String(round.word), Number(round.id), elapsed, roundSeconds(round), Boolean(round.reveal)),
 		// The word only for its drawer, or once the round is over.
 		word: mine || ended ? String(round.word) : null,
 		guesser: ended && Number(round.solved_by) ? String(round.guesser_name ?? '') : null,
@@ -68,12 +76,12 @@ export function createScribbleEndpoint({ databaseProvider = getDatabase, telegra
 
 			switch (input.action) {
 				case 'state': {
-					await joinPlayer(db, me.chatId, me.userId, me.name);
-					const state = await claimTurn(db, me.chatId, me.gameMessageId, me.userId, input.locale.slice(0, 2) === 'de' ? 'de' : 'en');
+					await joinPlayer(db, me.chatId, me.userId, me.name, input.avatar === undefined ? undefined : cleanAvatar(input.avatar));
+					const state = await claimTurn(db, me.table, me.userId, input.locale.slice(0, 2) === 'de' ? 'de' : 'en');
 					const round = await currentRound(db, me.chatId);
 					const drawerId = state.drawer_id === null ? null : Number(state.drawer_id);
 					const [[drawer]] = drawerId === null ? [[undefined]] : await db.execute('SELECT first_name FROM wordcircle_scribble_players WHERE chat_id = ? AND user_id = ?', [me.chatId, drawerId]);
-					const [standings] = await db.execute('SELECT user_id, first_name, match_points FROM wordcircle_scribble_players WHERE chat_id = ? ORDER BY match_points DESC, joined_at LIMIT 8', [me.chatId]);
+					const [standings] = await db.execute('SELECT user_id, first_name, match_points, avatar FROM wordcircle_scribble_players WHERE chat_id = ? ORDER BY match_points DESC, joined_at LIMIT 12', [me.chatId]);
 					const running = round && round.solved_by === null;
 					return respond(res, 200, {
 						ok: true,
@@ -84,16 +92,19 @@ export function createScribbleEndpoint({ databaseProvider = getDatabase, telegra
 						roundTimes: ROUND_TIMES,
 						turnSecondsLeft: Math.max(0, Math.ceil(TURN_SECONDS - (Date.now() - new Date(state.turn_started_at).getTime()) / 1000)),
 						round: roundView(round, me.userId, input.since),
+						guesses: round ? (await recentGuesses(db, Number(round.id))).map((row) => ({ id: Number(row.id), player: playerId(row.user_id), name: String(row.first_name ?? ''), result: String(row.result), text: row.result === 'wrong' ? String(row.text) : null })) : [],
+						reveal: state.reveal !== false,
 						match: {
 							round: Math.min(MATCH_ROUNDS, Number(state.match_rounds ?? 0) + (running ? 1 : 0)),
 							of: MATCH_ROUNDS,
-							standings: (standings as Row[]).map((row) => ({ name: String(row.first_name ?? ''), points: Number(row.match_points ?? 0), me: Number(row.user_id) === me.userId }))
+							standings: (standings as Row[]).map((row) => ({ id: playerId(row.user_id), name: String(row.first_name ?? ''), points: Number(row.match_points ?? 0), me: Number(row.user_id) === me.userId, avatar: row.avatar ? String(row.avatar) : null, drawing: Number(row.user_id) === drawerId })),
+							champion: recentChampion(state)
 						}
 					});
 				}
 				case 'start': {
 					if (!validRoundSeconds(input.seconds)) return respond(res, 400, { ok: false, error: 'invalid_seconds' });
-					const started = await startRound(db, telegram, me.chatId, me.userId, me.name, input.word, input.answers, input.seconds);
+					const started = await startRound(db, me.chatId, me.userId, me.name, input.word, input.answers, input.seconds, input.reveal);
 					if (!started.ok) return respond(res, 409, { ok: false, error: started.error });
 					return respond(res, 200, { ok: true, round: Number(started.round.id) });
 				}

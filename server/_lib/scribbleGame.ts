@@ -1,17 +1,18 @@
 /*
- * Scribble in a Telegram group, live. The game message (sendGame "scribble") is the table; pressing
- * Play opens WordCircle with a session. Whose turn it is decides the page's role: the drawer picks a
- * word and draws, and every stroke reaches the others within a second; everybody else watches the
- * drawing appear and types guesses (or replies to the bot's "now drawing" message in the chat).
+ * Scribble in a Telegram group, live. The game message (sendGame "scribble", or the same game shared
+ * inline) is the table; pressing Play opens WordCircle with a session. Whose turn it is decides the
+ * page's role: the drawer picks a word and draws, and every stroke reaches the others within a second;
+ * everybody else watches the drawing appear and types guesses on the page. Nothing is posted to the
+ * chat: the only trace there is the game message's scoreboard (setGameScore).
  * The first right guess ends the round: the faster, the more points for the guesser and the drawer.
- * After MATCH_ROUNDS rounds the bot posts the match's leaderboard; its winner counts a win towards
- * the app's Scribble achievements (first win, ten wins). The turn passes in the order players joined.
+ * After MATCH_ROUNDS rounds the pages show the winner, which counts a win towards the app's Scribble
+ * achievements (first win, ten wins). The turn passes in the order players joined.
  *
  * Everything here runs in the API server (server/main.ts): the endpoints call it, and `scribbleTick`
  * ends rounds nobody guessed and skips drawers who do not start.
  */
+import { createHash } from 'node:crypto';
 import { checkGuess } from '../../src/lib/scribble/guess.js';
-import { escapeHtml } from './telegram.js';
 import type { Database, Row } from './database.js';
 
 export const ROUND_SECONDS = 90;
@@ -23,41 +24,30 @@ export const TURN_SECONDS = 120;
 export const MATCH_ROUNDS = 5;
 /** A finished round stays visible to the players this long. */
 export const RESULT_SECONDS = 12;
+/** The match's winner stays on the players' pages this long. */
+export const CHAMPION_SECONDS = 60;
 export const MAX_LINE_POINTS = 24_000;
 
 export type Telegram = <T>(method: string, params: Record<string, unknown>) => Promise<T>;
 export type Line = { c: string; s: number; p: number[] };
 
-const TEXTS = {
-	de: {
-		drawing: (who: string, letters: number, seconds: number) => `🎨 <b>${who}</b> zeichnet jetzt (${letters} Buchstaben, ${seconds} s)!\n▶️ Drückt Spielen beim Scribble-Spiel, um live zuzuschauen und zu raten – oder antwortet hier mit eurem Tipp.`,
-		right: (who: string, word: string, points: number, drawer: string, drawerPoints: number) => `✅ ${who} hat es erraten: <b>${word}</b> (+${points}) · ${drawer} +${drawerPoints}`,
-		timeout: (word: string) => `⏰ Zeit um! Gesucht war: <b>${word}</b>`,
-		next: (who: string) => `🎨 Als Nächstes zeichnet ${who}: drück ▶️ Spielen beim Scribble-Spiel.`,
-		skipped: (who: string) => `⏭ ${who} hat nicht angefangen und wird übersprungen.`,
-		paused: '⏸ Scribble macht Pause. Drückt ▶️ Spielen, wenn ihr weiterzeichnen wollt.',
-		matchOver: (round: number) => `🏁 <b>Runde ${round} geschafft – die Wertung:</b>`,
-		champion: (who: string, wins: number) => `🏆 ${who} gewinnt! (${wins}. Sieg)`,
-		firstWin: '🏅 Erfolg freigeschaltet: <b>Scribble-Sieger</b>',
-		tenWins: '👑 Erfolg freigeschaltet: <b>Scribble-Legende</b> – zehn Siege!'
-	},
-	en: {
-		drawing: (who: string, letters: number, seconds: number) => `🎨 <b>${who}</b> is drawing now (${letters} letters, ${seconds} s)!\n▶️ Press Play on the Scribble game to watch live and guess – or reply here with your guess.`,
-		right: (who: string, word: string, points: number, drawer: string, drawerPoints: number) => `✅ ${who} got it: <b>${word}</b> (+${points}) · ${drawer} +${drawerPoints}`,
-		timeout: (word: string) => `⏰ Time's up! The word was: <b>${word}</b>`,
-		next: (who: string) => `🎨 Next to draw: ${who} – press ▶️ Play on the Scribble game.`,
-		skipped: (who: string) => `⏭ ${who} didn't start and is skipped.`,
-		paused: '⏸ Scribble is paused. Press ▶️ Play when you want to draw again.',
-		matchOver: (round: number) => `🏁 <b>${round} rounds done – the standings:</b>`,
-		champion: (who: string, wins: number) => `🏆 ${who} wins! (win no. ${wins})`,
-		firstWin: '🏅 Achievement unlocked: <b>Scribble champion</b>',
-		tenWins: '👑 Achievement unlocked: <b>Scribble legend</b> – ten wins!'
-	}
-};
-type Texts = (typeof TEXTS)['en'];
-const texts = (lang: unknown): Texts => (lang === 'de' ? TEXTS.de : TEXTS.en);
+/** A table: its key in the Scribble tables and the game message its scores go to. */
+export type Table = { key: number; messageId: number; inlineMessageId: string | null };
 
-export const mention = (userId: number, name: string) => `<a href="tg://user?id=${Math.trunc(userId)}">${escapeHtml(name || '?')}</a>`;
+/**
+ * The table's key. A game message in a group is keyed by its chat; one shared inline has no chat the
+ * bot can see, so its inline message id becomes a key far below any chat id.
+ */
+export function tableKey(chatId: number | null | undefined, inlineMessageId: string | null | undefined): number {
+	if (chatId) return chatId;
+	const hash = createHash('sha256').update(String(inlineMessageId ?? '')).digest();
+	return -(5e15 + hash.readUIntBE(0, 6));
+}
+
+/** setGameScore's target for a table: the inline game message, or the message in the chat. */
+export function scoreTarget(state: Row | undefined, chatId: number, messageId: number): Record<string, unknown> {
+	return state?.inline_message_id ? { inline_message_id: String(state.inline_message_id) } : { chat_id: chatId, message_id: messageId };
+}
 
 /** The guesser's points: 100, plus up to 100 for guessing fast. The drawer gets half of that. */
 export function scribblePoints(elapsedSeconds: number, seconds = ROUND_SECONDS): { guesser: number; drawer: number } {
@@ -69,6 +59,39 @@ export function scribblePoints(elapsedSeconds: number, seconds = ROUND_SECONDS):
 /** The word without its article, for the letter count and the blanks the guessers see. */
 export function bareWord(word: string): string {
 	return word.replace(/^(der|die|das|the)\s+/iu, '');
+}
+
+/**
+ * The word as the guessers see it: one entry per character, the letter once revealed, else null;
+ * spaces stay spaces. With `reveal` on, letters appear one by one in an order fixed by the round,
+ * evenly over the round time, up to half of them (never the whole word).
+ */
+export function revealPattern(word: string, roundId: number, elapsedSeconds: number, seconds: number, reveal: boolean): Array<string | null> {
+	const chars = [...bareWord(word)];
+	const slots = chars.map((char, index) => ({ char, index })).filter(({ char }) => char.trim() !== '');
+	const most = reveal ? Math.floor(slots.length / 2) : 0;
+	const shown = most > 0 ? Math.min(most, Math.floor(Math.max(0, elapsedSeconds) / (seconds / (most + 1)))) : 0;
+	// A small seeded shuffle, so every watcher sees the same letters in the same order.
+	let seed = (Math.abs(Math.trunc(roundId)) * 2654435761) % 4294967296 || 1;
+	const order = slots.map(({ index }) => index);
+	for (let i = order.length - 1; i > 0; i--) {
+		seed = (seed * 1103515245 + 12345) % 2147483648;
+		const j = seed % (i + 1);
+		[order[i], order[j]] = [order[j]!, order[i]!];
+	}
+	const open = new Set(order.slice(0, shown));
+	return chars.map((char, index) => (char.trim() === '' ? ' ' : open.has(index) ? char : null));
+}
+
+/** A player's avatar as the page sent it: a short JSON object, or nothing. The pages check its parts. */
+export function cleanAvatar(value: unknown): string | null {
+	if (typeof value !== 'string' || value.length > 400) return null;
+	try {
+		const parsed = JSON.parse(value) as unknown;
+		return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? value : null;
+	} catch {
+		return null;
+	}
 }
 
 /** Lines from the drawer's page, checked: colours, pen sizes and whole coordinates on the 640 canvas. */
@@ -87,18 +110,26 @@ export function cleanLines(value: unknown): Line[] | null {
 	return lines;
 }
 
-export function standingsText(rows: Array<{ first_name: string; match_points: number }>): string {
-	const medals = ['🥇', '🥈', '🥉'];
-	return rows.map((row, index) => `${medals[index] ?? `${index + 1}.`} ${escapeHtml(row.first_name || '?')} – ${row.match_points}`).join('\n');
-}
-
 // --- Storage ------------------------------------------------------------------------------------
 
-export async function joinPlayer(db: Database, chatId: number, userId: number, name: string) {
+export async function joinPlayer(db: Database, chatId: number, userId: number, name: string, avatar?: string | null) {
+	if (avatar === undefined) {
+		await db.execute(
+			'INSERT INTO wordcircle_scribble_players (chat_id, user_id, first_name) VALUES (?, ?, ?) ON CONFLICT (chat_id, user_id) DO UPDATE SET first_name = EXCLUDED.first_name',
+			[chatId, userId, name.slice(0, 64)]
+		);
+		return;
+	}
 	await db.execute(
-		'INSERT INTO wordcircle_scribble_players (chat_id, user_id, first_name) VALUES (?, ?, ?) ON CONFLICT (chat_id, user_id) DO UPDATE SET first_name = EXCLUDED.first_name',
-		[chatId, userId, name.slice(0, 64)]
+		'INSERT INTO wordcircle_scribble_players (chat_id, user_id, first_name, avatar) VALUES (?, ?, ?, ?) ON CONFLICT (chat_id, user_id) DO UPDATE SET first_name = EXCLUDED.first_name, avatar = EXCLUDED.avatar',
+		[chatId, userId, name.slice(0, 64), avatar]
 	);
+}
+
+/** The round's latest guesses, oldest first, for the speech bubbles. */
+export async function recentGuesses(db: Database, roundId: number, limit = 12): Promise<Row[]> {
+	const [rows] = await db.execute('SELECT id, user_id, first_name, text, result FROM wordcircle_scribble_guesses WHERE round_id = ? ORDER BY id DESC LIMIT ?', [roundId, limit]);
+	return (rows as Row[]).reverse();
 }
 
 export async function getState(db: Database, chatId: number): Promise<Row | undefined> {
@@ -126,15 +157,16 @@ const turnStale = (state: Row) => Date.now() - new Date(state.turn_started_at).g
  * Makes `userId` the drawer when nobody is, or when the drawer let the turn go stale without
  * drawing. Also opens the table on the pressed game message the first time.
  */
-export async function claimTurn(db: Database, chatId: number, gameMessageId: number, userId: number, lang: string): Promise<Row> {
+export async function claimTurn(db: Database, table: Table, userId: number, lang: string): Promise<Row> {
+	const chatId = table.key;
 	await db.execute(
-		'INSERT INTO wordcircle_scribble_state (chat_id, game_message_id, drawer_id, lang) VALUES (?, ?, ?, ?) ON CONFLICT (chat_id) DO UPDATE SET lang = EXCLUDED.lang',
-		[chatId, gameMessageId, userId, lang]
+		'INSERT INTO wordcircle_scribble_state (chat_id, game_message_id, inline_message_id, drawer_id, lang) VALUES (?, ?, ?, ?, ?) ON CONFLICT (chat_id) DO UPDATE SET lang = EXCLUDED.lang',
+		[chatId, table.messageId, table.inlineMessageId, userId, lang]
 	);
 	let state = (await getState(db, chatId))!;
 	const running = await runningRound(db, chatId);
 	if (state.drawer_id === null || (Number(state.drawer_id) !== userId && turnStale(state) && !running)) {
-		await db.execute('UPDATE wordcircle_scribble_state SET drawer_id = ?, turn_started_at = now(), game_message_id = ? WHERE chat_id = ?', [userId, gameMessageId, chatId]);
+		await db.execute('UPDATE wordcircle_scribble_state SET drawer_id = ?, turn_started_at = now(), game_message_id = ? WHERE chat_id = ?', [userId, table.messageId, chatId]);
 		state = (await getState(db, chatId))!;
 	}
 	return state;
@@ -142,29 +174,17 @@ export async function claimTurn(db: Database, chatId: number, gameMessageId: num
 
 export type StartResult = { ok: true; round: Row } | { ok: false; error: 'not_your_turn' | 'round_running' };
 
-/** The drawer picked a word: the round opens and the chat hears about it. */
-export async function startRound(db: Database, telegram: Telegram, chatId: number, userId: number, name: string, word: string, answers: string[], seconds = ROUND_SECONDS): Promise<StartResult> {
+/** The drawer picked a word: the round opens for everybody on the page. */
+export async function startRound(db: Database, chatId: number, userId: number, name: string, word: string, answers: string[], seconds = ROUND_SECONDS, reveal = false): Promise<StartResult> {
 	const state = await getState(db, chatId);
 	if (!state || Number(state.drawer_id) !== userId) return { ok: false, error: 'not_your_turn' };
 	if (await runningRound(db, chatId)) return { ok: false, error: 'round_running' };
-	const t = texts(state.lang);
-	let announcement = 0;
-	try {
-		const message = await telegram<{ message_id: number }>('sendMessage', {
-			chat_id: chatId,
-			text: t.drawing(escapeHtml(name || '?'), bareWord(word).length, seconds),
-			parse_mode: 'HTML',
-			reply_parameters: { message_id: Number(state.game_message_id), allow_sending_without_reply: true }
-		});
-		announcement = message.message_id;
-	} catch {
-		/* the round still runs for everyone watching in the app */
-	}
 	const [[round]] = await db.execute(
-		'INSERT INTO wordcircle_scribble_rounds (chat_id, game_message_id, photo_message_id, drawer_id, drawer_name, word, answers, seconds) VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING *',
-		[chatId, Number(state.game_message_id), announcement, userId, name.slice(0, 64), word, JSON.stringify(answers), seconds]
+		'INSERT INTO wordcircle_scribble_rounds (chat_id, game_message_id, photo_message_id, drawer_id, drawer_name, word, answers, seconds, reveal) VALUES (?, ?, 0, ?, ?, ?, ?, ?, ?) RETURNING *',
+		[chatId, Number(state.game_message_id), userId, name.slice(0, 64), word, JSON.stringify(answers), seconds, reveal]
 	);
-	await db.execute('UPDATE wordcircle_scribble_state SET round_seconds = ? WHERE chat_id = ?', [seconds, chatId]);
+	await db.execute('UPDATE wordcircle_scribble_state SET round_seconds = ?, reveal = ? WHERE chat_id = ?', [seconds, reveal, chatId]);
+	await db.execute("DELETE FROM wordcircle_scribble_guesses WHERE created_at < now() - interval '1 day'");
 	return { ok: true, round };
 }
 
@@ -184,16 +204,14 @@ export function roundAnswers(round: Row): string[] {
 
 export type GuessResult = 'right' | 'close' | 'wrong' | 'none';
 
-/**
- * A guess for the running round (from the app, or a chat reply to the round's announcement when
- * `replyTo` is given). The drawer cannot guess their own word.
- */
-export async function guess(db: Database, telegram: Telegram, chatId: number, userId: number, name: string, text: string, replyTo?: number): Promise<GuessResult> {
+/** A guess typed on the page for the running round. The drawer cannot guess their own word. */
+export async function guess(db: Database, telegram: Telegram, chatId: number, userId: number, name: string, text: string): Promise<GuessResult> {
 	const round = await runningRound(db, chatId);
 	if (!round || Number(round.drawer_id) === userId) return 'none';
-	if (replyTo !== undefined && Number(round.photo_message_id) !== replyTo) return 'none';
 	if (Date.now() - new Date(round.created_at).getTime() > roundSeconds(round) * 1000) return 'none';
 	const result = checkGuess(text, roundAnswers(round));
+	const shown = text.trim().slice(0, 64);
+	if (shown) await db.execute('INSERT INTO wordcircle_scribble_guesses (round_id, user_id, first_name, text, result) VALUES (?, ?, ?, ?, ?)', [round.id, userId, name.slice(0, 64), shown, result]);
 	if (result !== 'right') return result;
 	await joinPlayer(db, chatId, userId, name);
 	return (await finishRound(db, telegram, round, { id: userId, name })) ? 'right' : 'none';
@@ -206,9 +224,6 @@ export async function finishRound(db: Database, telegram: Telegram, round: Row, 
 	const chatId = Number(round.chat_id);
 	const drawerId = Number(round.drawer_id);
 	const state = await getState(db, chatId);
-	const t = texts(state?.lang);
-	const send = (text: string, replyTo?: number) =>
-		telegram('sendMessage', { chat_id: chatId, text, parse_mode: 'HTML', ...(replyTo ? { reply_parameters: { message_id: replyTo, allow_sending_without_reply: true } } : {}) }).catch(() => undefined);
 
 	if (guesser) {
 		const points = scribblePoints((Date.now() - new Date(round.created_at).getTime()) / 1000, roundSeconds(round));
@@ -218,37 +233,40 @@ export async function finishRound(db: Database, telegram: Telegram, round: Row, 
 				'INSERT INTO wordcircle_scribble_players (chat_id, user_id, first_name, points, match_points) VALUES (?, ?, ?, ?, ?) ON CONFLICT (chat_id, user_id) DO UPDATE SET points = wordcircle_scribble_players.points + EXCLUDED.points, match_points = wordcircle_scribble_players.match_points + EXCLUDED.match_points RETURNING points',
 				[chatId, id, name.slice(0, 64), gained, gained]
 			);
-			await telegram('setGameScore', { user_id: id, score: Number(row.points), chat_id: chatId, message_id: Number(round.game_message_id), force: true }).catch(() => undefined);
+			await telegram('setGameScore', { user_id: id, score: Number(row.points), force: true, ...scoreTarget(state, chatId, Number(round.game_message_id)) }).catch(() => undefined);
 		}
-		await send(t.right(mention(guesser.id, guesser.name), escapeHtml(String(round.word)), points.guesser, escapeHtml(String(round.drawer_name || '?')), points.drawer), Number(round.photo_message_id) || undefined);
-	} else {
-		await send(t.timeout(escapeHtml(String(round.word))), Number(round.photo_message_id) || undefined);
 	}
 
-	// Count the round towards the match; after MATCH_ROUNDS, the standings and the winner.
+	// Count the round towards the match; after MATCH_ROUNDS, the winner.
 	const [[match]] = await db.execute('UPDATE wordcircle_scribble_state SET match_rounds = match_rounds + 1, skips = 0 WHERE chat_id = ? RETURNING match_rounds', [chatId]);
-	if (match && Number(match.match_rounds) >= MATCH_ROUNDS) await endMatch(db, chatId, t, send);
-	await passTurn(db, telegram, chatId, drawerId, t);
+	if (match && Number(match.match_rounds) >= MATCH_ROUNDS) await endMatch(db, chatId);
+	await passTurn(db, chatId, drawerId);
 	return true;
 }
 
-async function endMatch(db: Database, chatId: number, t: Texts, send: (text: string) => Promise<unknown>) {
-	const [rows] = await db.execute('SELECT user_id, first_name, match_points FROM wordcircle_scribble_players WHERE chat_id = ? AND match_points > 0 ORDER BY match_points DESC, user_id LIMIT 10', [chatId]);
-	const lines = [t.matchOver(MATCH_ROUNDS), standingsText(rows as Array<{ first_name: string; match_points: number }>)];
+async function endMatch(db: Database, chatId: number) {
+	const [rows] = await db.execute('SELECT user_id, first_name, match_points FROM wordcircle_scribble_players WHERE chat_id = ? AND match_points > 0 ORDER BY match_points DESC, user_id LIMIT 1', [chatId]);
 	const winner = (rows as Row[])[0];
 	if (winner) {
 		const [[champion]] = await db.execute(
 			'INSERT INTO wordcircle_scribble_champions (telegram_user_id, first_name, wins) VALUES (?, ?, 1) ON CONFLICT (telegram_user_id) DO UPDATE SET wins = wordcircle_scribble_champions.wins + 1, first_name = EXCLUDED.first_name RETURNING wins',
 			[Number(winner.user_id), String(winner.first_name ?? '')]
 		);
-		const wins = Number(champion.wins);
-		lines.push('', t.champion(mention(Number(winner.user_id), String(winner.first_name ?? '')), wins));
-		if (wins === 1) lines.push(t.firstWin);
-		if (wins === 10) lines.push(t.tenWins);
+		await db.execute('UPDATE wordcircle_scribble_state SET champion_name = ?, champion_points = ?, champion_wins = ?, champion_at = now() WHERE chat_id = ?', [
+			String(winner.first_name ?? '').slice(0, 64),
+			Number(winner.match_points),
+			Number(champion.wins),
+			chatId
+		]);
 	}
-	await send(lines.join('\n'));
 	await db.execute('UPDATE wordcircle_scribble_players SET match_points = 0 WHERE chat_id = ?', [chatId]);
 	await db.execute('UPDATE wordcircle_scribble_state SET match_rounds = 0 WHERE chat_id = ?', [chatId]);
+}
+
+/** The last match's winner, while CHAMPION_SECONDS have not passed. */
+export function recentChampion(state: Row | undefined): { name: string; points: number; wins: number } | null {
+	if (!state?.champion_at || Date.now() - new Date(state.champion_at).getTime() > CHAMPION_SECONDS * 1000) return null;
+	return { name: String(state.champion_name ?? ''), points: Number(state.champion_points ?? 0), wins: Number(state.champion_wins ?? 0) };
 }
 
 /** The next player after `afterUser`, in the order they joined, wrapping around. */
@@ -260,12 +278,10 @@ export async function nextPlayer(db: Database, chatId: number, afterUser: number
 	return list[(index + 1) % list.length];
 }
 
-async function passTurn(db: Database, telegram: Telegram, chatId: number, afterUser: number, t: Texts) {
+async function passTurn(db: Database, chatId: number, afterUser: number) {
 	const next = await nextPlayer(db, chatId, afterUser);
-	const state = await getState(db, chatId);
-	if (!next || !state) return;
+	if (!next) return;
 	await db.execute('UPDATE wordcircle_scribble_state SET drawer_id = ?, turn_started_at = now() WHERE chat_id = ?', [Number(next.user_id), chatId]);
-	await telegram('sendMessage', { chat_id: chatId, text: t.next(mention(Number(next.user_id), String(next.first_name ?? ''))), parse_mode: 'HTML', reply_parameters: { message_id: Number(state.game_message_id), allow_sending_without_reply: true } }).catch(() => undefined);
 }
 
 /** Every few seconds: ends rounds nobody guessed in time and skips drawers who never started. */
@@ -279,21 +295,16 @@ export async function scribbleTick(db: Database, telegram: Telegram) {
 	);
 	for (const state of idle as Row[]) {
 		const chatId = Number(state.chat_id);
-		const t = texts(state.lang);
 		const [[count]] = await db.execute('SELECT COUNT(*) AS n FROM wordcircle_scribble_players WHERE chat_id = ?', [chatId]);
-		const [[name]] = await db.execute('SELECT first_name FROM wordcircle_scribble_players WHERE chat_id = ? AND user_id = ?', [chatId, Number(state.drawer_id)]);
 		const skips = Number(state.skips ?? 0) + 1;
 		const next = await nextPlayer(db, chatId, Number(state.drawer_id));
-		const reply = { reply_parameters: { message_id: Number(state.game_message_id), allow_sending_without_reply: true } };
 		// Everyone skipped once in a row (or nobody else is there): pause until someone presses Play.
 		if (!next || Number(next.user_id) === Number(state.drawer_id) || skips >= Number(count?.n ?? 0)) {
 			await db.execute('UPDATE wordcircle_scribble_state SET drawer_id = NULL, skips = 0 WHERE chat_id = ?', [chatId]);
-			await telegram('sendMessage', { chat_id: chatId, text: t.paused, parse_mode: 'HTML', ...reply }).catch(() => undefined);
 			continue;
 		}
 		await db.execute('UPDATE wordcircle_scribble_state SET skips = ? WHERE chat_id = ?', [skips, chatId]);
-		await telegram('sendMessage', { chat_id: chatId, text: t.skipped(escapeHtml(String(name?.first_name ?? '?'))), parse_mode: 'HTML', ...reply }).catch(() => undefined);
-		await passTurn(db, telegram, chatId, Number(state.drawer_id), t);
+		await passTurn(db, chatId, Number(state.drawer_id));
 	}
 }
 

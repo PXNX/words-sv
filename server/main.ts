@@ -25,7 +25,6 @@ import telegramDevice from './telegram/device.js';
 import telegramGame from './telegram/game.js';
 import telegramPurchase from './telegram/purchase.js';
 import telegramStart from './telegram/start.js';
-import telegramScribble from './telegram/scribble.js';
 import { scribbleTick } from './_lib/scribbleGame.js';
 import { telegramApi } from './_lib/games.js';
 
@@ -44,8 +43,7 @@ export const ROUTES: Record<string, Handler> = {
 	'telegram/device': telegramDevice,
 	'telegram/game': telegramGame,
 	'telegram/purchase': telegramPurchase,
-	'telegram/start': telegramStart,
-	'telegram/scribble': telegramScribble
+	'telegram/start': telegramStart
 };
 
 // Request bodies above this are refused; progress snapshots stay below 2 MB (progress/sync.ts).
