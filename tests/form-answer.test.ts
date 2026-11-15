@@ -14,6 +14,13 @@ describe('typed form credit', () => {
   it('accepts umlauts and ß typed plainly as a spelling slip', () => {
     expect(scoreForm('faehrt', 'fährt', FAHREN).verdict).toBe('spelling');
     expect(scoreForm('weiss', 'weiß').verdict).toBe('spelling');
+  });
+
+  it('does not take a dropped letter for a plainly typed umlaut', () => {
+    expect(formCountsAsRight(scoreForm('Fraun', 'Frauen'))).toBe(false);
+    expect(formCountsAsRight(scoreForm('Feur', 'Feuer'))).toBe(false);
+    expect(scoreForm('grusse', 'grüße').verdict).toBe('spelling');
+    expect(scoreForm('gruesse', 'grüße').verdict).toBe('spelling');
     expect(formCountsAsRight(scoreForm('weiss', 'weiß'))).toBe(true);
   });
 

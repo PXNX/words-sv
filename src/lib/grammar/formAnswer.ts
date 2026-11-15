@@ -22,8 +22,13 @@ export interface FormScore {
 const CREDIT: Record<FormVerdict, number> = { exact: 1, case: 0.9, spelling: 0.75, typo: 0.5, wrong: 0 };
 
 const tidy = (text: string) => text.trim().replace(/\s+/gu, ' ');
-/** Umlauts and ß as typed on a keyboard without them. */
-const plain = (text: string) => text.toLocaleLowerCase('de').replace(/ä/gu, 'a').replace(/ö/gu, 'o').replace(/ü/gu, 'u').replace(/ß/gu, 'ss').replace(/ae/gu, 'a').replace(/oe/gu, 'o').replace(/ue/gu, 'u');
+/** Umlauts and ß as typed on a keyboard without them: "fahrt" for "fährt", "weiss" for "weiß". */
+const plain = (text: string) => text.toLocaleLowerCase('de').replace(/ä/gu, 'a').replace(/ö/gu, 'o').replace(/ü/gu, 'u').replace(/ß/gu, 'ss');
+/** The same letters written out as two: "faehrt" for "fährt". */
+const spelledOut = (text: string) => text.toLocaleLowerCase('de').replace(/ä/gu, 'ae').replace(/ö/gu, 'oe').replace(/ü/gu, 'ue').replace(/ß/gu, 'ss');
+// Only the correct form's own umlauts may be written differently. Folding every "ue" or "ae" of
+// both words gave credit for dropped letters ("Fraun" for "Frauen", "Feur" for "Feuer").
+const sameButPlain = (given: string, target: string) => plain(given) === plain(target) || spelledOut(given) === spelledOut(target);
 
 /** Levenshtein distance, stopping early once it exceeds `limit`. */
 export function editDistance(a: string, b: string, limit = 2): number {
@@ -55,7 +60,7 @@ export function scoreForm(typed: string, correct: string, forms: readonly string
     const lowerGiven = given.toLocaleLowerCase('de');
     const otherForm = forms.some((form) => tidy(form).toLocaleLowerCase('de') === lowerGiven && tidy(form).toLocaleLowerCase('de') !== target.toLocaleLowerCase('de'));
     if (otherForm) return 'wrong';
-    if (plain(given) === plain(target)) return 'spelling';
+    if (sameButPlain(given, target)) return 'spelling';
     if (target.length >= 5 && editDistance(lowerGiven, target.toLocaleLowerCase('de'), 1) <= 1) return 'typo';
     return 'wrong';
   })();
