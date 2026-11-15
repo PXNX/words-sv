@@ -175,13 +175,17 @@ export async function publishReminderState(streak: StreakLike, extras: ReminderE
   });
 }
 
-export async function wasReminderDelivered(dateKey: string, _type?: ReminderType): Promise<boolean> {
-  const record = await withStore<Delivery>(DELIVERY_STORE, 'readonly', (store) => store.get(dateKey));
+// One reminder a day, except that the deadline warning has a slot of its own: an earlier nudge
+// (a new day, due words) must not use up the day and silence the one that saves the streak.
+const deliveryKey = (dateKey: string, type?: ReminderType) => (type === 'deadline' ? `${dateKey}|deadline` : dateKey);
+
+export async function wasReminderDelivered(dateKey: string, type?: ReminderType): Promise<boolean> {
+  const record = await withStore<Delivery>(DELIVERY_STORE, 'readonly', (store) => store.get(deliveryKey(dateKey, type)));
   return Boolean(record);
 }
 
-export async function markReminderDelivered(dateKey: string, _type?: ReminderType): Promise<void> {
-  await withStore(DELIVERY_STORE, 'readwrite', (store) => store.put({ id: dateKey, at: Date.now() } satisfies Delivery));
+export async function markReminderDelivered(dateKey: string, type?: ReminderType): Promise<void> {
+  await withStore(DELIVERY_STORE, 'readwrite', (store) => store.put({ id: deliveryKey(dateKey, type), at: Date.now() } satisfies Delivery));
 }
 
 export function dateKeyFor(timeZone: string, now = new Date()): string {
@@ -239,7 +243,9 @@ export function dueReminderTypes(state: ReminderState, now = new Date()): { type
   else if (atRisk && 1440 - minutesRemaining < 120) types.push('new_day');
   else if (daytime && state.dueWords > 0) types.push('due');
   else if (daytime && state.readingTitle) types.push('continue_text');
-  else if (daytime && state.weeklyReady) types.push('weekly');
+  // `weeklyReady` is only true for the day it was published on; without the app being opened
+  // again it would otherwise announce the recap every day.
+  else if (daytime && state.weeklyReady && state.dateKey === dateKey) types.push('weekly');
   return { types, dateKey, minutesRemaining };
 }
 

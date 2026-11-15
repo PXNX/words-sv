@@ -73,15 +73,25 @@ export function createRemindersEndpoint({ databaseProvider = getDatabase, pushSe
 		const [rows] = await db.execute(`SELECT d.*, s.endpoint_hash, s.endpoint, s.p256dh_key, s.auth_key FROM wordcircle_streak_devices d INNER JOIN wordcircle_push_subscriptions s ON s.device_id = d.device_id WHERE s.enabled = 1`);
 		let attempted = 0;
 		let delivered = 0;
+		// A device with several push subscriptions (a rotated endpoint, a second browser profile) is
+		// claimed once and then reaches every one of them; a dead endpoint must not use up the day.
+		const claims = new Map<string, boolean>();
 		for (const row of rows) {
 			const { summary, types } = reminderTypes(row, row.timezone, now());
 			for (const type of types) {
-				try {
-					await db.execute('INSERT INTO wordcircle_reminder_deliveries (device_id, delivery_date, delivery_type) VALUES (?, ?, ?)', [row.device_id, summary.dateKey, type]);
-				} catch (error) {
-					if ((error as { code?: string } | null)?.code === '23505') continue;
-					throw error;
+				const key = `${row.device_id}|${summary.dateKey}|${type}`;
+				if (!claims.has(key)) {
+					// One reminder per device and day, but the deadline warning takes over the day's row from
+					// the new-day nudge sent just after midnight: otherwise it could never be sent at all.
+					const [claim] = await db.execute(
+						`INSERT INTO wordcircle_reminder_deliveries (device_id, delivery_date, delivery_type) VALUES (?, ?, ?)
+						ON CONFLICT (device_id, delivery_date) DO UPDATE SET delivery_type = EXCLUDED.delivery_type
+						WHERE EXCLUDED.delivery_type = 'deadline' AND wordcircle_reminder_deliveries.delivery_type <> 'deadline'`,
+						[row.device_id, summary.dateKey, type]
+					);
+					claims.set(key, (claim as { affectedRows?: number } | undefined)?.affectedRows !== 0);
 				}
+				if (!claims.get(key)) continue;
 				attempted += 1;
 				const payload = { ...reminderNotification(type, row.locale, summary.minutesRemaining, Boolean(row.native_digits)), url: '/' };
 				try {

@@ -62,6 +62,15 @@ describe('pwa streak reminders', () => {
 	});
 });
 
+describe('weekly recap reminder', () => {
+	it('is announced on the day it was published, not on the days after', () => {
+		const state = { ...base, dateKey: '2026-10-19', qualified: false, lastQualifiedDay: null, weeklyReady: true };
+		expect(dueReminderTypes(state, new Date('2026-10-19T10:00:00Z')).types).toEqual(['weekly']);
+		expect(dueReminderTypes(state, new Date('2026-10-20T10:00:00Z')).types).toEqual([]);
+		expect(dueReminderTypes(state, new Date('2026-10-22T10:00:00Z')).types).toEqual([]);
+	});
+});
+
 describe('reminder number format', () => {
 	it('uses Western digits unless the learner picked native ones', () => {
 		expect(reminderNotification('due', 'fa', 30, { count: 12 }).body).toContain('12');
