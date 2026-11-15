@@ -31,7 +31,7 @@
   import { pickPartner, type Partner } from './partners.js';
   import { storiesFor } from '#lib/story/storyPacks.svelte.js';
   import { activeModelLabel, checkLocalModel, chosenModel, generateReply, interruptReply, loadLocalModel, localModel, modelGpuMB } from './localModel.svelte.js';
-  import { setCloudMode } from './cloudModel.svelte.js';
+  import { cloud, setCloudMode } from './cloudModel.svelte.js';
   import { isUsageLimitError } from './openRouter.js';
   import { aiAvailable, usesAi } from './aiChoice.svelte.js';
   import AiSwitch from './AiSwitch.svelte';
@@ -299,7 +299,8 @@
       }));
     } catch (error) {
       console.error('Conversation reply failed', error);
-      replyError = classifyReplyError(error);
+      // A failure from a round the learner already left must not put its note into the new one.
+      if (token === roundToken) replyError = classifyReplyError(error);
     }
     if (token !== roundToken) return;
     draftReply = '';
@@ -344,24 +345,60 @@
   /** The note beside the failed reply, and the actions that can fix it. */
   const errorNote = $derived(replyError === 'limit' ? m.cloud_limit({}, { locale }) : replyError === 'cloud' ? labels.replyCloud : labels.replyDevice);
 
+  // Read through a function: the status changes while a load is awaited, which TypeScript's
+  // narrowing of the property does not see.
+  const modelReady = () => localModel.status === 'ready';
+
   /** Tries the failed reply once more. */
-  function retryReply() {
+  async function retryReply() {
+    // The mic may still be open: its end would otherwise start a second reply next to this one.
+    stopListening();
+    stopAudio();
+    if (phase !== 'waiting') return;
+    const failed = replyError;
     replyError = '';
-    void partnerTurn();
+    // A device model that fell out of memory has to load again before it can answer.
+    if (localModel.provider === 'local' && !modelReady()) {
+      const token = roundToken;
+      phase = 'thinking';
+      draftReply = '';
+      await loadLocalModel();
+      if (token !== roundToken) return;
+      if (!modelReady()) { phase = 'waiting'; replyError = failed || 'device'; return; }
+    }
+    await partnerTurn();
   }
 
   /** Answers from now on with the model on this device instead of OpenRouter. */
   async function useDeviceModel() {
+    stopListening();
+    stopAudio();
+    if (phase !== 'waiting') return;
+    const token = roundToken;
+    const failed = replyError;
+    const previousMode = cloud.mode;
+    // OpenRouter stays the learner's choice until the device model really answers: declining the
+    // download or a failed load puts the setting back instead of leaving the chat without any model.
+    const giveUp = async () => {
+      setCloudMode(previousMode);
+      await checkLocalModel(true);
+      if (token !== roundToken) return;
+      phase = 'waiting';
+      replyError = failed || 'cloud';
+    };
     replyError = '';
     setCloudMode('off');
     await checkLocalModel(true);
-    if (localModel.status === 'unsupported') { replyError = 'device'; return; }
-    if (!localModel.cached && !(await confirmDownload(chosenModel().downloadMB, chosenModel().label))) { replyError = 'cloud'; return; }
+    if (token !== roundToken) return;
+    if (localModel.status === 'unsupported') return giveUp();
+    if (!localModel.cached && !(await confirmDownload(chosenModel().downloadMB, chosenModel().label))) return giveUp();
+    if (token !== roundToken) return;
     phase = 'thinking';
     draftReply = '';
     await loadLocalModel();
-    if (localModel.status === 'ready') void partnerTurn();
-    else { phase = 'waiting'; replyError = 'device'; }
+    if (token !== roundToken) return;
+    if (!modelReady()) return giveUp();
+    await partnerTurn();
   }
 
   async function submit(text: string) {
@@ -573,8 +610,8 @@
             <span class="talk-who">{partner?.name}</span>
             <p class="talk-error-text" lang={lang}>{errorNote}</p>
             <div class="talk-error-actions">
-              <button type="button" class="talk-error-btn" onclick={retryReply}>{labels.retry}</button>
-              {#if localModel.provider === 'cloud'}<button type="button" class="talk-error-btn" onclick={() => void useDeviceModel()}>{labels.useDevice}</button>{/if}
+              <button type="button" class="talk-error-btn" onclick={() => void retryReply()}>{labels.retry}</button>
+              {#if localModel.provider === 'cloud' && localModel.device}<button type="button" class="talk-error-btn" onclick={() => void useDeviceModel()}>{labels.useDevice}</button>{/if}
               <a class="talk-error-btn" href="/settings">{labels.changeModel}</a>
             </div>
           </div>
