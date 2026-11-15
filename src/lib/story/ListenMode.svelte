@@ -578,7 +578,9 @@
       createdAt: now,
       updatedAt: now,
       language,
-      level,
+      // The story's own level, as `storyKey` reads it: a lower-level story saved under the chosen
+      // level was never recognised as saved and was generated again on every visit.
+      level: raw.level,
       duration: buffer.duration,
       position: 0,
       storyCount: 1,
@@ -809,6 +811,8 @@
   }
   async function openSession(session: SavedAudio) {
     if (currentId === session.id && phase === 'ready') {
+      // Playing it again from the recap: the recap card gives way to the player.
+      sessionDone = false;
       if (audio?.paused) void audio.play().catch(() => (playing = false));
       return;
     }
