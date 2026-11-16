@@ -1222,5 +1222,7 @@
   "scribble_speed_normal": "Normal",
   "scribble_speed_fast": "Schnell",
   "scribble_live_round_time": "Zeit für diese Runde",
-  "scribble_seconds": "{seconds} s"
+  "scribble_seconds": "{seconds} s",
+  "scribble_live_leave": "Spiel verlassen",
+  "scribble_live_left": "{name} hat das Spiel verlassen …"
 }

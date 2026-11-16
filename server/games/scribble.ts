@@ -2,7 +2,7 @@ import * as v from 'valibot';
 import { getDatabase } from '../_lib/database.js';
 import { isMethod, readJson, respond } from '../_lib/http.js';
 import { ensureGameTables, SessionIdSchema, SESSION_TTL_MS, telegramApi } from '../_lib/games.js';
-import { bareWord, claimTurn, cleanAvatar, cleanLines, currentRound, guess, joinPlayer, MATCH_ROUNDS, recentChampion, recentGuesses, revealPattern, ROUND_SECONDS, ROUND_TIMES, roundSeconds, saveLines, startRound, tableKey, TURN_SECONDS, validRoundSeconds, winsOf, type Table, type Telegram } from '../_lib/scribbleGame.js';
+import { bareWord, claimTurn, cleanAvatar, cleanLines, currentRound, guess, joinPlayer, leavePlayer, MATCH_ROUNDS, recentChampion, recentGuesses, revealPattern, ROUND_SECONDS, ROUND_TIMES, roundSeconds, saveLines, startRound, tableKey, TURN_SECONDS, validRoundSeconds, winsOf, type Table, type Telegram } from '../_lib/scribbleGame.js';
 import type { Database, Row } from '../_lib/database.js';
 import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 
@@ -16,7 +16,8 @@ const Request = v.variant('action', [
 	v.object({ action: v.literal('state'), session: SessionIdSchema, since: v.optional(v.number(), -1), locale: v.optional(v.string(), 'en'), avatar: v.optional(v.nullable(v.pipe(v.string(), v.maxLength(400)))) }),
 	v.object({ action: v.literal('start'), session: SessionIdSchema, word: Text, answers: v.pipe(v.array(Text), v.minLength(1), v.maxLength(12)), seconds: v.optional(v.number(), ROUND_SECONDS), reveal: v.optional(v.boolean(), false) }),
 	v.object({ action: v.literal('lines'), session: SessionIdSchema, round: v.number(), lines: v.unknown() }),
-	v.object({ action: v.literal('guess'), session: SessionIdSchema, text: v.pipe(v.string(), v.maxLength(64)) })
+	v.object({ action: v.literal('guess'), session: SessionIdSchema, text: v.pipe(v.string(), v.maxLength(64)) }),
+	v.object({ action: v.literal('leave'), session: SessionIdSchema })
 ]);
 
 type Player = { userId: number; name: string; chatId: number; table: Table };
@@ -117,6 +118,10 @@ export function createScribbleEndpoint({ databaseProvider = getDatabase, telegra
 				case 'guess': {
 					const result = await guess(db, telegram, me.chatId, me.userId, me.name, input.text);
 					return respond(res, 200, { ok: true, result });
+				}
+				case 'leave': {
+					await leavePlayer(db, me.chatId, me.userId);
+					return respond(res, 200, { ok: true });
 				}
 				default:
 					return respond(res, 400, { ok: false, error: 'invalid_request' });

@@ -11,6 +11,7 @@ entries, section names and summaries are never translated.
 
 ### Fixed
 - Speak in Telegram's Mini App again: its webview lists no voices of its own, so the browser voice was silent; the app now hears that and speaks with its rendered voices instead
+- Let either player leave a live Scribble game: the leaver drops out of the standings, their turn passes at once and an unfinished drawing is closed, so the other side never waits on an absent player; the last player leaving resets the table
 
 ### Improved
 - Put the learning language and the interface language together in one box in the settings, each with its own name, hint and dropdown, so it is clear which language is being learnt and which one the app speaks

@@ -30,6 +30,14 @@ export function initGroupGame(url: URL) {
   groupGame.session = session;
 }
 
+/** Leaves a group game: forget the session so the page falls back to the solo modes. */
+export function leaveGroupGame() {
+  groupGame.session = null;
+  try {
+    sessionStorage.removeItem(KEY);
+  } catch {}
+}
+
 /** Sends a finished round's score when this page plays `game` for a group; no-op otherwise. */
 export async function reportGroupScore(game: GroupGame, score: number): Promise<void> {
   const session = groupGame.session;

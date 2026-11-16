@@ -18,7 +18,7 @@
   import { haptic } from '#lib/feedback/haptics.js';
   import { playErrorSound, playSuccessSound } from '#lib/feedback/sounds.js';
   import { callApi, ApiError } from '#lib/api/client.js';
-  import { groupGame } from '#lib/games/groupGame.svelte.js';
+  import { groupGame, leaveGroupGame } from '#lib/games/groupGame.svelte.js';
   import { pictureFor, pictureTranslations } from '#lib/learn/pictures.js';
   import { spokenWord, type Language } from '#lib/data/vocabulary.js';
   import { parseAvatar, seededAvatar } from '#lib/profile/avatar.js';
@@ -33,6 +33,7 @@
   import IconMedal from '~icons/material-symbols/workspace-premium-rounded';
   import IconCheck from '~icons/material-symbols/check-rounded';
   import IconSpell from '~icons/material-symbols/spellcheck-rounded';
+  import IconExit from '~icons/material-symbols/logout-rounded';
 
   let { words, language }: { words: string[]; language: string } = $props();
 
@@ -98,6 +99,11 @@
   let reveal = $state<boolean | null>(null);
   let pending: LiveLine[] | null = null;
   let sending = false;
+  let leaving = $state(false);
+  let leftNotice = $state('');
+  let leftTimer: ReturnType<typeof setTimeout> | undefined;
+  // Compared on every poll so the others hear when someone leaves instead of staring at a face that no longer plays.
+  let seenPlayers = new Map<number, string>();
 
   // The learner's avatar goes to the table with the first poll and again whenever it changes.
   let sentAvatar: string | null | undefined;
@@ -141,6 +147,31 @@
     return bubble.text ?? '';
   }
 
+  /** Announce a player who vanished from the standings, but not our own exit. */
+  function notePlayers(standings: State['match']['standings']) {
+    const now = new Map(standings.map((player) => [player.id, player.name]));
+    const me = standings.find((player) => player.me)?.id ?? 0;
+    for (const [id, name] of seenPlayers) {
+      if (now.has(id) || id === me) continue;
+      leftNotice = m.scribble_live_left({ name: name || '–' }, locale);
+      if (leftTimer) clearTimeout(leftTimer);
+      leftTimer = setTimeout(() => (leftNotice = ''), 5000);
+    }
+    seenPlayers = now;
+  }
+
+  /** Leave the table for good: the server passes the turn on, and this page returns to the solo modes. */
+  async function leave() {
+    if (leaving || !session) return;
+    leaving = true;
+    try {
+      await callApi('/api/games/scribble', OkSchema, { body: { action: 'leave', session }, accept: [404, 410] });
+    } catch {
+      /* the session may already be gone; leaving this page still works */
+    }
+    leaveGroupGame();
+  }
+
   const round = $derived(game?.round ?? null);
   const drawing = $derived(round?.status === 'drawing');
   const iDraw = $derived(Boolean(round?.mine && drawing));
@@ -168,6 +199,7 @@
       if (next.role === 'draw' && !next.round?.mine && choices.length === 0) choices = pickWords(words, 3);
       if (next.role !== 'draw') { choices = []; chosen = ''; }
       showBubbles(next.guesses, next.round?.id ?? 0);
+      notePlayers(next.match.standings);
       recordScribbleWins(next.me.wins);
       game = next;
     } catch (error) {
@@ -265,6 +297,7 @@
   {:else}
     <header class="live-head">
       <span class="live-pill">{m.scribble_live_round({ round: num(Math.max(1, game.match.round)), of: num(game.match.of) }, locale)}</span>
+      <button type="button" class="live-leave" onclick={leave} disabled={leaving} aria-label={m.scribble_live_leave({}, locale)}><IconExit aria-hidden="true" />{m.scribble_live_leave({}, locale)}</button>
       {#if round && drawing}
         <span class="live-pill live-time" class:low={round.secondsLeft <= Math.min(10, round.seconds / 4)}><IconTimer aria-hidden="true" />{num(round.secondsLeft)}</span>
       {:else if game.role === 'draw' && !round?.mine}
@@ -275,6 +308,8 @@
       </span>
       {#if round && drawing}<span class="live-bar" aria-hidden="true"><i style:width="{Math.max(0, Math.min(100, (round.secondsLeft / round.seconds) * 100))}%"></i></span>{/if}
     </header>
+
+    {#if leftNotice}<p class="live-left" role="status" aria-live="polite">{leftNotice}</p>{/if}
 
     {#if game.match.standings.length > 0}
       <!-- Everyone at the table: face, points, who draws, and their latest guess as a speech bubble. -->
@@ -372,7 +407,11 @@
   .live-pill :global(svg) { width:1.05rem;height:1.05rem; }
   .live-time.low { color:#c4522e;animation:live-pulse 1s ease-in-out infinite; }
   .live-turn { background:#e6a527;color:#172a45;border-color:#172a45; }
-  .live-dots { display:inline-flex;gap:.3rem;margin-inline-start:auto; }
+  .live-leave { display:inline-flex;align-items:center;gap:.25rem;margin-inline-start:auto;padding:.28rem .55rem;border:2px solid currentColor;border-radius:999px;background:none;color:inherit;font:inherit;font-size:.8rem;font-weight:800;cursor:pointer; }
+  .live-leave:disabled { opacity:.5;cursor:default; }
+  .live-leave :global(svg) { width:.95rem;height:.95rem; }
+  .live-left { margin:0;padding:.35rem .7rem;border-radius:.7rem;text-align:center;font-size:.85rem;font-weight:800;background:color-mix(in srgb, #c4522e 12%, transparent); }
+  .live-dots { display:inline-flex;gap:.3rem; }
   .live-dots i { width:.6rem;height:.6rem;border:2px solid currentColor;border-radius:50%;opacity:.45; }
   .live-dots i.done { background:currentColor;opacity:.8; }
   .live-dots i.now { background:#e6a527;border-color:#e6a527;opacity:1; }

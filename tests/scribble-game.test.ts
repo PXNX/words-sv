@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bareWord, cleanAvatar, cleanLines, MAX_LINE_POINTS, revealPattern, scribblePoints, scoreTarget, tableKey } from '../server/_lib/scribbleGame.js';
+import { bareWord, cleanAvatar, cleanLines, leavePlayer, MAX_LINE_POINTS, revealPattern, scribblePoints, scoreTarget, tableKey } from '../server/_lib/scribbleGame.js';
 
 describe('live Scribble rules', () => {
   it('pays the guesser more the faster, and the drawer half of it', () => {
@@ -56,6 +56,81 @@ describe('live Scribble rules', () => {
   it('sends scores to the inline message when the table has one', () => {
     expect(scoreTarget({ inline_message_id: 'abc' }, -5, 7)).toEqual({ inline_message_id: 'abc' });
     expect(scoreTarget({ inline_message_id: null }, -5, 7)).toEqual({ chat_id: -5, message_id: 7 });
+  });
+});
+
+describe('leaving a live Scribble table', () => {
+  function fakeTable(players: Array<{ user_id: number; joined: number }>, drawerId: number | null, round: { drawer_id: number } | null = null) {
+    const rows = players.map((player) => ({ user_id: player.user_id, first_name: `Player ${player.user_id}`, joined: player.joined }));
+    const state = { chat_id: -100, drawer_id: drawerId, skips: 2, match_rounds: 3 };
+    const rounds = round ? [{ ...round, solved_by: null, solved_at: null, guesser_name: 'somebody' }] : [];
+    const db = {
+      async execute(sql: string, params: unknown[] = []): Promise<any> {
+        if (sql.startsWith('DELETE FROM wordcircle_scribble_players')) {
+          const remaining = rows.filter((row) => !(row.user_id === params[1]));
+          rows.splice(0, rows.length, ...remaining);
+          return [{}];
+        }
+        if (sql.startsWith('SELECT * FROM wordcircle_scribble_state')) return [[{ ...state }]];
+        if (sql.startsWith('SELECT COUNT(*)')) return [[{ n: rows.length }]];
+        if (sql.startsWith('UPDATE wordcircle_scribble_rounds')) {
+          for (const item of rounds) if (item.solved_by === null && (!params[1] || item.drawer_id === params[1])) item.solved_by = 0;
+          return [{}];
+        }
+        if (sql.startsWith('SELECT user_id, first_name FROM wordcircle_scribble_players')) {
+          const sorted = [...rows].sort((a, b) => a.joined - b.joined || a.user_id - b.user_id);
+          return [sorted];
+        }
+        if (sql.startsWith('UPDATE wordcircle_scribble_state SET drawer_id = NULL, skips = 0, match_rounds = 0')) {
+          state.drawer_id = null;
+          state.skips = 0;
+          state.match_rounds = 0;
+          return [{}];
+        }
+        if (sql.startsWith('UPDATE wordcircle_scribble_state SET drawer_id = NULL')) {
+          state.drawer_id = null;
+          state.skips = 0;
+          return [{}];
+        }
+        if (sql.startsWith('UPDATE wordcircle_scribble_state SET drawer_id = ?')) {
+          state.drawer_id = Number(params[0]);
+          state.skips = 0;
+          return [{}];
+        }
+        throw new Error(`unexpected statement: ${sql}`);
+      }
+    };
+    return { db, rows, state, rounds };
+  }
+
+  it('removes the leaver and hands their turn to the next remaining player', async () => {
+    const table = fakeTable([{ user_id: 1, joined: 1 }, { user_id: 2, joined: 2 }, { user_id: 3, joined: 3 }], 1);
+    await leavePlayer(table.db as never, -100, 1);
+    expect(table.rows.map((row) => row.user_id)).toEqual([2, 3]);
+    expect(table.state.drawer_id).toBe(2);
+    expect(table.state.skips).toBe(0);
+  });
+
+  it('closes a round the leaver was drawing so the others are not stuck', async () => {
+    const table = fakeTable([{ user_id: 1, joined: 1 }, { user_id: 2, joined: 2 }], 1, { drawer_id: 1 });
+    await leavePlayer(table.db as never, -100, 1);
+    expect(table.rounds[0]!.solved_by).toBe(0);
+    expect(table.state.drawer_id).toBe(2);
+  });
+
+  it('resets the table when the last player leaves', async () => {
+    const table = fakeTable([{ user_id: 1, joined: 1 }], 1, { drawer_id: 1 });
+    await leavePlayer(table.db as never, -100, 1);
+    expect(table.rows).toEqual([]);
+    expect(table.state).toMatchObject({ drawer_id: null, skips: 0, match_rounds: 0 });
+    expect(table.rounds[0]!.solved_by).toBe(0);
+  });
+
+  it('leaves the turn alone when somebody else leaves', async () => {
+    const table = fakeTable([{ user_id: 1, joined: 1 }, { user_id: 2, joined: 2 }], 1);
+    await leavePlayer(table.db as never, -100, 2);
+    expect(table.state.drawer_id).toBe(1);
+    expect(table.rounds).toEqual([]);
   });
 });
 

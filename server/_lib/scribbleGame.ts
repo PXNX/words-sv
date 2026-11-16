@@ -126,6 +126,33 @@ export async function joinPlayer(db: Database, chatId: number, userId: number, n
 	);
 }
 
+/**
+ * A player leaves the table. They drop out of the standings and the turn rotation at once, and a
+ * round they were drawing is closed so the others are not left staring at a frozen canvas. When
+ * nobody is left the table is reset, so the next group to press Play starts a fresh match.
+ */
+export async function leavePlayer(db: Database, chatId: number, userId: number): Promise<void> {
+	await db.execute('DELETE FROM wordcircle_scribble_players WHERE chat_id = ? AND user_id = ?', [chatId, userId]);
+	const state = await getState(db, chatId);
+	if (!state) return;
+	const [[count]] = await db.execute('SELECT COUNT(*) AS n FROM wordcircle_scribble_players WHERE chat_id = ?', [chatId]);
+	const remaining = Number(count?.n ?? 0);
+	if (remaining === 0) {
+		await db.execute('UPDATE wordcircle_scribble_rounds SET solved_by = 0, solved_at = now() WHERE chat_id = ? AND solved_by IS NULL', [chatId]);
+		await db.execute('UPDATE wordcircle_scribble_state SET drawer_id = NULL, skips = 0, match_rounds = 0 WHERE chat_id = ?', [chatId]);
+		return;
+	}
+	if (Number(state.drawer_id) !== userId) return;
+	// An unfinished round of theirs cannot be finished by anybody else; treat it as a timeout without points.
+	await db.execute('UPDATE wordcircle_scribble_rounds SET solved_by = 0, solved_at = now(), guesser_name = NULL WHERE chat_id = ? AND drawer_id = ? AND solved_by IS NULL', [chatId, userId]);
+	const next = await nextPlayer(db, chatId, userId);
+	if (!next || Number(next.user_id) === userId) {
+		await db.execute('UPDATE wordcircle_scribble_state SET drawer_id = NULL, skips = 0 WHERE chat_id = ?', [chatId]);
+	} else {
+		await db.execute('UPDATE wordcircle_scribble_state SET drawer_id = ?, turn_started_at = now(), skips = 0 WHERE chat_id = ?', [Number(next.user_id), chatId]);
+	}
+}
+
 /** The round's latest guesses, oldest first, for the speech bubbles. */
 export async function recentGuesses(db: Database, roundId: number, limit = 12): Promise<Row[]> {
 	const [rows] = await db.execute('SELECT id, user_id, first_name, text, result FROM wordcircle_scribble_guesses WHERE round_id = ? ORDER BY id DESC LIMIT ?', [roundId, limit]);
@@ -160,7 +187,7 @@ const turnStale = (state: Row) => Date.now() - new Date(state.turn_started_at).g
 export async function claimTurn(db: Database, table: Table, userId: number, lang: string): Promise<Row> {
 	const chatId = table.key;
 	await db.execute(
-		'INSERT INTO wordcircle_scribble_state (chat_id, game_message_id, inline_message_id, drawer_id, lang) VALUES (?, ?, ?, ?, ?) ON CONFLICT (chat_id) DO UPDATE SET lang = EXCLUDED.lang',
+		'INSERT INTO wordcircle_scribble_state (chat_id, game_message_id, inline_message_id, drawer_id, lang) VALUES (?, ?, ?, ?, ?) ON CONFLICT (chat_id) DO UPDATE SET lang = EXCLUDED.lang, game_message_id = EXCLUDED.game_message_id',
 		[chatId, table.messageId, table.inlineMessageId, userId, lang]
 	);
 	let state = (await getState(db, chatId))!;
