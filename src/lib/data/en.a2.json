@@ -97,7 +97,7 @@
   },
   "alright": {
     "definition": "Good enough; in an acceptable way.",
-    "type": "noun"
+    "type": "adjective"
   },
   "ambition": {
     "definition": "A strong wish to achieve something.",
@@ -257,7 +257,7 @@
   },
   "basic": {
     "definition": "Simple and at the first level.",
-    "type": "noun"
+    "type": "adjective"
   },
   "basket": {
     "definition": "A container made of woven material with a handle.",
@@ -601,7 +601,7 @@
   },
   "classic": {
     "definition": "Of the best quality, and respected over many years.",
-    "type": "noun"
+    "type": "adjective"
   },
   "cleaner": {
     "definition": "A person whose job is cleaning, or a substance used for cleaning.",
@@ -661,7 +661,7 @@
   },
   "comic": {
     "definition": "Funny, or a magazine with picture stories.",
-    "type": "noun"
+    "type": "adjective"
   },
   "common": {
     "definition": "Happening often, or shared by many people.",
@@ -781,7 +781,7 @@
   },
   "creative": {
     "definition": "Good at making new things and having ideas.",
-    "type": "noun"
+    "type": "adjective"
   },
   "creature": {
     "definition": "A living animal of any kind.",
@@ -801,11 +801,11 @@
   },
   "crisp": {
     "definition": "Firm and dry and breaking with a sound, or a thin fried slice of potato.",
-    "type": "noun"
+    "type": "adjective"
   },
   "cross": {
     "definition": "Angry, or to go from one side to the other.",
-    "type": "noun"
+    "type": "adjective"
   },
   "crowd": {
     "definition": "A large group of people in one place.",
@@ -1257,7 +1257,7 @@
   },
   "female": {
     "definition": "Of the sex that can have babies.",
-    "type": "noun"
+    "type": "adjective"
   },
   "fence": {
     "definition": "A barrier of wood or wire around a piece of land.",
@@ -1365,7 +1365,7 @@
   },
   "fresh": {
     "definition": "New and not old, or recently picked.",
-    "type": "noun"
+    "type": "adjective"
   },
   "fridge": {
     "definition": "A cold cupboard that keeps food fresh.",
@@ -1425,7 +1425,7 @@
   },
   "gentle": {
     "definition": "Careful and soft, not rough.",
-    "type": "noun"
+    "type": "adjective"
   },
   "given": {
     "definition": "Handed to someone as a gift, or stated as a fact.",
@@ -1881,7 +1881,7 @@
   },
   "mad": {
     "definition": "Silly or angry, or not sane.",
-    "type": "noun"
+    "type": "adjective"
   },
   "magic": {
     "definition": "The power to make impossible things happen.",
@@ -1897,7 +1897,7 @@
   },
   "male": {
     "definition": "Of the sex that does not have babies.",
-    "type": "noun"
+    "type": "adjective"
   },
   "mall": {
     "definition": "A large building with many shops inside.",
@@ -2029,7 +2029,7 @@
   },
   "modern": {
     "definition": "Of the present time; not old-fashioned.",
-    "type": "noun"
+    "type": "adjective"
   },
   "mood": {
     "definition": "The way you feel at a certain time.",
@@ -2101,7 +2101,7 @@
   },
   "negative": {
     "definition": "Bad or harmful, or saying no.",
-    "type": "noun"
+    "type": "adjective"
   },
   "nervous": {
     "definition": "Worried and not relaxed.",
@@ -2257,7 +2257,7 @@
   },
   "peaceful": {
     "definition": "Quiet and calm.",
-    "type": "noun"
+    "type": "adjective"
   },
   "pear": {
     "definition": "A sweet fruit with a lot of juice and a green or yellow skin.",
@@ -2465,7 +2465,7 @@
   },
   "proper": {
     "definition": "Right and suitable for the situation.",
-    "type": "noun"
+    "type": "adjective"
   },
   "provide": {
     "definition": "To give someone something they need.",
@@ -3009,7 +3009,7 @@
   },
   "sleepy": {
     "definition": "Tired and ready to sleep.",
-    "type": "noun"
+    "type": "adjective"
   },
   "slice": {
     "definition": "A thin flat piece cut from something.",
@@ -3021,7 +3021,7 @@
   },
   "slim": {
     "definition": "Thin in an attractive way.",
-    "type": "noun"
+    "type": "adjective"
   },
   "smoke": {
     "definition": "The grey cloud that rises from a fire.",
@@ -3093,7 +3093,7 @@
   },
   "specific": {
     "definition": "Clear and exact, not general.",
-    "type": "noun"
+    "type": "adjective"
   },
   "speed": {
     "definition": "How fast something moves.",
@@ -3237,7 +3237,7 @@
   },
   "suitable": {
     "definition": "Right for a purpose or situation.",
-    "type": "noun"
+    "type": "adjective"
   },
   "suitcase": {
     "definition": "A case with a handle for carrying clothes when you travel.",
@@ -3485,7 +3485,7 @@
   },
   "unhappy": {
     "definition": "Sad and not satisfied.",
-    "type": "noun"
+    "type": "adjective"
   },
   "uniform": {
     "definition": "Special clothes worn by everyone in a group, such as pupils or soldiers.",
@@ -3509,7 +3509,7 @@
   },
   "upset": {
     "definition": "Sad or worried because something bad happened.",
-    "type": "noun"
+    "type": "adjective"
   },
   "use": {
     "definition": "To do something with an object for a purpose.",

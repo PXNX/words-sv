@@ -131,6 +131,11 @@
     ],
     "definition": "An event that happens unexpectedly and causes damage or injury."
   },
+  "ACCOMPLISH": {
+    "levels": [
+      "b1"
+    ]
+  },
   "ACCOUNT": {
     "levels": [
       "a2",
@@ -141,6 +146,11 @@
   "ACCRUE": {
     "levels": [
       "c2"
+    ]
+  },
+  "ACCUMULATE": {
+    "levels": [
+      "b1"
     ]
   },
   "ACCURACY": {
@@ -741,6 +751,11 @@
       "b2"
     ]
   },
+  "ANALYZE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "ANARCHIC": {
     "levels": [
       "c2"
@@ -1014,6 +1029,11 @@
       "c1"
     ]
   },
+  "ARBITRARY": {
+    "levels": [
+      "b1"
+    ]
+  },
   "ARCANE": {
     "levels": [
       "c2"
@@ -1022,6 +1042,11 @@
   "ARCH": {
     "levels": [
       "b2"
+    ]
+  },
+  "ARCHITECTURE": {
+    "levels": [
+      "b1"
     ]
   },
   "ARCHIVAL": {
@@ -1362,6 +1387,11 @@
   "AUSTERE": {
     "levels": [
       "c2"
+    ]
+  },
+  "AUTHENTIC": {
+    "levels": [
+      "b1"
     ]
   },
   "AUTHOR": {
@@ -4499,6 +4529,11 @@
       "c2"
     ]
   },
+  "COMMODITY": {
+    "levels": [
+      "b1"
+    ]
+  },
   "COMMON": {
     "levels": [
       "a2"
@@ -4524,7 +4559,17 @@
       "c1"
     ]
   },
+  "COMPENSATE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "COMPETE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "COMPETENT": {
     "levels": [
       "b1"
     ]
@@ -4566,6 +4611,11 @@
     ]
   },
   "COMPOUND": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "COMPREHENSIVE": {
     "levels": [
       "b1"
     ]
@@ -4753,6 +4803,11 @@
       "b2"
     ]
   },
+  "CONSEQUENCE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "CONSERVE": {
     "levels": [
       "c1"
@@ -4763,6 +4818,11 @@
       "a2"
     ]
   },
+  "CONSIDERABLE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "CONSIGN": {
     "levels": [
       "c2"
@@ -4771,6 +4831,11 @@
   "CONSIST": {
     "levels": [
       "a2"
+    ]
+  },
+  "CONSISTENT": {
+    "levels": [
+      "b1"
     ]
   },
   "CONSOLE": {
@@ -4808,6 +4873,11 @@
       "b1"
     ]
   },
+  "CONTEMPORARY": {
+    "levels": [
+      "b1"
+    ]
+  },
   "CONTEMPT": {
     "levels": [
       "b2"
@@ -4841,6 +4911,11 @@
       "c1"
     ]
   },
+  "CONTRADICT": {
+    "levels": [
+      "b1"
+    ]
+  },
   "CONTRARY": {
     "levels": [
       "b1"
@@ -4851,6 +4926,11 @@
       "a2"
     ]
   },
+  "CONTRIBUTE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "CONTRIVE": {
     "levels": [
       "c2"
@@ -4859,6 +4939,11 @@
   "CONTROL": {
     "levels": [
       "a2",
+      "b1"
+    ]
+  },
+  "CONTROVERSIAL": {
+    "levels": [
       "b1"
     ]
   },
@@ -5425,6 +5510,11 @@
       "c2"
     ]
   },
+  "CULTIVATE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "CULTURAL": {
     "levels": [
       "b1"
@@ -5482,6 +5572,11 @@
     ]
   },
   "CURRENT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "CURRICULUM": {
     "levels": [
       "b1"
     ]
@@ -6042,6 +6137,11 @@
       "b2"
     ]
   },
+  "DEMONSTRATE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "DENIM": {
     "levels": [
       "b2"
@@ -6237,6 +6337,11 @@
       "b2"
     ]
   },
+  "DETERMINE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "DETEST": {
     "levels": [
       "c1"
@@ -6342,6 +6447,11 @@
       "b1"
     ]
   },
+  "DIFFERENTIATE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "DIFFUSE": {
     "levels": [
       "c2"
@@ -6392,6 +6502,11 @@
   "DIME": {
     "levels": [
       "b2"
+    ]
+  },
+  "DIMENSION": {
+    "levels": [
+      "b1"
     ]
   },
   "DIMINISH": {
@@ -6617,9 +6732,24 @@
       "c2"
     ]
   },
+  "DISTINCT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "DISTORT": {
+    "levels": [
+      "b1"
+    ]
+  },
   "DISTRACT": {
     "levels": [
       "b2"
+    ]
+  },
+  "DISTRIBUTE": {
+    "levels": [
+      "b1"
     ]
   },
   "DISTRICT": {
@@ -7328,6 +7458,11 @@
       "c1"
     ]
   },
+  "ELABORATE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "ELASTIC": {
     "levels": [
       "c1"
@@ -7411,6 +7546,11 @@
   "ELIGIBLE": {
     "levels": [
       "b2"
+    ]
+  },
+  "ELIMINATE": {
+    "levels": [
+      "b1"
     ]
   },
   "ELITE": {
@@ -7504,6 +7644,11 @@
       "b1"
     ]
   },
+  "EMPHASIZE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "EMPIRE": {
     "levels": [
       "b1"
@@ -7550,6 +7695,11 @@
     ]
   },
   "ENCLOSE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ENCOUNTER": {
     "levels": [
       "b1"
     ]
@@ -7759,6 +7909,11 @@
       "b2"
     ]
   },
+  "EQUIPMENT": {
+    "levels": [
+      "b1"
+    ]
+  },
   "EQUITY": {
     "levels": [
       "b2"
@@ -7806,6 +7961,11 @@
     ]
   },
   "ESSENCE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "ESTABLISH": {
     "levels": [
       "b1"
     ]
@@ -7987,6 +8147,11 @@
       "b2"
     ]
   },
+  "EXCEPTIONAL": {
+    "levels": [
+      "b1"
+    ]
+  },
   "EXCESS": {
     "levels": [
       "b1"
@@ -8164,6 +8329,11 @@
       "b1"
     ]
   },
+  "EXPOSURE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "EXPRESS": {
     "levels": [
       "a2",
@@ -8280,6 +8450,11 @@
   "FACIAL": {
     "levels": [
       "c1"
+    ]
+  },
+  "FACILITATE": {
+    "levels": [
+      "b1"
     ]
   },
   "FACILITY": {
@@ -9060,6 +9235,11 @@
       "b1"
     ]
   },
+  "FLUCTUATE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "FLUENCY": {
     "levels": [
       "b2"
@@ -9299,6 +9479,11 @@
       "c1"
     ]
   },
+  "FOSTER": {
+    "levels": [
+      "b1"
+    ]
+  },
   "FOUL": {
     "levels": [
       "b2"
@@ -9307,6 +9492,11 @@
   "FOUND": {
     "levels": [
       "b2"
+    ]
+  },
+  "FOUNDATION": {
+    "levels": [
+      "b1"
     ]
   },
   "FOUNTAIN": {
@@ -10385,6 +10575,11 @@
     "levels": [
       "c1",
       "c2"
+    ]
+  },
+  "GUARANTEE": {
+    "levels": [
+      "b1"
     ]
   },
   "GUARD": {
@@ -11520,6 +11715,11 @@
       "b1"
     ]
   },
+  "ILLUSTRATE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "IMAGE": {
     "levels": [
       "a2"
@@ -11585,6 +11785,16 @@
       "c1"
     ]
   },
+  "IMPLEMENT": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "IMPLICATION": {
+    "levels": [
+      "b1"
+    ]
+  },
   "IMPLY": {
     "levels": [
       "b2"
@@ -11645,6 +11855,11 @@
       "b2"
     ]
   },
+  "INCENTIVE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "INCH": {
     "levels": [
       "a2",
@@ -11682,6 +11897,11 @@
     ]
   },
   "INCOME": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "INCORPORATE": {
     "levels": [
       "b1"
     ]
@@ -11757,6 +11977,11 @@
     "levels": [
       "b2",
       "c2"
+    ]
+  },
+  "INEVITABLE": {
+    "levels": [
+      "b1"
     ]
   },
   "INFANT": {
@@ -11880,6 +12105,11 @@
       "c1"
     ]
   },
+  "INNOVATION": {
+    "levels": [
+      "b1"
+    ]
+  },
   "INNUENDO": {
     "levels": [
       "c2"
@@ -11971,6 +12201,16 @@
     ],
     "definition": "Necessary and important as part of a whole."
   },
+  "INTEGRATE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "INTEGRITY": {
+    "levels": [
+      "b1"
+    ]
+  },
   "INTEND": {
     "levels": [
       "b1"
@@ -12007,7 +12247,17 @@
       "b1"
     ]
   },
+  "INTERPRET": {
+    "levels": [
+      "b1"
+    ]
+  },
   "INTERVAL": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "INTERVENE": {
     "levels": [
       "b1"
     ]
@@ -12015,6 +12265,11 @@
   "INTIMATE": {
     "levels": [
       "b2"
+    ]
+  },
+  "INTRINSIC": {
+    "levels": [
+      "b1"
     ]
   },
   "INTRUDE": {
@@ -12053,6 +12308,11 @@
     ]
   },
   "INVEST": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "INVESTIGATE": {
     "levels": [
       "b1"
     ]
@@ -12928,6 +13188,11 @@
   "LEGION": {
     "levels": [
       "c2"
+    ]
+  },
+  "LEGISLATION": {
+    "levels": [
+      "b1"
     ]
   },
   "LEISURE": {
@@ -13916,6 +14181,11 @@
     ]
   },
   "MECHANIC": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "MECHANISM": {
     "levels": [
       "b1"
     ]
@@ -15374,6 +15644,11 @@
       "c1"
     ]
   },
+  "OCCUPATION": {
+    "levels": [
+      "b1"
+    ]
+  },
   "OCCUPY": {
     "levels": [
       "b1"
@@ -15553,6 +15828,11 @@
   "OPPONENT": {
     "levels": [
       "b2"
+    ]
+  },
+  "OPPORTUNITY": {
+    "levels": [
+      "b1"
     ]
   },
   "OPPOSE": {
@@ -16199,6 +16479,11 @@
       "b1"
     ]
   },
+  "PARTICIPATE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "PARTICLE": {
     "levels": [
       "b2"
@@ -16531,6 +16816,11 @@
       "b2"
     ]
   },
+  "PERCENT": {
+    "levels": [
+      "b1"
+    ]
+  },
   "PERCH": {
     "levels": [
       "c2"
@@ -16557,6 +16847,11 @@
       "a1"
     ]
   },
+  "PERMANENT": {
+    "levels": [
+      "b1"
+    ]
+  },
   "PERMEATE": {
     "levels": [
       "b2"
@@ -16580,6 +16875,11 @@
   "PERSONAL": {
     "levels": [
       "a1"
+    ]
+  },
+  "PERSPECTIVE": {
+    "levels": [
+      "b1"
     ]
   },
   "PERSUADE": {
@@ -16622,6 +16922,11 @@
     "levels": [
       "b2",
       "c2"
+    ]
+  },
+  "PHENOMENON": {
+    "levels": [
+      "b1"
     ]
   },
   "PHOENIX": {
@@ -17271,6 +17576,11 @@
       "b2"
     ]
   },
+  "POTENTIAL": {
+    "levels": [
+      "b1"
+    ]
+  },
   "POTTERY": {
     "levels": [
       "b1"
@@ -17367,6 +17677,11 @@
   "PRECISE": {
     "levels": [
       "a2"
+    ]
+  },
+  "PRECISION": {
+    "levels": [
+      "b1"
     ]
   },
   "PREDICT": {
@@ -17533,6 +17848,11 @@
       "a1"
     ]
   },
+  "PRINCIPLE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "PRINT": {
     "levels": [
       "a2",
@@ -17551,6 +17871,7 @@
   },
   "PRIORITY": {
     "levels": [
+      "b1",
       "b2"
     ]
   },
@@ -17607,6 +17928,11 @@
   "PROBLEM": {
     "levels": [
       "a1"
+    ]
+  },
+  "PROCEDURE": {
+    "levels": [
+      "b1"
     ]
   },
   "PROCEED": {
@@ -17740,6 +18066,11 @@
   "PROPHET": {
     "levels": [
       "c1"
+    ]
+  },
+  "PROPORTION": {
+    "levels": [
+      "b1"
     ]
   },
   "PROPOSAL": {
@@ -18267,6 +18598,11 @@
       "b2"
     ]
   },
+  "RANDOM": {
+    "levels": [
+      "b1"
+    ]
+  },
   "RANGE": {
     "levels": [
       "a2",
@@ -18338,6 +18674,11 @@
   "RATING": {
     "levels": [
       "a2"
+    ]
+  },
+  "RATIO": {
+    "levels": [
+      "b1"
     ]
   },
   "RATION": {
@@ -18543,6 +18884,16 @@
       "c2"
     ]
   },
+  "RECOGNIZE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "RECOMMEND": {
+    "levels": [
+      "b1"
+    ]
+  },
   "RECORD": {
     "levels": [
       "a2",
@@ -18623,6 +18974,11 @@
   "REFERENT": {
     "levels": [
       "b2"
+    ]
+  },
+  "REFINE": {
+    "levels": [
+      "b1"
     ]
   },
   "REFINERY": {
@@ -18733,6 +19089,11 @@
       "b2"
     ]
   },
+  "REINFORCE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "REISSUE": {
     "levels": [
       "c2"
@@ -18840,6 +19201,11 @@
       "b1"
     ]
   },
+  "RELUCTANT": {
+    "levels": [
+      "b1"
+    ]
+  },
   "RELY": {
     "levels": [
       "b1"
@@ -18859,6 +19225,11 @@
     "levels": [
       "b1",
       "b2"
+    ]
+  },
+  "REMARKABLE": {
+    "levels": [
+      "b1"
     ]
   },
   "REMEDIAL": {
@@ -18991,6 +19362,11 @@
   "REPOSE": {
     "levels": [
       "c2"
+    ]
+  },
+  "REPRESENT": {
+    "levels": [
+      "b1"
     ]
   },
   "REPRESS": {
@@ -19403,6 +19779,11 @@
     "levels": [
       "a1",
       "a2"
+    ]
+  },
+  "RIGID": {
+    "levels": [
+      "b1"
     ]
   },
   "RIM": {
@@ -20997,6 +21378,11 @@
       "b1"
     ]
   },
+  "SIMULATE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "SINCERE": {
     "levels": [
       "b2"
@@ -21564,6 +21950,11 @@
       "b1"
     ]
   },
+  "SOPHISTICATED": {
+    "levels": [
+      "b1"
+    ]
+  },
   "SORE": {
     "levels": [
       "b1"
@@ -21726,6 +22117,11 @@
       "c1"
     ]
   },
+  "SPECULATE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "SPEECH": {
     "levels": [
       "a1"
@@ -21854,6 +22250,11 @@
       "b2"
     ]
   },
+  "SPONTANEOUS": {
+    "levels": [
+      "b1"
+    ]
+  },
   "SPOON": {
     "levels": [
       "a2"
@@ -21964,6 +22365,11 @@
   "STAB": {
     "levels": [
       "b2"
+    ]
+  },
+  "STABILITY": {
+    "levels": [
+      "b1"
     ]
   },
   "STABLE": {
@@ -22225,6 +22631,11 @@
       "a1"
     ]
   },
+  "STIMULATE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "STIMULI": {
     "levels": [
       "c1"
@@ -22467,6 +22878,11 @@
       "a1"
     ]
   },
+  "STRUCTURE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "STRUGGLE": {
     "levels": [
       "b1",
@@ -22570,6 +22986,11 @@
       "b2"
     ]
   },
+  "SUBSEQUENT": {
+    "levels": [
+      "b1"
+    ]
+  },
   "SUBSIDE": {
     "levels": [
       "b2"
@@ -22585,6 +23006,11 @@
       "c2"
     ]
   },
+  "SUBSTITUTE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "SUBTITLE": {
     "levels": [
       "b2"
@@ -22592,6 +23018,7 @@
   },
   "SUBTLE": {
     "levels": [
+      "b1",
       "b2"
     ]
   },
@@ -22666,6 +23093,11 @@
       "c1"
     ]
   },
+  "SUFFICIENT": {
+    "levels": [
+      "b1"
+    ]
+  },
   "SUFFIX": {
     "levels": [
       "b1"
@@ -22719,6 +23151,11 @@
   "SUM": {
     "levels": [
       "a1"
+    ]
+  },
+  "SUMMARIZE": {
+    "levels": [
+      "b1"
     ]
   },
   "SUMMARY": {
@@ -22809,6 +23246,11 @@
   "SUPPLE": {
     "levels": [
       "c1"
+    ]
+  },
+  "SUPPLEMENT": {
+    "levels": [
+      "b1"
     ]
   },
   "SUPPLIER": {
@@ -23352,6 +23794,16 @@
       "b2"
     ]
   },
+  "TECHNIQUE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "TECHNOLOGY": {
+    "levels": [
+      "b1"
+    ]
+  },
   "TEDIOUS": {
     "levels": [
       "c1"
@@ -23412,6 +23864,11 @@
   "TEMPLE": {
     "levels": [
       "a1"
+    ]
+  },
+  "TEMPORARY": {
+    "levels": [
+      "b1"
     ]
   },
   "TEMPT": {
@@ -23880,6 +24337,11 @@
       "a1"
     ]
   },
+  "TOLERANCE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "TOLERANT": {
     "levels": [
       "b2"
@@ -24166,9 +24628,19 @@
       "c1"
     ]
   },
+  "TRANSFORM": {
+    "levels": [
+      "b1"
+    ]
+  },
   "TRANSIT": {
     "levels": [
       "c1"
+    ]
+  },
+  "TRANSITION": {
+    "levels": [
+      "b1"
     ]
   },
   "TRANSMIT": {
@@ -24616,9 +25088,19 @@
       "b1"
     ]
   },
+  "UNDERMINE": {
+    "levels": [
+      "b1"
+    ]
+  },
   "UNDERSEA": {
     "levels": [
       "b2"
+    ]
+  },
+  "UNDERTAKE": {
+    "levels": [
+      "b1"
     ]
   },
   "UNDO": {
@@ -24714,6 +25196,11 @@
   "UNITED": {
     "levels": [
       "b2"
+    ]
+  },
+  "UNIVERSAL": {
+    "levels": [
+      "b1"
     ]
   },
   "UNIVERSE": {
@@ -25125,6 +25612,11 @@
       "c1"
     ]
   },
+  "VERIFY": {
+    "levels": [
+      "b1"
+    ]
+  },
   "VERMIN": {
     "levels": [
       "c2"
@@ -25168,6 +25660,11 @@
   "VETERAN": {
     "levels": [
       "b2"
+    ]
+  },
+  "VIABLE": {
+    "levels": [
+      "b1"
     ]
   },
   "VIBRATE": {
@@ -25347,6 +25844,11 @@
       "c2"
     ]
   },
+  "VOCATION": {
+    "levels": [
+      "b1"
+    ]
+  },
   "VOICE": {
     "levels": [
       "a2",
@@ -25359,6 +25861,11 @@
     ]
   },
   "VOLUME": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "VOLUNTARY": {
     "levels": [
       "b1"
     ]
@@ -25400,6 +25907,11 @@
     ]
   },
   "VOYAGE": {
+    "levels": [
+      "b1"
+    ]
+  },
+  "VULNERABLE": {
     "levels": [
       "b1"
     ]
@@ -25856,6 +26368,11 @@
       "b2"
     ]
   },
+  "WIDESPREAD": {
+    "levels": [
+      "b1"
+    ]
+  },
   "WIDOW": {
     "levels": [
       "b2"
@@ -25990,6 +26507,11 @@
     "levels": [
       "b1",
       "c2"
+    ]
+  },
+  "WITHSTAND": {
+    "levels": [
+      "b1"
     ]
   },
   "WITNESS": {

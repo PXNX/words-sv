@@ -109,7 +109,7 @@
   },
   "bad": {
     "definition": "Of poor quality, or not good.",
-    "type": "noun"
+    "type": "adjective"
   },
   "bag": {
     "definition": "A container of paper, cloth, or plastic for carrying things.",
@@ -201,7 +201,7 @@
   },
   "better": {
     "definition": "Of higher quality than something else.",
-    "type": "noun"
+    "type": "adjective"
   },
   "bicycle": {
     "definition": "A vehicle with two wheels that you ride by pushing pedals.",
@@ -209,7 +209,7 @@
   },
   "big": {
     "definition": "Large in size, amount, or importance.",
-    "type": "noun"
+    "type": "adjective"
   },
   "bike": {
     "definition": "A short word for a bicycle.",
@@ -501,7 +501,7 @@
   },
   "clever": {
     "definition": "Quick to understand things and good at learning.",
-    "type": "noun"
+    "type": "adjective"
   },
   "climb": {
     "definition": "To go up something using your hands and feet.",
@@ -617,7 +617,7 @@
   },
   "correct": {
     "definition": "Right, with no mistakes.",
-    "type": "noun"
+    "type": "adjective"
   },
   "couch": {
     "definition": "A long soft seat for two or more people.",
@@ -961,7 +961,7 @@
   },
   "fine": {
     "definition": "Good enough; well and happy.",
-    "type": "noun"
+    "type": "adjective"
   },
   "finish": {
     "definition": "To come to the end of something.",
@@ -989,7 +989,7 @@
   },
   "flat": {
     "definition": "Smooth and level, with no bumps.",
-    "type": "noun"
+    "type": "adjective"
   },
   "floor": {
     "definition": "The flat surface you walk on inside a room.",
@@ -1125,7 +1125,7 @@
   },
   "good": {
     "definition": "Of high quality; pleasant or right.",
-    "type": "noun"
+    "type": "adjective"
   },
   "grade": {
     "definition": "A mark given for school work, or a level in a school.",
@@ -1217,7 +1217,7 @@
   },
   "handsome": {
     "definition": "Good-looking, especially of a man.",
-    "type": "noun"
+    "type": "adjective"
   },
   "happen": {
     "definition": "To take place; to occur.",
@@ -1689,7 +1689,7 @@
   },
   "merry": {
     "definition": "Happy and cheerful.",
-    "type": "noun"
+    "type": "adjective"
   },
   "message": {
     "definition": "Words you send to someone who is not with you.",
@@ -2685,7 +2685,7 @@
   },
   "sure": {
     "definition": "Certain that something is true.",
-    "type": "noun"
+    "type": "adjective"
   },
   "surf": {
     "definition": "To ride on waves on a board.",

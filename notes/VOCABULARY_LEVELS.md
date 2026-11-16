@@ -12,6 +12,7 @@ Words-sv therefore labels its small puzzle-word pools using a reproducible hiera
 | German | B2–C2 | GerVLPro (LREC 2026) [3] | The candidate must have GerVLPro’s conservative `first_level_above_12_percent` assignment for the stated level. |
 | English | A1–B2 | Open Language Profiles CEFR-J Vocabulary Profile 1.5 [4] | The candidate uses the profile’s declared CEFR band and part of speech. |
 | English | C1–C2 | Octanove C1/C2 Vocabulary Profile 1.0 [4] | The candidate uses the profile’s declared CEFR band and part of speech. |
+| English | B1 (exam core) | Common academic vocabulary as used in TOEFL reading and listening [6] | A curated core of words that recur in university-style passages is taught at B1 so exam preparation meets them early; these entries carry short definitions and a word type like the rest of the level. |
 | English | Sample verification | Cambridge English Vocabulary Profile [5] | Individual sense-level checks validate the primary English reference without copying its protected bulk database. |
 
 ## Reproducible update
@@ -35,3 +36,4 @@ The generated alignment report records 5 source-backed German C2 entries and 398
 [3]: https://aclanthology.org/2026.lrec-1.935/ "Michael, Hülsing & Horbach (2026), GerVLPro"; https://github.com/noahmanu/gervlpro "GerVLPro released data"
 [4]: https://github.com/openlanguageprofiles/olp-en-cefrj "Open Language Profiles: CEFR-J and Octanove English vocabulary profiles"
 [5]: https://englishprofile.org/?menu=english-vocabulary-profile "English Profile: English Vocabulary Profile"
+[6]: https://www.ets.org/toefl "ETS: TOEFL – the exam context for the curated academic core at B1"

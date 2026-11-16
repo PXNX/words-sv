@@ -225,7 +225,7 @@
   },
   "antique": {
     "definition": "Old and valuable because of its age.",
-    "type": "noun"
+    "type": "adjective"
   },
   "antonym": {
     "definition": "A word with the opposite meaning to another word.",
@@ -341,7 +341,7 @@
   },
   "athletic": {
     "definition": "Strong, fit, and good at sports.",
-    "type": "noun"
+    "type": "adjective"
   },
   "atlantic": {
     "definition": "The ocean between Europe and America.",
@@ -533,7 +533,7 @@
   },
   "bent": {
     "definition": "Curved, not straight, or determined to do something.",
-    "type": "noun"
+    "type": "adjective"
   },
   "bet": {
     "definition": "To risk money on the result of something.",
@@ -613,7 +613,7 @@
   },
   "bold": {
     "definition": "Brave and confident, or thick and dark in colour.",
-    "type": "noun"
+    "type": "adjective"
   },
   "bomb": {
     "definition": "An explosive weapon.",
@@ -661,7 +661,7 @@
   },
   "bound": {
     "definition": "Certain to happen, or tied up.",
-    "type": "noun"
+    "type": "adjective"
   },
   "bow": {
     "definition": "To bend the head or body forward, or a weapon for shooting arrows.",
@@ -713,7 +713,7 @@
   },
   "broad": {
     "definition": "Wide, or covering many things.",
-    "type": "noun"
+    "type": "adjective"
   },
   "broccoli": {
     "definition": "A green vegetable with a thick stalk and flower buds.",
@@ -909,7 +909,7 @@
   },
   "cautious": {
     "definition": "Careful to avoid danger.",
-    "type": "noun"
+    "type": "adjective"
   },
   "cave": {
     "definition": "A large natural hole in the side of a hill or under the ground.",
@@ -969,7 +969,7 @@
   },
   "cheerful": {
     "definition": "Happy and showing it.",
-    "type": "noun"
+    "type": "adjective"
   },
   "chemical": {
     "definition": "A substance used in or made by chemistry.",
@@ -1433,7 +1433,7 @@
   },
   "definite": {
     "definition": "Certain and clear.",
-    "type": "noun"
+    "type": "adjective"
   },
   "delay": {
     "definition": "A period of waiting, or to make something late.",
@@ -1717,7 +1717,7 @@
   },
   "earnest": {
     "definition": "Serious and sincere.",
-    "type": "noun"
+    "type": "adjective"
   },
   "eastern": {
     "definition": "In or from the east.",
@@ -1877,7 +1877,7 @@
   },
   "even": {
     "definition": "Flat and level, or equal, or used to stress a point.",
-    "type": "noun"
+    "type": "adjective"
   },
   "evident": {
     "definition": "Easy to see or understand.",
@@ -1989,7 +1989,7 @@
   },
   "fancy": {
     "definition": "Special and not simple, or to want something.",
-    "type": "noun"
+    "type": "adjective"
   },
   "fantasy": {
     "definition": "A story or idea about things that cannot really happen.",
@@ -2313,7 +2313,7 @@
   },
   "generous": {
     "definition": "Happy to give money or help to others.",
-    "type": "noun"
+    "type": "adjective"
   },
   "genetic": {
     "definition": "Relating to genes and what is passed to children.",
@@ -2517,7 +2517,7 @@
   },
   "handy": {
     "definition": "Useful and easy to use.",
-    "type": "noun"
+    "type": "adjective"
   },
   "hang": {
     "definition": "To fix something at the top so it hangs down.",
@@ -2641,7 +2641,7 @@
   },
   "historic": {
     "definition": "Important in history.",
-    "type": "noun"
+    "type": "adjective"
   },
   "hit": {
     "definition": "To strike with force, or a great success.",
@@ -2721,7 +2721,7 @@
   },
   "humorous": {
     "definition": "Funny and amusing.",
-    "type": "noun"
+    "type": "adjective"
   },
   "hunger": {
     "definition": "The feeling that you need food.",
@@ -3557,7 +3557,7 @@
   },
   "narrow": {
     "definition": "Small in width; not wide.",
-    "type": "noun"
+    "type": "adjective"
   },
   "nasty": {
     "definition": "Very unpleasant.",
@@ -3833,7 +3833,7 @@
   },
   "pale": {
     "definition": "Light in colour, or looking unwell.",
-    "type": "noun"
+    "type": "adjective"
   },
   "palm": {
     "definition": "The inside of the hand, or a tropical tree.",
@@ -3981,7 +3981,7 @@
   },
   "plain": {
     "definition": "Simple and without decoration, or easy to understand.",
-    "type": "noun"
+    "type": "adjective"
   },
   "plan": {
     "definition": "An idea about what you will do and how.",
@@ -4049,7 +4049,7 @@
   },
   "positive": {
     "definition": "Hopeful and confident, or certain.",
-    "type": "noun"
+    "type": "adjective"
   },
   "possess": {
     "definition": "To have or own something.",
@@ -4605,7 +4605,7 @@
   },
   "ripe": {
     "definition": "Ready to be eaten, as of fruit.",
-    "type": "noun"
+    "type": "adjective"
   },
   "rise": {
     "definition": "To go up, or an increase.",
@@ -4781,7 +4781,7 @@
   },
   "secure": {
     "definition": "Safe and protected, or firmly fixed.",
-    "type": "noun"
+    "type": "adjective"
   },
   "security": {
     "definition": "Protection from danger or crime.",
@@ -4809,7 +4809,7 @@
   },
   "serious": {
     "definition": "Important or severe, or not joking.",
-    "type": "noun"
+    "type": "adjective"
   },
   "server": {
     "definition": "A computer that supplies data to others, or a person who serves food.",
@@ -4849,7 +4849,7 @@
   },
   "shadowy": {
     "definition": "Dark because of shadows.",
-    "type": "noun"
+    "type": "adjective"
   },
   "shake": {
     "definition": "To move quickly from side to side.",
@@ -4901,7 +4901,7 @@
   },
   "shiny": {
     "definition": "Bright because it reflects light.",
-    "type": "noun"
+    "type": "adjective"
   },
   "ship": {
     "definition": "A large boat that carries people or goods at sea.",
@@ -5017,7 +5017,7 @@
   },
   "slight": {
     "definition": "Small in amount or degree.",
-    "type": "noun"
+    "type": "adjective"
   },
   "slip": {
     "definition": "To slide by accident and lose your balance.",
@@ -5157,7 +5157,7 @@
   },
   "stable": {
     "definition": "Firm and not likely to change or fall.",
-    "type": "noun"
+    "type": "adjective"
   },
   "stall": {
     "definition": "A table or small shop where things are sold.",
@@ -5185,7 +5185,7 @@
   },
   "steady": {
     "definition": "Firm and not shaking or changing.",
-    "type": "noun"
+    "type": "adjective"
   },
   "steam": {
     "definition": "The hot gas that water turns into when it boils.",
@@ -5569,7 +5569,7 @@
   },
   "thorough": {
     "definition": "Careful and complete in every detail.",
-    "type": "noun"
+    "type": "adjective"
   },
   "threat": {
     "definition": "A warning that you will harm someone, or a possible danger.",
@@ -5817,7 +5817,7 @@
   },
   "unique": {
     "definition": "Being the only one of its kind.",
-    "type": "noun"
+    "type": "adjective"
   },
   "unite": {
     "definition": "To join together for a common purpose.",
@@ -6198,5 +6198,429 @@
   "yoga": {
     "definition": "A set of exercises and stretches done slowly, from India.",
     "type": "noun"
+  },
+  "accomplish": {
+    "definition": "To succeed in doing something after effort.",
+    "type": "verb"
+  },
+  "accumulate": {
+    "definition": "To gather more and more of something over time.",
+    "type": "verb"
+  },
+  "analyze": {
+    "definition": "To study something closely in order to understand it.",
+    "type": "verb"
+  },
+  "arbitrary": {
+    "definition": "Based on a personal choice rather than on a rule or reason.",
+    "type": "adjective"
+  },
+  "architecture": {
+    "definition": "The art and work of designing buildings.",
+    "type": "noun"
+  },
+  "authentic": {
+    "definition": "Real and genuine, not a copy.",
+    "type": "adjective"
+  },
+  "commodity": {
+    "definition": "A product that can be bought and sold.",
+    "type": "noun"
+  },
+  "compensate": {
+    "definition": "To make up for a loss or for damage done.",
+    "type": "verb"
+  },
+  "competent": {
+    "definition": "Having enough skill to do something well.",
+    "type": "adjective"
+  },
+  "comprehensive": {
+    "definition": "Covering all or nearly all of the parts of something.",
+    "type": "adjective"
+  },
+  "consequence": {
+    "definition": "A result that follows from an action or condition.",
+    "type": "noun"
+  },
+  "considerable": {
+    "definition": "Large enough to be important or noticeable.",
+    "type": "adjective"
+  },
+  "consistent": {
+    "definition": "Always behaving or happening in the same way.",
+    "type": "adjective"
+  },
+  "contemporary": {
+    "definition": "Belonging to the present time; modern.",
+    "type": "adjective"
+  },
+  "contradict": {
+    "definition": "To say or show that something is not true or correct.",
+    "type": "verb"
+  },
+  "contribute": {
+    "definition": "To give something, such as money, time or ideas, to help.",
+    "type": "verb"
+  },
+  "controversial": {
+    "definition": "Causing strong disagreement among people.",
+    "type": "adjective"
+  },
+  "cultivate": {
+    "definition": "To prepare land for growing crops, or to develop a skill.",
+    "type": "verb"
+  },
+  "curriculum": {
+    "definition": "All the subjects and courses taught in a school or course.",
+    "type": "noun"
+  },
+  "demonstrate": {
+    "definition": "To show clearly how something works or that it is true.",
+    "type": "verb"
+  },
+  "determine": {
+    "definition": "To find out exactly what something is or what will happen.",
+    "type": "verb"
+  },
+  "differentiate": {
+    "definition": "To see or show the difference between things.",
+    "type": "verb"
+  },
+  "dimension": {
+    "definition": "A measurable extent such as length, width or height.",
+    "type": "noun"
+  },
+  "distinct": {
+    "definition": "Clearly different from something else; easy to tell apart.",
+    "type": "adjective"
+  },
+  "distort": {
+    "definition": "To change the shape or meaning of something so that it is no longer true.",
+    "type": "verb"
+  },
+  "distribute": {
+    "definition": "To give or hand out something to several people or places.",
+    "type": "verb"
+  },
+  "elaborate": {
+    "definition": "To add more detail to an idea or a plan.",
+    "type": "verb"
+  },
+  "eliminate": {
+    "definition": "To remove or get rid of something completely.",
+    "type": "verb"
+  },
+  "emphasize": {
+    "definition": "To give special importance to something when speaking or writing.",
+    "type": "verb"
+  },
+  "encounter": {
+    "definition": "To meet something, often something difficult or unexpected.",
+    "type": "verb"
+  },
+  "equipment": {
+    "definition": "The tools and machines needed for a particular activity.",
+    "type": "noun"
+  },
+  "establish": {
+    "definition": "To set up or found something, or to prove a fact.",
+    "type": "verb"
+  },
+  "exceptional": {
+    "definition": "Much better than usual; unusually good.",
+    "type": "adjective"
+  },
+  "exposure": {
+    "definition": "The state of being in a situation where something affects you.",
+    "type": "noun"
+  },
+  "facilitate": {
+    "definition": "To make an action or a process easier.",
+    "type": "verb"
+  },
+  "fluctuate": {
+    "definition": "To rise and fall again and again.",
+    "type": "verb"
+  },
+  "foster": {
+    "definition": "To help something, such as a skill or a feeling, to develop.",
+    "type": "verb"
+  },
+  "foundation": {
+    "definition": "The base on which something is built or developed.",
+    "type": "noun"
+  },
+  "guarantee": {
+    "definition": "To promise that something will certainly happen or be true.",
+    "type": "verb"
+  },
+  "illustrate": {
+    "definition": "To explain something with a picture or an example.",
+    "type": "verb"
+  },
+  "implement": {
+    "definition": "To put a plan or decision into action.",
+    "type": "verb"
+  },
+  "implication": {
+    "definition": "A possible effect or result of an action or statement.",
+    "type": "noun"
+  },
+  "incentive": {
+    "definition": "Something that encourages a person to do something.",
+    "type": "noun"
+  },
+  "incorporate": {
+    "definition": "To include something as part of a whole.",
+    "type": "verb"
+  },
+  "inevitable": {
+    "definition": "Certain to happen and impossible to avoid.",
+    "type": "adjective"
+  },
+  "innovation": {
+    "definition": "A new idea, method or invention.",
+    "type": "noun"
+  },
+  "integrate": {
+    "definition": "To combine things so that they work together as one.",
+    "type": "verb"
+  },
+  "integrity": {
+    "definition": "The quality of being honest and morally sound.",
+    "type": "noun"
+  },
+  "interpret": {
+    "definition": "To explain the meaning of something.",
+    "type": "verb"
+  },
+  "intervene": {
+    "definition": "To come between things in order to change what happens.",
+    "type": "verb"
+  },
+  "intrinsic": {
+    "definition": "Belonging to the nature of something itself.",
+    "type": "adjective"
+  },
+  "investigate": {
+    "definition": "To try to find out the facts about something.",
+    "type": "verb"
+  },
+  "legislation": {
+    "definition": "A law, or the act of making laws.",
+    "type": "noun"
+  },
+  "mechanism": {
+    "definition": "The parts of a machine or system that make it work.",
+    "type": "noun"
+  },
+  "occupation": {
+    "definition": "A person's job or profession.",
+    "type": "noun"
+  },
+  "opportunity": {
+    "definition": "A time or situation that makes it possible to do something.",
+    "type": "noun"
+  },
+  "participate": {
+    "definition": "To take part in an activity with other people.",
+    "type": "verb"
+  },
+  "percent": {
+    "definition": "One part in every hundred, written as %.",
+    "type": "noun"
+  },
+  "permanent": {
+    "definition": "Lasting or intended to last for a long time or for ever.",
+    "type": "adjective"
+  },
+  "perspective": {
+    "definition": "A particular way of thinking about something.",
+    "type": "noun"
+  },
+  "phenomenon": {
+    "definition": "Something that happens or exists and can be observed.",
+    "type": "noun"
+  },
+  "potential": {
+    "definition": "The ability to develop into something more in the future.",
+    "type": "noun"
+  },
+  "precision": {
+    "definition": "The quality of being exact and accurate.",
+    "type": "noun"
+  },
+  "principle": {
+    "definition": "A general rule or belief that guides behaviour.",
+    "type": "noun"
+  },
+  "priority": {
+    "definition": "The thing that is considered most important.",
+    "type": "noun"
+  },
+  "procedure": {
+    "definition": "The usual way of doing something, step by step.",
+    "type": "noun"
+  },
+  "proportion": {
+    "definition": "The relation in size or number between parts of a whole.",
+    "type": "noun"
+  },
+  "random": {
+    "definition": "Chosen by chance, without a plan or pattern.",
+    "type": "adjective"
+  },
+  "ratio": {
+    "definition": "The relation between two amounts, shown as one number divided by another.",
+    "type": "noun"
+  },
+  "recognize": {
+    "definition": "To know something or someone because you have seen or heard them before.",
+    "type": "verb"
+  },
+  "recommend": {
+    "definition": "To say that something is a good choice or should be done.",
+    "type": "verb"
+  },
+  "refine": {
+    "definition": "To make something better by removing small faults.",
+    "type": "verb"
+  },
+  "reinforce": {
+    "definition": "To make something stronger or more certain.",
+    "type": "verb"
+  },
+  "reluctant": {
+    "definition": "Unwilling to do something.",
+    "type": "adjective"
+  },
+  "remarkable": {
+    "definition": "Unusual and worth noticing or talking about.",
+    "type": "adjective"
+  },
+  "represent": {
+    "definition": "To stand for or act on behalf of something or someone.",
+    "type": "verb"
+  },
+  "rigid": {
+    "definition": "Not able to bend or to be changed easily.",
+    "type": "adjective"
+  },
+  "simulate": {
+    "definition": "To copy the behaviour or appearance of something.",
+    "type": "verb"
+  },
+  "sophisticated": {
+    "definition": "Complex and developed, showing a high level of skill.",
+    "type": "adjective"
+  },
+  "speculate": {
+    "definition": "To guess about something without knowing all the facts.",
+    "type": "verb"
+  },
+  "spontaneous": {
+    "definition": "Done naturally, without planning or being forced.",
+    "type": "adjective"
+  },
+  "stability": {
+    "definition": "The state of staying steady and not likely to change.",
+    "type": "noun"
+  },
+  "stimulate": {
+    "definition": "To encourage an activity, feeling or process to grow.",
+    "type": "verb"
+  },
+  "structure": {
+    "definition": "The way in which the parts of something are arranged.",
+    "type": "noun"
+  },
+  "subsequent": {
+    "definition": "Happening after something else in time.",
+    "type": "adjective"
+  },
+  "substitute": {
+    "definition": "To use one thing in place of another.",
+    "type": "verb"
+  },
+  "subtle": {
+    "definition": "Not obvious, but still important or noticeable.",
+    "type": "adjective"
+  },
+  "sufficient": {
+    "definition": "As much as is needed; enough.",
+    "type": "adjective"
+  },
+  "summarize": {
+    "definition": "To give the main points of something briefly.",
+    "type": "verb"
+  },
+  "supplement": {
+    "definition": "To add something extra to make something more complete.",
+    "type": "verb"
+  },
+  "technique": {
+    "definition": "A particular way of doing something skilfully.",
+    "type": "noun"
+  },
+  "technology": {
+    "definition": "The tools, machines and methods used to do things.",
+    "type": "noun"
+  },
+  "temporary": {
+    "definition": "Lasting only for a short time.",
+    "type": "adjective"
+  },
+  "tolerance": {
+    "definition": "The ability to accept or put up with something.",
+    "type": "noun"
+  },
+  "transform": {
+    "definition": "To change something completely in form or character.",
+    "type": "verb"
+  },
+  "transition": {
+    "definition": "The change from one state or stage to another.",
+    "type": "noun"
+  },
+  "undermine": {
+    "definition": "To weaken something gradually.",
+    "type": "verb"
+  },
+  "undertake": {
+    "definition": "To agree to do a piece of work or a task.",
+    "type": "verb"
+  },
+  "universal": {
+    "definition": "True or happening everywhere and for everyone.",
+    "type": "adjective"
+  },
+  "verify": {
+    "definition": "To check that something is true or correct.",
+    "type": "verb"
+  },
+  "viable": {
+    "definition": "Able to work or to be done successfully.",
+    "type": "adjective"
+  },
+  "vocation": {
+    "definition": "A strong feeling of suitability for a particular career.",
+    "type": "noun"
+  },
+  "voluntary": {
+    "definition": "Done by choice, without being forced or paid.",
+    "type": "adjective"
+  },
+  "vulnerable": {
+    "definition": "Easily harmed or affected by something.",
+    "type": "adjective"
+  },
+  "widespread": {
+    "definition": "Found or happening over a large area or among many people.",
+    "type": "adjective"
+  },
+  "withstand": {
+    "definition": "To resist something without being damaged or defeated.",
+    "type": "verb"
   }
 }

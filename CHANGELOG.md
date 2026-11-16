@@ -14,6 +14,7 @@ entries, section names and summaries are never translated.
 - Let either player leave a live Scribble game: the leaver drops out of the standings, their turn passes at once and an unfinished drawing is closed, so the other side never waits on an absent player; the last player leaving resets the table
 
 ### Improved
+- Teach a core of common TOEFL academic words at English B1, with short definitions and word types, and correct the word type of adjectives that were tagged as nouns in English A1–B1
 - Announce game results and feedback in the language being learnt: Scribble, Hangman, Wordle and group scores now read in the learner's language, with wording added for French, Italian, Spanish, Portuguese and Ukrainian
 - Give error pages their own themed card: 404, 500 and other statuses get their own localized title and text, Lilith's reaction, and a way home or to retry
 - Put the learning language and the interface language together in one box in the settings, each with its own name, hint and dropdown, so it is clear which language is being learnt and which one the app speaks
