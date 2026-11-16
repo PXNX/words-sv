@@ -79,6 +79,8 @@
   const GuessSchema = v.object({ ok: v.literal(true), result: v.picklist(['right', 'close', 'wrong', 'none']) });
 
   const locale = $derived({ locale: settings.interfaceLocale });
+  // Announcements about the round are in the language being learnt; controls stay in the app's language.
+  const learn = $derived({ locale: settings.lang });
   const lang = $derived(language as Language);
   const session = $derived(groupGame.session?.session ?? '');
   const display = (word: string) => spokenWord(lang, word);
@@ -142,8 +144,8 @@
     return parseAvatar(player.avatar) ?? seededAvatar(player.id);
   }
   function bubbleText(bubble: Bubble) {
-    if (bubble.result === 'right') return m.scribble_live_bubble_right({}, locale);
-    if (bubble.result === 'close') return m.scribble_live_bubble_close({}, locale);
+    if (bubble.result === 'right') return m.scribble_live_bubble_right({}, learn);
+    if (bubble.result === 'close') return m.scribble_live_bubble_close({}, learn);
     return bubble.text ?? '';
   }
 
@@ -153,7 +155,7 @@
     const me = standings.find((player) => player.me)?.id ?? 0;
     for (const [id, name] of seenPlayers) {
       if (now.has(id) || id === me) continue;
-      leftNotice = m.scribble_live_left({ name: name || '–' }, locale);
+      leftNotice = m.scribble_live_left({ name: name || '–' }, learn);
       if (leftTimer) clearTimeout(leftTimer);
       leftTimer = setTimeout(() => (leftNotice = ''), 5000);
     }
@@ -281,7 +283,7 @@
 </script>
 
 {#snippet wordSlots(pattern: Array<string | null>, letters: number)}
-  <p class="live-slots" aria-label={m.scribble_live_letters({ count: num(letters) }, locale)}>
+  <p class="live-slots" aria-label={m.scribble_live_letters({ count: num(letters) }, learn)}>
     {#each pattern as slot, index (index)}
       {#if slot === ' '}<span class="gap"></span>{:else}<span class="slot" class:open={slot !== null}>{#if slot !== null}<span class="letter">{slot}</span>{/if}</span>{/if}
     {/each}
@@ -296,12 +298,12 @@
     <div class="live-card live-wait"><span class="live-badge pulse" aria-hidden="true"><IconBrush /></span><p class="live-note">{m.scribble_live_loading({}, locale)}</p></div>
   {:else}
     <header class="live-head">
-      <span class="live-pill">{m.scribble_live_round({ round: num(Math.max(1, game.match.round)), of: num(game.match.of) }, locale)}</span>
+      <span class="live-pill">{m.scribble_live_round({ round: num(Math.max(1, game.match.round)), of: num(game.match.of) }, learn)}</span>
       <button type="button" class="live-leave" onclick={leave} disabled={leaving} aria-label={m.scribble_live_leave({}, locale)}><IconExit aria-hidden="true" />{m.scribble_live_leave({}, locale)}</button>
       {#if round && drawing}
         <span class="live-pill live-time" class:low={round.secondsLeft <= Math.min(10, round.seconds / 4)}><IconTimer aria-hidden="true" />{num(round.secondsLeft)}</span>
       {:else if game.role === 'draw' && !round?.mine}
-        <span class="live-pill live-turn"><IconBrush aria-hidden="true" />{m.scribble_live_your_turn({}, locale)}</span>
+        <span class="live-pill live-turn"><IconBrush aria-hidden="true" />{m.scribble_live_your_turn({}, learn)}</span>
       {/if}
       <span class="live-dots" aria-hidden="true">
         {#each Array.from({ length: game.match.of }, (_, index) => index) as index (index)}<i class:done={index < game.match.round - (drawing ? 1 : 0)} class:now={drawing && index === game.match.round - 1}></i>{/each}
@@ -334,15 +336,15 @@
     {#if game.match.champion}
       <div class="live-card live-champion" aria-live="polite">
         <span class="live-badge gold" aria-hidden="true"><IconMedal /></span>
-        <p class="live-prompt">{m.scribble_live_champion({ name: game.match.champion.name || '–' }, locale)}</p>
-        <small class="live-note">{m.scribble_live_champion_points({ points: num(game.match.champion.points), wins: num(game.match.champion.wins) }, locale)}</small>
+        <p class="live-prompt">{m.scribble_live_champion({ name: game.match.champion.name || '–' }, learn)}</p>
+        <small class="live-note">{m.scribble_live_champion_points({ points: num(game.match.champion.points), wins: num(game.match.champion.wins) }, learn)}</small>
       </div>
     {/if}
 
     {#if game.role === 'draw' && !round?.mine}
       <!-- Your turn: choose the word. -->
       <div class="live-card">
-        <p class="live-prompt">{m.scribble_choose_group({}, locale)}</p>
+        <p class="live-prompt">{m.scribble_choose_group({}, learn)}</p>
         <div class="live-options">
           {#each choices as choice (choice)}
             <button type="button" class="live-choice" disabled={starting} onclick={() => start(choice)}><span class="live-emoji" aria-hidden="true">{pictureFor(language, choice)}</span><span>{display(choice)}</span></button>
@@ -359,32 +361,32 @@
           <span class="track" aria-hidden="true"></span>
           <IconSpell aria-hidden="true" />{m.scribble_live_reveal({}, locale)}
         </label>
-        <small class="live-note"><IconHourglass aria-hidden="true" />{m.scribble_live_turn_left({ seconds: num(game.turnSecondsLeft) }, locale)}</small>
+        <small class="live-note"><IconHourglass aria-hidden="true" />{m.scribble_live_turn_left({ seconds: num(game.turnSecondsLeft) }, learn)}</small>
       </div>
     {:else if iDraw && round}
       <div class="live-stage">
-        <p class="live-prompt live-word">{m.scribble_draw_prompt({ word: round.word ?? chosen }, locale)}</p>
+        <p class="live-prompt live-word">{m.scribble_draw_prompt({ word: round.word ?? chosen }, learn)}</p>
         <DrawPad onlive={(next) => (pending = next)} />
-        <small class="live-note">{m.scribble_live_drawing_hint({}, locale)}</small>
+        <small class="live-note">{m.scribble_live_drawing_hint({}, learn)}</small>
       </div>
     {:else if round}
       <div class="live-stage">
-        <div class="live-canvas"><LiveCanvas {lines} label={m.scribble_live_canvas({ name: round.drawer }, locale)} /></div>
+        <div class="live-canvas"><LiveCanvas {lines} label={m.scribble_live_canvas({ name: round.drawer }, learn)} /></div>
         {#if drawing}
-          <p class="live-prompt">{m.scribble_live_watch({ name: round.drawer }, locale)}</p>
+          <p class="live-prompt">{m.scribble_live_watch({ name: round.drawer }, learn)}</p>
           {@render wordSlots(slots, round.letters)}
           <form class="live-guess" onsubmit={(event) => { event.preventDefault(); void sendGuess(); }}>
             <input type="text" bind:value={typed} autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="send" aria-label={m.scribble_spell_label({}, locale)} placeholder={m.scribble_spell_placeholder({}, locale)} class:close={hint === 'close'} class:shake={hint === 'wrong'} />
             <button type="submit" class="btn-play btn-play-ink" disabled={!typed.trim()}>{m.scribble_spell_submit({}, locale)}</button>
           </form>
-          {#if hint}<p class="live-hint" class:close={hint === 'close'} aria-live="polite">{hint === 'close' ? m.scribble_close({}, locale) : m.scribble_try_again({}, locale)}</p>{/if}
+          {#if hint}<p class="live-hint" class:close={hint === 'close'} aria-live="polite">{hint === 'close' ? m.scribble_close({}, learn) : m.scribble_try_again({}, learn)}</p>{/if}
         {:else}
           {@render wordSlots(slots, round.letters)}
           <p class="live-result" class:solved={round.status === 'solved'} aria-live="polite">
             {#if round.status === 'solved'}<span class="live-mark" aria-hidden="true"><IconCheck /></span>{/if}
             {round.status === 'solved'
-              ? round.guessedByMe ? m.scribble_live_you_got_it({ word: round.word ?? '', points: num(round.points ?? 0) }, locale) : m.scribble_live_guessed({ name: round.guesser ?? '', word: round.word ?? '' }, locale)
-              : m.scribble_timeout({ word: round.word ?? '' }, locale)}
+              ? round.guessedByMe ? m.scribble_live_you_got_it({ word: round.word ?? '', points: num(round.points ?? 0) }, learn) : m.scribble_live_guessed({ name: round.guesser ?? '', word: round.word ?? '' }, learn)
+              : m.scribble_timeout({ word: round.word ?? '' }, learn)}
           </p>
         {/if}
       </div>
@@ -393,7 +395,7 @@
     {#if (!round || !drawing) && game.role === 'wait'}
       <div class="live-card live-wait">
         <span class="live-badge pulse" aria-hidden="true"><IconBrush /></span>
-        <p class="live-prompt">{game.drawer ? m.scribble_live_waiting({ name: game.drawer }, locale) : m.scribble_live_waiting_anyone({}, locale)}</p>
+        <p class="live-prompt">{game.drawer ? m.scribble_live_waiting({ name: game.drawer }, learn) : m.scribble_live_waiting_anyone({}, learn)}</p>
       </div>
     {/if}
 

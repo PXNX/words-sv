@@ -1224,5 +1224,13 @@
   "scribble_live_round_time": "Time for this round",
   "scribble_seconds": "{seconds} s",
   "scribble_live_leave": "Leave game",
-  "scribble_live_left": "{name} left the game …"
+  "scribble_live_left": "{name} left the game …",
+  "error_404_title": "This trail has no word.",
+  "error_404_body": "Lilith searched everywhere, but the page you asked for is not in today’s WordCircle folio. Return to the puzzle and draw a new path.",
+  "error_500_title": "A page slipped out of the folio.",
+  "error_500_body": "Something went wrong while WordCircle was putting this page together. Try again, or go back to your exercises.",
+  "error_generic_title": "This page took a wrong turn.",
+  "error_generic_body": "Lilith could not load this page ({status}). Try again or head home.",
+  "error_home": "Back to WordCircle",
+  "error_try_again": "Try again"
 }

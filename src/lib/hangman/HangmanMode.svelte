@@ -26,6 +26,8 @@
   let figure = $state<SVGSVGElement>();
 
   const locale = $derived(settings.interfaceLocale);
+  // Feedback about the word is heard in the language being learnt.
+  const learn = $derived(settings.lang);
   const layout = $derived(keyboardLayoutFor(language));
   const candidates = $derived(hangmanCandidates(words, layout));
   const letters = $derived(Array.from(target));
@@ -40,16 +42,16 @@
     for (const letter of guessed) marks[letter] = target.includes(letter) ? 'correct' : 'absent';
     return marks;
   });
-  const wordLabel = $derived(m.hangman_word_label({ count: num(letters.length), pattern: letters.map((letter) => (guessedSet.has(letter) || finished ? letter : m.hangman_blank({}, { locale }))).join(', ') }, { locale }));
+  const wordLabel = $derived(m.hangman_word_label({ count: num(letters.length), pattern: letters.map((letter) => (guessedSet.has(letter) || finished ? letter : m.hangman_blank({}, { locale: learn }))).join(', ') }, { locale: learn }));
   // The reveal: the word as it is written (with its article) and what it means.
   const revealSpelling = $derived(finished ? spokenWord(language as Language, target) : '');
   const revealDefinition = $derived(finished ? wordDefinitions[language as Language]?.[target] ?? null : null);
   const revealHref = $derived(finished ? wiktionaryUrl(language as Language, wordMetadata[language as Language]?.[target]?.spelling ?? target) : '#');
-  const resultText = $derived(won ? (wrongGuesses === 0 ? m.hangman_win_perfect({}, { locale }) : m.hangman_win({}, { locale })) : lost ? m.hangman_lost({}, { locale }) : '');
+  const resultText = $derived(won ? (wrongGuesses === 0 ? m.hangman_win_perfect({}, { locale: learn }) : m.hangman_win({}, { locale: learn })) : lost ? m.hangman_lost({}, { locale: learn }) : '');
   // Lilith watches the letters: pleased by a hit, startled by a miss, worried when the figure is nearly done.
   const lastGuess = $derived(guessed.at(-1));
   const lilithMood = $derived<Mood>(won ? 'happy' : lost ? 'sad' : !lastGuess ? 'curious' : !target.includes(lastGuess) ? (wrongGuesses >= 4 ? 'sad' : 'surprised') : 'happy');
-  const lilithLine = $derived(won ? m.hangman_lilith_win({}, { locale }) : lost ? m.hangman_lilith_lost({}, { locale }) : '');
+  const lilithLine = $derived(won ? m.hangman_lilith_win({}, { locale: learn }) : lost ? m.hangman_lilith_lost({}, { locale: learn }) : '');
 
   let recordedCompletion = '';
   function start() {
@@ -78,17 +80,17 @@
   function press(letter: string) {
     if (!target || finished) return;
     if (guessedSet.has(letter)) {
-      notice = { text: m.hangman_repeat({ letter }, { locale }), tone: 'info' };
+      notice = { text: m.hangman_repeat({ letter }, { locale: learn }), tone: 'info' };
       haptic('tap');
       return;
     }
     guessed = [...guessed, letter];
     const count = letters.filter((candidate) => candidate === letter).length;
     if (count > 0) {
-      notice = { text: m.hangman_hit({ letter, count }, { locale }), tone: 'hit' };
+      notice = { text: m.hangman_hit({ letter, count }, { locale: learn }), tone: 'hit' };
       if (!won) playSuccessSound(settings.sound, 'wordle');
     } else {
-      notice = { text: m.hangman_miss({ letter }, { locale }), tone: 'miss' };
+      notice = { text: m.hangman_miss({ letter }, { locale: learn }), tone: 'miss' };
       if (!lost) playErrorSound(settings.sound, 'vocab');
       shakeFigure();
     }

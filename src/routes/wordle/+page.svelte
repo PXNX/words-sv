@@ -26,14 +26,16 @@
   }
   const lengthOptions = [3, 4, 5, 6, 7].map((length) => ({ value: String(length), label: num(length) }));
 
+  // Result feedback is in the language being learnt, the controls stay in the app's language.
+  const learn = $derived({ locale: settings.lang });
   const labels = $derived({
     title: m.wordle_title({}, { locale: settings.interfaceLocale }),
     // The original texts say "five letters"; other lengths get their own, so translated five-letter texts stay in use.
     empty: settings.wordleLength === 5 ? m.wordle_empty({}, { locale: settings.interfaceLocale }) : m.wordle_empty_length({ length: num(settings.wordleLength) }, { locale: settings.interfaceLocale }),
     input: m.wordle_input({}, { locale: settings.interfaceLocale }),
-    win: m.wordle_win({}, { locale: settings.interfaceLocale }),
-    invalid: m.wordle_invalid({}, { locale: settings.interfaceLocale }),
-    again: m.wordle_again({}, { locale: settings.interfaceLocale })
+    win: m.wordle_win({}, learn),
+    invalid: m.wordle_invalid({}, learn),
+    again: m.wordle_again({}, learn)
   });
   const words = $derived(wordPools[settings.lang][settings.vocabularyLevel]);
 </script>

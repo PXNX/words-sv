@@ -33,6 +33,8 @@
 
   type View = 'menu' | 'guess' | 'choose' | 'draw' | 'pass' | 'friend';
   const locale = $derived({ locale: settings.interfaceLocale });
+  // What the game says about a round is heard in the language being learnt, not the app's language.
+  const learn = $derived({ locale: settings.lang });
   const lang = $derived(language as Language);
   const inGroup = $derived(groupGame.session?.game === 'scribble');
 
@@ -201,7 +203,7 @@
       {@const isRight = finished && option === target}
       {@const isWrong = finished && option === picked && option !== target}
       <button type="button" class="btn-play" class:right={isRight} class:wrong={isWrong} disabled={finished} onclick={() => onpick(option)}>
-        {display(option)}{#if isRight}<IconCheck aria-label={m.scribble_mark_right({}, locale)} />{:else if isWrong}<IconCross aria-label={m.scribble_mark_wrong({}, locale)} />{/if}
+        {display(option)}{#if isRight}<IconCheck aria-label={m.scribble_mark_right({}, learn)} />{:else if isWrong}<IconCross aria-label={m.scribble_mark_wrong({}, learn)} />{/if}
       </button>
     {/each}
   </div>
@@ -219,7 +221,7 @@
   <header class="scribble-head">
     {#if view !== 'menu' && !inGroup}<button type="button" class="scribble-back" onclick={() => (view = 'menu')} aria-label={m.scribble_back({}, locale)}><IconArrowBack aria-hidden="true" class="rtl:rotate-180" /></button>{/if}
     <h1 id="scribble-title">{m.scribble_title({}, locale)}</h1>
-    {#if view === 'guess'}<span class="scribble-score" aria-live="polite">{m.scribble_score({ score: num(score) }, locale)}</span>{/if}
+    {#if view === 'guess'}<span class="scribble-score" aria-live="polite">{m.scribble_score({ score: num(score) }, learn)}</span>{/if}
     {#if !inGroup}<ScribbleInvite />{/if}
   </header>
 
@@ -264,7 +266,7 @@
       {#key target}<LilithSketch emoji={pictureFor(language, target) ?? '?'} {rule} duration={timing.drawMs} reveal={finished} label={m.scribble_sketch_label({}, locale)} />{/key}
       <p class="scribble-prompt" aria-live="polite">
         {#if finished}<span class="scribble-mark" class:right aria-hidden="true">{#if right}<IconCheck />{:else}<IconCross />{/if}</span>{/if}
-        {finished ? (right ? m.scribble_right({ points: num(lastPoints) }, locale) : timedOut ? m.scribble_timeout({ word: display(target) }, locale) : m.scribble_wrong({ word: display(target) }, locale)) : hint === 'close' ? m.scribble_close({}, locale) : hint === 'wrong' ? m.scribble_try_again({}, locale) : m.scribble_guess_prompt({}, locale)}
+        {finished ? (right ? m.scribble_right({ points: num(lastPoints) }, learn) : timedOut ? m.scribble_timeout({ word: display(target) }, learn) : m.scribble_wrong({ word: display(target) }, learn)) : hint === 'close' ? m.scribble_close({}, learn) : hint === 'wrong' ? m.scribble_try_again({}, learn) : m.scribble_guess_prompt({}, learn)}
       </p>
       {#if spell}
         {#if !finished}{@render spellForm(finishGuess)}{/if}
@@ -272,11 +274,11 @@
         {@render optionButtons(finishGuess)}
       {/if}
       {#if finished}<button type="button" class="btn-play btn-play-ink" onclick={startGuessing}>{m.scribble_next({}, locale)}</button>{/if}
-      {#if rounds > 0}<small class="scribble-note">{m.scribble_rounds({ count: num(rounds) }, locale)}</small>{/if}
+      {#if rounds > 0}<small class="scribble-note">{m.scribble_rounds({ count: num(rounds) }, learn)}</small>{/if}
     </div>
   {:else if view === 'choose'}
     <div class="scribble-stage">
-      <p class="scribble-prompt">{m.scribble_choose({}, locale)}</p>
+      <p class="scribble-prompt">{m.scribble_choose({}, learn)}</p>
       <div class="scribble-options">
         {#each choices as choice (choice)}
           <button type="button" class="btn-play scribble-choice" onclick={() => choose(choice)}><span aria-hidden="true">{pictureFor(language, choice)}</span>{display(choice)}</button>
@@ -286,13 +288,13 @@
     </div>
   {:else if view === 'draw'}
     <div class="scribble-stage">
-      <p class="scribble-prompt">{m.scribble_draw_prompt({ word: display(target) }, locale)}</p>
+      <p class="scribble-prompt">{m.scribble_draw_prompt({ word: display(target) }, learn)}</p>
       <DrawPad bind:this={pad} onchange={(count) => (lines = count)} />
       <button type="button" class="btn-play btn-play-ink" disabled={lines === 0} onclick={finishDrawing}>{m.scribble_done({}, locale)}</button>
     </div>
   {:else if view === 'pass'}
     <div class="scribble-stage">
-      <p class="scribble-prompt">{m.scribble_pass({}, locale)}</p>
+      <p class="scribble-prompt">{m.scribble_pass({}, learn)}</p>
       <button type="button" class="btn-play btn-play-ink" onclick={() => (view = 'friend')}>{m.scribble_pass_ready({}, locale)}</button>
     </div>
   {:else if view === 'friend'}
@@ -300,7 +302,7 @@
       <img class="scribble-drawing" src={drawing} alt={m.scribble_drawing_alt({}, locale)} />
       <p class="scribble-prompt" aria-live="polite">
         {#if finished}<span class="scribble-mark" class:right aria-hidden="true">{#if right}<IconCheck />{:else}<IconCross />{/if}</span>{/if}
-        {finished ? (right ? m.scribble_friend_right({}, locale) : m.scribble_wrong({ word: display(target) }, locale)) : hint === 'close' ? m.scribble_close({}, locale) : hint === 'wrong' ? m.scribble_try_again({}, locale) : m.scribble_friend_prompt({}, locale)}
+        {finished ? (right ? m.scribble_friend_right({}, learn) : m.scribble_wrong({ word: display(target) }, learn)) : hint === 'close' ? m.scribble_close({}, learn) : hint === 'wrong' ? m.scribble_try_again({}, learn) : m.scribble_friend_prompt({}, learn)}
       </p>
       {#if spell}
         {#if !finished}

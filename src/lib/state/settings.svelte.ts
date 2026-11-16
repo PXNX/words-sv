@@ -256,6 +256,8 @@ class SettingsStore {
     localStorage.setItem(LANGUAGE_KEY, next);
     this.chatModel = readChatModel(next);
     this.normalizeVocabulary();
+    // Game feedback is announced in the language being learnt, so bring its messages along too.
+    void loadLocaleMessages(next).catch(() => undefined);
     // Fetch the new language's vocabulary in the background; game modes that need it
     // pick it up from the cache as soon as it arrives.
     void warmLanguage(next).then(refreshHintableBaseWords);

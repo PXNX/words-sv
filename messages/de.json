@@ -1224,5 +1224,13 @@
   "scribble_live_round_time": "Zeit für diese Runde",
   "scribble_seconds": "{seconds} s",
   "scribble_live_leave": "Spiel verlassen",
-  "scribble_live_left": "{name} hat das Spiel verlassen …"
+  "scribble_live_left": "{name} hat das Spiel verlassen …",
+  "error_404_title": "Diese Spur hat kein Wort.",
+  "error_404_body": "Lilith hat überall gesucht, aber die gesuchte Seite steht nicht in diesem WordCircle-Heft. Zurück zum Rätsel und einen neuen Weg zeichnen.",
+  "error_500_title": "Eine Seite ist aus dem Heft gerutscht.",
+  "error_500_body": "Beim Zusammensetzen dieser Seite ist etwas schiefgelaufen. Versuch es noch einmal oder geh zurück zu deinen Übungen.",
+  "error_generic_title": "Diese Seite ist falsch abgebogen.",
+  "error_generic_body": "Lilith konnte diese Seite nicht laden ({status}). Versuch es noch einmal oder geh zur Startseite.",
+  "error_home": "Zurück zu WordCircle",
+  "error_try_again": "Noch einmal versuchen"
 }

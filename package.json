@@ -17,6 +17,8 @@
     "qa:content": "bun scripts/content-qa.ts",
     "voices:build": "bun scripts/build-character-voices.ts",
     "lint": "bun lint",
+    "fmt": "bun fmt",
+    "fmt:check": "bun fmt --check",
     "ci": "bun run lint && bun run check && bun run test"
   },
   "devDependencies": {

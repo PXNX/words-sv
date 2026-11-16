@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 
 // German is the base locale; English is kept complete; the other locales may fall back to German
 // for missing keys but must never carry keys German does not have, or different placeholders.
-const LOCALES = ['de', 'en', 'fa', 'pt', 'ru', 'ar', 'uk', 'hi', 'ml'] as const;
+const LOCALES = ['de', 'en', 'fa', 'pt', 'ru', 'ar', 'uk', 'hi', 'ml', 'fr', 'it', 'es'] as const;
 const messages = Object.fromEntries(LOCALES.map((locale) => [locale, JSON.parse(readFileSync(new URL(`../messages/${locale}.json`, import.meta.url), 'utf8')) as Record<string, string>]));
 const base = messages.de!;
 const placeholders = (text: string) => [...text.matchAll(/\{(\w+)\}/gu)].map((match) => match[1]).sort();

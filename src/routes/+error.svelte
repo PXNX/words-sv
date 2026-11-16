@@ -1,25 +1,49 @@
 <script lang="ts">
   import { page } from '$app/state';
+  import { m } from '#lib/paraglide/messages.js';
+  import { settings } from '#lib/state/settings.svelte.js';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
 
   const status = $derived(page.status ?? 404);
+  const kind = $derived(status === 404 ? '404' : status >= 500 ? '500' : 'generic');
+  const locale = $derived({ locale: settings.interfaceLocale });
+  const title = $derived(
+    kind === '404' ? m.error_404_title({}, locale) : kind === '500' ? m.error_500_title({}, locale) : m.error_generic_title({}, locale)
+  );
+  const body = $derived(
+    kind === '404'
+      ? m.error_404_body({}, locale)
+      : kind === '500'
+        ? m.error_500_body({}, locale)
+        : m.error_generic_body({ status: String(status) }, locale)
+  );
 </script>
 
 <svelte:head><title>{status} · WordCircle</title></svelte:head>
 
-<main class="not-found-shell">
-  <section class="not-found-card" aria-labelledby="not-found-title">
-    <span class="not-found-lilith" aria-hidden="true"><StoryCharacter id="lilith" mood="sad" /></span>
-    <p class="not-found-code">{status}</p>
-    <h1 id="not-found-title">This trail has no word.</h1>
-    <p>Lilith searched everywhere, but the page you requested is not in today’s WordCircle folio. Return to the puzzle and draw a new path.</p>
-    <a class="btn-play btn-play-ink" href="/circle">Return to WordCircle</a>
+<main class="error-shell">
+  <section class="error-card panel-play" aria-labelledby="error-title">
+    <span class="error-character" aria-hidden="true"><StoryCharacter id="lilith" mood={kind === '404' ? 'sad' : 'surprised'} /></span>
+    <p class="error-code">{status}</p>
+    <h1 id="error-title">{title}</h1>
+    <p class="error-body">{body}</p>
+    <div class="error-actions">
+      <a class="btn-play btn-play-ink" href="/">{m.error_home({}, locale)}</a>
+      {#if kind !== '404'}
+        <button type="button" class="btn-play btn-play-soft" onclick={() => location.reload()}>{m.error_try_again({}, locale)}</button>
+      {/if}
+    </div>
   </section>
 </main>
 
 <style>
-  .not-found-shell { min-height:100svh;display:grid;place-items:center;padding:1.25rem;background:radial-gradient(circle at 50% 20%,rgba(230,165,39,.14),transparent 32%),#ede4d5; }
-  .not-found-card { width:min(100%,28rem);padding:clamp(1.6rem,7vw,2.75rem);border:2px solid #172a45;border-radius:22px 14px 20px 15px / 15px 20px 14px 22px;background:#fffdf7;box-shadow:4px 4px 0 #172a45;color:#172a45;text-align:center; }
-  .not-found-lilith { display:block;width:6rem;height:7.5rem;margin:0 auto .6rem; }.not-found-lilith :global(.story-character) { width:100%;height:100%; }
-  .not-found-code { margin:0;color:#a45e38;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:900;letter-spacing:.18em; }.not-found-card h1 { margin:.35rem 0 .75rem;font-family:'DM Serif Display',serif;font-size:clamp(2rem,9vw,3rem);font-weight:400;letter-spacing:-.045em;line-height:.95; }.not-found-card p:not(.not-found-code) { max-width:23rem;margin:0 auto 1.35rem;color:#596477;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:700;line-height:1.5; }.not-found-card a { text-decoration:none; }
-  :global(html.dark) .not-found-shell { background:radial-gradient(circle at 50% 20%,rgba(230,165,39,.18),transparent 32%),#172a45; }:global(html.dark) .not-found-card { border-color:#0b1626;background:#213a5d;box-shadow:4px 4px 0 #0b1626;color:#fffdf7; }:global(html.dark) .not-found-card p:not(.not-found-code) { color:rgba(255,253,247,.72); }</style>
+  .error-shell { min-height:100svh;display:grid;place-items:center;padding:1.25rem;background:radial-gradient(circle at 50% 20%,rgba(230,165,39,.14),transparent 32%),var(--color-base-200); }
+  .error-card { width:min(100%,28rem);padding:clamp(1.6rem,7vw,2.75rem);color:var(--color-base-content);text-align:center; }
+  .error-character { display:block;width:6rem;height:7.5rem;margin:0 auto .6rem; }
+  .error-character :global(.story-character) { width:100%;height:100%; }
+  .error-code { margin:0;color:var(--color-accent);font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:900;letter-spacing:.18em; }
+  .error-card h1 { margin:.35rem 0 .75rem;font-family:'DM Serif Display',serif;font-size:clamp(2rem,9vw,3rem);font-weight:400;letter-spacing:-.045em;line-height:.95; }
+  .error-body { max-width:23rem;margin:0 auto 1.35rem;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:700;line-height:1.5;opacity:.78; }
+  .error-actions { display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem; }
+  .error-actions :global(a) { text-decoration:none; }
+</style>

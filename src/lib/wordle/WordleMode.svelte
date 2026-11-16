@@ -64,17 +64,19 @@
   const practicePromptLabel = $derived(m.wordle_tutorial_prompt({}, { locale: settings.interfaceLocale }));
   const practiceCompleteLabel = $derived(m.wordle_tutorial_complete({}, { locale: settings.interfaceLocale }));
   const practiceContinueLabel = $derived(m.tutorial_start({}, { locale: settings.interfaceLocale }));
-  const alreadyTriedLabel = $derived(m.wordle_already_tried({}, { locale: settings.interfaceLocale }));
-  const tooShortLabel = $derived(m.wordle_too_short({}, { locale: settings.interfaceLocale }));
+  // What the game announces after a guess is heard in the language being learnt.
+  const learn = $derived({ locale: settings.lang });
+  const alreadyTriedLabel = $derived(m.wordle_already_tried({}, learn));
+  const tooShortLabel = $derived(m.wordle_too_short({}, learn));
   const markLabels = $derived<Record<WordleMark, string>>({
-    correct: m.wordle_mark_correct({}, { locale: settings.interfaceLocale }),
-    present: m.wordle_mark_present({}, { locale: settings.interfaceLocale }),
-    absent: m.wordle_mark_absent({}, { locale: settings.interfaceLocale })
+    correct: m.wordle_mark_correct({}, learn),
+    present: m.wordle_mark_present({}, learn),
+    absent: m.wordle_mark_absent({}, learn)
   });
-  const noDefinitionLabel = $derived(m.wordle_no_definition({}, { locale: settings.interfaceLocale }));
+  const noDefinitionLabel = $derived(m.wordle_no_definition({}, learn));
   const deleteLabel = $derived(m.wordle_delete({}, { locale: settings.interfaceLocale }));
-  const revealLabel = $derived(m.wordle_reveal({}, { locale: settings.interfaceLocale }));
-  const solvedLabel = $derived(m.wordle_solved_in({ attempts: num(entries.length), max: num(maxAttempts) }, { locale: settings.interfaceLocale }));
+  const revealLabel = $derived(m.wordle_reveal({}, learn));
+  const solvedLabel = $derived(m.wordle_solved_in({ attempts: num(entries.length), max: num(maxAttempts) }, learn));
   const explanation = $derived(explanationWord ? wordInfo(explanationWord) : null);
   // Once a round is over, the answer is shown with its article and meaning, won or lost.
   const roundOver = $derived(won || exhausted);

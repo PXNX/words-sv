@@ -63,7 +63,7 @@ describe('leaving a live Scribble table', () => {
   function fakeTable(players: Array<{ user_id: number; joined: number }>, drawerId: number | null, round: { drawer_id: number } | null = null) {
     const rows = players.map((player) => ({ user_id: player.user_id, first_name: `Player ${player.user_id}`, joined: player.joined }));
     const state = { chat_id: -100, drawer_id: drawerId, skips: 2, match_rounds: 3 };
-    const rounds = round ? [{ ...round, solved_by: null, solved_at: null, guesser_name: 'somebody' }] : [];
+    const rounds: Array<{ drawer_id: number; solved_by: number | null; solved_at: Date | null; guesser_name: string | null }> = round ? [{ ...round, solved_by: null, solved_at: null, guesser_name: 'somebody' }] : [];
     const db = {
       async execute(sql: string, params: unknown[] = []): Promise<any> {
         if (sql.startsWith('DELETE FROM wordcircle_scribble_players')) {

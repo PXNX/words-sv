@@ -16,14 +16,16 @@
   import IconClose from '~icons/material-symbols/close-rounded';
 
   const locale = $derived({ locale: settings.interfaceLocale });
+  // The group score is game feedback, so it reads in the language being learnt.
+  const learn = $derived({ locale: settings.lang });
   const result = $derived(groupGame.last);
   const ms = (duration: number) => (prefersReducedMotion.current ? 0 : duration);
 </script>
 
 {#if result}
-  <div class="group-score" role="status" dir={getTextDirection(settings.interfaceLocale)} lang={settings.interfaceLocale} transition:fly={{ y: 160, duration: ms(420), easing: backOut }}>
+  <div class="group-score" role="status" dir={getTextDirection(settings.lang)} lang={settings.lang} transition:fly={{ y: 160, duration: ms(420), easing: backOut }}>
     <button type="button" class="group-score-close" aria-label={m.cosmetic_close({}, locale)} onclick={() => (groupGame.last = null)}><IconClose aria-hidden="true" /></button>
-    <p class="group-score-head">{#if result.newBest}<span class="group-score-trophy" aria-hidden="true"><IconTrophy /></span>{/if}<strong>{result.newBest ? m.group_game_best({ score: num(result.score) }, locale) : m.group_game_score({ score: num(result.score) }, locale)}</strong></p>
+    <p class="group-score-head">{#if result.newBest}<span class="group-score-trophy" aria-hidden="true"><IconTrophy /></span>{/if}<strong>{result.newBest ? m.group_game_best({ score: num(result.score) }, learn) : m.group_game_score({ score: num(result.score) }, learn)}</strong></p>
     {#if result.leaderboard.length}
       <ol class="group-score-board">
         {#each result.leaderboard as row, index (row.position)}
@@ -31,7 +33,7 @@
         {/each}
       </ol>
     {/if}
-    <small>{m.group_game_hint({}, locale)}</small>
+    <small>{m.group_game_hint({}, learn)}</small>
   </div>
 {/if}
 
