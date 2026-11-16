@@ -183,7 +183,7 @@
 
 <style>
   .welcome { position:relative;width:min(100%,27rem);justify-self:center;display:grid;padding:clamp(1.15rem,6vw,1.8rem);border-radius:22px 14px 20px 15px / 15px 20px 14px 22px;border:2px solid #172a45;background:#fffdf7;box-shadow:4px 4px 0 #172a45;text-align:center;overflow:hidden; }
-  .welcome-step { grid-area:1/1;display:grid;justify-items:center;gap:.8rem; }
+  .welcome-step { grid-area:1/1;display:grid;justify-items:center;gap:.8rem;min-width:0;width:100%; }
   .welcome-dots { position:absolute;top:.7rem;inset-inline:0;display:flex;justify-content:center;gap:.35rem;margin:0;padding:0;list-style:none; }
   .welcome-dots li { width:.45rem;height:.45rem;border-radius:999px;background:rgba(23,42,69,.16);transition:width .3s,background .3s; }
   .welcome-dots li.active { width:1.1rem;background:#e6a527; }
@@ -200,7 +200,8 @@
   .welcome-rings b { right:0;bottom:0;border-color:#e6a527;animation:welcome-ring-b .7s cubic-bezier(.34,1.56,.64,1) .12s both; }
 
   .welcome-parade { display:flex;align-items:flex-end;justify-content:center;gap:.2rem;height:7rem; }
-  .welcome-parade > .walk-in :global(.story-character),.welcome-parade.finale > .hop:not(.welcome-lilith) :global(.story-character) { width:5.4rem;height:100%; }
+  .welcome-parade > .walk-in :global(.story-character) { width:5.4rem;height:100%; }
+  .welcome-parade.finale > .hop :global(.story-character) { width:100%;height:100%; }
   /* Lilith strolls in the gap between Mia and Tom (story/WalkingLilith.svelte) */
   .welcome-stroll { flex:1;min-width:6rem;height:5.6rem;align-self:flex-end; }
   .welcome-lilith { position:relative;width:4.6rem;height:5.6rem;padding:0;border:0;background:none;cursor:pointer;align-self:flex-end; }
@@ -239,7 +240,9 @@
   .welcome-field input { min-height:2.7rem;padding:0 .8rem;border-radius:.7rem;border:1px solid rgba(23,42,69,.28);background:#fffdf7;color:#172a45;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:800; }
   .welcome-field input:focus-visible { outline:2px solid #e6a527;outline-offset:2px; }
 
-  .welcome-parade.finale .hop { display:block;height:100%;animation:welcome-pop .5s cubic-bezier(.34,1.56,.64,1) var(--d) both, welcome-hop .9s ease-in-out calc(var(--d) + .6s) 3; transform-origin:50% 100%; }
+  .welcome-parade.finale { gap:0;width:100%; }
+  .welcome-parade.finale .hop.welcome-lilith { flex-basis:4.6rem; }
+  .welcome-parade.finale .hop { flex:0 1 5.4rem;min-width:0;display:block;height:100%;animation:welcome-pop .5s cubic-bezier(.34,1.56,.64,1) var(--d) both, welcome-hop .9s ease-in-out calc(var(--d) + .6s) 3; transform-origin:50% 100%; }
   .welcome-confetti { position:absolute;inset:0 0 auto;height:12rem;pointer-events:none;overflow:hidden; }
   .welcome-confetti i { position:absolute;top:-1rem;left:var(--x);width:.45rem;height:.8rem;border-radius:.12rem;background:var(--c);opacity:0;animation:welcome-confetti 1.8s cubic-bezier(.2,.7,.4,1) var(--d) forwards; }
 

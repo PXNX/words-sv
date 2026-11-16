@@ -377,7 +377,7 @@ import { haptic } from '#lib/feedback/haptics.js';
   });
 </script>
 
-<section class="home-view" dir={interfaceDirection} lang={settings.interfaceLocale} aria-label={labels.homeTitle}>
+<section class="home-view" class:welcoming={rootOnboarding || needsName || pickingLook} dir={interfaceDirection} lang={settings.interfaceLocale} aria-label={labels.homeTitle}>
   {#if rootOnboarding || needsName || pickingLook}
     <WelcomeFlow start={rootOnboarding ? 'hello' : 'name'} onlanguage={chooseLearningLanguage} onfinish={finishWelcome} />
   {:else}
@@ -474,6 +474,8 @@ import { haptic } from '#lib/feedback/haptics.js';
 
 <style>
   .home-view { flex:1 1 auto;min-height:0;display:grid;grid-auto-rows:max-content;align-content:start;gap:1.5rem;padding:clamp(2rem,7vh,3.4rem) clamp(1rem,4.4vw,1.4rem) 1.8rem;overflow-x:hidden;overflow-y:auto;font-family:var(--font-body); }
+  /* the welcome card sits in the middle of the screen instead of hanging at the top */
+  .home-view.welcoming { align-content:safe center; }
   .home-side,.home-main { display:contents; }
 
   /* Header: the learner's own face and greeting on one side, the cast under their arch on the other. */

@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 
 const load = (name: string) => JSON.parse(readFileSync(new URL(`../../src/lib/data/${name}`, import.meta.url), 'utf8')) as Record<string, { definition?: string; type?: string }>;
-const toeflCore = JSON.parse(readFileSync(new URL('../fixtures/toefl-core.json', import.meta.url), 'utf8')) as string[];
+const fixture = (name: string) => JSON.parse(readFileSync(new URL(`../fixtures/${name}.json`, import.meta.url), 'utf8')) as string[];
+const toeflCore = fixture('toefl-core');
 
 const levels = Object.fromEntries(['a1', 'a2', 'b1'].map((level) => [level, load(`en.${level}.json`)]));
 
@@ -14,6 +15,14 @@ describe('English learning content', () => {
     });
     expect(missing).toEqual([]);
   });
+
+  // The lists are kept as fixtures so a later data edit cannot quietly drop exam vocabulary.
+  for (const source of ['toefl-prepscholar', 'toefl-magoosh', 'cambridge-b1-core']) {
+    it(`teaches every ${source} word at B1`, () => {
+      const missing = fixture(source).filter((word) => !levels.b1![word]);
+      expect(missing).toEqual([]);
+    });
+  }
 
   // These were tagged as nouns although their definitions describe a quality. The type decides
   // which words can stand as answer options together, so a wrong type teaches the wrong thing.

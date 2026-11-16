@@ -49,7 +49,13 @@
   .dock-icon :global(svg) { width:1.4rem;height:1.4rem; }
   .dock-label { max-width:100%;overflow:hidden;font-size:.6875rem;font-weight:800;line-height:1.2;text-overflow:ellipsis;white-space:nowrap; }
   .app-dock a.current { color:var(--ink); }
-  .app-dock a.current .dock-icon { background:var(--sun); }
+  .app-dock a.current .dock-icon { background:var(--sun);animation:dock-pop var(--dur-show) var(--ease-spring); }
+  .app-dock a.current .dock-icon :global(svg) { animation:dock-hop var(--dur-show) var(--ease-spring); }
+  .dock-badge { animation:dock-pop var(--dur-show) var(--ease-spring) both; }
+  /* the tab that just became current swells a little and its icon hops, so a switch feels answered */
+  @keyframes dock-pop { 0% { scale:.6 .8; } 60% { scale:1.08 .96; } 100% { scale:1; } }
+  @keyframes dock-hop { 0%,100% { translate:0 0; } 45% { translate:0 -.18rem; } }
+  @media (prefers-reduced-motion:reduce) { .app-dock a.current .dock-icon,.app-dock a.current .dock-icon :global(svg),.dock-badge { animation:none; } }
   .app-dock a:active .dock-icon { scale:.9; }
   .dock-badge { position:absolute;top:-.25rem;inset-inline-end:.2rem;min-width:1.1rem;padding:0 .25rem;border:1.5px solid var(--paper);border-radius:999px;background:var(--no);color:var(--paper);font-size:.6875rem;font-weight:900;line-height:1.05rem;text-align:center;font-variant-numeric:tabular-nums; }
   :global(html.dark) .app-dock { border-top-color:var(--ink-deep);background:var(--surface-2); }

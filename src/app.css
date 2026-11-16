@@ -410,6 +410,8 @@ html.dark { --play-line: #0b1626; }
   /* A word in another script: the word itself stays on one line, its Latin reading sits small below. */
   .has-transliteration { display: inline-flex; flex-direction: column; align-items: center; line-height: 1.15; }
   .word-row { display: inline-flex; align-items: baseline; }
+  /* a flex row drops the plain space between article and noun, so it is put back as a margin */
+  .word-row > .gender-article:not(:last-child) { margin-inline-end: .28em; }
   .word-transliteration { font-size: .72em; font-weight: 600; opacity: .6; margin-top: .05em; }
   html.dark .gender-masculine { --gender: #7fa7f0; }
   html.dark .gender-feminine { --gender: #f08a85; }

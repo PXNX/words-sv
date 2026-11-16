@@ -15,10 +15,9 @@
   import TutorialDialog from './TutorialDialog.svelte';
 
 
-  let { kicker, title, cornerMark, steps, startLabel, onstart, onskip, footer }: {
+  let { kicker, title, steps, startLabel, onstart, onskip, footer }: {
     kicker: string;
     title: string;
-    cornerMark?: string;
     steps: TutorialStep[];
     startLabel: string;
     onstart: () => void;
@@ -46,7 +45,7 @@
 
 <svelte:window {onkeydown} />
 
-<TutorialDialog {kicker} {title} {cornerMark}>
+<TutorialDialog {kicker} {title}>
   <!-- Every step lies in the same cell and only the current one shows, so the card is as tall as
        its tallest step from the start and the buttons below never move. -->
   <div class="tutorial-stage">
