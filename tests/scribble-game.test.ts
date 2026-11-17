@@ -143,7 +143,7 @@ describe('leaving a live Scribble table', () => {
 
 describe('passing the turn', () => {
   const tableOf = (players: Array<{ user_id: number; active: boolean }>) => ({
-    async execute(sql: string): Promise<any> {
+    async execute(sql: string): Promise<[unknown[]]> {
       if (sql.startsWith('SELECT user_id, first_name, last_seen')) return [players.map((player) => ({ ...player, first_name: '' }))];
       throw new Error(`unexpected statement: ${sql}`);
     }
