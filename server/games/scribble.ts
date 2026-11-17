@@ -2,7 +2,7 @@ import * as v from 'valibot';
 import { getDatabase } from '../_lib/database.js';
 import { isMethod, readJson, respond } from '../_lib/http.js';
 import { ensureGameTables, SessionIdSchema, SESSION_TTL_MS, telegramApi } from '../_lib/games.js';
-import { bareWord, claimTurn, cleanAvatar, cleanLines, currentRound, guess, joinPlayer, leavePlayer, MATCH_ROUNDS, recentChampion, recentGuesses, revealPattern, ROUND_SECONDS, ROUND_TIMES, roundSeconds, saveLines, startRound, tableKey, TURN_SECONDS, validRoundSeconds, winsOf, type Table, type Telegram } from '../_lib/scribbleGame.js';
+import { activePlayers, bareWord, claimTurn, cleanAvatar, cleanLines, currentRound, guess, joinPlayer, leavePlayer, MATCH_ROUNDS, MIN_PLAYERS, recentChampion, recentGuesses, revealPattern, ROUND_SECONDS, ROUND_TIMES, roundSeconds, saveLines, settleTable, startRound, tableKey, TURN_SECONDS, validRoundSeconds, winsOf, type Table, type Telegram } from '../_lib/scribbleGame.js';
 import type { Database, Row } from '../_lib/database.js';
 import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 
@@ -78,27 +78,32 @@ export function createScribbleEndpoint({ databaseProvider = getDatabase, telegra
 			switch (input.action) {
 				case 'state': {
 					await joinPlayer(db, me.chatId, me.userId, me.name, input.avatar === undefined ? undefined : cleanAvatar(input.avatar));
+					await settleTable(db, me.chatId);
 					const state = await claimTurn(db, me.table, me.userId, input.locale.slice(0, 2) === 'de' ? 'de' : 'en');
 					const round = await currentRound(db, me.chatId);
 					const drawerId = state.drawer_id === null ? null : Number(state.drawer_id);
 					const [[drawer]] = drawerId === null ? [[undefined]] : await db.execute('SELECT first_name FROM wordcircle_scribble_players WHERE chat_id = ? AND user_id = ?', [me.chatId, drawerId]);
-					const [standings] = await db.execute('SELECT user_id, first_name, match_points, avatar FROM wordcircle_scribble_players WHERE chat_id = ? ORDER BY match_points DESC, joined_at LIMIT 12', [me.chatId]);
+					// Only the players whose page is open: a closed one drops out after a few seconds.
+					const standings = await activePlayers(db, me.chatId);
 					const running = round && round.solved_by === null;
+					const myRound = round ? Number(round.drawer_id) === me.userId : false;
 					return respond(res, 200, {
 						ok: true,
-						role: running ? (Number(round.drawer_id) === me.userId ? 'draw' : 'watch') : drawerId === me.userId ? 'draw' : 'wait',
+						role: running ? (myRound ? 'draw' : 'watch') : drawerId === me.userId && standings.length >= MIN_PLAYERS ? 'draw' : 'wait',
+						players: standings.length,
+						minPlayers: MIN_PLAYERS,
 						me: { name: me.name, wins: await winsOf(db, me.userId) },
 						drawer: drawer ? String(drawer.first_name ?? '') : null,
 						roundSeconds: validRoundSeconds(Number(state.round_seconds)) ? Number(state.round_seconds) : ROUND_SECONDS,
 						roundTimes: ROUND_TIMES,
 						turnSecondsLeft: Math.max(0, Math.ceil(TURN_SECONDS - (Date.now() - new Date(state.turn_started_at).getTime()) / 1000)),
 						round: roundView(round, me.userId, input.since),
-						guesses: round ? (await recentGuesses(db, Number(round.id))).map((row) => ({ id: Number(row.id), player: playerId(row.user_id), name: String(row.first_name ?? ''), result: String(row.result), text: row.result === 'wrong' ? String(row.text) : null })) : [],
+						guesses: round ? (await recentGuesses(db, Number(round.id))).map((row) => ({ id: Number(row.id), player: playerId(row.user_id), name: String(row.first_name ?? ''), result: String(row.result), text: row.result === 'wrong' || !running || myRound || Number(row.user_id) === me.userId ? String(row.text) : null })) : [],
 						reveal: state.reveal !== false,
 						match: {
 							round: Math.min(MATCH_ROUNDS, Number(state.match_rounds ?? 0) + (running ? 1 : 0)),
 							of: MATCH_ROUNDS,
-							standings: (standings as Row[]).map((row) => ({ id: playerId(row.user_id), name: String(row.first_name ?? ''), points: Number(row.match_points ?? 0), me: Number(row.user_id) === me.userId, avatar: row.avatar ? String(row.avatar) : null, drawing: Number(row.user_id) === drawerId })),
+							standings: standings.map((row) => ({ id: playerId(row.user_id), name: String(row.first_name ?? ''), points: Number(row.match_points ?? 0), me: Number(row.user_id) === me.userId, avatar: row.avatar ? String(row.avatar) : null, drawing: Number(row.user_id) === drawerId })),
 							champion: recentChampion(state)
 						}
 					});

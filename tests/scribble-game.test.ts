@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bareWord, cleanAvatar, cleanLines, leavePlayer, MAX_LINE_POINTS, revealPattern, scribblePoints, scoreTarget, tableKey } from '../server/_lib/scribbleGame.js';
+import { bareWord, cleanAvatar, cleanLines, leavePlayer, MAX_LINE_POINTS, nextPlayer, revealPattern, scribblePoints, scoreTarget, tableKey } from '../server/_lib/scribbleGame.js';
 
 describe('live Scribble rules', () => {
   it('pays the guesser more the faster, and the drawer half of it', () => {
@@ -77,7 +77,7 @@ describe('leaving a live Scribble table', () => {
           for (const item of rounds) if (item.solved_by === null && (!params[1] || item.drawer_id === params[1])) item.solved_by = 0;
           return [{}];
         }
-        if (sql.startsWith('SELECT user_id, first_name FROM wordcircle_scribble_players')) {
+        if (sql.startsWith('SELECT user_id, first_name, last_seen')) {
           const sorted = [...rows].sort((a, b) => a.joined - b.joined || a.user_id - b.user_id);
           return [sorted];
         }
@@ -112,10 +112,17 @@ describe('leaving a live Scribble table', () => {
   });
 
   it('closes a round the leaver was drawing so the others are not stuck', async () => {
-    const table = fakeTable([{ user_id: 1, joined: 1 }, { user_id: 2, joined: 2 }], 1, { drawer_id: 1 });
+    const table = fakeTable([{ user_id: 1, joined: 1 }, { user_id: 2, joined: 2 }, { user_id: 3, joined: 3 }], 1, { drawer_id: 1 });
     await leavePlayer(table.db as never, -100, 1);
     expect(table.rounds[0]!.solved_by).toBe(0);
     expect(table.state.drawer_id).toBe(2);
+  });
+
+  it('pauses with nobody to draw when only one player is left', async () => {
+    const table = fakeTable([{ user_id: 1, joined: 1 }, { user_id: 2, joined: 2 }], 1, { drawer_id: 1 });
+    await leavePlayer(table.db as never, -100, 2);
+    expect(table.rounds[0]!.solved_by).toBe(0);
+    expect(table.state.drawer_id).toBeNull();
   });
 
   it('resets the table when the last player leaves', async () => {
@@ -127,10 +134,32 @@ describe('leaving a live Scribble table', () => {
   });
 
   it('leaves the turn alone when somebody else leaves', async () => {
-    const table = fakeTable([{ user_id: 1, joined: 1 }, { user_id: 2, joined: 2 }], 1);
+    const table = fakeTable([{ user_id: 1, joined: 1 }, { user_id: 2, joined: 2 }, { user_id: 3, joined: 3 }], 1);
     await leavePlayer(table.db as never, -100, 2);
     expect(table.state.drawer_id).toBe(1);
     expect(table.rounds).toEqual([]);
+  });
+});
+
+describe('passing the turn', () => {
+  const tableOf = (players: Array<{ user_id: number; active: boolean }>) => ({
+    async execute(sql: string): Promise<any> {
+      if (sql.startsWith('SELECT user_id, first_name, last_seen')) return [players.map((player) => ({ ...player, first_name: '' }))];
+      throw new Error(`unexpected statement: ${sql}`);
+    }
+  });
+
+  it('skips players whose page is closed and wraps around', async () => {
+    const db = tableOf([{ user_id: 1, active: true }, { user_id: 2, active: false }, { user_id: 3, active: true }]);
+    expect(Number((await nextPlayer(db as never, -100, 1))!.user_id)).toBe(3);
+    expect(Number((await nextPlayer(db as never, -100, 3))!.user_id)).toBe(1);
+    // A drawer who closed their page hands over to the next one who is there.
+    expect(Number((await nextPlayer(db as never, -100, 2))!.user_id)).toBe(3);
+  });
+
+  it('finds nobody when everyone else is gone', async () => {
+    const db = tableOf([{ user_id: 1, active: false }, { user_id: 2, active: false }]);
+    expect(await nextPlayer(db as never, -100, 1)).toBeUndefined();
   });
 });
 

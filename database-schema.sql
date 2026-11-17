@@ -200,3 +200,7 @@ CREATE TABLE IF NOT EXISTS wordcircle_scribble_guesses (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS wordcircle_scribble_guesses_round_idx ON wordcircle_scribble_guesses (round_id, id);
+
+-- Live Scribble presence: a player's page asks for the state every second; one that stopped asking
+-- has been closed, so they drop out of turns and standings until they come back.
+ALTER TABLE wordcircle_scribble_players ADD COLUMN IF NOT EXISTS last_seen TIMESTAMPTZ NOT NULL DEFAULT now();

@@ -9,7 +9,9 @@
  * achievements (first win, ten wins). The turn passes in the order players joined.
  *
  * Everything here runs in the API server (server/main.ts): the endpoints call it, and `scribbleTick`
- * ends rounds nobody guessed and skips drawers who do not start.
+ * ends rounds nobody guessed and skips drawers who do not start. A player counts as there while their
+ * page asks for the state (every second); a closed page drops out after ACTIVE_SECONDS like a Leave,
+ * and a round only starts with MIN_PLAYERS there, one of whom draws.
  */
 import { createHash } from 'node:crypto';
 import { checkGuess } from '../../src/lib/scribble/guess.js';
@@ -27,6 +29,10 @@ export const RESULT_SECONDS = 12;
 /** The match's winner stays on the players' pages this long. */
 export const CHAMPION_SECONDS = 60;
 export const MAX_LINE_POINTS = 24_000;
+/** A player whose page has not asked for the state this long has closed it: they are out of turns and standings. */
+export const ACTIVE_SECONDS = 15;
+/** A round needs a drawer and at least one guesser. */
+export const MIN_PLAYERS = 2;
 
 export type Telegram = <T>(method: string, params: Record<string, unknown>) => Promise<T>;
 export type Line = { c: string; s: number; p: number[] };
@@ -115,13 +121,13 @@ export function cleanLines(value: unknown): Line[] | null {
 export async function joinPlayer(db: Database, chatId: number, userId: number, name: string, avatar?: string | null) {
 	if (avatar === undefined) {
 		await db.execute(
-			'INSERT INTO wordcircle_scribble_players (chat_id, user_id, first_name) VALUES (?, ?, ?) ON CONFLICT (chat_id, user_id) DO UPDATE SET first_name = EXCLUDED.first_name',
+			'INSERT INTO wordcircle_scribble_players (chat_id, user_id, first_name, last_seen) VALUES (?, ?, ?, now()) ON CONFLICT (chat_id, user_id) DO UPDATE SET first_name = EXCLUDED.first_name, last_seen = now()',
 			[chatId, userId, name.slice(0, 64)]
 		);
 		return;
 	}
 	await db.execute(
-		'INSERT INTO wordcircle_scribble_players (chat_id, user_id, first_name, avatar) VALUES (?, ?, ?, ?) ON CONFLICT (chat_id, user_id) DO UPDATE SET first_name = EXCLUDED.first_name, avatar = EXCLUDED.avatar',
+		'INSERT INTO wordcircle_scribble_players (chat_id, user_id, first_name, avatar, last_seen) VALUES (?, ?, ?, ?, now()) ON CONFLICT (chat_id, user_id) DO UPDATE SET first_name = EXCLUDED.first_name, avatar = EXCLUDED.avatar, last_seen = now()',
 		[chatId, userId, name.slice(0, 64), avatar]
 	);
 }
@@ -135,11 +141,15 @@ export async function leavePlayer(db: Database, chatId: number, userId: number):
 	await db.execute('DELETE FROM wordcircle_scribble_players WHERE chat_id = ? AND user_id = ?', [chatId, userId]);
 	const state = await getState(db, chatId);
 	if (!state) return;
-	const [[count]] = await db.execute('SELECT COUNT(*) AS n FROM wordcircle_scribble_players WHERE chat_id = ?', [chatId]);
-	const remaining = Number(count?.n ?? 0);
+	const remaining = await activeCount(db, chatId);
 	if (remaining === 0) {
 		await db.execute('UPDATE wordcircle_scribble_rounds SET solved_by = 0, solved_at = now() WHERE chat_id = ? AND solved_by IS NULL', [chatId]);
 		await db.execute('UPDATE wordcircle_scribble_state SET drawer_id = NULL, skips = 0, match_rounds = 0 WHERE chat_id = ?', [chatId]);
+		return;
+	}
+	// Alone at the table: nobody could guess, so the round closes and the table waits for company.
+	if (remaining < MIN_PLAYERS) {
+		await pause(db, chatId);
 		return;
 	}
 	if (Number(state.drawer_id) !== userId) return;
@@ -153,8 +163,49 @@ export async function leavePlayer(db: Database, chatId: number, userId: number):
 	}
 }
 
-/** The round's latest guesses, oldest first, for the speech bubbles. */
-export async function recentGuesses(db: Database, roundId: number, limit = 12): Promise<Row[]> {
+async function activeCount(db: Database, chatId: number): Promise<number> {
+	const [[count]] = await db.execute('SELECT COUNT(*) AS n FROM wordcircle_scribble_players WHERE chat_id = ? AND last_seen > now() - make_interval(secs => ?)', [chatId, ACTIVE_SECONDS]);
+	return Number(count?.n ?? 0);
+}
+
+/** The players whose page is open, best of the match first. */
+export async function activePlayers(db: Database, chatId: number, limit = 12): Promise<Row[]> {
+	const [rows] = await db.execute(
+		'SELECT user_id, first_name, match_points, avatar FROM wordcircle_scribble_players WHERE chat_id = ? AND last_seen > now() - make_interval(secs => ?) ORDER BY match_points DESC, joined_at LIMIT ?',
+		[chatId, ACTIVE_SECONDS, limit]
+	);
+	return rows as Row[];
+}
+
+/** Closes a running round without points or a match round, and leaves the turn open. */
+async function pause(db: Database, chatId: number) {
+	await db.execute('UPDATE wordcircle_scribble_rounds SET solved_by = 0, solved_at = now(), guesser_name = NULL WHERE chat_id = ? AND solved_by IS NULL', [chatId]);
+	await db.execute('UPDATE wordcircle_scribble_state SET drawer_id = NULL, skips = 0 WHERE chat_id = ?', [chatId]);
+}
+
+/**
+ * Keeps a table playable when pages close without pressing Leave: below MIN_PLAYERS the table
+ * pauses (a running round closes without counting), and a drawer whose page is gone loses the turn
+ * (and their round) to the next player who is still there. Returns how many players are there.
+ */
+export async function settleTable(db: Database, chatId: number): Promise<number> {
+	const present = await activeCount(db, chatId);
+	const state = await getState(db, chatId);
+	if (!state || state.drawer_id === null) return present;
+	if (present < MIN_PLAYERS) {
+		await pause(db, chatId);
+		return present;
+	}
+	const drawerId = Number(state.drawer_id);
+	const [[drawer]] = await db.execute('SELECT 1 AS here FROM wordcircle_scribble_players WHERE chat_id = ? AND user_id = ? AND last_seen > now() - make_interval(secs => ?)', [chatId, drawerId, ACTIVE_SECONDS]);
+	if (drawer) return present;
+	await db.execute('UPDATE wordcircle_scribble_rounds SET solved_by = 0, solved_at = now(), guesser_name = NULL WHERE chat_id = ? AND drawer_id = ? AND solved_by IS NULL', [chatId, drawerId]);
+	await passTurn(db, chatId, drawerId);
+	return present;
+}
+
+/** The round's latest guesses, oldest first, for the speech bubbles and the guess list. */
+export async function recentGuesses(db: Database, roundId: number, limit = 30): Promise<Row[]> {
 	const [rows] = await db.execute('SELECT id, user_id, first_name, text, result FROM wordcircle_scribble_guesses WHERE round_id = ? ORDER BY id DESC LIMIT ?', [roundId, limit]);
 	return (rows as Row[]).reverse();
 }
@@ -187,11 +238,13 @@ const turnStale = (state: Row) => Date.now() - new Date(state.turn_started_at).g
 export async function claimTurn(db: Database, table: Table, userId: number, lang: string): Promise<Row> {
 	const chatId = table.key;
 	await db.execute(
-		'INSERT INTO wordcircle_scribble_state (chat_id, game_message_id, inline_message_id, drawer_id, lang) VALUES (?, ?, ?, ?, ?) ON CONFLICT (chat_id) DO UPDATE SET lang = EXCLUDED.lang, game_message_id = EXCLUDED.game_message_id',
-		[chatId, table.messageId, table.inlineMessageId, userId, lang]
+		'INSERT INTO wordcircle_scribble_state (chat_id, game_message_id, inline_message_id, drawer_id, lang) VALUES (?, ?, ?, NULL, ?) ON CONFLICT (chat_id) DO UPDATE SET lang = EXCLUDED.lang, game_message_id = EXCLUDED.game_message_id',
+		[chatId, table.messageId, table.inlineMessageId, lang]
 	);
 	let state = (await getState(db, chatId))!;
 	const running = await runningRound(db, chatId);
+	// A turn is only handed out once somebody is there to guess.
+	if (await activeCount(db, chatId) < MIN_PLAYERS) return state;
 	if (state.drawer_id === null || (Number(state.drawer_id) !== userId && turnStale(state) && !running)) {
 		await db.execute('UPDATE wordcircle_scribble_state SET drawer_id = ?, turn_started_at = now(), game_message_id = ? WHERE chat_id = ?', [userId, table.messageId, chatId]);
 		state = (await getState(db, chatId))!;
@@ -206,6 +259,7 @@ export async function startRound(db: Database, chatId: number, userId: number, n
 	const state = await getState(db, chatId);
 	if (!state || Number(state.drawer_id) !== userId) return { ok: false, error: 'not_your_turn' };
 	if (await runningRound(db, chatId)) return { ok: false, error: 'round_running' };
+	if (await activeCount(db, chatId) < MIN_PLAYERS) return { ok: false, error: 'not_your_turn' };
 	const [[round]] = await db.execute(
 		'INSERT INTO wordcircle_scribble_rounds (chat_id, game_message_id, photo_message_id, drawer_id, drawer_name, word, answers, seconds, reveal) VALUES (?, ?, 0, ?, ?, ?, ?, ?, ?) RETURNING *',
 		[chatId, Number(state.game_message_id), userId, name.slice(0, 64), word, JSON.stringify(answers), seconds, reveal]
@@ -298,21 +352,31 @@ export function recentChampion(state: Row | undefined): { name: string; points: 
 
 /** The next player after `afterUser`, in the order they joined, wrapping around. */
 export async function nextPlayer(db: Database, chatId: number, afterUser: number): Promise<Row | undefined> {
-	const [players] = await db.execute('SELECT user_id, first_name FROM wordcircle_scribble_players WHERE chat_id = ? ORDER BY joined_at, user_id', [chatId]);
+	const [players] = await db.execute('SELECT user_id, first_name, last_seen > now() - make_interval(secs => ?) AS active FROM wordcircle_scribble_players WHERE chat_id = ? ORDER BY joined_at, user_id', [ACTIVE_SECONDS, chatId]);
 	const list = players as Row[];
-	if (list.length === 0) return undefined;
 	const index = list.findIndex((player) => Number(player.user_id) === afterUser);
-	return list[(index + 1) % list.length];
+	// Players whose page is closed are passed over; `afterUser` itself comes last.
+	for (let step = 1; step <= list.length; step += 1) {
+		const candidate = list[(index + step + list.length) % list.length]!;
+		if (candidate.active !== false) return candidate;
+	}
+	return undefined;
 }
 
 async function passTurn(db: Database, chatId: number, afterUser: number) {
 	const next = await nextPlayer(db, chatId, afterUser);
-	if (!next) return;
+	// Nobody else is there: the turn stays open until somebody presses Play.
+	if (!next || (Number(next.user_id) === afterUser && next.active === false)) {
+		await db.execute('UPDATE wordcircle_scribble_state SET drawer_id = NULL, skips = 0 WHERE chat_id = ?', [chatId]);
+		return;
+	}
 	await db.execute('UPDATE wordcircle_scribble_state SET drawer_id = ?, turn_started_at = now() WHERE chat_id = ?', [Number(next.user_id), chatId]);
 }
 
 /** Every few seconds: ends rounds nobody guessed in time and skips drawers who never started. */
 export async function scribbleTick(db: Database, telegram: Telegram) {
+	const [tables] = await db.execute('SELECT chat_id FROM wordcircle_scribble_state WHERE drawer_id IS NOT NULL');
+	for (const table of tables as Row[]) await settleTable(db, Number(table.chat_id));
 	const [expired] = await db.execute('SELECT * FROM wordcircle_scribble_rounds WHERE solved_by IS NULL AND created_at + make_interval(secs => seconds) <= now()');
 	for (const round of expired as Row[]) await finishRound(db, telegram, round, null);
 	const [idle] = await db.execute(
@@ -322,11 +386,10 @@ export async function scribbleTick(db: Database, telegram: Telegram) {
 	);
 	for (const state of idle as Row[]) {
 		const chatId = Number(state.chat_id);
-		const [[count]] = await db.execute('SELECT COUNT(*) AS n FROM wordcircle_scribble_players WHERE chat_id = ?', [chatId]);
 		const skips = Number(state.skips ?? 0) + 1;
 		const next = await nextPlayer(db, chatId, Number(state.drawer_id));
 		// Everyone skipped once in a row (or nobody else is there): pause until someone presses Play.
-		if (!next || Number(next.user_id) === Number(state.drawer_id) || skips >= Number(count?.n ?? 0)) {
+		if (!next || Number(next.user_id) === Number(state.drawer_id) || skips >= await activeCount(db, chatId)) {
 			await db.execute('UPDATE wordcircle_scribble_state SET drawer_id = NULL, skips = 0 WHERE chat_id = ?', [chatId]);
 			continue;
 		}
