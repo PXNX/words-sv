@@ -300,7 +300,11 @@
     if (kind && word && ['noun', 'adj', 'verb', 'article'].includes(kind)) recordMissedWord(settings.lang, word);
   }
   function continueLearning() {
-    position = position >= queue.length - 1 ? 0 : position + 1;
+    const next = position >= queue.length - 1 ? 0 : position + 1;
+    // With a one-item queue (or a wrap back onto the same prompt) nothing would change, so the
+    // prompt is reset directly instead of leaving Continue without effect.
+    if (queue[next] === currentKey && next === position) resetPrompt();
+    position = next;
   }
   function optionStateClasses(choice: string) {
     if (!prompt) return '';
@@ -354,7 +358,12 @@
       <div class="grid justify-items-center content-start gap-[.5rem] min-h-[6.4rem]">
       {#if answerStatus === 'wrong'}
         <span class="answer-mark answer-mark-wrong" role="img" aria-label={labels.tryAgain}><IconClose aria-hidden="true" /></span>
-        <button class="btn-play btn-play-soft" onclick={resetOrder}>{labels.orderReset}</button>
+        <!-- A rejected order shows a correct one and still lets the learner move on. -->
+        {#if currentOrderExercise}<p class="learn-reveal m-0 max-w-[28rem] text-center text-success font-bold leading-[1.4]" lang={settings.lang}>{currentOrderExercise.answers[0]}</p>{/if}
+        <div class="flex flex-wrap justify-center gap-[.5rem]">
+          <button class="btn-play btn-play-soft" onclick={resetOrder}>{labels.orderReset}</button>
+          <button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>
+        </div>
       {:else if answerStatus === 'correct'}
         <span class="answer-mark answer-mark-right" role="img" aria-label={labels.correct}><IconCheck aria-hidden="true" /></span>
         <button class="btn-play btn-play-ink" onclick={continueLearning}>{labels.continue}</button>
