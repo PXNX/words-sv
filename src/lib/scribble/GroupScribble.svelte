@@ -5,7 +5,10 @@
     and you see the clock and who guessed it;
   - someone else draws: watch the picture appear, see the blanks and the clock, type guesses
     (guessing happens only here, never in the chat);
-  - between turns: whose turn it is; after five rounds, the winner.
+  - between turns: whose turn it is; after five rounds, the winner;
+  - alone at the table: nothing starts until a second player presses Play (one draws, the rest guess).
+  Every guess of the round is listed under the picture for the drawer and the guessers alike; a
+  page that is closed drops out after a few seconds, the same as pressing Leave (which takes two taps).
   Above it all sit the players' faces with their match points; every guess pops up as a speech
   bubble over its player (right and close ones without the word). With "reveal letters" on, the
   word's underlined slots fill in one letter at a time.
@@ -43,6 +46,8 @@
   const StateSchema = v.object({
     ok: v.literal(true),
     role: v.picklist(['draw', 'watch', 'wait']),
+    players: v.optional(v.number(), 2),
+    minPlayers: v.optional(v.number(), 2),
     me: v.object({ name: v.string(), wins: v.number() }),
     drawer: v.nullable(v.string()),
     roundSeconds: v.number(),
@@ -102,6 +107,11 @@
   let pending: LiveLine[] | null = null;
   let sending = false;
   let leaving = $state(false);
+  // Leaving takes two taps, so a stray one does not throw away the match points.
+  let confirmLeave = $state(false);
+  let confirmTimer: ReturnType<typeof setTimeout> | undefined;
+  // The poll in flight, so leaving waits for it instead of being undone by its late join.
+  let inflight: Promise<void> | null = null;
   let leftNotice = $state('');
   let leftTimer: ReturnType<typeof setTimeout> | undefined;
   // Compared on every poll so the others hear when someone leaves instead of staring at a face that no longer plays.
@@ -165,7 +175,14 @@
   /** Leave the table for good: the server passes the turn on, and this page returns to the solo modes. */
   async function leave() {
     if (leaving || !session) return;
+    if (!confirmLeave) {
+      confirmLeave = true;
+      if (confirmTimer) clearTimeout(confirmTimer);
+      confirmTimer = setTimeout(() => (confirmLeave = false), 3000);
+      return;
+    }
     leaving = true;
+    await inflight;
     try {
       await callApi('/api/games/scribble', OkSchema, { body: { action: 'leave', session }, accept: [404, 410] });
     } catch {
@@ -178,10 +195,17 @@
   const drawing = $derived(round?.status === 'drawing');
   const iDraw = $derived(Boolean(round?.mine && drawing));
   // One slot per letter: underlined, filled once revealed (or for the drawer and after the round).
+  const waitingForPlayers = $derived(Boolean(game && game.players < game.minPlayers && !drawing));
+  // Newest first; the drawer and the guessers see the same list.
+  const feed = $derived(game ? [...game.guesses].reverse() : []);
   const slots = $derived(round ? (round.pattern.length ? round.pattern : Array.from({ length: round.letters }, () => null)) : []);
 
-  async function poll() {
-    if (!session) return;
+  function poll() {
+    inflight = pollOnce().finally(() => (inflight = null));
+    return inflight;
+  }
+  async function pollOnce() {
+    if (!session || leaving) return;
     try {
       const next = await callApi('/api/games/scribble', StateSchema, { body: { action: 'state', session, since: version, locale: settings.interfaceLocale, ...avatarUpdate() } });
       failed = '';
@@ -203,6 +227,7 @@
       showBubbles(next.guesses, next.round?.id ?? 0);
       notePlayers(next.match.standings);
       recordScribbleWins(next.me.wins);
+      if (leaving) return;
       game = next;
     } catch (error) {
       failed = error instanceof ApiError && error.code === 'session_expired' ? m.scribble_live_expired({}, locale) : m.scribble_live_offline({}, locale);
@@ -215,7 +240,7 @@
     let timer: ReturnType<typeof setTimeout>;
     const loop = async () => {
       await poll();
-      if (!stopped) timer = setTimeout(loop, POLL_MS);
+      if (!stopped && !leaving) timer = setTimeout(loop, POLL_MS);
     };
     void loop();
     return () => { stopped = true; clearTimeout(timer); };
@@ -291,6 +316,24 @@
   </p>
 {/snippet}
 
+{#snippet guessFeed()}
+  <section class="live-feed" aria-label={m.scribble_live_guesses({}, locale)}>
+    <h2>{m.scribble_live_guesses({}, locale)}</h2>
+    {#if feed.length === 0}
+      <p class="live-feed-empty">{m.scribble_live_no_guesses({}, learn)}</p>
+    {:else}
+      <ol aria-live="polite">
+        {#each feed as entry (entry.id)}
+          <li class={entry.result}>
+            <b>{entry.name || '–'}</b>
+            <span lang={settings.lang}>{#if entry.result === 'right'}{entry.text ? `${entry.text} · ` : ''}{m.scribble_live_bubble_right({}, learn)}{:else if entry.result === 'close'}{entry.text ? `${entry.text} · ` : ''}{m.scribble_live_bubble_close({}, learn)}{:else}{entry.text}{/if}</span>
+          </li>
+        {/each}
+      </ol>
+    {/if}
+  </section>
+{/snippet}
+
 <div class="group-scribble">
   {#if failed}<p class="live-error" role="alert">{failed}</p>{/if}
 
@@ -298,17 +341,20 @@
     <div class="live-card live-wait"><span class="live-badge pulse" aria-hidden="true"><IconBrush /></span><p class="live-note">{m.scribble_live_loading({}, locale)}</p></div>
   {:else}
     <header class="live-head">
-      <span class="live-pill">{m.scribble_live_round({ round: num(Math.max(1, game.match.round)), of: num(game.match.of) }, learn)}</span>
-      <button type="button" class="live-leave" onclick={leave} disabled={leaving} aria-label={m.scribble_live_leave({}, locale)}><IconExit aria-hidden="true" />{m.scribble_live_leave({}, locale)}</button>
+      <!-- Where the match stands on the left, the clock (or your turn) and Leave on the right. -->
+      <div class="live-progress">
+        <span class="live-round">{m.scribble_live_round({ round: num(Math.max(1, game.match.round)), of: num(game.match.of) }, learn)}</span>
+        <span class="live-dots" aria-hidden="true">
+          {#each Array.from({ length: game.match.of }, (_, index) => index) as index (index)}<i class:done={index < game.match.round - (drawing ? 1 : 0)} class:now={drawing && index === game.match.round - 1}></i>{/each}
+        </span>
+      </div>
       {#if round && drawing}
         <span class="live-pill live-time" class:low={round.secondsLeft <= Math.min(10, round.seconds / 4)}><IconTimer aria-hidden="true" />{num(round.secondsLeft)}</span>
       {:else if game.role === 'draw' && !round?.mine}
         <span class="live-pill live-turn"><IconBrush aria-hidden="true" />{m.scribble_live_your_turn({}, learn)}</span>
       {/if}
-      <span class="live-dots" aria-hidden="true">
-        {#each Array.from({ length: game.match.of }, (_, index) => index) as index (index)}<i class:done={index < game.match.round - (drawing ? 1 : 0)} class:now={drawing && index === game.match.round - 1}></i>{/each}
-      </span>
-      {#if round && drawing}<span class="live-bar" aria-hidden="true"><i style:width="{Math.max(0, Math.min(100, (round.secondsLeft / round.seconds) * 100))}%"></i></span>{/if}
+      <button type="button" class="live-leave" class:confirm={confirmLeave} onclick={leave} disabled={leaving} aria-label={confirmLeave ? m.scribble_live_leave_confirm({}, locale) : m.scribble_live_leave({}, locale)} title={m.scribble_live_leave({}, locale)}><IconExit aria-hidden="true" />{#if confirmLeave}<span>{m.scribble_live_leave_confirm({}, locale)}</span>{/if}</button>
+      {#if round && drawing}<span class="live-bar" aria-hidden="true"><i class:low={round.secondsLeft <= Math.min(10, round.seconds / 4)} style:width="{Math.max(0, Math.min(100, (round.secondsLeft / round.seconds) * 100))}%"></i></span>{/if}
     </header>
 
     {#if leftNotice}<p class="live-left" role="status" aria-live="polite">{leftNotice}</p>{/if}
@@ -368,6 +414,7 @@
         <p class="live-prompt live-word">{m.scribble_draw_prompt({ word: round.word ?? chosen }, learn)}</p>
         <DrawPad onlive={(next) => (pending = next)} />
         <small class="live-note">{m.scribble_live_drawing_hint({}, learn)}</small>
+        {@render guessFeed()}
       </div>
     {:else if round}
       <div class="live-stage">
@@ -380,6 +427,7 @@
             <button type="submit" class="btn-play btn-play-ink" disabled={!typed.trim()}>{m.scribble_spell_submit({}, locale)}</button>
           </form>
           {#if hint}<p class="live-hint" class:close={hint === 'close'} aria-live="polite">{hint === 'close' ? m.scribble_close({}, learn) : m.scribble_try_again({}, learn)}</p>{/if}
+          {@render guessFeed()}
         {:else}
           {@render wordSlots(slots, round.letters)}
           <p class="live-result" class:solved={round.status === 'solved'} aria-live="polite">
@@ -388,11 +436,19 @@
               ? round.guessedByMe ? m.scribble_live_you_got_it({ word: round.word ?? '', points: num(round.points ?? 0) }, learn) : m.scribble_live_guessed({ name: round.guesser ?? '', word: round.word ?? '' }, learn)
               : m.scribble_timeout({ word: round.word ?? '' }, learn)}
           </p>
+          {#if feed.length > 0}{@render guessFeed()}{/if}
         {/if}
       </div>
     {/if}
 
-    {#if (!round || !drawing) && game.role === 'wait'}
+    {#if waitingForPlayers}
+      <!-- Alone at the table: nothing starts until somebody else presses Play. -->
+      <div class="live-card live-wait">
+        <span class="live-seats" aria-hidden="true">{#each Array.from({ length: game.minPlayers }, (_, index) => index) as index (index)}<i class:taken={index < game.players}></i>{/each}</span>
+        <p class="live-prompt">{m.scribble_live_need_players({}, learn)}</p>
+        <small class="live-note">{m.scribble_live_need_players_hint({}, learn)}</small>
+      </div>
+    {:else if (!round || !drawing) && game.role === 'wait'}
       <div class="live-card live-wait">
         <span class="live-badge pulse" aria-hidden="true"><IconBrush /></span>
         <p class="live-prompt">{game.drawer ? m.scribble_live_waiting({ name: game.drawer }, learn) : m.scribble_live_waiting_anyone({}, learn)}</p>
@@ -404,12 +460,15 @@
 
 <style>
   .group-scribble { display:grid;gap:.85rem; }
-  .live-head { display:flex;flex-wrap:wrap;align-items:center;gap:.45rem; }
+  .live-head { display:flex;flex-wrap:wrap;align-items:center;gap:.5rem; }
+  .live-progress { display:grid;gap:.3rem;margin-inline-end:auto; }
+  .live-round { font-size:.8rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;opacity:.75; }
   .live-pill { display:inline-flex;align-items:center;gap:.3rem;padding:.28rem .7rem;border:2px solid currentColor;border-radius:999px;font-size:.88rem;font-weight:900;font-variant-numeric:tabular-nums; }
   .live-pill :global(svg) { width:1.05rem;height:1.05rem; }
   .live-time.low { color:#c4522e;animation:live-pulse 1s ease-in-out infinite; }
   .live-turn { background:#e6a527;color:#172a45;border-color:#172a45; }
-  .live-leave { display:inline-flex;align-items:center;gap:.25rem;margin-inline-start:auto;padding:.28rem .55rem;border:2px solid currentColor;border-radius:999px;background:none;color:inherit;font:inherit;font-size:.8rem;font-weight:800;cursor:pointer; }
+  .live-leave { display:inline-flex;align-items:center;justify-content:center;gap:.3rem;min-width:2.3rem;height:2.3rem;padding:0 .55rem;border:2px solid currentColor;border-radius:999px;background:none;color:inherit;font:inherit;font-size:.82rem;font-weight:800;cursor:pointer;transition:background .15s ease, color .15s ease; }
+  .live-leave.confirm { background:#c4522e;border-color:#c4522e;color:#fffdf7;animation:live-pop .3s cubic-bezier(.34,1.56,.64,1); }
   .live-leave:disabled { opacity:.5;cursor:default; }
   .live-leave :global(svg) { width:.95rem;height:.95rem; }
   .live-left { margin:0;padding:.35rem .7rem;border-radius:.7rem;text-align:center;font-size:.85rem;font-weight:800;background:color-mix(in srgb, #c4522e 12%, transparent); }
@@ -418,7 +477,21 @@
   .live-dots i.done { background:currentColor;opacity:.8; }
   .live-dots i.now { background:#e6a527;border-color:#e6a527;opacity:1; }
   .live-bar { flex:1 1 100%;height:.35rem;border-radius:999px;background:color-mix(in srgb, currentColor 14%, transparent);overflow:hidden; }
-  .live-bar i { display:block;height:100%;border-radius:inherit;background:#34824d;transition:width 1s linear; }
+  .live-bar i { display:block;height:100%;border-radius:inherit;background:#34824d;transition:width 1s linear, background-color .3s; }
+  .live-bar i.low { background:#c4522e; }
+  .live-seats { display:flex;gap:.5rem; }
+  .live-seats i { width:2.6rem;height:2.6rem;border:2px dashed currentColor;border-radius:50%;opacity:.45; }
+  .live-seats i.taken { border-style:solid;background:#e6a527;opacity:1;animation:live-pop .4s cubic-bezier(.34,1.56,.64,1); }
+  .live-seats i:not(.taken) { animation:live-pulse 1.6s ease-in-out infinite; }
+  .live-feed { display:grid;gap:.4rem;padding:.7rem .8rem;border:2px solid color-mix(in srgb, currentColor 22%, transparent);border-radius:1rem; }
+  .live-feed h2 { margin:0;font-size:.78rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;opacity:.7; }
+  .live-feed ol { display:grid;gap:.3rem;max-height:9.5rem;margin:0;padding:0;list-style:none;overflow-y:auto; }
+  .live-feed li { display:flex;gap:.45rem;align-items:baseline;padding:.25rem .5rem;border-radius:.6rem;font-size:.92rem;animation:live-feed-in .35s cubic-bezier(.34,1.56,.64,1); }
+  .live-feed li b { flex:none;font-weight:900; }
+  .live-feed li span { min-width:0;overflow-wrap:anywhere;font-weight:700; }
+  .live-feed li.right { background:color-mix(in srgb, #34824d 16%, transparent); }
+  .live-feed li.close { background:color-mix(in srgb, #e6a527 22%, transparent); }
+  .live-feed-empty { margin:0;font-size:.88rem;font-weight:700;opacity:.6; }
   .live-card { display:grid;justify-items:center;gap:.7rem;padding:1rem;border:2px solid currentColor;border-radius:1.1rem;background:color-mix(in srgb, currentColor 4%, transparent); }
   .live-stage { display:grid;gap:.7rem; }
   .live-canvas { border-radius:1rem;overflow:hidden;box-shadow:0 .35rem 0 color-mix(in srgb, currentColor 18%, transparent); }
@@ -486,6 +559,8 @@
   @keyframes live-bubble { 0% { opacity:0;translate:0 .4rem;scale:.8; } 10% { opacity:1;translate:0 0;scale:1; } 85% { opacity:1; } 100% { opacity:0;translate:0 -.3rem; } }
   @keyframes live-letter { from { opacity:0;transform:translateY(-.6rem) scale(.6); } }
   @keyframes live-pulse { 50% { transform:scale(1.08); } }
+  @keyframes live-pop { 0% { scale:.7; } 60% { scale:1.08; } 100% { scale:1; } }
+  @keyframes live-feed-in { from { opacity:0;translate:0 -.35rem; } }
   @keyframes live-shake { 25% { transform:translateX(-4px); } 75% { transform:translateX(4px); } }
-  @media (prefers-reduced-motion: reduce) { .live-badge.pulse, .live-time.low, .live-guess input.shake, .live-slots .letter { animation:none; } .live-bubble { animation-name:none; } .live-bar i, .live-choice { transition:none; } }
+  @media (prefers-reduced-motion: reduce) { .live-badge.pulse, .live-time.low, .live-guess input.shake, .live-slots .letter, .live-leave.confirm, .live-seats i, .live-feed li { animation:none; } .live-bubble { animation-name:none; } .live-bar i, .live-choice { transition:none; } }
 </style>
