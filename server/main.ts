@@ -7,9 +7,10 @@
  *
  * Environment: DATABASE_URL, PORT (default 3791), TELEGRAM_BOT_TOKEN, TELEGRAM_BRIDGE_SECRET,
  * VAPID_SUBJECT / VAPID_PUBLIC_KEY / VAPID_PRIVATE_KEY (optional, for web push), APP_URL (optional).
+ * With TELEGRAM_MOCK set, the Telegram endpoints answer from an in-memory fake database instead: no
+ * DATABASE_URL or bot token is needed, and sign-in links the device straight away.
  */
 import { randomBytes } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
 import { getDatabase } from './_lib/database.js';
 import type { ApiRequest, ApiResponse } from './_lib/http.js';
 import cronReminders from './cron/reminders.js';
@@ -97,7 +98,7 @@ export async function handle(request: Request): Promise<Response> {
 }
 
 async function applySchema() {
-	const sql = await readFile(new URL('../database-schema.sql', import.meta.url), 'utf8');
+	const sql = await readTextFile(new URL('../database-schema.sql', import.meta.url));
 	// Statements are separated by `;` at a line end; the file has no functions or quoted semicolons.
 	for (const statement of sql.split(/;\s*$/mu).map((part) => part.replace(/^\s*--.*$/gmu, '').trim()).filter(Boolean)) {
 		await getDatabase().execute(statement);
@@ -113,10 +114,16 @@ async function runReminders() {
 // Bun's own globals, typed here so the project needs no Bun type package.
 type BunRuntime = { serve: (options: { port: number; hostname: string; fetch: (request: Request) => Promise<Response> }) => unknown };
 
+/** Reads a text file through Bun's own file API, typed locally like `BunRuntime` above. */
+async function readTextFile(url: URL) {
+	return (globalThis as unknown as { Bun: { file: (path: URL) => { text(): Promise<string> } } }).Bun.file(url).text();
+}
+
 if ((import.meta as { main?: boolean }).main) {
 	// Without a configured secret, the in-process job still authorizes itself; outside calls cannot.
 	process.env.CRON_SECRET ||= randomBytes(32).toString('hex');
-	await applySchema();
+	// Mock mode runs the Telegram flow against an in-memory fake database, so there is no schema to apply.
+	if (!process.env.TELEGRAM_MOCK) await applySchema();
 	const port = Number(process.env.PORT) || 3791;
 	(globalThis as unknown as { Bun: BunRuntime }).Bun.serve({ port, hostname: process.env.HOST || '0.0.0.0', fetch: handle });
 	console.log(`WordCircle API listening on :${port}`);

@@ -40,5 +40,16 @@ export default defineConfig({
   resolve: { alias: [{ find: /^#lib\/paraglide\/messages\.js$/u, replacement: fileURLToPath(new URL('./src/lib/i18n/messages.ts', import.meta.url)) }] },
   // The on-device conversation model runs in a module worker (src/lib/conversation/llm.worker.ts).
   worker: { format: 'es' },
-  server: { host: '0.0.0.0', allowedHosts: true }
+  server: {
+    host: '0.0.0.0',
+    allowedHosts: true,
+    // The API server runs next to the database; in dev it is reached through this proxy, so the
+    // Telegram login flow (mock mode: TELEGRAM_MOCK on the server) works without Vercel.
+    proxy: {
+      '/api': {
+        target: process.env.API_ORIGIN || 'http://localhost:3791',
+        changeOrigin: true
+      }
+    }
+  }
 });

@@ -1,5 +1,7 @@
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 import * as v from 'valibot';
+import { getDatabase } from './database.js';
+import { getMockDatabase } from './mockDatabase.js';
 import { FREEZE_EVERY, MAX_FREEZES } from './streak.js';
 
 // @word_circle_bot (the ptb-words repo) polls for updates on its own server. It forwards `/start`
@@ -8,6 +10,10 @@ import { FREEZE_EVERY, MAX_FREEZES } from './streak.js';
 // Every new player who starts the bot through a player's invite link earns that player this many
 // embers; there is no limit on how many friends can be invited.
 export const INVITE_EMBERS = 2;
+
+// With TELEGRAM_MOCK set, the Telegram endpoints answer from an in-memory fake database instead of
+// PostgreSQL and no real bot is involved; this is the Telegram user the mock links devices to.
+export const MOCK_TELEGRAM_USER_ID = 4242;
 
 export function botUsername() {
 	return process.env.TELEGRAM_BOT_USERNAME || 'word_circle_bot';
@@ -39,9 +45,21 @@ const InitDataUser = v.looseObject({
 export type TelegramUser = v.InferOutput<typeof InitDataUser>;
 
 /** The Telegram user behind a Mini App launch, once Telegram's signature over `initData` checks out
- * against the bot token; null for anything forged, unsigned or older than `maxAgeSeconds`. */
+ * against the bot token; null for anything forged, unsigned or older than `maxAgeSeconds`. With
+ * `TELEGRAM_MOCK` set the signature is skipped and the `user` field is trusted instead, so the Mini
+ * App login flow works against the fake database in development. */
 export function verifyInitData(initData: unknown, token = process.env.TELEGRAM_BOT_TOKEN ?? '', now = Date.now(), maxAgeSeconds = 24 * 60 * 60): TelegramUser | null {
-	if (!token || typeof initData !== 'string' || initData.length > 4096) return null;
+	if (typeof initData !== 'string' || initData.length > 4096) return null;
+	if (process.env.TELEGRAM_MOCK) {
+		try {
+			const params = new URLSearchParams(initData);
+			const user = v.safeParse(InitDataUser, JSON.parse(params.get('user') ?? ''));
+			return user.success ? user.output : null;
+		} catch {
+			return null;
+		}
+	}
+	if (!token) return null;
 	const params = new URLSearchParams(initData);
 	const hash = params.get('hash') ?? '';
 	params.delete('hash');
@@ -82,6 +100,7 @@ export function addEmbers(embers: number, freezes: number, count: number) {
 }
 
 export async function sendTelegram(chatId: number | string, text: string, buttonUrl?: string) {
+	if (process.env.TELEGRAM_MOCK) return undefined;
 	const token = process.env.TELEGRAM_BOT_TOKEN;
 	if (!token) throw new Error('telegram_not_configured');
 	const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -101,6 +120,12 @@ export async function sendTelegram(chatId: number | string, text: string, button
 
 export function appUrl() {
 	return (process.env.APP_URL || 'https://words-sv.vercel.app').replace(/\/+$/, '') + '/';
+}
+
+/** The database the Telegram endpoints run against: the in-memory fake one with `TELEGRAM_MOCK`,
+ * PostgreSQL otherwise. */
+export function telegramDatabaseProvider(): { execute: (sql: string, params?: unknown[]) => Promise<unknown> } {
+	return process.env.TELEGRAM_MOCK ? getMockDatabase() : getDatabase();
 }
 
 export const escapeHtml = (text: string) => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');

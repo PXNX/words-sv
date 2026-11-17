@@ -1,82 +1,14 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { createHmac } from 'node:crypto';
-import { addEmbers, bridgeAuthorized, parseStartPayload, verifyInitData } from '../server/_lib/telegram.js';
+import { addEmbers, bridgeAuthorized, parseStartPayload, verifyInitData, sendTelegram, telegramDatabaseProvider } from '../server/_lib/telegram.js';
+import { getMockDatabase, mockDatabase, type MockDatabase, type MockSentMessage } from '../server/_lib/mockDatabase.js';
 import { createStartEndpoint } from '../server/telegram/start.js';
+import { createDeviceEndpoint } from '../server/telegram/device.js';
 import { createRemindersEndpoint } from '../server/cron/reminders.js';
 import { responseCapture } from './support/api';
 
-type Device = {
-	embers?: number;
-	freezes?: number;
-	invite_freezes?: number;
-	qualified_days?: number;
-	locale?: string;
-	timezone?: string;
-	day_key?: string;
-	last_qualified_day?: string;
-	current_qualified?: number;
-	streak_count?: number;
-};
-type Link = {
-	device_id: string;
-	invite_code?: string;
-	link_code?: string | null;
-	chat_id?: number | null;
-	telegram_user_id?: number | null;
-	reminders?: number;
-	last_reminded_day?: string | null;
-};
-type Invite = { telegram_user_id: number; inviter_device_id: string };
-type SentMessage = [chatId: number, text: string, buttonUrl: string];
-
-
-// A tiny in-memory stand-in for the few statements the Telegram endpoints run.
-function fakeDatabase({ devices = {}, links = [], invites = [] }: { devices?: Record<string, Device>, links?: Link[], invites?: Invite[] } = {}) {
-	const db = {
-		devices, links, invites,
-		async execute(sql: string, params: any[] = []) {
-			if (/^(CREATE|ALTER)/.test(sql)) return [{}];
-			if (sql.startsWith('UPDATE wordcircle_telegram_links SET chat_id')) {
-				const link = links.find((entry) => entry.link_code === params[2]);
-				if (link) Object.assign(link, { chat_id: params[0], telegram_user_id: params[1], link_code: null }, sql.includes('reminders = 1') ? { reminders: 1 } : {});
-				return [{ affectedRows: link ? 1 : 0 }];
-			}
-			if (sql.includes('FROM wordcircle_telegram_links WHERE invite_code')) return [links.filter((entry) => entry.invite_code === params[0])];
-			if (sql.includes('FROM wordcircle_telegram_links WHERE telegram_user_id')) return [links.filter((entry) => entry.telegram_user_id === params[0])];
-			if (sql.startsWith('INSERT INTO wordcircle_telegram_invites')) {
-				if (invites.some((entry) => entry.telegram_user_id === params[0])) throw Object.assign(new Error('dup'), { code: '23505' });
-				invites.push({ telegram_user_id: params[0], inviter_device_id: params[1] });
-				return [{}];
-			}
-			if (sql.startsWith('SELECT embers, freezes')) return [devices[params[0]] ? [devices[params[0]]] : []];
-			if (sql.startsWith('UPDATE wordcircle_streak_devices SET embers')) {
-				const device = devices[params[3]];
-				if (!device) throw new Error('unknown device');
-				Object.assign(device, { embers: params[0], freezes: params[1], invite_freezes: Math.min(2, (device.invite_freezes ?? 0) + params[2]) });
-				return [{ affectedRows: 1 }];
-			}
-			if (sql.startsWith('SELECT d.*, t.chat_id')) return [links.filter((entry) => entry.reminders && entry.chat_id).map((entry) => ({ ...devices[entry.device_id], device_id: entry.device_id, chat_id: entry.chat_id }))];
-			if (sql.startsWith('UPDATE wordcircle_telegram_links SET last_reminded_day')) {
-				const link = links.find((entry) => entry.device_id === params[1]);
-				const claimed = Boolean(link && link.last_reminded_day !== params[0]);
-				if (claimed && link) link.last_reminded_day = params[0];
-				return [{ affectedRows: claimed ? 1 : 0 }];
-			}
-			if (sql.startsWith('UPDATE wordcircle_telegram_links SET reminders = 0')) {
-				const link = links.find((entry) => entry.device_id === params[0]);
-				if (link) link.reminders = 0;
-				return [{}];
-			}
-			if (sql.startsWith('SELECT COUNT(*) AS count FROM wordcircle_telegram_invites')) return [[{ count: invites.filter((entry) => entry.inviter_device_id === params[0]).length }]];
-			if (sql.includes('wordcircle_push_subscriptions')) return [[]];
-			throw new Error(`unexpected statement: ${sql}`);
-		}
-	};
-	return db;
-}
-
 const secret = 'bridge-secret-for-tests-0123456789';
-async function start(db: ReturnType<typeof fakeDatabase>, body: Record<string, unknown>, sent: SentMessage[] = []) {
+async function start(db: MockDatabase, body: Record<string, unknown>, sent: MockSentMessage[] = []) {
 	process.env.TELEGRAM_BRIDGE_SECRET = secret;
 	const res = responseCapture();
 	await createStartEndpoint({ databaseProvider: () => db, telegramSender: async (...args) => { sent.push(args); } })({ method: 'POST', headers: { authorization: `Bearer ${secret}` }, body }, res);
@@ -108,30 +40,30 @@ describe('telegram helpers', () => {
 describe('telegram start bridge', () => {
 	it('rejects calls without the bridge secret', async () => {
 		const res = responseCapture();
-		await createStartEndpoint({ databaseProvider: () => fakeDatabase() })({ method: 'POST', headers: {}, body: {} }, res);
+		await createStartEndpoint({ databaseProvider: () => mockDatabase() })({ method: 'POST', headers: {}, body: {} }, res);
 		expect(res.result.statusCode).toBe(401);
 	});
 
 	it('turns on reminders with a one-time code', async () => {
-		const db = fakeDatabase({ links: [{ device_id: 'device-a', invite_code: 'inviteA', link_code: 'linkcode1234' }] });
+		const db = mockDatabase({ links: [{ device_id: 'device-a', invite_code: 'inviteA', link_code: 'linkcode1234' }] });
 		expect((await start(db, { payload: 'r_linkcode1234', userId: 11, chatId: 11 })).body.result).toBe('reminders_on');
 		expect(db.links[0]).toMatchObject({ chat_id: 11, telegram_user_id: 11, reminders: 1, link_code: null });
 		expect((await start(db, { payload: 'r_linkcode1234', userId: 11, chatId: 11 })).body.result).toBe('expired');
 	});
 
 	it('signs a device in with a one-time code, without turning reminders on', async () => {
-		const db = fakeDatabase({ links: [{ device_id: 'device-a', invite_code: 'inviteA', link_code: 'logincode123', reminders: 0 }] });
+		const db = mockDatabase({ links: [{ device_id: 'device-a', invite_code: 'inviteA', link_code: 'logincode123', reminders: 0 }] });
 		expect((await start(db, { payload: 'l_logincode123', userId: 11, chatId: 11 })).body.result).toBe('signed_in');
 		expect(db.links[0]).toMatchObject({ chat_id: 11, telegram_user_id: 11, reminders: 0, link_code: null });
 		expect((await start(db, { payload: 'l_logincode123', userId: 11, chatId: 11 })).body.result).toBe('expired');
 	});
 
 	it('says so in Telegram when the tenth friend joins', async () => {
-		const db = fakeDatabase({
+		const db = mockDatabase({
 			devices: { 'device-a': { embers: 0, freezes: 2, qualified_days: 0, locale: 'en' } },
 			links: [{ device_id: 'device-a', invite_code: 'inviteCodeB1', chat_id: 11, telegram_user_id: 11 }]
 		});
-		const sent: SentMessage[] = [];
+		const sent: MockSentMessage[] = [];
 		for (let userId = 100; userId < 111; userId += 1) await start(db, { payload: 'i_inviteCodeB1', userId, chatId: userId }, sent);
 		// Eleven thanks plus one milestone message, sent right after the tenth.
 		expect(sent).toHaveLength(12);
@@ -139,11 +71,11 @@ describe('telegram start bridge', () => {
 	});
 
 	it('pays embers for every new player, once per player, without a limit', async () => {
-		const db = fakeDatabase({
+		const db = mockDatabase({
 			devices: { 'device-a': { embers: 5, freezes: 0, qualified_days: 5, locale: 'de' } },
 			links: [{ device_id: 'device-a', invite_code: 'inviteCodeA1', chat_id: 11, telegram_user_id: 11 }]
 		});
-		const sent: SentMessage[] = [];
+		const sent: MockSentMessage[] = [];
 		for (const userId of [21, 22, 23, 24, 25]) expect((await start(db, { payload: 'i_inviteCodeA1', userId, chatId: userId }, sent)).body.result).toBe('invited');
 		// 5 + 5 × 2 = 15 embers: two freezes forged, the last ember stays.
 		expect(db.devices['device-a']).toMatchObject({ embers: 1, freezes: 2, invite_freezes: 2 });
@@ -158,11 +90,11 @@ describe('telegram start bridge', () => {
 describe('telegram streak reminders', () => {
 	it('messages a linked player once, two hours before their streak expires', async () => {
 		process.env.CRON_SECRET ??= 'cron-secret-for-tests-0123456789abcdef';
-		const db = fakeDatabase({
+		const db = mockDatabase({
 			devices: { 'device-a': { timezone: 'UTC', locale: 'en', day_key: '2026-10-27', last_qualified_day: '2026-10-26', current_qualified: 0, streak_count: 4 } },
 			links: [{ device_id: 'device-a', invite_code: 'inviteCodeA1', chat_id: 11, reminders: 1 }]
 		});
-		const sent: SentMessage[] = [];
+		const sent: MockSentMessage[] = [];
 		const run = async (iso: string) => {
 			const res = responseCapture();
 			await createRemindersEndpoint({ databaseProvider: () => db, telegramSender: async (...args) => { sent.push(args); }, now: () => new Date(iso) })({ method: 'POST', headers: { authorization: `Bearer ${process.env.CRON_SECRET}` } }, res);
@@ -199,5 +131,49 @@ describe('telegram mini app', () => {
 		expect(verifyInitData(signed({ auth_date: String(now / 1000 - 3 * 24 * 60 * 60), user }), token, now)).toBeNull();
 		expect(verifyInitData('user=%7B%22id%22%3A42%7D', token, now)).toBeNull();
 		expect(verifyInitData(signed({ auth_date: authDate, user }), '', now)).toBeNull();
+	});
+});
+
+describe('telegram mock mode', () => {
+	const mockDevice = 'dev-device-0000000000000000';
+	afterEach(() => { delete process.env.TELEGRAM_MOCK; });
+
+	it('trusts the user field without a signature when TELEGRAM_MOCK is set', () => {
+		process.env.TELEGRAM_MOCK = '1';
+		expect(verifyInitData('user=%7B%22id%22%3A42%2C%22first_name%22%3A%22Anna%22%7D')).toMatchObject({ id: 42, first_name: 'Anna' });
+		expect(verifyInitData('user=%7B%22id%22%3A42%7D', '', 0)).toMatchObject({ id: 42 });
+		expect(verifyInitData('auth_date=1')).toBeNull();
+	});
+
+	it('refuses unsigned launch data without TELEGRAM_MOCK', () => {
+		expect(verifyInitData('user=%7B%22id%22%3A42%7D')).toBeNull();
+	});
+
+	it('serves the fake database from the telegram provider', () => {
+		process.env.TELEGRAM_MOCK = '1';
+		expect(telegramDatabaseProvider()).toBe(getMockDatabase());
+		expect(mockDatabase().links).toEqual([]);
+	});
+
+	it('links the device straight away for signin and connect', async () => {
+		process.env.TELEGRAM_MOCK = '1';
+		const call = async (action: string) => {
+			const res = responseCapture();
+			await createDeviceEndpoint()({ method: 'POST', headers: {}, body: { deviceId: mockDevice, timeZone: 'UTC', locale: 'en', action } }, res);
+			return res.result.body;
+		};
+		expect((await call('signin')).linked).toBe(true);
+		expect((await call('connect')).reminders).toBe(true);
+	});
+
+	it('sends nothing through the bot in mock mode', async () => {
+		process.env.TELEGRAM_MOCK = '1';
+		const token = process.env.TELEGRAM_BOT_TOKEN;
+		delete process.env.TELEGRAM_BOT_TOKEN;
+		try {
+			await expect(sendTelegram(11, 'mock')).resolves.toBeUndefined();
+		} finally {
+			if (token) process.env.TELEGRAM_BOT_TOKEN = token;
+		}
 	});
 });

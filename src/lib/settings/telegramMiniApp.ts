@@ -15,6 +15,18 @@ export type MiniAppLaunch = { initData: string; user: MiniAppUser };
 const SESSION_KEY = 'wordcircle-telegram-init-data-v1';
 let launch: MiniAppLaunch | null | undefined;
 
+// In mock mode (VITE_TELEGRAM_MOCK, server in TELEGRAM_MOCK) there is no Telegram around, so the app
+// fabricates the launch data a Mini App would have passed; the server trusts it unsigned.
+function mockInitData(): string {
+	const params = new URLSearchParams({
+		user: JSON.stringify({ id: 4242, first_name: 'Mock', language_code: 'en' }),
+		auth_date: String(Math.floor(Date.now() / 1000)),
+		query_id: 'mock',
+		hash: 'mock'
+	});
+	return params.toString();
+}
+
 function parse(initData: string | null): MiniAppLaunch | null {
 	if (!initData) return null;
 	try {
@@ -35,6 +47,7 @@ export function miniAppLaunch(): MiniAppLaunch | null {
 	} catch {
 		launch = parse(fromHash);
 	}
+	if (!launch && import.meta.env?.DEV && import.meta.env?.VITE_TELEGRAM_MOCK) launch = parse(mockInitData());
 	return launch;
 }
 

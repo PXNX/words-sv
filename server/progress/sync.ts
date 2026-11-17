@@ -1,6 +1,5 @@
-import { getDatabase } from '../_lib/database.js';
 import { isMethod, readJson, respond } from '../_lib/http.js';
-import { ensureTelegramTables } from '../_lib/telegram.js';
+import { ensureTelegramTables, telegramDatabaseProvider } from '../_lib/telegram.js';
 import type { Database } from '../_lib/database.js';
 import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 
@@ -37,7 +36,7 @@ function parseSnapshot(raw: string): Record<string, unknown> | null {
 	}
 }
 
-export function createSyncEndpoint({ databaseProvider = getDatabase }: { databaseProvider?: () => Database } = {}) {
+export function createSyncEndpoint({ databaseProvider = telegramDatabaseProvider }: { databaseProvider?: () => Database } = {}) {
 	return async function progressSync(req: ApiRequest, res: ApiResponse) {
 		if (!isMethod(req, 'POST')) return respond(res, 405, { ok: false, error: 'method_not_allowed' });
 		try {

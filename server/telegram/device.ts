@@ -1,7 +1,6 @@
-import { getDatabase } from '../_lib/database.js';
 import { isMethod, readJson, respond } from '../_lib/http.js';
 import { dateKeyFor, isSupportedTimeZone, normalizeReminderLocale } from '../_lib/streak.js';
-import { INVITE_EMBERS, ensureTelegramTables, newCode, startLink, verifyInitData } from '../_lib/telegram.js';
+import { INVITE_EMBERS, MOCK_TELEGRAM_USER_ID, ensureTelegramTables, newCode, startLink, telegramDatabaseProvider, verifyInitData } from '../_lib/telegram.js';
 import type { Database } from '../_lib/database.js';
 import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 
@@ -14,7 +13,7 @@ const actions = new Set(['status', 'connect', 'disconnect', 'miniapp', 'signin',
 // Telegram user who opened WordCircle as a Mini App, from Telegram's signed `initData`. `signin`
 // returns a one-time /start link that links the device to whoever presses Start (outside the Mini
 // App), and `signout` unlinks this device again: its local progress stays, the account keeps its copy.
-export function createDeviceEndpoint({ databaseProvider = getDatabase }: { databaseProvider?: () => Database } = {}) {
+export function createDeviceEndpoint({ databaseProvider = telegramDatabaseProvider }: { databaseProvider?: () => Database } = {}) {
 	return async function telegramDevice(req: ApiRequest, res: ApiResponse) {
 		if (!isMethod(req, 'POST')) return respond(res, 405, { ok: false, error: 'method_not_allowed' });
 		try {
@@ -34,14 +33,24 @@ export function createDeviceEndpoint({ databaseProvider = getDatabase }: { datab
 			} else if (action === 'connect') {
 				const [direct] = await db.execute('UPDATE wordcircle_telegram_links SET reminders = 1, link_code = NULL WHERE device_id = ? AND chat_id IS NOT NULL', [deviceId]);
 				if (direct.affectedRows !== 1) {
-					const code = newCode(12);
-					await db.execute('UPDATE wordcircle_telegram_links SET link_code = ? WHERE device_id = ?', [code, deviceId]);
-					connectUrl = startLink(`r_${code}`);
+					if (process.env.TELEGRAM_MOCK) {
+						// Mock mode: there is no bot to press Start, so the chat is linked straight away.
+						await db.execute('UPDATE wordcircle_telegram_links SET chat_id = ?, telegram_user_id = ?, reminders = 1, link_code = NULL WHERE device_id = ?', [MOCK_TELEGRAM_USER_ID, MOCK_TELEGRAM_USER_ID, deviceId]);
+					} else {
+						const code = newCode(12);
+						await db.execute('UPDATE wordcircle_telegram_links SET link_code = ? WHERE device_id = ?', [code, deviceId]);
+						connectUrl = startLink(`r_${code}`);
+					}
 				}
 			} else if (action === 'signin') {
-				const code = newCode(12);
-				await db.execute('UPDATE wordcircle_telegram_links SET link_code = ? WHERE device_id = ?', [code, deviceId]);
-				connectUrl = startLink(`l_${code}`);
+				if (process.env.TELEGRAM_MOCK) {
+					// Mock mode: the one-time link's Start is simulated; the device is linked right away.
+					await db.execute('UPDATE wordcircle_telegram_links SET chat_id = ?, telegram_user_id = ?, link_code = NULL WHERE device_id = ?', [MOCK_TELEGRAM_USER_ID, MOCK_TELEGRAM_USER_ID, deviceId]);
+				} else {
+					const code = newCode(12);
+					await db.execute('UPDATE wordcircle_telegram_links SET link_code = ? WHERE device_id = ?', [code, deviceId]);
+					connectUrl = startLink(`l_${code}`);
+				}
 			} else if (action === 'signout') {
 				await db.execute('UPDATE wordcircle_telegram_links SET telegram_user_id = NULL, chat_id = NULL, reminders = 0, link_code = NULL WHERE device_id = ?', [deviceId]);
 			} else if (action === 'disconnect') {

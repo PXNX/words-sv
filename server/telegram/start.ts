@@ -1,7 +1,6 @@
-import { getDatabase } from '../_lib/database.js';
 import { isMethod, readJson, respond } from '../_lib/http.js';
 import { FREEZE_EVERY, normalizeReminderLocale } from '../_lib/streak.js';
-import { INVITE_EMBERS, INVITE_REWARD_TARGET, addEmbers, inviteMilestone, appUrl, bridgeAuthorized, ensureTelegramTables, htmlMessage, inviteThanks, parseStartPayload, sendTelegram } from '../_lib/telegram.js';
+import { INVITE_EMBERS, INVITE_REWARD_TARGET, addEmbers, inviteMilestone, appUrl, bridgeAuthorized, ensureTelegramTables, htmlMessage, inviteThanks, parseStartPayload, sendTelegram, telegramDatabaseProvider } from '../_lib/telegram.js';
 import type { Database } from '../_lib/database.js';
 import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 
@@ -12,7 +11,7 @@ const validId = (value: unknown): value is number => Number.isSafeInteger(value)
 // Called by the ptb-words bot for every `/start r_…`, `/start l_…` or `/start i_…` it receives.
 // Answers with what happened, so the bot can reply in the player's language:
 // reminders_on | signed_in | expired | invited | known | own_invite | unknown.
-export function createStartEndpoint({ databaseProvider = getDatabase, telegramSender = sendTelegram }: { databaseProvider?: () => Database; telegramSender?: TelegramSender } = {}) {
+export function createStartEndpoint({ databaseProvider = telegramDatabaseProvider, telegramSender = sendTelegram }: { databaseProvider?: () => Database; telegramSender?: TelegramSender } = {}) {
 	return async function telegramStart(req: ApiRequest, res: ApiResponse) {
 		if (!isMethod(req, 'POST')) return respond(res, 405, { ok: false, error: 'method_not_allowed' });
 		if (!bridgeAuthorized(req.headers?.authorization)) return respond(res, 401, { ok: false, error: 'unauthorized' });

@@ -16,6 +16,14 @@ bun run dev
 The app opens at the URL Vite prints. Vocabulary, voices and models are downloaded on the device
 when a mode first needs them; no account or cloud key is required to practise.
 
+The Telegram login can also be tried without a bot, token or database, with the API server in mock
+mode (an in-memory fake database) and the app in dev mode, both with Bun:
+
+```bash
+TELEGRAM_MOCK=1 bun server/main.ts   # the API server, with the fake Telegram database
+VITE_TELEGRAM_MOCK=1 bun run dev     # the app, which then calls that server instead of refusing
+```
+
 ## Where things live
 
 Code is grouped by feature under `src/lib/<feature>/`. Each route in `src/routes/<mode>/+page.svelte`

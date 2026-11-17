@@ -21,8 +21,9 @@ export type TelegramStatus = { reminders: boolean; linked: boolean; connectUrl: 
 export type TelegramAction = 'status' | 'connect' | 'disconnect' | 'miniapp' | 'signin' | 'signout';
 
 export async function telegramDevice(action: TelegramAction, initData?: string): Promise<TelegramStatus> {
-	// The /api functions only exist on Vercel; under `vite dev` every call would just 404.
-	if (import.meta.env?.DEV) throw new Error('telegram_unavailable');
+	// The /api functions only exist on Vercel; under `vite dev` every call would just 404, unless the
+	// API server runs in mock mode (TELEGRAM_MOCK) and answers from its in-memory fake database.
+	if (import.meta.env?.DEV && !import.meta.env?.VITE_TELEGRAM_MOCK) throw new Error('telegram_unavailable');
 	try {
 		return await callApi('/api/telegram/device', TelegramStatusSchema, { body: { deviceId: deviceId(), timeZone: timeZone(), locale: reminderLocale(), action, initData } });
 	} catch {

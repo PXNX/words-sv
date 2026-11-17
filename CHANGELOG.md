@@ -9,6 +9,9 @@ entries, section names and summaries are never translated.
 
 ## Unreleased
 
+### New
+- Try the Telegram login without a bot, token or database: `TELEGRAM_MOCK=1 bun server/main.ts` answers the Telegram endpoints from an in-memory fake database and links the device straight away, and `VITE_TELEGRAM_MOCK=1 bun run dev` lets the app talk to that server
+
 ### Fixed
 - Speak in Telegram's Mini App again: its webview lists no voices of its own, so the browser voice was silent; the app now hears that and speaks with its rendered voices instead
 - Let either player leave a live Scribble game: the leaver drops out of the standings, their turn passes at once and an unfinished drawing is closed, so the other side never waits on an absent player; the last player leaving resets the table
