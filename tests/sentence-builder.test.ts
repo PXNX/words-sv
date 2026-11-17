@@ -110,6 +110,11 @@ describe('composed German sentences', () => {
     expect(sentence(composeSentence('de', { structure: 'weil', subject: { noun: 'girl' }, verb: 'read', object: { noun: 'book', determiner: 'indefinite', adjective: 'new' } }))).toBe('Das Mädchen ist glücklich, weil es ein neues Buch liest.');
   });
 
+  it('accepts the dass or weil clause in front, with the main clause inverted', () => {
+    expect(composeSentence('de', { structure: 'weil', subject: { noun: 'girl' }, verb: 'read', object: { noun: 'book', determiner: 'indefinite', adjective: 'new' } })!.answers).toContain('Weil es ein neues Buch liest, ist das Mädchen glücklich.');
+    expect(composeSentence('de', { structure: 'dass', frame: 'think', subject: { noun: 'man' }, verb: 'buy', object: { noun: 'bread', determiner: 'indefinite', adjective: 'fresh' } })!.answers).toContain('Dass der Mann ein frisches Brot kauft, glaube ich.');
+  });
+
   it('refuses words that do not go together', () => {
     expect(composeSentence('de', { structure: 'statement', subject: { noun: 'dog' }, verb: 'eat', object: { noun: 'apple', determiner: 'definite' } })).toBeNull();
     expect(composeSentence('de', { structure: 'statement', subject: { noun: 'man' }, verb: 'read', object: { noun: 'apple', determiner: 'definite' } })).toBeNull();
@@ -145,6 +150,11 @@ describe('composed English sentences', () => {
     expect(sentence(composeSentence('en', { structure: 'dative', subject: { noun: 'man' }, verb: 'give', recipient: { noun: 'child', determiner: 'definite' }, object: { noun: 'apple', determiner: 'indefinite' } }))).toBe('The man gives the child an apple.');
   });
 
+  it('accepts the because clause or the time phrase in front', () => {
+    expect(composeSentence('en', { structure: 'weil', subject: { noun: 'dog' }, verb: 'find', object: { noun: 'ball', determiner: 'definite' } })!.answers).toEqual(['The dog is happy because it finds the ball.', 'Because it finds the ball, the dog is happy.']);
+    expect(composeSentence('en', { structure: 'negation', subject: { noun: 'child' }, verb: 'read', object: { noun: 'book', determiner: 'indefinite', adjective: 'old' }, time: 'evening' })!.answers).toContain('In the evening, the child does not read an old book.');
+  });
+
   it('leaves out German-only time words and modals', () => {
     expect(composeSentence('en', { structure: 'inversion', subject: { noun: 'man' }, verb: 'buy', object: { noun: 'bread', determiner: 'indefinite' }, time: 'today' })).toBeNull();
     expect(composeSentence('en', { structure: 'modal', modal: 'wouldLike', subject: { noun: 'man' }, verb: 'eat', object: { noun: 'apple', determiner: 'indefinite' } })).toBeNull();
@@ -171,6 +181,12 @@ describe('the word-order pool', () => {
       });
     }
   }
+
+  it('takes the other natural orders of hand-checked sentences', () => {
+    const find = (start: string) => vocabularyLevels.flatMap((level) => curatedExercises('en', level)).find((exercise) => exercise.answers[0]!.startsWith(start))!;
+    expect(matchOrder(find('Never have I'), sentenceTokens('I have never seen such a beautiful sunset.'))).not.toBeNull();
+    expect(matchOrder(find('I am staying'), sentenceTokens('Because I am ill, I am staying at home.'))).not.toBeNull();
+  });
 
   it('keeps the German finite verb second in main clauses and last after dass/weil', () => {
     for (const level of vocabularyLevels) {

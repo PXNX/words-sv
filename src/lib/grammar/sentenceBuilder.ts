@@ -496,6 +496,12 @@ function germanExercise(spec: SentenceSpec): OrderExercise {
       const clauseCore = [clauseSubject, recipientPart, objectPart].filter((item): item is Part => Boolean(item));
       orders = germanMiddleFields(clauseCore, timePart).map((middle) => [frame, conj, ...middle, ...tail, verbPart]);
       orders.sort((a, b) => Number(a[2] !== clauseSubject) - Number(b[2] !== clauseSubject));
+      // The clause may also come first; it then fills position one and the main clause inverts:
+      // "Weil er heute Brot kauft, ist der Mann glücklich." / "Dass sie kommt, glaube ich."
+      // "ich glaube" turns into "glaube ich", "der Mann ist glücklich" into "ist der Mann glücklich".
+      const verbAt = spec.structure === 'dass' ? 1 : frame.tokens.length - 2;
+      const invertedFrame = part('frame', [frame.tokens[verbAt]!, ...frame.tokens.slice(0, verbAt), ...frame.tokens.slice(verbAt + 1)]);
+      orders.push(...orders.map((order) => [...order.slice(1), invertedFrame]));
       break;
     }
     default: {
@@ -537,7 +543,8 @@ function englishExercise(spec: SentenceSpec): OrderExercise {
       orders = [[part('wh', ['what']), part('verb', [doForm]), subjectPart, part('infinitive', [verb.en.base, ...particle]), ...(timePart ? [timePart] : [])]];
       break;
     case 'negation':
-      orders = [[subjectPart, part('verb', [doForm]), part('neg', ['not']), part('infinitive', [verb.en.base, ...particle]), ...objects, ...(timePart ? [timePart] : [])]];
+      orders = [[subjectPart, part('verb', [doForm]), part('neg', ['not']), part('infinitive', [verb.en.base, ...particle]), ...objects]];
+      if (timePart) orders = [[...orders[0]!, timePart], [timePart, ...orders[0]!]];
       break;
     case 'dass': {
       const frame = part('frame', DASS_FRAMES[spec.frame!]!.en.split(' '));
@@ -547,7 +554,9 @@ function englishExercise(spec: SentenceSpec): OrderExercise {
     case 'weil': {
       const frame = part('frame', [...englishNounPhrase(subjectNoun!, 'definite'), 'is', 'happy']);
       const restated = part('subject', [subjectNoun!.pronoun!], { pronoun: true });
-      orders = [[frame, part('conj', ['because']), restated, part('verb', [finiteLexical, ...particle]), ...objects, ...(timePart ? [timePart] : [])]];
+      const clause = [part('conj', ['because']), restated, part('verb', [finiteLexical, ...particle]), ...objects, ...(timePart ? [timePart] : [])];
+      // "The man is happy because …" or, with a comma, "Because …, the man is happy."
+      orders = [[frame, ...clause], [...clause, frame]];
       break;
     }
     default: {
@@ -568,6 +577,9 @@ function finishExercise(language: SentenceLanguage, structure: SentenceStructure
   const answers = [...new Set(orders.map((order) => {
     const tokens = flatten(order);
     const comma = commaAfterFrontedTime && order[0]!.role === 'time' && order.length > 1 ? [order[0]!.tokens.length - 1] : [];
+    // A subordinate clause in front ends with a comma before the main clause.
+    const frameAt = order[0]!.role === 'conj' ? order.findIndex((item) => item.role === 'frame') : -1;
+    if (frameAt > 0) comma.push(flatten(order.slice(0, frameAt)).length - 1);
     return renderSentence(tokens, punctuation, comma);
   }))];
   return { id: answers[0]!, language, structure, tokens: flatten(orders[0]!), answers, parts: orders[0]! };
@@ -593,24 +605,24 @@ const CURATED: Record<SentenceLanguage, CuratedSentence[]> = {
     { level: 'a1', answers: ['Morgen fährt er nach Berlin.', 'Er fährt morgen nach Berlin.', 'Nach Berlin fährt er morgen.'] },
     { level: 'a1', answers: ['Die Kinder spielen im Park.', 'Im Park spielen die Kinder.'] },
     { level: 'a2', answers: ['Ich habe einen Kaffee bestellt.', 'Einen Kaffee habe ich bestellt.'] },
-    { level: 'a2', answers: ['Am Abend liest sie ein Buch.', 'Sie liest am Abend ein Buch.'] },
+    { level: 'a2', answers: ['Am Abend liest sie ein Buch.', 'Sie liest am Abend ein Buch.', 'Ein Buch liest sie am Abend.'] },
     { level: 'a2', answers: ['Wir stehen jeden Morgen um sieben Uhr auf.', 'Jeden Morgen stehen wir um sieben Uhr auf.', 'Um sieben Uhr stehen wir jeden Morgen auf.'] },
     { level: 'a2', answers: ['Er ruft heute seine Mutter an.', 'Heute ruft er seine Mutter an.', 'Seine Mutter ruft er heute an.'] },
     { level: 'b1', answers: ['Ich bleibe zu Hause, weil ich krank bin.', 'Weil ich krank bin, bleibe ich zu Hause.'] },
-    { level: 'b1', answers: ['Sie sagt, dass sie morgen kommt.'] },
+    { level: 'b1', answers: ['Sie sagt, dass sie morgen kommt.', 'Dass sie morgen kommt, sagt sie.'] },
     { level: 'b1', answers: ['Wenn es regnet, nehme ich den Bus.', 'Ich nehme den Bus, wenn es regnet.'] },
     { level: 'b2', answers: ['Obwohl er müde war, hat er noch gearbeitet.', 'Er hat noch gearbeitet, obwohl er müde war.'] },
     { level: 'b2', answers: ['Das Buch, das ich gestern gekauft habe, ist spannend.'] },
     { level: 'c1', answers: ['Hätte ich mehr Zeit gehabt, wäre ich mitgekommen.', 'Ich wäre mitgekommen, hätte ich mehr Zeit gehabt.'] },
-    { level: 'c1', answers: ['Der Brief wurde gestern von meiner Schwester geschrieben.', 'Gestern wurde der Brief von meiner Schwester geschrieben.'] },
+    { level: 'c1', answers: ['Der Brief wurde gestern von meiner Schwester geschrieben.', 'Gestern wurde der Brief von meiner Schwester geschrieben.', 'Von meiner Schwester wurde der Brief gestern geschrieben.'] },
     { level: 'c2', answers: ['Je länger ich darüber nachdenke, desto weniger verstehe ich es.'] },
     { level: 'c2', answers: ['Es wäre besser gewesen, früher damit anzufangen.'] },
     // A2: the verb bracket (Perfekt, modal verbs, separable verbs) and time before place.
-    { level: 'a2', answers: ['Gestern sind wir mit dem Zug nach Hamburg gefahren.', 'Wir sind gestern mit dem Zug nach Hamburg gefahren.'] },
+    { level: 'a2', answers: ['Gestern sind wir mit dem Zug nach Hamburg gefahren.', 'Wir sind gestern mit dem Zug nach Hamburg gefahren.', 'Mit dem Zug sind wir gestern nach Hamburg gefahren.', 'Nach Hamburg sind wir gestern mit dem Zug gefahren.'] },
     { level: 'a2', answers: ['Ich muss morgen früh aufstehen.', 'Morgen muss ich früh aufstehen.'] },
-    { level: 'a2', answers: ['Kannst du mir bitte das Salz geben?'] },
-    { level: 'a2', answers: ['Am Wochenende kaufe ich immer auf dem Markt ein.', 'Ich kaufe am Wochenende immer auf dem Markt ein.'] },
-    { level: 'a2', answers: ['Sie hat ihrem Bruder ein Buch geschenkt.', 'Ihrem Bruder hat sie ein Buch geschenkt.'] },
+    { level: 'a2', answers: ['Kannst du mir bitte das Salz geben?', 'Kannst du mir das Salz bitte geben?'] },
+    { level: 'a2', answers: ['Am Wochenende kaufe ich immer auf dem Markt ein.', 'Ich kaufe am Wochenende immer auf dem Markt ein.', 'Auf dem Markt kaufe ich am Wochenende immer ein.'] },
+    { level: 'a2', answers: ['Sie hat ihrem Bruder ein Buch geschenkt.', 'Ihrem Bruder hat sie ein Buch geschenkt.', 'Ein Buch hat sie ihrem Bruder geschenkt.'] },
     { level: 'a2', answers: ['Warum bist du gestern nicht gekommen?'] },
     // B1: subordinate clauses send the verb to the end; a clause in front counts as position one.
     { level: 'b1', answers: ['Ich weiß nicht, ob er heute Zeit hat.'] },
@@ -624,15 +636,15 @@ const CURATED: Record<SentenceLanguage, CuratedSentence[]> = {
     // B2: relative clauses with prepositions, passive with modal verbs, two-part connectors.
     { level: 'b2', answers: ['Nachdem sie gegessen hatten, gingen sie spazieren.', 'Sie gingen spazieren, nachdem sie gegessen hatten.'] },
     { level: 'b2', answers: ['Die Rechnung muss bis Freitag bezahlt werden.', 'Bis Freitag muss die Rechnung bezahlt werden.'] },
-    { level: 'b2', answers: ['Er spricht sowohl Englisch als auch Spanisch.'] },
-    { level: 'b2', answers: ['Entweder kommst du mit, oder du bleibst zu Hause.'] },
-    { level: 'b2', answers: ['Ich habe weder Zeit noch Lust.'] },
+    { level: 'b2', answers: ['Er spricht sowohl Englisch als auch Spanisch.', 'Er spricht sowohl Spanisch als auch Englisch.'] },
+    { level: 'b2', answers: ['Entweder kommst du mit, oder du bleibst zu Hause.', 'Entweder du kommst mit, oder du bleibst zu Hause.', 'Du kommst entweder mit, oder du bleibst zu Hause.'] },
+    { level: 'b2', answers: ['Ich habe weder Zeit noch Lust.', 'Ich habe weder Lust noch Zeit.'] },
     { level: 'b2', answers: ['Das ist die Kollegin, mit der ich zusammenarbeite.'] },
     { level: 'b2', answers: ['Statt zu lernen, hat er den ganzen Abend ferngesehen.', 'Er hat den ganzen Abend ferngesehen, statt zu lernen.'] },
     { level: 'b2', answers: ['Sie tat so, als ob sie nichts gehört hätte.'] },
     { level: 'b2', answers: ['Trotz des Regens sind wir spazieren gegangen.', 'Wir sind trotz des Regens spazieren gegangen.'] },
-    { level: 'b2', answers: ['Ich lasse mein Auto morgen reparieren.', 'Morgen lasse ich mein Auto reparieren.'] },
-    { level: 'b2', answers: ['Er ist nicht nur klug, sondern auch fleißig.'] },
+    { level: 'b2', answers: ['Ich lasse mein Auto morgen reparieren.', 'Morgen lasse ich mein Auto reparieren.', 'Mein Auto lasse ich morgen reparieren.'] },
+    { level: 'b2', answers: ['Er ist nicht nur klug, sondern auch fleißig.', 'Er ist nicht nur fleißig, sondern auch klug.'] },
     { level: 'b2', answers: ['Seitdem er in Berlin wohnt, sehen wir uns selten.', 'Wir sehen uns selten, seitdem er in Berlin wohnt.'] },
     { level: 'b2', answers: ['Ohne ein Wort zu sagen, verließ sie den Raum.', 'Sie verließ den Raum, ohne ein Wort zu sagen.'] },
     { level: 'b2', answers: ['Je mehr ich übe, desto besser spreche ich.'] },
@@ -655,7 +667,7 @@ const CURATED: Record<SentenceLanguage, CuratedSentence[]> = {
     { level: 'c2', answers: ['Die von der Regierung beschlossenen Maßnahmen stoßen auf Kritik.'] },
     { level: 'c2', answers: ['Wie dem auch sei, wir müssen heute eine Entscheidung treffen.'] },
     { level: 'c2', answers: ['So sehr er sich auch bemühte, es gelang ihm nicht.'] },
-    { level: 'c2', answers: ['Er soll das Geld schon vor Jahren ins Ausland gebracht haben.', 'Schon vor Jahren soll er das Geld ins Ausland gebracht haben.'] },
+    { level: 'c2', answers: ['Er soll das Geld schon vor Jahren ins Ausland gebracht haben.', 'Schon vor Jahren soll er das Geld ins Ausland gebracht haben.', 'Das Geld soll er schon vor Jahren ins Ausland gebracht haben.'] },
     { level: 'c2', answers: ['Das Angebot war zu gut, als dass man es hätte ablehnen können.'] },
     { level: 'c2', answers: ['Mag er auch recht haben, sein Ton war unangemessen.'] },
     { level: 'c2', answers: ['Nicht dass ich wüsste, aber ich frage gern noch einmal nach.'] },
@@ -669,23 +681,23 @@ const CURATED: Record<SentenceLanguage, CuratedSentence[]> = {
   ],
   en: [
     { level: 'a1', answers: ['I learn English every day.', 'Every day, I learn English.'] },
-    { level: 'a1', answers: ['The dog sleeps in the garden.'] },
+    { level: 'a1', answers: ['The dog sleeps in the garden.', 'In the garden, the dog sleeps.'] },
     { level: 'a1', answers: ['He drives to London on Mondays.', 'On Mondays, he drives to London.'] },
-    { level: 'a1', answers: ['The children play in the park.'] },
+    { level: 'a1', answers: ['The children play in the park.', 'In the park, the children play.'] },
     { level: 'a1', answers: ['We buy fresh bread every morning.', 'Every morning, we buy fresh bread.'] },
     { level: 'a2', answers: ['I have ordered a coffee.'] },
     { level: 'a2', answers: ['She reads a book in the evening.', 'In the evening, she reads a book.'] },
     { level: 'a2', answers: ['We get up at seven every morning.', 'Every morning, we get up at seven.'] },
     { level: 'a2', answers: ['Does he call his mother every day?'] },
-    { level: 'b1', answers: ['I am staying at home because I am ill.'] },
+    { level: 'b1', answers: ['I am staying at home because I am ill.', 'Because I am ill, I am staying at home.'] },
     { level: 'b1', answers: ['She says that she will come tomorrow.'] },
     { level: 'b1', answers: ['If it rains, I take the bus.', 'I take the bus if it rains.'] },
     { level: 'b2', answers: ['Although he was tired, he kept working.', 'He kept working although he was tired.'] },
     { level: 'b2', answers: ['The book that I bought yesterday is exciting.'] },
     { level: 'c1', answers: ['Had I had more time, I would have come along.', 'I would have come along had I had more time.'] },
-    { level: 'c1', answers: ['The letter was written by my sister yesterday.', 'Yesterday, the letter was written by my sister.'] },
+    { level: 'c1', answers: ['The letter was written by my sister yesterday.', 'Yesterday, the letter was written by my sister.', 'The letter was written yesterday by my sister.'] },
     { level: 'c2', answers: ['The longer I think about it, the less I understand it.'] },
-    { level: 'c2', answers: ['Never have I seen such a beautiful sunset.'] }
+    { level: 'c2', answers: ['Never have I seen such a beautiful sunset.', 'I have never seen such a beautiful sunset.'] }
   ]
 };
 
