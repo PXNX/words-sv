@@ -11,16 +11,29 @@ names, scopes and summaries are never translated.
 
 ## Unreleased
 
+## v2.5.0 - 2026-11-23
+
+A steadier Scribble lobby, more forgiving word order, a Telegram login you can try without a bot, and a grouped version history.
+
 ### New
 #### telegram
 - Try the Telegram login without a bot, token or database: `TELEGRAM_MOCK=1 bun server/main.ts` answers the Telegram endpoints from an in-memory fake database and links the device straight away, and `VITE_TELEGRAM_MOCK=1 bun run dev` lets the app talk to that server
 
-### Fixed
-#### telegram
-- Speak in Telegram's Mini App again: its webview lists no voices of its own, so the browser voice was silent; the app now hears that and speaks with its rendered voices instead
+### Improved
+#### changelog
+- Group a release's entries by type and scope in the version history, with the scope as a subheading, and keep the whole changelog in English
 
+### Fixed
 #### scribble
-- Let either player leave a live Scribble game: the leaver drops out of the standings, their turn passes at once and an unfinished drawing is closed, so the other side never waits on an absent player; the last player leaving resets the table
+- Wait for a second player before a live game starts, list every guess for the drawer and the guessers, tidy the header and add a two-tap Leave
+- Drop a closed page out of a live game the same way, so the other side never waits on an absent player; the last player leaving resets the table
+
+#### grammar
+- Accept more correct word orders, such as a dass/weil/because clause in front and the natural alternatives of hand-checked sentences; when an answer is rejected, show a correct sentence and a Continue button that always advances
+
+## v2.4.0 - 2026-11-16
+
+More English B1 vocabulary, game feedback in the learner's language, and themed error pages.
 
 ### Improved
 #### data
@@ -32,19 +45,131 @@ names, scopes and summaries are never translated.
 #### design
 - Give error pages their own themed card: 404, 500 and other statuses get their own localized title and text, Lilith's reaction, and a way home or to retry
 
+#### scribble
+- Let either player leave a live Scribble game: the leaver drops out of the standings, their turn passes at once and an unfinished drawing is closed, so the other side never waits on an absent player; the last player leaving resets the table
+
+## v2.3.0 - 2026-11-15
+
+Group games from the bot, a group page for Scribble, and fixes across the app.
+
+### New
+#### scribble
+- Play Scribble in a Telegram group: the group page shows faces, guess bubbles, underlined letter slots, a letter-reveal switch and a winner card, and the group only sees game messages so ordinary chat stays readable
+- Let the drawer choose the group round's time (45 s to 3 min), remembered for the group
+
+#### games
+- Open Wordle, Hangman and vocabulary from the bot's `/games` inline results with real Play buttons and leaderboards; an unregistered game is skipped quietly, a game opened from Play has no home button, `/start` answers in groups and long emoji names can play
+
+### Fixed
+#### telegram
+- Speak in Telegram's Mini App again: its webview lists no voices of its own, so the browser voice was silent; the app now hears that and speaks with its rendered voices instead
+
+#### wordle
+- Keep the round on a reload when the current row is a rejected guess
+
+#### script
+- Stop offering a letter that shares its Latin reading as a wrong answer
+
+#### progress
+- Keep finished achievements finished after the activity log rolls over
+
+#### vocab
+- Name the streak that can actually be restored in the repair screen, not the best one
+
+#### audio
+- Delete the word audio in the settings for real
+
+#### reminders
+- Let the deadline warning through and bring the weekly recap once
+
+#### offline
+- Keep a newer deployment's page out of this build's cache
+
+#### listen
+- Stop regenerating lower-level stories on every visit
+
+#### conversation
+- Keep retry and the switch to the device model from stranding the chat
+
+#### sync
+- Carry a live streak into a device that has not played today, count each answer once and keep streaks played offline
+
+## v2.2.0 - 2026-11-14
+
+Learn the Ukrainian script, navigate faster, and get more from OpenRouter.
+
+### New
+#### script
+- Learn the Ukrainian script with an alphabet table and Latin transcription, words shown in their letters with a small transliteration, and a practice mode
+
+#### conversation
+- Explain a failed reply with a retry and a switch to the device model, so either action keeps the chat going
+
+#### cloud
+- Start with a free OpenRouter model and say so, and explain when the learner's own key has run out of usage
+
+#### offline
+- Show how fast an update is downloading in the update sheet
+
+### Improved
+#### data
+- Finish definitions for English B2, C1 and C2 and add word types throughout A1 to B1
+
+#### nav
+- Show a progress bar while a tap's page is on its way, preload the likely next destinations, and fall back to the cached page after a short wait instead of a long one
+
+#### home
+- Make holding Lilith burst hearts above her head, and let her purr on every story page
+
+### Fixed
+#### grammar
+- Stop treating a dropped letter as a plainly typed umlaut
+
+#### offline
+- Stop reading a downloaded model loading into memory as downloading
+
+## v2.1.0 - 2026-11-13
+
+Scribble drawing and Telegram groups, English definitions, and a wider layout.
+
+### New
+#### scribble
+- Draw against the clock: Lilith draws in colour at three difficulties while a countdown runs, with invite links for a friend and champion achievements for the winners
+- Add Scribble to a group with `?startgroup=scribble`, with turns, guesses by reply, points and time-outs
+
+#### bot
+- List the games as inline results with logo and description
+
+#### store
+- Add a small donate button in the settings with a custom Stars amount, and accept any donation from 500 Stars in the bot
+
+#### data
+- Put definitions on English A1, A2 and B1 words
+
+#### profile
+- Put more avatar items behind achievements as unlockable bundles
+
+### Improved
+#### layout
+- Widen the pages on tablets and desktops: the framed sheet grows, the home screen shows its two columns earlier, and the progress panels and repeat groups sit side by side instead of trailing down one phone column (phones unchanged)
+
 #### settings
 - Put the learning language and the interface language together in one box in the settings, each with its own name, hint and dropdown, so it is clear which language is being learnt and which one the app speaks
 - Rework the model cards in the settings: a radio, the name, size, memory and one line about it, and beneath them the model's state with the one action that fits it (its download with the size, in use, or delete)
 - Show the version history in a sheet over the settings instead of its own page, without links out to GitHub; links to `/changelog` now open the sheet on the settings
-
-#### layout
-- Widen the pages on tablets and desktops: the framed sheet grows, the home screen shows its two columns earlier, and the progress panels and repeat groups sit side by side instead of trailing down one phone column (phones unchanged)
 
 #### models
 - A voice or model that is not on the device yet stays chosen and says so on its card instead of falling back to "no language model"; downloading a model also chooses it
 
 #### onboarding
 - Give the first run's introduction the sheet to itself: no dock under it, and an update waits until it is done
+
+#### changelog
+- Keep the version history English throughout
+
+### Fixed
+#### settings
+- Keep Sign in with Telegram clickable when the status check fails
 
 ## v2.0.0 - 2026-11-12
 
