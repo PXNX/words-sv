@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { appVersion, compareVersions, isAppVersion, bumpVersion, latestVersion, parseVersion, type AppVersion } from '../src/lib/app/version';
-import { ChangelogError, parseChangelog, releaseAnchor, unseenReleases } from '../src/lib/app/changelog';
+import { ChangelogError, commitEntries, entriesMarkdown, groupByScope, parseChangelog, releaseAnchor, unseenReleases } from '../src/lib/app/changelog';
 import { cutChangelog, fullChangelogLink } from '../scripts/release';
 
 describe('versions', () => {
@@ -58,7 +58,7 @@ describe('changelog', () => {
   it('lists tagged releases newest first and skips unreleased work', () => {
     const releases = parseChangelog(SAMPLE);
     expect(releases.map((release) => release.version)).toEqual(['1.1.0', '1.0.0']);
-    expect(releases[0]).toEqual({ version: '1.1.0', date: '2026-11-12', summary: 'Formatting follows the learned language.', entries: { new: ['Format like setting'], fixed: ['Weekday names'] } });
+    expect(releases[0]).toEqual({ version: '1.1.0', date: '2026-11-12', summary: 'Formatting follows the learned language.', entries: { new: [{ scope: null, text: 'Format like setting' }], fixed: [{ scope: null, text: 'Weekday names' }] } });
   });
 
   it('rejects malformed entries', () => {
@@ -83,7 +83,7 @@ describe('changelog', () => {
   it('cuts a release from the unreleased entries', () => {
     const { changelog, notes } = cutChangelog(SAMPLE, appVersion('1.2.0'), '2026-11-20', 'Next one.');
     const releases = parseChangelog(changelog);
-    expect(releases[0]).toMatchObject({ version: '1.2.0', summary: 'Next one.', entries: { new: ['Work in progress'] } });
+    expect(releases[0]).toMatchObject({ version: '1.2.0', summary: 'Next one.', entries: { new: [{ scope: null, text: 'Work in progress' }] } });
     expect(changelog).toMatch(/## Unreleased\n\n## v1\.2\.0 - 2026-11-20/u);
     expect(notes).toContain('- Work in progress');
     expect(() => cutChangelog(changelog, appVersion('1.3.0'), '2026-11-21', 'Empty')).toThrow('Nothing to release');
@@ -91,8 +91,7 @@ describe('changelog', () => {
 });
 
 describe('release notes from commits', () => {
-  it('lists features and fixes, never docs or chore', async () => {
-    const { commitEntries } = await import('../src/lib/app/changelog');
+  it('lists features and fixes with their scope, never docs or chore', () => {
     expect(commitEntries([
       'feat(pwa): offer updates in a bottom sheet',
       'fix(data): restore the directory listing.',
@@ -101,13 +100,58 @@ describe('release notes from commits', () => {
       'refactor(format): cache week info',
       'feat(api)!: drop the old sync endpoint',
       'Merge branch main'
-    ])).toEqual({ new: ['Offer updates in a bottom sheet'], fixed: ['Restore the directory listing'], migration: ['Drop the old sync endpoint'] });
+    ])).toEqual({
+      new: [{ scope: 'pwa', text: 'Offer updates in a bottom sheet' }],
+      fixed: [{ scope: 'data', text: 'Restore the directory listing' }],
+      migration: [{ scope: 'api', text: 'Drop the old sync endpoint' }]
+    });
   });
 
-  it('merges commit entries into the unreleased section as bullets', () => {
+  it('merges commit entries into the unreleased section as scope-grouped bullets', () => {
     const { changelog } = cutChangelog('# C\n\n## Unreleased\n\n## v1.0.0 - 2026-11-10\n\nBase.\n\n### New\n- X\n', appVersion('1.1.0'), '2026-11-11', 'Next.', ['feat(a): add a', 'fix(b): fix b', 'chore(c): bump']);
-    expect(changelog).toContain('## v1.1.0 - 2026-11-11\n\nNext.\n\n### New\n- Add a\n\n### Fixed\n- Fix b\n');
+    expect(changelog).toContain('## v1.1.0 - 2026-11-11\n\nNext.\n\n### New\n#### a\n- Add a\n\n### Fixed\n#### b\n- Fix b\n');
     expect(changelog).not.toContain('bump');
+  });
+});
+
+describe('grouping by scope', () => {
+  it('groups consecutive entries by scope, keeping unscoped ones first', () => {
+    expect(groupByScope([
+      { scope: null, text: 'Manual' },
+      { scope: 'scribble', text: 'First scribble change' },
+      { scope: 'bot', text: 'Bot change' },
+      { scope: 'scribble', text: 'Second scribble change' }
+    ])).toEqual([
+      { scope: null, entries: ['Manual'] },
+      { scope: 'scribble', entries: ['First scribble change', 'Second scribble change'] },
+      { scope: 'bot', entries: ['Bot change'] }
+    ]);
+  });
+
+  it('writes scope subheadings under each type in markdown', () => {
+    const entries = commitEntries([
+      'feat: a general improvement',
+      'feat(bot): invite links',
+      'feat(scribble): live rounds',
+      'feat(bot): group games',
+      'fix(grammar): word order'
+    ]);
+    expect(entriesMarkdown(entries)).toBe(
+      '### New\n- A general improvement\n\n#### bot\n- Invite links\n- Group games\n\n#### scribble\n- Live rounds\n\n### Fixed\n#### grammar\n- Word order'
+    );
+  });
+
+  it('reads scope subheadings back and keeps them per release', () => {
+    const [newest, older] = parseChangelog('## v1.1.0 - 2026-11-12\n\nHi.\n\n### New\n- General\n\n#### bot\n- Scoped\n\n## v1.0.0 - 2026-11-10\n\nBase.\n\n### Fixed\n#### scribble\n- Older\n');
+    expect(newest!.entries).toEqual({ new: [{ scope: null, text: 'General' }, { scope: 'bot', text: 'Scoped' }] });
+    expect(older!.entries).toEqual({ fixed: [{ scope: 'scribble', text: 'Older' }] });
+  });
+
+  it('rejects a scope before its type and deduplicates by scope and text', () => {
+    expect(() => parseChangelog('## v1.1.0 - 2026-11-12\n\n#### bot\n- Scoped\n')).toThrow('scope outside a section');
+    expect(commitEntries(['feat(bot): same', 'feat(bot): same', 'feat(scribble): same'])).toEqual({
+      new: [{ scope: 'bot', text: 'Same' }, { scope: 'scribble', text: 'Same' }]
+    });
   });
 });
 

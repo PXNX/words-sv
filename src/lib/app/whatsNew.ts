@@ -18,7 +18,7 @@ export interface WhatsNew {
 export function whatsNew(releases: readonly ChangelogRelease[], lastSeen: string | null, returning: boolean): WhatsNew | null {
   const shown = lastSeen ? unseenReleases(releases, lastSeen) : returning ? releases.slice(0, 1) : [];
   if (!shown.length) return null;
-  const features = shown.flatMap((release) => release.entries.new ?? []);
+  const features = shown.flatMap((release) => (release.entries.new ?? []).map((entry) => entry.text));
   const fixes = shown.reduce((sum, release) => sum + (release.entries.fixed?.length ?? 0), 0);
   if (!features.length && !fixes) return null;
   return { releases: shown, features: features.slice(0, WHATS_NEW_MAX_FEATURES), moreFeatures: Math.max(0, features.length - WHATS_NEW_MAX_FEATURES), fixes };

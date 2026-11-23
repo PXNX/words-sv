@@ -3,28 +3,47 @@
 Maintained by `scripts/release.ts`. Add entries under "Unreleased" while working; a release
 moves them under a new `## vMAJOR.MINOR.PATCH - YYYY-MM-DD` heading (semantic versioning:
 features bump MINOR, fixes PATCH, breaking changes MAJOR). Sections: New, Improved, Fixed,
-Migration (anything that needs action), Known issues. The first line under a release heading is
-its one-line summary and the highlight shown in the app. The changelog is English throughout:
-entries, section names and summaries are never translated.
+Migration (anything that needs action), Known issues. Within a section, `#### scope` subheadings
+group entries by the area they touch (taken from the Conventional Commit scope); entries without
+one stay directly under the section. The first line under a release heading is its one-line
+summary and the highlight shown in the app. The changelog is English throughout: entries, section
+names, scopes and summaries are never translated.
 
 ## Unreleased
 
 ### New
+#### telegram
 - Try the Telegram login without a bot, token or database: `TELEGRAM_MOCK=1 bun server/main.ts` answers the Telegram endpoints from an in-memory fake database and links the device straight away, and `VITE_TELEGRAM_MOCK=1 bun run dev` lets the app talk to that server
 
 ### Fixed
+#### telegram
 - Speak in Telegram's Mini App again: its webview lists no voices of its own, so the browser voice was silent; the app now hears that and speaks with its rendered voices instead
+
+#### scribble
 - Let either player leave a live Scribble game: the leaver drops out of the standings, their turn passes at once and an unfinished drawing is closed, so the other side never waits on an absent player; the last player leaving resets the table
 
 ### Improved
+#### data
 - Cover the TOEFL vocabulary of PrepScholar's 327-word list and the Magoosh decks at English B1, and add everyday words from Cambridge's B1 Preliminary list, each with a definition and word type; also correct adjectives that were tagged as nouns in A1–B1
+
+#### i18n
 - Announce game results and feedback in the language being learnt: Scribble, Hangman, Wordle and group scores now read in the learner's language, with wording added for French, Italian, Spanish, Portuguese and Ukrainian
+
+#### design
 - Give error pages their own themed card: 404, 500 and other statuses get their own localized title and text, Lilith's reaction, and a way home or to retry
+
+#### settings
 - Put the learning language and the interface language together in one box in the settings, each with its own name, hint and dropdown, so it is clear which language is being learnt and which one the app speaks
-- Widen the pages on tablets and desktops: the framed sheet grows, the home screen shows its two columns earlier, and the progress panels and repeat groups sit side by side instead of trailing down one phone column (phones unchanged)
 - Rework the model cards in the settings: a radio, the name, size, memory and one line about it, and beneath them the model's state with the one action that fits it (its download with the size, in use, or delete)
-- A voice or model that is not on the device yet stays chosen and says so on its card instead of falling back to "no language model"; downloading a model also chooses it
 - Show the version history in a sheet over the settings instead of its own page, without links out to GitHub; links to `/changelog` now open the sheet on the settings
+
+#### layout
+- Widen the pages on tablets and desktops: the framed sheet grows, the home screen shows its two columns earlier, and the progress panels and repeat groups sit side by side instead of trailing down one phone column (phones unchanged)
+
+#### models
+- A voice or model that is not on the device yet stays chosen and says so on its card instead of falling back to "no language model"; downloading a model also chooses it
+
+#### onboarding
 - Give the first run's introduction the sheet to itself: no dock under it, and an update waits until it is done
 
 ## v2.0.0 - 2026-11-12

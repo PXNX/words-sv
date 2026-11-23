@@ -10,7 +10,7 @@
   import { settings } from '#lib/state/settings.svelte.js';
   import { formatDate, isolateLtr } from '#lib/format/format.js';
   import BottomSheet from './BottomSheet.svelte';
-  import { CHANGE_TYPES, unseenReleases, type ChangeType, type ChangelogRelease } from './changelog.js';
+  import { CHANGE_TYPES, groupByScope, unseenReleases, type ChangeType, type ChangelogRelease } from './changelog.js';
   import { lastSeenVersion, markVersionSeen } from './changelogSeen.js';
   import { releases } from './releases.js';
   import { appVersion } from './version.js';
@@ -56,9 +56,13 @@
       <p class="changelog-highlight" dir="ltr" lang="en">{release.summary}</p>
       <div class="changelog-details" dir="ltr" lang="en">
         {#each CHANGE_TYPES as type}
-          {#if release.entries[type]?.length}
+          {@const groups = release.entries[type] ? groupByScope(release.entries[type]) : []}
+          {#if groups.length}
             <h3 class={type}>{sectionTitle[type]}</h3>
-            <ul>{#each release.entries[type] ?? [] as entry}<li>{entry}</li>{/each}</ul>
+            {#each groups as group}
+              {#if group.scope}<h4 class="changelog-scope" dir="ltr">{group.scope}</h4>{/if}
+              <ul>{#each group.entries as entry}<li>{entry}</li>{/each}</ul>
+            {/each}
           {/if}
         {/each}
       </div>
@@ -77,6 +81,7 @@
   .changelog-highlight { margin:.5rem 0 0;font-size:.9rem;font-weight:800;line-height:1.4; }
   .changelog-details h3 { margin:.65rem 0 .2rem;color:#a45e38;font-size:.6875rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase; }
   .changelog-details ul { margin:0;padding-inline-start:1.05rem;list-style:disc;font-size:.875rem;line-height:1.45; }
+  .changelog-scope { margin:.45rem 0 .1rem;color:#5b6475;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase; }
   .changelog-details li { margin-block:.15rem; }
   .changelog-details li::marker { color:#e6a527; }
   .changelog-details h3.fixed { color:#34824d; }

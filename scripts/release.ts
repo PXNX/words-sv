@@ -7,7 +7,7 @@
 // Run it on a clean, pushed `main`. The summary is the highlight shown in the app's changelog.
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
-import { commitEntries, entriesMarkdown, parseChangelog, type ChangeType } from '../src/lib/app/changelog.js';
+import { commitEntries, entriesMarkdown, parseChangelog, type ChangeEntries, type ChangeEntry, type ChangeType } from '../src/lib/app/changelog.js';
 import { bumpVersion, latestVersion, type AppVersion } from '../src/lib/app/version.js';
 
 /**
@@ -22,10 +22,13 @@ export function cutChangelog(markdown: string, version: AppVersion, date: string
   const end = nextRelease < 0 ? markdown.length : headingEnd + nextRelease;
   const manual = parseChangelog(`## v0.0.0 - 2000-01-01\n\n${markdown.slice(headingEnd, end)}`)[0]!.entries;
   const fromCommits = commitEntries(commitSubjects);
-  const entries: Partial<Record<ChangeType, string[]>> = {};
+  const entries: ChangeEntries = {};
   for (const source of [manual, fromCommits]) {
-    for (const [type, items] of Object.entries(source) as Array<[ChangeType, string[]]>) {
-      for (const item of items) if (!entries[type]?.includes(item)) (entries[type] ??= []).push(item);
+    for (const [type, items] of Object.entries(source) as Array<[ChangeType, ChangeEntry[]]>) {
+      const list = (entries[type] ??= []);
+      for (const item of items) {
+        if (!list.some((existing) => existing.scope === item.scope && existing.text === item.text)) list.push(item);
+      }
     }
   }
   const body = entriesMarkdown(entries);
