@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { buildTodayPlan, estimatedMinutes, type TodayPlanInput } from '../src/lib/today/todayPlan.js';
+import { buildTodayPlan, DUE_SESSION_HREF, estimatedMinutes, todaySession, type TodayPlanInput } from '../src/lib/today/todayPlan.js';
 
 function input(overrides: Partial<TodayPlanInput> = {}): TodayPlanInput {
 	return {
@@ -16,7 +16,7 @@ function input(overrides: Partial<TodayPlanInput> = {}): TodayPlanInput {
 describe('buildTodayPlan', () => {
 	test('due reviews come first', () => {
 		const plan = buildTodayPlan(input({ dueWords: 5, reading: { id: 'text-1', title: 'Im Supermarkt', answered: 2, total: 5 } }));
-		expect(plan).toEqual({ kind: 'due', href: '/vocab', count: 5 });
+		expect(plan).toEqual({ kind: 'due', href: DUE_SESSION_HREF, count: 5 });
 	});
 
 	test('an unfinished text deep links to its next question', () => {
@@ -31,7 +31,7 @@ describe('buildTodayPlan', () => {
 
 	test('an unqualified streak asks for the missing words', () => {
 		const plan = buildTodayPlan(input({ streakQualified: false, vocabCorrect: 5, vocabularyGoal: 8 }));
-		expect(plan).toEqual({ kind: 'streak', href: '/vocab', count: 3 });
+		expect(plan).toEqual({ kind: 'streak', href: DUE_SESSION_HREF, count: 3 });
 	});
 
 	test('a full goal never asks for zero words', () => {
@@ -41,7 +41,7 @@ describe('buildTodayPlan', () => {
 
 	test('marked words are repeated once the day is qualified', () => {
 		const plan = buildTodayPlan(input({ markedWords: 4 }));
-		expect(plan).toEqual({ kind: 'marked', href: '/vocab', count: 4 });
+		expect(plan).toEqual({ kind: 'marked', href: DUE_SESSION_HREF, count: 4 });
 	});
 
 	test('nothing left points at the progress page', () => {
@@ -53,6 +53,33 @@ test('estimatedMinutes stays useful for small reviews and grows with the pile', 
 	expect(estimatedMinutes(0)).toBe(2);
 	expect(estimatedMinutes(3)).toBe(2);
 	expect(estimatedMinutes(12)).toBe(4);
+});
+
+describe('todaySession', () => {
+	test('starts with the plan and adds the still-open mix steps once', () => {
+		const plan = buildTodayPlan(input({ dueWords: 5 }));
+		const session = todaySession(plan, [
+			{ href: '/vocab?due=1', done: false },
+			{ href: '/listen', done: false },
+			{ href: '/sentence', done: true }
+		]);
+		expect(session.href).toBe(DUE_SESSION_HREF);
+		expect(session.steps).toBe(2);
+		expect(session.minutes).toBe(4);
+	});
+
+	test('a finished plan falls through to the first open mix step', () => {
+		const session = todaySession(buildTodayPlan(input()), [
+			{ href: '/circle', done: true },
+			{ href: '/stories', done: false }
+		]);
+		expect(session.href).toBe('/stories');
+		expect(session.steps).toBe(1);
+	});
+
+	test('nothing left points home', () => {
+		expect(todaySession(buildTodayPlan(input()), [])).toEqual({ href: '/progress', steps: 0, minutes: 0 });
+	});
 });
 
 describe('weak grammar feature', () => {

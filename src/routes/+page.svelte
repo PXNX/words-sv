@@ -31,7 +31,7 @@ import { haptic } from '#lib/feedback/haptics.js';
   import { readEvents } from '#lib/progress/eventLog.js';
   import { featureStats } from '#lib/progress/events.js';
   import { labelKeys, type FeatureKey } from '#lib/grammar/taxonomy.js';
-  import { buildTodayPlan, estimatedMinutes, type TodayPlan, type TodayReading } from '#lib/today/todayPlan.js';
+  import { buildTodayPlan, estimatedMinutes, todaySession, type TodayPlan, type TodayReading } from '#lib/today/todayPlan.js';
   import { readDueVocabulary } from '#lib/vocab/spacedRepetition.js';
   import { readMissedWords } from '#lib/story/missedWords.js';
   import { dueReviewEntries } from '#lib/review/ledger.js';
@@ -136,6 +136,7 @@ import { haptic } from '#lib/feedback/haptics.js';
     todayKicker: m.today_kicker({}, { locale: settings.interfaceLocale }),
     todayDone: m.today_done({}, { locale: settings.interfaceLocale }),
     todayStart: m.today_start({}, { locale: settings.interfaceLocale }),
+    todaySession: (steps: number, minutes: number) => m.today_session({ steps, minutes }, { locale: settings.interfaceLocale }),
     todayDue: (count: number, minutes: number) => m.today_due({ count, minutes }, { locale: settings.interfaceLocale }),
     todayReading: (title: string, number: number) => m.today_reading({ title, number }, { locale: settings.interfaceLocale }),
     todayStreak: (count: number) => m.today_streak({ count }, { locale: settings.interfaceLocale }),
@@ -255,6 +256,8 @@ import { haptic } from '#lib/feedback/haptics.js';
   const mixLabels = $derived<Record<MixStep, string>>({ hear: m.mix_hear({}, { locale: settings.interfaceLocale }), see: m.mix_see({}, { locale: settings.interfaceLocale }), do: m.mix_do({}, { locale: settings.interfaceLocale }) });
   const mix = $derived(dailyMix({ language: settings.lang, dateKey: settings.streak.dateKey, style: settings.learningStyle, dueWords: wordDue, isDone: (mode) => modeDone(settings.streak, mode) }));
   const mixDone = $derived(mix.filter((entry) => entry.done).length);
+  // The card's one action: the ready-made round, then whatever the daily mix still leaves open.
+  const session = $derived(todaySession(todayPlan ?? { kind: 'done', href: '/progress', count: 0 }, mix.map((entry) => ({ href: entry.mode.href, done: entry.done }))));
   type HomeContinue = { href: string; label: string; detail: string };
   let homeContinue = $state<HomeContinue[]>([]);
 
@@ -408,11 +411,12 @@ import { haptic } from '#lib/feedback/haptics.js';
         </div>
       {/if}
       {#if todayPlan}
-        <a class="home-daily-row home-today" href={todayPlan.href}>
+        <a class="home-daily-row home-today" href={session.href}>
           <span class="home-today-icon" aria-hidden="true"><IconExplore /></span>
           <span class="home-today-copy">
             <small>{labels.todayKicker}</small>
             <strong>{todayTitle(todayPlan)}</strong>
+            <span class="home-today-session">{labels.todaySession(session.steps, session.minutes)}</span>
           </span>
           <span class="home-today-start">{labels.todayStart}<IconChevronRight aria-hidden="true" class="rtl:rotate-180" /></span>
         </a>
@@ -529,6 +533,7 @@ import { haptic } from '#lib/feedback/haptics.js';
   .home-today-copy { display:grid;gap:.1rem;min-width:0; }
   .home-today-copy small { color:var(--clay);font-size:.6875rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase; }
   .home-today-copy strong { color:var(--ink);font-size:var(--text-sm);font-weight:800;line-height:1.3; }
+  .home-today-session { color:var(--text-soft);font-size:.8rem;font-weight:700;line-height:1.35; }
   .home-today-start { display:inline-flex;align-items:center;gap:.1rem;flex:none;padding:.35rem .45rem .35rem .7rem;border:2px solid var(--ink);border-radius:999px;background:var(--ink);color:var(--paper);font-size:var(--text-xs);font-weight:900;white-space:nowrap; }
   .home-today-start :global(svg) { width:1rem;height:1rem;animation:home-nudge 1.6s ease-in-out infinite; }
   @keyframes home-nudge { 0%,100% { translate:0 0; } 50% { translate:.2rem 0; } }
@@ -622,6 +627,7 @@ import { haptic } from '#lib/feedback/haptics.js';
   :global(html.dark) .home-today-icon { border-color:var(--ink-deep);background:var(--surface);color:var(--sun); }
   :global(html.dark) .home-today-copy small,:global(html.dark) .home-mix h2,:global(html.dark) .home-group-heading { color:#f0c06a; }
   :global(html.dark) .home-today-copy strong { color:var(--paper); }
+  :global(html.dark) .home-today-session { color:#d6dfeb; }
   :global(html.dark) .home-today-start { border-color:var(--sun);background:var(--sun);color:var(--ink); }
   :global(html.dark) .home-continue :global(.home-continue-arrow) { color:var(--sun); }
   :global(html.dark) .home-mix-step { border-color:var(--ink-deep);box-shadow:3px 3px 0 var(--ink-deep); }

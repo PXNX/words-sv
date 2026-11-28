@@ -327,6 +327,7 @@
   "today_marked": "You marked {count} words — repeat them",
   "today_done": "Everything done for today.",
   "today_start": "Start",
+  "today_session": "{steps} steps · about {minutes} minutes — one tap starts your round",
   "vocab_recap_title": "Round complete",
   "vocab_recap_score": "{correct} of {total} words right on the first try.",
   "vocab_recap_tricky": "These words need another round",
