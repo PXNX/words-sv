@@ -16,13 +16,14 @@
   import { haptic } from '#lib/feedback/haptics.js';
   import { randomAvatar, type Avatar } from '#lib/profile/avatar.js';
   import AvatarEditor from '#lib/profile/AvatarEditor.svelte';
+  import QuickPlacement from '#lib/assessment/QuickPlacement.svelte';
   import SelectMenu from '#lib/settings/SelectMenu.svelte';
   import StoryCharacter from '#lib/story/StoryCharacter.svelte';
   import WalkingLilith from '#lib/story/WalkingLilith.svelte';
   import { introFlow } from './intro.svelte.js';
   import type { CharacterId } from '#lib/story/stories.js';
 
-  type Step = 'hello' | 'cast' | 'language' | 'name' | 'look' | 'done';
+  type Step = 'hello' | 'cast' | 'language' | 'name' | 'level' | 'look' | 'done';
   let { start = 'hello', onlanguage, onfinish }: {
     start?: Step;
     onlanguage: (language: Language) => void;
@@ -38,7 +39,12 @@
   const locale = $derived({ locale: settings.interfaceLocale });
   const still = $derived(prefersReducedMotion.current);
   const ms = (duration: number) => (still ? 0 : duration);
-  const steps = $derived<Step[]>(start === 'hello' ? ['hello', 'cast', 'language', 'name', ...(settings.avatar ? [] : ['look' as const])] : ['name', ...(settings.avatar ? [] : ['look' as const])]);
+  // Learners who never chose a level get a one-minute placement in the welcome flow instead of
+  // having to find it in the settings later. The full /placement test stays for a deeper check.
+  const wantsLevel = $derived(settings.vocabularyLevel === 'a1');
+  const steps = $derived<Step[]>(start === 'hello'
+    ? ['hello', 'cast', 'language', 'name', ...(wantsLevel ? ['level' as const] : []), ...(settings.avatar ? [] : ['look' as const])]
+    : ['name', ...(wantsLevel ? ['level' as const] : []), ...(settings.avatar ? [] : ['look' as const])]);
   const position = $derived(Math.max(0, steps.indexOf(step)));
 
   // Each friend says who they are and what they do in the app.
@@ -73,6 +79,11 @@
     event.preventDefault();
     if (!nameDraft.trim()) return;
     settings.setFirstName(nameDraft);
+    if (steps.includes('level')) go('level');
+    else if (settings.avatar) celebrate();
+    else go('look');
+  }
+  function afterLevel() {
     if (settings.avatar) celebrate();
     else go('look');
   }
@@ -158,6 +169,8 @@
           <span class="welcome-body">{m.onboarding_name_hint({}, locale)}</span>
           <button type="submit" class="btn-play btn-play-ink welcome-cta" disabled={!nameDraft.trim()}>{m.continue_button({}, locale)}</button>
         </form>
+      {:else if step === 'level'}
+        <QuickPlacement language={settings.lang} ondone={afterLevel} onskip={afterLevel} />
       {:else if step === 'look'}
         <form class="welcome-form" onsubmit={submitLook}>
           <h1>{m.avatar_title({}, locale)}</h1>
