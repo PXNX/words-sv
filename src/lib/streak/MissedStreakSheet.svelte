@@ -8,6 +8,7 @@
   import { settings } from '#lib/state/settings.svelte.js';
   import BottomSheet from '#lib/app/BottomSheet.svelte';
   import ProCard from '#lib/store/ProCard.svelte';
+  import FreezeCard from '#lib/store/FreezeCard.svelte';
   import { proActive } from '#lib/store/storeClient.svelte.js';
   import { REPAIR_WORDS, type StreakRepair } from './clientStreak.js';
 
@@ -31,12 +32,15 @@
   <BottomSheet bind:open title={m.streak_missed_title({}, locale)}>
     <p class="missed-text">{m.streak_repair_hint({ count: repair.streakCount, need: REPAIR_WORDS }, locale)}</p>
     <a class="btn-play btn-play-ink missed-repair" href="/vocab?repair=1" onclick={() => (open = false)}>{m.streak_repair_cta({}, locale)}</a>
-    <p class="missed-text">{m.streak_missed_pro({}, locale)}</p>
-    <ProCard />
+    <div class="missed-offers">
+      <FreezeCard />
+      <ProCard />
+    </div>
   </BottomSheet>
 {/if}
 
 <style>
   .missed-text { margin:0;font-size:.9rem;font-weight:700;line-height:1.45; }
   .missed-repair { justify-self:start; }
+  .missed-offers { display:grid;gap:.6rem;width:100%; }
 </style>

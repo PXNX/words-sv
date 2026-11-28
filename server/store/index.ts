@@ -18,8 +18,8 @@ const Request = v.object({
 });
 
 const TITLES: Record<string, Record<string, string>> = {
-	en: { pro: 'WordCircle Pro', set: 'Character set', item: 'Character item', description: 'For your WordCircle character. Thank you for supporting WordCircle!', proDescription: 'One missed day a week does not break your streak. Renews every 30 days; cancel any time in Telegram.' },
-	de: { pro: 'WordCircle Pro', set: 'Figuren-Set', item: 'Figuren-Teil', description: 'Für deine WordCircle-Figur. Danke, dass du WordCircle unterstützt!', proDescription: 'Ein verpasster Tag pro Woche unterbricht deine Serie nicht. Verlängert sich alle 30 Tage; jederzeit in Telegram kündbar.' }
+	en: { pro: 'WordCircle Pro', freeze: 'Streak freeze', set: 'Character set', item: 'Character item', description: 'For your WordCircle character. Thank you for supporting WordCircle!', proDescription: 'One missed day a week does not break your streak. Renews every 30 days; cancel any time in Telegram.', freezeDescription: 'One missed day will not break your streak. Used automatically before you lose a day.' },
+	de: { pro: 'WordCircle Pro', freeze: 'Serien-Schutz', set: 'Figuren-Set', item: 'Figuren-Teil', description: 'Für deine WordCircle-Figur. Danke, dass du WordCircle unterstützt!', proDescription: 'Ein verpasster Tag pro Woche unterbricht deine Serie nicht. Verlängert sich alle 30 Tage; jederzeit in Telegram kündbar.', freezeDescription: 'Ein verpasster Tag unterbricht deine Serie nicht. Wird automatisch verbraucht, bevor die Serie reißt.' }
 };
 
 
@@ -45,7 +45,7 @@ export function createStoreEndpoint({ databaseProvider = getDatabase, telegram =
 				const title = found.kind === 'pro' ? texts.pro! : `${texts[found.kind]}`;
 				const url = await telegram<string>('createInvoiceLink', {
 					title,
-					description: found.kind === 'pro' ? texts.proDescription : texts.description,
+					description: found.kind === 'pro' ? texts.proDescription : found.kind === 'freeze' ? texts.freezeDescription : texts.description,
 					payload: storePayload(found.id, userId),
 					currency: 'XTR',
 					prices: [{ label: title, amount: found.stars }],
@@ -55,8 +55,15 @@ export function createStoreEndpoint({ databaseProvider = getDatabase, telegram =
 			}
 			const [purchases] = await db.execute('SELECT DISTINCT product FROM wordcircle_purchases WHERE telegram_user_id = ?', [userId]);
 			const [[pro]] = await db.execute('SELECT pro_until FROM wordcircle_pro WHERE telegram_user_id = ? LIMIT 1', [userId]);
+			const [[freeze]] = await db.execute("SELECT COUNT(*) AS count FROM wordcircle_purchases WHERE telegram_user_id = ? AND product = 'freeze'", [userId]);
 			const proUntil = pro?.pro_until ? new Date(pro.pro_until).getTime() : null;
-			return respond(res, 200, { ok: true, linked: true, bought: (purchases as Array<{ product: string }>).map((row) => row.product).filter((id) => id !== 'pro'), proUntil: proUntil && proUntil > Date.now() ? proUntil : null });
+			return respond(res, 200, {
+				ok: true,
+				linked: true,
+				bought: (purchases as Array<{ product: string }>).map((row) => row.product).filter((id) => id !== 'pro' && id !== 'freeze'),
+				proUntil: proUntil && proUntil > Date.now() ? proUntil : null,
+				freezes: Number(freeze?.count ?? 0)
+			});
 		} catch (error) {
 			return respond(res, 503, { ok: false, error: error instanceof Error ? error.message : 'store_unavailable' });
 		}

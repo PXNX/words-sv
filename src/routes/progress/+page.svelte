@@ -22,6 +22,7 @@
   import { slide } from 'svelte/transition';
   import AvatarEditor from '#lib/profile/AvatarEditor.svelte';
   import ProCard from '#lib/store/ProCard.svelte';
+  import FreezeCard from '#lib/store/FreezeCard.svelte';
   import { readScribbleWins } from '#lib/scribble/scribbleWins.js';
   import { cloudSync } from '#lib/sync/cloudSync.svelte.js';
   import { checkAchievementRewards, cosmetics } from '#lib/profile/cosmetics.svelte.js';
@@ -360,7 +361,7 @@
       {/if}
     </div>
     <!-- Signed in with Telegram: WordCircle Pro, which keeps the streak through one missed day a week. -->
-    <div class="mt-[.7rem]"><ProCard /></div>
+    <div class="mt-[.7rem] grid gap-[.6rem]"><FreezeCard /><ProCard /></div>
 
 
     <dl class="m-0 mt-[.8rem] pt-[.7rem] grid grid-cols-2 border-t border-base-content/[.14] dark:border-base-content/[.22]">

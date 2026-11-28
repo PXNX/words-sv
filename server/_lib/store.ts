@@ -3,12 +3,13 @@ import type { Database } from './database.js';
 // The store's prices and what each product is, for the invoice and the payment check. The app's copy
 // (src/lib/store/catalog.ts) only displays them; tests/store.test.ts keeps both in step.
 
-export type StoreProduct = { id: string; stars: number; kind: 'item' | 'set' | 'pro' };
+export type StoreProduct = { id: string; stars: number; kind: 'item' | 'set' | 'pro' | 'freeze' };
 
 export const PRO_PERIOD_SECONDS = 30 * 24 * 60 * 60;
 
 export const STORE_PRODUCTS: readonly StoreProduct[] = [
 	{ id: 'pro', stars: 75, kind: 'pro' },
+	{ id: 'freeze', stars: 25, kind: 'freeze' },
 	{ id: 'set_neon', stars: 40, kind: 'set' },
 	{ id: 'set_dusk', stars: 40, kind: 'set' },
 	{ id: 'set_rose', stars: 40, kind: 'set' },

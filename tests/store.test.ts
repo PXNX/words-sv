@@ -25,6 +25,7 @@ function fakeDatabase(linkedUser: number | null = 42) {
         return [{}];
       }
       if (sql.startsWith('SELECT DISTINCT product')) return [[...new Set(purchases.filter((row) => row.telegram_user_id === params[0]).map((row) => row.product))].map((product) => ({ product }))];
+      if (sql.startsWith("SELECT COUNT(*) AS count FROM wordcircle_purchases")) return [[{ count: purchases.filter((row) => row.telegram_user_id === params[0] && row.product === 'freeze').length }]];
       if (sql.startsWith('SELECT pro_until')) return [pro.has(params[0]) ? [{ pro_until: pro.get(params[0]) }] : []];
       throw new Error(`unexpected statement: ${sql}`);
     }
@@ -72,6 +73,22 @@ describe('store endpoints', () => {
     const res = responseCapture();
     await createStoreEndpoint({ databaseProvider: () => db })({ method: 'POST', body: { deviceId: 'device_0123456789abcdef', action: 'status' } }, res);
     expect(res.result.body).toMatchObject({ linked: true, bought: ['set_neon'], proUntil: 4_102_444_800_000 });
+  });
+
+  it('counts each bought freeze while keeping it out of the cosmetics list', async () => {
+    process.env.TELEGRAM_BRIDGE_SECRET = secret;
+    const db = fakeDatabase();
+    const paid = async (chargeId: string) => {
+      const res = responseCapture();
+      await createPurchaseEndpoint({ databaseProvider: () => db })({ method: 'POST', headers: { authorization: `Bearer ${secret}` }, body: { action: 'paid', currency: 'XTR', userId: 42, amount: 25, payload: storePayload('freeze', 42), chargeId } }, res);
+      return res.result;
+    };
+    expect((await paid('f1')).body.problem).toBeNull();
+    expect((await paid('f1')).body.problem).toBeNull();
+    expect((await paid('f2')).body.problem).toBeNull();
+    const res = responseCapture();
+    await createStoreEndpoint({ databaseProvider: () => db })({ method: 'POST', body: { deviceId: 'device_0123456789abcdef', action: 'status' } }, res);
+    expect(res.result.body).toMatchObject({ linked: true, bought: [], freezes: 2 });
   });
 
   it('makes a subscription invoice for Pro and needs a signed-in device', async () => {

@@ -5,10 +5,10 @@
 import type { AvatarPart } from '#lib/profile/avatar.js';
 
 export type ShopItemId = 'shop_neon_hair' | 'shop_mint_top' | 'shop_sunset_hair' | 'shop_midnight_top' | 'shop_rose_top' | 'shop_turquoise_hair';
-export type ProductId = ShopItemId | 'set_neon' | 'set_dusk' | 'set_rose' | 'pro';
+export type ProductId = ShopItemId | 'set_neon' | 'set_dusk' | 'set_rose' | 'pro' | 'freeze';
 
 export type ShopItem = { id: ShopItemId; part: AvatarPart; choice: string };
-export type Product = { id: ProductId; stars: number; kind: 'item' | 'set' | 'pro'; unlocks: ShopItemId[] };
+export type Product = { id: ProductId; stars: number; kind: 'item' | 'set' | 'pro' | 'freeze'; unlocks: ShopItemId[] };
 
 export const SHOP_ITEMS: readonly ShopItem[] = [
   { id: 'shop_neon_hair', part: 'hair', choice: '#39ff14' },
@@ -22,11 +22,13 @@ export const SHOP_ITEMS: readonly ShopItem[] = [
 export const ITEM_STARS = 25;
 export const SET_STARS = 40;
 export const PRO_STARS = 75;
+export const FREEZE_STARS = 25;
 /** Telegram's only subscription period: 30 days. */
 export const PRO_PERIOD_DAYS = 30;
 
 export const PRODUCTS: readonly Product[] = [
   { id: 'pro', stars: PRO_STARS, kind: 'pro', unlocks: [] },
+  { id: 'freeze', stars: FREEZE_STARS, kind: 'freeze', unlocks: [] },
   { id: 'set_neon', stars: SET_STARS, kind: 'set', unlocks: ['shop_neon_hair', 'shop_mint_top'] },
   { id: 'set_dusk', stars: SET_STARS, kind: 'set', unlocks: ['shop_sunset_hair', 'shop_midnight_top'] },
   { id: 'set_rose', stars: SET_STARS, kind: 'set', unlocks: ['shop_rose_top', 'shop_turquoise_hair'] },

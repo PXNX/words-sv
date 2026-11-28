@@ -3,19 +3,20 @@
 // opens in place; elsewhere as a Telegram link, and the page checks back until the payment arrived.
 import * as v from 'valibot';
 import { callApi } from '#lib/api/client.js';
-import { deviceId, readProUntil, writeProUntil } from '#lib/streak/clientStreak.js';
+import { deviceId, readProUntil, writePaidFreezes, writeProUntil } from '#lib/streak/clientStreak.js';
 import { unlockCosmetic } from '#lib/profile/cosmetics.svelte.js';
 import { openTelegramLink } from '#lib/settings/telegramClient.js';
 import { settings } from '#lib/state/settings.svelte.js';
 import { ownedItems, type ProductId } from './catalog.js';
 
-const StatusSchema = v.object({ ok: v.literal(true), linked: v.boolean(), bought: v.array(v.string()), proUntil: v.nullable(v.number()) });
+const StatusSchema = v.object({ ok: v.literal(true), linked: v.boolean(), bought: v.array(v.string()), proUntil: v.nullable(v.number()), freezes: v.optional(v.number(), 0) });
 const InvoiceSchema = v.object({ ok: v.literal(true), url: v.optional(v.string()), linked: v.optional(v.boolean()) });
 
-export const storeState = $state<{ linked: boolean | null; bought: string[]; proUntil: number | null; loading: boolean; buying: ProductId | null; failed: boolean }>({
+export const storeState = $state<{ linked: boolean | null; bought: string[]; proUntil: number | null; freezes: number; loading: boolean; buying: ProductId | null; failed: boolean }>({
   linked: null,
   bought: [],
   proUntil: typeof localStorage === 'undefined' ? null : readProUntil(),
+  freezes: 0,
   loading: false,
   buying: null,
   failed: false
@@ -35,8 +36,10 @@ export async function refreshStore(): Promise<void> {
     storeState.linked = status.linked;
     storeState.bought = status.bought;
     storeState.proUntil = status.proUntil;
+    storeState.freezes = status.freezes ?? 0;
     storeState.failed = false;
     writeProUntil(status.proUntil);
+    writePaidFreezes(storeState.freezes);
     for (const item of ownedItems(status.bought)) unlockCosmetic(item);
   } catch {
     storeState.failed = true;
@@ -67,12 +70,12 @@ export async function buy(product: ProductId): Promise<boolean> {
       openTelegramLink(invoice.url);
     }
     // The bot records the payment on the server a moment after Telegram confirms it.
-    const before = JSON.stringify([storeState.bought, storeState.proUntil]);
+    const before = JSON.stringify([storeState.bought, storeState.proUntil, storeState.freezes]);
     for (const until = Date.now() + CHECK_FOR_MS; Date.now() < until;) {
       await new Promise((resolve) => setTimeout(resolve, CHECK_EVERY_MS));
       if (document.visibilityState === 'hidden') continue;
       await refreshStore();
-      if (JSON.stringify([storeState.bought, storeState.proUntil]) !== before) return true;
+      if (JSON.stringify([storeState.bought, storeState.proUntil, storeState.freezes]) !== before) return true;
     }
     return false;
   } catch {

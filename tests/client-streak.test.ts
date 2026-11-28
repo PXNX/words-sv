@@ -11,7 +11,7 @@ globalThis.localStorage = {
 	length: 0
 } as Storage;
 
-const { applyLocalEvent, ALLTAG_GOAL, FREEZE_EVERY, MAX_FREEZES, rewardReady, dateKey, modeDone, previousDate, readStreak, repairCandidate, repairStreak, dismissRepair, lilithMood } = await import('../src/lib/streak/clientStreak.js');
+const { applyLocalEvent, ALLTAG_GOAL, FREEZE_EVERY, MAX_FREEZES, rewardReady, dateKey, modeDone, previousDate, readStreak, readPaidFreezes, repairCandidate, repairStreak, dismissRepair, lilithMood } = await import('../src/lib/streak/clientStreak.js');
 
 const NOW = new Date('2026-10-26T12:00:00Z');
 const TODAY = dateKey(NOW);
@@ -54,6 +54,16 @@ describe('streak repair', () => {
 		const state = readStreak(NOW);
 		expect(state.streakCount).toBe(12);
 		expect(state.freezes).toBe(0);
+		expect(repairCandidate(NOW)).toBeNull();
+	});
+
+	test('a Stars-bought freeze bridges a missed day after earned ones ran out', () => {
+		seed({ freezes: 0 });
+		store.set('wordcircle-paid-freezes-v1', '1');
+		const state = readStreak(NOW);
+		expect(state.streakCount).toBe(12);
+		expect(state.paidFreezes).toBe(0);
+		expect(readPaidFreezes()).toBe(0);
 		expect(repairCandidate(NOW)).toBeNull();
 	});
 

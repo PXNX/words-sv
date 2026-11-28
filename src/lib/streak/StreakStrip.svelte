@@ -24,6 +24,8 @@
   // Today's ring: the vocabulary goal, or full once any mode qualified the day.
   const goalProgress = $derived(streak.qualified ? 1 : Math.min(1, streak.vocabCorrect / Math.max(1, streak.vocabularyGoal)));
   const milestone = $derived(nextMilestone(streak.streakCount));
+  // Earned and Stars-bought shields both protect a missed day.
+  const protections = $derived(streak.freezes + streak.paidFreezes);
   const weekdayName = $derived.by(() => {
     const context = settings.formatContext;
     return (key: string) => formatWeekday(context, new Date(`${key}T12:00:00.000Z`), 'narrow', 'UTC');
@@ -64,8 +66,8 @@
     </span>
     <span class="streak-side">
       {#if streak.bestStreak > 0}<span class="streak-best">{m.streak_best_short({ count: num(streak.bestStreak) }, locale)}</span>{/if}
-      {#if streak.freezes > 0}
-        <span class="streak-freeze" title={m.streak_freeze_title({ count: num(streak.freezes), embers: num(streak.embers), total: num(FREEZE_EVERY) }, locale)}><IconFreeze aria-hidden="true" />{num(streak.freezes)}</span>
+      {#if protections > 0}
+        <span class="streak-freeze" title={m.streak_freeze_title({ count: num(protections), embers: num(streak.embers), total: num(FREEZE_EVERY) }, locale)}><IconFreeze aria-hidden="true" />{num(protections)}</span>
       {/if}
     </span>
   </a>

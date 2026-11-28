@@ -47,6 +47,8 @@ export type ClientStreak = {
 	minutesRemaining: number;
 	// One earned freeze bridges a single missed day, so a long streak does not vanish overnight.
 	freezes: number;
+	// Freezes bought with Stars, kept separately so a server sync cannot overwrite them.
+	paidFreezes: number;
 	// Every qualified day counts toward the streak history.
 	qualifiedDays: number;
 	// Finishing today's challenge unlocks one ember; collecting FREEZE_EVERY embers forges a freeze.
@@ -68,6 +70,7 @@ const DAILY_GOAL_KEY = 'wordcircle-daily-goal-v1';
 // Remembers a broken-but-repairable streak for the rest of the day, so opening the app before
 // the repair session does not erase the count we are about to restore.
 const REPAIR_KEY = 'wordcircle-streak-repair-v1';
+const PAID_FREEZE_KEY = 'wordcircle-paid-freezes-v1';
 export const REPAIR_WORDS = 5;
 
 export type StreakRepair = { dateKey: string; streakCount: number; bestStreak: number };
@@ -109,6 +112,22 @@ export function writeProUntil(until: number | null) {
 	} catch { /* Pro still applies on the server */ }
 }
 
+/** Stars-bought freezes live outside the synced streak, so they survive a server reply. */
+export function readPaidFreezes(): number {
+	if (typeof localStorage === 'undefined') return 0;
+	const count = Number(localStorage.getItem(PAID_FREEZE_KEY));
+	return Number.isSafeInteger(count) && count > 0 ? Math.min(count, 10) : 0;
+}
+
+export function writePaidFreezes(count: number) {
+	if (typeof localStorage === 'undefined') return;
+	try {
+		const value = Math.min(Math.max(0, Math.floor(count)), 10);
+		if (value) localStorage.setItem(PAID_FREEZE_KEY, String(value));
+		else localStorage.removeItem(PAID_FREEZE_KEY);
+	} catch { /* A full storage must not interrupt the streak. */ }
+}
+
 export function readDailyGoal(): number {
 	if (typeof localStorage === 'undefined') return DEFAULT_VOCABULARY_GOAL;
 	return normalizeVocabularyGoal(localStorage.getItem(DAILY_GOAL_KEY));
@@ -145,6 +164,7 @@ function defaultState(now = new Date()): ClientStreak {
 		vocabularyGoal: readDailyGoal(),
 		minutesRemaining: minutesLeft(now),
 		freezes: 0,
+		paidFreezes: readPaidFreezes(),
 		qualifiedDays: 0,
 		rewardCollected: false,
 		embers: 0
@@ -185,6 +205,7 @@ export function readStreak(now = new Date()) {
 			const yesterday = previousDate(today);
 			let lastQualifiedDay = typeof saved.lastQualifiedDay === 'string' ? saved.lastQualifiedDay : null;
 			let freezes = Math.min(MAX_FREEZES, numberField(saved.freezes));
+			let paidFreezes = readPaidFreezes();
 			let proShieldWeek = typeof saved.proShieldWeek === 'string' ? saved.proShieldWeek : null;
 			const missedYesterday = Boolean(lastQualifiedDay && lastQualifiedDay < yesterday && daysBetween(lastQualifiedDay, yesterday) === 1);
 			// Pro forgives one missed day a week before a freeze is spent.
@@ -194,6 +215,13 @@ export function readStreak(now = new Date()) {
 			} else if (missedYesterday && freezes > 0) {
 				freezes -= 1;
 				lastQualifiedDay = yesterday;
+			} else if (missedYesterday && paidFreezes > 0) {
+				// A bought freeze is the last line of defence, after Pro and earned freezes.
+				paidFreezes -= 1;
+				writePaidFreezes(paidFreezes);
+				lastQualifiedDay = yesterday;
+				// Persist the bridged day: a second read in the same session must not spend it twice.
+				writeStreak({ ...defaultState(now), ...saved, dateKey: today, lastQualifiedDay, freezes, paidFreezes } as ClientStreak);
 			} else if (missedYesterday) {
 				// One missed day is repairable with a short session later that day instead of losing months.
 				rememberRepair(today, saved);
@@ -207,6 +235,7 @@ export function readStreak(now = new Date()) {
 				lastQualifiedDay,
 				proShieldWeek,
 				freezes,
+				paidFreezes,
 				qualifiedDays: numberField(saved.qualifiedDays),
 				embers: embersField(saved)
 			};
@@ -232,6 +261,7 @@ export function readStreak(now = new Date()) {
 			vocabularyGoal: goal,
 			minutesRemaining: minutesLeft(now),
 			freezes: Math.min(MAX_FREEZES, numberField(saved.freezes)),
+			paidFreezes: readPaidFreezes(),
 			qualifiedDays: numberField(saved.qualifiedDays),
 			rewardCollected: Boolean(saved.rewardCollected),
 			embers: embersField(saved)
