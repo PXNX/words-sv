@@ -1,6 +1,7 @@
 import { isMethod, readJson, respond } from '../_lib/http.js';
 import { FREEZE_EVERY, normalizeReminderLocale } from '../_lib/streak.js';
 import { INVITE_EMBERS, INVITE_REWARD_TARGET, addEmbers, inviteMilestone, appUrl, bridgeAuthorized, ensureTelegramTables, htmlMessage, inviteThanks, parseStartPayload, sendTelegram, telegramDatabaseProvider } from '../_lib/telegram.js';
+import { ensureStoreTables } from '../_lib/store.js';
 import type { Database } from '../_lib/database.js';
 import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 
@@ -8,9 +9,9 @@ type TelegramSender = (chatId: number, text: string, buttonUrl: string) => Promi
 
 const validId = (value: unknown): value is number => Number.isSafeInteger(value) && value !== 0;
 
-// Called by the ptb-words bot for every `/start r_…`, `/start l_…` or `/start i_…` it receives.
+// Called by the ptb-words bot for every `/start r_…`, `l_…`, `i_…` or `g_…` it receives.
 // Answers with what happened, so the bot can reply in the player's language:
-// reminders_on | signed_in | expired | invited | known | own_invite | unknown.
+// reminders_on | signed_in | expired | invited | known | own_invite | gifted | gift_used | own_gift | unknown.
 export function createStartEndpoint({ databaseProvider = telegramDatabaseProvider, telegramSender = sendTelegram }: { databaseProvider?: () => Database; telegramSender?: TelegramSender } = {}) {
 	return async function telegramStart(req: ApiRequest, res: ApiResponse) {
 		if (!isMethod(req, 'POST')) return respond(res, 405, { ok: false, error: 'method_not_allowed' });
@@ -21,6 +22,10 @@ export function createStartEndpoint({ databaseProvider = telegramDatabaseProvide
 			if (!start || !validId(userId) || !validId(chatId)) return respond(res, 400, { ok: false, error: 'invalid_request' });
 			const db = databaseProvider();
 			await ensureTelegramTables(db);
+			await ensureStoreTables(db);
+			if (start.kind === 'gift') {
+				return respond(res, 200, { ok: true, result: await redeemGift(db, start.code, Number(userId)) });
+			}
 			if (start.kind === 'reminders') {
 				const [result] = await db.execute('UPDATE wordcircle_telegram_links SET chat_id = ?, telegram_user_id = ?, reminders = 1, link_code = NULL WHERE link_code = ?', [chatId, userId, start.code]);
 				return respond(res, 200, { ok: true, result: result.affectedRows === 1 ? 'reminders_on' : 'expired' });
@@ -35,6 +40,17 @@ export function createStartEndpoint({ databaseProvider = telegramDatabaseProvide
 			return respond(res, 503, { ok: false, error: error instanceof Error ? error.message : 'telegram_unavailable' });
 		}
 	};
+}
+
+/** Redeems a friend's Pro gift once, extending the recipient's Pro from today if it ran out. */
+async function redeemGift(db: Database, code: string, userId: number): Promise<string> {
+	const [[gift]] = await db.execute('SELECT code, sender_user_id, days, redeemed_by FROM wordcircle_gifts WHERE code = ? LIMIT 1', [code]);
+	if (!gift || gift.redeemed_by) return 'gift_used';
+	if (Number(gift.sender_user_id) === userId) return 'own_gift';
+	await db.execute('UPDATE wordcircle_gifts SET redeemed_by = ? WHERE code = ? AND redeemed_by IS NULL', [userId, code]);
+	const until = new Date(Date.now() + Number(gift.days) * 24 * 60 * 60 * 1000);
+	await db.execute('INSERT INTO wordcircle_pro (telegram_user_id, pro_until) VALUES (?, ?) ON CONFLICT (telegram_user_id) DO UPDATE SET pro_until = GREATEST(wordcircle_pro.pro_until, EXCLUDED.pro_until)', [userId, until]);
+	return 'gifted';
 }
 
 async function creditInvite(db: Database, code: string, userId: number, telegramSender: TelegramSender) {

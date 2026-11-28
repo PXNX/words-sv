@@ -10,8 +10,9 @@ const secret = 'bridge-secret-for-tests-0123456789';
 function fakeDatabase(linkedUser: number | null = 42) {
   const purchases: Array<{ charge_id: string; telegram_user_id: number; product: string }> = [];
   const pro = new Map<number, Date>();
+  const gifts: Array<{ code: string; charge_id: string; sender_user_id: number; days: number; redeemed_by: number | null }> = [];
   return {
-    purchases, pro,
+    purchases, pro, gifts,
     async execute(sql: string, params: any[] = []): Promise<any> {
       if (/^(CREATE|ALTER)/u.test(sql)) return [{}];
       if (sql.startsWith('SELECT telegram_user_id FROM wordcircle_telegram_links')) return [linkedUser ? [{ telegram_user_id: linkedUser }] : []];
@@ -26,6 +27,11 @@ function fakeDatabase(linkedUser: number | null = 42) {
       }
       if (sql.startsWith('SELECT DISTINCT product')) return [[...new Set(purchases.filter((row) => row.telegram_user_id === params[0]).map((row) => row.product))].map((product) => ({ product }))];
       if (sql.startsWith("SELECT COUNT(*) AS count FROM wordcircle_purchases")) return [[{ count: purchases.filter((row) => row.telegram_user_id === params[0] && row.product === 'freeze').length }]];
+      if (sql.startsWith('INSERT INTO wordcircle_gifts')) {
+        if (!gifts.some((row) => row.charge_id === params[1])) gifts.push({ code: params[0], charge_id: params[1], sender_user_id: params[2], days: params[3], redeemed_by: null });
+        return [{}];
+      }
+      if (sql.startsWith('SELECT code, days FROM wordcircle_gifts')) return [[gifts.filter((row) => row.sender_user_id === params[0] && row.redeemed_by === null).map((row) => ({ code: row.code, days: row.days }))]];
       if (sql.startsWith('SELECT pro_until')) return [pro.has(params[0]) ? [{ pro_until: pro.get(params[0]) }] : []];
       throw new Error(`unexpected statement: ${sql}`);
     }
@@ -89,6 +95,24 @@ describe('store endpoints', () => {
     const res = responseCapture();
     await createStoreEndpoint({ databaseProvider: () => db })({ method: 'POST', body: { deviceId: 'device_0123456789abcdef', action: 'status' } }, res);
     expect(res.result.body).toMatchObject({ linked: true, bought: [], freezes: 2 });
+  });
+
+  it('turns a paid gift into a shareable link, once per charge', async () => {
+    process.env.TELEGRAM_BRIDGE_SECRET = secret;
+    const db = fakeDatabase();
+    const paid = async (chargeId: string) => {
+      const res = responseCapture();
+      await createPurchaseEndpoint({ databaseProvider: () => db })({ method: 'POST', headers: { authorization: `Bearer ${secret}` }, body: { action: 'paid', currency: 'XTR', userId: 42, amount: 75, payload: storePayload('gift', 42), chargeId } }, res);
+      return res.result;
+    };
+    expect((await paid('g1')).body.problem).toBeNull();
+    await paid('g1');
+    expect(db.gifts).toHaveLength(1);
+    const res = responseCapture();
+    await createStoreEndpoint({ databaseProvider: () => db })({ method: 'POST', body: { deviceId: 'device_0123456789abcdef', action: 'status' } }, res);
+    expect(res.result.body.bought).toEqual([]);
+    expect(res.result.body.gifts).toHaveLength(1);
+    expect(res.result.body.gifts[0].url).toContain('?start=g_');
   });
 
   it('makes a subscription invoice for Pro and needs a signed-in device', async () => {

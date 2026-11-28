@@ -1,15 +1,23 @@
+import { randomBytes } from 'node:crypto';
 import type { Database } from './database.js';
 
 // The store's prices and what each product is, for the invoice and the payment check. The app's copy
 // (src/lib/store/catalog.ts) only displays them; tests/store.test.ts keeps both in step.
 
-export type StoreProduct = { id: string; stars: number; kind: 'item' | 'set' | 'pro' | 'freeze' };
+export type StoreProduct = { id: string; stars: number; kind: 'item' | 'set' | 'pro' | 'freeze' | 'gift' };
 
 export const PRO_PERIOD_SECONDS = 30 * 24 * 60 * 60;
+export const GIFT_DAYS = 30;
+
+/** A short code for a bought gift; the friend opens it as `t.me/<bot>?start=g_<code>`. */
+export function newGiftCode() {
+	return randomBytes(9).toString('base64url');
+}
 
 export const STORE_PRODUCTS: readonly StoreProduct[] = [
 	{ id: 'pro', stars: 75, kind: 'pro' },
 	{ id: 'freeze', stars: 25, kind: 'freeze' },
+	{ id: 'gift', stars: 75, kind: 'gift' },
 	{ id: 'set_neon', stars: 40, kind: 'set' },
 	{ id: 'set_dusk', stars: 40, kind: 'set' },
 	{ id: 'set_rose', stars: 40, kind: 'set' },
@@ -54,6 +62,14 @@ export const STORE_TABLES = [
 	`CREATE TABLE IF NOT EXISTS wordcircle_pro (
 		telegram_user_id BIGINT NOT NULL PRIMARY KEY,
 		pro_until TIMESTAMPTZ NOT NULL
+	)`,
+	`CREATE TABLE IF NOT EXISTS wordcircle_gifts (
+		code VARCHAR(32) NOT NULL PRIMARY KEY,
+		charge_id VARCHAR(255) NOT NULL UNIQUE,
+		sender_user_id BIGINT NOT NULL,
+		days INTEGER NOT NULL,
+		redeemed_by BIGINT,
+		created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 	)`
 ];
 

@@ -1,8 +1,9 @@
 """Forwards the app's one-time /start links to WordCircle's server, which owns the device links.
 
 `r_<code>` turns on streak reminders, `l_<code>` signs the device that made the code in (its progress
-is saved to this Telegram account) and `i_<code>` credits a player's invite. The server answers what
-happened (reminders_on, signed_in, expired, invited, known, own_invite, unknown) and the bot replies.
+is saved to this Telegram account), `i_<code>` credits a player's invite and `g_<code>` redeems a Pro
+gift. The server answers what happened (reminders_on, signed_in, expired, invited, known, own_invite,
+gifted, gift_used, own_gift, unknown) and the bot replies.
 """
 import logging
 import re
@@ -13,7 +14,7 @@ from settings.config import BRIDGE_SECRET, WORDS_API_URL
 
 logger = logging.getLogger(__name__)
 
-PAYLOAD = re.compile(r"^[ril]_[A-Za-z0-9_-]{8,40}$")
+PAYLOAD = re.compile(r"^[rilg]_[A-Za-z0-9_-]{8,40}$")
 
 
 def is_bridge_payload(payload: str) -> bool:

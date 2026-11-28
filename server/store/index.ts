@@ -1,7 +1,7 @@
 import * as v from 'valibot';
 import { getDatabase } from '../_lib/database.js';
 import { isMethod, readJson, respond } from '../_lib/http.js';
-import { ensureTelegramTables } from '../_lib/telegram.js';
+import { ensureTelegramTables, startLink } from '../_lib/telegram.js';
 import { telegramApi } from '../_lib/games.js';
 import { ensureStoreTables, PRO_PERIOD_SECONDS, storePayload, storeProduct } from '../_lib/store.js';
 import type { Database } from '../_lib/database.js';
@@ -18,8 +18,8 @@ const Request = v.object({
 });
 
 const TITLES: Record<string, Record<string, string>> = {
-	en: { pro: 'WordCircle Pro', freeze: 'Streak freeze', set: 'Character set', item: 'Character item', description: 'For your WordCircle character. Thank you for supporting WordCircle!', proDescription: 'One missed day a week does not break your streak. Renews every 30 days; cancel any time in Telegram.', freezeDescription: 'One missed day will not break your streak. Used automatically before you lose a day.' },
-	de: { pro: 'WordCircle Pro', freeze: 'Serien-Schutz', set: 'Figuren-Set', item: 'Figuren-Teil', description: 'Für deine WordCircle-Figur. Danke, dass du WordCircle unterstützt!', proDescription: 'Ein verpasster Tag pro Woche unterbricht deine Serie nicht. Verlängert sich alle 30 Tage; jederzeit in Telegram kündbar.', freezeDescription: 'Ein verpasster Tag unterbricht deine Serie nicht. Wird automatisch verbraucht, bevor die Serie reißt.' }
+	en: { pro: 'WordCircle Pro', freeze: 'Streak freeze', gift: 'Gift WordCircle Pro', set: 'Character set', item: 'Character item', description: 'For your WordCircle character. Thank you for supporting WordCircle!', proDescription: 'One missed day a week does not break your streak. Renews every 30 days; cancel any time in Telegram.', freezeDescription: 'One missed day will not break your streak. Used automatically before you lose a day.', giftDescription: 'Give a friend 30 days of WordCircle Pro. You will get a link to share after paying.' },
+	de: { pro: 'WordCircle Pro', freeze: 'Serien-Schutz', gift: 'WordCircle Pro verschenken', set: 'Figuren-Set', item: 'Figuren-Teil', description: 'Für deine WordCircle-Figur. Danke, dass du WordCircle unterstützt!', proDescription: 'Ein verpasster Tag pro Woche unterbricht deine Serie nicht. Verlängert sich alle 30 Tage; jederzeit in Telegram kündbar.', freezeDescription: 'Ein verpasster Tag unterbricht deine Serie nicht. Wird automatisch verbraucht, bevor die Serie reißt.', giftDescription: 'Schenke einem Freund 30 Tage WordCircle Pro. Nach der Zahlung bekommst du einen Link zum Teilen.' }
 };
 
 
@@ -45,7 +45,7 @@ export function createStoreEndpoint({ databaseProvider = getDatabase, telegram =
 				const title = found.kind === 'pro' ? texts.pro! : `${texts[found.kind]}`;
 				const url = await telegram<string>('createInvoiceLink', {
 					title,
-					description: found.kind === 'pro' ? texts.proDescription : found.kind === 'freeze' ? texts.freezeDescription : texts.description,
+					description: found.kind === 'pro' ? texts.proDescription : found.kind === 'freeze' ? texts.freezeDescription : found.kind === 'gift' ? texts.giftDescription : texts.description,
 					payload: storePayload(found.id, userId),
 					currency: 'XTR',
 					prices: [{ label: title, amount: found.stars }],
@@ -56,13 +56,16 @@ export function createStoreEndpoint({ databaseProvider = getDatabase, telegram =
 			const [purchases] = await db.execute('SELECT DISTINCT product FROM wordcircle_purchases WHERE telegram_user_id = ?', [userId]);
 			const [[pro]] = await db.execute('SELECT pro_until FROM wordcircle_pro WHERE telegram_user_id = ? LIMIT 1', [userId]);
 			const [[freeze]] = await db.execute("SELECT COUNT(*) AS count FROM wordcircle_purchases WHERE telegram_user_id = ? AND product = 'freeze'", [userId]);
+			const [giftRows] = await db.execute('SELECT code, days FROM wordcircle_gifts WHERE sender_user_id = ? AND redeemed_by IS NULL ORDER BY created_at DESC LIMIT 5', [userId]);
+			const gifts = (giftRows as Array<{ code: string; days: number }>).map((row) => ({ code: row.code, days: Number(row.days), url: startLink(`g_${row.code}`) }));
 			const proUntil = pro?.pro_until ? new Date(pro.pro_until).getTime() : null;
 			return respond(res, 200, {
 				ok: true,
 				linked: true,
-				bought: (purchases as Array<{ product: string }>).map((row) => row.product).filter((id) => id !== 'pro' && id !== 'freeze'),
+				bought: (purchases as Array<{ product: string }>).map((row) => row.product).filter((id) => id !== 'pro' && id !== 'freeze' && id !== 'gift'),
 				proUntil: proUntil && proUntil > Date.now() ? proUntil : null,
-				freezes: Number(freeze?.count ?? 0)
+				freezes: Number(freeze?.count ?? 0),
+				gifts
 			});
 		} catch (error) {
 			return respond(res, 503, { ok: false, error: error instanceof Error ? error.message : 'store_unavailable' });

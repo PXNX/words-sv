@@ -24,6 +24,7 @@ export type MockLink = {
 	last_reminded_day?: string | null;
 };
 export type MockInvite = { telegram_user_id: number; inviter_device_id: string };
+export type MockGift = { code: string; sender_user_id: number; days: number; redeemed_by: number | null };
 export type MockSnapshot = { telegram_user_id: number; revision: number; snapshot: string };
 export type MockSentMessage = [chatId: number, text: string, buttonUrl: string];
 
@@ -31,25 +32,43 @@ export type MockDatabase = {
 	devices: Record<string, MockDevice>;
 	links: MockLink[];
 	invites: MockInvite[];
+	gifts: MockGift[];
+	pro: Record<number, Date>;
 	snapshots: Record<number, MockSnapshot>;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	execute: (sql: string, params?: any[]) => Promise<unknown[]>;
 };
 
 /** A tiny in-memory stand-in for the few statements the Telegram endpoints run. */
-export function mockDatabase({ devices = {}, links = [], invites = [], snapshots = {} }: {
+export function mockDatabase({ devices = {}, links = [], invites = [], gifts = [], pro = {}, snapshots = {} }: {
 	devices?: Record<string, MockDevice>;
 	links?: MockLink[];
 	invites?: MockInvite[];
+	gifts?: MockGift[];
+	pro?: Record<number, Date>;
 	snapshots?: Record<number, MockSnapshot>;
 } = {}): MockDatabase {
 	const db: MockDatabase = {
 		devices,
 		links,
 		invites,
+		gifts,
+		pro,
 		snapshots,
 		async execute(sql: string, params: any[] = []) {
 			if (/^(CREATE|ALTER)/.test(sql)) return [{}];
+			if (sql.startsWith('SELECT code, sender_user_id, days, redeemed_by FROM wordcircle_gifts')) return [[gifts.find((gift) => gift.code === params[0]) ?? null]];
+			if (sql.startsWith('UPDATE wordcircle_gifts SET redeemed_by')) {
+				const gift = gifts.find((entry) => entry.code === params[1] && entry.redeemed_by === null);
+				if (gift) gift.redeemed_by = params[0] as number;
+				return [{ affectedRows: gift ? 1 : 0 }];
+			}
+			if (sql.startsWith('INSERT INTO wordcircle_pro')) {
+				const before = pro[params[0] as number];
+				pro[params[0] as number] = before && before > params[1] ? before : params[1];
+				return [{}];
+			}
+			if (sql.startsWith('SELECT code, days FROM wordcircle_gifts')) return [[gifts.filter((gift) => gift.sender_user_id === params[0] && gift.redeemed_by === null).map((gift) => ({ code: gift.code, days: gift.days }))]];
 			if (sql.startsWith('INSERT INTO wordcircle_streak_devices')) {
 				const device = devices[params[0] as string];
 				if (device) Object.assign(device, { timezone: params[1], locale: params[2] });

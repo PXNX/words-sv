@@ -9,14 +9,17 @@ import { openTelegramLink } from '#lib/settings/telegramClient.js';
 import { settings } from '#lib/state/settings.svelte.js';
 import { ownedItems, type ProductId } from './catalog.js';
 
-const StatusSchema = v.object({ ok: v.literal(true), linked: v.boolean(), bought: v.array(v.string()), proUntil: v.nullable(v.number()), freezes: v.optional(v.number(), 0) });
+export type GiftLink = { code: string; days: number; url: string };
+const GiftSchema = v.object({ code: v.string(), days: v.number(), url: v.string() });
+const StatusSchema = v.object({ ok: v.literal(true), linked: v.boolean(), bought: v.array(v.string()), proUntil: v.nullable(v.number()), freezes: v.optional(v.number(), 0), gifts: v.optional(v.array(GiftSchema), []) });
 const InvoiceSchema = v.object({ ok: v.literal(true), url: v.optional(v.string()), linked: v.optional(v.boolean()) });
 
-export const storeState = $state<{ linked: boolean | null; bought: string[]; proUntil: number | null; freezes: number; loading: boolean; buying: ProductId | null; failed: boolean }>({
+export const storeState = $state<{ linked: boolean | null; bought: string[]; proUntil: number | null; freezes: number; gifts: GiftLink[]; loading: boolean; buying: ProductId | null; failed: boolean }>({
   linked: null,
   bought: [],
   proUntil: typeof localStorage === 'undefined' ? null : readProUntil(),
   freezes: 0,
+  gifts: [],
   loading: false,
   buying: null,
   failed: false
@@ -37,6 +40,7 @@ export async function refreshStore(): Promise<void> {
     storeState.bought = status.bought;
     storeState.proUntil = status.proUntil;
     storeState.freezes = status.freezes ?? 0;
+    storeState.gifts = status.gifts ?? [];
     storeState.failed = false;
     writeProUntil(status.proUntil);
     writePaidFreezes(storeState.freezes);
@@ -70,12 +74,12 @@ export async function buy(product: ProductId): Promise<boolean> {
       openTelegramLink(invoice.url);
     }
     // The bot records the payment on the server a moment after Telegram confirms it.
-    const before = JSON.stringify([storeState.bought, storeState.proUntil, storeState.freezes]);
+    const before = JSON.stringify([storeState.bought, storeState.proUntil, storeState.freezes, storeState.gifts]);
     for (const until = Date.now() + CHECK_FOR_MS; Date.now() < until;) {
       await new Promise((resolve) => setTimeout(resolve, CHECK_EVERY_MS));
       if (document.visibilityState === 'hidden') continue;
       await refreshStore();
-      if (JSON.stringify([storeState.bought, storeState.proUntil, storeState.freezes]) !== before) return true;
+      if (JSON.stringify([storeState.bought, storeState.proUntil, storeState.freezes, storeState.gifts]) !== before) return true;
     }
     return false;
   } catch {

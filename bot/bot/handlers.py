@@ -16,7 +16,7 @@ from version import APP_VERSION
 
 logger = logging.getLogger(__name__)
 
-BRIDGE_RESULTS = {"reminders_on", "signed_in", "expired", "invited", "known", "own_invite", "unknown"}
+BRIDGE_RESULTS = {"reminders_on", "signed_in", "expired", "invited", "known", "own_invite", "gifted", "gift_used", "own_gift", "unknown"}
 
 
 def _lang(update: Update) -> str:
@@ -42,7 +42,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if context.args and context.args[0] == "scribble":
         await scribble_command(update, context)
         return
-    # One-time links from the app: sign-in, reminders, invites.
+    # One-time links from the app: sign-in, reminders, invites, gifts.
     if context.args and is_bridge_payload(context.args[0]) and update.effective_user and update.effective_chat:
         result = await forward_start(context.args[0], update.effective_user.id, update.effective_chat.id)
         button = InlineKeyboardMarkup([[_app_button(update, t(lang, "open_app"), WORDS_URL)]])

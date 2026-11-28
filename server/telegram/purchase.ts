@@ -2,7 +2,7 @@ import * as v from 'valibot';
 import { getDatabase } from '../_lib/database.js';
 import { isMethod, readJson, respond } from '../_lib/http.js';
 import { bridgeAuthorized } from '../_lib/telegram.js';
-import { checkoutProblem, ensureStoreTables, parseStorePayload, PRO_PERIOD_SECONDS } from '../_lib/store.js';
+import { checkoutProblem, ensureStoreTables, GIFT_DAYS, newGiftCode, parseStorePayload, PRO_PERIOD_SECONDS } from '../_lib/store.js';
 import type { Database } from '../_lib/database.js';
 import type { ApiRequest, ApiResponse } from '../_lib/http.js';
 
@@ -31,6 +31,10 @@ export function createPurchaseEndpoint({ databaseProvider = getDatabase, now = (
 			if (product.kind === 'pro') {
 				const until = new Date(input.subscriptionExpiration ? input.subscriptionExpiration * 1000 : now() + PRO_PERIOD_SECONDS * 1000);
 				await db.execute('INSERT INTO wordcircle_pro (telegram_user_id, pro_until) VALUES (?, ?) ON CONFLICT (telegram_user_id) DO UPDATE SET pro_until = GREATEST(wordcircle_pro.pro_until, EXCLUDED.pro_until)', [userId, until]);
+			}
+			if (product.kind === 'gift') {
+				// A unique charge id keeps a repeated webhook from creating a second gift code.
+				await db.execute('INSERT INTO wordcircle_gifts (code, charge_id, sender_user_id, days) VALUES (?, ?, ?, ?) ON CONFLICT (charge_id) DO NOTHING', [newGiftCode(), input.chargeId, userId, GIFT_DAYS]);
 			}
 			return respond(res, 200, { ok: true, problem: null, product: product.id });
 		} catch (error) {

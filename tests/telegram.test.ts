@@ -20,6 +20,7 @@ describe('telegram helpers', () => {
 		expect(parseStartPayload('r_abcdefgh1234')).toEqual({ kind: 'reminders', code: 'abcdefgh1234' });
 		expect(parseStartPayload('i_abcdefgh1234')).toEqual({ kind: 'invite', code: 'abcdefgh1234' });
 		expect(parseStartPayload('l_abcdefgh1234')).toEqual({ kind: 'login', code: 'abcdefgh1234' });
+		expect(parseStartPayload('g_abcdefgh1234')).toEqual({ kind: 'gift', code: 'abcdefgh1234' });
 		expect(parseStartPayload('donate')).toBeNull();
 		expect(parseStartPayload('i_short')).toBeNull();
 	});
@@ -68,6 +69,15 @@ describe('telegram start bridge', () => {
 		// Eleven thanks plus one milestone message, sent right after the tenth.
 		expect(sent).toHaveLength(12);
 		expect(sent[10]![1]).toContain('10 friends');
+	});
+
+	it('redeems a bought Pro gift once for the friend who opens it', async () => {
+		const db = mockDatabase({ gifts: [{ code: 'giftCode1234', sender_user_id: 11, days: 30, redeemed_by: null }] });
+		expect((await start(db, { payload: 'g_giftCode1234', userId: 11, chatId: 11 })).body.result).toBe('own_gift');
+		expect((await start(db, { payload: 'g_giftCode1234', userId: 21, chatId: 21 })).body.result).toBe('gifted');
+		expect(db.pro[21]!.getTime()).toBeGreaterThan(Date.now());
+		expect((await start(db, { payload: 'g_giftCode1234', userId: 22, chatId: 22 })).body.result).toBe('gift_used');
+		expect((await start(db, { payload: 'g_unknownCode1', userId: 23, chatId: 23 })).body.result).toBe('gift_used');
 	});
 
 	it('pays embers for every new player, once per player, without a limit', async () => {
