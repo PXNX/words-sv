@@ -1,6 +1,6 @@
 import { isMethod, readJson, respond } from '../_lib/http.js';
 import { FREEZE_EVERY, normalizeReminderLocale } from '../_lib/streak.js';
-import { INVITE_EMBERS, INVITE_REWARD_TARGET, addEmbers, inviteMilestone, appUrl, bridgeAuthorized, ensureTelegramTables, htmlMessage, inviteThanks, parseStartPayload, sendTelegram, telegramDatabaseProvider } from '../_lib/telegram.js';
+import { INVITE_EMBERS, INVITE_PRO_DAYS, INVITE_PRO_EVERY, INVITE_REWARD_TARGET, addEmbers, inviteMilestone, appUrl, bridgeAuthorized, ensureTelegramTables, htmlMessage, invitePro, inviteThanks, parseStartPayload, sendTelegram, telegramDatabaseProvider } from '../_lib/telegram.js';
 import { ensureStoreTables } from '../_lib/store.js';
 import type { Database } from '../_lib/database.js';
 import type { ApiRequest, ApiResponse } from '../_lib/http.js';
@@ -77,8 +77,16 @@ async function creditInvite(db: Database, code: string, userId: number, telegram
 		if (result.affectedRows !== 1) continue;
 		if (inviter.chat_id) await telegramSender(inviter.chat_id, htmlMessage(inviteThanks(normalizeReminderLocale(device.locale), INVITE_EMBERS)), appUrl()).catch(() => undefined);
 		const [[invites]] = await db.execute('SELECT COUNT(*) AS count FROM wordcircle_telegram_invites WHERE inviter_device_id = ?', [inviter.device_id]);
-		if (inviter.chat_id && Number(invites?.count ?? 0) === INVITE_REWARD_TARGET) {
-			await telegramSender(inviter.chat_id, htmlMessage(inviteMilestone(normalizeReminderLocale(device.locale), INVITE_REWARD_TARGET)), appUrl()).catch(() => undefined);
+		const invited = Number(invites?.count ?? 0);
+		const locale = normalizeReminderLocale(device.locale);
+		if (inviter.chat_id && invited === INVITE_REWARD_TARGET) {
+			await telegramSender(inviter.chat_id, htmlMessage(inviteMilestone(locale, INVITE_REWARD_TARGET)), appUrl()).catch(() => undefined);
+		}
+		// A real credit, not just a cosmetic: every fifth friend earns a week of Pro.
+		if (invited > 0 && invited % INVITE_PRO_EVERY === 0 && inviter.telegram_user_id) {
+			const until = new Date(Date.now() + INVITE_PRO_DAYS * 24 * 60 * 60 * 1000);
+			await db.execute('INSERT INTO wordcircle_pro (telegram_user_id, pro_until) VALUES (?, ?) ON CONFLICT (telegram_user_id) DO UPDATE SET pro_until = GREATEST(wordcircle_pro.pro_until, EXCLUDED.pro_until)', [Number(inviter.telegram_user_id), until]);
+			if (inviter.chat_id) await telegramSender(inviter.chat_id, htmlMessage(invitePro(locale, invited, INVITE_PRO_DAYS)), appUrl()).catch(() => undefined);
 		}
 		break;
 	}

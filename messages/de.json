@@ -351,6 +351,7 @@
   "gift_copy": "Link kopieren",
   "gift_copied": "Kopiert ✓",
   "gift_older": "Weiteres Geschenk teilen",
+  "invite_pro_hint": "Für je 5 eingeladene Freunde bekommst du obendrein {days} Tage WordCircle Pro.",
   "vocab_recap_title": "Runde geschafft",
   "vocab_recap_score": "{correct} von {total} Wörtern gleich beim ersten Mal richtig.",
   "vocab_recap_tricky": "Diese Wörter brauchen noch eine Runde",

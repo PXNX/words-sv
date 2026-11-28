@@ -400,6 +400,7 @@
           {#if telegram.invited < INVITE_REWARD_TARGET}
             <div class="settings-invite-goal" style:--share={telegram.invited / INVITE_REWARD_TARGET}><span aria-hidden="true"></span><small>{m.invite_goal({ count: num(telegram.invited), target: num(INVITE_REWARD_TARGET) }, { locale: settings.interfaceLocale })}</small></div>
           {/if}
+          <small class="settings-invite-pro">{m.invite_pro_hint({ days: num(7) }, { locale: settings.interfaceLocale })}</small>
         </SettingRow>
       {/if}
       <button type="button" class="settings-nav" onclick={shareApp}><IconShare aria-hidden="true" /><span>{labels.shareApp}</span><IconChevronRight aria-hidden="true" class="rtl:rotate-180" /></button>
@@ -467,6 +468,7 @@
   .settings-invite-goal span { height:.35rem;border-radius:999px;background:linear-gradient(90deg,#2aabee calc(var(--share) * 100%),color-mix(in srgb,currentColor 12%,transparent) 0); }
   .settings-invite-goal small { font-size:.8125rem;font-weight:800;color:#2a6fa8; }
   :global(html.dark) .settings-invite-goal small { color:#9cc8ec; }
+  .settings-invite-pro { display:block;font-size:.8125rem;font-weight:700;line-height:1.4;color:var(--text-soft); }
   .settings-voice-test { display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;margin-top:.55rem; }
   .settings-voice-test :global(svg) { width:.85rem;height:.85rem; }
   .settings-voice-test small { font-size:.8125rem;font-weight:700;opacity:.65; }

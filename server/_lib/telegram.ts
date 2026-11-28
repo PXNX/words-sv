@@ -155,12 +155,23 @@ export function inviteThanks(locale: string, count: number) {
 // Friends who joined through one invite link that bring the inviter's character its exclusive top
 // (the app unlocks it from the invite count; this only says so in Telegram).
 export const INVITE_REWARD_TARGET = 10;
+// Every fifth friend also earns the inviter a week of Pro, on top of the embers and cosmetics.
+export const INVITE_PRO_EVERY = 5;
+export const INVITE_PRO_DAYS = 7;
 const INVITE_MILESTONE: Record<string, (count: number) => { title: string; body: string }> = {
 	en: (count) => ({ title: `${count} friends joined through you!`, body: 'Your character has earned an exclusive Telegram-blue top. Open WordCircle to put it on.' }),
 	de: (count) => ({ title: `${count} Freunde sind über dich dabei!`, body: 'Deine Figur hat ein exklusives Oberteil in Telegram-Blau verdient. Öffne WordCircle und zieh es an.' })
 };
 export function inviteMilestone(locale: string, count: number) {
 	return (INVITE_MILESTONE[locale] ?? INVITE_MILESTONE.en!)(count);
+}
+
+const INVITE_PRO: Record<string, (count: number, days: number) => { title: string; body: string }> = {
+	en: (count, days) => ({ title: `${count} friends invited — Pro for you!`, body: `Thank you for bringing them along. You get ${days} days of WordCircle Pro, free.` }),
+	de: (count, days) => ({ title: `${count} Freunde eingeladen – Pro für dich!`, body: `Danke, dass du sie mitgebracht hast. Du bekommst ${days} Tage WordCircle Pro geschenkt.` })
+};
+export function invitePro(locale: string, count: number, days: number) {
+	return (INVITE_PRO[locale] ?? INVITE_PRO.en!)(count, days);
 }
 
 const TABLES = [

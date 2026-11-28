@@ -66,9 +66,11 @@ describe('telegram start bridge', () => {
 		});
 		const sent: MockSentMessage[] = [];
 		for (let userId = 100; userId < 111; userId += 1) await start(db, { payload: 'i_inviteCodeB1', userId, chatId: userId }, sent);
-		// Eleven thanks plus one milestone message, sent right after the tenth.
-		expect(sent).toHaveLength(12);
-		expect(sent[10]![1]).toContain('10 friends');
+		// Eleven thanks, a Pro reward at five and ten, and the cosmetic milestone at ten.
+		expect(sent).toHaveLength(14);
+		expect(sent.some((message) => message[1].includes('10 friends'))).toBe(true);
+		expect(sent.filter((message) => message[1].includes('Pro'))).toHaveLength(2);
+		expect(db.pro[11]!.getTime()).toBeGreaterThan(Date.now());
 	});
 
 	it('redeems a bought Pro gift once for the friend who opens it', async () => {
@@ -89,8 +91,10 @@ describe('telegram start bridge', () => {
 		for (const userId of [21, 22, 23, 24, 25]) expect((await start(db, { payload: 'i_inviteCodeA1', userId, chatId: userId }, sent)).body.result).toBe('invited');
 		// 5 + 5 × 2 = 15 embers: two freezes forged, the last ember stays.
 		expect(db.devices['device-a']).toMatchObject({ embers: 1, freezes: 2, invite_freezes: 2 });
-		expect(sent).toHaveLength(5);
+		// Five thanks plus the fifth friend's Pro reward.
+		expect(sent).toHaveLength(6);
 		expect(sent[0]![0]).toBe(11);
+		expect(sent[5]![1]).toContain('Pro');
 		expect((await start(db, { payload: 'i_inviteCodeA1', userId: 21, chatId: 21 })).body.result).toBe('known');
 		expect((await start(db, { payload: 'i_inviteCodeA1', userId: 11, chatId: 11 })).body.result).toBe('own_invite');
 		expect((await start(db, { payload: 'i_unknownCode1', userId: 30, chatId: 30 })).body.result).toBe('unknown');
