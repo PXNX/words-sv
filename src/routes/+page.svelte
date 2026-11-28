@@ -66,6 +66,7 @@ import { haptic } from '#lib/feedback/haptics.js';
   import PhysicsTiles from '#lib/app/PhysicsTiles.svelte';
   import { defaultAvatar } from '#lib/profile/avatar.js';
   import { CHANNELS, HOME_GROUPS, dailyMix, modesForChannel, type Channel, type HomeGroup, type HomeMode, type HomeModeId, type MixStep } from '#lib/today/homeModes.js';
+  import { readContinuations } from '#lib/today/continuations.js';
   import type { Component } from 'svelte';
 
   const interfaceDirection = $derived(getTextDirection(settings.interfaceLocale));
@@ -101,6 +102,7 @@ import { haptic } from '#lib/feedback/haptics.js';
     homeOrder: m.home_order({}, { locale: settings.interfaceLocale }),
     homeContinueReading: (title: string) => m.home_continue_reading({ title }, { locale: settings.interfaceLocale }),
     homeContinueStory: (title: string) => m.home_continue_story({ title }, { locale: settings.interfaceLocale }),
+    continueRound: (mode: string) => m.home_continue_round({ mode }, { locale: settings.interfaceLocale }),
     homePlay: m.home_play({}, { locale: settings.interfaceLocale }),
     modeCrossword: m.mode_crossword({}, { locale: settings.interfaceLocale }),
     modeWordle: m.mode_wordle({}, { locale: settings.interfaceLocale }),
@@ -287,7 +289,19 @@ import { haptic } from '#lib/feedback/haptics.js';
       vocabularyGoal: settings.streak.vocabularyGoal,
       weakFeature
     });
-    const next: HomeContinue[] = [];
+    // Saved rounds from the games that keep their place: crossword, Wordle, Hangman, speaking and
+    // listening. Reading and stories are added below because their details need the story catalog.
+    const savedRounds = readContinuations({
+      language: settings.lang,
+      level: settings.vocabularyLevel,
+      includeLowerVocabulary: settings.includeLowerVocabulary,
+      read: (key) => { try { return localStorage.getItem(key); } catch { return null; } }
+    });
+    const next: HomeContinue[] = savedRounds.map((round) => ({
+      href: round.href,
+      label: labels.continueRound(modeCards[round.id].title),
+      detail: round.detail
+    }));
     // When the Today card already points into the text, a second link would only repeat it.
     if (reading && todayPlan.kind !== 'reading') {
       next.push({

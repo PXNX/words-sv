@@ -328,6 +328,7 @@
   "today_done": "Für heute ist alles geschafft.",
   "today_start": "Los geht’s",
   "today_session": "{steps} Schritte · etwa {minutes} Minuten — ein Tippen startet deine Runde",
+  "home_continue_round": "Weiter: {mode}",
   "vocab_recap_title": "Runde geschafft",
   "vocab_recap_score": "{correct} von {total} Wörtern gleich beim ersten Mal richtig.",
   "vocab_recap_tricky": "Diese Wörter brauchen noch eine Runde",
