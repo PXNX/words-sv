@@ -11,13 +11,16 @@
   import { haptic } from '#lib/feedback/haptics.js';
   import { network } from '#lib/offline/network.svelte.js';
   import { PRODUCTS } from './catalog.js';
+  import { cloudSync } from '#lib/sync/cloudSync.svelte.js';
   import { buy, proActive, storeState } from './storeClient.svelte.js';
+  import StoreSignIn from './StoreSignIn.svelte';
   import IconPro from '~icons/material-symbols/workspace-premium-rounded';
   import IconStar from '~icons/material-symbols/star-rounded';
 
   const locale = $derived({ locale: settings.interfaceLocale });
   const pro = PRODUCTS.find((product) => product.kind === 'pro')!;
   const active = $derived(proActive());
+  const linked = $derived(cloudSync.linked === true || storeState.linked === true);
   let notice = $state('');
 
   async function purchase() {
@@ -36,7 +39,11 @@
     <small>{active ? m.store_pro_active({ date: formatDate(settings.formatContext, storeState.proUntil!, 'dayMonth') }, locale) : m.store_pro_terms({ stars: num(pro.stars) }, locale)}</small>
   </div>
   {#if !active}
-    <button type="button" class="btn-play btn-play-ink btn-play-sm pro-buy" disabled={storeState.buying !== null || !network.online} onclick={purchase}><IconStar aria-hidden="true" />{m.store_buy({ stars: num(pro.stars) }, locale)}</button>
+    {#if linked}
+      <button type="button" class="btn-play btn-play-ink btn-play-sm pro-buy" disabled={storeState.buying !== null || !network.online} onclick={purchase}><IconStar aria-hidden="true" />{m.store_buy({ stars: num(pro.stars) }, locale)}</button>
+    {:else}
+      <div class="pro-signin"><StoreSignIn /></div>
+    {/if}
   {/if}
   {#if notice}<p class="pro-notice" role="status">{notice}</p>{/if}
 </section>
@@ -53,6 +60,7 @@
   .pro-text small { font-size:.8125rem;font-weight:800;opacity:.65; }
   .pro-card.active small { color:#34824d;opacity:1; }
   .pro-buy { grid-column:1 / -1;justify-self:start;gap:.3rem; }
+  .pro-signin { grid-column:1 / -1; }
   .pro-buy :global(svg) { width:.85rem;height:.85rem; }
   .pro-notice { grid-column:1 / -1;margin:0;font-size:.8125rem;font-weight:800;color:#1d4f7a; }
   :global(html.dark) .pro-notice { color:#cfe4f5; }

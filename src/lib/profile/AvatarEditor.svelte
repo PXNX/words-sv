@@ -24,6 +24,7 @@
   import { cloudSync } from '#lib/sync/cloudSync.svelte.js';
   import { PRODUCTS, SHOP_ITEMS, product as findProduct, withProduct, type Product } from '#lib/store/catalog.js';
   import { buy, proActive, storeState } from '#lib/store/storeClient.svelte.js';
+  import StoreSignIn from '#lib/store/StoreSignIn.svelte';
 
   let { value, onchange, shop = false }: { value: Avatar; onchange: (next: Avatar) => void; shop?: boolean } = $props();
 
@@ -226,9 +227,10 @@
   {#if trying}
     <div class="avatar-locked-hint avatar-sale" role="status">
       <img class="avatar-sale-star" src="/telegram-star.svg" alt="" />
-      <span class="avatar-sale-text"><strong>{productName(trying)} · {num(trying.stars)}</strong><small>{notice || (shop && !linked ? m.store_sign_in({}, locale) : m.cosmetic_hint_shop({}, locale))}</small></span>
+      <span class="avatar-sale-text"><strong>{productName(trying)} · {num(trying.stars)}</strong><small>{notice || (shop && !linked ? '' : m.cosmetic_hint_shop({}, locale))}</small></span>
       {#if shop && linked}<button type="button" class="btn-play btn-play-ink btn-play-sm" disabled={storeState.buying !== null || !network.online} onclick={() => purchase(trying!)}>{m.store_buy_now({}, locale)}</button>{/if}
     </div>
+    {#if shop && !linked}<div class="avatar-signin"><StoreSignIn /></div>{/if}
   {:else if notice}
     <p class="avatar-locked-hint" role="status"><IconCheck aria-hidden="true" /> {notice}</p>
   {:else if lockedHint}<p class="avatar-locked-hint" role="status"><IconLock aria-hidden="true" /> {rewardHint(lockedHint)}</p>{/if}
@@ -289,6 +291,8 @@
   .avatar-sale-text strong { font-size:.9rem;font-weight:900; }
   .avatar-sale-text small { font-size:.8125rem;font-weight:700;opacity:.75; }
   .avatar-sale .btn-play { flex:none; }
+  .avatar-signin { display:grid;padding:.6rem .7rem;border:1.5px solid #172a45;border-radius:.8rem;background:#fffdf7;color:#172a45; }
+  :global(html.dark) .avatar-signin { border-color:#172a45;background:#213a5d;color:#fffdf7; }
   /* Pro: the stage shimmers gold with twinkling sparkles, like Telegram Premium. */
   .avatar-stage.pro { overflow:hidden;background:linear-gradient(115deg,#f7d774 0%,#fff3c4 22%,#e6a527 45%,#fff6d6 62%,#f0c04a 80%,#fbe6a0 100%);background-size:260% 100%;animation:avatar-gold 5s ease-in-out infinite alternate; }
   :global(html.dark) .avatar-stage.pro { background:linear-gradient(115deg,#7a5410 0%,#d8a83a 22%,#5c3f0c 45%,#e9c260 62%,#8a6116 80%,#c99a32 100%);background-size:260% 100%; }

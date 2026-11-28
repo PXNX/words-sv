@@ -1,6 +1,6 @@
 <!--
-  After a missed day, for learners signed in with Telegram: a sheet on the start page that offers to
-  repair the streak and WordCircle Pro, which keeps it through one missed day a week from then on.
+  After a missed day: a sheet on the start page that offers to repair the streak and WordCircle Pro,
+  which keeps it through one missed day a week from then on. Web visitors can sign in right here.
   It opens once per missed day and not while Pro already runs.
 -->
 <script lang="ts">
@@ -9,7 +9,6 @@
   import BottomSheet from '#lib/app/BottomSheet.svelte';
   import ProCard from '#lib/store/ProCard.svelte';
   import { proActive } from '#lib/store/storeClient.svelte.js';
-  import { cloudSync } from '#lib/sync/cloudSync.svelte.js';
   import { REPAIR_WORDS, type StreakRepair } from './clientStreak.js';
 
   let { repair }: { repair: StreakRepair | null } = $props();
@@ -22,7 +21,7 @@
     try { return localStorage.getItem(SEEN_KEY) === dateKey; } catch { return true; }
   }
   $effect(() => {
-    if (!repair || cloudSync.linked !== true || proActive() || seen(repair.dateKey)) return;
+    if (!repair || proActive() || seen(repair.dateKey)) return;
     open = true;
     try { localStorage.setItem(SEEN_KEY, repair.dateKey); } catch { /* shown again next time */ }
   });

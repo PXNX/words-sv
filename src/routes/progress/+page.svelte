@@ -360,7 +360,7 @@
       {/if}
     </div>
     <!-- Signed in with Telegram: WordCircle Pro, which keeps the streak through one missed day a week. -->
-    {#if cloudSync.linked === true}<div class="mt-[.7rem]"><ProCard /></div>{/if}
+    <div class="mt-[.7rem]"><ProCard /></div>
 
 
     <dl class="m-0 mt-[.8rem] pt-[.7rem] grid grid-cols-2 border-t border-base-content/[.14] dark:border-base-content/[.22]">
